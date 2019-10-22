@@ -13,12 +13,61 @@ import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NCustomComponent;
-import com.openrsc.interfaces.misc.*;
+import com.openrsc.interfaces.misc.AchievementGUI;
+import com.openrsc.interfaces.misc.AuctionHouse;
+import com.openrsc.interfaces.misc.BankPinInterface;
+import com.openrsc.interfaces.misc.CustomBankInterface;
+import com.openrsc.interfaces.misc.DoSkillInterface;
+import com.openrsc.interfaces.misc.ExperienceConfigInterface;
+import com.openrsc.interfaces.misc.FishingTrawlerInterface;
+import com.openrsc.interfaces.misc.IronManInterface;
+import com.openrsc.interfaces.misc.LostOnDeathInterface;
+import com.openrsc.interfaces.misc.OnlineListInterface;
+import com.openrsc.interfaces.misc.PartyGUI;
+import com.openrsc.interfaces.misc.ProgressBarInterface;
+import com.openrsc.interfaces.misc.QuestGuideInterface;
+import com.openrsc.interfaces.misc.SkillGuideInterface;
+import com.openrsc.interfaces.misc.TerritorySignupInterface;
 import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import orsc.buffers.RSBufferUtils;
-import orsc.enumerations.*;
-import orsc.graphics.gui.*;
+import orsc.enumerations.GameMode;
+import orsc.enumerations.InputXAction;
+import orsc.enumerations.MenuItemAction;
+import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
+import orsc.enumerations.ORSCharacterDirection;
+import orsc.enumerations.PasswordChangeMode;
+import orsc.enumerations.SocialPopupMode;
+import orsc.graphics.gui.InputXPrompt;
+import orsc.graphics.gui.KillAnnouncer;
+import orsc.graphics.gui.KillAnnouncerQueue;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.MessageHistory;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.gui.SocialLists;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
@@ -32,18 +81,106 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+import static orsc.Config.CLIENT_VERSION;
+import static orsc.Config.C_ANDROID_INV_TOGGLE;
+import static orsc.Config.C_BATCH_PROGRESS_BAR;
+import static orsc.Config.C_EXPERIENCE_CONFIG_SUBMENU;
+import static orsc.Config.C_EXPERIENCE_COUNTER;
+import static orsc.Config.C_EXPERIENCE_COUNTER_COLOR;
+import static orsc.Config.C_EXPERIENCE_COUNTER_MODE;
+import static orsc.Config.C_EXPERIENCE_DROPS;
+import static orsc.Config.C_EXPERIENCE_DROP_SPEED;
+import static orsc.Config.C_FIGHT_MENU;
+import static orsc.Config.C_HIDE_FOG;
+import static orsc.Config.C_HIDE_ROOFS;
+import static orsc.Config.C_HOLD_AND_CHOOSE;
+import static orsc.Config.C_INV_COUNT;
+import static orsc.Config.C_KILL_FEED;
+import static orsc.Config.C_LAST_ZOOM;
+import static orsc.Config.C_LONG_PRESS_TIMER;
+import static orsc.Config.C_MENU_SIZE;
+import static orsc.Config.C_MESSAGE_TAB_SWITCH;
+import static orsc.Config.C_NAME_CLAN_TAG_OVERLAY;
+import static orsc.Config.C_NPC_KC;
+import static orsc.Config.C_PARTY_INV;
+import static orsc.Config.C_SHOW_GROUND_ITEMS;
+import static orsc.Config.C_SIDE_MENU_OVERLAY;
+import static orsc.Config.C_SWIPE_TO_ROTATE;
+import static orsc.Config.C_SWIPE_TO_SCROLL;
+import static orsc.Config.C_SWIPE_TO_ZOOM;
+import static orsc.Config.C_VOLUME_TO_ROTATE;
+import static orsc.Config.DEBUG;
+import static orsc.Config.DISPLAY_LOGO_SPRITE;
+import static orsc.Config.F_CACHE_DIR;
+import static orsc.Config.F_SHOWING_KEYBOARD;
+import static orsc.Config.MEMBER_WORLD;
+import static orsc.Config.Remember;
+import static orsc.Config.SERVER_NAME;
+import static orsc.Config.SERVER_NAME_WELCOME;
+import static orsc.Config.S_AUTO_MESSAGE_SWITCH_TOGGLE;
+import static orsc.Config.S_BATCH_PROGRESSION;
+import static orsc.Config.S_CUSTOM_FIREMAKING;
+import static orsc.Config.S_EXPERIENCE_COUNTER_TOGGLE;
+import static orsc.Config.S_EXPERIENCE_DROPS_TOGGLE;
+import static orsc.Config.S_FIGHTMODE_SELECTOR_TOGGLE;
+import static orsc.Config.S_FOG_TOGGLE;
+import static orsc.Config.S_GROUND_ITEM_TOGGLE;
+import static orsc.Config.S_INVENTORY_COUNT_TOGGLE;
+import static orsc.Config.S_ITEMS_ON_DEATH_MENU;
+import static orsc.Config.S_MAX_WALKING_SPEED;
+import static orsc.Config.S_MENU_COMBAT_STYLE_TOGGLE;
+import static orsc.Config.S_NPC_KILL_MESSAGES;
+import static orsc.Config.S_PLAYER_INVENTORY_SLOTS;
+import static orsc.Config.S_PLAYER_LEVEL_LIMIT;
+import static orsc.Config.S_PLAYER_SLOT_COUNT;
+import static orsc.Config.S_RIGHT_CLICK_BANK;
+import static orsc.Config.S_SHOW_FLOATING_NAMETAGS;
+import static orsc.Config.S_SHOW_ROOF_TOGGLE;
+import static orsc.Config.S_SIDE_MENU_TOGGLE;
+import static orsc.Config.S_SPAWN_AUCTION_NPCS;
+import static orsc.Config.S_SPAWN_IRON_MAN_NPCS;
+import static orsc.Config.S_WANT_BANK_NOTES;
+import static orsc.Config.S_WANT_BANK_PINS;
+import static orsc.Config.S_WANT_BANK_PRESETS;
+import static orsc.Config.S_WANT_CERTS_TO_BANK;
+import static orsc.Config.S_WANT_CERT_DEPOSIT;
+import static orsc.Config.S_WANT_CLANS;
+import static orsc.Config.S_WANT_CUSTOM_BANKS;
+import static orsc.Config.S_WANT_CUSTOM_LANDSCAPE;
+import static orsc.Config.S_WANT_CUSTOM_RANK_DISPLAY;
+import static orsc.Config.S_WANT_DECANTING;
+import static orsc.Config.S_WANT_DROP_X;
+import static orsc.Config.S_WANT_EQUIPMENT_TAB;
+import static orsc.Config.S_WANT_EXPERIENCE_ELIXIRS;
+import static orsc.Config.S_WANT_EXP_INFO;
+import static orsc.Config.S_WANT_FIXED_OVERHEAD_CHAT;
+import static orsc.Config.S_WANT_GLOBAL_CHAT;
+import static orsc.Config.S_WANT_HIDE_IP;
+import static orsc.Config.S_WANT_KEYBOARD_SHORTCUTS;
+import static orsc.Config.S_WANT_KILL_FEED;
+import static orsc.Config.S_WANT_PARTIES;
+import static orsc.Config.S_WANT_PLAYER_COMMANDS;
+import static orsc.Config.S_WANT_QUEST_MENUS;
+import static orsc.Config.S_WANT_REMEMBER;
+import static orsc.Config.S_WANT_RUNECRAFTING;
+import static orsc.Config.S_WANT_SKILL_MENUS;
+import static orsc.Config.S_WANT_WOODCUTTING_GUILD;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.WELCOME_TEXT;
+import static orsc.Config.getFPS;
+import static orsc.Config.getServerName;
+import static orsc.Config.getServerNameWelcome;
+import static orsc.Config.getWelcomeText;
+import static orsc.Config.initConfig;
+import static orsc.Config.isAndroid;
+import static orsc.Config.isLenientContactDetails;
+import static orsc.Config.wantEmail;
+import static orsc.Config.wantMembers;
+import static orsc.multiclient.ClientPort.saveHideIp;
+
 //import javax.sound.sampled.AudioSystem;
 //import javax.sound.sampled.Clip;
 //import javax.sound.sampled.LineEvent;
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import static orsc.Config.*;
-import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
 
@@ -543,8 +680,8 @@ public final class mudclient implements Runnable {
 	public OnlineListInterface onlineList;
 	private NCustomComponent experienceOverlay;
 	private ProgressBarInterface batchProgressBar;
-	private BankPinInterface bankPinInterface;
 	private PartyGUI partyMenu;
+	private BankPinInterface bankPinInterface;
 	private FishingTrawlerInterface fishingTrawlerInterface;
 	public AchievementGUI achievementInterface;
 	public IronManInterface ironmanInterface;
@@ -2323,7 +2460,7 @@ public final class mudclient implements Runnable {
 							this.packetHandler.getClientStream().writeBuffer1.putShort(this.m_Cg);
 							this.packetHandler.getClientStream().finishPacket();
 						} else {
-							this.handleMenuItemClicked(false, 0);
+							this.handleMenuItemClicked(0);
 						}
 
 						this.mouseButtonClick = 0;
@@ -4945,8 +5082,8 @@ public final class mudclient implements Runnable {
 									break;
 								default:
 									getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getItemDef(notify.killPicture)), width_icon, 36 + Offset, picture_width,
-										18, EntityHandler.getItemDef(notify.killPicture).getPictureMask(), 0,
-										EntityHandler.getItemDef(notify.killPicture).getBlueMask(), false, 0, 1);
+										18, Objects.requireNonNull(EntityHandler.getItemDef(notify.killPicture)).getPictureMask(), 0,
+										Objects.requireNonNull(EntityHandler.getItemDef(notify.killPicture)).getBlueMask(), false, 0, 1);
 									break;
 							}
 							this.getSurface().drawString(notify.killedString, width_killed, 50 + Offset, 0xffffff, 1);
@@ -4978,9 +5115,9 @@ public final class mudclient implements Runnable {
 							this.showUiWildWarn = 1;
 						}
 					}
-						int i2 = 75;
-						int index;
-						int var12;
+					int i2 = 75;
+					int index;
+					int var12;
 					if (S_SIDE_MENU_TOGGLE && C_SIDE_MENU_OVERLAY) {
 						int i = 130;
 						if (localPlayer.isDev()) {
@@ -5529,7 +5666,7 @@ public final class mudclient implements Runnable {
 			} else {
 				int var2 = this.menuCommon.handleClick(this.mouseX, this.menuX, this.menuY, this.mouseY);
 				if (var2 >= 0) {
-					this.handleMenuItemClicked(false, var2);
+					this.handleMenuItemClicked(var2);
 				}
 
 				this.topMouseMenuVisible = false;
@@ -8652,10 +8789,10 @@ public final class mudclient implements Runnable {
 		// inventory close
 		if (!C_ANDROID_INV_TOGGLE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Close inventory with menu - @red@Off", 7, null, null);
+				"@whi@Close inventory with menu - @red@Off", 7, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Close inventory with menu - @gre@On", 7, null, null);
+				"@whi@Close inventory with menu - @gre@On", 7, null, null);
 		}
 
 		// logout text
@@ -11208,7 +11345,7 @@ public final class mudclient implements Runnable {
 
 	}
 
-	private void handleMenuItemClicked(boolean var1, int item) {
+	private void handleMenuItemClicked(int item) {
 		try {
 
 			MenuItemAction var3 = this.menuCommon.getItemAction(item);
@@ -11823,7 +11960,7 @@ public final class mudclient implements Runnable {
 					break;
 			}
 		} catch (RuntimeException var13) {
-			throw GenUtil.makeThrowable(var13, "client.KA(" + var1 + ',' + item + ')');
+			throw GenUtil.makeThrowable(var13, "client.KA(" + false + ',' + item + ')');
 		}
 	}
 
@@ -13765,16 +13902,16 @@ public final class mudclient implements Runnable {
 		batchProgressBar.resetProgressBar();
 	}
 
-	public final void initializeBatchProgressVariables(int repeatFor, int delay) {
-		batchProgressBar.initVariables(repeatFor, delay);
-	}
-	
 	public final void hidePartyMenu() {
 		partyMenu.hide();
 	}
 
 	public final void showPartyMenu() {
 		partyMenu.show();
+	}
+
+	public final void initializeBatchProgressVariables(int repeatFor, int delay) {
+		batchProgressBar.initVariables(repeatFor, delay);
 	}
 
 	public void showBankPinInterface() {
@@ -14814,9 +14951,6 @@ public final class mudclient implements Runnable {
 
 				mainComponent = new NComponent(this);
 				mainComponent.setSize(getGameWidth(), getGameHeight());
-				
-				partyMenu = new PartyGUI(this);
-				mainComponent.addComponent(partyMenu.getComponent());
 
 				bankPinInterface = new BankPinInterface(this);
 				mainComponent.addComponent(bankPinInterface);
@@ -14825,6 +14959,9 @@ public final class mudclient implements Runnable {
 
 				fishingTrawlerInterface = new FishingTrawlerInterface(this);
 				mainComponent.addComponent(fishingTrawlerInterface);
+
+				partyMenu = new PartyGUI(this);
+				mainComponent.addComponent(partyMenu.getComponent());
 
 				if (S_BATCH_PROGRESSION) {
 					batchProgressBar = new ProgressBarInterface(this);
@@ -15189,7 +15326,7 @@ public final class mudclient implements Runnable {
 								if ((var2 & 1) == 1) {
 									this.cameraAutoMoveX += this.cameraAutoMoveAmountX;
 								}
-								
+
 								// Saves zoom every 10 seconds
 								saveZoomDistance();
 							}

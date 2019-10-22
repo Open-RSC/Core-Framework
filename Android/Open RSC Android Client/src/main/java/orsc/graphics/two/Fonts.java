@@ -22,7 +22,7 @@ public class Fonts {
 		}
 	}
 
-	public static int addFont(byte bytes[]) {
+	public static int addFont(byte[] bytes) {
 		fontData[tmpFontDataHead] = bytes;
 		return tmpFontDataHead++;
 	}

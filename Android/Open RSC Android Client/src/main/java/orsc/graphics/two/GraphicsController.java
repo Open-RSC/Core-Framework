@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -306,8 +307,8 @@ public class GraphicsController {
 					var19 = 2;
 				}
 
-				this.plot_tran_scale(var19, var11, width, (byte) -61, scaleY, spriteWidth, scaleX, height, var14,
-					sprite.getPixels(), 0, var10, var15, var7, this.pixelData);
+				this.plot_tran_scale(var19, var11, width, scaleY, spriteWidth, scaleX, height, var14,
+					sprite.getPixels(), var10, var15, var7, this.pixelData);
 			} catch (Exception var17) {
 				System.out.println("error in sprite clipping routine");
 			}
@@ -323,16 +324,14 @@ public class GraphicsController {
 			return sprites[item.authenticSpriteID + mudclient.spriteItem];
 
 		String[] location = item.getSpriteLocation().split(":");
-		Sprite retVal = spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
-		return retVal;
+		return Objects.requireNonNull(spriteTree.get(location[0])).get(Integer.parseInt(location[1]));
 	}
 
 	public Sprite spriteSelect(AnimationDef animation, int offset) {
 		if (!Config.S_WANT_CUSTOM_SPRITES)
 			return sprites[animation.getNumber() + offset];
 
-		Sprite sprite = spriteTree.get("animations").get(animationMap.get(animation.name) + offset);
-		return sprite;
+		return Objects.requireNonNull(spriteTree.get("animations")).get(animationMap.get(animation.name) + offset);
 	}
 
 	public Sprite spriteSelect(SpriteDef sprite) {
@@ -341,8 +340,7 @@ public class GraphicsController {
 
 		String[] location = sprite.getSpriteLocation().split(":");
 
-		Sprite retVal = spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
-		return retVal;
+		return Objects.requireNonNull(spriteTree.get(location[0])).get(Integer.parseInt(location[1]));
 	}
 	/*
 	public Sprite spriteSelect(int id) {
@@ -381,6 +379,7 @@ public class GraphicsController {
 	public final void a(Sprite sprite, int var2, int var3, int var4, int var5) {
 		try {
 			if (sprite == null) {
+				assert sprite != null;
 				System.out.println("Sprite missing: " + sprite.getID());
 				return;
 			}
@@ -444,7 +443,7 @@ public class GraphicsController {
 				// var8, var11, var4, var9, this.pixelData,
 				// this.image2D_colorLookupTable[sprite], var6);
 				// } else {
-				this.a(var7, var8, var6, sprite.getPixels(), 0, var4, var14, this.pixelData, -107, var11,
+				this.a(var7, var8, var6, sprite.getPixels(), 0, var4, var14, this.pixelData, var11,
 					var10, var9);
 				// }
 
@@ -534,7 +533,7 @@ public class GraphicsController {
 				}
 
 				this.a(var11, var12, var7, var10, var15, sprite.getPixels(), var14, this.pixelData, 0,
-					spriteWidth, false, var13, var5, var2, var19);
+					spriteWidth, var13, var5, var2, var19);
 			} catch (Exception var17) {
 				System.out.println("error in sprite clipping routine");
 			}
@@ -592,7 +591,7 @@ public class GraphicsController {
 	}
 
 	private void a(int var1, int var2, int var3, int var4, int var5, int[] var6, int var7, int[] letterPlotTable,
-				   int var9, int var10, boolean var11, int var12, int var13, int var14, int var15) {
+				   int var9, int var10, int var12, int var13, int var14, int var15) {
 		try {
 
 			int var16 = (var14 & 16736117) >> 16;
@@ -601,7 +600,7 @@ public class GraphicsController {
 
 			try {
 				int var19 = var4;
-				if (var11) {
+				if (false) {
 					this.m_Tb = (int[]) null;
 				}
 
@@ -639,7 +638,7 @@ public class GraphicsController {
 			throw GenUtil.makeThrowable(var27,
 				"ua.EB(" + var1 + ',' + var2 + ',' + var3 + ',' + var4 + ',' + var5 + ','
 					+ (var6 != null ? "{...}" : "null") + ',' + var7 + ','
-					+ (letterPlotTable != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + var11
+					+ (letterPlotTable != null ? "{...}" : "null") + ',' + var9 + ',' + var10 + ',' + false
 					+ ',' + var12 + ',' + var13 + ',' + var14 + ',' + var15 + ')');
 		}
 	}
@@ -672,12 +671,12 @@ public class GraphicsController {
 		}
 	}
 
-	private void a(int var1, int var2, int var3, int[] var4, int var5, int var6, int var7, int[] var8, int var9,
+	private void a(int var1, int var2, int var3, int[] var4, int var5, int var6, int var7, int[] var8,
 				   int var10, int var11, int var12) {
 		try {
 
 			int var13 = 256 - var6;
-			if (var9 <= -54) {
+			if (-107 <= -54) {
 				for (int var14 = -var2; var14 < 0; var14 += var7) {
 					for (int var15 = -var12; var15 < 0; ++var15) {
 						var5 = var4[var1++];
@@ -701,7 +700,7 @@ public class GraphicsController {
 		} catch (RuntimeException var17) {
 			throw GenUtil.makeThrowable(var17,
 				"ua.TA(" + var1 + ',' + var2 + ',' + var3 + ',' + (var4 != null ? "{...}" : "null") + ',' + var5
-					+ ',' + var6 + ',' + var7 + ',' + (var8 != null ? "{...}" : "null") + ',' + var9 + ','
+					+ ',' + var6 + ',' + var7 + ',' + (var8 != null ? "{...}" : "null") + ',' + -107 + ','
 					+ var10 + ',' + var11 + ',' + var12 + ')');
 		}
 	}
@@ -744,25 +743,25 @@ public class GraphicsController {
 		}
 	}
 
-	private void a(int var1, int var2, String var3, int var4, int var5, int var6, int var7) {
+	private void a(int var1, int var2, String var3, int var4, int var6) {
 		try {
-			this.drawColoredString(var1 - this.stringWidth(var6, var3), var2, var3, var6, var4, var7);
+			this.drawColoredString(var1 - this.stringWidth(var6, var3), var2, var3, var6, var4, 0);
 
-			if (var5 != -12200) {
+			if (-12200 != -12200) {
 				this.copyPixelDataToSurface(SPRITE_LAYER.SHOP, -128, -127, -124, 75);
 			}
 
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "ua.OA(" + var1 + ',' + var2 + ',' + (var3 != null ? "{...}" : "null")
-				+ ',' + var4 + ',' + var5 + ',' + var6 + ',' + var7 + ')');
+				+ ',' + var4 + ',' + -12200 + ',' + var6 + ',' + 0 + ')');
 		}
 	}
 
-	private void a(int var1, int[] var2, int var3, int var4, int var5, int var6, byte var7, int var8, int[] var9,
+	private void a(int var1, int[] var2, int var3, int var4, int var5, int var6, int var8, int[] var9,
 				   int var10, int var11) {
 		try {
 
-			if (var7 <= 122) {
+			if ((byte) 123 <= 122) {
 				this.drawBoxBorder(121, 54, -117, 67, -103);
 			}
 
@@ -817,7 +816,7 @@ public class GraphicsController {
 		} catch (RuntimeException var15) {
 			throw GenUtil.makeThrowable(var15,
 				"ua.JB(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3 + ',' + var4 + ',' + var5
-					+ ',' + var6 + ',' + var7 + ',' + var8 + ',' + (var9 != null ? "{...}" : "null") + ','
+					+ ',' + var6 + ',' + (byte) 123 + ',' + var8 + ',' + (var9 != null ? "{...}" : "null") + ','
 					+ var10 + ',' + var11 + ')');
 		}
 	}
@@ -1044,6 +1043,7 @@ public class GraphicsController {
 			if (dummy1 != 1603920392) {
 				this.clipBottom = 29;
 			}
+
 			if (blueMask == 0)
 				blueMask = 0xFFFFFF;
 
@@ -1255,7 +1255,7 @@ public class GraphicsController {
 	public final void b(int var1, String var2, int var3, int var4, int var5, int var6) {
 		try {
 
-			this.a(var1, var3, var2, var4, -12200, (int) var6, 0);
+			this.a(var1, var3, var2, var4, (int) var6);
 		} catch (RuntimeException var8) {
 			throw GenUtil.makeThrowable(var8, "ua.J(" + var1 + ',' + (var2 != null ? "{...}" : "null") + ',' + var3
 				+ ',' + var4 + ',' + var5 + ',' + var6 + ')');
@@ -1292,7 +1292,7 @@ public class GraphicsController {
 
 			if (var2 != 0) {
 				if (var1 < 49) {
-					this.a(-22, 77, 112, -35, -44, (int[]) null, -45, (int[]) null, -39, -33, false, 50, 61, 37, -7);
+					this.a(-22, 77, 112, -35, -44, (int[]) null, -45, (int[]) null, -39, -33, 50, 61, 37, -7);
 				}
 
 				return Fonts.fontData[var2][8] - 1;
@@ -2168,7 +2168,7 @@ public class GraphicsController {
 					var10 += sprite.getWidth();
 				}
 
-				this.a(var8, this.pixelData, var13, var7, 0, var6, (byte) 123, var5, sprite.getPixels(), var9,
+				this.a(var8, this.pixelData, var13, var7, 0, var6, var5, sprite.getPixels(), var9,
 					var10);
 
 			}
@@ -2639,7 +2639,7 @@ public class GraphicsController {
 					i += 4;
 				} else {
 					char c = str.charAt(i);
-					if (c < 0 || c >= Fonts.inputFilterCharFontAddr.length) {
+					if (c >= Fonts.inputFilterCharFontAddr.length) {
 						c = ' ';
 					}
 					width += fontData[Fonts.inputFilterCharFontAddr[c] + 7];
@@ -2655,25 +2655,22 @@ public class GraphicsController {
 
 	/**
 	 * destHeight is height / heightStep
-	 *
 	 * @param heightStep    destinationHeight / height
 	 * @param srcStartY     First source row << 16
 	 * @param destWidth     Destination width
-	 * @param dummy1
 	 * @param scaleY        (source rows per destination row) << 16
 	 * @param spriteWidth   columns in source data
 	 * @param scaleX        (source columns per destination column) << 16
 	 * @param height        destination height * heightStep
 	 * @param destHead      first destination pixel to output to
 	 * @param src           source pixel data
-	 * @param dummy2
 	 * @param srcStartX     First source column << 16
 	 * @param destRowStride Pixels to skip between rows of output
 	 * @param alpha         Alpha value [0-256]
 	 * @param dest          Destination pixel data
 	 */
-	private void plot_tran_scale(int heightStep, int srcStartY, int destWidth, byte dummy1, int scaleY,
-								 int spriteWidth, int scaleX, int height, int destHead, int[] src, int dummy2, int srcStartX,
+	private void plot_tran_scale(int heightStep, int srcStartY, int destWidth, int scaleY,
+								 int spriteWidth, int scaleX, int height, int destHead, int[] src, int srcStartX,
 								 int destRowStride, int alpha, int[] dest) {
 		try {
 
@@ -2712,9 +2709,9 @@ public class GraphicsController {
 
 		} catch (RuntimeException var23) {
 			throw GenUtil.makeThrowable(var23,
-				"ua.EA(" + heightStep + ',' + srcStartY + ',' + destWidth + ',' + dummy1 + ',' + scaleY + ','
+				"ua.EA(" + heightStep + ',' + srcStartY + ',' + destWidth + ',' + (byte) -61 + ',' + scaleY + ','
 					+ spriteWidth + ',' + scaleX + ',' + height + ',' + destHead + ','
-					+ (src != null ? "{...}" : "null") + ',' + dummy2 + ',' + srcStartX + ',' + destRowStride
+					+ (src != null ? "{...}" : "null") + ',' + 0 + ',' + srcStartX + ',' + destRowStride
 					+ ',' + alpha + ',' + (dest != null ? "{...}" : "null") + ')');
 		}
 	}
@@ -2803,7 +2800,7 @@ public class GraphicsController {
 									newR = (spritePixelR * newR) >> 8;
 									newG = (spritePixelG * newG) >> 8;
 									newB = (spritePixelB * newB) >> 8;
-								} else if (blueMask != 0xFFFFFF && newR == newG && newB != newR) {//blue mask?
+								} else if (blueMask != 0xFFFFFF && newR == newG) {//blue mask?
 									int blueMaskR = blueMask >> 16 & 0xFF;
 									int blueMaskG = blueMask >> 8 & 0xFF;
 									int blueMaskB = blueMask & 0xFF;
@@ -2850,7 +2847,7 @@ public class GraphicsController {
 			}
 
 			if (dummy2 < 20) {
-				this.m_t = (int[]) null;
+				this.m_t = null;
 			}
 
 		} catch (RuntimeException var30) {
@@ -3085,8 +3082,10 @@ public class GraphicsController {
 
 		for (int i = 0; i < EntityHandler.animationCount(); i++) {
 			AnimationDef animation = EntityHandler.getAnimationDef(i);
+			assert animation != null;
 			if (!animationMap.containsKey(animation.getName())) {
 				int p = 0;
+				assert animationList != null;
 				for (Sprite sprite : animationList) {
 					if (animation.getName().equalsIgnoreCase(sprite.getPackageName())) {
 						animationMap.put(animation.getName(), p);

@@ -1,6 +1,7 @@
 package com.openrsc.server.login;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,7 +42,7 @@ public abstract class LoginRequest {
 		this.setUsernameHash(DataConversions.usernameToHash(username));
 	}
 
-	public String getIpAddress() {
+	private String getIpAddress() {
 		return ipAddress;
 	}
 
@@ -81,7 +82,7 @@ public abstract class LoginRequest {
 		return server;
 	}
 
-	public int getClientVersion() {
+	private int getClientVersion() {
 		return clientVersion;
 	}
 
@@ -110,7 +111,7 @@ public abstract class LoginRequest {
 		LOGGER.info("Processed login request for " + getUsername() + " response: " + loginResponse);
 	}
 
-	public byte validateLogin() {
+	private byte validateLogin() {
 		PreparedStatement statement = null;
 		ResultSet playerSet = null;
 		int groupId = Group.USER;
@@ -131,7 +132,7 @@ public abstract class LoginRequest {
 				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
 			}
 
-			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
+			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= ServerConfiguration.MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 

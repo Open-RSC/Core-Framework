@@ -351,7 +351,7 @@ public final class Event implements CommandListener {
 					player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
 				} catch (SQLException e) {
 					LOGGER.catching(e);
-					player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
+					player.message(messagePrefix + "A MySQL error has occurred! " + e.getMessage());
 					return;
 				}
 			} else {
