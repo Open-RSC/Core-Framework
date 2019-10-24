@@ -44,7 +44,7 @@ public abstract class Mob extends Entity {
 		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
 	}
 
-	public void addSkull(int timeLeft) {
+	public void addSkull(long timeLeft) {
 		if (skullEventNpc == null) {
 			skullEventNpc = new GameTickEvent(getWorld(), this, timeLeft, "NPC Add Skull") {
 
@@ -303,7 +303,7 @@ public abstract class Mob extends Entity {
 				return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
 			} else {
 				return canReach(low.getX(), high.getX(), low.getY(), high.getY())
-						|| (finishedPath() && canReachDiagonal(low.getX(), high.getX(), low.getY(), high.getY())) 
+						|| (finishedPath() && canReachDiagonal(low.getX(), high.getX(), low.getY(), high.getY()))
 						|| closeSpecObject(o);
 			}
 		} else if (o.getType() == 1) {
@@ -353,7 +353,7 @@ public abstract class Mob extends Entity {
 		}
 		return false;
 	}
-	
+
 	private boolean canReachx(int minX, int maxX, int minY, int maxY) {
 		if (getX() >= minX && getX() <= maxX && getY() >= minY && getY() <= maxY) {
 			return true;

@@ -8,7 +8,7 @@ run-server:
 	`pwd`/scripts/run.sh
 
 run-client:
-	sudo ant -f client/build.xml runclient
+	ant -f client/build.xml runclient
 
 combined-install:
 	`pwd`/scripts/combined-install.sh

@@ -384,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players`
     `headsprite`           int(5) UNSIGNED              DEFAULT 1,
     `bodysprite`           int(5) UNSIGNED              DEFAULT 2,
     `male`                 tinyint(1) UNSIGNED          DEFAULT 1,
-    `skulled`              int(10) UNSIGNED             DEFAULT 0,
+    `skulled`              bigint(16) UNSIGNED          DEFAULT 0,
     `charged`              int(10) UNSIGNED             DEFAULT 0,
     `creation_date`        int(10) UNSIGNED    NOT NULL DEFAULT 0,
     `creation_ip`          varchar(255)        NOT NULL DEFAULT '0.0.0.0',

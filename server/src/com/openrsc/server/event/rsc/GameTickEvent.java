@@ -10,12 +10,12 @@ public abstract class GameTickEvent {
 	protected boolean running = true;
 	private Mob owner;
 	private final World world;
-	private int delayTicks;
-	private int ticksBeforeRun = -1;
+	private long delayTicks;
+	private long ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
 
-	public GameTickEvent(World world, Mob owner, int ticks, String descriptor) {
+	public GameTickEvent(World world, Mob owner, long ticks, String descriptor) {
 		this.world = world;
 		this.owner = owner;
 		this.descriptor = descriptor;
@@ -62,7 +62,7 @@ public abstract class GameTickEvent {
 		running = false;
 	}
 
-	public int getDelayTicks() {
+	public long getDelayTicks() {
 		return delayTicks;
 	}
 
@@ -70,7 +70,7 @@ public abstract class GameTickEvent {
 		return descriptor;
 	}
 
-	protected void setDelayTicks(int delayTicks) {
+	protected void setDelayTicks(long delayTicks) {
 		this.delayTicks = delayTicks;
 	}
 

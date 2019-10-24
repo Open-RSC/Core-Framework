@@ -536,7 +536,7 @@ public final class Player extends Mob {
 		return privateMessageQueue.poll();
 	}
 
-	public void addSkull(int timeLeft) {
+	public void addSkull(long timeLeft) {
 		if (skullEvent == null) {
 			skullEvent = new DelayedEvent(getWorld(), this, timeLeft, "Player Add Skull") {
 

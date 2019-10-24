@@ -538,7 +538,7 @@ public class PlayerDatabase {
 			save.getSettings().setAppearance(pa);
 			save.setMale(result.getInt("male") == 1);
 			save.setWornItems(save.getSettings().getAppearance().getSprites());
-			int skulled = result.getInt("skulled");
+			long skulled = result.getLong("skulled");
 			if (skulled > 0) {
 				save.addSkull(skulled);
 			}

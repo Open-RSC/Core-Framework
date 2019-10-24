@@ -9,7 +9,7 @@ public abstract class DelayedEvent extends GameTickEvent {
 
 	private boolean uniqueEvent = true;
 
-	public DelayedEvent(World world, Player owner, int delayMs, String descriptor) {
+	public DelayedEvent(World world, Player owner, long delayMs, String descriptor) {
 		super(world, owner, (int)Math.ceil((double)delayMs / (double)world.getServer().getConfig().GAME_TICK), descriptor);
 	}
 
