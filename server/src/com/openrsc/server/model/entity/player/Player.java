@@ -194,6 +194,10 @@ public final class Player extends Mob {
 	 */
 	private long lastSpellCast = 0;
 	/**
+	 * The time the player had a skull status from combat
+	 */
+	private long lastSkullEvent = 0;
+	/**
 	 * Time of last trade/duel request
 	 */
 	private long lastTradeDuelRequest = 0;
@@ -543,7 +547,7 @@ public final class Player extends Mob {
 				public void run() {
 					removeSkull();
 					if (getWorld().getServer().getConfig().WANT_PARTIES) {
-						if(getParty() != null){
+						if (getParty() != null) {
 							getParty().sendParty();
 						}
 					}
@@ -553,7 +557,7 @@ public final class Player extends Mob {
 			getUpdateFlags().setAppearanceChanged(true);
 		}
 		if (getWorld().getServer().getConfig().WANT_PARTIES) {
-			if(getParty() != null){
+			if (getParty() != null) {
 				getParty().sendParty();
 			}
 		}
@@ -600,6 +604,10 @@ public final class Player extends Mob {
 		return System.currentTimeMillis() - lastSpellCast > 1250;
 	}
 
+	/*public boolean skullTimer() {
+		return System.currentTimeMillis() - lastSkullEvent > 20000;
+	}*/
+
 	public void checkAndInterruptBatchEvent() {
 		if (batchEvent != null) {
 			batchEvent.interrupt();
@@ -612,7 +620,7 @@ public final class Player extends Mob {
 			Player victim = (Player) mob;
 			if (getParty() != null && ((Player) mob).getParty() != null && getParty() == ((Player) mob).getParty()) {
 				message("You can't attack your party members");
-					return false;
+				return false;
 			}
 			if ((inCombat() && getDuel().isDuelActive()) && (victim.inCombat() && victim.getDuel().isDuelActive())) {
 				Player opponent = (Player) getOpponent();
@@ -693,6 +701,7 @@ public final class Player extends Mob {
 		}
 		if (force || canLogout()) {
 			updateTotalPlayed();
+			updateSkullRemaining();
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -708,8 +717,7 @@ public final class Player extends Mob {
 						&& System.currentTimeMillis() - startDestroy > 60000)) {
 						getOwner().unregister(true, reason);
 						running = false;
-					}
-					else {
+					} else {
 						running = false;
 					}
 				}
@@ -727,6 +735,26 @@ public final class Player extends Mob {
 			cache.store("total_played", System.currentTimeMillis() - sessionStart);
 		}
 		sessionStart = System.currentTimeMillis();
+	}
+
+	private void updateSkullRemaining() {
+		if (cache.hasKey("skull_remaining")) {
+			long oldSkull = cache.getLong("skull_remaining");
+			long sessionSkullLength = oldSkull - (System.currentTimeMillis() - sessionStart);
+
+			if (cache.getLong("skull_remaining") < 0) { // removes any negatives
+				cache.remove("skull_remaining");
+			} else {
+				cache.store("skull_remaining", sessionSkullLength);
+			}
+		} else {
+			cache.store("skull_remaining", 1200000);
+		}
+		sessionStart = System.currentTimeMillis();
+	}
+
+	private void setSkullRemaining() {
+		cache.store("skull_remaining", 1200000);
 	}
 
 	@Override
@@ -903,6 +931,10 @@ public final class Player extends Mob {
 
 	public long getCastTimer() {
 		return lastSpellCast;
+	}
+
+	public long getSkullTimer() {
+		return lastSkullEvent;
 	}
 
 	public int getClick() {
@@ -1459,13 +1491,13 @@ public final class Player extends Mob {
 			}
 		}
 		skillXP *= getExperienceRate(skill);
-		if(this.getParty() != null){
+		if (this.getParty() != null) {
 			PartyPlayer partyLeader = this.getParty().getLeader();
-			if(partyLeader.getShareExp() > 0){
-				if(skill > 6){
+			if (partyLeader.getShareExp() > 0) {
+				if (skill > 6) {
 					for (PartyPlayer p : this.getParty().getPlayers()) {
-						if(p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE){
-							if(p.getPlayerReference().getUsername() != this.getUsername()){
+						if (p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE) {
+							if (p.getPlayerReference().getUsername() != this.getUsername()) {
 								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + skillXP * 4);
 								ActionSender.sendFatigue(this);
 							}
@@ -1745,7 +1777,7 @@ public final class Player extends Mob {
 
 		resetPath();
 		if (getWorld().getServer().getConfig().WANT_PARTIES) {
-			if(this.getParty() != null){
+			if (this.getParty() != null) {
 				this.getParty().sendParty();
 			}
 		}
@@ -1753,7 +1785,7 @@ public final class Player extends Mob {
 		prayers.resetPrayers();
 		skills.normalize();
 		if (getWorld().getServer().getConfig().WANT_PARTIES) {
-			if(getParty() != null){
+			if (getParty() != null) {
 				this.getParty().sendParty();
 			}
 		}
@@ -1909,6 +1941,7 @@ public final class Player extends Mob {
 		}
 		skullEvent.stop();
 		skullEvent = null;
+		cache.remove("skull_remaining");
 		getUpdateFlags().setAppearanceChanged(true);
 	}
 
@@ -2087,7 +2120,7 @@ public final class Player extends Mob {
 
 	public void setBatchEvent(BatchEvent batchEvent) {
 		if (batchEvent != null && batchEvent.getOwner() != null) {
-			Player player = (Player)batchEvent.getOwner();
+			Player player = (Player) batchEvent.getOwner();
 			player.checkAndInterruptBatchEvent();
 			this.batchEvent = batchEvent;
 			getWorld().getServer().getGameEventHandler().add(batchEvent);
@@ -2102,6 +2135,14 @@ public final class Player extends Mob {
 
 	public void setCastTimer() {
 		lastSpellCast = System.currentTimeMillis();
+	}
+
+	public void setSkullTimer(long timer) {
+		lastSkullEvent = timer;
+	}
+
+	public void setSkullTimer() {
+		lastSkullEvent = System.currentTimeMillis();
 	}
 
 	public void setAntidoteProtection() {
@@ -2155,11 +2196,15 @@ public final class Player extends Mob {
 
 	public void setSkulledOn(Player player) {
 		player.getSettings().addAttackedBy(this);
-		if (System.currentTimeMillis() - getSettings().lastAttackedBy(player) > 1200000) { // 20 minutes
+
+		if ((System.currentTimeMillis() - getSettings().lastAttackedBy(player)) > 1200000) { // 20 minutes
 			addSkull(1200000);
-		} else {
-			removeSkull();
+			setSkullRemaining();
+
+			// saves the last time a player had a skull
+			cache.store("last_skull", System.currentTimeMillis() - getSettings().lastAttackedBy(player));
 		}
+
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
@@ -2218,13 +2263,12 @@ public final class Player extends Mob {
 
 	@Override
 	public void setLocation(Point p, boolean teleported) {
-		if(!teleported) {
+		if (!teleported) {
 			if (getSkullType() == 2)
 				getUpdateFlags().setAppearanceChanged(true);
 			else if (getSkullType() == 0)
 				getUpdateFlags().setAppearanceChanged(true);
-		}
-		else {
+		} else {
 			setTeleporting(true);
 			getUpdateFlags().setAppearanceChanged(true);
 		}
@@ -2577,10 +2621,10 @@ public final class Player extends Mob {
 
 	public boolean getPartyInviteSetting() {
 		//if (getServer().getConfig().WANT_PARTIES) {
-			if (getCache().hasKey("party_block_invites")) {
-				return getCache().getBoolean("party_block_invites");
-			}
-			return false;
+		if (getCache().hasKey("party_block_invites")) {
+			return getCache().getBoolean("party_block_invites");
+		}
+		return false;
 		//}
 	}
 
@@ -2597,6 +2641,7 @@ public final class Player extends Mob {
 		}
 		return false;
 	}
+
 	public boolean getPartyLootSetting() {
 		return getPartyInviteSetting();
 	}
@@ -2966,8 +3011,7 @@ public final class Player extends Mob {
 			npc.setBusy(true);
 		}
 
-		if (this.checkUnderAttack())
-		{
+		if (this.checkUnderAttack()) {
 			this.releaseUnderAttack();
 			if (npc != null) {
 				npc.setBusy(false);

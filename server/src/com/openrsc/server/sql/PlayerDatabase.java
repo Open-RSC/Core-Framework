@@ -294,15 +294,15 @@ public class PlayerDatabase {
 			result = resultSetFromString(getDatabaseConnection().getGameQueries().userToId, username);
 			if (useTransactions)
 				getDatabaseConnection().executeQuery("COMMIT");
-			return result.isBeforeFirst();
+			return !result.isBeforeFirst();
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
-		return false;
+		return true;
 	}
 
 	public boolean addFriend(int playerID, long friend, String friendName) {
-		if (!usernameToId(friendName)) return false;
+		if (usernameToId(friendName)) return false;
 		try {
 			if (useTransactions)
 				getDatabaseConnection().executeQuery("START TRANSACTION");
@@ -336,7 +336,7 @@ public class PlayerDatabase {
 	}
 
 	public boolean addIgnore(int playerID, long friend, String friendName) {
-		if (!usernameToId(friendName)) return false;
+		if (usernameToId(friendName)) return false;
 		try {
 			if (useTransactions)
 				getDatabaseConnection().executeQuery("START TRANSACTION");
@@ -440,14 +440,14 @@ public class PlayerDatabase {
 		return hasNextFromInt(getDatabaseConnection().getGameQueries().basicInfo, user);
 	}
 
-	private void setGameSettings(boolean settings[], int user) {
+	private void setGameSettings(boolean[] settings, int user) {
 		for (int i = 0; i < settings.length; i++) {
 			getDatabaseConnection().executeUpdate("UPDATE `" + getDatabaseConnection().getGameQueries().PREFIX + "players` SET " + gameSettings[i] + "="
 				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
 		}
 	}
 
-	private void setPrivacySettings(boolean settings[], int user) {
+	private void setPrivacySettings(boolean[] settings, int user) {
 		for (int i = 0; i < settings.length; i++) {
 			getDatabaseConnection().executeUpdate("UPDATE `" + getDatabaseConnection().getGameQueries().PREFIX + "players` SET " + privacySettings[i] + "="
 				+ (settings[i] ? 1 : 0) + " WHERE id='" + user + "'");
@@ -540,7 +540,7 @@ public class PlayerDatabase {
 			save.setWornItems(save.getSettings().getAppearance().getSprites());
 			long skulled = result.getLong("skulled");
 			if (skulled > 0) {
-				save.addSkull(skulled);
+				//save.addSkull(skulled);
 			}
 
 			int charged = result.getInt("charged");

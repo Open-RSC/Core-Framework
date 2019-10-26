@@ -25,7 +25,7 @@ public class PlayerSettings {
 
 	private Player player;
 
-	public PlayerSettings(Player player) {
+	PlayerSettings(Player player) {
 		this.player = player;
 	}
 
@@ -91,15 +91,15 @@ public class PlayerSettings {
 		this.appearance = pa;
 	}
 
-	public void addAttackedBy(Player p) {
+	void addAttackedBy(Player p) {
 		attackedBy.put(p.getUsernameHash(), System.currentTimeMillis());
 	}
 
-	public HashMap<Long, Long> getAttackedBy() {
+	HashMap<Long, Long> getAttackedBy() {
 		return attackedBy;
 	}
 
-	public long lastAttackedBy(Player p) {
+	long lastAttackedBy(Player p) {
 		Long time = attackedBy.get(p.getUsernameHash());
 		if (time != null) {
 			return time;

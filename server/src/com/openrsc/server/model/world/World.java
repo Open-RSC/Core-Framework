@@ -583,6 +583,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			}
 			getClanManager().checkAndAttachToClan(player);
 			getPartyManager().checkAndAttachToParty(player);
+
+			if (player.getCache().hasKey("skull_remaining") && (player.getCache().getLong("skull_remaining") > 0)) {
+				player.addSkull(player.getCache().getLong("skull_remaining"));
+			}
+
 			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
