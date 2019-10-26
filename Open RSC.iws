@@ -8,26 +8,16 @@
   <component name="AutomaticModuleUnloader">
     <loaded-modules>
       <module name="Client" />
-      <module name="Server" />
       <module name="Launcher" />
+      <module name="Server" />
+      <module name="Open RSC Android Client" />
     </loaded-modules>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Game.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php-docker-settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Cache/ip.txt" beforeDir="false" afterPath="$PROJECT_DIR$/client/Cache/ip.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,6 +62,9 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+    <projectState path="$PROJECT_DIR$/Android">
+      <ProjectState />
+    </projectState>
     <projectState path="$PROJECT_DIR$/Android/Open RSC Android Client">
       <ProjectState />
     </projectState>
@@ -85,9 +78,36 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
+        <task path="$PROJECT_DIR$/Android/Open RSC Android Client">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/Android">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Android" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Android" type="f1a62948:ProjectNode" />
+                <item name="Android" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Android" type="f1a62948:ProjectNode" />
+                <item name="Android" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Android" type="f1a62948:ProjectNode" />
+                <item name="Open RSC Android Client" type="2d1252cf:ModuleNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -95,7 +115,369 @@
     </system>
   </component>
   <component name="FavoritesManager">
-    <favorites_list name="Open RSC" />
+    <favorites_list name="Open RSC">
+      <favorite_root url="file://$PROJECT_DIR$/Android" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+        <favorite_root url="file://$PROJECT_DIR$/Android/.idea" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/caches" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/caches/gradle_models.ser" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/caches/build_file_checksums.ser" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          </favorite_root>
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/misc.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_core_common_1_1_1_jar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_core_runtime_1_1_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_print_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_loader_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_25_3_1.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_1_jar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_viewpager_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_lifecycle_livedata_1_1_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_customview_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_compat_25_3_1.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_25_3_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_v4_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_collections_28_0_0_jar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_ui_25_3_1.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_documentfile_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_drawerlayout_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_interpolator_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_25_3_1.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_cursoradapter_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_compat_25_3_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_compat_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_utils_25_3_1.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_ui_25_3_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_ui_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_25_3_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_fragment_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_25_3_1.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_coordinatorlayout_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_slidingpanelayout_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_utils_25_3_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_core_utils_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_swiperefreshlayout_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_asynclayoutinflater_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_annotations_25_3_1_jar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_annotations_28_0_0_jar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_versionedparcelable_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_25_3_1_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_support_media_compat_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/libraries/Gradle__com_android_support_localbroadcastmanager_28_0_0_aar.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          </favorite_root>
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/codeStyles" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/.idea/codeStyles/Project.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          </favorite_root>
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/gradle.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/modules.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/encodings.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/workspace.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/.idea/runConfigurations.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        </favorite_root>
+        <favorite_root url="file://$PROJECT_DIR$/Android/gradle" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+          <favorite_root url="file://$PROJECT_DIR$/Android/gradle/wrapper" module="Android" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/gradle/wrapper/gradle-wrapper.jar" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            <favorite_root url="file://$PROJECT_DIR$/Android/gradle/wrapper/gradle-wrapper.properties" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          </favorite_root>
+        </favorite_root>
+        <favorite_root url="file://$PROJECT_DIR$/Android/gradlew" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/.gitignore" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/Android.iml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/gradlew.bat" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/build.gradle" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/settings.gradle" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/Game.Android.iml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/import-summary.txt" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/font" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/font/exo.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/font/exoregular.otf" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/font/pressstart2p.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/font/pressstart2pregular.ttf" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/layout" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/layout/updater.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/layout/gameactivity.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/layout/applicationupdater.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values/colors.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values/dimens.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values/styles.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values/strings.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values-v11" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values-v11/styles.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values-v14" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values-v14/styles.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-hdpi" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-hdpi/logo.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-hdpi/ic_launcher.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-hdpi/bottom_image.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-mdpi" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-mdpi/ic_launcher.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values-w820dp" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/values-w820dp/dimens.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-xhdpi" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-xhdpi/ic_launcher.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-xxhdpi" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-xxhdpi/ic_launcher.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-xxxhdpi" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/res/drawable-xxxhdpi/ic_launcher.png" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+              </favorite_root>
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/data" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/data/DataOperations.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/data/DataConversions.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/data/DataFileDecrypter.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/data/DataFileVariables.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    </favorite_root>
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/model" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/model/Tile.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/model/Sector.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/model/Sprite.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      </favorite_root>
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/android" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/android/GameActivity.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      </favorite_root>
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras/TextureDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/extras/AnimationDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          </favorite_root>
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/NPCDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/DoorDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/ItemDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/TileDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/SpellDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/EntityDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/PrayerDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/SpriteDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/ElevationDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/defs/GameObjectDef.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        </favorite_root>
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/client/entityhandling/EntityHandler.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      </favorite_root>
+                    </favorite_root>
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/render" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/render/InputImpl.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/render/RSCBitmapSurfaceView.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      </favorite_root>
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/updater" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/updater/CacheUpdater.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/updater/TextProgressBar.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/android/updater/ApplicationUpdater.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      </favorite_root>
+                    </favorite_root>
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/clan" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/clan/Clan.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/clan/ClanInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        </favorite_root>
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/party" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/party/Party.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/party/PartyInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        </favorite_root>
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/PartyGUI.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AuctionHouse.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/AchievementGUI.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/BankPinInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/DoSkillInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/IronManInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/CustomBankInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/OnlineListInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/QuestGuideInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/SkillGuideInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/LostOnDeathInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/ProgressBarInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/FishingTrawlerInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/TerritorySignupInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/misc/ExperienceConfigInterface.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      </favorite_root>
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/MenuAction.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/NComponent.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/InputListener.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/NRightClickMenu.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/com/openrsc/interfaces/NCustomComponent.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    </favorite_root>
+                  </favorite_root>
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net/Isaac.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net/Network_Base.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net/Network_Socket.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net/RSSocketFactory.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net/SocketProxyFailure.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/net/RSSocketFactory_Base.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/bzip" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/bzip/BZLib.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/bzip/BZState.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    </favorite_root>
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/GenUtil.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/FastMath.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/ArrayUtil.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/StringUtil.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/util/RSRuntimeError.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/BufferStack.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer_Base.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer_Bits.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBufferUtils.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer_Sound.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/StringEncryption.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer_Variant2.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/buffers/RSBuffer_Variant2_Variant.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/Menu.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/Panel.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/MenuItem.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/SocialLists.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/InputXPrompt.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/KillAnnouncer.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/MessageHistory.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/gui/KillAnnouncerQueue.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    </favorite_root>
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/two" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/two/Fonts.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/two/MudClientGraphics.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/two/GraphicsController.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    </favorite_root>
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/Scene.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/World.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/Shader.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/Polygon.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/RSModel.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/Scanline.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/CollisionFlag.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/graphics/three/ModelFileManager.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    </favorite_root>
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Group.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/Config.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/multiclient" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/multiclient/ClientPort.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/GameMode.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/MessageTab.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/MessageType.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/GameModeWhat.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/InputXAction.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/FutureJobType.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/GameModeWhere.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/MenuItemAction.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/SocialPopupMode.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/PanelControlType.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/PasswordChangeMode.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/RSCharacterDirection.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/enumerations/ORSCharacterDirection.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/mudclient.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/ORSCharacter.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/MiscFunctions.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/java/orsc/PacketHandler.java" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+                </favorite_root>
+              </favorite_root>
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/src/main/AndroidManifest.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            </favorite_root>
+          </favorite_root>
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res/pngs" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res/pngs/debug" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res/pngs/release" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res/resValues" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res/resValues/debug" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/res/resValues/release" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                </favorite_root>
+              </favorite_root>
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/debug" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/debug/com" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/debug/com/openrsc" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/debug/com/openrsc/client" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                      </favorite_root>
+                    </favorite_root>
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/release" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/release/com" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/release/com/openrsc" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/release/com/openrsc/client" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                      </favorite_root>
+                    </favorite_root>
+                  </favorite_root>
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/androidTest" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                    <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/androidTest/debug" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                      <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/androidTest/debug/com" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                        <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/androidTest/debug/com/openrsc" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/androidTest/debug/com/openrsc/client" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/source/buildConfig/androidTest/debug/com/openrsc/client/test" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                          </favorite_root>
+                        </favorite_root>
+                      </favorite_root>
+                    </favorite_root>
+                  </favorite_root>
+                </favorite_root>
+              </favorite_root>
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/ap_generated_sources" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/ap_generated_sources/debug" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/ap_generated_sources/debug/out" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                </favorite_root>
+                <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/ap_generated_sources/release" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+                  <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/generated/ap_generated_sources/release/out" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+                </favorite_root>
+              </favorite_root>
+            </favorite_root>
+            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build/intermediates" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+          </favorite_root>
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradle" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+            <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradle/wrapper" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode">
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradle/wrapper/gradle-wrapper.jar" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+              <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradle/wrapper/gradle-wrapper.properties" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+            </favorite_root>
+          </favorite_root>
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradlew" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/release" module="Android.Open RSC Android Client" type="directory" klass="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/lint.xml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/gradlew.bat" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/build.gradle" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/proguard-project.txt" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/Open RSC Android Client.iml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+          <favorite_root url="file://$PROJECT_DIR$/Android/Open RSC Android Client/Android.Open RSC Android Client.iml" type="psiFile" klass="com.intellij.ide.projectView.impl.nodes.PsiFileNode" />
+        </favorite_root>
+      </favorite_root>
+    </favorites_list>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -108,6 +490,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
   <component name="ProjectId" id="1OyetdliBeYLylYjtdKiIZ6eEpS" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -115,10 +503,13 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="device.picker.selection" value="Android_Q" />
     <property name="jdk.selected.JAVA_MODULE" value="13" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -127,6 +518,12 @@
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.loader.openrsc.frame" />
     </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="gradle Android" />
+      <command value="gradle Game" />
+    </option>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -140,35 +537,12 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Android App.Android">
-    <configuration name="Android" type="AndroidRunConfigurationType" activateToolWindowBeforeRun="false">
-      <module name="Open RSC Android Client" />
-      <option name="DEPLOY" value="true" />
-      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
-      <option name="DEPLOY_AS_INSTANT" value="false" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="true" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <Java />
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
+  <component name="RunManager" selected="Ant Target.Run Server">
+    <configuration default="true" type="AndroidJUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="Game Launcher" type="AntRunConfiguration" singleton="false">
@@ -190,7 +564,6 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Android App.Android" />
       <item itemvalue="Ant Target.PC Client" />
       <item itemvalue="Ant Target.Game Launcher" />
       <item itemvalue="Ant Target.Run Server" />
@@ -227,6 +600,8 @@
       <workItem from="1571886554781" duration="2848000" />
       <workItem from="1572032400885" duration="230000" />
       <workItem from="1572032635545" duration="1610000" />
+      <workItem from="1572034612660" duration="293000" />
+      <workItem from="1572035127269" duration="1638000" />
     </task>
     <servers />
   </component>
@@ -241,6 +616,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="UnloadedModulesList">
+    <module name="Game" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -280,5 +658,9 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -11,7 +11,7 @@ allprojects {
 android {
     signingConfigs {
     }
-    compileSdkVersion 28
+    compileSdkVersion 'android-Q'
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.openrsc.client"
