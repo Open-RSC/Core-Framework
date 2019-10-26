@@ -26,11 +26,11 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	public static final int PHOENIX_GANG = 1;
 	public static final int BLACK_ARM_COMPLETE = -2;
 	public static final int PHOENIX_COMPLETE = -1;
-	
+
 	public static final int BLACKARM_MISSION = 1;
 	public static final int PHOENIX_MISSION = 2;
 	public static final int ANY_MISSION = 3;
-	
+
 	//84 & 85 black arm
 	private static final int PHOENIX_CHEST_OPEN = 81;
 	private static final int PHOENIX_CHEST_CLOSED = 82;
@@ -46,12 +46,12 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	public String getQuestName() {
 		return "Shield of Arrav";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done, you have completed the shield of Arrav quest");
@@ -59,7 +59,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 		p.message("@gre@You haved gained 1 quest point!");
 		addItem(p, ItemId.COINS.id(), 600);
 	}
-	
+
 	public static boolean isBlackArmGang(Player p) {
 		return (p.getCache().hasKey("arrav_gang") && p.getCache().getInt("arrav_gang") == BLACK_ARM)
 			|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) == BLACK_ARM_COMPLETE;
@@ -172,7 +172,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 		if (cID == -1) {
 			int choice;
 			int stage = p.getQuestStage(this);
-			if ((stage == 4 && isBlackArmGang(p)) || 
+			if ((stage == 4 && isBlackArmGang(p)) ||
 					(p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 1) == BLACKARM_MISSION)) {
 				if (hasItem(p, ItemId.PHOENIX_CROSSBOW.id(), 2)) {
 					npcTalk(p, n, "Have you got those crossbows for me yet?");
@@ -183,6 +183,10 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 						"Ok you can join our gang now",
 						"Feel free to enter any the rooms of the ganghouse");
 					p.updateQuestStage(this, 5);
+					if (!p.getCache().hasKey("arrav_gang")) {
+						// player got traded the crossbows or had them before starting mission
+						p.getCache().set("arrav_gang", BLACK_ARM);
+					}
 					if (p.getCache().hasKey("arrav_mission")) {
 						p.getCache().remove("arrav_mission");
 					}

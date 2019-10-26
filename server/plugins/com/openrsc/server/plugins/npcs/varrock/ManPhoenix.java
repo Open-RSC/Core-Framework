@@ -87,6 +87,10 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				npcTalk(p, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
 				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
+				if (!p.getCache().hasKey("arrav_gang")) {
+					// player got traded the report or had it before starting mission
+					p.getCache().set("arrav_gang", PHOENIX_GANG);
+				}
 				if (p.getCache().hasKey("arrav_mission")) {
 					p.getCache().remove("arrav_mission");
 				}

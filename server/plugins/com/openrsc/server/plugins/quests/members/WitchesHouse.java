@@ -31,7 +31,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	 * room and rat appears on the same coord Rat is never removed untill you
 	 * use magnet room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	 */
-	
+
 	private static final int WITCHES_HOUSE_CUPBOARD_OPEN = 259;
 	private static final int WITCHES_HOUSE_CUPBOARD_CLOSED = 258;
 
@@ -382,6 +382,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			Npc shapeshifter = getNearestNpc(p, NpcId.SHAPESHIFTER_HUMAN.id(), 20);
 			if (shapeshifter != null) {
 				shapeshifter.startCombat(p);
+				if (DataConversions.random(0, 3) == 0) weakenPlayer(p);
 			}
 		} else if (p.getQuestStage(getQuestId()) == -1) {
 			playerTalk(p, null, "I'd better not take it, its not mine");
@@ -389,10 +390,24 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	}
 
+	private void weakenPlayer(Player player) {
+		player.message("The shapeshifter glares at you");
+		//delay of about 2 ticks
+		player.message("You feel slightly weakened");
+		int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
+		for(int affectedStat : stats) {
+			/* How much to lower the stat */
+			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) - 4) / 15.0));
+			/* New current level */
+			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
+			player.getSkills().setLevel(affectedStat, newStat);
+		}
+	}
+
 	private boolean wearingInsulatingGloves(Player p) {
 		return p.getInventory().wielding(ItemId.LEATHER_GLOVES.id()) || p.getInventory().wielding(ItemId.ICE_GLOVES.id());
 	}
-	
+
 	//considerations: sq/kite shields, med/large helms, plate-bodies/plate-tops/chains, legs/skirts
 	public static final int[] METAL_ARMOURS = {
 		//plate bodies
