@@ -27,7 +27,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 
 	private static final int BAXTORIAN_CUPBOARD_OPEN = 507;
 	private static final int BAXTORIAN_CUPBOARD_CLOSED = 506;
-	
+
 	@Override
 	public int getQuestId() {
 		return Quests.WATERFALL_QUEST;
@@ -325,6 +325,10 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			} else
 				message(p, "but find nothing of interest");
 		} else if (obj.getID() == 481) {
+			if (p.getQuestStage(this) == 0) {
+				p.message("the crate is empty");
+				return;
+			}
 			message(p, "you search the crate");
 			if (!p.getInventory().hasItemId(ItemId.LARGE_KEY.id())) {
 				message(p, "and find a large key");
