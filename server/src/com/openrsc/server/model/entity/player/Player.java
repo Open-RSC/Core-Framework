@@ -697,7 +697,8 @@ public final class Player extends Mob {
 		}
 		if (force || canLogout()) {
 			updateTotalPlayed();
-			updateSkullRemaining();
+			if (isSkulled())
+				updateSkullRemaining();
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -734,23 +735,12 @@ public final class Player extends Mob {
 	}
 
 	private void updateSkullRemaining() {
-		if (getCache().hasKey("skull_remaining")) {
-			long oldSkull = getCache().getLong("skull_remaining");
-			long sessionSkullLength = oldSkull - (System.currentTimeMillis() - sessionStart);
-
-			if ((getCache().getLong("skull_remaining") <= 0) || !isSkulled()) { // Removes the skull remaining key once no longer needed
-				cache.remove("skull_remaining");
-			} else {
-				System.out.println("updating existing skull remaining: " + sessionSkullLength);
-				cache.store("skull_remaining", sessionSkullLength);
-			}
+		if ((getCache().getLong("skull_remaining") <= 0) || (getCache().hasKey("skull_remaining") && !isSkulled())) { // Removes the skull remaining key once no longer needed
+			cache.remove("skull_remaining");
 		}
-		if (!getCache().hasKey("skull_remaining") && (getSkullTimer() > 0)) {
-			long sessionSkullLength = getSkullTimer() - System.currentTimeMillis() - sessionStart;
-			System.out.println("updating new skull remaining: " + sessionSkullLength);
-			cache.store("skull_remaining", sessionSkullLength);
+		else if (getSkullTime() - System.currentTimeMillis() > 0) {
+			cache.store("skull_remaining", (getSkullTime() - System.currentTimeMillis()));
 		}
-		sessionStart = System.currentTimeMillis();
 	}
 
 	@Override
@@ -1284,6 +1274,21 @@ public final class Player extends Mob {
 			return skullEvent.timeTillNextRun();
 		}
 		return 0;
+	}
+
+	private long getSkullExpires() {
+		if (getCache().hasKey("skull_remaining"))
+			return getCache().getLong("skull_remaining");
+		if (!getCache().hasKey("skull_remaining"))
+			getSkullTime();
+		else
+			return 0;
+		return 0;
+	}
+
+	public int getMinutesSkullLeft() {
+		long now = System.currentTimeMillis();
+		return (int) ((getSkullExpires() - now) / 60000);
 	}
 
 	public long getChargeTime() {

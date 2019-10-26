@@ -585,7 +585,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			getPartyManager().checkAndAttachToParty(player);
 
 			if (player.getCache().hasKey("skull_remaining") && (player.getCache().getLong("skull_remaining") > 0)) {
-				System.out.println("loading skull remaining: " + player.getCache().getLong("skull_remaining"));
 				player.addSkull(player.getCache().getLong("skull_remaining"));
 				player.setSkullTimer(player.getCache().getLong("skull_remaining"));
 			}
