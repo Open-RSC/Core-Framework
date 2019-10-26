@@ -604,10 +604,6 @@ public final class Player extends Mob {
 		return System.currentTimeMillis() - lastSpellCast > 1250;
 	}
 
-	/*public boolean skullTimer() {
-		return System.currentTimeMillis() - lastSkullEvent > 20000;
-	}*/
-
 	public void checkAndInterruptBatchEvent() {
 		if (batchEvent != null) {
 			batchEvent.interrupt();
@@ -738,23 +734,23 @@ public final class Player extends Mob {
 	}
 
 	private void updateSkullRemaining() {
-		if (cache.hasKey("skull_remaining")) {
-			long oldSkull = cache.getLong("skull_remaining");
+		if (getCache().hasKey("skull_remaining")) {
+			long oldSkull = getCache().getLong("skull_remaining");
 			long sessionSkullLength = oldSkull - (System.currentTimeMillis() - sessionStart);
 
-			if (cache.getLong("skull_remaining") < 0) { // removes any negatives
+			if ((getCache().getLong("skull_remaining") <= 0) || !isSkulled()) { // Removes the skull remaining key once no longer needed
 				cache.remove("skull_remaining");
 			} else {
+				System.out.println("updating existing skull remaining: " + sessionSkullLength);
 				cache.store("skull_remaining", sessionSkullLength);
 			}
-		} else {
-			cache.store("skull_remaining", 1200000);
+		}
+		if (!getCache().hasKey("skull_remaining") && (getSkullTimer() > 0)) {
+			long sessionSkullLength = getSkullTimer() - System.currentTimeMillis() - sessionStart;
+			System.out.println("updating new skull remaining: " + sessionSkullLength);
+			cache.store("skull_remaining", sessionSkullLength);
 		}
 		sessionStart = System.currentTimeMillis();
-	}
-
-	private void setSkullRemaining() {
-		cache.store("skull_remaining", 1200000);
 	}
 
 	@Override
@@ -2141,10 +2137,6 @@ public final class Player extends Mob {
 		lastSkullEvent = timer;
 	}
 
-	public void setSkullTimer() {
-		lastSkullEvent = System.currentTimeMillis();
-	}
-
 	public void setAntidoteProtection() {
 		lastAntidote = System.currentTimeMillis();
 	}
@@ -2197,12 +2189,10 @@ public final class Player extends Mob {
 	public void setSkulledOn(Player player) {
 		player.getSettings().addAttackedBy(this);
 
-		if ((System.currentTimeMillis() - getSettings().lastAttackedBy(player)) > 1200000) { // 20 minutes
-			addSkull(1200000);
-			setSkullRemaining();
-
-			// saves the last time a player had a skull
-			cache.store("last_skull", System.currentTimeMillis() - getSettings().lastAttackedBy(player));
+		if ((System.currentTimeMillis() - getSettings().lastAttackedBy(player)) > 1200000) { // Checks if the player has attacked within the last 20 minutes
+			addSkull(1200000); // Sets the skull timer to 20 minutes
+			cache.store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
+			cache.store("last_skull", System.currentTimeMillis() - getSettings().lastAttackedBy(player)); // Sets the last time a player had a skull
 		}
 
 		player.getUpdateFlags().setAppearanceChanged(true);
