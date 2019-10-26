@@ -248,7 +248,6 @@ public final class Player extends Mob {
 	 */
 	private DelayedEvent skullEvent = null;
 	private DelayedEvent chargeEvent = null;
-	private DelayedEvent sleepEvent;
 	private boolean sleeping = false;
 	/**
 	 * Player sleep word
@@ -2156,8 +2155,10 @@ public final class Player extends Mob {
 
 	public void setSkulledOn(Player player) {
 		player.getSettings().addAttackedBy(this);
-		if (System.currentTimeMillis() - getSettings().lastAttackedBy(player) > 1200000) {
+		if (System.currentTimeMillis() - getSettings().lastAttackedBy(player) > 1200000) { // 20 minutes
 			addSkull(1200000);
+		} else {
+			removeSkull();
 		}
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
@@ -2167,7 +2168,7 @@ public final class Player extends Mob {
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		sleepEvent = new DelayedEvent(getWorld(), this, 600, "Start Sleep Event") {
+		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, 600, "Start Sleep Event") {
 			@Override
 			public void run() {
 				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {

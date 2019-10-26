@@ -872,8 +872,10 @@ public abstract class Mob extends Entity {
 			victim.setCombatTimer();
 
 			if (victim.isPlayer()) {
+				assert victim instanceof Player;
 				Player playerVictim = (Player) victim;
 				if (this.isPlayer()) {
+					assert this instanceof Player;
 					((Player) this).setSkulledOn(playerVictim);
 				}
 				playerVictim.resetAll();

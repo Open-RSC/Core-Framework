@@ -113,6 +113,7 @@ public class AttackHandler implements PacketHandler {
 				public void action() {
 					getOwner().setStatus(Action.RANGING_MOB);
 					if (target.isPlayer()) {
+						assert target instanceof Player;
 						Player affectedPlayer = (Player) target;
 						getOwner().setSkulledOn(affectedPlayer);
 						affectedPlayer.getTrade().resetAll();
