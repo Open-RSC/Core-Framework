@@ -336,16 +336,21 @@ public final class AvatarGenerator {
 				new AnimationDef("2hander", 11717785, 0, true, false, 0),
 				new AnimationDef("2hander", 65535, 0, true, false, 0),
 				new AnimationDef("2hander", 3158064, 0, true, false, 0),
-				new AnimationDef("unicornmask", 3355443,  0, true, false, 0),
-				new AnimationDef("unicornmask", 16759039,  0, true, false, 0),
-				new AnimationDef("wolfmask", 16752165,  0, true, false, 0)
+				new AnimationDef("unicornmask", 16777215, 0,true, false, 0), //287 - white unicorn mask
+				new AnimationDef("unicornmask", 10878976, 0,true, false, 0), //288 - blood unicorn mask
+				new AnimationDef("unicornmask", 1513239, 0,true, false, 0), //289 - black unicorn mask
+				new AnimationDef("unicornmask", 16759039, 0,true, false, 0), //290 - pink unicorn mask
+				new AnimationDef("wolfmask", 16777215, 0,true, false, 0), //291 - white wolf mask
+				new AnimationDef("wolfmask", 10878976, 0,true, false, 0), //292 - blood wolf mask
+				new AnimationDef("wolfmask", 1513239, 0,true, false, 0), //293 - black wolf mask
+				new AnimationDef("wolfmask", 16759039, 0,true, false, 0) //294 - pink wolf mask
 			};
 
 
 		/// Load the sprites
 		static {
 			try {
-				ZipFile spritesArchive = new ZipFile("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Sprites.rscd");
+				ZipFile spritesArchive = new ZipFile("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Sprites.orsc");
 				int animationNumber = 0;
 				label0:
 				for (int animationIndex = 0; animationIndex < animations.length; animationIndex++) {
@@ -493,7 +498,7 @@ public final class AvatarGenerator {
 		}
 
 		/// A helper function for rendering
-		private void spritePlotTransparent(int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3) {
+		private void spritePlotTransparent(int[] ai, int[] ai1, int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3) {
 			int i4 = overlay >> 16 & 0xff; //R
 			int j4 = overlay >> 8 & 0xff;  //G
 			int k4 = overlay & 0xff;       //B
@@ -538,7 +543,7 @@ public final class AvatarGenerator {
 		}
 
 		/// A helper function for rendering
-		private void spritePlotTransparent(int ai[], int ai1[], int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3, int j3) {
+		private void spritePlotTransparent(int[] ai, int[] ai1, int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int overlay, int k2, int l2, int i3, int j3) {
 			int j4 = overlay >> 16 & 0xff;
 			int k4 = overlay >> 8 & 0xff;
 			int l4 = overlay & 0xff;

@@ -4694,17 +4694,22 @@ public class EntityHandler {
 			animations.add(new AnimationDef("2hander", 11717785, 0, true, false, 0));
 			animations.add(new AnimationDef("2hander", 65535, 0, true, false, 0));
 			animations.add(new AnimationDef("2hander", 3158064, 0, true, false, 0));
-			animations.add(new AnimationDef("unicornmask", 3355443, 2139581,0, true, false, 0));//287
-			animations.add(new AnimationDef("unicornmask", 16759039, 9098751,0, true, false, 0));
-			animations.add(new AnimationDef("wolfmask", 16752165 , 16777215,0, true, false, 0));
-			/*animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0));
-			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0));
-			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0));
-			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0));
-			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0));
-			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0));
-			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0));
-			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0));
+			animations.add(new AnimationDef("unicornmask", 16777215, 16777215,0, true, false, 0)); //287 - white unicorn mask
+			animations.add(new AnimationDef("unicornmask", 10878976, 1513239,0, true, false, 0)); //288 - blood unicorn mask
+			animations.add(new AnimationDef("unicornmask", 1513239, 10878976,0, true, false, 0)); //289 - black unicorn mask
+			animations.add(new AnimationDef("unicornmask", 16759039, 16777215,0, true, false, 0)); //290 - pink unicorn mask
+			animations.add(new AnimationDef("wolfmask", 16777215, 16777215,0, true, false, 0)); //291 - white wolf mask
+			animations.add(new AnimationDef("wolfmask", 10878976, 1513239,0, true, false, 0)); //292 - blood wolf mask
+			animations.add(new AnimationDef("wolfmask", 1513239, 10878976,0, true, false, 0)); //293 - black wolf mask
+			animations.add(new AnimationDef("wolfmask", 16759039, 16777215,0, true, false, 0)); //294 - pink wolf mask
+			/*animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0)); //295 - dragon large
+			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0)); //296 - dragon plate
+			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0)); //297 - dragon legs
+			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0)); //298 - dragon large
+			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0)); //299
+			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0)); //300
+			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0)); //301
+			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0)); //302
 			*/
 		}
 	}
