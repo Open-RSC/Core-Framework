@@ -3,20 +3,45 @@ package com.openrsc.server.sql.web;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.sql.web.AvatarGenerator.AvatarTransaction.Sprite;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public final class AvatarGenerator {
 
+	private static String packageName = "unknown";
+	private static int id = -1;
+
+	private boolean requiresShift;
+
 	private final World world;
+	private static ZipFile spriteArchive;
+	private Map<String, List<AvatarTransaction.Sprite>> spriteTree = new HashMap<>();
+	private static Map<String, Integer> animationMap = new HashMap<>();
+
+	public void setName(int id, String packageName) {
+		AvatarGenerator.id = id;
+		AvatarGenerator.packageName = packageName;
+	}
+
+	public int getID() {
+		return id;
+	}
+	public void setID(int id) { AvatarGenerator.id = id; }
+
+	public String getPackageName() {
+		return packageName;
+	}
+	private static void setPackageName(String name) { packageName = name; }
+
+	public void setShift(int xShift, int yShift) {
+	}
 
 	public AvatarGenerator(World world) {
 		this.world = world;
@@ -36,12 +61,121 @@ public final class AvatarGenerator {
 		new AvatarTransaction(world, playerID, appearance, wornItems);
 	}
 
+	public boolean fillSpriteTree() {
+		Enumeration<? extends ZipEntry> entries = spriteArchive.entries();
+		//Loop through each spritesheet
+		try {
+			while (entries.hasMoreElements()) {
+				List<AvatarTransaction.Sprite> spriteGroup;
+				ZipEntry entry = entries.nextElement();
+				spriteGroup = unpackSpriteData(spriteArchive, entry);
+				spriteTree.put(entry.getName(), spriteGroup);
+			}
+		} catch (IOException a) {
+			a.printStackTrace();
+		}
+
+		return true;
+	}
+
+	private static ArrayList<AvatarTransaction.Sprite> unpackSpriteData(ZipFile ioe, ZipEntry zipEntry) throws IOException {
+		ArrayList<AvatarTransaction.Sprite> sprites = new ArrayList<>();
+
+		try {
+			InputStream fileIn = ioe.getInputStream(zipEntry);
+			ByteArrayOutputStream fileBytesBuffer = new ByteArrayOutputStream();
+			byte[] buffer = new byte[4096];
+			int readByte;
+			while ((readByte = fileIn.read(buffer)) != -1) {
+				fileBytesBuffer.write(buffer, 0, readByte);
+			}
+
+			fileBytesBuffer.close();
+			fileIn.close();
+
+			byte[] fileBytes = fileBytesBuffer.toByteArray();
+			ByteBuffer fileByteBuffer = ByteBuffer.wrap(fileBytes);
+			try {
+				sprites = unpackSpriteNew(fileByteBuffer);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+
+		} catch (IOException a) {
+			a.printStackTrace();
+		}
+		return sprites;
+	}
+
+	private static ArrayList<Sprite> unpackSpriteNew(ByteBuffer in) {
+			ArrayList<Sprite> spriteArray = new ArrayList<>();
+
+			while (in.hasRemaining()) {
+
+				int id = in.getShort();
+				int width = in.getShort();
+				int height = in.getShort();
+
+				boolean requiresShift = in.get() == 1;
+				int xShift = in.getShort();
+				int yShift = in.getShort();
+
+				int width2 = in.getShort();
+				int height2 = in.getShort();
+
+				int[] pixels = new int[width * height];
+
+				//if (in.remaining() < (pixels.length * 4))
+				//   throw new IOException("Provided buffer too short - Pixels missing");
+
+				for (int pixel = 0; pixel < pixels.length; pixel++)
+					pixels[pixel] = in.getInt();
+
+				//if (in.remaining() <= 0)
+				//  e.name = "Missing";
+				//else
+
+				Sprite e = new Sprite(pixels, width, height);
+				setPackageName(readString(in));
+
+				//e.data = rgbTo8bit(pixels,width,height);
+				e.setID(id);
+				e.setSomething(width2, height2);
+
+				e.setXShift(xShift);
+				e.setYShift(yShift);
+
+				e.setRequiresShift(requiresShift);
+				spriteArray.add(e);
+			}
+			//if (in.remaining() < 15)
+			//   throw new IOException("Provided buffer too short - Headers missing");
+
+
+			return spriteArray;
+		}
+
+	private static String readString(ByteBuffer buffer) {
+		StringBuilder bldr = new StringBuilder();
+
+		byte b;
+		try {
+			while ((b = buffer.get()) != 10) {
+				bldr.append((char) b);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return bldr.toString();
+	}
+
 	public World getWorld() {
 		return world;
 	}
 
 	/// An internal transaction type
-	private final static class AvatarTransaction {
+	final static class AvatarTransaction {
 		/// An array of unpacked sprites
 		private final static Sprite[] sprites = new Sprite[4000];
 		/// The animations
@@ -397,7 +531,7 @@ public final class AvatarGenerator {
 			this.wornItems = wornItems;
 			this.pixels = new int[Constants.AVATAR_WIDTH * Constants.AVATAR_HEIGHT];
 
-			drawPlayer(0, 0, Constants.AVATAR_WIDTH - 1, Constants.AVATAR_HEIGHT - 12, 0);
+			drawPlayer(0, 0);
 
 			BufferedImage img = new BufferedImage(Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
@@ -592,7 +726,7 @@ public final class AvatarGenerator {
 		}
 
 		/// A helper function for rendering
-		private void drawPlayer(int x, int y, int scaleX, int scaleY, int unknown) {
+		private void drawPlayer(int x, int y) {
 			for (int k2 = 0; k2 < 12; k2++) {
 				int l2 = Constants.npcAnimationArray[0][k2];
 				int animationIndex = wornItems[l2] - 1;
@@ -601,10 +735,10 @@ public final class AvatarGenerator {
 					int i5 = 0;
 					int ANGLE = 1;
 					int k5 = ANGLE + animations[animationIndex].getNumber();
-					k4 = (k4 * scaleX) / sprites[k5].getSomething1();
-					i5 = (i5 * scaleY) / sprites[k5].getSomething2();
-					int l5 = (scaleX * sprites[k5].getSomething1()) / sprites[animations[animationIndex].getNumber()].getSomething1();
-					k4 -= (l5 - scaleX) / 2;
+					k4 = (k4 * 64) / sprites[k5].getSomething1();
+					i5 = (i5 * 103) / sprites[k5].getSomething2();
+					int l5 = (64 * sprites[k5].getSomething1()) / sprites[animations[animationIndex].getNumber()].getSomething1();
+					k4 -= (l5 - 64) / 2;
 					int colour = animations[animationIndex].getCharColour();
 					int skinColour = Constants.characterSkinColours[appearance.getSkinColour()];
 					if (colour == 1)
@@ -613,7 +747,7 @@ public final class AvatarGenerator {
 						colour = Constants.characterTopBottomColours[appearance.getTopColour()];
 					else if (colour == 3)
 						colour = Constants.characterTopBottomColours[appearance.getTrouserColour()];
-					spriteClip4(x + k4, y + i5, l5, scaleY, k5, colour, skinColour, unknown, false);
+					spriteClip4(x + k4, y + i5, l5, 103, k5, colour, skinColour, 0, false);
 				}
 			}
 		}
@@ -623,7 +757,7 @@ public final class AvatarGenerator {
 		}
 
 		/// An internal helper class
-		private final static class Sprite {
+		final static class Sprite {
 			private int[] pixels;
 			private int width;
 			private int height;
@@ -683,14 +817,6 @@ public final class AvatarGenerator {
 				return requiresShift;
 			}
 
-			int getXShift() {
-				return xShift;
-			}
-
-			int getYShift() {
-				return yShift;
-			}
-
 			int[] getPixels() {
 				return pixels;
 			}
@@ -701,6 +827,39 @@ public final class AvatarGenerator {
 
 			public int getHeight() {
 				return height;
+			}
+
+			public int getID() {
+				return id;
+			}
+			public void setID(int id) {
+			}
+
+			public String getPackageName() {
+				return packageName;
+			}
+			public void setPackageName(String name) { packageName = name; }
+
+			public void setShift(int xShift, int yShift) {
+				this.xShift = xShift;
+				this.yShift = yShift;
+			}
+
+			void setSomething(int something1, int something2) {
+				this.something1 = something1;
+				this.something2 = something2;
+			}
+
+			int getXShift() {
+				return xShift;
+			}
+			void setXShift(int value) { this.xShift = value; }
+
+			int getYShift() { return yShift;	}
+			void setYShift(int value) { this.yShift = value; }
+
+			void setRequiresShift(boolean requiresShift) {
+				this.requiresShift = requiresShift;
 			}
 		}
 

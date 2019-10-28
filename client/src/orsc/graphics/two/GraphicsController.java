@@ -6,28 +6,19 @@ import com.openrsc.client.entityhandling.defs.SpriteDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.data.DataConversions;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import orsc.Config;
 import orsc.MiscFunctions;
 import orsc.mudclient;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class GraphicsController {
 
@@ -323,16 +314,14 @@ public class GraphicsController {
 			return sprites[item.authenticSpriteID + mudclient.spriteItem];
 
 		String[] location = item.getSpriteLocation().split(":");
-		Sprite retVal = spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
-		return retVal;
+		return spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
 	}
 
 	public Sprite spriteSelect(AnimationDef animation, int offset) {
 		if (!Config.S_WANT_CUSTOM_SPRITES)
 			return sprites[animation.getNumber() + offset];
 
-		Sprite sprite = spriteTree.get("animations").get(animationMap.get(animation.name) + offset);
-		return sprite;
+		return spriteTree.get("animations").get(animationMap.get(animation.name) + offset);
 	}
 
 	public Sprite spriteSelect(SpriteDef sprite) {
@@ -341,8 +330,7 @@ public class GraphicsController {
 
 		String[] location = sprite.getSpriteLocation().split(":");
 
-		Sprite retVal = spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
-		return retVal;
+		return spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
 	}
 	/*
 	public Sprite spriteSelect(int id) {
