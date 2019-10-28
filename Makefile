@@ -5,19 +5,19 @@ start-linux:
 	`pwd`/Start-Linux.sh
 
 run-server:
-	`pwd`/scripts/run.sh
+	`pwd`/Deployment_Scripts/run.sh
 
 run-client:
 	ant -f Client_Base/build.xml runclient
 
 combined-install:
-	`pwd`/scripts/combined-install.sh
+	`pwd`/Deployment_Scripts/combined-install.sh
 
 docker-install:
-	`pwd`/scripts/docker-install.sh
+	`pwd`/Deployment_Scripts/docker-install.sh
 
 get-updates:
-	`pwd`/scripts/get-updates.sh
+	`pwd`/Deployment_Scripts/get-updates.sh
 
 start:
 	docker-compose up -d
@@ -36,10 +36,10 @@ logs:
 	@docker-compose logs -f
 
 compile:
-	ant -f server/build.xml compile_core
-	ant -f server/build.xml compile_plugins
+	ant -f Game_Server/build.xml compile_core
+	ant -f Game_Server/build.xml compile_plugins
 	ant -f Client_Base/build.xml compile
-	ant -f Launcher/build.xml compile
+	ant -f PC_Launcher/build.xml compile
 
 # Call via "sudo make create db=cabbage"
 create:

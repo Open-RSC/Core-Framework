@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="Android" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/Open RSC Android Client/gen" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/Open RSC Android Client/gen" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/Open RSC Android Client/AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/Open RSC Android Client/res" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/Open RSC Android Client/assets" />
+        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/Open RSC Android Client/libs" />
+        <option name="USE_CUSTOM_APK_RESOURCE_FOLDER" value="true" />
+        <option name="CUSTOM_APK_RESOURCE_FOLDER" value="/Open RSC Android Client/src/main/res" />
+        <option name="PROJECT_TYPE" value="1" />
+        <option name="RUN_PROGUARD" value="true" />
+        <option name="PROGUARD_LOGS_FOLDER_RELATIVE_PATH" value="/Open RSC Android Client/proguard_logs" />
+        <proGuardCfgFiles>
+          <file>file://$MODULE_DIR$/Open RSC Android Client/proguard-project.txt</file>
+        </proGuardCfgFiles>
+        <option name="UPDATE_PROPERTY_FILES" value="true" />
+        <option name="ENABLE_MULTI_DEX" value="true" />
+        <option name="MINIMAL_MAIN_DEX" value="true" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/Open RSC Android Client">
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/build/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/build/generated/source/buildConfig/androidTest/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/build/generated/not_namespaced_r_class_sources/debug/r" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/gen" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/Open RSC Android Client/src/main/res" type="java-resource" />
+    </content>
+    <orderEntry type="jdk" jdkName="Android API 29 Platform" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

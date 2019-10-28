@@ -11,7 +11,7 @@ allprojects {
 android {
     signingConfigs {
     }
-    compileSdkVersion 'android-Q'
+    compileSdkVersion 29
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.openrsc.client"
@@ -34,6 +34,9 @@ android {
         targetCompatibility = '1.8'
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/../Client_Base'
     }
 }
 

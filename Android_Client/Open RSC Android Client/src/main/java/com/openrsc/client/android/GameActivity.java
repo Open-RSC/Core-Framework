@@ -4,22 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
-
 import com.openrsc.android.render.InputImpl;
 import com.openrsc.android.render.RSCBitmapSurfaceView;
 import com.openrsc.client.model.Sprite;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-
 import orsc.Config;
 import orsc.PacketHandler;
 import orsc.mudclient;
 import orsc.multiclient.ClientPort;
+
+import java.io.ByteArrayInputStream;
 
 public class GameActivity extends Activity implements ClientPort {
 
