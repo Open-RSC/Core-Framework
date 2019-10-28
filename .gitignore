@@ -147,3 +147,5 @@ PC_Launcher/Cache/
 Game_Server/core.jar
 
 Game_Server/plugins.jar
+
+Game_Server/local.conf

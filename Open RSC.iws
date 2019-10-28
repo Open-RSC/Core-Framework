@@ -143,7 +143,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="device.picker.selection" value="Android_Q" />
     <property name="jdk.selected.JAVA_MODULE" value="13" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Game_Server/lib/xstream-1.4.9.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Game_Server" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -176,7 +176,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.Run Client">
+  <component name="RunManager" selected="Ant Target.Run Server">
     <configuration default="true" type="AndroidJUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
