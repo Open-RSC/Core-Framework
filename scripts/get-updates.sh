@@ -46,7 +46,7 @@ elif [ "$compiling" == "2" ]; then
   sudo chmod 777 ../Website/downloads/*.jar
 
   # Cache
-  yes | sudo cp -a -rf "client/Cache/." "../Website/downloads/"
+  yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/downloads/"
   sudo rm ../Website/downloads/MD5CHECKSUM
   sudo touch ../Website/downloads/MD5CHECKSUM && sudo chmod 777 ../Website/downloads/MD5CHECKSUM
   md5sum ../Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee ../Website/downloads/MD5CHECKSUM

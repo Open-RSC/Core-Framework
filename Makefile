@@ -8,7 +8,7 @@ run-server:
 	`pwd`/scripts/run.sh
 
 run-client:
-	ant -f client/build.xml runclient
+	ant -f Client_Base/build.xml runclient
 
 combined-install:
 	`pwd`/scripts/combined-install.sh
@@ -38,7 +38,7 @@ logs:
 compile:
 	ant -f server/build.xml compile_core
 	ant -f server/build.xml compile_plugins
-	ant -f client/build.xml compile
+	ant -f Client_Base/build.xml compile
 	ant -f Launcher/build.xml compile
 
 # Call via "sudo make create db=cabbage"
