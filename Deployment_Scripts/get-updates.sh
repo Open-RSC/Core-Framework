@@ -52,7 +52,10 @@ elif [ "$compiling" == "2" ]; then
   md5sum ../Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee ../Website/downloads/MD5CHECKSUM
   sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
   sudo sed -i 's/index=/#index=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  sudo sed -i 's/openrsc.apk=/#openrsc.apk=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
+  sudo sed -i 's/android_version.txt=/#android_version.txt=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
   sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  sudo sed -i 's/Cache=/#Cache=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
   sudo sed -i 's/..\///g' "../Website/downloads/MD5CHECKSUM" # Removes ../
 fi
 
