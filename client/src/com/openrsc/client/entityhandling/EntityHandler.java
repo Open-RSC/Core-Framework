@@ -4888,10 +4888,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0)); //296 - dragon plate
 			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0)); //297 - dragon legs
 			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0)); //298 - dragon large
-			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0)); //299
-			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0)); //300
-			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0)); //301
-			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0)); //302
+			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0)); //299 -
+			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0)); //300 -
+			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0)); //301 -
+			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0)); //302 -
 
 			// Pumpkin head masks
 			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 303 - appearanceID

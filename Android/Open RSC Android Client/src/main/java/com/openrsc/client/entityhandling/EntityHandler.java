@@ -1,22 +1,13 @@
 package com.openrsc.client.entityhandling;
 
-import com.openrsc.client.entityhandling.defs.DoorDef;
-import com.openrsc.client.entityhandling.defs.ElevationDef;
-import com.openrsc.client.entityhandling.defs.GameObjectDef;
-import com.openrsc.client.entityhandling.defs.ItemDef;
-import com.openrsc.client.entityhandling.defs.NPCDef;
-import com.openrsc.client.entityhandling.defs.PrayerDef;
-import com.openrsc.client.entityhandling.defs.SpellDef;
-import com.openrsc.client.entityhandling.defs.SpriteDef;
-import com.openrsc.client.entityhandling.defs.TileDef;
+import com.openrsc.client.entityhandling.defs.*;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
 import com.openrsc.client.entityhandling.defs.extras.TextureDef;
+import orsc.Config;
+import orsc.mudclient;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import orsc.Config;
-import orsc.mudclient;
 
 public class EntityHandler {
 
@@ -4897,10 +4888,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0)); //296 - dragon plate
 			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0)); //297 - dragon legs
 			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0)); //298 - dragon large
-			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0)); //299
-			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0)); //300
-			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0)); //301
-			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0)); //302
+			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0)); //299 -
+			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0)); //300 -
+			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0)); //301 -
+			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0)); //302 -
 
 			// Pumpkin head masks
 			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 303 - appearanceID
