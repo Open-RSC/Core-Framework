@@ -32,9 +32,6 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.*;
@@ -203,7 +200,7 @@ public final class mudclient implements Runnable {
 	public int mouseButtonItemCountIncrement = 0;
 	private int mouseClickCount = 0;
 	private int mouseClickXStep = 0;
-	private HashMap<String, File> soundCache = new HashMap<String, File>();
+	public static HashMap<String, File> soundCache = new HashMap<String, File>();
 	public boolean authenticSettings = !(
 		isAndroid() ||
 			S_WANT_CLANS || S_WANT_KILL_FEED
@@ -407,7 +404,7 @@ public final class mudclient implements Runnable {
 	private int objectAnimationNumberTorch = 0;
 	private boolean optionCameraModeAuto = true;
 	private boolean optionMouseButtonOne = false;
-	private boolean optionSoundDisabled = true;
+	public static boolean optionSoundDisabled = true;
 	private boolean clanInviteBlockSetting = false;
 	private boolean partyInviteBlockSetting = false;
 	private int controlPartyPanel;
@@ -1456,8 +1453,8 @@ public final class mudclient implements Runnable {
 
 			// TODO: Inauthentic to loop through packets like this.
 			int len = this.packetHandler.getClientStream().readIncomingPacket(packetHandler.getPacketsIncoming());
-				if (len > 0)
-					this.packetHandler.handlePacket(packetHandler.getPacketsIncoming().getUnsignedByte(), len);
+			if (len > 0)
+				this.packetHandler.handlePacket(packetHandler.getPacketsIncoming().getUnsignedByte(), len);
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "client.SB(" + "dummy" + ')');
 		}
@@ -4462,7 +4459,7 @@ public final class mudclient implements Runnable {
 		try {
 
 			if (isAndroid()) {
-				this.menuCommon.font = C_MENU_SIZE;
+				this.menuCommon.font = osConfig.C_MENU_SIZE;
 			}
 
 			if (var1 == 13) {
@@ -4544,7 +4541,7 @@ public final class mudclient implements Runnable {
 						}
 
 						// Sets camera zoom distance based on last saved value in the player cache
-						cameraZoom = minCameraZoom + (Config.C_LAST_ZOOM * 2);
+						cameraZoom = minCameraZoom + (osConfig.C_LAST_ZOOM * 2);
 
 						if ((this.lastHeightOffset == 0
 							&& (world.collisionFlags[this.localPlayer.currentX / 128][this.localPlayer.currentZ
@@ -4978,9 +4975,9 @@ public final class mudclient implements Runnable {
 							this.showUiWildWarn = 1;
 						}
 					}
-						int i2 = 75;
-						int index;
-						int var12;
+					int i2 = 75;
+					int index;
+					int var12;
 					if (S_SIDE_MENU_TOGGLE && C_SIDE_MENU_OVERLAY) {
 						int i = 130;
 						if (localPlayer.isDev()) {
@@ -5029,7 +5026,7 @@ public final class mudclient implements Runnable {
 					}
 
 					if (isAndroid() && Config.S_WANT_PLAYER_COMMANDS) { // on screen buttons for various player chat commands
-						if (F_SHOWING_KEYBOARD) {
+						if (osConfig.F_SHOWING_KEYBOARD) {
 							C_SIDE_MENU_OVERLAY = false;
 							int uiX = 5;
 							int uiY = 5;
@@ -5101,7 +5098,7 @@ public final class mudclient implements Runnable {
 					}
 
 					if (isAndroid()) {
-						if (F_SHOWING_KEYBOARD) {
+						if (osConfig.F_SHOWING_KEYBOARD) {
 							panelMessageTabs.reposition(panelMessageEntry, 7, 130 + 10, getGameWidth() - 14, 14);
 						} else {
 							panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
@@ -5116,7 +5113,7 @@ public final class mudclient implements Runnable {
 									MessageHistory.messageHistorySender[centerX],
 									MessageHistory.messageHistoryType[centerX], MessageHistory.messageHistoryColor[centerX]);
 								double boost = this.getGameHeight();
-								if (isAndroid() && F_SHOWING_KEYBOARD)
+								if (isAndroid() && osConfig.F_SHOWING_KEYBOARD)
 									boost = (boost / 2.5) + 8;
 								this.getSurface().drawColoredString(7, (int) boost - centerX * 12 - 18, var17,
 									1, 0xFFFF00, MessageHistory.messageHistoryCrownID[centerX]);
@@ -5125,7 +5122,7 @@ public final class mudclient implements Runnable {
 					}
 
 
-					boolean LAST_FRAME_SHOWING_KEYBOARD = F_SHOWING_KEYBOARD;
+					boolean LAST_FRAME_SHOWING_KEYBOARD = osConfig.F_SHOWING_KEYBOARD;
 					this.panelMessageTabs.hide(this.panelMessageChat);
 					this.panelMessageTabs.hide(this.panelMessageQuest);
 					this.panelMessageTabs.hide(this.panelMessagePrivate);
@@ -7877,13 +7874,13 @@ public final class mudclient implements Runnable {
 									this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
 									this.packetHandler.getClientStream().finishPacket();
 									this.prayerOn[var9] = true;
-									this.playSoundFile("prayeron");
+									soundPlayer.playSoundFile("prayeron");
 								} else {
 									this.packetHandler.getClientStream().newPacket(254);
 									this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
 									this.packetHandler.getClientStream().finishPacket();
 									this.prayerOn[var9] = false;
-									this.playSoundFile("prayeroff");
+									soundPlayer.playSoundFile("prayeroff");
 								}
 							}
 						}
@@ -8556,56 +8553,56 @@ public final class mudclient implements Runnable {
 
 		// Color changing long press timer option
 		// -> red
-		if (C_LONG_PRESS_TIMER < 3) { // 1-2
+		if (osConfig.C_LONG_PRESS_TIMER < 3) { // 1-2
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @red@" + (C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @red@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
 		}
 		// -> light red
-		if (C_LONG_PRESS_TIMER > 2 && C_LONG_PRESS_TIMER < 5) { // 3-4
+		if (osConfig.C_LONG_PRESS_TIMER > 2 && osConfig.C_LONG_PRESS_TIMER < 5) { // 3-4
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @lre@" + (C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @lre@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
 		}
 		// -> green
-		if (C_LONG_PRESS_TIMER > 4 && C_LONG_PRESS_TIMER < 9) { // 5-8
+		if (osConfig.C_LONG_PRESS_TIMER > 4 && osConfig.C_LONG_PRESS_TIMER < 9) { // 5-8
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @gre@" + (C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @gre@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
 		}
 		// -> light red
-		if (C_LONG_PRESS_TIMER > 8 && C_LONG_PRESS_TIMER < 11) { // 9-10
+		if (osConfig.C_LONG_PRESS_TIMER > 8 && osConfig.C_LONG_PRESS_TIMER < 11) { // 9-10
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @lre@" + (C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @lre@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
 		}
 		// -> red
-		if (C_LONG_PRESS_TIMER > 10) { // 11
+		if (osConfig.C_LONG_PRESS_TIMER > 10) { // 11
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @red@" + (C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @red@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
 		}
 
 		// Color changing font size toggle
 		// -> light red
-		if (C_MENU_SIZE < 3) { // 1-2
+		if (osConfig.C_MENU_SIZE < 3) { // 1-2
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @lre@" + (C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @lre@" + (osConfig.C_MENU_SIZE), 1, null, null);
 		}
 		// -> green
-		if (C_MENU_SIZE > 2 && C_MENU_SIZE < 5) { // 3-4
+		if (osConfig.C_MENU_SIZE > 2 && osConfig.C_MENU_SIZE < 5) { // 3-4
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @gre@" + (C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @gre@" + (osConfig.C_MENU_SIZE), 1, null, null);
 		}
 		// -> light red
-		if (C_MENU_SIZE > 4 && C_MENU_SIZE < 7) { // 5-6
+		if (osConfig.C_MENU_SIZE > 4 && osConfig.C_MENU_SIZE < 7) { // 5-6
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @lre@" + (C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @lre@" + (osConfig.C_MENU_SIZE), 1, null, null);
 		}
 
 		// menu size
-		if (C_MENU_SIZE == 7) { // 7
+		if (osConfig.C_MENU_SIZE == 7) { // 7
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @red@" + (C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @red@" + (osConfig.C_MENU_SIZE), 1, null, null);
 		}
 
 		// hold and choose
-		if (!C_HOLD_AND_CHOOSE) {
+		if (!osConfig.C_HOLD_AND_CHOOSE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Hold and Choose - @red@Off", 2, null, null);
 		} else {
@@ -8614,7 +8611,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe to scroll
-		if (!C_SWIPE_TO_SCROLL) {
+		if (!osConfig.C_SWIPE_TO_SCROLL) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Swipe to Scroll - @red@Off", 3, null, null);
 		} else {
@@ -8623,7 +8620,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe to zoom
-		if (!C_SWIPE_TO_ZOOM) {
+		if (!osConfig.C_SWIPE_TO_ZOOM) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Swipe to Zoom - @red@Off", 4, null, null);
 		} else {
@@ -8632,7 +8629,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe to rotate
-		if (!C_SWIPE_TO_ROTATE) {
+		if (!osConfig.C_SWIPE_TO_ROTATE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Swipe to Rotate - @red@Off", 5, null, null);
 		} else {
@@ -8641,7 +8638,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// volume to rotate
-		if (!C_VOLUME_TO_ROTATE) {
+		if (!osConfig.C_VOLUME_TO_ROTATE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Volume buttons to Rotate - @red@Off", 6, null, null);
 		} else {
@@ -8650,7 +8647,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// inventory close
-		if (!C_ANDROID_INV_TOGGLE) {
+		if (!osConfig.C_ANDROID_INV_TOGGLE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Close inventory with menu - @red@Off", 7, null, null);
 		} else {
@@ -9032,80 +9029,80 @@ public final class mudclient implements Runnable {
 
 		// hold to right click delay control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
-			C_LONG_PRESS_TIMER++;
-			if (C_LONG_PRESS_TIMER == 13)
-				C_LONG_PRESS_TIMER = 1;
+			osConfig.C_LONG_PRESS_TIMER++;
+			if (osConfig.C_LONG_PRESS_TIMER == 13)
+				osConfig.C_LONG_PRESS_TIMER = 1;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(19);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_LONG_PRESS_TIMER);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_LONG_PRESS_TIMER);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// font size control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
-			C_MENU_SIZE++;
-			if (C_MENU_SIZE == 8)
-				C_MENU_SIZE = 1;
+			osConfig.C_MENU_SIZE++;
+			if (osConfig.C_MENU_SIZE == 8)
+				osConfig.C_MENU_SIZE = 1;
 			if (isAndroid()) {
-				this.menuCommon.font = C_MENU_SIZE;
+				this.menuCommon.font = osConfig.C_MENU_SIZE;
 			}
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(20);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_MENU_SIZE);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_MENU_SIZE);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// hold to right click toggle
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
-			C_HOLD_AND_CHOOSE = !C_HOLD_AND_CHOOSE;
+			osConfig.C_HOLD_AND_CHOOSE = !osConfig.C_HOLD_AND_CHOOSE;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(21);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_HOLD_AND_CHOOSE ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_HOLD_AND_CHOOSE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// swipe scroll control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
-			C_SWIPE_TO_SCROLL = !C_SWIPE_TO_SCROLL;
+			osConfig.C_SWIPE_TO_SCROLL = !osConfig.C_SWIPE_TO_SCROLL;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(18);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_SCROLL ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_SWIPE_TO_SCROLL ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// swipe camera zoom control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
-			C_SWIPE_TO_ZOOM = !C_SWIPE_TO_ZOOM;
+			osConfig.C_SWIPE_TO_ZOOM = !osConfig.C_SWIPE_TO_ZOOM;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(22);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ZOOM ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_SWIPE_TO_ZOOM ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// swipe camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
-			C_SWIPE_TO_ROTATE = !C_SWIPE_TO_ROTATE;
+			osConfig.C_SWIPE_TO_ROTATE = !osConfig.C_SWIPE_TO_ROTATE;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(17);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SWIPE_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_SWIPE_TO_ROTATE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// volume button camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
-			C_VOLUME_TO_ROTATE = !C_VOLUME_TO_ROTATE;
+			osConfig.C_VOLUME_TO_ROTATE = !osConfig.C_VOLUME_TO_ROTATE;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(16);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_VOLUME_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_VOLUME_TO_ROTATE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// android inventory toggle
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 7 && this.mouseButtonClick == 1) {
-			C_ANDROID_INV_TOGGLE = !C_ANDROID_INV_TOGGLE;
+			osConfig.C_ANDROID_INV_TOGGLE = !osConfig.C_ANDROID_INV_TOGGLE;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(37);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_ANDROID_INV_TOGGLE ? 1 : 0);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_ANDROID_INV_TOGGLE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -10094,7 +10091,7 @@ public final class mudclient implements Runnable {
 							stepsToMove = 10 + waypointIndexCurrent - waypointIndexNext;
 						}
 
-						amountToMove = Config.C_MOVE_PER_FRAME;
+						amountToMove = osConfig.C_MOVE_PER_FRAME;
 						if (stepsToMove > 2) {
 							amountToMove = stepsToMove * amountToMove - amountToMove;
 						}
@@ -10209,7 +10206,7 @@ public final class mudclient implements Runnable {
 							stepsToMove = waypointIndexCurrent - waypointIndexNext;
 						}
 
-						amountToMove = Config.C_MOVE_PER_FRAME;
+						amountToMove = osConfig.C_MOVE_PER_FRAME;
 						if (stepsToMove > 2) {
 							amountToMove = (stepsToMove - 1) * amountToMove;
 						}
@@ -10556,8 +10553,8 @@ public final class mudclient implements Runnable {
 					} else if (this.keyDown) {
 						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
 							// Don't want to go over 255
-							if (C_LAST_ZOOM < 254) {
-								C_LAST_ZOOM += 2;
+							if (osConfig.C_LAST_ZOOM < 254) {
+								osConfig.C_LAST_ZOOM += 2;
 							}
 						} else {
 							if (this.cameraAllowPitchModification) {
@@ -10574,8 +10571,8 @@ public final class mudclient implements Runnable {
 					} else if (this.keyUp) {
 						if (S_ZOOM_VIEW_TOGGLE || getLocalPlayer().isStaff()) {
 							// Don't want to go under 0
-							if (C_LAST_ZOOM > 1) {
-								C_LAST_ZOOM -= 2;
+							if (osConfig.C_LAST_ZOOM > 1) {
+								osConfig.C_LAST_ZOOM -= 2;
 							}
 						} else {
 							if (this.cameraAllowPitchModification) {
@@ -10696,13 +10693,13 @@ public final class mudclient implements Runnable {
 	}
 
 	public void saveZoomDistance() {
-		if(lastSavedCameraZoom != Config.C_LAST_ZOOM) {
+		if (lastSavedCameraZoom != osConfig.C_LAST_ZOOM) {
 			// Saves last zoom distance
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(23);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(Config.C_LAST_ZOOM);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_LAST_ZOOM);
 			this.packetHandler.getClientStream().finishPacket();
-			lastSavedCameraZoom = Config.C_LAST_ZOOM;
+			lastSavedCameraZoom = osConfig.C_LAST_ZOOM;
 		}
 	}
 
@@ -11439,14 +11436,14 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_USE: {
 					this.selectedItemInventoryIndex = indexOrX;
-					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
 					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
-					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.m_ig = equippedItems[indexOrX].getName();
 					break;
@@ -11456,7 +11453,7 @@ public final class mudclient implements Runnable {
 					int amount = this.inventoryItemSize[indexOrX];
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, null,
@@ -11476,7 +11473,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(dropQuantity);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || C_ANDROID_INV_TOGGLE)
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
 						this.showUiTab = 0;
 					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
 					if (dropQuantity == 1)
@@ -13043,36 +13040,6 @@ public final class mudclient implements Runnable {
 			}
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.CC(" + var1 + ')');
-		}
-	}
-
-	public final void playSoundFile(String key) {
-		try {
-			if (!optionSoundDisabled) {
-				File sound = soundCache.get(key + ".wav");
-				if (sound == null)
-					return;
-				try {
-					// PC sound code:
-					final Clip clip = AudioSystem.getClip();
-					clip.addLineListener(myLineEvent -> {
-						if (myLineEvent.getType() == LineEvent.Type.STOP)
-							clip.close();
-					});
-					clip.open(AudioSystem.getAudioInputStream(sound));
-					clip.start();
-					// Android sound code:
-					//int dataLength = DataOperations.getDataFileLength(key + ".pcm", soundData);
-					//int offset = DataOperations.getDataFileOffset(key + ".pcm", soundData);
-					//clientPort.playSound(soundData, offset, dataLength);
-
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-
-		} catch (RuntimeException var6) {
-			throw GenUtil.makeThrowable(var6, "client.SC(" + "dummy" + ',' + (key != null ? "{...}" : "null") + ')');
 		}
 	}
 
@@ -14913,7 +14880,7 @@ public final class mudclient implements Runnable {
 					mainComponent.addComponent(experienceOverlay);
 				}
 
-				this.menuCommon = new Menu(this.getSurface(), isAndroid() ? C_MENU_SIZE : 1, "Choose option");
+				this.menuCommon = new Menu(this.getSurface(), isAndroid() ? osConfig.C_MENU_SIZE : 1, "Choose option");
 
 				this.menuTrade = new Menu(this.getSurface(), 1);
 				this.menuDuel = new Menu(this.getSurface(), 1);
@@ -15861,32 +15828,32 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setVolumeToRotate(boolean b) {
-		Config.C_VOLUME_TO_ROTATE = b;
+		osConfig.C_VOLUME_TO_ROTATE = b;
 	}
 
 	public void setSwipeToRotate(boolean b) {
-		Config.C_SWIPE_TO_ROTATE = b;
+		osConfig.C_SWIPE_TO_ROTATE = b;
 	}
 
 	public void setSwipeToScroll
 		(boolean b) {
-		Config.C_SWIPE_TO_SCROLL = b;
+		osConfig.C_SWIPE_TO_SCROLL = b;
 	}
 
 	public void setSwipeToZoom(boolean b) {
-		Config.C_SWIPE_TO_ZOOM = b;
+		osConfig.C_SWIPE_TO_ZOOM = b;
 	}
 
 	public void setLongPressDelay(int i) {
-		Config.C_LONG_PRESS_TIMER = i;
+		osConfig.C_LONG_PRESS_TIMER = i;
 	}
 
 	public void setLastZoom(int i) {
-		Config.C_LAST_ZOOM = i;
+		osConfig.C_LAST_ZOOM = i;
 	}
 
 	public void setGroundItemsToggle(int i) {
-		Config.C_SHOW_GROUND_ITEMS = i;
+		C_SHOW_GROUND_ITEMS = i;
 	}
 
 	public void setFightModeSelectorToggle(int i) {
@@ -15898,51 +15865,51 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setFontSize(int i) {
-		Config.C_MENU_SIZE = i;
+		osConfig.C_MENU_SIZE = i;
 	}
 
 	public void setHoldAndChoose(boolean b) {
-		Config.C_HOLD_AND_CHOOSE = b;
+		osConfig.C_HOLD_AND_CHOOSE = b;
 	}
 
 	public void setOptionBatchProgressBar(boolean b) {
-		Config.C_BATCH_PROGRESS_BAR = b;
+		C_BATCH_PROGRESS_BAR = b;
 	}
 
 	public void setOptionExperienceDrops(boolean b) {
-		Config.C_EXPERIENCE_DROPS = b;
+		C_EXPERIENCE_DROPS = b;
 	}
 
 	public void setOptionHideRoofs(boolean b) {
-		Config.C_HIDE_ROOFS = b;
+		C_HIDE_ROOFS = b;
 	}
 
 	public void setOptionHideFog(boolean b) {
-		Config.C_HIDE_FOG = b;
+		C_HIDE_FOG = b;
 	}
 
 	public void setOptionAutoMessageSwitch(boolean b) {
-		Config.C_MESSAGE_TAB_SWITCH = b;
+		C_MESSAGE_TAB_SWITCH = b;
 	}
 
 	public void setOptionHideSideMenu(boolean b) {
-		Config.C_SIDE_MENU_OVERLAY = b;
+		C_SIDE_MENU_OVERLAY = b;
 	}
 
 	public void setOptionHideKillFeed(boolean b) {
-		Config.C_KILL_FEED = b;
+		C_KILL_FEED = b;
 	}
 
 	public void setHideInventoryCount(boolean b) {
-		Config.C_INV_COUNT = b;
+		C_INV_COUNT = b;
 	}
 
 	public void setBlockPartyInv(boolean b) {
-		Config.C_PARTY_INV = b;
+		C_PARTY_INV = b;
 	}
 
 	public void setAndroidInvToggle(boolean b) {
-		C_ANDROID_INV_TOGGLE = b;
+		osConfig.C_ANDROID_INV_TOGGLE = b;
 	}
 
 	public void setShowNPCKC(boolean b) {
@@ -15950,7 +15917,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setHideNameTag(boolean b) {
-		Config.C_NAME_CLAN_TAG_OVERLAY = b;
+		C_NAME_CLAN_TAG_OVERLAY = b;
 	}
 
 	public void updateQuestRewards() {

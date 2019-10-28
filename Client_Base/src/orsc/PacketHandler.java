@@ -1793,10 +1793,10 @@ public class PacketHandler {
 		for (int i = 0; length - 1 > i; ++i) {
 			boolean enabled = packetsIncoming.getByte() == 1;
 			if (!mc.checkPrayerOn(i) && enabled) {
-				mc.playSoundFile("prayeron");
+				soundPlayer.playSoundFile("prayeron");
 			}
 			if (mc.checkPrayerOn(i) && !enabled) {
-				mc.playSoundFile("prayeroff");
+				soundPlayer.playSoundFile("prayeroff");
 			}
 
 			mc.togglePrayer(i, enabled);
@@ -1993,7 +1993,7 @@ public class PacketHandler {
 
 	private void playSound() {
 		String filename = packetsIncoming.readString();
-		mc.playSoundFile(filename);
+		soundPlayer.playSoundFile(filename);
 	}
 
 	private void showLoginDialog() {

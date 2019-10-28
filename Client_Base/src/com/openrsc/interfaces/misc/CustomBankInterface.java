@@ -2,9 +2,6 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-
 import com.openrsc.client.model.Sprite;
 import orsc.Config;
 import orsc.enumerations.InputXAction;
@@ -12,10 +9,13 @@ import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
 import orsc.util.GenUtil;
 
+import java.util.ArrayList;
+
 import static orsc.Config.*;
+import static orsc.osConfig.*;
 
 public final class CustomBankInterface extends BankInterface {
-	private static int fontSize = Config.isAndroid() ? Config.C_MENU_SIZE : 1;
+	private static int fontSize = Config.isAndroid() ? C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
 	private int[] equipmentViewOrder = new int[]{0, 1, 2, 5, 4, 3, 8, 9, 6, 7, 10};
 	private final int presetCount = 2;

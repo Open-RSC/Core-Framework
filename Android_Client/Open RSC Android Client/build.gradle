@@ -12,7 +12,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 29
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.1'
     defaultConfig {
         applicationId "com.openrsc.client"
         minSdkVersion 14
@@ -25,6 +25,11 @@ android {
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
+            multiDexEnabled = true
+            renderscriptOptimLevel = 3
+        }
+        debug {
+            multiDexEnabled = true
         }
     }
     productFlavors {
@@ -36,7 +41,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets {
-        main.java.srcDirs += 'src/main/../Client_Base'
+        main.java.srcDirs += 'src/main/../../../../Client_Base'
     }
 }
 

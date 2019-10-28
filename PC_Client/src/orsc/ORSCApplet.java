@@ -14,8 +14,8 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.ByteArrayInputStream;
 
-import static orsc.Config.C_LAST_ZOOM;
-import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.Config.*;
+import static orsc.osConfig.*;
 
 public class ORSCApplet extends Applet implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener,
 	ImageObserver, ImageProducer, ClientPort {
@@ -234,8 +234,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				int distanceY = (mudclient.mouseY - mudclient.mouseLastProcessedY)/2;
 
 				if (mudclient.showUiTab == 0) {
-					if ((Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
-						if (Config.C_SWIPE_TO_ZOOM) {
+					if ((S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
+						if (osConfig.C_SWIPE_TO_ZOOM) {
 							int newZoom = C_LAST_ZOOM + distanceY;
 							// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
 							if (newZoom >= 0 && newZoom <= 255) {
@@ -252,7 +252,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 						if (mudclient.cameraPitch < 768 && mudclient.cameraPitch > 512)
 							mudclient.cameraPitch = 768;
 					}
-					if (Config.C_SWIPE_TO_ROTATE) {
+					if (osConfig.C_SWIPE_TO_ROTATE) {
 						float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
 						mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
 					}
