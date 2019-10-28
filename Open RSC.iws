@@ -15,7 +15,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/caches/gradle_models.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/Android.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/Game.Android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/Game.Android.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/Open RSC Android Client/Open RSC Android Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/Open RSC Android Client/Open RSC Android Client.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/Open RSC Android Client/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/Open RSC Android Client/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/Open RSC Android Client/src/main/java/com/openrsc/client/android/GameActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/Open RSC Android Client/src/main/java/com/openrsc/client/android/GameActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android_Client/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client_Base/Cache/ip.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/Cache/ip.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client_Base/Client_Base.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/Client_Base.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Databases/cabbage_game_server.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Databases/cabbage_game_server.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
     </list>
@@ -505,8 +517,9 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="device.picker.selection" value="Android_Q" />
     <property name="jdk.selected.JAVA_MODULE" value="13" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/PC_Client" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
@@ -537,7 +550,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Ant Target.Run Server">
+  <component name="RunManager" selected="Ant Target.Run Client">
     <configuration default="true" type="AndroidJUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -547,26 +560,20 @@
     </configuration>
     <configuration name="Game Launcher" type="AntRunConfiguration" singleton="false">
       <antsettings antfile="file://$PROJECT_DIR$/Launcher/build.xml" target="compile-and-run" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+      <method v="2" />
     </configuration>
-    <configuration name="PC Client" type="AntRunConfiguration" singleton="false">
-      <antsettings antfile="file://$PROJECT_DIR$/client/build.xml" target="compile-and-run" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+    <configuration name="Run Client" type="AntRunConfiguration" singleton="false">
+      <antsettings antfile="file://$PROJECT_DIR$/Client_Base/build.xml" target="compile-and-run" />
+      <method v="2" />
     </configuration>
     <configuration name="Run Server" type="AntRunConfiguration" singleton="false">
       <antsettings antfile="file://$PROJECT_DIR$/server/build.xml" target="compile-and-run" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+      <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Ant Target.PC Client" />
       <item itemvalue="Ant Target.Game Launcher" />
       <item itemvalue="Ant Target.Run Server" />
+      <item itemvalue="Ant Target.Run Client" />
     </list>
   </component>
   <component name="StructureViewFactory">
@@ -602,6 +609,8 @@
       <workItem from="1572032635545" duration="1610000" />
       <workItem from="1572034612660" duration="293000" />
       <workItem from="1572035127269" duration="1638000" />
+      <workItem from="1572093740392" duration="1039000" />
+      <workItem from="1572190154753" duration="30245000" />
     </task>
     <servers />
   </component>
@@ -616,9 +625,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="UnloadedModulesList">
-    <module name="Game" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -655,6 +661,11 @@
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/AttackHandler.java</url>
           <line>25</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/EntityHandler.java</url>
+          <line>4883</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

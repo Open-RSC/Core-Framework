@@ -3,7 +3,7 @@
   <component name="AntConfiguration">
     <buildFile url="file://$PROJECT_DIR$/Launcher/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
-    <buildFile url="file://$PROJECT_DIR$/client/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/Client_Base/build.xml" />
   </component>
   <component name="CheckStyle-IDEA">
     <option name="configuration">
@@ -151,17 +151,28 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="Brett Ellis">
+      <words>
+        <w>orsc</w>
+        <w>runclient</w>
+        <w>xlint</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/client/Client.iml" filepath="$PROJECT_DIR$/client/Client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Game.iml" filepath="$PROJECT_DIR$/Game.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Client_Base/Client_Base.iml" filepath="$PROJECT_DIR$/Client_Base/Client_Base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android_Client/Game.Android.iml" filepath="$PROJECT_DIR$/Android_Client/Game.Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" filepath="$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/Server.iml" filepath="$PROJECT_DIR$/server/Server.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" default="false" project-jdk-name="13" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
   <component name="libraryTable">
     <library name="Gradle: android.arch.core:common:1.1.1@jar">
@@ -425,6 +436,13 @@
         <root url="jar://$PROJECT_DIR$/server/lib/netty-all-4.1.33.Final.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/lib/netty-3.4.6.final.jar!/" />
         <root url="jar://$PROJECT_DIR$/server/lib/guava-25.0-jre.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Open_RSC_Client">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/Client_Base/Open_RSC_Client.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
