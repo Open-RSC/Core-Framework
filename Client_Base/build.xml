@@ -14,14 +14,7 @@
         <copy todir="${build}/res">
             <fileset dir="src/res"/>
         </copy>
-        <javac srcdir="${src}" destdir="${build}" debug="on" target="${javac.target}" source="${javac.source}"
-               includeantruntime="false">
-            <classpath>
-                <pathelement path="${java.class.path}/"/>
-            </classpath>
-            <compilerarg line="-Xlint:unchecked"/>
-        </javac>
-        <javac srcdir="${pc_client}" destdir="${build}" debug="on" target="${javac.target}" source="${javac.source}"
+        <javac srcdir="${src}:${pc_client}" destdir="${build}" debug="on" target="${javac.target}" source="${javac.source}"
                includeantruntime="false">
             <classpath>
                 <pathelement path="${java.class.path}/"/>
