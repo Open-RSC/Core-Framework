@@ -13,8 +13,7 @@ import orsc.Config;
 import orsc.enumerations.MessageTab;
 import orsc.graphics.two.Fonts;
 import orsc.mudclient;
-
-import static orsc.Config.C_LAST_ZOOM;
+import orsc.osConfig;
 
 public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListener {
 
@@ -36,7 +35,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
     @Override
     public boolean onDown(MotionEvent e) {
-        if (Config.C_HOLD_AND_CHOOSE)
+        if (osConfig.C_HOLD_AND_CHOOSE)
             return false;
 
         mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
@@ -46,7 +45,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
     @Override
     public void onShowPress(MotionEvent e) {
-        if (Config.C_HOLD_AND_CHOOSE)
+        if (osConfig.C_HOLD_AND_CHOOSE)
             return;
         mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
         mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
@@ -57,7 +56,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        if (Config.C_HOLD_AND_CHOOSE)
+        if (osConfig.C_HOLD_AND_CHOOSE)
             return false;
         mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
         mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
@@ -89,26 +88,26 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
         if (mudclient.showUiTab == 0) {
             if (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) {
-                if (Config.C_SWIPE_TO_ZOOM) {
+                if (osConfig.C_SWIPE_TO_ZOOM) {
                     int zoomDistance = (int) (-distanceY * 5);
-                    int newZoom = C_LAST_ZOOM + zoomDistance;
+                    int newZoom = osConfig.C_LAST_ZOOM + zoomDistance;
                     // Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
                     if (newZoom >= 0 && newZoom <= 255) {
-                        C_LAST_ZOOM = newZoom;
+						osConfig.C_LAST_ZOOM = newZoom;
                     }
                 }
             } else if (mudclient.cameraAllowPitchModification) {
                 mudclient.cameraPitch = (mudclient.cameraPitch + (int) (-distanceY * 10)) & 1023;
             }
 
-            if (Config.C_SWIPE_TO_ROTATE) {
+            if (osConfig.C_SWIPE_TO_ROTATE) {
                 float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
                         * 0.5F;
                 mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
             }
 
             return true;
-        } else if (Config.C_SWIPE_TO_SCROLL) {
+        } else if (osConfig.C_SWIPE_TO_SCROLL) {
             mudclient.runScroll((int) distanceY);
             return true;
         }
@@ -129,7 +128,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (Config.C_VOLUME_TO_ROTATE) {
+        if (osConfig.C_VOLUME_TO_ROTATE) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                 mudclient.keyLeft = event.getAction() == KeyEvent.ACTION_DOWN;
                 return true;
@@ -205,7 +204,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         mudclient.lastMouseAction = 0;
 
         if (!gestureDetector.onTouchEvent(e)) {
-            if (Config.C_HOLD_AND_CHOOSE) {
+            if (osConfig.C_HOLD_AND_CHOOSE) {
                 switch (e.getAction()) {
                     case MotionEvent.ACTION_UP:
                         isLongPress = false;
@@ -242,7 +241,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                                         mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown = 2;
                                     }
                                 }
-                            }, Config.C_LONG_PRESS_TIMER * 50);
+                            }, osConfig.C_LONG_PRESS_TIMER * 50);
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:
