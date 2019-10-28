@@ -143,3 +143,7 @@ Android_Client/import-summary.txt
 PC_Launcher/OpenRSC.jar
 
 PC_Launcher/Cache/
+
+Game_Server/core.jar
+
+Game_Server/plugins.jar
