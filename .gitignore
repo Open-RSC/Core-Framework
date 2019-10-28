@@ -131,3 +131,9 @@ local.properties
 Android/.idea/dictionaries/
 
 server/logs/
+
+Client_Base/Open_RSC_Client.jar
+
+Client_Base/Cache/credentials.txt
+
+Android_Client/import-summary.txt
