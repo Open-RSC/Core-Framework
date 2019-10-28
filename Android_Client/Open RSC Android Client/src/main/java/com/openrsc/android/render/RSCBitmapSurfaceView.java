@@ -9,17 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.PorterDuff.Mode;
 import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioRecord;
 import android.media.AudioTrack;
-import android.media.MediaRecorder;
-import android.os.Build.VERSION;
 import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -31,8 +26,8 @@ import com.openrsc.client.model.Sprite;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
-import orsc.Config;
 import orsc.multiclient.ClientPort;
+import orsc.osConfig;
 
 public abstract class RSCBitmapSurfaceView extends SurfaceView implements SurfaceHolder.Callback, ClientPort {
 
@@ -94,7 +89,7 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 						.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 					if (imm.isAcceptingText()) { // REMOVE?
-						Config.F_SHOWING_KEYBOARD = !Config.F_SHOWING_KEYBOARD;
+						osConfig.F_SHOWING_KEYBOARD = !osConfig.F_SHOWING_KEYBOARD;
 					}
 				}
 			});

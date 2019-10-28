@@ -29,7 +29,7 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
-import orsc.Config;
+import orsc.osConfig;
 import orsc.util.GenUtil;
 
 public class CacheUpdater extends Activity {
@@ -363,7 +363,7 @@ public class CacheUpdater extends Activity {
             Log.d("Updater", "Downloading file: " + filename + " - " + getNiceName(filename));
             HttpURLConnection connection;
             try {
-                connection = (HttpURLConnection) new URL(Config.CACHE_URL + filename).openConnection();
+                connection = (HttpURLConnection) new URL(osConfig.CACHE_URL + filename).openConnection();
                 connection.connect();
                 publishProgress("Downloading " + getNiceName(filename));
                 int fileLength = connection.getContentLength();

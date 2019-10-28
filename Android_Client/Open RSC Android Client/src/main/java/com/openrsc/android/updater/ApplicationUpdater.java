@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -29,7 +28,7 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import orsc.Config;
+import orsc.osConfig;
 
 public class ApplicationUpdater extends Activity {
 
@@ -47,7 +46,7 @@ public class ApplicationUpdater extends Activity {
         tv1 = findViewById(R.id.textView1);
         System.out.println(" ");
         System.out.println(" ");
-        System.out.println("Connecting to " + Config.DL_URL + " with installed Android client version " + Config.ANDROID_CLIENT_VERSION + ". Please wait...");
+        System.out.println("Connecting to " + osConfig.DL_URL + " with installed Android client version " + osConfig.ANDROID_CLIENT_VERSION + ". Please wait...");
         System.out.println(" ");
         System.out.println(" ");
         new Handler().postDelayed(() -> {
@@ -66,7 +65,7 @@ public class ApplicationUpdater extends Activity {
         PackageInfo info;
         try {
             info = manager.getPackageInfo(getApplicationContext().getPackageName(), 0);
-            return Config.ANDROID_CLIENT_VERSION;
+            return osConfig.ANDROID_CLIENT_VERSION;
         } catch (NameNotFoundException e) {
             e.printStackTrace();
             Toast.makeText(this, "Unable to check application version", Toast.LENGTH_LONG).show();
@@ -106,14 +105,12 @@ public class ApplicationUpdater extends Activity {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}).setNegativeButton("Do not install", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Intent mainIntent = new Intent(ApplicationUpdater.this, CacheUpdater.class);
-                mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(mainIntent);
-                finish();
-            }
-        });
+				}).setNegativeButton("Do not install", (dialog, id) -> {
+					Intent mainIntent = new Intent(ApplicationUpdater.this, CacheUpdater.class);
+					mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(mainIntent);
+					finish();
+				});
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
@@ -132,7 +129,7 @@ public class ApplicationUpdater extends Activity {
             System.out.println(" ");
             URL updatePage;
             try {
-                updatePage = new URL(Config.ANDROID_DOWNLOAD_PATH + "android_version.txt");
+                updatePage = new URL(osConfig.ANDROID_DOWNLOAD_PATH + "android_version.txt");
 
                 System.out.println(" ");
                 System.out.println(" ");
@@ -188,7 +185,7 @@ public class ApplicationUpdater extends Activity {
 
             HttpURLConnection connection;
             try {
-                connection = (HttpURLConnection) new URL(Config.ANDROID_DOWNLOAD_PATH + "openrsc.apk").openConnection();
+                connection = (HttpURLConnection) new URL(osConfig.ANDROID_DOWNLOAD_PATH + "openrsc.apk").openConnection();
                 connection.connect();
 
                 int fileLength = connection.getContentLength();

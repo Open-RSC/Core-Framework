@@ -12,7 +12,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 29
-    buildToolsVersion '29.0.1'
+    buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "com.openrsc.client"
         minSdkVersion 14

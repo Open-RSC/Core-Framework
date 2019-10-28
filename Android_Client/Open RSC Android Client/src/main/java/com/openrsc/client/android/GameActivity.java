@@ -4,15 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
+
 import com.openrsc.android.render.InputImpl;
 import com.openrsc.android.render.RSCBitmapSurfaceView;
 import com.openrsc.client.model.Sprite;
+
+import java.io.ByteArrayInputStream;
+
 import orsc.Config;
 import orsc.PacketHandler;
 import orsc.mudclient;
 import orsc.multiclient.ClientPort;
-
-import java.io.ByteArrayInputStream;
+import orsc.osConfig;
 
 public class GameActivity extends Activity implements ClientPort {
 
@@ -34,7 +37,7 @@ public class GameActivity extends Activity implements ClientPort {
 
         if (mudclient.threadState >= 0) mudclient.threadState = 0;
 
-        Config.F_ANDROID_BUILD = true;
+        osConfig.F_ANDROID_BUILD = true;
 
         mudclient.startMainThread();
 
@@ -145,12 +148,12 @@ public class GameActivity extends Activity implements ClientPort {
         InputMethodManager imm = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        if (imm.isAcceptingText()) Config.F_SHOWING_KEYBOARD = true;
+        if (imm.isAcceptingText()) osConfig.F_SHOWING_KEYBOARD = true;
     }
 
     public void closeKeyboard() {
         ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
                 .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-        Config.F_SHOWING_KEYBOARD = false;
+        osConfig.F_SHOWING_KEYBOARD = false;
     }
 }
