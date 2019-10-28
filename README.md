@@ -28,7 +28,7 @@ Feel free to join our Discord if you need help: <a href="https://discord.gg/KGvu
 
 ## Minimum Requirements<a name="requirements"></a>
 
-* Windows XP, MacOS, Ubuntu 18.04 Linux, or CentOS 7 Linux (or newer)
+* Windows XP, MacOS, or Ubuntu 18.04 Linux (or newer)
 
 * 2GB RAM in order to run both server and client or 1GB RAM to just run the game server
 
