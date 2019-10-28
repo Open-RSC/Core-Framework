@@ -4884,35 +4884,35 @@ public class EntityHandler {
 			animations.add(new AnimationDef("wolfmask", 16759039, 16777215,0, true, false, 0)); //294 - pink wolf mask
 
 			// Dragon items
-			animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0)); //295 - dragon large
-			animations.add(new AnimationDef("platemailtop", 11189164, 0, true, false, 0)); //296 - dragon plate
-			animations.add(new AnimationDef("platemaillegs", 11189164, 0, true, false, 0)); //297 - dragon legs
-			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0)); //298 - dragon large
-			animations.add(new AnimationDef("platemailtop", 16768685, 0, true, false, 0)); //299 -
-			animations.add(new AnimationDef("platemaillegs", 16768685, 0, true, false, 0)); //300 -
+			animations.add(new AnimationDef("dragonfullhelm", 11189164, 0, true, false, 0)); //295 - dragon large
+			animations.add(new AnimationDef("dragonbody", 11189164, 0, true, false, 0)); //296 - dragon plate
+			animations.add(new AnimationDef("dragonlegs", 11189164, 0, true, false, 0)); //297 - dragon legs
+			animations.add(new AnimationDef("fullhelm", 16768685, 0, true, false, 0)); //298 -
+			animations.add(new AnimationDef("fdragontop", 16768685, 0, true, false, 0)); //299 -
+			animations.add(new AnimationDef("dragonskirt", 16768685, 0, true, false, 0)); //300 -
 			animations.add(new AnimationDef("fullhelm", 10027084, 0, true, false, 0)); //301 -
 			animations.add(new AnimationDef("platemailtop", 10027084, 0, true, false, 0)); //302 -
+			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 303 -
 
-			// Pumpkin head masks
-			animations.add(new AnimationDef("hatchet", 0, 0, true, false, 0)); // 303 - appearanceID
-			animations.add(new AnimationDef("pumpkinhead1", 0, 0, true, false, 0)); //304 - orange pumpkin head
-			animations.add(new AnimationDef("pumpkinhead2", 16711680, 0, true, false, 0)); //305 - red pumpkin head
-			animations.add(new AnimationDef("pumpkinhead2", 16776960, 0, true, false, 0)); //306 - yellow pumpkin head
-			animations.add(new AnimationDef("pumpkinhead2", 255, 0, true, false, 0)); //307 - blue pumpkin head
-			animations.add(new AnimationDef("pumpkinhead2", 11141375, 0, true, false, 0)); //308 - purple pumpkin head
-			animations.add(new AnimationDef("pumpkinhead2", 65280, 0, true, false, 0)); //309 - green pumpkin head
+			// Pumpkin head masks (missing, using demon instead)
+			animations.add(new AnimationDef("demon", 0, 0, true, false, 0)); //304 - orange pumpkin head (missing)
+			animations.add(new AnimationDef("demon", 16711680, 0, true, false, 0)); //305 - red pumpkin head (missing)
+			animations.add(new AnimationDef("demon", 16776960, 0, true, false, 0)); //306 - yellow pumpkin head (missing)
+			animations.add(new AnimationDef("demon", 255, 0, true, false, 0)); //307 - blue pumpkin head (missing)
+			animations.add(new AnimationDef("demon", 11141375, 0, true, false, 0)); //308 - purple pumpkin head (missing)
+			animations.add(new AnimationDef("demon", 65280, 0, true, false, 0)); //309 - green pumpkin head (missing)
 
 			// Skill capes and hoods
-			animations.add(new AnimationDef("skillcape1", 0, 0, true, false, 0)); //310 - fishing cape
-			animations.add(new AnimationDef("skillcape2", 0, 0, true, false, 0)); //311 - cooking cape
+			animations.add(new AnimationDef("fishingcape", 0, 0, true, false, 0)); //310 - fishing cape
+			animations.add(new AnimationDef("cookingcape", 0, 0, true, false, 0)); //311 - cooking cape
 			animations.add(new AnimationDef("hood1", 0, 0, true, false, 0)); //312 - fishing hood
 			animations.add(new AnimationDef("warriorcape", 0, 0, true, false, 0)); //313 - warrior cape
 			animations.add(new AnimationDef("spottedcape", 7692086, 0, true, false, 0)); //314 - spotted cape
-			animations.add(new AnimationDef("skillcape3", 0, 0, true, false, 0)); //317 - attack cape
+			animations.add(new AnimationDef("attackcape", 0, 0, true, false, 0)); //317 - attack cape
 
-			// Easter basket and Gaia NPC
-			animations.add(new AnimationDef("gaia", 0, 0, true, false, 0)); //316 - NPC Gaia
-			animations.add(new AnimationDef("easterbasket", 0, 0, true, false, 0)); //317 - easter basket
+			// Easter basket (missing, using peppermintstick instead) and Gaia NPC (missing, using evilhoodie instead)
+			animations.add(new AnimationDef("evilhoodie", 0, 0, true, false, 0)); //316 - NPC Gaia (missing)
+			animations.add(new AnimationDef("peppermintstick", 0, 0, true, false, 0)); //317 - easter basket (missing)
 
 			// Ironman items
 			animations.add(new AnimationDef("fullhelm", 11189164, 0, true, false, 0)); //318 - ironman helm
@@ -4970,14 +4970,14 @@ public class EntityHandler {
 			animations.add(new AnimationDef("fullhelmgreen", 11717785, 0, true, false, 0)); //360 - addy helm green
 			animations.add(new AnimationDef("fullhelmgreen", 65535, 0, true, false, 0)); //361 - rune helm green
 
-			// Matched feather helms?
-			animations.add(new AnimationDef("fullhelmatched", 16737817, 0, true, false, 0)); //362 - bronze helm
-			animations.add(new AnimationDef("fullhelmatched", 15654365, 0, true, false, 0)); //363 - iron helm
-			animations.add(new AnimationDef("fullhelmatched", 15658734, 0, true, false, 0)); //364 - steel helm
-			animations.add(new AnimationDef("fullhelmatched", 3158064, 0, true, false, 0)); //365 - black helm
-			animations.add(new AnimationDef("fullhelmatched", 10072780, 0, true, false, 0)); //366 - mith helm
-			animations.add(new AnimationDef("fullhelmatched", 11717785, 0, true, false, 0)); //367 - addy helm
-			animations.add(new AnimationDef("fullhelmatched", 65535, 0, true, false, 0)); //368 - rune helm
+			// Grey feather helms
+			animations.add(new AnimationDef("fullhelmgrey", 16737817, 0, true, false, 0)); //362 - bronze helm grey
+			animations.add(new AnimationDef("fullhelmgrey", 15654365, 0, true, false, 0)); //363 - iron helm grey
+			animations.add(new AnimationDef("fullhelmgrey", 15658734, 0, true, false, 0)); //364 - steel helm grey
+			animations.add(new AnimationDef("fullhelmgrey", 3158064, 0, true, false, 0)); //365 - black helm grey
+			animations.add(new AnimationDef("fullhelmgrey", 10072780, 0, true, false, 0)); //366 - mith helm grey
+			animations.add(new AnimationDef("fullhelmgrey", 11717785, 0, true, false, 0)); //367 - addy helm grey
+			animations.add(new AnimationDef("fullhelmgrey", 65535, 0, true, false, 0)); //368 - rune helm grey
 
 			// Black feather helms
 			animations.add(new AnimationDef("fullhelmblack", 16737817, 0, true, false, 0)); //369 - bronze helm black
@@ -4997,11 +4997,11 @@ public class EntityHandler {
 			animations.add(new AnimationDef("fullhelmwhite", 11717785, 0, true, false, 0)); //381 - addy helm white
 			animations.add(new AnimationDef("fullhelmwhite", 65535, 0, true, false, 0)); //382 - rune helm white
 
-			// Greatwood NPC and skill capes
-			animations.add(new AnimationDef("greatwood", 5453066, 0, true, false, 0)); //383 NPC Greatwood tree boss
-			animations.add(new AnimationDef("skillcape4", 0, 0, true, false, 0)); //384 smithing cape
-			animations.add(new AnimationDef("skillcape5", 0, 0, true, false, 0)); //385 strength cape
-			animations.add(new AnimationDef("skillcape6", 0, 0, true, false, 0)); //386 hits cape
+			// Greatwood NPC (missing, using evilhoodie instead) and skill capes
+			animations.add(new AnimationDef("evilhoodie", 5453066, 0, true, false, 0)); //383 NPC Greatwood tree boss (missing)
+			animations.add(new AnimationDef("smithingcape", 0, 0, true, false, 0)); //384 smithing cape
+			animations.add(new AnimationDef("strengthcape", 0, 0, true, false, 0)); //385 strength cape
+			animations.add(new AnimationDef("hitscape", 0, 0, true, false, 0)); //386 hits cape
 		}
 	}
 
