@@ -36,8 +36,8 @@ logs:
 	@docker-compose logs -f
 
 compile:
-	ant -f Game_Server/build.xml compile_core
-	ant -f Game_Server/build.xml compile_plugins
+	ant -f server/build.xml compile_core
+	ant -f server/build.xml compile_plugins
 	ant -f Client_Base/build.xml compile
 	ant -f PC_Launcher/build.xml compile
 

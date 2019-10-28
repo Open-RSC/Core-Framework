@@ -2,8 +2,8 @@
 <project version="4">
   <component name="AntConfiguration">
     <buildFile url="file://$PROJECT_DIR$/Client_Base/build.xml" />
-    <buildFile url="file://$PROJECT_DIR$/Game_Server/build.xml" />
     <buildFile url="file://$PROJECT_DIR$/PC_Launcher/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/server/build.xml" />
   </component>
   <component name="CheckStyle-IDEA">
     <option name="configuration">
@@ -162,7 +162,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Game_Server/Game Server.iml" filepath="$PROJECT_DIR$/Game_Server/Game Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/Game Server.iml" filepath="$PROJECT_DIR$/server/Game Server.iml" />
       <module fileurl="file://$PROJECT_DIR$/Client_Base/PC Client.iml" filepath="$PROJECT_DIR$/Client_Base/PC Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/PC_Launcher/PC Launcher.iml" filepath="$PROJECT_DIR$/PC_Launcher/PC Launcher.iml" />
     </modules>
@@ -176,17 +176,17 @@
   <component name="libraryTable">
     <library name="Game Server">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/commons-lang-2.6.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/disruptor-3.3.5.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/guava-25.0-jre.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/log4j-api-2.8.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/log4j-core-2.8.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/mysql-connector-java-5.1.40.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/netty-3.4.6.final.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/netty-all-4.1.33.Final.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/xpp3-1.1.4c.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/xpp3_min-1.1.4c.jar!/" />
-        <root url="jar://$PROJECT_DIR$/Game_Server/lib/xstream-1.4.9.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/commons-lang-2.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/disruptor-3.3.5.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/guava-25.0-jre.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/log4j-api-2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/log4j-core-2.8.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/mysql-connector-java-5.1.40.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/netty-3.4.6.final.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/netty-all-4.1.33.Final.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xpp3-1.1.4c.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xpp3_min-1.1.4c.jar!/" />
+        <root url="jar://$PROJECT_DIR$/server/lib/xstream-1.4.9.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
