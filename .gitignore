@@ -129,3 +129,5 @@ Android/Open RSC Android Client/release/
 local.properties
 
 Android/.idea/dictionaries/
+
+server/logs/
