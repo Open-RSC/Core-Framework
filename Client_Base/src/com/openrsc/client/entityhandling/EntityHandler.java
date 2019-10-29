@@ -3788,7 +3788,7 @@ public class EntityHandler {
 
 		// Skill capes
 		items.add(new ItemDef("Smithing cape", "The cape worn by masters of smithing", "", 99000, -1, "items:444", false, true, 2048, 0, false, true, -1, -1, 2318));
-		items.add(new ItemDef("Strength hood", "The cape worn by masters of strength", "", 99000, -1, "items:444", false, true, 33, 0, false, true, -1, -1, 2319));
+		items.add(new ItemDef("Strength cape", "The cape worn by masters of strength", "", 99000, -1, "items:444", false, true, 33, 0, false, true, -1, -1, 2319));
 		items.add(new ItemDef("Hits cape", "The cape worn by masters of hits", "", 99000, -1, "items:445", false, true, 2048, 0, false, true, -1, -1, 2320));
 
 		// Halloween cracker
