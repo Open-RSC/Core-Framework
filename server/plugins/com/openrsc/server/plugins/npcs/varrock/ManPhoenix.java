@@ -1,12 +1,13 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.listeners.action.IndirectTalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.IndirectTalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -15,10 +16,29 @@ import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
 public class ManPhoenix implements TalkToNpcExecutiveListener,
-	TalkToNpcListener {
+	TalkToNpcListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
+		stravenDialogue(p, n, true);
+	}
+
+	@Override
+	public void onIndirectTalkToNpc(final Player p, final Npc n) {
+		Npc man = getNearestNpc(p, NpcId.STRAVEN.id(), 20);
+		if (isBlackArmGang(p)) {
+			if (man != null) {
+				npcTalk(p, man, "hey get away from there",
+					"Black arm dog");
+				man.setChasing(p);
+			}
+		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 0 && p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 5) {
+			stravenDialogue(p, n, false);
+		}
+		//any other condition inexistent, should open door
+	}
+
+	public void stravenDialogue(Player p, Npc n, final boolean directTalk) {
 		Npc man = getNearestNpc(p, NpcId.STRAVEN.id(), 20);
 		if (isBlackArmGang(p)) {
 			if (man != null) {
@@ -58,8 +78,8 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 			p.getCache().store("pheonix_mission", true);
 			p.getCache().store("pheonix_alf", true);
 		} else if (!p.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !hasItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id()) &&
-				(p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
-				&& isPhoenixGang(p)) {
+			(p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
+			&& isPhoenixGang(p)) {
 			npcTalk(p, n, "Greetings fellow gang member");
 			playerTalk(p, n, "I have lost the key you gave me");
 			npcTalk(p, n, "You need to be more careful",
@@ -69,7 +89,7 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 			addItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 			message(p, "Straven hands you a key");
 		} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p))
-				|| (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
+			|| (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
 			npcTalk(p, n, "Hows your little mission going?");
 			if (p.getInventory().hasItemId(ItemId.SCROLL.id())) {
 				playerTalk(p, n, "I have the intelligence report");
@@ -108,7 +128,7 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 			|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0 || p.getQuestStage(Quests.HEROS_QUEST) == -1) {
 			memberOfPhoenixConversation(p, n);
 		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
-			defaultConverstation(p, n);
+			defaultConverstation(p, n, directTalk);
 		}
 	}
 
@@ -165,9 +185,11 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 		}
 	}
 
-	private void defaultConverstation(final Player p, final Npc n) {
+	private void defaultConverstation(final Player p, final Npc n, final boolean directTalk) {
 		Menu defaultMenu = new Menu();
-		playerTalk(p, n, "What's through that door?");
+		if (directTalk) {
+			playerTalk(p, n, "What's through that door?");
+		}
 		npcTalk(p,
 			n,
 			"Heh you can't go in there",
@@ -203,9 +225,9 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 									"By the south entrance to this city",
 									"The name of the contact is Jonny the beard",
 									"Kill him and bring back his intelligence report");
-								if (p.getCache().hasKey("arrav_mission")) {
+								if (p.getCache().hasKey("arrav_mission") && ((p.getCache().getInt("arrav_mission") & 2) != PHOENIX_MISSION)) {
 									p.getCache().set("arrav_mission", ANY_MISSION);
-								} else {
+								} else if (!p.getCache().hasKey("arrav_mission")) {
 									p.getCache().set("arrav_mission", PHOENIX_MISSION);
 								}
 								playerTalk(p, n, "Ok, I'll get on it");
@@ -241,6 +263,11 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
+		return n.getID() == NpcId.STRAVEN.id();
+	}
+
+	@Override
+	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.STRAVEN.id();
 	}
 }

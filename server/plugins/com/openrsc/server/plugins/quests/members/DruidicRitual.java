@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -327,6 +328,11 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 236 &&
 				(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
 				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id())) {
+			if (p.getQuestStage(this) <= 0) {
+				p.playerServerMessage(MessageType.QUEST,"Nothing interesting happens");
+				return;
+			}
+
 			if (item.getID() == ItemId.RAW_CHICKEN.id()) {
 				message(p, "You dip the chicken in the cauldron");
 				p.getInventory().remove(ItemId.RAW_CHICKEN.id(), 1);

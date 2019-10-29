@@ -414,9 +414,9 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					"Sounds a little tricky got anything easier?");
 				if (choice3 == 0) {
 					playerTalk(p, n, "Ok no problem");
-					if (p.getCache().hasKey("arrav_mission")) {
+					if (p.getCache().hasKey("arrav_mission") && ((p.getCache().getInt("arrav_mission") & 1) != BLACKARM_MISSION)) {
 						p.getCache().set("arrav_mission", ANY_MISSION);
-					} else {
+					} else if (!p.getCache().hasKey("arrav_mission")) {
 						p.getCache().set("arrav_mission", BLACKARM_MISSION);
 					}
 				} else if (choice3 == 1) {
@@ -492,7 +492,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 			if (isPhoenixGang(p)) {
 				if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 5) {
 					if (man != null) {
-						man.initializeTalkScript(p);
+						man.initializeIndirectTalkScript(p);
 					}
 				} else {
 					p.message("The door is opened for you");
@@ -513,7 +513,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				}
 			} else {
 				if (man != null) {
-					man.initializeTalkScript(p);
+					man.initializeIndirectTalkScript(p);
 				}
 			}
 		} else if (obj.getID() == 20 && obj.getY() == 532) {
