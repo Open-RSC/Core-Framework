@@ -3792,8 +3792,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Hits cape", "The cape worn by masters of hits", "", 99000, -1, "items:445", false, true, 2048, 0, false, true, -1, -1, 2320));
 
 		// Halloween cracker
-		items.add(new ItemDef("Halloween cracker", "Use on another player to pull it", "", 0, 188, "items:188", false, false, 0, 333333,false, false, -1, -1, 2321));
-		items.add(new ItemDef("Halloween cracker", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2321, 2322));
+		items.add(new ItemDef("Trick or treat cracker", "Use on another player to pull it", "", 0, 515, "items:515", false, false, 0, 0,false, false, -1, -1, 2321));
+		items.add(new ItemDef("Trick or treat cracker", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2321, 2322));
 	}
 
 	// Bank note items

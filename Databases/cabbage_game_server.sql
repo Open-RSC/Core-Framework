@@ -5231,9 +5231,9 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         0, 0, 0, 0, 0, 99000),
        (2320, 0, -1, 'Hits cape', 'The cape worn by masters of hits', '', 0, 0, 0, 1, 1, 386, 2048, 11, 99, 0, 0, 0, 0,
         0, 0, 99000),
-       (2321, 2322, -1, 'Halloween cracker', 'Use on another player to pull it', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0,
+       (2321, 2322, -1, 'Trick or treat cracker', 'Use on another player to pull it', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0,
         0, 0, 0, 0, 1),
-       (2322, -1, 2321, 'Halloween cracker', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0,
+       (2322, -1, 2321, 'Trick or treat cracker', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
