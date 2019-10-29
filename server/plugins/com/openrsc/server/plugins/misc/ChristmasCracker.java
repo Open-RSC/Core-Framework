@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -44,9 +45,21 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				return;
 			}
 
+			/*if(!player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
+				player.message(otherPlayer.getUsername() + " does not want to pull a cracker with you...");
+				return;
+			}*/
+
+			player.setBusy(true);
+			otherPlayer.setBusy(true);
+			player.face(otherPlayer);
+			//otherPlayer.face(player);
+
 			showBubble(player, item);
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
+
+			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
@@ -66,6 +79,9 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			}
 
 			player.getInventory().remove(item);
+
+			player.setBusy(false);
+			otherPlayer.setBusy(false);
 		}
 	}
 
