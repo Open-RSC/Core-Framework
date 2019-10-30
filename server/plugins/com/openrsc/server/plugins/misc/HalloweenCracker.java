@@ -45,7 +45,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.NOTHING_REROLL.id() // hit the RDT
 	};
 
-	private static final int[] blackPrizeWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+	private static final int[] blackPrizeWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 	private static final int[] blackPrizeIds = {
 		ItemId.BLACK_PLATE_MAIL_BODY.id(),
 		ItemId.LARGE_BLACK_HELMET.id(),
@@ -62,7 +62,6 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.BLACK_CHAIN_MAIL_BODY.id(),
 		ItemId.BLACK_SQUARE_SHIELD.id(),
 		ItemId.BLACK_KITE_SHIELD.id(),
-		ItemId.BLACK_PLATED_SKIRT.id(),
 		ItemId.BLACK_PLATED_SKIRT.id(),
 		ItemId.MEDIUM_BLACK_HELMET.id(),
 		ItemId.BLACK_THROWING_KNIFE.id(),
