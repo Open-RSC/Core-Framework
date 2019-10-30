@@ -146,17 +146,17 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			Item prize = new Item(prizeId);
 
 			if (DataConversions.random(0, 1) == 1) {
+				player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat?", null));
 				player.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.message(player.getUsername() + " got the contents!");
 				player.getInventory().add(mask);
 				otherPlayer.getInventory().add(prize);
-				player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat!", null));
 			} else {
+				player.getUpdateFlags().setChatMessage(new ChatMessage(otherPlayer, "Trick or treat?", null));
 				otherPlayer.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.message(otherPlayer.getUsername() + " got the contents!");
 				otherPlayer.getInventory().add(mask);
 				player.getInventory().add(prize);
-				player.getUpdateFlags().setChatMessage(new ChatMessage(otherPlayer, "Trick or treat!", null));
 			}
 
 			player.setBusy(false);
