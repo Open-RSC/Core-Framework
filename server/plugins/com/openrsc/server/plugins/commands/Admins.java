@@ -127,7 +127,7 @@ public final class Admins implements CommandListener {
 			player.message(messagePrefix + "Cleaned " + count1 + " regions.");
 		} else if (cmd.equalsIgnoreCase("holidaydrop")) {
 			if (args.length < 2) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [item_id] ...");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [minute] [item_id] ...");
 				return;
 			}
 
@@ -135,17 +135,29 @@ public final class Admins implements CommandListener {
 			try {
 				executionCount = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [item_id] ...");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [minute] [item_id] ...");
+				return;
+			}
+
+			int minute;
+			try {
+				minute = Integer.parseInt(args[1]);
+
+				if(minute < 0 || minute > 60) {
+					player.message(messagePrefix + "The minute of the hour must be between 0 and 60");
+				}
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [minute] [item_id] ...");
 				return;
 			}
 
 			final ArrayList<Integer> items = new ArrayList<>();
-			for (int i = 1; i < args.length; i++) {
+			for (int i = 2; i < args.length; i++) {
 				int itemId;
 				try {
 					itemId = Integer.parseInt(args[i]);
 				} catch (NumberFormatException ex) {
-					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [item_id] ...");
+					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [minute] [item_id] ...");
 					return;
 				}
 				items.add(itemId);
@@ -159,7 +171,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			player.getWorld().getServer().getGameEventHandler().add(new HolidayDropEvent(player.getWorld(), executionCount, player, items));
+			player.getWorld().getServer().getGameEventHandler().add(new HolidayDropEvent(player.getWorld(), executionCount, minute, player, items));
 			player.message(messagePrefix + "Starting holiday drop!");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 		} else if (cmd.equalsIgnoreCase("stopholidaydrop") || cmd.equalsIgnoreCase("cancelholidaydrop")) {
@@ -180,8 +192,9 @@ public final class Admins implements CommandListener {
 				HolidayDropEvent holidayEvent = (HolidayDropEvent) event;
 
 				player.message(messagePrefix + "There is currently an Holiday Drop Event running:");
-				player.message(messagePrefix + "Items: " + StringUtils.join(holidayEvent.getItems(), ", "));
+				player.message(messagePrefix + "Occurs on minute " + holidayEvent.getMinute() + " of each hour");
 				player.message(messagePrefix + "Total Hours: " + holidayEvent.getLifeTime() + ", Elapsed Hours: " + holidayEvent.getElapsedHours() + ", Hours Left: " + Math.abs(holidayEvent.getLifeTimeLeft()));
+				player.message(messagePrefix + "Items: " + StringUtils.join(holidayEvent.getItems(), ", "));
 				return;
 			}
 
@@ -889,9 +902,9 @@ public final class Admins implements CommandListener {
 							wearableId, false);
 				}
 			}
-			
+
 			ListIterator<Item> iterator = p.getInventory().iterator();
-			
+
 			for (; iterator.hasNext(); ) {
 				Item i = iterator.next();
 				if (i.isWielded()) {
@@ -901,7 +914,7 @@ public final class Admins implements CommandListener {
 				}
 				iterator.remove();
 			}
-			
+
 			ActionSender.sendInventory(p);
 			ActionSender.sendEquipmentStats(p);
 			if (p.getUsernameHash() != player.getUsernameHash()) {

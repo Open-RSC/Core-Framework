@@ -21,12 +21,16 @@ public class HolidayDropEvent extends HourlyEvent  {
 	private String eventMessage;
 	private Player executor;
 
-	public HolidayDropEvent(World world, int lifeTime, Player executor, ArrayList<Integer> items) {
-		this(world, lifeTime, executor, items, (String)null);
+	public HolidayDropEvent(final World world, final int lifeTime, final Player executor, final ArrayList<Integer> items) {
+		this(world, lifeTime, 0, executor, items, (String)null);
 	}
 
-	private HolidayDropEvent(World world, int lifeTime, Player executor, ArrayList<Integer> items, String eventMessage) {
-		super(world, lifeTime, "Holiday Drop Event");
+	public HolidayDropEvent(final World world, final int lifeTime, final int minute, final Player executor, final ArrayList<Integer> items) {
+		this(world, lifeTime, minute, executor, items, (String)null);
+	}
+
+	private HolidayDropEvent(final World world, final int lifeTime, final int minute, final Player executor, final ArrayList<Integer> items, final String eventMessage) {
+		super(world, lifeTime, minute,"Holiday Drop Event");
 		this.executor = executor;
 		this.items = items;
 		this.eventMessage = eventMessage;
