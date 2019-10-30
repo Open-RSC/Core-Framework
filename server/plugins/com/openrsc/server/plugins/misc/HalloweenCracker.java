@@ -31,7 +31,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.BLUE_HALLOWEEN_MASK.id(),
 	};
 
-	private static final int[] prizeWeights = {64, 64, 12, 12, 20, 64, 12, 8};
+	private static final int[] prizeWeights = {48, 48, 12, 12, 20, 48, 48, 12, 8};
 	private static final int[] prizeIds = {
 		ItemId.PUMPKIN.id(),
 		ItemId.CHOCOLATE_BAR.id(),
@@ -40,9 +40,19 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(),
 		ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id(),
 
+		ItemId.NOTHING_REROLL4.id(), // hit the trick items
 		ItemId.NOTHING_REROLL3.id(), // Roll for a Black items
 		ItemId.NOTHING_REROLL2.id(), // Roll for a good items
-		ItemId.NOTHING_REROLL.id() // hit the RDT
+		ItemId.NOTHING_REROLL.id(), // hit the RDT
+	};
+
+	private static final int[] trickWeights = {48, 52, 52, 52, 52};
+	private static final int[] trickIds = {
+		ItemId.COAL.id(),
+		ItemId.COOKING_APPLE.id(),
+		ItemId.ROTTEN_APPLES.id(),
+		ItemId.BURNT_SHARK.id(),
+		ItemId.WORM_CRUNCHIES.id(),
 	};
 
 	private static final int[] blackPrizeWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -114,6 +124,8 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			player.setBusy(true);
 			otherPlayer.setBusy(true);
 
+			player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat?", null));
+
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
@@ -136,25 +148,27 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				prizeId = Formulae.weightedRandomChoice(runePrizeIds, runePrizeWeights);
 			} else if (prizeId == ItemId.NOTHING_REROLL3.id()) {
 				prizeId = Formulae.weightedRandomChoice(blackPrizeIds, blackPrizeWeights);
+			} else if (prizeId == ItemId.NOTHING_REROLL4.id()) {
+				prizeId = Formulae.weightedRandomChoice(trickIds, trickWeights);
 			}
 
-			if (prizeId == ItemId.NOTHING.id()) {
-				prizeId = ItemId.PUMPKIN.id();
+			if (prizeId == ItemId.NOTHING.id()) { // RDT missed Drag Shield
+				prizeId = ItemId.FEATHER.id();
 			}
 
 			Item mask = new Item(holidayId);
 			Item prize = new Item(prizeId);
 
 			if (DataConversions.random(0, 1) == 1) {
-				player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat?", null));
 				player.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				otherPlayer.message(player.getUsername() + " got the contents!");
+				otherPlayer.message("You got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
+				player.message(otherPlayer.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.getInventory().add(mask);
 				otherPlayer.getInventory().add(prize);
 			} else {
-				player.getUpdateFlags().setChatMessage(new ChatMessage(otherPlayer, "Trick or treat?", null));
 				otherPlayer.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				player.message(otherPlayer.getUsername() + " got the contents!");
+				otherPlayer.message(otherPlayer.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
+				player.message("You got a " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.getInventory().add(mask);
 				player.getInventory().add(prize);
 			}

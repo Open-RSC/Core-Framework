@@ -10,6 +10,8 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 
+import java.security.InvalidParameterException;
+
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
 
@@ -488,7 +490,7 @@ public final class Formulae {
 		int levelStopFail = requiredLvl + 8;
 		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
 	}
-	
+
 	/**
 	 * Should the golden item (bowl) break?
 	 */
@@ -891,7 +893,11 @@ public final class Formulae {
 		return weightedRandomChoice(list, weights, 0);
 	}
 
-	private static int weightedRandomChoice(int[] list, int[] weights, int defaultReturn) {
+	private static int weightedRandomChoice(int[] list, int[] weights, int defaultReturn) throws InvalidParameterException {
+		if(list.length != weights.length) {
+			throw new InvalidParameterException("weightedRandomChoice ID list and weights must be of equal length");
+		}
+
 		int total = 0;
 		for (int x : weights)
 			total += x;
@@ -906,7 +912,7 @@ public final class Formulae {
 		return defaultReturn;
 	}
 
-	public static int calculateGoldDrop(int[] goldValues) {
+	public static int calculateGoldDrop(int[] goldValues) throws InvalidParameterException {
 		int[] weights = new int[]{100};
 		if (goldValues.length == 2) weights = new int[]{67, 33};
 		else if (goldValues.length == 3) weights = new int[]{45, 33, 22};
@@ -926,7 +932,7 @@ public final class Formulae {
 		return boost > 1000 ? 1000 : boost;
 	}
 
-	public static int calculateGemDrop(Player p) {
+	public static int calculateGemDrop(Player p) throws InvalidParameterException {
 		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
 		if (roll1 != ItemId.NOTHING_REROLL.id())
 			return roll1;
@@ -934,11 +940,11 @@ public final class Formulae {
 		return roll2;
 	}
 
-	public static int calculateRareDrop(Player p) {
+	public static int calculateRareDrop(Player p) throws InvalidParameterException {
 		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
 
-	public static int calculateHerbDrop() {
+	public static int calculateHerbDrop() throws InvalidParameterException {
 		return weightedRandomChoice(herbDropIDs, herbDropWeights, ItemId.UNIDENTIFIED_GUAM_LEAF.id());
 	}
 
