@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
@@ -48,8 +49,9 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		return (item1.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getID() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
-				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id());
+		return ((item1.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getID() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
+				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id())) ||
+			Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id());
 	}
 
 	@Override
@@ -58,6 +60,8 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
 			p.message("I think these fit together, but I can't seem to make it fit");
 			p.message("I am going to need someone with more experience to help me with this");
+		} else if (Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id())) {
+			p.message("The bat bones are to bulky to fit in the vial");
 		}
 	}
 

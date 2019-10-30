@@ -27,9 +27,9 @@ public class Retreats {
 			put(NpcId.THIEF_BLANKET.id(), 5);
 			put(NpcId.HEAD_THIEF.id(), 5);
 			put(NpcId.MONK.id(), 5);
+			put(NpcId.GIANT_BAT.id(), 5);
+			put(NpcId.DEATH_WING.id(), 5);
 			put(NpcId.IMP.id(), 4);
-			put(NpcId.GIANT_BAT.id(), 4);
-			put(NpcId.DEATH_WING.id(), 4);
 			put(NpcId.CHICKEN.id(), 2);
 			put(NpcId.FIREBIRD.id(), 2);
 			put(NpcId.OOMLIE_BIRD.id(), 2);
@@ -69,5 +69,5 @@ public class Retreats {
 			put(NpcId.KALRAG.id(), 1);
 		}};
 	}
-	
+
 }
