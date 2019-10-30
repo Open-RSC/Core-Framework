@@ -48,8 +48,8 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 
 		String[] options;
 		int extraOptions = 0;
-		boolean ears = p.getInventory().hasItemId(1156) || p.getBank().countId(1156) > 0;
-		boolean scythe = p.getInventory().hasItemId(1289) || p.getBank().countId(1289) > 0;
+		boolean ears = p.getInventory().hasItemId(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0;
+		boolean scythe = p.getInventory().hasItemId(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0;
 		if (p.getCache().hasKey("bunny_ears") && p.getCache().hasKey("scythe") && !scythe && !ears) {
 			options = new String[]{
 				"I have lost my scythe can I get another one please?",

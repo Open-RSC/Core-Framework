@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
@@ -80,6 +79,8 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 						"you can send help for me later", "traveler wait!");
 					message(p, "kent reaches behind your neck", "slooop",
 						"he pulls a sea slug from under your top");
+					//kent drops slug at 511, 636 and stays for about 12s
+					createGroundItemDelayedRemove(new GroundItem(p.getWorld(), ItemId.SEASLUG.id(), 511, 636, 1, p), 12000);
 					npcTalk(p, n,
 						"a few more minutes and that thing would have full control you body");
 					playerTalk(p, n, "yuck..thanks kent");
@@ -136,6 +137,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n,
 						"okay, you wait here and i'll figure another way to get you out");
 					break;
+				case 6:
 				case -1:
 					message(p, "He doesn't seem interested in talking");
 			}

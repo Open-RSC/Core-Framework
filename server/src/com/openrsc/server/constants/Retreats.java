@@ -30,6 +30,9 @@ public class Retreats {
 			put(NpcId.GIANT_BAT.id(), 5);
 			put(NpcId.DEATH_WING.id(), 5);
 			put(NpcId.IMP.id(), 4);
+			put(NpcId.PLATFORM_FISHERMAN_GOLDEN.id(), 3);
+			put(NpcId.PLATFORM_FISHERMAN_GRAY.id(), 3);
+			put(NpcId.PLATFORM_FISHERMAN_PURPLE.id(), 3);
 			put(NpcId.CHICKEN.id(), 2);
 			put(NpcId.FIREBIRD.id(), 2);
 			put(NpcId.OOMLIE_BIRD.id(), 2);
