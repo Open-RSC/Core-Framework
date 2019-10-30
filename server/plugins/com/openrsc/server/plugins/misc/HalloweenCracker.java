@@ -167,7 +167,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				otherPlayer.getInventory().add(prize);
 			} else {
 				otherPlayer.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				otherPlayer.message(otherPlayer.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
+				otherPlayer.message(player.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.message("You got a " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.getInventory().add(mask);
 				player.getInventory().add(prize);
