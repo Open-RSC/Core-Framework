@@ -49,7 +49,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				return;
 			}
 			if (affectedPlayer.isIronMan(1) || affectedPlayer.isIronMan(2) || affectedPlayer.isIronMan(3)) {
-				player.message(affectedPlayer.getUsername() + " is an Iron Man. He stands alone.");
+				player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
 				player.getTrade().resetAll();
 				return;
 			}

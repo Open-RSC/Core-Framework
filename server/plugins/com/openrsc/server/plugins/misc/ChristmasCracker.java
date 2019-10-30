@@ -41,7 +41,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getID() == ItemId.CHRISTMAS_CRACKER.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. He stands alone.");
+				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
 				return;
 			}
 

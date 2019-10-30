@@ -102,19 +102,17 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getID() == ItemId.HALLOWEEN_CRACKER.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. He stands alone.");
+				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
 				return;
 			}
 
-			if(!player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
+			if (!player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
 				player.message(otherPlayer.getUsername() + " does not want to pull a cracker with you...");
 				return;
 			}
 
 			player.setBusy(true);
 			otherPlayer.setBusy(true);
-
-			player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Kah Bah Gee!", null));
 
 			player.face(otherPlayer);
 			otherPlayer.face(player);
@@ -132,7 +130,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
 
-			if(prizeId == ItemId.NOTHING_REROLL.id()) {
+			if (prizeId == ItemId.NOTHING_REROLL.id()) {
 				prizeId = Formulae.calculateGemDrop(player);
 			} else if (prizeId == ItemId.NOTHING_REROLL2.id()) {
 				prizeId = Formulae.weightedRandomChoice(runePrizeIds, runePrizeWeights);
@@ -140,23 +138,25 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				prizeId = Formulae.weightedRandomChoice(blackPrizeIds, blackPrizeWeights);
 			}
 
-			if(prizeId == ItemId.NOTHING.id()) {
+			if (prizeId == ItemId.NOTHING.id()) {
 				prizeId = ItemId.PUMPKIN.id();
 			}
 
-			Item phat = new Item(holidayId);
+			Item mask = new Item(holidayId);
 			Item prize = new Item(prizeId);
 
 			if (DataConversions.random(0, 1) == 1) {
-				player.message("Out comes a party hat!");
+				player.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.message(player.getUsername() + " got the contents!");
-				player.getInventory().add(phat);
+				player.getInventory().add(mask);
 				otherPlayer.getInventory().add(prize);
+				player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat!", null));
 			} else {
-				otherPlayer.message("Out comes a party hat!");
-				player.message(player.getUsername() + " got the contents!");
-				otherPlayer.getInventory().add(phat);
+				otherPlayer.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
+				player.message(otherPlayer.getUsername() + " got the contents!");
+				otherPlayer.getInventory().add(mask);
 				player.getInventory().add(prize);
+				player.getUpdateFlags().setChatMessage(new ChatMessage(otherPlayer, "Trick or treat!", null));
 			}
 
 			player.setBusy(false);

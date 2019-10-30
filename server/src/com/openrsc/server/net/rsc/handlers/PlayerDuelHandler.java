@@ -75,7 +75,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			}
 
 			if (affectedPlayer.isIronMan(1) || affectedPlayer.isIronMan(2) || affectedPlayer.isIronMan(3)) {
-				player.message(affectedPlayer.getUsername() + " is an Iron Man. He stands alone.");
+				player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
 				unsetOptions(player);
 				unsetOptions(affectedPlayer);
 				return;

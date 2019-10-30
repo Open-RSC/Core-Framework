@@ -26,7 +26,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, PickupListener, PickupExecutiveListener,
 InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
-		
+
 	private static final int[][] SCORES_XP = {{20, 30, 35, 40, 220} , {40, 50, 60, 70, 220}};
 
 	@Override
@@ -48,12 +48,12 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	public void handleReward(Player p) {
 		//mini-game complete handled already
 	}
-	
+
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. He stands alone.");
+				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
 			} else {
 				// does not matter where the players are at, neither in the field or wild,
 				// nor if they have free inventory space
@@ -63,12 +63,12 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 						if (otherPlayer.isPlayer()) {
 							player.getInventory().remove(item);
 							player.message("you throw the ball");
-							
+
 							// only the shops interface is reset is closed if they are accessing it
 							if (otherPlayer.accessingShop()) {
 								otherPlayer.resetShop();
 							}
-							
+
 							otherPlayer.getInventory().add(item);
 							otherPlayer.message("Warning! " + player.getUsername() + " is shooting at you!");
 							otherPlayer.message("you catch the ball");
@@ -79,14 +79,14 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			}
 		}
 	}
-	
+
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
 		Zone playerZone = GnomeField.getInstance().resolvePositionToZone(player);
 		if (playerZone == Zone.ZONE_NO_PASS) {
 			player.message("you can't make the pass from here");
 		} else if (playerZone == Zone.ZONE_PASS) {
-			Npc gnome_team; 
+			Npc gnome_team;
 			if (player.getY() <= 449) {
 				gnome_team = getNearestNpc(player, GnomeNpcs.GNOME_BALLER_NORTH, 10);
 			}
@@ -161,9 +161,9 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 					"maybe you should try playing on the pitch!");
 		}
 	}
-	
+
 	private void cheerLeaderCelebrate(Player p, Npc n) {
-		
+
 		switch(DataConversions.random(0, 2)) {
 		case 0:
 			npcTalk(p, n, "yeah", "good goal");
@@ -176,7 +176,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			break;
 		}
 	}
-	
+
 	private void loadIfNotMemory(Player p, String cacheName) {
 		//load from player cache if not present in memory
 		if((p.getSyncAttribute(cacheName, -1) == -1) && p.getCache().hasKey(cacheName)) {
@@ -185,7 +185,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			p.setSyncAttribute(cacheName, 0);
 		}
 	}
-	
+
 	private void handleScore(Player p, int score_zone) {
 		loadIfNotMemory(p, "gnomeball_goals");
 		int prev_goalCount = p.getAttribute("gnomeball_goals", 0);
@@ -197,7 +197,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 		}
 		p.setAttribute("gnomeball_goals", (prev_goalCount+1)%5);
 	}
-	
+
 	private void showScoreWindow(Player p, int goalNum) {
 		String text = "@yel@goal";
 		if (goalNum > 1) {
@@ -220,7 +220,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		return item.getID() == ItemId.GNOME_BALL.id();
