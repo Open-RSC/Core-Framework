@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
 
-	private static final int[] holidayWeights = {9, 9, 8, 5, 9, 9, 8, 5, 8, 62, 62, 62};
+	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 64, 64, 64};
 	private static final int[] holidayIds = {
 		ItemId.WHITE_UNICORN_MASK.id(),
 		ItemId.BLOOD_UNICORN_MASK.id(),
@@ -25,8 +25,6 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 		ItemId.BLOOD_WOLF_MASK.id(),
 		ItemId.BLACK_WOLF_MASK.id(),
 		ItemId.PINK_WOLF_MASK.id(),
-
-		ItemId.FOX_MASK.id(),
 
 		ItemId.GREEN_HALLOWEEN_MASK.id(),
 		ItemId.RED_HALLOWEEN_MASK.id(),
