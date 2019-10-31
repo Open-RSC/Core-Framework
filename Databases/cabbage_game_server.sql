@@ -5238,7 +5238,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2321, 2322, -1, 'Trick or treat cracker', 'Use on another player to pull it', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0,
         0, 0, 0, 0, 1),
        (2322, -1, 2321, 'Trick or treat cracker', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+       (2323, 2324, -1, 'Fox mask', 'Struttin like a fox', '', 0, 0, 0, 0, 1, 387, 32, 5, 0, 0, 0, 0, 0, 0, 0, 0),
+       (2324, -1, 2323, 'Fox mask', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`

@@ -3767,23 +3767,23 @@ public class EntityHandler {
 		items.add(new ItemDef("Opal ring", "Swap this note at any bank for the equivalent item.", "", 1050, -1, "items:438", true, false, 0, 0, true, false, -1, 2300, 2301));
 
 		// Wolf masks
-		items.add(new ItemDef("White wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16777215, 16777215, false, false, 1448, -1, 2302));
+		items.add(new ItemDef("White wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16777215, 16777215, false, false, 2303, -1, 2302));
 		items.add(new ItemDef("White wolf mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2302, 2303));
-		items.add(new ItemDef("Blood wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 10878976, 1513239, false, false, 1448, -1, 2304));
+		items.add(new ItemDef("Blood wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 10878976, 1513239, false, false, 2305, -1, 2304));
 		items.add(new ItemDef("Blood wolf mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2304, 2305));
-		items.add(new ItemDef("Black wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 1513239, 10878976, false, false, 1448, -1, 2306));
+		items.add(new ItemDef("Black wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 1513239, 10878976, false, false, 2307, -1, 2306));
 		items.add(new ItemDef("Black wolf mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2306, 2307));
-		items.add(new ItemDef("Pink wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16759039, 16777215, false, false, 1448, -1, 2308));
+		items.add(new ItemDef("Pink wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16759039, 16777215, false, false, 2309, -1, 2308));
 		items.add(new ItemDef("Pink wolf mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2308, 2309));
 
 		// Unicorn masks
-		items.add(new ItemDef("White unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16777215, 16777215, false, false, -1, -1, 2310));
+		items.add(new ItemDef("White unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16777215, 16777215, false, false, 2311, -1, 2310));
 		items.add(new ItemDef("White unicorn mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2310, 2311));
-		items.add(new ItemDef("Blood unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 10878976, 1513239, false, false, -1, -1, 2312));
+		items.add(new ItemDef("Blood unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 10878976, 1513239, false, false, 2313, -1, 2312));
 		items.add(new ItemDef("Blood unicorn mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2312, 2313));
-		items.add(new ItemDef("Black unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 1513239, 10878976, false, false, -1, -1, 2314));
+		items.add(new ItemDef("Black unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 1513239, 10878976, false, false, 2315, -1, 2314));
 		items.add(new ItemDef("Black unicorn mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2314, 2315));
-		items.add(new ItemDef("Pink unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16759039, 16777215, false, false, -1, -1, 2316));
+		items.add(new ItemDef("Pink unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16759039, 16777215, false, false, 2317, -1, 2316));
 		items.add(new ItemDef("Pink unicorn mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2316, 2317));
 
 		// Skill capes
@@ -3792,8 +3792,12 @@ public class EntityHandler {
 		items.add(new ItemDef("Hits cape", "The cape worn by masters of hits", "", 99000, -1, "items:445", false, true, 2048, 0, false, true, -1, -1, 2320));
 
 		// Halloween cracker
-		items.add(new ItemDef("Trick or treat cracker", "Use on another player to pull it", "", 0, 515, "items:515", false, false, 0, 0,false, false, -1, -1, 2321));
+		items.add(new ItemDef("Trick or treat cracker", "Use on another player to pull it", "", 0, 515, "items:515", false, false, 0, 0,false, false, 2322, -1, 2321));
 		items.add(new ItemDef("Trick or treat cracker", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2321, 2322));
+
+		// Fox mask
+		items.add(new ItemDef("Fox mask", "Struttin' like a fox", "", 0, 86, "items:509", false, true, 32, 16730368, 16446686, false, false, 2324, -1, 2323));
+		items.add(new ItemDef("Fox mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2323, 2324));
 	}
 
 	// Bank note items
@@ -5043,6 +5047,9 @@ public class EntityHandler {
 			animations.add(new AnimationDef("smithingcape", 0, 0, true, false, 0)); //384 smithing cape
 			animations.add(new AnimationDef("strengthcape", 0, 0, true, false, 0)); //385 strength cape
 			animations.add(new AnimationDef("hitscape", 0, 0, true, false, 0)); //386 hits cape
+
+			// Fox mask
+			animations.add(new AnimationDef("wolfmask", 16730368, 16446686, 0, true, false, 0)); //387 - fox mask
 		}
 	}
 

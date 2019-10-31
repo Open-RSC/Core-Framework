@@ -1383,7 +1383,10 @@ public enum ItemId {
 	HITS_CAPE(2320),
 
 	// Halloween cracker
-	HALLOWEEN_CRACKER(2321);
+	HALLOWEEN_CRACKER(2321),
+
+	// Fox mask
+	FOX_MASK(2323);
 
 	private int itemId;
 

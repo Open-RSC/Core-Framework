@@ -33,12 +33,18 @@ public final class AvatarGenerator {
 	public int getID() {
 		return id;
 	}
-	public void setID(int id) { AvatarGenerator.id = id; }
+
+	public void setID(int id) {
+		AvatarGenerator.id = id;
+	}
 
 	public String getPackageName() {
 		return packageName;
 	}
-	private static void setPackageName(String name) { packageName = name; }
+
+	private static void setPackageName(String name) {
+		packageName = name;
+	}
 
 	public void setShift(int xShift, int yShift) {
 	}
@@ -108,52 +114,52 @@ public final class AvatarGenerator {
 	}
 
 	private static ArrayList<Sprite> unpackSpriteNew(ByteBuffer in) {
-			ArrayList<Sprite> spriteArray = new ArrayList<>();
+		ArrayList<Sprite> spriteArray = new ArrayList<>();
 
-			while (in.hasRemaining()) {
+		while (in.hasRemaining()) {
 
-				int id = in.getShort();
-				int width = in.getShort();
-				int height = in.getShort();
+			int id = in.getShort();
+			int width = in.getShort();
+			int height = in.getShort();
 
-				boolean requiresShift = in.get() == 1;
-				int xShift = in.getShort();
-				int yShift = in.getShort();
+			boolean requiresShift = in.get() == 1;
+			int xShift = in.getShort();
+			int yShift = in.getShort();
 
-				int width2 = in.getShort();
-				int height2 = in.getShort();
+			int width2 = in.getShort();
+			int height2 = in.getShort();
 
-				int[] pixels = new int[width * height];
+			int[] pixels = new int[width * height];
 
-				//if (in.remaining() < (pixels.length * 4))
-				//   throw new IOException("Provided buffer too short - Pixels missing");
+			//if (in.remaining() < (pixels.length * 4))
+			//   throw new IOException("Provided buffer too short - Pixels missing");
 
-				for (int pixel = 0; pixel < pixels.length; pixel++)
-					pixels[pixel] = in.getInt();
+			for (int pixel = 0; pixel < pixels.length; pixel++)
+				pixels[pixel] = in.getInt();
 
-				//if (in.remaining() <= 0)
-				//  e.name = "Missing";
-				//else
+			//if (in.remaining() <= 0)
+			//  e.name = "Missing";
+			//else
 
-				Sprite e = new Sprite(pixels, width, height);
-				setPackageName(readString(in));
+			Sprite e = new Sprite(pixels, width, height);
+			setPackageName(readString(in));
 
-				//e.data = rgbTo8bit(pixels,width,height);
-				e.setID(id);
-				e.setSomething(width2, height2);
+			//e.data = rgbTo8bit(pixels,width,height);
+			e.setID(id);
+			e.setSomething(width2, height2);
 
-				e.setXShift(xShift);
-				e.setYShift(yShift);
+			e.setXShift(xShift);
+			e.setYShift(yShift);
 
-				e.setRequiresShift(requiresShift);
-				spriteArray.add(e);
-			}
-			//if (in.remaining() < 15)
-			//   throw new IOException("Provided buffer too short - Headers missing");
-
-
-			return spriteArray;
+			e.setRequiresShift(requiresShift);
+			spriteArray.add(e);
 		}
+		//if (in.remaining() < 15)
+		//   throw new IOException("Provided buffer too short - Headers missing");
+
+
+		return spriteArray;
+	}
 
 	private static String readString(ByteBuffer buffer) {
 		StringBuilder bldr = new StringBuilder();
@@ -470,14 +476,141 @@ public final class AvatarGenerator {
 				new AnimationDef("2hander", 11717785, 0, true, false, 0),
 				new AnimationDef("2hander", 65535, 0, true, false, 0),
 				new AnimationDef("2hander", 3158064, 0, true, false, 0),
-				new AnimationDef("unicornmask", 16777215, 0,true, false, 0), //287 - white unicorn mask
-				new AnimationDef("unicornmask", 10878976, 0,true, false, 0), //288 - blood unicorn mask
-				new AnimationDef("unicornmask", 1513239, 0,true, false, 0), //289 - black unicorn mask
-				new AnimationDef("unicornmask", 16759039, 0,true, false, 0), //290 - pink unicorn mask
-				new AnimationDef("wolfmask", 16777215, 0,true, false, 0), //291 - white wolf mask
-				new AnimationDef("wolfmask", 10878976, 0,true, false, 0), //292 - blood wolf mask
-				new AnimationDef("wolfmask", 1513239, 0,true, false, 0), //293 - black wolf mask
-				new AnimationDef("wolfmask", 16759039, 0,true, false, 0) //294 - pink wolf mask
+
+				// Unicorn masks
+				new AnimationDef("unicornmask", 16777215, 0, true, false, 0), //287 - white unicorn mask
+				new AnimationDef("unicornmask", 10878976, 0, true, false, 0), //288 - blood unicorn mask
+				new AnimationDef("unicornmask", 1513239, 0, true, false, 0), //289 - black unicorn mask
+				new AnimationDef("unicornmask", 16759039, 0, true, false, 0), //290 - pink unicorn mask
+
+				// Wolf masks
+				new AnimationDef("wolfmask", 16777215, 0, true, false, 0), //291 - white wolf mask
+				new AnimationDef("wolfmask", 10878976, 0, true, false, 0), //292 - blood wolf mask
+				new AnimationDef("wolfmask", 1513239, 0, true, false, 0), //293 - black wolf mask
+				new AnimationDef("wolfmask", 16759039, 0, true, false, 0), //294 - pink wolf mask
+
+				// Dragon items
+				new AnimationDef("dragonfullhelm", 11189164, 0, true, false, 0), //295 - dragon large
+				new AnimationDef("dragonbody", 11189164, 0, true, false, 0), //296 - dragon plate
+				new AnimationDef("dragonlegs", 11189164, 0, true, false, 0), //297 - dragon legs
+				new AnimationDef("fullhelm", 16768685, 0, true, false, 0), //298 -
+				new AnimationDef("fdragontop", 16768685, 0, true, false, 0), //299 -
+				new AnimationDef("dragonskirt", 16768685, 0, true, false, 0), //300 -
+				new AnimationDef("fullhelm", 10027084, 0, true, false, 0), //301 -
+				new AnimationDef("platemailtop", 10027084, 0, true, false, 0), //302 -
+				new AnimationDef("hatchet", 0, 0, true, false, 0), // 303 -
+
+				// Pumpkin head masks (missing, using wolf instead)
+				new AnimationDef("wolf", 2039583, 0, true, false, 0), //304 - orange pumpkin head (missing, was using charColour 0)
+				new AnimationDef("wolf", 2039583, 0, true, false, 0), //305 - red pumpkin head (missing, was 1513239)
+				new AnimationDef("wolf", 2039583, 0, true, false, 0), //306 - yellow pumpkin head (missing, was 16776960)
+				new AnimationDef("wolf", 255, 0, true, false, 0), //307 - blue pumpkin head (missing)
+				new AnimationDef("wolf", 11141375, 0, true, false, 0), //308 - purple pumpkin head (missing)
+				new AnimationDef("wolf", 65280, 0, true, false, 0), //309 - green pumpkin head (missing)
+
+				// Skill capes and hoods
+				new AnimationDef("fishingcape", 0, 0, true, false, 0), //310 - fishing cape
+				new AnimationDef("cookingcape", 0, 0, true, false, 0), //311 - cooking cape
+				new AnimationDef("hood1", 0, 0, true, false, 0), //312 - fishing hood
+				new AnimationDef("warriorcape", 0, 0, true, false, 0), //313 - warrior cape
+				new AnimationDef("spottedcape", 7692086, 0, true, false, 0), //314 - spotted cape
+				new AnimationDef("attackcape", 0, 0, true, false, 0), //317 - attack cape
+
+				// Easter basket (missing, using peppermintstick instead) and Gaia NPC (missing, using evilhoodie instead)
+				new AnimationDef("evilhoodie", 0, 0, true, false, 0), //316 - NPC Gaia (missing)
+				new AnimationDef("peppermintstick", 0, 0, true, false, 0), //317 - easter basket (missing)
+
+				// Ironman items
+				new AnimationDef("fullhelm", 11189164, 0, true, false, 0), //318 - ironman helm
+				new AnimationDef("platemailtop", 11189164, 0, true, false, 0), //319 - ironman plate
+				new AnimationDef("platemaillegs", 11189164, 0, true, false, 0), //320 - ironman legs
+				new AnimationDef("fullhelm", 16768685, 0, true, false, 0), //321 - ultimate ironman helm
+				new AnimationDef("platemailtop", 16768685, 0, true, false, 0), //322 - ultimate ironman plate
+				new AnimationDef("platemaillegs", 16768685, 0, true, false, 0), //323 - ultimate ironman legs
+				new AnimationDef("fullhelm", 10027084, 0, true, false, 0), //324 - hc ironman helm
+				new AnimationDef("platemailtop", 10027084, 0, true, false, 0), //325 - hc ironman plate
+				new AnimationDef("platemaillegs", 10027084, 0, true, false, 0), //326 - hc ironman legs
+
+				// Orange feather helms
+				new AnimationDef("fullhelmorange", 16737817, 0, true, false, 0), //327 - bronze helm orange
+				new AnimationDef("fullhelmorange", 15654365, 0, true, false, 0), //328 - iron helm orange
+				new AnimationDef("fullhelmorange", 15658734, 0, true, false, 0), //329 - steel helm orange
+				new AnimationDef("fullhelmorange", 3158064, 0, true, false, 0), //330 - black helm orange
+				new AnimationDef("fullhelmorange", 10072780, 0, true, false, 0), //331 - mith helm orange
+				new AnimationDef("fullhelmorange", 11717785, 0, true, false, 0), //332 - addy helm orange
+				new AnimationDef("fullhelmorange", 65535, 0, true, false, 0), //333 - rune helm orange
+
+				// Blue feather helms
+				new AnimationDef("fullhelmblue", 16737817, 0, true, false, 0), //334 - bronze helm blue
+				new AnimationDef("fullhelmblue", 15654365, 0, true, false, 0), //335 - iron helm blue
+				new AnimationDef("fullhelmblue", 15658734, 0, true, false, 0), //336 - steel helm blue
+				new AnimationDef("fullhelmblue", 3158064, 0, true, false, 0), //337 - black helm blue
+				new AnimationDef("fullhelmblue", 10072780, 0, true, false, 0), //338 - mith helm blue
+				new AnimationDef("fullhelmblue", 11717785, 0, true, false, 0), //339 - addy helm blue
+				new AnimationDef("fullhelmblue", 65535, 0, true, false, 0), //340 - rune helm blue
+
+				// Purple feather helms
+				new AnimationDef("fullhelmpurple", 16737817, 0, true, false, 0), //341 - bronze helm purple
+				new AnimationDef("fullhelmpurple", 15654365, 0, true, false, 0), //342 - iron helm purple
+				new AnimationDef("fullhelmpurple", 15658734, 0, true, false, 0), //343 - steel helm purple
+				new AnimationDef("fullhelmpurple", 3158064, 0, true, false, 0), //344 - black helm purple
+				new AnimationDef("fullhelmpurple", 10072780, 0, true, false, 0), //345 - mith helm purple
+				new AnimationDef("fullhelmpurple", 11717785, 0, true, false, 0), //346 - addy helm purple
+				new AnimationDef("fullhelmpurple", 65535, 0, true, false, 0), //347 - rune helm purple
+
+				// Yellow feather helms
+				new AnimationDef("fullhelmyellow", 16737817, 0, true, false, 0), //348 - bronze helm yellow
+				new AnimationDef("fullhelmyellow", 15654365, 0, true, false, 0), //349 - iron helm yellow
+				new AnimationDef("fullhelmyellow", 15658734, 0, true, false, 0), //350 - steel helm yellow
+				new AnimationDef("fullhelmyellow", 3158064, 0, true, false, 0), //351 - black helm yellow
+				new AnimationDef("fullhelmyellow", 10072780, 0, true, false, 0), //352 - mith helm yellow
+				new AnimationDef("fullhelmyellow", 11717785, 0, true, false, 0), //353 - addy helm yellow
+				new AnimationDef("fullhelmyellow", 65535, 0, true, false, 0), //354 - rune helm yellow
+
+				// Green feather helms
+				new AnimationDef("fullhelmgreen", 16737817, 0, true, false, 0), //355 - bronze helm green
+				new AnimationDef("fullhelmgreen", 15654365, 0, true, false, 0), //356 - iron helm green
+				new AnimationDef("fullhelmgreen", 15658734, 0, true, false, 0), //357 - steel helm green
+				new AnimationDef("fullhelmgreen", 3158064, 0, true, false, 0), //358 - black helm green
+				new AnimationDef("fullhelmgreen", 10072780, 0, true, false, 0), //359 - mith helm green
+				new AnimationDef("fullhelmgreen", 11717785, 0, true, false, 0), //360 - addy helm green
+				new AnimationDef("fullhelmgreen", 65535, 0, true, false, 0), //361 - rune helm green
+
+				// Grey feather helms
+				new AnimationDef("fullhelmgrey", 16737817, 0, true, false, 0), //362 - bronze helm grey
+				new AnimationDef("fullhelmgrey", 15654365, 0, true, false, 0), //363 - iron helm grey
+				new AnimationDef("fullhelmgrey", 15658734, 0, true, false, 0), //364 - steel helm grey
+				new AnimationDef("fullhelmgrey", 3158064, 0, true, false, 0), //365 - black helm grey
+				new AnimationDef("fullhelmgrey", 10072780, 0, true, false, 0), //366 - mith helm grey
+				new AnimationDef("fullhelmgrey", 11717785, 0, true, false, 0), //367 - addy helm grey
+				new AnimationDef("fullhelmgrey", 65535, 0, true, false, 0), //368 - rune helm grey
+
+				// Black feather helms
+				new AnimationDef("fullhelmblack", 16737817, 0, true, false, 0), //369 - bronze helm black
+				new AnimationDef("fullhelmblack", 15654365, 0, true, false, 0), //370 - iron helm black
+				new AnimationDef("fullhelmblack", 15658734, 0, true, false, 0), //371 - steel helm black
+				new AnimationDef("fullhelmblack", 3158064, 0, true, false, 0), //372 - black helm black
+				new AnimationDef("fullhelmblack", 10072780, 0, true, false, 0), //373 - mith helm black
+				new AnimationDef("fullhelmblack", 11717785, 0, true, false, 0), //374 - addy helm black
+				new AnimationDef("fullhelmblack", 65535, 0, true, false, 0), //375 - rune helm black
+
+				// White feather helms
+				new AnimationDef("fullhelmwhite", 16737817, 0, true, false, 0), //376 - bronze helm white
+				new AnimationDef("fullhelmwhite", 15654365, 0, true, false, 0), //377 - iron helm white
+				new AnimationDef("fullhelmwhite", 15658734, 0, true, false, 0), //378 - steel helm white
+				new AnimationDef("fullhelmwhite", 3158064, 0, true, false, 0), //379 - black helm white
+				new AnimationDef("fullhelmwhite", 10072780, 0, true, false, 0), //380 - mith helm white
+				new AnimationDef("fullhelmwhite", 11717785, 0, true, false, 0), //381 - addy helm white
+				new AnimationDef("fullhelmwhite", 65535, 0, true, false, 0), //382 - rune helm white
+
+				// Greatwood NPC (missing, using evilhoodie instead) and skill capes
+				new AnimationDef("evilhoodie", 5453066, 0, true, false, 0), //383 NPC Greatwood tree boss (missing)
+				new AnimationDef("smithingcape", 0, 0, true, false, 0), //384 smithing cape
+				new AnimationDef("strengthcape", 0, 0, true, false, 0), //385 strength cape
+				new AnimationDef("hitscape", 0, 0, true, false, 0), //386 hits cape
+
+				// Fox mask
+				new AnimationDef("wolfmask", 16730368, 0, true, false, 0) //387 - fox mask
 			};
 
 
@@ -832,13 +965,17 @@ public final class AvatarGenerator {
 			public int getID() {
 				return id;
 			}
+
 			public void setID(int id) {
 			}
 
 			public String getPackageName() {
 				return packageName;
 			}
-			public void setPackageName(String name) { packageName = name; }
+
+			public void setPackageName(String name) {
+				packageName = name;
+			}
 
 			public void setShift(int xShift, int yShift) {
 				this.xShift = xShift;
@@ -853,10 +990,18 @@ public final class AvatarGenerator {
 			int getXShift() {
 				return xShift;
 			}
-			void setXShift(int value) { this.xShift = value; }
 
-			int getYShift() { return yShift;	}
-			void setYShift(int value) { this.yShift = value; }
+			void setXShift(int value) {
+				this.xShift = value;
+			}
+
+			int getYShift() {
+				return yShift;
+			}
+
+			void setYShift(int value) {
+				this.yShift = value;
+			}
 
 			void setRequiresShift(boolean requiresShift) {
 				this.requiresShift = requiresShift;
