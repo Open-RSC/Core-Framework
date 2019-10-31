@@ -19,5 +19,5 @@ VIAddVersionKey OriginalFilename "OpenRSC Launcher.exe"
  
 Section
   nsExec::Exec 'powershell -command "if (!(Test-Path "OpenRSC/OpenRSC.jar")) { Invoke-WebRequest -Uri "https://game.openrsc.com/downloads/OpenRSC.jar" -OutFile "OpenRSC/OpenRSC.jar" }"'
-  nsExec::Exec 'powershell -command "cd OpenRSC; zulu11.35.13-ca-jre11.0.5-win_x64/bin/java.exe -jar OpenRSC.jar"'
+  nsExec::Exec 'powershell -command "cd OpenRSC; zulu8.42.0.21-ca-jre8.0.232-win_x64/bin/java.exe -jar OpenRSC.jar"'
 SectionEnd
