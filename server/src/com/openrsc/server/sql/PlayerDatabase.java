@@ -538,15 +538,6 @@ public class PlayerDatabase {
 			save.getSettings().setAppearance(pa);
 			save.setMale(result.getInt("male") == 1);
 			save.setWornItems(save.getSettings().getAppearance().getSprites());
-			long skulled = result.getLong("skulled");
-			if (skulled > 0) {
-				//save.addSkull(skulled);
-			}
-
-			int charged = result.getInt("charged");
-			if (charged > 0) {
-				save.addCharge(charged);
-			}
 
 			save.getSkills().loadExp(fetchExperience(save.getDatabaseID()));
 
