@@ -96,7 +96,7 @@ Launcher/Cache/
 Launcher/*.jar
 Launcher/out/
 
-server/avatars/
+server/avatars/*.png
 server/*.jar
 server/out/
 server/local.conf
