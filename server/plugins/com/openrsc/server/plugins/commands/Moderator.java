@@ -183,10 +183,6 @@ public final class Moderator implements CommandListener {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			if (p.wasSummoned()) {
-				player.message(messagePrefix + "You can not summon a player who has already been summoned.");
-				return;
-			}
 			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not summon a staff member of equal or greater rank.");
 				return;

@@ -2838,6 +2838,7 @@ public final class Player extends Mob {
 
 	public Point summon(Point summonLocation) {
 		Point originalLocation = getLocation();
+		resetSummonReturnPoint();
 		setSummonReturnPoint();
 		teleport(summonLocation.getX(), summonLocation.getY(), true);
 		return originalLocation;

@@ -248,6 +248,7 @@ Super/Senior Moderator Commands
 - summonall
   - Usage: `::summonall (width) (height)`
   - Summons all currently logged in players to the current player.
+  - Clears any previous summon flag.
   - Width and height define a rectangle that the summon players will be placed into.
   - If width and height is not supplied then all players are summoned to the same square as the current player.
 - returnall
@@ -311,7 +312,7 @@ Moderator Commands
   - Summons the specified player to the current player's location.
   - This command sets a return point which can be used with `::return [player]`
   - Moderators can not summon players into the wilderness.
-  - You can not summon a player who already has already been summoned. Use `::return [player]` first.
+  - Clears any previous summon flag.
   - You can not summon a staff member of equal or greater rank.
 - say
   - Usage `::say [message]`
