@@ -11,6 +11,7 @@ import static orsc.osConfig.F_ANDROID_BUILD;
 public class Config {
 	private static Properties prop = new Properties();
 
+	public static boolean CUSTOM_UI = true; //Enables more rs2 style UI
 	public static boolean DEBUG = false; // Enables print out of the config being sent to the client
 	static String WINDOW_TITLE = "Open RSC"; // Only set here due to config not set by server fast enough at load time
 	public static String SERVER_NAME = "Runescape";
