@@ -51,7 +51,7 @@ public class ServerConfiguration {
 	/**
 	 * this worlds 'number'
 	 */
-	public int WORLD_NUMBER = 2;
+	private int WORLD_NUMBER = 2;
 	/**
 	 * the client version needed for login
 	 */
@@ -67,24 +67,24 @@ public class ServerConfiguration {
 	/**
 	 * the port the server is hosted on
 	 */
-	public int SERVER_PORT = 43594;
+	int SERVER_PORT = 43594;
 	/**
 	 * idle timer to force a player logout for standing in the same spot
 	 *
 	 */
-	public int IDLE_TIMER = 300000; // 5 minutes
+	int IDLE_TIMER = 300000; // 5 minutes
 	/**
 	 * auto save interval
 	 */
-	public int AUTO_SAVE = 30000; // 30 seconds
+	int AUTO_SAVE = 30000; // 30 seconds
 	/**
 	 * where the server is hosted (i.e. USA, Holland, etc.)
 	 */
-	public String SERVER_LOCATION = "USA";
+	private String SERVER_LOCATION = "USA";
 	/**
 	 * The HMAC SHA512 + Salt private key.
 	 */
-	public String HMAC_PRIVATE_KEY = "";
+	private String HMAC_PRIVATE_KEY = "";
 	/**
 	 * AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
 	 */
@@ -185,12 +185,12 @@ public class ServerConfiguration {
 	/**
 	 * The amount of time in minutes that users who are suspicious will be IP banned for
 	 */
-	public static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = 15;
+	private static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = 15;
 	/**
 	 * where the server will look for other configuration files
 	 */
 	public String CONFIG_DIR = "conf" + File.separator + "server";
-	public long START_TIME = 0L;
+	private long START_TIME = 0L;
 	public boolean AVATAR_GENERATOR = false; // Not sent to client
 	public boolean IS_DOUBLE_EXP = false;
 	public boolean DISPLAY_LOGO_SPRITE = false;
@@ -240,7 +240,7 @@ public class ServerConfiguration {
 	public boolean VALUABLE_DROP_MESSAGES = false;
 	public double VALUABLE_DROP_RATIO = 0;
 	public boolean VALUABLE_DROP_EXTRAS = false;
-	public String VALUABLE_DROP_ITEMS = "";
+	private String VALUABLE_DROP_ITEMS = "";
 	public boolean WANT_CUSTOM_RANK_DISPLAY = false;
 	public boolean RIGHT_CLICK_BANK = false;
 	public boolean FIX_OVERHEAD_CHAT = false;
@@ -290,22 +290,22 @@ public class ServerConfiguration {
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK = false;
 	public int PACKET_LIMIT = 30;
-	public int CONNECTION_LIMIT = 10;
-	public int CONNECTION_TIMEOUT = 15;
+	private int CONNECTION_LIMIT = 10;
+	private int CONNECTION_TIMEOUT = 15;
 	//quest-minigame related
-	public boolean WANT_GIANNE_BADGE = false;
-	public boolean WANT_BLURBERRY_BADGE = false;
+	private boolean WANT_GIANNE_BADGE = false;
+	private boolean WANT_BLURBERRY_BADGE = false;
 	public boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
 	public boolean WANT_BARTER_WORMBRAINS = false;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = false;
-	public boolean CAN_RETRIEVE_POST_QUEST_ITEMS = false;
+	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS = false;
 
 	public final int RING_OF_RECOIL_LIMIT = 40;
 	public final int RING_OF_FORGING_USES = 75;
 	public final int DWARVEN_RING_USES = 29;
 	public final int DWARVEN_RING_BONUS = 3;
 	public List<String> valuableDrops;
-
+	public boolean WANT_CUSTOM_UI = false;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -316,7 +316,7 @@ public class ServerConfiguration {
 	 * @throws IOException
 	 * Config file for server configurations.
 	 */
-	static Properties props = new Properties();
+	private static Properties props = new Properties();
 
 	void initConfig(String defaultFile) throws IOException {
 		try { // Always try to load local.conf first
@@ -430,7 +430,6 @@ public class ServerConfiguration {
 		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(props.getProperty("want_custom_quests"));
 		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(props.getProperty("want_improved_pathfinding"));
 
-
 		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
 		NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
@@ -496,5 +495,7 @@ public class ServerConfiguration {
 			VIEW_DISTANCE = 4;
 
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
+
+		WANT_CUSTOM_UI = Boolean.parseBoolean(props.getProperty("want_custom_ui"));
 	}
 }

@@ -22,16 +22,14 @@ import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 
 /**
  * @author n0m
@@ -518,7 +516,8 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().MINING_ROCKS_EXTENDED + " 65");
 			LOGGER.info(server.getConfig().WANT_NEW_RARE_DROP_TABLES + "");
 			LOGGER.info(server.getConfig().WANT_LEFTCLICK_WEBS + " 67");
-			LOGGER.info(server.getConfig().WANT_CUSTOM_QUESTS + "");
+			LOGGER.info(server.getConfig().WANT_CUSTOM_QUESTS + " 68");
+			LOGGER.info(server.getConfig().WANT_CUSTOM_UI + " 69");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -609,6 +608,7 @@ public class ActionSender {
 		s.writeByte((byte) stepsPerFrame); //66
 		s.writeByte((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //67
 		s.writeByte((byte) ((server.getConfig().NPC_KILL_LOGGING && server.getConfig().NPC_KILL_MESSAGES) ? 1 : 0)); //68
+		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_UI ? 1 : 0)); //69
 		return s;
 	}
 
