@@ -265,6 +265,8 @@ public class ServerConfiguration {
 	public String DISCORD_AUCTION_WEBHOOK_URL = "";
 	public boolean WANT_DISCORD_MONITORING_UPDATES = false;
 	public String DISCORD_MONITORING_WEBHOOK_URL = "";
+	public boolean WANT_DISCORD_BOT = false;
+	public long CROSS_CHAT_CHANNEL = 0;
 	public boolean WANT_EQUIPMENT_TAB = false;
 	public boolean WANT_BANK_PRESETS = false;
 	public boolean WANT_PARTIES = false;
@@ -417,6 +419,8 @@ public class ServerConfiguration {
 		DISCORD_AUCTION_WEBHOOK_URL = props.getProperty("discord_auction_webhook_url");
 		WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_monitoring_updates"));
 		DISCORD_MONITORING_WEBHOOK_URL = props.getProperty("discord_monitoring_webhook_url");
+		WANT_DISCORD_BOT = Boolean.parseBoolean(props.getProperty("want_discord_bot"));
+		CROSS_CHAT_CHANNEL = Long.parseLong(props.getProperty("cross_chat_channel"));
 		WANT_EQUIPMENT_TAB = Boolean.parseBoolean(props.getProperty("want_equipment_tab"));
 		WANT_BANK_PRESETS = Boolean.parseBoolean(props.getProperty("want_bank_presets"));
 		WANT_PARTIES = Boolean.parseBoolean(props.getProperty("want_parties"));

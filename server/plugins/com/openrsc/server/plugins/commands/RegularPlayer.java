@@ -6,6 +6,7 @@ import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
+import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
@@ -15,9 +16,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
@@ -388,6 +392,51 @@ public final class RegularPlayer implements CommandListener {
 					kills.append("NPC: ").append(player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey()).getName()).append(" - Kill Count: ").append(entry.getValue()).append("%");
 				}
 				ActionSender.sendBox(player, kills.toString(), true);
+		} else if (cmd.equalsIgnoreCase("pair")) {
+			if (player.getCache().hasKey("discordID")) {
+				player.message("Your account is already paired. Please message a mod on discord to unpair.");
+			} else {
+				if (player.getCache().hasKey("pair_token")) {
+					player.message("Your pair token is: " + player.getCache().getString("pair_token"));
+				} else {
+					Random rand = new Random();
+					int tokenLength = 10;
+					StringBuilder builder = new StringBuilder(tokenLength);
+					for (int i = 0; i < tokenLength; i++) {
+						boolean isCharacter = (rand.nextInt(2)) == 1;
+						if (isCharacter) {
+							boolean isCaps = (rand.nextInt(2)) == 1;
+							if (isCaps) {
+								builder.append((char)((rand.nextInt(26)) + 65));
+							} else {
+								builder.append((char)((rand.nextInt(26)) + 97));
+							}
+						} else {
+							builder.append((char)((rand.nextInt(10)) + 48));
+						}
+					}
+					try {
+						PreparedStatement pinStatement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
+						pinStatement.setInt(1, player.getDatabaseID());
+						pinStatement.setInt(2, 1);
+						pinStatement.setString(3, "pair_token");
+						pinStatement.setString(4, builder.toString());
+						pinStatement.executeUpdate();
+
+						player.getCache().store("pair_token", builder.toString());
+					} catch(SQLException a) {
+						a.printStackTrace();
+					}
+
+					player.message("Your pair token is: " + builder.toString());
+				}
+			}
+		} else if (cmd.equalsIgnoreCase("d")) {
+			String message = String.join(" ", args);
+			player.getWorld().getServer().getDiscordService().chatToDiscord("[InGame] " + player.getUsername() + ": " + message);
+			for (Player p : player.getWorld().getPlayers()) {
+				ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[>@gr2@D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0);
+			}
 		} else if (cmd.equalsIgnoreCase("commands")) {
 			ActionSender.sendBox(player, ""
 				+ "@yel@Commands available: %"
