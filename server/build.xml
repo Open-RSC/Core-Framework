@@ -42,7 +42,9 @@
                 <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/guava-25.0-jre.jar"/>
-                <pathelement location="${lib}/*"/>
+                <pathelement location="${lib}/JDA-4.0.0_55-withDependencies.jar"/>
+                <pathelement location="${lib}/emoji-java-5.1.1.jar"/>
+                <pathelement location="${lib}/json-20190722.jar"/>
                 <pathelement path="${java.class.path}/"/>
             </classpath>
             <compilerarg line="-Xlint:deprecation"/>
