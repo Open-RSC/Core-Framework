@@ -2222,7 +2222,7 @@ public final class mudclient implements Runnable {
 
 				int var4;
 				int var5;
-				if (this.showUiTab == Constants.FRIENDS_TAB) {
+				if (this.showUiTab == Config.FRIENDS_TAB) {
 					String var9 = null;
 					if (this.panelSocialTab == 0 && this.m_wk != -1) {
 						if (this.m_wk >= 0) {
@@ -3366,8 +3366,8 @@ public final class mudclient implements Runnable {
 			} else {
 				int var2;
 				int startY = 0;
-				if(Config.CUSTOM_UI){
-					startY = getGameHeight() - 100;	
+				if (Config.C_CUSTOM_UI) {
+					startY = getGameHeight() - 100;
 				}
 				if (this.mouseButtonClick == 0) {
 					// Draw
@@ -5144,34 +5144,34 @@ public final class mudclient implements Runnable {
 					MiscFunctions.textListEntryHeightMod = 2;
 					this.panelMessageTabs.drawPanel();
 					MiscFunctions.textListEntryHeightMod = 0;
-					
+
 					//redstones below (temporary, can be done better with proper tab sprites for ui)
-					if(Config.CUSTOM_UI){
+					if (Config.C_CUSTOM_UI) {
 						int maxY = getUITabsY();
 						int x = this.getSurface().width2 - 199 - 1;
-						if(this.showUiTab == Constants.OPTIONS_TAB){
+						if (this.showUiTab == Config.OPTIONS_TAB) {
 							this.getSurface().drawBox(x, maxY, 32, 32, GenUtil.buildColor(255, 0, 0));
 						}
 						x += 33;
-						if(this.showUiTab == Constants.FRIENDS_TAB){
+						if (this.showUiTab == Config.FRIENDS_TAB) {
 							this.getSurface().drawBox(x, maxY, 32, 32, GenUtil.buildColor(255, 0, 0));
 						}
 						x += 33;
-						if(this.showUiTab == Constants.MAGIC_AND_PRAYER_TAB){
+						if (this.showUiTab == Config.MAGIC_AND_PRAYER_TAB) {
 							this.getSurface().drawBox(x, maxY, 32, 32, GenUtil.buildColor(255, 0, 0));
 						}
 						x += 33;
-						if(this.showUiTab == Constants.SKILLS_AND_QUESTS_TAB){
+						if (this.showUiTab == Config.SKILLS_AND_QUESTS_TAB) {
 							this.getSurface().drawBox(x, maxY, 32, 32, GenUtil.buildColor(255, 0, 0));
 						}
 						x += 33;
 						x += 33;
-						if(this.showUiTab == Constants.INVENTORY_TAB){
+						if (this.showUiTab == Config.INVENTORY_TAB) {
 							this.getSurface().drawBox(x, maxY, 32, 32, GenUtil.buildColor(255, 0, 0));
 						}
 					}
 					//redstones above
-					
+
 					this.getSurface().a(spriteSelect(GUIPARTS.MENUBAR.getDef()), 0, this.getSurface().width2 - 200, 128, getUITabsY());
 					this.drawUi(0);
 					this.getSurface().loggedIn = false;
@@ -5927,11 +5927,11 @@ public final class mudclient implements Runnable {
 				}
 
 				if (S_SHOW_FLOATING_NAMETAGS) {
-					if ((C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0 && !Config.CUSTOM_UI) || (Config.CUSTOM_UI && C_NAME_CLAN_TAG_OVERLAY)) {
+					if ((C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0 && !Config.C_CUSTOM_UI) || (Config.C_CUSTOM_UI && C_NAME_CLAN_TAG_OVERLAY)) {
 						if (player.displayName != null)
 							this.getSurface().drawShadowText(player.getStaffName(), (width - this.getSurface().stringWidth(0, player.getStaffName())) / 2 + x + 1, y - 14, 0xffff00, 0, false);
 					}
-					if ((C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0 && !Config.CUSTOM_UI) || (Config.CUSTOM_UI && C_NAME_CLAN_TAG_OVERLAY)) {
+					if ((C_NAME_CLAN_TAG_OVERLAY && this.showUiTab == 0 && !Config.C_CUSTOM_UI) || (Config.C_CUSTOM_UI && C_NAME_CLAN_TAG_OVERLAY)) {
 						if (player.clanTag != null)
 							this.getSurface().drawColoredString((width - this.getSurface().stringWidth(0, "< " + player.clanTag + " >")) / 2 + x + 1, y - 5, "< " + player.clanTag + " >", 0, 0x7CADDA, 0);
 					}
@@ -6522,13 +6522,13 @@ public final class mudclient implements Runnable {
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
-						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !Config.CUSTOM_UI) || Config.CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !Config.C_CUSTOM_UI) || Config.C_CUSTOM_UI)) {
 						selectedSpell = lastSelectedSpell;
 						mouseButtonClick = 0;
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y + 49 && mouseY < y + 69
-						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !Config.CUSTOM_UI) || Config.CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !Config.C_CUSTOM_UI) || Config.C_CUSTOM_UI)) {
 						selectedSpell = -1;
 						lastSelectedSpell = -1;
 						mouseButtonClick = 0;
@@ -6536,17 +6536,17 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			//TODO: add && !Config.CUSTOM_UI where needed + scroll down to next TODO and fill in
-			
+			//TODO: add && !Config.C_CUSTOM_UI where needed + scroll down to next TODO and fill in
+
 			if (var1 != this.logoutTimeout) {
 				this.drawDialogLogout();
 			} else if (this.showDialogMessage) {
 				this.drawDialogWelcome(var1 - 4853);
 				this.setInitLoginCleared(false);
-			} else if (this.showDialogServerMessage && !Config.CUSTOM_UI) {
+			} else if (this.showDialogServerMessage && !Config.C_CUSTOM_UI) {
 				this.drawDialogServerMessage((byte) -115);
 			} else if (this.showUiWildWarn != 1) {
-				if (this.isShowDialogBank() && this.combatTimeout == 0 && !Config.CUSTOM_UI) {
+				if (this.isShowDialogBank() && this.combatTimeout == 0 && !Config.C_CUSTOM_UI) {
 					this.drawDialogBank();
 				} else if (auctionHouse.isVisible() && combatTimeout == 0) {
 					auctionHouse.onRender(getSurface());
@@ -6554,21 +6554,21 @@ public final class mudclient implements Runnable {
 					ironmanInterface.onRender(getSurface());
 				} else if (achievementInterface.isVisible() && combatTimeout == 0) {
 					achievementInterface.onRender(getSurface());
-				} else if (clan.getClanInterface().isVisible() && !Config.CUSTOM_UI) {
+				} else if (clan.getClanInterface().isVisible() && !Config.C_CUSTOM_UI) {
 					clan.getClanInterface().onRender(getSurface());
 				} else if (party.getPartyInterface().isVisible()) {
 					party.getPartyInterface().onRender(getSurface());
-				} else if (this.showDialogShop && this.combatTimeout == 0  && !Config.CUSTOM_UI) {
+				} else if (this.showDialogShop && this.combatTimeout == 0 && !Config.C_CUSTOM_UI) {
 					this.drawDialogShop();
-				} else if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible() && !Config.CUSTOM_UI) {
+				} else if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible() && !Config.C_CUSTOM_UI) {
 					this.drawSkillGuide();
-				} else if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible() && !Config.CUSTOM_UI) {
+				} else if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible() && !Config.C_CUSTOM_UI) {
 					this.drawQuestGuide();
 				} else if (experienceConfigInterface.isVisible()) {
 					this.drawExperienceConfig();
 				} else if (doSkillInterface.isVisible() && this.combatTimeout == 0) {
 					this.drawDoSkill();
-				} else if (S_ITEMS_ON_DEATH_MENU && lostOnDeathInterface.isVisible() && !Config.CUSTOM_UI) {
+				} else if (S_ITEMS_ON_DEATH_MENU && lostOnDeathInterface.isVisible() && !Config.C_CUSTOM_UI) {
 					this.drawLostOnDeath();
 				} else if (territorySignupInterface.isVisible()) {
 					this.drawTerritorySignup();
@@ -6626,29 +6626,29 @@ public final class mudclient implements Runnable {
 				boolean clickedTab = this.handleTabUIClick();
 				boolean mouseInTabArea = mouseInTabArea_CUSTOM();
 				boolean interfaceOpen = false;
-				
-				if(Config.CUSTOM_UI && clickedTab){
+
+				if (Config.C_CUSTOM_UI && clickedTab) {
 					this.mouseButtonClick = 0;
 				}
-				
-				if(Config.CUSTOM_UI){//TODO: fill in the interfaces that hides part of the ui when opened
-					if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible()){
+
+				if (Config.C_CUSTOM_UI) {//TODO: fill in the interfaces that hides part of the ui when opened
+					if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible()) {
 						this.drawSkillGuide();
 						interfaceOpen = true;
 					}
-					if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible()){
+					if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible()) {
 						this.drawQuestGuide();
 						interfaceOpen = true;
 					}
-					if (S_ITEMS_ON_DEATH_MENU && lostOnDeathInterface.isVisible()){
+					if (S_ITEMS_ON_DEATH_MENU && lostOnDeathInterface.isVisible()) {
 						this.drawLostOnDeath();
 						interfaceOpen = true;
 					}
-					if (clan.getClanInterface().isVisible()){
+					if (clan.getClanInterface().isVisible()) {
 						clan.getClanInterface().onRender(getSurface());
 						interfaceOpen = true;
 					}
-					if (this.isShowDialogBank() && this.combatTimeout == 0){
+					if (this.isShowDialogBank() && this.combatTimeout == 0) {
 						this.drawDialogBank();
 						interfaceOpen = true;
 					}
@@ -6661,45 +6661,45 @@ public final class mudclient implements Runnable {
 						interfaceOpen = true;
 					}
 				}
-				
+
 				boolean mustDrawMenu = !this.optionsMenuShow && !this.topMouseMenuVisible;
 				if (mustDrawMenu) {
 					this.menuCommon.recalculateSize(0);
 				}
 
-				if ((this.showUiTab == 0 && mustDrawMenu && !Config.CUSTOM_UI) || (!mouseInTabArea && !interfaceOpen && Config.CUSTOM_UI && mustDrawMenu)) {
+				if ((this.showUiTab == 0 && mustDrawMenu && !Config.C_CUSTOM_UI) || (!mouseInTabArea && !interfaceOpen && Config.C_CUSTOM_UI && mustDrawMenu)) {
 					this.drawUiTab0(var1 ^ 2);
 				}
 
-				if (this.showUiTab == Constants.INVENTORY_TAB) {
+				if (this.showUiTab == Config.INVENTORY_TAB) {
 					this.drawUiTab1(-15252, mustDrawMenu);
 				}
 
 				if (S_INVENTORY_COUNT_TOGGLE && C_INV_COUNT) {
-					this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, getUITabsY()+14, (0x00FFFFFF << (int) Math.floor((this.inventoryItemCount / 15)) * 8) & 0x00FFFFFF, 1, true);
+					this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, getUITabsY() + 14, (0x00FFFFFF << (int) Math.floor((this.inventoryItemCount / 15)) * 8) & 0x00FFFFFF, 1, true);
 				}
 
-				if(Config.CUSTOM_UI){
+				if (Config.C_CUSTOM_UI) {
 					this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
 				} else {
-					if (this.showUiTab == Constants.MINIMAP_AND_COMPASS_TAB) {
+					if (this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB) {
 						this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
-				}
+					}
 				}
 
-				if (this.showUiTab == Constants.SKILLS_AND_QUESTS_TAB) {
+				if (this.showUiTab == Config.SKILLS_AND_QUESTS_TAB) {
 					this.drawUiTabPlayerInfo(mustDrawMenu, var1 ^ 0);
 				}
 
-				if (this.showUiTab == Constants.MAGIC_AND_PRAYER_TAB) {
+				if (this.showUiTab == Config.MAGIC_AND_PRAYER_TAB) {
 					this.drawUiTabMagic(mustDrawMenu, (byte) -74);
 				}
 
-				if (this.showUiTab == Constants.FRIENDS_TAB) {
+				if (this.showUiTab == Config.FRIENDS_TAB) {
 					this.drawUiTab5(mustDrawMenu, false);
 				}
 
-				if (this.showUiTab == Constants.OPTIONS_TAB) {
+				if (this.showUiTab == Config.OPTIONS_TAB) {
 					this.drawUiTabOptions(15, mustDrawMenu);
 				}
 
@@ -7120,9 +7120,9 @@ public final class mudclient implements Runnable {
 
 	// inventory right click menu definitions
 	private void drawUiTab1(int var1, boolean var2) {
-		
+
 		int maxY = getUITabsY();
-		
+
 		try {
 			if (var1 != -15252) {
 				this.packetHandler.handlePacket2(-79, -83);
@@ -7130,15 +7130,15 @@ public final class mudclient implements Runnable {
 
 			int var3 = this.getSurface().width2 - 248;
 			int xOffset = var3;
-			if(!Config.CUSTOM_UI)
-			this.getSurface().drawSprite(spriteSelect(GUIPARTS.BAGTAB.getDef()), var3, 3);
+			if (!Config.C_CUSTOM_UI)
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.BAGTAB.getDef()), var3, 3);
 
 			int var4;
 			int var5;
 			int id;
 			int yOffset = 36;
-			if(Config.CUSTOM_UI)
-				yOffset = maxY-228;
+			if (Config.C_CUSTOM_UI)
+				yOffset = maxY - 228;
 
 			if (this.tabEquipmentIndex == 0) //inventory tab
 			{
@@ -7246,7 +7246,7 @@ public final class mudclient implements Runnable {
 				}
 			} else if (this.tabEquipmentIndex == 1) //equipment tab
 			{
-				if(Config.CUSTOM_UI)
+				if (Config.C_CUSTOM_UI)
 					yOffset -= 45;
 				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 204, this.clearBox, 128);
 				this.getSurface().drawBoxAlpha(xOffset, yOffset + 228, 245, 45, this.clearBox, 128);
@@ -7367,16 +7367,16 @@ public final class mudclient implements Runnable {
 
 	// social tab
 	private void drawUiTab5(boolean var1, boolean var2) {
-		
+
 		int maxY = getUITabsY();
-		
+
 		try {
 			int var3 = this.getSurface().width2 - 199;
 			int var4 = 36;
-			if(!Config.CUSTOM_UI)
-			this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSOCIAL.getDef()), var3 - 49, 3);
-			if(Config.CUSTOM_UI)
-				var4 = maxY-182;
+			if (!Config.C_CUSTOM_UI)
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSOCIAL.getDef()), var3 - 49, 3);
+			if (Config.C_CUSTOM_UI)
+				var4 = maxY - 182;
 			short var5 = 196;
 			short var6 = 182;
 			int maxWidth = getGameWidth() - 23;
@@ -7392,7 +7392,7 @@ public final class mudclient implements Runnable {
 				int colorA = colorB = clanTab = GenUtil.buildColor(160, 160, 160);
 				if (this.panelSocialTab == 1) {
 					clanTab = GenUtil.buildColor(220, 220, 220);
-					if(Config.CUSTOM_UI)
+					if (Config.C_CUSTOM_UI)
 						var4 -= 19;
 					if (clan.inClan()) {
 						this.getSurface().drawBoxAlpha(var3, 24 + var4, var5, 49, GenUtil.buildColor(220, 220, 220), 192);
@@ -7495,7 +7495,7 @@ public final class mudclient implements Runnable {
 				int listX = var3 + 3;
 				int listY = 75;
 
-				if(Config.CUSTOM_UI)
+				if (Config.C_CUSTOM_UI)
 					listY = var4 + 39;
 
 				int buttonColorA = 0x0A2B56, buttonColorB = 0x0A2B56;
@@ -7528,8 +7528,8 @@ public final class mudclient implements Runnable {
 						&& this.mouseY < var6 + var4 + 60) {
 						buttonColorA = 0x263751;
 						if (getMouseClick() == 1) {
-							if(!Config.CUSTOM_UI)
-							this.showUiTab = 0;
+							if (!Config.C_CUSTOM_UI)
+								this.showUiTab = 0;
 							String[] inputXMessage = new String[]{"Are you sure you want to leave the clan?"};
 							this.showItemModX(inputXMessage, InputXAction.CLAN_LEAVE, false);
 							setMouseClick(0);
@@ -7545,8 +7545,8 @@ public final class mudclient implements Runnable {
 						buttonColorB = 0x263751;
 						if (getMouseClick() == 1) {
 							clan.showClanSetupInterface(clan.inClan());
-							if(!Config.CUSTOM_UI)
-							this.showUiTab = 0;
+							if (!Config.C_CUSTOM_UI)
+								this.showUiTab = 0;
 							setMouseClick(0);
 						}
 					}
@@ -7566,8 +7566,8 @@ public final class mudclient implements Runnable {
 							clan.getClanInterface().clanActivePanel = 3;
 							clan.getClanInterface().resetAll();
 							clan.getClanInterface().sendClanSearch();
-							if(!Config.CUSTOM_UI)
-							this.showUiTab = 0;
+							if (!Config.C_CUSTOM_UI)
+								this.showUiTab = 0;
 							setMouseClick(0);
 						}
 					}
@@ -7580,8 +7580,8 @@ public final class mudclient implements Runnable {
 						buttonColorB = 0x263751;
 						if (getMouseClick() == 1) {
 							clan.showClanSetupInterface(clan.inClan());
-							if(!Config.CUSTOM_UI)
-							this.showUiTab = 0;
+							if (!Config.C_CUSTOM_UI)
+								this.showUiTab = 0;
 							setMouseClick(0);
 						}
 					}
@@ -7646,15 +7646,15 @@ public final class mudclient implements Runnable {
 			 int maxY = getUITabsY();
 				panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY-240) + 16, 195, 184);
 				panelSocial.reposition(controlSocialPanel, var3, (maxY-182) + 40, 196, 126);
-				
+
 				var10 = 36;
 				if(Config.CUSTOM_UI_1)
 						var10 = var4 - 24;
 			 */
-			
+
 			if (var1) {
 				int var15 = this.mouseY - 36;
-				if(Config.CUSTOM_UI)
+				if (Config.C_CUSTOM_UI)
 					var15 = this.mouseY - var4;
 				var3 = 199 + this.mouseX - this.getSurface().width2;
 				// handle friends and ignores tab
@@ -7697,11 +7697,11 @@ public final class mudclient implements Runnable {
 
 				// interactions within the panels
 				if (var3 >= 0 && var15 >= 0 && var3 < 196 && var15 < 225 && (this.panelSocialTab == 0 || this.panelSocialTab == 2)) {
-					if(Config.CUSTOM_UI)
+					if (Config.C_CUSTOM_UI)
 						this.panelSocial.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
 					else
-					this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
-						this.currentMouseButtonDown, this.lastMouseButtonDown);
+						this.panelSocial.handleMouse(var3 - 199 + this.getSurface().width2, var15 + 36,
+							this.currentMouseButtonDown, this.lastMouseButtonDown);
 					if (this.mouseButtonClick == 1 && this.panelSocialTab == 0) {
 						index = this.panelSocial.getControlSelectedListIndex(this.controlSocialPanel);
 						if (index >= 0 && this.mouseX < maxWidth) {
@@ -7790,16 +7790,16 @@ public final class mudclient implements Runnable {
 
 	// spells menu
 	private void drawUiTabMagic(boolean var1, byte var2) {
-		
+
 		int maxY = getUITabsY();
-		
+
 		try {
 			int var3 = this.getSurface().width2 - 199;
 			int var4 = 36;
-			if(!Config.CUSTOM_UI)
-			this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSPELLS.getDef()), var3 - 49, 3);
-			if(Config.CUSTOM_UI)
-				var4 = maxY-182;
+			if (!Config.C_CUSTOM_UI)
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSPELLS.getDef()), var3 - 49, 3);
+			if (Config.C_CUSTOM_UI)
+				var4 = maxY - 182;
 			short var5 = 196;
 			short var6 = 182;
 			int var8;
@@ -7927,14 +7927,14 @@ public final class mudclient implements Runnable {
 				if (var1) {
 					var3 = 199 - this.getSurface().width2 + this.mouseX;
 					int var17 = this.mouseY - 36;
-					if(Config.CUSTOM_UI)
+					if (Config.C_CUSTOM_UI)
 						var17 = this.mouseY - var4;
 					if (var3 >= 0 && var17 >= 0 && var3 < 196 && var17 < 182) {
-						if(Config.CUSTOM_UI)
+						if (Config.C_CUSTOM_UI)
 							this.panelMagic.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
 						else
-						this.panelMagic.handleMouse(var3 + (this.getSurface().width2 - 199), var17 + 36,
-							this.currentMouseButtonDown, this.lastMouseButtonDown);
+							this.panelMagic.handleMouse(var3 + (this.getSurface().width2 - 199), var17 + 36,
+								this.currentMouseButtonDown, this.lastMouseButtonDown);
 						if (var17 <= 24 && this.mouseButtonClick == 1) {
 							if (var3 < 98 && this.m_Ji == 1) {
 								this.m_Ji = 0;
@@ -7973,7 +7973,7 @@ public final class mudclient implements Runnable {
 										lastSelectedSpell = var9;
 										this.selectedItemInventoryIndex = -1;
 										if (openInventorySpell(var9))
-											this.showUiTab = Constants.INVENTORY_TAB;
+											this.showUiTab = Config.INVENTORY_TAB;
 										//if (EntityHandler.getSpellDef(var9).getSpellType() == 3 && var9 != 16) {
 										//	showUiTab = 1;
 										//}
@@ -8023,17 +8023,17 @@ public final class mudclient implements Runnable {
 	// mini map menu
 	private void drawUiTabMinimap(boolean var1, byte var2) {
 		try {
-			int offX = Config.CUSTOM_UI ? 170 : 199;
+			int offX = Config.C_CUSTOM_UI ? 170 : 199;
 			int posX = this.getSurface().width2 - offX;
 			int posY = 36;
 			short var4 = 156;
 			short var5 = 152;
-			if(Config.CUSTOM_UI){
+			if (Config.C_CUSTOM_UI) {
 				int borderSize = 2;
 				posY = 10;
 				posX += borderSize;
 				posY += borderSize;
-				this.getSurface().drawBox(posX-borderSize, posY-borderSize, var4 + (borderSize*2), var5 + (borderSize*2), 0);
+				this.getSurface().drawBox(posX - borderSize, posY - borderSize, var4 + (borderSize * 2), var5 + (borderSize * 2), 0);
 			} else {
 				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MINIMAPTAB.getDef()), posX - 49, 3);
 				posX += 40;
@@ -8134,7 +8134,7 @@ public final class mudclient implements Runnable {
 					var4 = 156;
 					var6 = 192 + this.minimapRandom_2;
 					var7 = 255 & this.cameraRotation + this.minimapRandom_1;
-					if(!Config.CUSTOM_UI)
+					if (!Config.C_CUSTOM_UI)
 						posX += 40;
 					mZ = (this.mouseY - var5 / 2 - posY) * 16384 / (var6 * 3);
 					mX = (this.mouseX + (-(var4 / 2) - posX)) * 16384 / (var6 * 3);
@@ -8159,16 +8159,16 @@ public final class mudclient implements Runnable {
 
 	// wrench settings menu
 	private void drawUiTabOptions(int var1, boolean mustTrackMouse) {
-		
+
 		int maxY = getUITabsY();
-		
+
 		try {
 			int var3 = this.getSurface().width2 - 199;
-			if(!Config.CUSTOM_UI)
-			this.getSurface().drawSprite(spriteSelect(GUIPARTS.SETTINGSTAB.getDef()), var3 - 49, 3);
+			if (!Config.C_CUSTOM_UI)
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.SETTINGSTAB.getDef()), var3 - 49, 3);
 			int var4 = 36 + 25;
-			if(Config.CUSTOM_UI)
-				var4 = maxY-240;
+			if (Config.C_CUSTOM_UI)
+				var4 = maxY - 240;
 			short var5 = 196;
 
 			int chosenColor = GenUtil.buildColor(220, 220, 220);
@@ -8224,7 +8224,7 @@ public final class mudclient implements Runnable {
 			if (mustTrackMouse) {
 				var3 = 199 - this.getSurface().width2 + this.mouseX; // relative X
 				int var13 = this.mouseY - 36; // relative Y
-				if(Config.CUSTOM_UI)
+				if (Config.C_CUSTOM_UI)
 					var13 = this.mouseY - var4 + 25; // relative Y
 				// within panel
 				if (var3 >= 0 && var13 >= 0 && var3 < 196 && var13 < 295) {
@@ -8258,7 +8258,7 @@ public final class mudclient implements Runnable {
 					int var9 = this.getSurface().width2 - 199;
 					var6 = var9 + 3;
 					int var10 = 36;
-					if(Config.CUSTOM_UI)
+					if (Config.C_CUSTOM_UI)
 						var10 = var4 - 24;
 					var5 = 184;
 
@@ -8450,7 +8450,7 @@ public final class mudclient implements Runnable {
 		int logoutColor;
 		if (this.insideTutorial) {
 			y = 256;
-			if(Config.CUSTOM_UI)
+			if (Config.C_CUSTOM_UI)
 				y = var4 + 195;
 			logoutColor = 0xFFFFFF;
 			if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
@@ -8460,7 +8460,7 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawString("Skip the tutorial", x, y, logoutColor, 1);
 		} else if (this.insideBlackHole) {
 			y = 256;
-			if(Config.CUSTOM_UI)
+			if (Config.C_CUSTOM_UI)
 				y = var4 + 195;
 			logoutColor = 0xFFFFFF;
 			if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
@@ -8472,7 +8472,7 @@ public final class mudclient implements Runnable {
 
 		// logout text
 		y = 275;
-		if(Config.CUSTOM_UI)
+		if (Config.C_CUSTOM_UI)
 			y = var4 + 214;
 		this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
 		logoutColor = 0xFFFFFF;
@@ -8679,7 +8679,7 @@ public final class mudclient implements Runnable {
 
 		// items on death menu option OR logout text if not enabled
 		y = 275;
-		if(Config.CUSTOM_UI)
+		if (Config.C_CUSTOM_UI)
 			y = var4 + 214;
 		if (S_ITEMS_ON_DEATH_MENU) {
 			int onDeathColor = 0xFFFFFF;
@@ -9037,13 +9037,13 @@ public final class mudclient implements Runnable {
 
 		// items on death
 		yFromTopDistance = 275;
-		if(Config.CUSTOM_UI)
+		if (Config.C_CUSTOM_UI)
 			yFromTopDistance = getUITabsY() - 240 + 214;
 		if (S_ITEMS_ON_DEATH_MENU) {
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
-				if(!Config.CUSTOM_UI)
-				this.showUiTab = 0;
+				if (!Config.C_CUSTOM_UI)
+					this.showUiTab = 0;
 				lostOnDeathInterface.setVisible(true);
 			}
 		}
@@ -9161,29 +9161,29 @@ public final class mudclient implements Runnable {
 		// skip tutorial button or exit blackhole button
 		if (this.insideTutorial) {
 			yFromTopDistance = 255;
-			if(Config.CUSTOM_UI)
+			if (Config.C_CUSTOM_UI)
 				yFromTopDistance = getUITabsY() - 240 + 194;
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
-				if(!Config.CUSTOM_UI)
-				this.showUiTab = 0;
+				if (!Config.C_CUSTOM_UI)
+					this.showUiTab = 0;
 			}
 		} else if (this.insideBlackHole) {
 			yFromTopDistance = 255;
-			if(Config.CUSTOM_UI)
+			if (Config.C_CUSTOM_UI)
 				yFromTopDistance = getUITabsY() - 240 + 194;
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
-				if(!Config.CUSTOM_UI)
-				this.showUiTab = 0;
+				if (!Config.C_CUSTOM_UI)
+					this.showUiTab = 0;
 			}
 		}
 
 		// logout menu option
 		yFromTopDistance = 290;
-		if(Config.CUSTOM_UI)
+		if (Config.C_CUSTOM_UI)
 			yFromTopDistance = getUITabsY() - 240 + 229;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 			&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
@@ -9530,16 +9530,16 @@ public final class mudclient implements Runnable {
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
-				if(!Config.CUSTOM_UI)
-				this.showUiTab = 0;
+				if (!Config.C_CUSTOM_UI)
+					this.showUiTab = 0;
 			}
 			yFromTopDistance += 20;
 		} else if (this.insideBlackHole) { // blackhole menu option
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptExitBlackHole, InputXAction.EXIT_BLACK_HOLE, false);
-				if(!Config.CUSTOM_UI)
-				this.showUiTab = 0;
+				if (!Config.C_CUSTOM_UI)
+					this.showUiTab = 0;
 			}
 			yFromTopDistance += 20;
 		}
@@ -9582,17 +9582,17 @@ public final class mudclient implements Runnable {
 
 	// bar chart icon tab menu
 	private void drawUiTabPlayerInfo(boolean var1, int var2) {
-		
+
 		int maxY = getUITabsY();
-		
+
 		try {
 
 			int x = this.surface.width2 - 199;
 			int y = 36;
-			if(!Config.CUSTOM_UI)
-			this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKILLSTAB.getDef()), x - 49, 3);
-			if(Config.CUSTOM_UI)
-				y = maxY-287;
+			if (!Config.C_CUSTOM_UI)
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKILLSTAB.getDef()), x - 49, 3);
+			if (Config.C_CUSTOM_UI)
+				y = maxY - 287;
 			short width = 196;
 			short height;
 			if (S_WANT_EXP_INFO)
@@ -9619,8 +9619,8 @@ public final class mudclient implements Runnable {
 			// stats menu tab
 			if (this.uiTabPlayerInfoSubTab == 0) {
 				heightMargin = 72;
-				if(Config.CUSTOM_UI)
-					heightMargin = y+36;
+				if (Config.C_CUSTOM_UI)
+					heightMargin = y + 36;
 				int yOffset = heightMargin + 13;
 				int xOffset = x + 5;
 				int textColour = 0xFFFFFF, textColourHovered = 0xFF0000, textColourHeading = 0xFFFF00;
@@ -9644,14 +9644,14 @@ public final class mudclient implements Runnable {
 								if (doubleClick() && S_WANT_SKILL_MENUS) {
 									setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
 									skillGuideInterface.setVisible(true);
-									if(!Config.CUSTOM_UI)
-									this.showUiTab = 0;
+									if (!Config.C_CUSTOM_UI)
+										this.showUiTab = 0;
 								}
 							} else if (!isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
 								skillGuideInterface.setVisible(true);
-								if(!Config.CUSTOM_UI)
-								this.showUiTab = 0;
+								if (!Config.C_CUSTOM_UI)
+									this.showUiTab = 0;
 							}
 						}
 					}
@@ -9783,8 +9783,8 @@ public final class mudclient implements Runnable {
 					setQuestGuideRequirement(position);
 					setQuestGuideReward(position);
 					questGuideInterface.setVisible(true);
-					if(!Config.CUSTOM_UI)
-					this.showUiTab = 0;
+					if (!Config.C_CUSTOM_UI)
+						this.showUiTab = 0;
 					setMouseClick(0);
 				}
 
@@ -9793,16 +9793,16 @@ public final class mudclient implements Runnable {
 
 			if (var1) {
 				int mouseYOffset = this.mouseY - 36;
-				if(Config.CUSTOM_UI)
+				if (Config.C_CUSTOM_UI)
 					mouseYOffset = this.mouseY - y; // relative Y
 				x = -this.getSurface().width2 - (-199 - this.mouseX);
 				if (x >= 0 && mouseYOffset >= 0 && x < width && mouseYOffset < height) {
 					if (this.uiTabPlayerInfoSubTab == 1) {
-						if(Config.CUSTOM_UI)
+						if (Config.C_CUSTOM_UI)
 							this.panelQuestInfo.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
 						else
-						this.panelQuestInfo.handleMouse(x + this.getSurface().width2 - 199, 36 + mouseYOffset,
-							this.currentMouseButtonDown, this.lastMouseButtonDown);
+							this.panelQuestInfo.handleMouse(x + this.getSurface().width2 - 199, 36 + mouseYOffset,
+								this.currentMouseButtonDown, this.lastMouseButtonDown);
 					}
 					if (mouseYOffset <= 24 && this.mouseButtonClick == 1) {
 						if (x >= 98) {
@@ -10044,14 +10044,14 @@ public final class mudclient implements Runnable {
 		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
 		panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
 		panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
-		if (!authenticSettings){
-			if(Config.CUSTOM_UI){
+		if (!authenticSettings) {
+			if (Config.C_CUSTOM_UI) {
 				int maxY = getUITabsY();
-				panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY-240) + 16, 195, 184);
-				panelSocial.reposition(controlSocialPanel, var3, (maxY-182) + 40, 196, 126);
-				panelMagic.reposition(controlMagicPanel, var3, (maxY-182) + 24, 196, 90);
-				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY-287) + 24, 196, 251);
-				panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY-287) + 24, 196, 251);
+				panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
+				panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
+				panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
+				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+				panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
 				int offX = 300;
 				panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
 				panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
@@ -10059,16 +10059,16 @@ public final class mudclient implements Runnable {
 				panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
 				panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
 			} else {
-			panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
+				panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
 				panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
 				panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
 				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
 				panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
-		panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-		panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
-		panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-		panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-		panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+				panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+				panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
+				panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+				panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+				panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
 			}
 		}
 		return true;
@@ -10491,7 +10491,7 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				if (this.showUiTab != Constants.MINIMAP_AND_COMPASS_TAB) {
+				if (this.showUiTab != Config.MINIMAP_AND_COMPASS_TAB) {
 					if (MiscFunctions.cachingFile_s_g > 0) {
 						++this.sleepWordDelayTimer;
 					}
@@ -11578,7 +11578,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					if (selectedSpell != 16) {
-						showUiTab = Constants.MAGIC_AND_PRAYER_TAB;
+						showUiTab = Config.MAGIC_AND_PRAYER_TAB;
 					}
 					this.selectedSpell = -1;
 					break;
@@ -12007,8 +12007,8 @@ public final class mudclient implements Runnable {
 					kickClanPlayer(playerName);
 					String[] kickMessage = new String[]{"Are you sure you want to kick " + playerName + " from clan?"};
 					this.showItemModX(kickMessage, InputXAction.KICK_CLAN_PLAYER, false);
-					if(!Config.CUSTOM_UI)
-					this.showUiTab = 0;
+					if (!Config.C_CUSTOM_UI)
+						this.showUiTab = 0;
 					break;
 				}
 				case PARTY_MENU_KICK: {
@@ -12017,8 +12017,8 @@ public final class mudclient implements Runnable {
 					kickPartyPlayer(playerName);
 					String[] kickMessage = new String[]{"Are you sure you want to kick " + playerName + " from party?"};
 					this.showItemModX(kickMessage, InputXAction.KICK_PARTY_PLAYER, false);
-					if(!Config.CUSTOM_UI)
-					this.showUiTab = 0;
+					if (!Config.C_CUSTOM_UI)
+						this.showUiTab = 0;
 					break;
 				}
 				default:
@@ -12341,107 +12341,107 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	int getUITabsY(){
-		if(Config.CUSTOM_UI)
-			return getGameHeight()-32-10;
+	int getUITabsY() {
+		if (Config.C_CUSTOM_UI)
+			return getGameHeight() - 32 - 10;
 		else
 			return 3;
 	}
 
 	private boolean handleTabUIClick() {
-		if(Config.CUSTOM_UI){
+		if (Config.C_CUSTOM_UI) {
 			return handleTabUIClick_CUSTOM();
 		}
 		try {
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 && this.mouseY >= 3
 				&& this.mouseX < this.getSurface().width2 - 3 && this.mouseY < 35) {
-				this.showUiTab = Constants.INVENTORY_TAB;
+				this.showUiTab = Config.INVENTORY_TAB;
 			}
 
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= 3
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < 35) {
-				this.showUiTab = Constants.MINIMAP_AND_COMPASS_TAB;
+				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
 			}
 
 			if (this.showUiTab == 0 && this.getSurface().width2 - 101 <= this.mouseX && this.mouseY >= 3
 				&& this.mouseX < this.getSurface().width2 - 3 - 66 && this.mouseY < 35) {
-				this.showUiTab = Constants.SKILLS_AND_QUESTS_TAB;
+				this.showUiTab = Config.SKILLS_AND_QUESTS_TAB;
 			}
 
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 99 - 35 && this.mouseY >= 3
 				&& this.getSurface().width2 - 3 - 99 > this.mouseX && this.mouseY < 35) {
-				this.showUiTab = Constants.MAGIC_AND_PRAYER_TAB;
+				this.showUiTab = Config.MAGIC_AND_PRAYER_TAB;
 			}
 
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 132 && this.mouseY >= 3
 				&& this.mouseX < this.getSurface().width2 - 135 && this.mouseY < 35) {
-				this.showUiTab = Constants.FRIENDS_TAB;
+				this.showUiTab = Config.FRIENDS_TAB;
 			}
 
 			if (this.showUiTab == 0 && this.getSurface().width2 - 35 - 165 <= this.mouseX && this.mouseY >= 3
 				&& this.mouseX < this.getSurface().width2 - 165 - 3 && this.mouseY < 35) {
-				this.showUiTab = Constants.OPTIONS_TAB;
+				this.showUiTab = Config.OPTIONS_TAB;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 35 <= this.mouseX && this.mouseY >= 3
 				&& this.getSurface().width2 - 3 > this.mouseX && this.mouseY < 26) {
-				this.showUiTab = Constants.INVENTORY_TAB;
+				this.showUiTab = Config.INVENTORY_TAB;
 			}
 
-			if (this.showUiTab != 0 && this.showUiTab != Constants.MINIMAP_AND_COMPASS_TAB && this.getSurface().width2 - 68 <= this.mouseX
+			if (this.showUiTab != 0 && this.showUiTab != Config.MINIMAP_AND_COMPASS_TAB && this.getSurface().width2 - 68 <= this.mouseX
 				&& this.mouseY >= 3 && this.getSurface().width2 - 33 - 3 > this.mouseX && this.mouseY < 26) {
-				this.showUiTab = Constants.MINIMAP_AND_COMPASS_TAB;
+				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
 				this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
 			}
 
 			if (this.showUiTab != 0 && this.mouseX >= this.getSurface().width2 - 66 - 35 && this.mouseY >= 3
 				&& this.getSurface().width2 - 3 - 66 > this.mouseX && this.mouseY < 26) {
-				this.showUiTab = Constants.SKILLS_AND_QUESTS_TAB;
+				this.showUiTab = Config.SKILLS_AND_QUESTS_TAB;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 35 - 99 <= this.mouseX && this.mouseY >= 3
 				&& this.getSurface().width2 - 102 > this.mouseX && this.mouseY < 26) {
-				this.showUiTab = Constants.MAGIC_AND_PRAYER_TAB;
+				this.showUiTab = Config.MAGIC_AND_PRAYER_TAB;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 167 <= this.mouseX && this.mouseY >= 3
 				&& this.getSurface().width2 - 132 - 3 > this.mouseX && this.mouseY < 26) {
-				this.showUiTab = Constants.FRIENDS_TAB;
+				this.showUiTab = Config.FRIENDS_TAB;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 35 - 165 <= this.mouseX && this.mouseY >= 3
 				&& this.mouseX < this.getSurface().width2 - 168 && this.mouseY < 26) {
-				this.showUiTab = Constants.OPTIONS_TAB;
+				this.showUiTab = Config.OPTIONS_TAB;
 			}
 
 			if (!S_WANT_EQUIPMENT_TAB) {
-				if (this.showUiTab == Constants.INVENTORY_TAB
+				if (this.showUiTab == Config.INVENTORY_TAB
 					&& (this.mouseX < this.getSurface().width2 - 248 || 36 + this.m_cl / 5 * 34 < this.mouseY)) {
 					this.showUiTab = 0;
 				}
 			} else {
-				if (this.showUiTab == Constants.INVENTORY_TAB && this.tabEquipmentIndex == 0
+				if (this.showUiTab == Config.INVENTORY_TAB && this.tabEquipmentIndex == 0
 					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
 					this.showUiTab = 0;
-				} else if (this.showUiTab == Constants.INVENTORY_TAB && this.tabEquipmentIndex == 1
+				} else if (this.showUiTab == Config.INVENTORY_TAB && this.tabEquipmentIndex == 1
 					&& (this.mouseX < this.getSurface().width2 - 248 || 90 + this.m_cl / 5 * 34 < this.mouseY)) {
 					this.showUiTab = 0;
 				}
 			}
 
-			if (this.showUiTab == Constants.SKILLS_AND_QUESTS_TAB && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 324)) {
+			if (this.showUiTab == Config.SKILLS_AND_QUESTS_TAB && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 324)) {
 				this.showUiTab = 0;
 			}
 
-			if ((this.showUiTab == Constants.MINIMAP_AND_COMPASS_TAB || this.showUiTab == Constants.MAGIC_AND_PRAYER_TAB || this.showUiTab == Constants.FRIENDS_TAB)
+			if ((this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB || this.showUiTab == Config.MAGIC_AND_PRAYER_TAB || this.showUiTab == Config.FRIENDS_TAB)
 				&& (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > (this.panelSocialTab == 1 ? 307 : 240))) {
 				this.showUiTab = 0;
 			}
 
-			if (this.showUiTab == Constants.OPTIONS_TAB && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 325)) {
+			if (this.showUiTab == Config.OPTIONS_TAB && (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 325)) {
 				this.showUiTab = 0;
 			}
 
@@ -12450,23 +12450,23 @@ public final class mudclient implements Runnable {
 		}
 		return true;
 	}
-	
+
 	private boolean handleTabUIClick_CUSTOM() {
 		boolean clicked = mouseButtonClick == 1;
 		int minY = getUITabsY();
-		int maxY = minY+32;
-		if(!clicked)
+		int maxY = minY + 32;
+		if (!clicked)
 			return false;
 		try {
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 && this.mouseY >= minY
 				&& this.mouseX < this.getSurface().width2 - 3 && this.mouseY < maxY) {
-				this.showUiTab = Constants.INVENTORY_TAB;
+				this.showUiTab = Config.INVENTORY_TAB;
 				return true;
 			}
 
 			/*if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < maxY) {
-				this.showUiTab = Constants.MINIMAP_AND_COMPASS_TAB;
+				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
 				return true;
@@ -12474,43 +12474,43 @@ public final class mudclient implements Runnable {
 
 			if (this.showUiTab == 0 && this.getSurface().width2 - 101 <= this.mouseX && this.mouseY >= minY
 				&& this.mouseX < this.getSurface().width2 - 3 - 66 && this.mouseY < maxY) {
-				this.showUiTab = Constants.SKILLS_AND_QUESTS_TAB;
+				this.showUiTab = Config.SKILLS_AND_QUESTS_TAB;
 				return true;
 			}
 
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 99 - 35 && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 - 99 > this.mouseX && this.mouseY < maxY) {
-				this.showUiTab = Constants.MAGIC_AND_PRAYER_TAB;
+				this.showUiTab = Config.MAGIC_AND_PRAYER_TAB;
 				return true;
 			}
 
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 132 && this.mouseY >= minY
 				&& this.mouseX < this.getSurface().width2 - 135 && this.mouseY < maxY) {
-				this.showUiTab = Constants.FRIENDS_TAB;
+				this.showUiTab = Config.FRIENDS_TAB;
 				return true;
 			}
 
 			if (this.showUiTab == 0 && this.getSurface().width2 - 35 - 165 <= this.mouseX && this.mouseY >= minY
 				&& this.mouseX < this.getSurface().width2 - 165 - 3 && this.mouseY < maxY) {
-				this.showUiTab = Constants.OPTIONS_TAB;
+				this.showUiTab = Config.OPTIONS_TAB;
 				return true;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 35 <= this.mouseX && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 > this.mouseX && this.mouseY < maxY) {
-				if(this.showUiTab == Constants.INVENTORY_TAB)
+				if (this.showUiTab == Config.INVENTORY_TAB)
 					this.showUiTab = 0;
 				else
-					this.showUiTab = Constants.INVENTORY_TAB;
+					this.showUiTab = Config.INVENTORY_TAB;
 				return true;
 			}
 
-			/*if (this.showUiTab != 0 && this.showUiTab != Constants.MINIMAP_AND_COMPASS_TAB && this.getSurface().width2 - 68 <= this.mouseX
+			/*if (this.showUiTab != 0 && this.showUiTab != Config.MINIMAP_AND_COMPASS_TAB && this.getSurface().width2 - 68 <= this.mouseX
 				&& this.mouseY >= minY && this.getSurface().width2 - 33 - 3 > this.mouseX && this.mouseY < maxY) {
-				if(this.showUiTab == Constants.MINIMAP_AND_COMPASS_TAB)
+				if(this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB)
 					this.showUiTab = 0;
 				else
-					this.showUiTab = Constants.MINIMAP_AND_COMPASS_TAB;
+					this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
 				this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
 				return true;
@@ -12518,37 +12518,37 @@ public final class mudclient implements Runnable {
 
 			if (this.showUiTab != 0 && this.mouseX >= this.getSurface().width2 - 66 - 35 && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 - 66 > this.mouseX && this.mouseY < maxY) {
-				if(this.showUiTab == Constants.SKILLS_AND_QUESTS_TAB)
+				if (this.showUiTab == Config.SKILLS_AND_QUESTS_TAB)
 					this.showUiTab = 0;
 				else
-					this.showUiTab = Constants.SKILLS_AND_QUESTS_TAB;
+					this.showUiTab = Config.SKILLS_AND_QUESTS_TAB;
 				return true;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 35 - 99 <= this.mouseX && this.mouseY >= minY
 				&& this.getSurface().width2 - 102 > this.mouseX && this.mouseY < maxY) {
-				if(this.showUiTab == Constants.MAGIC_AND_PRAYER_TAB)
+				if (this.showUiTab == Config.MAGIC_AND_PRAYER_TAB)
 					this.showUiTab = 0;
 				else
-					this.showUiTab = Constants.MAGIC_AND_PRAYER_TAB;
+					this.showUiTab = Config.MAGIC_AND_PRAYER_TAB;
 				return true;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 167 <= this.mouseX && this.mouseY >= minY
 				&& this.getSurface().width2 - 132 - 3 > this.mouseX && this.mouseY < maxY) {
-				if(this.showUiTab == Constants.FRIENDS_TAB)
+				if (this.showUiTab == Config.FRIENDS_TAB)
 					this.showUiTab = 0;
 				else
-					this.showUiTab = Constants.FRIENDS_TAB;
+					this.showUiTab = Config.FRIENDS_TAB;
 				return true;
 			}
 
 			if (this.showUiTab != 0 && this.getSurface().width2 - 35 - 165 <= this.mouseX && this.mouseY >= minY
 				&& this.mouseX < this.getSurface().width2 - 168 && this.mouseY < maxY) {
-				if(this.showUiTab == Constants.OPTIONS_TAB)
+				if (this.showUiTab == Config.OPTIONS_TAB)
 					this.showUiTab = 0;
 				else
-					this.showUiTab = Constants.OPTIONS_TAB;
+					this.showUiTab = Config.OPTIONS_TAB;
 				return true;
 			}
 
@@ -12582,7 +12582,7 @@ public final class mudclient implements Runnable {
 
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.OC(" + "dummy" + ')');
-			}
+		}
 		return false;
 	}
 
@@ -12594,7 +12594,7 @@ public final class mudclient implements Runnable {
 				return true;
 			}
 			//tab interface
-			if (this.showUiTab != 0 && this.mouseX >= this.getSurface().width2 - 250 && this.mouseY >= getUITabsY()-340
+			if (this.showUiTab != 0 && this.mouseX >= this.getSurface().width2 - 250 && this.mouseY >= getUITabsY() - 340
 				&& this.mouseX < this.getSurface().width2 && this.mouseY < getGameHeight()) {
 				return true;
 			}
@@ -12603,8 +12603,8 @@ public final class mudclient implements Runnable {
 			int minY = 10;
 			int borderSize = 2;
 			//int maxX = minX + 156 + (borderSize*2);
-			int maxY = minY + 152 + (borderSize*2);
-			
+			int maxY = minY + 152 + (borderSize * 2);
+
 			if (this.mouseX >= minX && this.mouseY >= 0
 				&& this.mouseX < this.getSurface().width2 && this.mouseY < maxY) {
 				return true;
@@ -16130,15 +16130,15 @@ public final class mudclient implements Runnable {
 			x += x;
 		else if (x < -1)
 			x -= (-x);
-		if (showUiTab == Constants.SKILLS_AND_QUESTS_TAB) { // Quest list.
+		if (showUiTab == Config.SKILLS_AND_QUESTS_TAB) { // Quest list.
 			if (uiTabPlayerInfoSubTab == 1) {
 				panelQuestInfo.scrollMethodList(controlQuestInfoPanel, x);
 			}
-		} else if (showUiTab == Constants.OPTIONS_TAB) { // Settings wrench menu
+		} else if (showUiTab == Config.OPTIONS_TAB) { // Settings wrench menu
 			panelSettings.scrollMethodCustomList(controlSettingPanel, x, 1);
-		} else if (showUiTab == Constants.MAGIC_AND_PRAYER_TAB) // Magic and prayer book list.
+		} else if (showUiTab == Config.MAGIC_AND_PRAYER_TAB) // Magic and prayer book list.
 			panelMagic.scrollMethodList(controlMagicPanel, x);
-		else if (showUiTab == Constants.FRIENDS_TAB) { // Friend list and ignore list.
+		else if (showUiTab == Config.FRIENDS_TAB) { // Friend list and ignore list.
 			if (this.panelSocialTab == 2 || this.panelSocialTab == 0) {
 				panelSocial.scrollMethodList(controlSocialPanel, x);
 			} else if (this.panelSocialTab == 1) {
