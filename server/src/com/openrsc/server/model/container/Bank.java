@@ -284,7 +284,7 @@ public class Bank {
 
 		int requiredSpaces = getRequiredSlots(itemsToStore);
 
-		if (player.getFreeBankSlots() + 1 < requiredSpaces) {
+		if (player.getFreeBankSlots() < requiredSpaces) {
 			player.message("You need more bank space to equip that.");
 			return;
 		}
