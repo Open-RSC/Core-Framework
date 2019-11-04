@@ -45,6 +45,7 @@
                 <pathelement location="${lib}/JDA-4.0.0_55-withDependencies.jar"/>
                 <pathelement location="${lib}/emoji-java-5.1.1.jar"/>
                 <pathelement location="${lib}/json-20190722.jar"/>
+                <pathelement location="${lib}/gitlab4j-api-4.12.17.jar"/>
                 <pathelement path="${java.class.path}/"/>
             </classpath>
             <compilerarg line="-Xlint:deprecation"/>

@@ -815,6 +815,7 @@ public class PacketHandler {
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
+		int wantCustomUI;
 
 		String logoSpriteID;
 
@@ -887,6 +888,7 @@ public class PacketHandler {
 			movePerFrame = this.getClientStream().getByte(); //66
 			wantLeftclickWebs = this.getClientStream().getByte(); //67
 			npcKillMessages = this.getClientStream().getByte(); //68
+			wantCustomUI = this.getClientStream().getUnsignedByte(); //69
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -956,6 +958,7 @@ public class PacketHandler {
 			movePerFrame = packetsIncoming.getByte(); //66
 			wantLeftclickWebs = packetsIncoming.getByte(); //67
 			npcKillMessages = packetsIncoming.getByte(); //68
+			wantCustomUI = packetsIncoming.getUnsignedByte(); //69
 		}
 
 		if (Config.DEBUG) {
@@ -1016,18 +1019,19 @@ public class PacketHandler {
 					"\nS_WANT_PETS " + wantPets + // 54
 					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
 					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
-					"\nS_WANT_QUEST_STARTED_INDICATOR  " + wantQuestStartedIndicator + // 57
+					"\nS_WANT_QUEST_STARTED_INDICATOR " + wantQuestStartedIndicator + // 57
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
-					"\nS_PROPER_MAGIC_TREE_NAME  " + properMagicTreeName + // 59
-					"\nS_WANT_RUNECRAFTING  "   + wantRunecrafting + // 60
-					"\nS_WANT_CUSTOM_LANDSCAPE  "   + wantCustomLandscape + // 61
-					"\nS_WANT_EQUIPMENT_TAB  "   + wantEquipmentTab + // 62
-					"\nS_WANT_BANK_PRESETS  "   + wantEquipmentTab + // 63
+					"\nS_PROPER_MAGIC_TREE_NAME " + properMagicTreeName + // 59
+					"\nS_WANT_RUNECRAFTING " + wantRunecrafting + // 60
+					"\nS_WANT_CUSTOM_LANDSCAPE " + wantCustomLandscape + // 61
+					"\nS_WANT_EQUIPMENT_TAB " + wantEquipmentTab + // 62
+					"\nS_WANT_BANK_PRESETS " + wantEquipmentTab + // 63
 					"\nS_WANT_PARTIES " + wantClans + // 64
-					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended +// 65
-					"\nC_MOVE_PER_FRAME " + movePerFrame +// 66
-					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs +// 67
-					"\nS_NPC_KILL_MESSAGES " + npcKillMessages// 68
+					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended + // 65
+					"\nC_MOVE_PER_FRAME " + movePerFrame + // 66
+					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs + // 67
+					"\nS_NPC_KILL_MESSAGES " + npcKillMessages + // 68
+					"\nS_WANT_CUSTOM_UI " + wantCustomUI // 69
 					);
 		}
 
@@ -1101,6 +1105,7 @@ public class PacketHandler {
 		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
 		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //67
 		props.setProperty("S_NPC_KILL_MESSAGES", npcKillMessages == 1 ? "true" : "false"); //68
+		props.setProperty("S_WANT_CUSTOM_UI", wantCustomUI == 1 ? "true" : "false"); //69
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1787,6 +1792,7 @@ public class PacketHandler {
 		mc.setBlockPartyInv(packetsIncoming.getUnsignedByte() == 1); // 36
 		mc.setAndroidInvToggle(packetsIncoming.getUnsignedByte() == 1); // 37
 		mc.setShowNPCKC(packetsIncoming.getUnsignedByte() == 1); // 38
+		mc.setCustomUI(packetsIncoming.getUnsignedByte() == 1); //39
 	}
 
 	private void togglePrayer(int length) {

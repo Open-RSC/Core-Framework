@@ -40,8 +40,8 @@ import java.util.concurrent.TimeUnit;
 
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
-//import org.gitlab4j.api.GitLabApi;
-//import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.GitLabApiException;
 
 import javax.security.auth.login.LoginException;
 
@@ -59,7 +59,7 @@ public class DiscordService implements Runnable{
 	private final Server server;
 	private JDABuilder builder;
 	private JDA jda;
-//	private GitLabApi gitLabApi;
+	private GitLabApi gitLabApi;
 
 	public DiscordService(Server server) {
 		this.server = server;
@@ -84,7 +84,7 @@ public class DiscordService implements Runnable{
 				try
 				{
 					byte[] encoded = Files.readAllBytes(Paths.get(tokenFile.getPath()));
-//					gitLabApi = new GitLabApi("http://gitlab.openrsc.com", new String(encoded, StandardCharsets.UTF_8));
+					//gitLabApi = new GitLabApi("http://gitlab.openrsc.com", new String(encoded, StandardCharsets.UTF_8));
 				} catch (IOException a) {
 					a.printStackTrace();
 				}
@@ -216,8 +216,7 @@ public class DiscordService implements Runnable{
 						reply = "You have not paired an account yet. Type !help for more information";
 					}
 				} else if (message.getContentRaw().startsWith("!bug ")) {
-//					if (gitLabApi != null) {
-					if (false) {
+					if (gitLabApi != null) {
 						int hasTitle = message.getContentRaw().indexOf(" -t ");
 						int hasDesc = message.getContentRaw().indexOf(" -d ");
 						String title, desc;
@@ -226,12 +225,12 @@ public class DiscordService implements Runnable{
 							title = message.getContentRaw().substring(hasTitle + 4, hasDesc);
 							desc = message.getContentRaw().substring(hasDesc + 4);
 							desc = "Submitted by: " + message.getAuthor().getName() + "\n" + "Discord Bot Submission (" + this.server.getName() + ")\n---------------------------------\n\n" + desc;
-/*							try {
+							try {
 								gitLabApi.getIssuesApi().createIssue(2, title, desc);
 							} catch (GitLabApiException a) {
 								a.printStackTrace();
 							}
-*/						} else
+						} else
 							reply = "Usage: !bug -t TITLE -d DESCRIPTION";
 					} else
 						reply = "The bug submission service has malfunctioned. Please report this to an admin.";
@@ -245,12 +244,16 @@ public class DiscordService implements Runnable{
 									String[] watchlist = results.getString("value").split(",");
 									reply = "`";
 									for (String item : watchlist) {
-										int itemID = Integer.parseInt(item);
-										ItemDefinition itemDef = server.getEntityHandler().getItemDef(itemID);
-										if (itemDef != null) {
-											reply = reply + itemDef.getName() + " (" + itemID + ")\n";
-										} else
-											reply = reply + "ERROR (ID " + itemID + ")\n";
+										try {
+											int itemID = Integer.parseInt(item);
+											ItemDefinition itemDef = server.getEntityHandler().getItemDef(itemID);
+											if (itemDef != null) {
+												reply = reply + itemDef.getName() + " (" + itemID + ")\n";
+											} else
+												reply = reply + "ERROR (ID " + itemID + ")\n";
+										} catch (NumberFormatException a) {
+											a.printStackTrace();
+										}
 									}
 									reply = reply + "`";
 								} else
@@ -264,12 +267,18 @@ public class DiscordService implements Runnable{
 										if (itemDef != null) {
 											if (results.next()) {
 												String watchlist = results.getString("value");
-												watchlist = String.join(",", watchlist, String.valueOf(toAdd));
-												pinStatement = this.server.getDatabaseConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
-												pinStatement.setString(1, watchlist);
-												pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
-												pinStatement.executeUpdate();
-
+												if (!watchlist.contains(String.valueOf(toAdd))) {
+													if (watchlist.split(",").length < WATCHLIST_MAX_SIZE) {
+														watchlist = String.join(",", watchlist, String.valueOf(toAdd));
+														pinStatement = this.server.getDatabaseConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
+														pinStatement.setString(1, watchlist);
+														pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
+														pinStatement.executeUpdate();
+														reply = "Added " + itemDef.getName() + " to your watchlist.";
+													} else
+														reply = "Your watchlist is full. (10/10)";
+												} else
+													reply = "That item is already on your watchlist.";
 											} else {
 												pinStatement = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
 												pinStatement.setInt(1, 0);
@@ -277,8 +286,8 @@ public class DiscordService implements Runnable{
 												pinStatement.setString(3, "watchlist_" + message.getAuthor().getId());
 												pinStatement.setString(4, String.valueOf(toAdd));
 												pinStatement.executeUpdate();
+												reply = "Added " + itemDef.getName() + " to your watchlist.";
 											}
-											reply = "Added " + itemDef.getName() + " to your watchlist.";
 										} else
 											reply = "That item ID does not exist.";
 									} catch (NumberFormatException a) {
@@ -286,7 +295,8 @@ public class DiscordService implements Runnable{
 									}
 								} else
 									reply = "Usage: !watch add ITEMID";
-							} else if (args[1].equalsIgnoreCase("del")) {
+							} else if (args[1].equalsIgnoreCase("del")
+										|| args[1].equalsIgnoreCase("rem")) {
 								if (args.length > 2) {
 									int itemID = 0;
 									try {
@@ -361,14 +371,24 @@ public class DiscordService implements Runnable{
 		if (textChannel != null)
 			textChannel.sendMessage(message).queue();
 	}
+
+	public void sendPM(long channelID, String message) {
+		PrivateChannel textChannel = jda.getPrivateChannelById(channelID);
+		User user = jda.getUserById(channelID);
+		if (user != null)
+			user.openPrivateChannel().queue((channel) -> {
+				channel.sendMessage(message).queue();
+			});
+	}
+
 	public final Server getServer() {
 		return server;
 	}
 
 	public void auctionAdd(MarketItem addItem) {
 		String pluralHandlerMessage = addItem.getAmount() > 1
-				? "%d x %s, priced at %d coins each, auctioned by %s.  %d hours left."
-				: "%d x %s, priced at %d coins, auctioned by %s.  %d hours left.";
+				? "%d x %s, priced at %d coins each, auctioned by %s."
+				: "%d x %s, priced at %d coins, auctioned by %s.";
 
 		String addMessage = String.format(pluralHandlerMessage,
 				addItem.getAmount(),
@@ -379,6 +399,30 @@ public class DiscordService implements Runnable{
 		);
 
 		auctionSendToDiscord(addMessage);
+
+		//TODO: Add a delay between auction post and watchlist notification.
+		try {
+			PreparedStatement pinStatement = server.getDatabaseConnection().prepareStatement("SELECT `value`, `key` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key` LIKE 'watchlist_%'");
+			ResultSet results = pinStatement.executeQuery();
+			while (results.next()) {
+				String watchlist = results.getString("value");
+				if (watchlist.contains(String.valueOf(addItem.getItemID()))) {
+					String key = results.getString("key").substring(10);
+					try {
+						long discordID = Long.parseLong(key);
+						ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getItemID());
+						if (itemDef != null) {
+							String message = "[" + server.getConfig().SERVER_NAME + " watchlist] " + itemDef.getName() + " ( " + addItem.getAmountLeft() + " @ " + addItem.getPrice() + "gp)";
+							sendPM(discordID, message);
+						}
+					} catch (NumberFormatException a) {
+						a.printStackTrace();
+					}
+				}
+			}
+		} catch (SQLException a) {
+			a.printStackTrace();
+		}
 	}
 
 	public void auctionBuy(MarketItem buyItem) {

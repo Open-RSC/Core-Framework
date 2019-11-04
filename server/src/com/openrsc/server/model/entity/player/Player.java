@@ -2498,6 +2498,17 @@ public final class Player extends Mob {
 		}
 	}
 
+	public Boolean getCustomUI() {
+		if (getWorld().getServer().getConfig().WANT_CUSTOM_UI) {
+			if (getCache().hasKey("custom_ui")) {
+				return getCache().getBoolean("custom_ui");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public Boolean getHideKillFeed() {
 		if (getWorld().getServer().getConfig().WANT_KILL_FEED) {
 			if (getCache().hasKey("setting_kill_feed")) {

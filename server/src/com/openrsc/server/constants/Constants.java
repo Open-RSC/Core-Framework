@@ -125,12 +125,4 @@ public final class Constants {
 		{11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}
 	};
-
-	//public static final class Skillcapes {
-	//	public static final int ATTACK_CAPE = 2111;
-	//	public static final int STRENGTH_CAPE = 2259;
-	//	public static final int COOKING_CAPE = 2105;
-	//	public static final int FISHING_CAPE = 2103;
-	//	public static final int SMITHING_CAPE = 2258;
-	//}
 }

@@ -27,6 +27,13 @@ public class Config {
 	private static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
 	public static String F_CACHE_DIR = "";
 
+	public static final int INVENTORY_TAB = 1;
+	public static final int MINIMAP_AND_COMPASS_TAB = 2;
+	public static final int SKILLS_AND_QUESTS_TAB = 3;
+	public static final int MAGIC_AND_PRAYER_TAB = 4;
+	public static final int FRIENDS_TAB = 5;
+	public static final int OPTIONS_TAB = 6;
+
 	/* Configurable: */
 	public static boolean C_EXPERIENCE_DROPS = false;
 	public static boolean C_NPC_KC = false;
@@ -42,6 +49,7 @@ public class Config {
 	public static boolean C_INV_COUNT = false;
 	public static boolean C_PARTY_INV = false;
 	public static int C_ZOOM;
+	public static boolean C_CUSTOM_UI = false; // Enables a osrs style UI
 
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;
@@ -119,6 +127,7 @@ public class Config {
 	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
 	public static boolean S_WANT_PARTIES = false;
 	public static boolean S_MINING_ROCKS_EXTENDED = false;
+	public static boolean S_WANT_CUSTOM_UI = false;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());
