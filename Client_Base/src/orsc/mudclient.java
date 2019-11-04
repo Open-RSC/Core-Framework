@@ -6521,14 +6521,14 @@ public final class mudclient implements Runnable {
 						textHeightOffset += 10;
 					}
 
-					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
-						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
+					if ((mouseX > x) && (mouseX < (x + boxWidth)) && (mouseY > y) && (mouseY < (y + boxHeight))
+						&& (mouseButtonClick > 0) && ((this.showUiTab == 0) || C_CUSTOM_UI)) {
 						selectedSpell = lastSelectedSpell;
 						mouseButtonClick = 0;
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y + 49 && mouseY < y + 69
-						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
 						selectedSpell = -1;
 						lastSelectedSpell = -1;
 						mouseButtonClick = 0;
@@ -6648,6 +6648,10 @@ public final class mudclient implements Runnable {
 						clan.getClanInterface().onRender(getSurface());
 						interfaceOpen = true;
 					}
+					if (party.getPartyInterface().isVisible()) {
+						party.getPartyInterface().onRender(getSurface());
+						interfaceOpen = true;
+					}
 					if (this.isShowDialogBank() && this.combatTimeout == 0) {
 						this.drawDialogBank();
 						interfaceOpen = true;
@@ -6679,12 +6683,8 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, getUITabsY() + 14, (0x00FFFFFF << (int) Math.floor((this.inventoryItemCount / 15)) * 8) & 0x00FFFFFF, 1, true);
 				}
 
-				if (C_CUSTOM_UI) {
-					this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
-				} else {
-					if (this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB) {
+				if (this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB) {
 						this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
-					}
 				}
 
 				if (this.showUiTab == Config.SKILLS_AND_QUESTS_TAB) {
@@ -12488,13 +12488,14 @@ public final class mudclient implements Runnable {
 				return true;
 			}
 
-			/*if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= minY
+			//wolfreturn
+			if (this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < maxY) {
 				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
 				return true;
-			}*/
+			}
 
 			if (this.showUiTab == 0 && this.getSurface().width2 - 101 <= this.mouseX && this.mouseY >= minY
 				&& this.mouseX < this.getSurface().width2 - 3 - 66 && this.mouseY < maxY) {
