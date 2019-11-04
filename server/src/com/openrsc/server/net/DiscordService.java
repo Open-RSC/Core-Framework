@@ -4,19 +4,17 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.market.MarketItem;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.MessageType;
 import com.vdurmont.emoji.EmojiParser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -26,20 +24,15 @@ import org.apache.logging.log4j.core.util.JsonUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
-import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -47,11 +40,13 @@ import java.util.concurrent.TimeUnit;
 
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
+//import org.gitlab4j.api.GitLabApi;
+//import org.gitlab4j.api.GitLabApiException;
 
 import javax.security.auth.login.LoginException;
 
 public class DiscordService implements Runnable{
-
+	private static final int WATCHLIST_MAX_SIZE = 10;
 	private final ScheduledExecutorService scheduledExecutor;
 
 	private Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
@@ -64,7 +59,7 @@ public class DiscordService implements Runnable{
 	private final Server server;
 	private JDABuilder builder;
 	private JDA jda;
-
+//	private GitLabApi gitLabApi;
 
 	public DiscordService(Server server) {
 		this.server = server;
@@ -83,10 +78,23 @@ public class DiscordService implements Runnable{
 			} else {
 				LOGGER.info(server.getConfig().SERVER_NAME + ".tok not found. Cannot start bot.");
 			}
+
+			tokenFile = new File("gitlab.pat");
+			if (tokenFile.exists()) {
+				try
+				{
+					byte[] encoded = Files.readAllBytes(Paths.get(tokenFile.getPath()));
+//					gitLabApi = new GitLabApi("http://gitlab.openrsc.com", new String(encoded, StandardCharsets.UTF_8));
+				} catch (IOException a) {
+					a.printStackTrace();
+				}
+			} else {
+				LOGGER.info("gitlab.pat not found. Cannot start gitlab API.");
+			}
 		}
 	}
 
-	public void startPlayerBot(String token) {
+	private void startPlayerBot(String token) {
 		this.builder = new JDABuilder(AccountType.BOT);
 		this.builder.setEventManager(new AnnotatedEventManager());
 		this.builder.addEventListeners(this);
@@ -100,7 +108,7 @@ public class DiscordService implements Runnable{
 	}
 
 	@SubscribeEvent
-	public void handleIncomingMessage(MessageReceivedEvent event)
+	private void handleIncomingMessage(MessageReceivedEvent event)
 	{
 		MessageChannel channel = event.getChannel();
 		Message message = event.getMessage();
@@ -110,7 +118,7 @@ public class DiscordService implements Runnable{
 			if (event.getChannelType() == ChannelType.PRIVATE) {
 				if (message.getContentRaw().startsWith("!help"))
 				{
-					reply = "To use me, you must pair your accounts. To do this, login to your openrsc account and type ::pair . You will be given a unique code. Return to this conversation and use !pair TOKEN. To see the commands that are available, type !commands";
+					reply = "To see the commands that are available, type !commands. Some commands require you to pair your discord account to your openrsc account. To do this, type ::pair in game to get your pairing token, then return to this DM and type !pair TOKEN";
 				} else if (message.getContentRaw().startsWith("!commands")) {
 					reply = "!auctions";
 				} else if (message.getContentRaw().startsWith("!pair")) {
@@ -145,7 +153,7 @@ public class DiscordService implements Runnable{
 										mrMan.getCache().store("discordID", message.getAuthor().getIdLong());
 									}
 								} else {
-									reply = "Error 1580. Please contact an administrator.";
+									reply = "[Error 1580] Please contact an administrator.";
 								}
 
 							} else {
@@ -171,7 +179,8 @@ public class DiscordService implements Runnable{
 								reply = "You have not paired an account yet. Type !help for more information";
 					}
 					if (reply.isEmpty())
-						reply = "There are no auctions at the moment.";
+						reply = "You have no active auctions.";
+					reply = "`" + reply + "`";
 				} else if (message.getContentRaw().startsWith("!stats")
 							|| message.getContentRaw().startsWith("!skills")) {
 					int dbID = 0;
@@ -206,13 +215,134 @@ public class DiscordService implements Runnable{
 					} else {
 						reply = "You have not paired an account yet. Type !help for more information";
 					}
+				} else if (message.getContentRaw().startsWith("!bug ")) {
+//					if (gitLabApi != null) {
+					if (false) {
+						int hasTitle = message.getContentRaw().indexOf(" -t ");
+						int hasDesc = message.getContentRaw().indexOf(" -d ");
+						String title, desc;
+						if (hasTitle != -1 && hasDesc != -1 &&
+							hasTitle < hasDesc && hasDesc-hasTitle > 3) {
+							title = message.getContentRaw().substring(hasTitle + 4, hasDesc);
+							desc = message.getContentRaw().substring(hasDesc + 4);
+							desc = "Submitted by: " + message.getAuthor().getName() + "\n" + "Discord Bot Submission (" + this.server.getName() + ")\n---------------------------------\n\n" + desc;
+/*							try {
+								gitLabApi.getIssuesApi().createIssue(2, title, desc);
+							} catch (GitLabApiException a) {
+								a.printStackTrace();
+							}
+*/						} else
+							reply = "Usage: !bug -t TITLE -d DESCRIPTION";
+					} else
+						reply = "The bug submission service has malfunctioned. Please report this to an admin.";
+				} else if (message.getContentRaw().startsWith("!watch")) {
+					if (args.length > 1) {
+						try {
+							PreparedStatement pinStatement = this.server.getDatabaseConnection().prepareStatement("SELECT `value` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE`key`='watchlist_" + message.getAuthor().getId() + "'");
+							ResultSet results = pinStatement.executeQuery();
+							if (args[1].equalsIgnoreCase("list")) {
+								if (results.next()) {
+									String[] watchlist = results.getString("value").split(",");
+									reply = "`";
+									for (String item : watchlist) {
+										int itemID = Integer.parseInt(item);
+										ItemDefinition itemDef = server.getEntityHandler().getItemDef(itemID);
+										if (itemDef != null) {
+											reply = reply + itemDef.getName() + " (" + itemID + ")\n";
+										} else
+											reply = reply + "ERROR (ID " + itemID + ")\n";
+									}
+									reply = reply + "`";
+								} else
+									reply = "You have nothing on your watchlist.";
+							} else if (args[1].equalsIgnoreCase("add")) {
+								if (args.length > 2) {
+									int toAdd = 0;
+									try {
+										toAdd = Integer.parseInt(args[2]);
+										ItemDefinition itemDef = server.getEntityHandler().getItemDef(toAdd);
+										if (itemDef != null) {
+											if (results.next()) {
+												String watchlist = results.getString("value");
+												watchlist = String.join(",", watchlist, String.valueOf(toAdd));
+												pinStatement = this.server.getDatabaseConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
+												pinStatement.setString(1, watchlist);
+												pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
+												pinStatement.executeUpdate();
+
+											} else {
+												pinStatement = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
+												pinStatement.setInt(1, 0);
+												pinStatement.setInt(2, 1);
+												pinStatement.setString(3, "watchlist_" + message.getAuthor().getId());
+												pinStatement.setString(4, String.valueOf(toAdd));
+												pinStatement.executeUpdate();
+											}
+											reply = "Added " + itemDef.getName() + " to your watchlist.";
+										} else
+											reply = "That item ID does not exist.";
+									} catch (NumberFormatException a) {
+										reply = "You must enter a valid number as the item ID.";
+									}
+								} else
+									reply = "Usage: !watch add ITEMID";
+							} else if (args[1].equalsIgnoreCase("del")) {
+								if (args.length > 2) {
+									int itemID = 0;
+									try {
+										itemID = Integer.parseInt(args[2]);
+										if (results.next()) {
+											List<String> watchlist = new ArrayList<String>(Arrays.asList(results.getString("value").split(",")));
+											if (watchlist.contains(args[2])) {
+												watchlist.remove(args[2]);
+												if (watchlist.size() > 0) {
+													StringBuilder query = new StringBuilder();
+													for (String item : watchlist) {
+														if (query.length() == 0) {
+															query.append(item);
+														} else
+															query.append("," + item);
+													}
+
+													pinStatement = this.server.getDatabaseConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
+													pinStatement.setString(1, query.toString());
+													pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
+													pinStatement.executeUpdate();
+												} else {
+													pinStatement = this.server.getDatabaseConnection().prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key`=?");
+													pinStatement.setString(1, "watchlist_" + message.getAuthor().getId());
+													pinStatement.executeUpdate();
+												}
+												ItemDefinition itemDef = server.getEntityHandler().getItemDef(Integer.parseInt(args[2]));
+												if (itemDef != null)
+													reply = "You have removed " + itemDef.getName() + " from your watchlist.";
+												else
+													reply = "You have removed " + args[2] + " from your watchlist.";
+											} else
+												reply = "You do not have that item on your watchlist.";
+										} else
+											reply = "Your watchlist is already empty.";
+									} catch (NumberFormatException a) {
+										reply = "You must enter a valid number as the item ID.";
+									}
+
+								} else
+									reply = "Usage: !watch del ITEMID";
+							} else
+								reply = "Usage: !watch [list add del]";
+						} catch (SQLException a) {
+							a.printStackTrace();
+						}
+					} else
+						reply = "Usage: !watch [list add del]";
+
 				}
 			} else if (message.getChannel().getIdLong() == this.server.getConfig().CROSS_CHAT_CHANNEL
 						&& !message.getContentRaw().isEmpty()) {
 				String strMessage = EmojiParser.parseToAliases(message.getContentRaw());
 
 				for (Player p : this.server.getWorld().getPlayers()) {
-					ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@D@whi@>] @or1@" + message.getAuthor().getName() + "@yel@: " + strMessage, 0);
+					ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@D>G@whi@] @or1@" + message.getAuthor().getName() + "@yel@: " + strMessage, 0);
 				}
 			} else {
 				if (message.getContentRaw().startsWith("!help"))
@@ -226,7 +356,7 @@ public class DiscordService implements Runnable{
 		}
 	}
 
-	public void chatToDiscord(String message) {
+	public void sendMessage(String message) {
 		TextChannel textChannel = jda.getTextChannelById(this.server.getConfig().CROSS_CHAT_CHANNEL);
 		if (textChannel != null)
 			textChannel.sendMessage(message).queue();

@@ -16,6 +16,9 @@ public class LiveFeedLog extends Query {
 			+ "live_feeds`(`username`,`message`,`time`) VALUES(?, ?, ?)");
 		this.username = player.getUsername();
 		this.feedText = feedText;
+		if (player.getWorld().getServer().getConfig().WANT_DISCORD_BOT) {
+			player.getWorld().getServer().getDiscordService().sendMessage("[Live Feed] " + this.username + " " + this.feedText.replace("<strong>","**").replace("</strong>","**"));
+		}
 	}
 
 	@Override
