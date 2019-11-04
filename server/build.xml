@@ -35,18 +35,17 @@
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
                 <pathelement location="${lib}/log4j-core-2.8.jar"/>
-                <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
                 <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
-                <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/guava-25.0-jre.jar"/>
                 <pathelement location="${lib}/JDA-4.0.0_55-withDependencies.jar"/>
                 <pathelement location="${lib}/emoji-java-5.1.1.jar"/>
                 <pathelement location="${lib}/json-20190722.jar"/>
                 <pathelement location="${lib}/gitlab4j-api-4.12.17.jar"/>
-                <pathelement path="${java.class.path}/"/>
+                <pathelement location="${lib}/slf4j-nop-1.7.28.jar"/>
+                <pathelement location="${lib}/disruptor-3.3.11.jar"/>
             </classpath>
             <compilerarg line="-Xlint:deprecation"/>
         </javac>
