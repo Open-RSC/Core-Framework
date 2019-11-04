@@ -74,6 +74,8 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("android_inv_toggle", p.readByte() == 1);
 			} else if (idx == 38) {
 				player.getCache().store("show_npc_kc", p.readByte() == 1);
+			} else if (idx == 39) {
+				player.getCache().store("custom_ui", p.readByte() == 1);
 			}
 			return;
 		}

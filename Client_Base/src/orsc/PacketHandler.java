@@ -1792,6 +1792,7 @@ public class PacketHandler {
 		mc.setBlockPartyInv(packetsIncoming.getUnsignedByte() == 1); // 36
 		mc.setAndroidInvToggle(packetsIncoming.getUnsignedByte() == 1); // 37
 		mc.setShowNPCKC(packetsIncoming.getUnsignedByte() == 1); // 38
+		mc.setCustomUI(packetsIncoming.getUnsignedByte() == 1); //39
 	}
 
 	private void togglePrayer(int length) {

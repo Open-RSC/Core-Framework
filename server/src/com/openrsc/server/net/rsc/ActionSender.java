@@ -442,6 +442,7 @@ public class ActionSender {
 		s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
 		s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
 		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
+		s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
 		player.write(s.toPacket());
 	}
 
