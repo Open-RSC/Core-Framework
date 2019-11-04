@@ -413,6 +413,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 							ActionSender.sendBox(player, "Leave your current party before joining another", false);
 							return;
 						}
+						if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+							player.message("You are an Iron Man. You stand alone.");
+							return;
+						}
 
 						Party party = new Party(player.getWorld());
 						//party.setPartyName(partyName);
@@ -433,10 +437,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 						break;
 					case 2:
 						Player invited = player.getWorld().getPlayer(p.readShort());
-						/*if (!player.getParty().isAllowed(1, player)) {
-							player.message("You are not allowed to invite others into this party");
+						if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+							player.message("You are an Iron Man. You stand alone.");
 							return;
-						}*/
+						}
 						if (player.getParty() == null) {
 							String partyName = p.readString();
 							String partyTag = p.readString();
@@ -559,6 +563,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 								player.message("Only the party owner can invite players to this party");
 								return;
 							}
+						}
+						if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+							player.message("You are an Iron Man. You stand alone.");
+							return;
 						}
 						if (player.getParty() == null) {
 							if (invited2 == null) {
