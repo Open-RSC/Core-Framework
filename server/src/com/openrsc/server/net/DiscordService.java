@@ -338,13 +338,16 @@ public class DiscordService implements Runnable{
 
 								} else
 									reply = "Usage: !watch del ITEMID";
-							} else
-								reply = "Usage: !watch [list add del]";
+							} else if (args[1].equalsIgnoreCase("help")) {
+								reply = "The auction watchlist feature will notify you when an item of your interest is placed on the auction house. To use it, use !watch [list add del] [item id]. To get an items ID, use https://openrsc.com/items. The number in () after the items name is its ID. You may have up to 10 items on your watchlist.";
+							}
+							else
+								reply = "Usage: !watch [list add del help]";
 						} catch (SQLException a) {
 							a.printStackTrace();
 						}
 					} else
-						reply = "Usage: !watch [list add del]";
+						reply = "Usage: !watch [list add del help]";
 
 				}
 			} else if (message.getChannel().getIdLong() == this.server.getConfig().CROSS_CHAT_CHANNEL
