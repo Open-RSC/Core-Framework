@@ -615,6 +615,7 @@ public final class mudclient implements Runnable {
 		"What is your favourite book?",
 		"What is your favourite food?",
 		"What is your favourite movie?"};
+	private boolean drawMinimap = true;
 
 	/**
 	 * Newest RSC cache: SAME VALUES.
@@ -6683,8 +6684,12 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawShadowText(this.inventoryItemCount + "/30", this.getGameWidth() - 19, getUITabsY() + 14, (0x00FFFFFF << (int) Math.floor((this.inventoryItemCount / 15)) * 8) & 0x00FFFFFF, 1, true);
 				}
 
-				if (this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB) {
+				if (C_CUSTOM_UI && drawMinimap) {
+					this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
+				} else {
+					if (this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB) {
 						this.drawUiTabMinimap(mustDrawMenu, (byte) 125);
+					}
 				}
 
 				if (this.showUiTab == Config.SKILLS_AND_QUESTS_TAB) {
@@ -12488,10 +12493,9 @@ public final class mudclient implements Runnable {
 				return true;
 			}
 
-			//wolfreturn
 			if (this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < maxY) {
-				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
+				drawMinimap = !drawMinimap;
 				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
 				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
 				return true;
@@ -12624,15 +12628,17 @@ public final class mudclient implements Runnable {
 				return true;
 			}
 			//minimap
-			int minX = this.getSurface().width2 - 170;
-			int minY = 10;
-			int borderSize = 2;
-			//int maxX = minX + 156 + (borderSize*2);
-			int maxY = minY + 152 + (borderSize * 2);
+			if (drawMinimap) {
+				int minX = this.getSurface().width2 - 170;
+				int minY = 10;
+				int borderSize = 2;
+				// int maxX = minX + 156 + (borderSize*2);
+				int maxY = minY + 152 + (borderSize * 2);
 
-			if (this.mouseX >= minX && this.mouseY >= 0
-				&& this.mouseX < this.getSurface().width2 && this.mouseY < maxY) {
-				return true;
+				if (this.mouseX >= minX && this.mouseY >= 0 && this.mouseX < this.getSurface().width2
+					&& this.mouseY < maxY) {
+					return true;
+				}
 			}
 
 
