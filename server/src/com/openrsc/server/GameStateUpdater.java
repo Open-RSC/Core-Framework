@@ -173,7 +173,7 @@ public final class GameStateUpdater {
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 					|| otherPlayer.isTeleporting() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride || otherPlayer.inCombat()) {
+					|| !visibleConditionOverride || otherPlayer.inCombat() || otherPlayer.hasMoved()) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //???
