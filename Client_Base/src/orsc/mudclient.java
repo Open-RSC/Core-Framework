@@ -10083,18 +10083,7 @@ public final class mudclient implements Runnable {
 		panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
 		if (!authenticSettings) {
 			if (C_CUSTOM_UI) {
-				int maxY = getUITabsY();
-				panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
-				panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
-				panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
-				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
-				panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
-				int offX = 300;
-				panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-				panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
-				panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-				panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-				panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+				repositionCustomUI();
 			} else {
 				panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
 				panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
