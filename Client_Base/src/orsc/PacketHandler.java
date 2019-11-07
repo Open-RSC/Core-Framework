@@ -328,6 +328,9 @@ public class PacketHandler {
 				// Kills2
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
+			
+			else if (opcode == 98)
+				mc.setExpShared(packetsIncoming.getShort());
 
 			else if (opcode == 140)
 				mc.setPetFatigue(packetsIncoming.getShort());
@@ -598,6 +601,7 @@ public class PacketHandler {
 					mc.party.partyMembersTotal[id] = packetsIncoming.getByte();
 					mc.party.inCombat[id] = packetsIncoming.getByte();
 					mc.party.shareExp[id] = packetsIncoming.getByte();
+					mc.party.expShared[id] = packetsIncoming.getLong(0);
 				}
 				mc.party.putParty(true);
 				mc.showPartyMenu();

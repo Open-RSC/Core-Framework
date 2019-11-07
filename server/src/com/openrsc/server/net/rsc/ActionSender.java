@@ -330,6 +330,13 @@ public class ActionSender {
 		s.writeShort(player.getKills2());
 		player.write(s.toPacket());
 	}
+	
+	public static void sendExpShared(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_EXPSHARED.opcode);
+		s.writeShort(player.getExpShared());
+		player.write(s.toPacket());
+	}
 
 	/**
 	 * Sends the sleeping state fatigue
@@ -1363,6 +1370,7 @@ public class ActionSender {
 			pb.writeByte(m.getPartyMembersTotal());
 			pb.writeByte(m.getInCombat());
 			pb.writeByte(m.getShareExp());
+			pb.writeLong(m.getExpShared2());
 		}
 		p.write(pb.toPacket());
 	}
@@ -1515,6 +1523,7 @@ public class ActionSender {
 		SEND_TRADE_WINDOW(92),
 		SEND_TRADE_OTHER_ITEMS(97),
 		SEND_SHOP_OPEN(101),
+		SEND_EXPSHARED(98),
 		SEND_IGNORE_LIST(109),
 		SEND_INPUT_BOX(110),
 		SEND_ON_TUTORIAL(111),

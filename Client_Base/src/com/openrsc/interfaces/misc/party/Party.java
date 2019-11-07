@@ -11,6 +11,7 @@ public class Party {
 	public int[] shareLoot = new int[99];
 	public int[] shareExp = new int[99];
 	public int[] cbLvl = new int[99];
+	public long[] expShared = new long[99];
 	public int[] skull = new int[99];
 	public int[] maxHp = new int[99];
 	public int[] pMemDTimeout = new int[99];
@@ -46,6 +47,10 @@ public class Party {
 
 	int getCbLvl(int user) {
 		return cbLvl[user];
+	}
+	
+	long getExpShared(int user) {
+		return expShared[user];
 	}
 
 	public void setPlayerKills(int user, int kills) {

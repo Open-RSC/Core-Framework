@@ -337,6 +337,7 @@ public final class Player extends Mob {
 	 **/
 	private int kills = 0;
 	private int kills2 = 0;
+	private int expShared = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
 	private WalkToAction walkToAction;
@@ -1502,8 +1503,19 @@ public final class Player extends Mob {
 								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + skillXP * 4);
 								ActionSender.sendFatigue(this);
 							}
-							p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired());
+							p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired() - 1);
 						}
+					}
+					int p11 = partyLeader.getPartyMembersNotTired() - 1;
+					if(partyLeader.getPartyMembersNotTired() - 1 > 0){
+						int skill1 = skillXP / 4;
+						int p1 = partyLeader.getPartyMembersNotTired();
+						int p3 = partyLeader.getPartyMembersNotTired() - 1;
+						ActionSender.sendMessage(this, skill1 +" total exp. " + p1 + " members to share");
+						int shared = this.getExpShared() + skill1 / p1;
+						this.setExpShared(this.getExpShared() + skill1 / p1 * p3);
+						ActionSender.sendExpShared(this);
+						this.getParty().sendParty();
 					}
 				} else {
 					skills.addExperience(skill, (int) skillXP);
@@ -2342,6 +2354,10 @@ public final class Player extends Mob {
 	public int getKills2() {
 		return kills2;
 	}
+	
+	public int getExpShared() {
+		return expShared;
+	}
 
 	public void setDeaths(int i) {
 		this.deaths = i;
@@ -2354,6 +2370,11 @@ public final class Player extends Mob {
 	public void setKills2(int i) {
 		this.kills2 = i;
 		ActionSender.sendKills2(this);
+	}
+	
+	public void setExpShared(int i) {
+		this.expShared = i;
+		ActionSender.sendExpShared(this);
 	}
 
 	private void incDeaths() {
@@ -2497,7 +2518,7 @@ public final class Player extends Mob {
 			return false;
 		}
 	}
-
+	
 	public Boolean getCustomUI() {
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_UI) {
 			if (getCache().hasKey("custom_ui")) {

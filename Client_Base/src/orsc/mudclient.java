@@ -487,6 +487,7 @@ public final class mudclient implements Runnable {
 	private int spriteCount = 0;
 	private int statFatigue = 0;
 	private int statKills2 = 0;
+	private int expShared = 0;
 	private int petFatigue = 0;
 	private MudClientGraphics surface;
 	private int systemUpdate = 0;
@@ -14943,6 +14944,10 @@ public final class mudclient implements Runnable {
 	public int getPetFatigue() {
 		return this.petFatigue;
 	}
+	
+	public int getExpShared() {
+		return this.expShared;
+	}
 
 	public void setStatFatigue(int fatigue) {
 		if (DEBUG)
@@ -14960,6 +14965,12 @@ public final class mudclient implements Runnable {
 		if (DEBUG)
 			System.out.println("PetFatigue: " + petFatigue);
 		this.petFatigue = petFatigue;
+	}
+	
+	public void setExpShared(int expShared2) {
+		if (DEBUG)
+			System.out.println("ExpShared: " + expShared2);
+		this.expShared = expShared2;
 	}
 
 	public void setInputTextCurrent(String s) {
