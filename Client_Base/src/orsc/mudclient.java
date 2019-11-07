@@ -40,6 +40,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static orsc.Config.*;
+import static orsc.graphics.two.GraphicsController.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -616,6 +617,8 @@ public final class mudclient implements Runnable {
 		"What is your favourite food?",
 		"What is your favourite movie?"};
 	private boolean drawMinimap = true;
+	private GraphicsController graphics;
+	private OpenRSC openrsc;
 
 	/**
 	 * Newest RSC cache: SAME VALUES.
@@ -922,9 +925,7 @@ public final class mudclient implements Runnable {
 						lastFPSUpdate = time;
 						mudclient.FPS = currentFPS;
 						currentFPS = 0;
-
 					}
-
 				}
 
 				if (this.threadState == -1) {
@@ -1915,6 +1916,13 @@ public final class mudclient implements Runnable {
 				yOffsetWelcome = -125;
 				yOffsetLogin = -200;
 			}
+
+			if (!allowResize1())
+				try {
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			if (!wantMembers()) { // Free version
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 23 + yOffsetWelcome, "Welcome to " + getServerNameWelcome(), 4, true);
@@ -8881,6 +8889,7 @@ public final class mudclient implements Runnable {
 		if (S_WANT_CUSTOM_UI) {
 			if (settingIndex == 39 && this.mouseButtonClick == 1) {
 				C_CUSTOM_UI = !C_CUSTOM_UI;
+				repositionCustomUI();
 				this.packetHandler.getClientStream().newPacket(111);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(39);
 				boolean setting = C_CUSTOM_UI;
@@ -10050,7 +10059,6 @@ public final class mudclient implements Runnable {
 	}
 
 	boolean reposition() {
-
 		if (resizeWidth <= 0 && resizeHeight <= 0) {
 			return false;
 		}
@@ -10101,6 +10109,30 @@ public final class mudclient implements Runnable {
 			}
 		}
 		return true;
+	}
+
+	private void repositionCustomUI() {
+		int var3 = this.getSurface().width2 - 199;
+		int maxY = getUITabsY();
+		panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
+		panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
+		panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
+		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+		panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+		int offX = 300;
+		panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
+		panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+
+		// Ensures the client is redrawn (resized) to refresh all scrollable menus
+		try {
+			resizeWidth = getGameWidth();
+			resizeHeight = getGameHeight() + 12;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final int getInventoryCount(int id) {
@@ -12779,7 +12811,7 @@ public final class mudclient implements Runnable {
 						while (entries.hasMoreElements()) {
 							List<Sprite> spriteGroup;
 							ZipEntry entry = entries.nextElement();
-							spriteGroup = GraphicsController.unpackSpriteData(spritePack, entry);
+							spriteGroup = unpackSpriteData(spritePack, entry);
 							List<Sprite> defaultSprites = getSurface().spriteTree.get(entry.getName());
 							for (Sprite sprite : spriteGroup) {
 								for (int i = 0; i < defaultSprites.size(); i++) {
@@ -15397,6 +15429,8 @@ public final class mudclient implements Runnable {
 					}
 				}
 			}
+			if (C_CUSTOM_UI)
+				repositionCustomUI();
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');
 		}
