@@ -32,8 +32,7 @@ public final class ItemDropHandler implements PacketHandler {
 		Item tempitem = null;
 
 		//User wants to drop the item from equipment tab
-		if (idx == -1)
-		{
+		if (idx == -1) {
 			int realid = (int) p.readShort();
 			int slot = player.getEquipment().hasEquipped(realid);
 			if (slot != -1)
@@ -55,7 +54,7 @@ public final class ItemDropHandler implements PacketHandler {
 			if (amount > item.getAmount()) {
 				amount = item.getAmount();
 			}
-		} else if (idx != -1){
+		} else if (idx != -1) {
 			if (amount > player.getInventory().countId(item.getID())) {
 				amount = player.getInventory().countId(item.getID());
 			}
@@ -87,7 +86,11 @@ public final class ItemDropHandler implements PacketHandler {
 		});
 
 	}
-	private void dropStackable(final Player player, final Item item, final int amount) { this.dropStackable(player, item, amount, true);}
+
+	private void dropStackable(final Player player, final Item item, final int amount) {
+		this.dropStackable(player, item, amount, true);
+	}
+
 	public void dropStackable(final Player player, final Item item, final int amount, boolean fromInventory) {
 		if (!item.getDef(player.getWorld()).isStackable()) {
 			throw new IllegalArgumentException("Item must be stackable when passed on to dropStackable()");
@@ -128,7 +131,11 @@ public final class ItemDropHandler implements PacketHandler {
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 		player.setStatus(Action.IDLE);
 	}
-	public void dropUnstackable(final Player player, final Item item, final int amount) { this.dropStackable(player, item, amount, true); }
+
+	public void dropUnstackable(final Player player, final Item item, final int amount) {
+		this.dropStackable(player, item, amount, true);
+	}
+
 	public void dropUnstackable(final Player player, final Item item, final int amount, boolean fromInventory) {
 		if (item.getDef(player.getWorld()).isStackable()) {
 			throw new IllegalArgumentException("Item must be unstackable when passed on to dropUnstackable()");
@@ -156,7 +163,7 @@ public final class ItemDropHandler implements PacketHandler {
 				}
 				int slot = 0;
 				if ((fromInventory && !player.getInventory().hasItemId(item.getID())) ||
-					(!fromInventory && (slot=player.getEquipment().hasEquipped(item.getID())) == -1)) {
+					(!fromInventory && (slot = player.getEquipment().hasEquipped(item.getID())) == -1)) {
 					player.message("You don't have the entered amount to drop");
 					running = false;
 					player.setStatus(Action.IDLE);
@@ -188,7 +195,6 @@ public final class ItemDropHandler implements PacketHandler {
 				dropCount++;
 				if (amount > 1)
 					player.message("Dropped " + dropCount + "/" + amount);
-
 			}
 		});
 	}
