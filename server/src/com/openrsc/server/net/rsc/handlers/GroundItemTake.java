@@ -54,7 +54,7 @@ public class GroundItemTake implements PacketHandler {
 					player.sendMemberErrorMessage();
 					return;
 				}
-				if (item.getLocation().inWilderness() && item.belongsTo(player) && item.getAttribute("playerKill", false) && (player.isIronMan(2) || player.isIronMan(1) || player.isIronMan(3))) {
+				if (item.getLocation().inWilderness() && !item.belongsTo(player) && item.getAttribute("playerKill", false) && (player.isIronMan(2) || player.isIronMan(1) || player.isIronMan(3))) {
 					player.message("You're an Iron Man, so you can't loot items from players.");
 					return;
 				}
