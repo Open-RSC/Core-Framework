@@ -738,8 +738,7 @@ public final class Player extends Mob {
 	private void updateSkullRemaining() {
 		if ((getCache().getLong("skull_remaining") <= 0) || (getCache().hasKey("skull_remaining") && !isSkulled())) { // Removes the skull remaining key once no longer needed
 			cache.remove("skull_remaining");
-		}
-		else if (getSkullTime() - System.currentTimeMillis() > 0) {
+		} else if (getSkullTime() - System.currentTimeMillis() > 0) {
 			cache.store("skull_remaining", (getSkullTime() - System.currentTimeMillis()));
 		}
 	}
@@ -1507,11 +1506,11 @@ public final class Player extends Mob {
 						}
 					}
 					int p11 = partyLeader.getPartyMembersNotTired() - 1;
-					if(partyLeader.getPartyMembersNotTired() - 1 > 0){
+					if (partyLeader.getPartyMembersNotTired() - 1 > 0) {
 						int skill1 = skillXP / 4;
 						int p1 = partyLeader.getPartyMembersNotTired();
 						int p3 = partyLeader.getPartyMembersNotTired() - 1;
-						ActionSender.sendMessage(this, skill1 +" total exp. " + p1 + " members to share");
+						ActionSender.sendMessage(this, skill1 + " total exp. " + p1 + " members to share");
 						int shared = this.getExpShared() + skill1 / p1;
 						this.setExpShared(this.getExpShared() + skill1 / p1 * p3);
 						ActionSender.sendExpShared(this);
@@ -2994,7 +2993,7 @@ public final class Player extends Mob {
 			itemFinal.setAttribute("npcdrop", true);
 		}
 
-		if (item.getAttribute("isIronmanItem", false)) {
+		if (item.getAttribute("isIronmanItem", false) && getIronMan() == 0) {
 			message("That belongs to an Ironman player.");
 			return false;
 		}
