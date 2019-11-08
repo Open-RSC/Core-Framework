@@ -42,10 +42,11 @@ public class GroundItem extends Entity {
 		super(world);
 		setID(id);
 		setAmount(amount);
-		this.ownerUsernameHash = owner.getUsernameHash();
+		//this.ownerUsernameHash = owner.getUsernameHash();
+		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = System.currentTimeMillis();
 		setLocation(Point.location(x, y));
-		if (owner.getIronMan() >= 1 && owner.getIronMan() <= 3)
+		if (owner != null && owner.getIronMan() >= 1 && owner.getIronMan() <= 3)
 			this.setAttribute("isIronmanItem", true);
 	}
 
