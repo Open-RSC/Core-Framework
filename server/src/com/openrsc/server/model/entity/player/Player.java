@@ -2354,7 +2354,7 @@ public final class Player extends Mob {
 	public int getKills2() {
 		return kills2;
 	}
-	
+
 	public int getExpShared() {
 		return expShared;
 	}
@@ -2371,7 +2371,7 @@ public final class Player extends Mob {
 		this.kills2 = i;
 		ActionSender.sendKills2(this);
 	}
-	
+
 	public void setExpShared(int i) {
 		this.expShared = i;
 		ActionSender.sendExpShared(this);
@@ -2518,7 +2518,7 @@ public final class Player extends Mob {
 			return false;
 		}
 	}
-	
+
 	public Boolean getCustomUI() {
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_UI) {
 			if (getCache().hasKey("custom_ui")) {
@@ -2992,6 +2992,11 @@ public final class Player extends Mob {
 		Item itemFinal = new Item(item.getID(), item.getAmount());
 		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
 			itemFinal.setAttribute("npcdrop", true);
+		}
+
+		if (item.getAttribute("isIronmanItem", false)) {
+			message("That belongs to an Ironman player.");
+			return false;
 		}
 
 		if (!this.getInventory().canHold(itemFinal)) {
