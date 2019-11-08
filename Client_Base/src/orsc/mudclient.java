@@ -40,7 +40,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static orsc.Config.*;
-import static orsc.graphics.two.GraphicsController.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
 
 public final class mudclient implements Runnable {
@@ -617,9 +616,6 @@ public final class mudclient implements Runnable {
 		"What is your favourite book?",
 		"What is your favourite food?",
 		"What is your favourite movie?"};
-	private boolean drawMinimap = true;
-	private GraphicsController graphics;
-	private OpenRSC openrsc;
 
 	/**
 	 * Newest RSC cache: SAME VALUES.
@@ -926,7 +922,9 @@ public final class mudclient implements Runnable {
 						lastFPSUpdate = time;
 						mudclient.FPS = currentFPS;
 						currentFPS = 0;
+
 					}
+
 				}
 
 				if (this.threadState == -1) {
@@ -1917,13 +1915,6 @@ public final class mudclient implements Runnable {
 				yOffsetWelcome = -125;
 				yOffsetLogin = -200;
 			}
-
-			if (!allowResize1())
-				try {
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 
 			if (!wantMembers()) { // Free version
 				this.panelLoginWelcome.addCenteredText(halfGameWidth(), halfGameHeight() + 23 + yOffsetWelcome, "Welcome to " + getServerNameWelcome(), 4, true);
@@ -6482,6 +6473,8 @@ public final class mudclient implements Runnable {
 		experienceConfigInterface.onRender(this.getSurface());
 	}
 
+	boolean drawMinimap = true;
+
 	private void drawUi(int var1) {
 		try {
 
@@ -6531,14 +6524,14 @@ public final class mudclient implements Runnable {
 						textHeightOffset += 10;
 					}
 
-					if ((mouseX > x) && (mouseX < (x + boxWidth)) && (mouseY > y) && (mouseY < (y + boxHeight))
-						&& (mouseButtonClick > 0) && ((this.showUiTab == 0) || C_CUSTOM_UI)) {
+					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
+						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
 						selectedSpell = lastSelectedSpell;
 						mouseButtonClick = 0;
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y + 49 && mouseY < y + 69
-						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
 						selectedSpell = -1;
 						lastSelectedSpell = -1;
 						mouseButtonClick = 0;
@@ -7662,7 +7655,7 @@ public final class mudclient implements Runnable {
 				panelSocial.reposition(controlSocialPanel, var3, (maxY-182) + 40, 196, 126);
 
 				var10 = 36;
-				if(Config.CUSTOM_UI_1)
+				if(C_CUSTOM_UI_1)
 						var10 = var4 - 24;
 			 */
 
@@ -10059,7 +10052,24 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	void repositionCustomUI() {
+		int var3 = this.getSurface().width2 - 199;
+		int maxY = getUITabsY();
+		panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
+		panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
+		panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
+		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+		panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+		int offX = 300;
+		panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
+		panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+	}
+
 	boolean reposition() {
+
 		if (resizeWidth <= 0 && resizeHeight <= 0) {
 			return false;
 		}
@@ -10076,11 +10086,7 @@ public final class mudclient implements Runnable {
 		clientPort.resized();
 		int var3 = this.getSurface().width2 - 199;
 		byte var12 = 36;
-		panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
-		panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
 		panelClan.reposition(controlClanPanel, var3, var12 + 72, 196, 128);
-		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
-		panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
 		panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
 		if (!authenticSettings) {
 			if (C_CUSTOM_UI) {
@@ -10099,30 +10105,6 @@ public final class mudclient implements Runnable {
 			}
 		}
 		return true;
-	}
-
-	private void repositionCustomUI() {
-		int var3 = this.getSurface().width2 - 199;
-		int maxY = getUITabsY();
-		panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
-		panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
-		panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
-		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
-		panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
-		int offX = 300;
-		panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-		panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
-		panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-		panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-		panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-
-		// Ensures the client is redrawn (resized) to refresh all scrollable menus
-		try {
-			resizeWidth = getGameWidth();
-			resizeHeight = getGameHeight() + 12;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public final int getInventoryCount(int id) {
@@ -11691,15 +11673,19 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_USE: {
 					this.selectedItemInventoryIndex = indexOrX;
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
 					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.m_ig = equippedItems[indexOrX].getName();
 					break;
 				case ITEM_DROP: {
@@ -11708,8 +11694,10 @@ public final class mudclient implements Runnable {
 					int amount = this.inventoryItemSize[indexOrX];
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, null,
 						"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
@@ -11728,8 +11716,10 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(dropQuantity);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
 					if (dropQuantity == 1)
 						this.showMessage(false, null,
@@ -12401,6 +12391,7 @@ public final class mudclient implements Runnable {
 
 	private boolean handleTabUIClick() {
 		if (C_CUSTOM_UI) {
+			repositionCustomUI();
 			return handleTabUIClick_CUSTOM();
 		}
 		try {
@@ -12801,7 +12792,7 @@ public final class mudclient implements Runnable {
 						while (entries.hasMoreElements()) {
 							List<Sprite> spriteGroup;
 							ZipEntry entry = entries.nextElement();
-							spriteGroup = unpackSpriteData(spritePack, entry);
+							spriteGroup = GraphicsController.unpackSpriteData(spritePack, entry);
 							List<Sprite> defaultSprites = getSurface().spriteTree.get(entry.getName());
 							for (Sprite sprite : spriteGroup) {
 								for (int i = 0; i < defaultSprites.size(); i++) {
@@ -14944,7 +14935,7 @@ public final class mudclient implements Runnable {
 	public int getPetFatigue() {
 		return this.petFatigue;
 	}
-	
+
 	public int getExpShared() {
 		return this.expShared;
 	}
@@ -14966,7 +14957,7 @@ public final class mudclient implements Runnable {
 			System.out.println("PetFatigue: " + petFatigue);
 		this.petFatigue = petFatigue;
 	}
-	
+
 	public void setExpShared(int expShared2) {
 		if (DEBUG)
 			System.out.println("ExpShared: " + expShared2);
