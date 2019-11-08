@@ -10259,6 +10259,7 @@ public final class mudclient implements Runnable {
 	}
 
 	boolean reposition() {
+
 		if (resizeWidth <= 0 && resizeHeight <= 0) {
 			return false;
 		}
