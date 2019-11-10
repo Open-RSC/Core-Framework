@@ -157,12 +157,14 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						return;
 					}
 					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-							&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-							getOwner().message("You are too tired to gain experience, get some rest!");
-							interrupt();
-							continue;
+						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+							if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2) {
+								getOwner().message("You are too tired to gain experience, get some rest!");
+								interrupt();
+								return;
+							}
 						}
+
 					}
 					if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
 						&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
