@@ -15,6 +15,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.io.WorldLoader;
+import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.GameObject;
@@ -88,6 +89,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
 	private ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
+
+	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<GlobalMessage>();
 
 	public DropTable gemTable;
 	public DropTable standardTable;
@@ -589,6 +592,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				player.setSkullTimer(player.getCache().getLong("skull_remaining"));
 			}
 
+			if (player.getCache().hasKey("charge_remaining") && (player.getCache().getLong("charge_remaining") > 0)) {
+				player.addCharge(player.getCache().getLong("charge_remaining"));
+				player.setChargeTimer(player.getCache().getLong("charge_remaining"));
+			}
+
 			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
@@ -725,6 +733,14 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				}
 				break;
 		}
+	}
+
+	public GlobalMessage getNextGlobalMessage() {
+		return globalMessageQueue.poll();
+	}
+
+	public void addGlobalMessage(GlobalMessage privateMessage) {
+		getGlobalMessageQueue().add(privateMessage);
 	}
 
 	/**
@@ -976,5 +992,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public boolean isTelegrabEnabled() {
 		return telegrabEnabled;
+	}
+
+	public Queue<GlobalMessage> getGlobalMessageQueue() {
+		return globalMessageQueue;
 	}
 }

@@ -9,6 +9,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
+import java.util.Objects;
+
 public class GroundItem extends Entity {
 	/**
 	 * Amount (for stackables)
@@ -40,9 +42,12 @@ public class GroundItem extends Entity {
 		super(world);
 		setID(id);
 		setAmount(amount);
+		//this.ownerUsernameHash = owner.getUsernameHash();
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = System.currentTimeMillis();
 		setLocation(Point.location(x, y));
+		if (owner != null && owner.getIronMan() >= 1 && owner.getIronMan() <= 3)
+			this.setAttribute("isIronmanItem", true);
 	}
 
 	public GroundItem(World world, int id, int x, int y, int amount, Npc owner) {
@@ -84,7 +89,7 @@ public class GroundItem extends Entity {
 	public boolean belongsTo(Player p) {
 		if (p.getParty() != null) {
 			for (Player p2 : getWorld().getPlayers()) {
-				if (p.getParty().getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
+				if (Objects.requireNonNull(p.getParty()).getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
 					PartyPlayer p3 = p2.getParty().getLeader();
 					if (p3.getShareLoot() > 0) {
 						p = p2;
@@ -156,12 +161,10 @@ public class GroundItem extends Entity {
 	}
 
 	public boolean visibleTo(Player p) {
-		if (belongsTo(p)) {
+		if (belongsTo(p))
 			return true;
-		}
-		if (getDef().isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (getDef().isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD)
 			return false;
-		}
 		if (getDef().isUntradable())
 			return false;
 		if (!belongsTo(p) && p.getIronMan() >= 1 && p.getIronMan() <= 3)

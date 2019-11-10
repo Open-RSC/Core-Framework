@@ -164,17 +164,15 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 					npcTalk(p, gnomeTrainer, "my granny can move faster than you");
 				}
 				p.message("you take a few steps back");
-				final int initialY = p.getY();
-				movePlayer(p, p.getX(), initialY + 2);
 				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 1, "Gnome Agility Net") {
 					public void init() {
 						addState(0, () -> {
+							movePlayer(getPlayerOwner(), 683, 505);
 							getPlayerOwner().message("and run towards the net");
-							movePlayer(getPlayerOwner(), getPlayerOwner().getX(), initialY - 2);
 							return nextState(1);
 						});
 						addState(1, () -> {
-							movePlayer(getPlayerOwner(), getPlayerOwner().getX(), initialY - 2);
+							movePlayer(getPlayerOwner(), 683, 501);
 							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
 							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
 							getPlayerOwner().setBusy(false);

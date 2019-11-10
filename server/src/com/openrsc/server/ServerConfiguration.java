@@ -215,6 +215,7 @@ public class ServerConfiguration {
 	public boolean WANT_HIDE_IP = false;
 	public boolean WANT_REMEMBER = false;
 	public boolean WANT_GLOBAL_CHAT = false;
+	public boolean WANT_GLOBAL_FRIEND = false;
 	public boolean WANT_SKILL_MENUS = false;
 	public boolean WANT_QUEST_MENUS = false;
 	public boolean WANT_EXPERIENCE_ELIXIRS = false;
@@ -384,6 +385,7 @@ public class ServerConfiguration {
 		WANT_HIDE_IP = Boolean.parseBoolean(props.getProperty("want_hide_ip"));
 		WANT_REMEMBER = Boolean.parseBoolean(props.getProperty("want_remember"));
 		WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
+		WANT_GLOBAL_FRIEND = Boolean.parseBoolean(props.getProperty("want_global_friend"));
 		WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
 		WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
 		WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));

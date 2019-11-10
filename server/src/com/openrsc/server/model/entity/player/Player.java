@@ -198,6 +198,10 @@ public final class Player extends Mob {
 	 */
 	private long lastSkullEvent = 0;
 	/**
+	 * The time the player was charged
+	 */
+	private long lastChargeEvent = 0;
+	/**
 	 * Time of last trade/duel request
 	 */
 	private long lastTradeDuelRequest = 0;
@@ -337,6 +341,7 @@ public final class Player extends Mob {
 	 **/
 	private int kills = 0;
 	private int kills2 = 0;
+	private int expShared = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
 	private WalkToAction walkToAction;
@@ -569,9 +574,10 @@ public final class Player extends Mob {
 		}
 		chargeEvent.stop();
 		chargeEvent = null;
+		cache.remove("charge_remaining");
 	}
 
-	public void addCharge(int timeLeft) {
+	public void addCharge(long timeLeft) {
 		if (chargeEvent == null) {
 			chargeEvent = new DelayedEvent(getWorld(), this, timeLeft, "Charge Spell Removal") {
 				// 6 minutes taken from RS2.
@@ -699,6 +705,8 @@ public final class Player extends Mob {
 			updateTotalPlayed();
 			if (isSkulled())
 				updateSkullRemaining();
+			if (isCharged())
+				updateChargeRemaining();
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -737,9 +745,16 @@ public final class Player extends Mob {
 	private void updateSkullRemaining() {
 		if ((getCache().getLong("skull_remaining") <= 0) || (getCache().hasKey("skull_remaining") && !isSkulled())) { // Removes the skull remaining key once no longer needed
 			cache.remove("skull_remaining");
-		}
-		else if (getSkullTime() - System.currentTimeMillis() > 0) {
+		} else if (getSkullTime() - System.currentTimeMillis() > 0) {
 			cache.store("skull_remaining", (getSkullTime() - System.currentTimeMillis()));
+		}
+	}
+
+	private void updateChargeRemaining() {
+		if ((getCache().getLong("charge_remaining") <= 0) || (getCache().hasKey("charge_remaining") && !isCharged())) { // Removes the charge remaining key once no longer needed
+			cache.remove("charge_remaining");
+		} else if (getChargeTime() - System.currentTimeMillis() > 0) {
+			cache.store("charge_remaining", (getChargeTime() - System.currentTimeMillis()));
 		}
 	}
 
@@ -1298,6 +1313,16 @@ public final class Player extends Mob {
 		return 0;
 	}
 
+	private long getChargeExpires() {
+		if (getCache().hasKey("charge_remaining"))
+			return getCache().getLong("charge_remaining");
+		if (!getCache().hasKey("charge_remaining"))
+			getChargeTime();
+		else
+			return 0;
+		return 0;
+	}
+
 	public String getSleepword() {
 		return sleepword;
 	}
@@ -1502,8 +1527,19 @@ public final class Player extends Mob {
 								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + skillXP * 4);
 								ActionSender.sendFatigue(this);
 							}
-							p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired());
+							p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired() - 1);
 						}
+					}
+					int p11 = partyLeader.getPartyMembersNotTired() - 1;
+					if (partyLeader.getPartyMembersNotTired() - 1 > 0) {
+						int skill1 = skillXP / 4;
+						int p1 = partyLeader.getPartyMembersNotTired();
+						int p3 = partyLeader.getPartyMembersNotTired() - 1;
+						ActionSender.sendMessage(this, skill1 + " total exp. " + p1 + " members to share");
+						int shared = this.getExpShared() + skill1 / p1;
+						this.setExpShared(this.getExpShared() + skill1 / p1 * p3);
+						ActionSender.sendExpShared(this);
+						this.getParty().sendParty();
 					}
 				} else {
 					skills.addExperience(skill, (int) skillXP);
@@ -2142,6 +2178,10 @@ public final class Player extends Mob {
 		lastSkullEvent = timer;
 	}
 
+	public void setChargeTimer(long timer) {
+		lastChargeEvent = timer;
+	}
+
 	public void setAntidoteProtection() {
 		lastAntidote = System.currentTimeMillis();
 	}
@@ -2343,6 +2383,10 @@ public final class Player extends Mob {
 		return kills2;
 	}
 
+	public int getExpShared() {
+		return expShared;
+	}
+
 	public void setDeaths(int i) {
 		this.deaths = i;
 	}
@@ -2354,6 +2398,11 @@ public final class Player extends Mob {
 	public void setKills2(int i) {
 		this.kills2 = i;
 		ActionSender.sendKills2(this);
+	}
+
+	public void setExpShared(int i) {
+		this.expShared = i;
+		ActionSender.sendExpShared(this);
 	}
 
 	private void incDeaths() {
@@ -2971,6 +3020,11 @@ public final class Player extends Mob {
 		Item itemFinal = new Item(item.getID(), item.getAmount());
 		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
 			itemFinal.setAttribute("npcdrop", true);
+		}
+
+		if (item.getAttribute("isIronmanItem", false) && getIronMan() == 0) {
+			message("That belongs to an Ironman player.");
+			return false;
 		}
 
 		if (!this.getInventory().canHold(itemFinal)) {

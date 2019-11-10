@@ -1,5 +1,6 @@
 package com.openrsc.server;
 
+import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.PrivateMessage;
@@ -173,7 +174,7 @@ public final class GameStateUpdater {
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 					|| otherPlayer.isTeleporting() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride || otherPlayer.inCombat()) {
+					|| !visibleConditionOverride || otherPlayer.inCombat() || otherPlayer.hasMoved()) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //???
@@ -739,12 +740,24 @@ public final class GameStateUpdater {
 					if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
 						.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
 						&& !affectedPlayer.getSocial().isIgnoring(p.getUsernameHash()) || p.isMod()) {
-						ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage());
-						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage());
+						ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
+						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage(), false);
 					}
 
 					p.getWorld().getServer().getGameLogger().addQuery(new PMLog(p.getWorld(), p.getUsername(), pm.getMessage(),
 						DataConversions.hashToUsername(pm.getFriend())));
+				}
+			}
+		}
+		GlobalMessage gm = null;
+		while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
+			for (Player p : players) {
+				if (p == gm.getPlayer()) {
+					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
+				}
+				else if (!p.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
+						&& !p.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+					ActionSender.sendPrivateMessageReceived(p, gm.getPlayer(), gm.getMessage(), true);
 				}
 			}
 		}

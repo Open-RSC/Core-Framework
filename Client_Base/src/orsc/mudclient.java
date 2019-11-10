@@ -486,6 +486,7 @@ public final class mudclient implements Runnable {
 	private int spriteCount = 0;
 	private int statFatigue = 0;
 	private int statKills2 = 0;
+	private int expShared = 0;
 	private int petFatigue = 0;
 	private MudClientGraphics surface;
 	private int systemUpdate = 0;
@@ -615,7 +616,6 @@ public final class mudclient implements Runnable {
 		"What is your favourite book?",
 		"What is your favourite food?",
 		"What is your favourite movie?"};
-	private boolean drawMinimap = true;
 
 	/**
 	 * Newest RSC cache: SAME VALUES.
@@ -6473,6 +6473,8 @@ public final class mudclient implements Runnable {
 		experienceConfigInterface.onRender(this.getSurface());
 	}
 
+	boolean drawMinimap = true;
+
 	private void drawUi(int var1) {
 		try {
 
@@ -6522,14 +6524,14 @@ public final class mudclient implements Runnable {
 						textHeightOffset += 10;
 					}
 
-					if ((mouseX > x) && (mouseX < (x + boxWidth)) && (mouseY > y) && (mouseY < (y + boxHeight))
-						&& (mouseButtonClick > 0) && ((this.showUiTab == 0) || C_CUSTOM_UI)) {
+					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
+						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
 						selectedSpell = lastSelectedSpell;
 						mouseButtonClick = 0;
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y + 49 && mouseY < y + 69
-						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
 						selectedSpell = -1;
 						lastSelectedSpell = -1;
 						mouseButtonClick = 0;
@@ -7653,7 +7655,7 @@ public final class mudclient implements Runnable {
 				panelSocial.reposition(controlSocialPanel, var3, (maxY-182) + 40, 196, 126);
 
 				var10 = 36;
-				if(Config.CUSTOM_UI_1)
+				if(C_CUSTOM_UI_1)
 						var10 = var4 - 24;
 			 */
 
@@ -8881,6 +8883,10 @@ public final class mudclient implements Runnable {
 		if (S_WANT_CUSTOM_UI) {
 			if (settingIndex == 39 && this.mouseButtonClick == 1) {
 				C_CUSTOM_UI = !C_CUSTOM_UI;
+				if (C_CUSTOM_UI)
+					repositionCustomUI();
+				if (!C_CUSTOM_UI)
+					repositionAuthenticUI();
 				this.packetHandler.getClientStream().newPacket(111);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(39);
 				boolean setting = C_CUSTOM_UI;
@@ -10049,8 +10055,40 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	boolean reposition() {
+	void repositionCustomUI() {
+		int var3 = this.getSurface().width2 - 199;
+		int maxY = getUITabsY();
+		panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
+		panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
+		panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
+		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+		panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
+		int offX = 300;
+		panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
+		panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+		panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
+	}
 
+	void repositionAuthenticUI() {
+		int var3 = this.getSurface().width2 - 199;
+		byte var12 = 36;
+		if (!authenticSettings) {
+			panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
+		}
+		panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
+		panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
+		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
+		panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
+		panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+		panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
+		panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+		panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+		panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
+	}
+
+	boolean reposition() {
 		if (resizeWidth <= 0 && resizeHeight <= 0) {
 			return false;
 		}
@@ -10067,38 +10105,12 @@ public final class mudclient implements Runnable {
 		clientPort.resized();
 		int var3 = this.getSurface().width2 - 199;
 		byte var12 = 36;
-		panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
-		panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
 		panelClan.reposition(controlClanPanel, var3, var12 + 72, 196, 128);
-		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
-		panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
 		panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
-		if (!authenticSettings) {
-			if (C_CUSTOM_UI) {
-				int maxY = getUITabsY();
-				panelSettings.reposition(controlSettingPanel, var3 + 1, (maxY - 240) + 16, 195, 184);
-				panelSocial.reposition(controlSocialPanel, var3, (maxY - 182) + 40, 196, 126);
-				panelMagic.reposition(controlMagicPanel, var3, (maxY - 182) + 24, 196, 90);
-				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, (maxY - 287) + 24, 196, 251);
-				panelQuestInfo.reposition(controlQuestInfoPanel, var3, (maxY - 287) + 24, 196, 251);
-				int offX = 300;
-				panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-				panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - offX, 14);
-				panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-				panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-				panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - offX, 56);
-			} else {
-				panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
-				panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
-				panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
-				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
-				panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
-				panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-				panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
-				panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-				panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-				panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-			}
+		if (!authenticSettings && C_CUSTOM_UI) {
+			repositionCustomUI();
+		} else {
+			repositionAuthenticUI();
 		}
 		return true;
 	}
@@ -11669,15 +11681,19 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_USE: {
 					this.selectedItemInventoryIndex = indexOrX;
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
 					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.m_ig = equippedItems[indexOrX].getName();
 					break;
 				case ITEM_DROP: {
@@ -11686,8 +11702,10 @@ public final class mudclient implements Runnable {
 					int amount = this.inventoryItemSize[indexOrX];
 					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, null,
 						"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
@@ -11706,8 +11724,10 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().writeBuffer1.putInt(dropQuantity);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE)
-						this.showUiTab = 0;
+					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
+						if (!C_CUSTOM_UI)
+							this.showUiTab = 0;
+					}
 					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
 					if (dropQuantity == 1)
 						this.showMessage(false, null,
@@ -12379,7 +12399,11 @@ public final class mudclient implements Runnable {
 
 	private boolean handleTabUIClick() {
 		if (C_CUSTOM_UI) {
+			repositionCustomUI();
 			return handleTabUIClick_CUSTOM();
+		}
+		if (!C_CUSTOM_UI) {
+			repositionAuthenticUI();
 		}
 		try {
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 && this.mouseY >= 3
@@ -14923,6 +14947,10 @@ public final class mudclient implements Runnable {
 		return this.petFatigue;
 	}
 
+	public int getExpShared() {
+		return this.expShared;
+	}
+
 	public void setStatFatigue(int fatigue) {
 		if (DEBUG)
 			System.out.println("Fatigue: " + fatigue);
@@ -14939,6 +14967,12 @@ public final class mudclient implements Runnable {
 		if (DEBUG)
 			System.out.println("PetFatigue: " + petFatigue);
 		this.petFatigue = petFatigue;
+	}
+
+	public void setExpShared(int expShared2) {
+		if (DEBUG)
+			System.out.println("ExpShared: " + expShared2);
+		this.expShared = expShared2;
 	}
 
 	public void setInputTextCurrent(String s) {
@@ -15396,6 +15430,9 @@ public final class mudclient implements Runnable {
 						}
 					}
 				}
+			}
+			if (C_CUSTOM_UI) {
+				repositionCustomUI();
 			}
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "client.KC(" + var1 + ')');

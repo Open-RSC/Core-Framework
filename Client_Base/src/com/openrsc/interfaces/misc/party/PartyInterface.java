@@ -41,7 +41,7 @@ public final class PartyInterface {
 	private boolean visible;
 	private boolean menu_visible = false;
 	private String invitationBy = null;
-	private String[] partyMateTable = {"Username", "Rank", "HP", "Cb Lvl", "Ratio"};
+	private String[] partyMateTable = {"Username", "Rank", "HP", "Cb Lvl", "XP Shared"};
 	private Menu rightClickMenu;
 
 	PartyInterface(mudclient mc) {
@@ -169,7 +169,7 @@ public final class PartyInterface {
 			graphics.drawColoredString(newX + 3 + 137, newY + 16, "" + mc.party.getPartyRankNames(mc.party.partyRank[i]), 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 135 + 67, newY + 16, "" + mc.party.curHp[i] + "/" + mc.party.maxHp[i], 2, 0xffffff, 0);
 			graphics.drawColoredString(newX + 3 + 135 + 67 + 67, newY + 16, "" + mc.party.getCbLvl(i), 2, 0xffffff, 0);
-			graphics.drawColoredString(newX + 3 + 135 + 67 + 67 + 67, newY + 16, "" + mc.party.getKDR(i), 2, 0xffffff, 0);
+			graphics.drawColoredString(newX + 3 + 135 + 67 + 67 + 67, newY + 16, "" + mc.party.getExpShared(i), 2, 0xffffff, 0);
 			newY += boxHeight - 1;
 		}
 

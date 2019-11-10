@@ -1,22 +1,22 @@
 package orsc;
 
-import java.applet.Applet;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.io.File;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import orsc.util.Utils;
+
+import javax.swing.*;
+import java.applet.Applet;
+import java.awt.*;
+import java.io.File;
 
 public class OpenRSC extends ORSCApplet {
 
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
+		SwingUtilities.invokeLater(OpenRSC::createAndShowGUI);
+	}
+
+	public static void createAndShowGUI() {
+		try {
 			JFrame jframe = new JFrame(Config.getServerNameWelcome());
 			final Applet applet = new OpenRSC();
 			applet.setPreferredSize(new Dimension(512, 334 + 12));
@@ -34,7 +34,9 @@ public class OpenRSC extends ORSCApplet {
 			jframe.setLocationRelativeTo(null);
 			applet.init();
 			applet.start();
-		});
+		} catch (HeadlessException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getCacheLocation() {
@@ -49,5 +51,9 @@ public class OpenRSC extends ORSCApplet {
 	@Override
 	public void stopSoundPlayer() {
 		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	public boolean getResizable() {
+		return Config.allowResize1();
 	}
 }

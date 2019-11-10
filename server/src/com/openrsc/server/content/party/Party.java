@@ -62,6 +62,8 @@ public class Party {
 			ActionSender.sendLeaveParty(member.getPlayerReference());
 			member.getPlayerReference().setParty(null);
 			member.getPlayerReference().message("You are no longer in a party");
+			member.getPlayerReference().setExpShared(0);
+			ActionSender.sendExpShared(member.getPlayerReference());
 		}
 
 		getPlayers().remove(member);
@@ -73,7 +75,6 @@ public class Party {
 				getLeader().setRank(PartyRank.LEADER);
 				messagePartyInfo("@red@Your party leader has left the party!");
 				messagePartyInfo("@yel@" + getLeader().getUsername() + " is the new party leader!");
-				//getPlayers().get(0).getPlayerReference().message("You are no longer in a party");
 				ActionSender.sendParty(getPlayers().get(0).getPlayerReference());
 				getPlayers().get(0).getPlayerReference().getParty().updatePartySettings();
 			}

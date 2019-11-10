@@ -331,6 +331,13 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
+	public static void sendExpShared(Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_EXPSHARED.opcode);
+		s.writeShort(player.getExpShared());
+		player.write(s.toPacket());
+	}
+
 	/**
 	 * Sends the sleeping state fatigue
 	 *
@@ -355,7 +362,7 @@ public class ActionSender {
 
 			@Override
 			public void run() {
-				if (currentFriend == player.getSocial().getFriendListEntry().size()) {
+				if (currentFriend == player.getSocial().getFriendListEntry().size() + 1) {
 					stop();
 					return;
 				}
@@ -378,8 +385,14 @@ public class ActionSender {
 	public static void sendFriendUpdate(Player player, long usernameHash) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		int arg = 0;
+		String username = DataConversions.hashToUsername(usernameHash);
 
-		if (
+		if (usernameHash == Long.MIN_VALUE && player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			arg = 6;
+			username = "Global$";
+		}
+
+		else if (
 			player.getWorld().getPlayer(usernameHash) != null &&
 				player.getWorld().getPlayer(usernameHash).isLoggedIn() &&
 				(!player.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1) ||
@@ -392,7 +405,6 @@ public class ActionSender {
 
 		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
 
-		String username = DataConversions.hashToUsername(usernameHash);
 		s.writeString(username);
 
 		// if(usernameChanged)
@@ -519,6 +531,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_LEFTCLICK_WEBS + " 67");
 			LOGGER.info(server.getConfig().WANT_CUSTOM_QUESTS + " 68");
 			LOGGER.info(server.getConfig().WANT_CUSTOM_UI + " 69");
+			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 70");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -610,6 +623,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //67
 		s.writeByte((byte) ((server.getConfig().NPC_KILL_LOGGING && server.getConfig().NPC_KILL_MESSAGES) ? 1 : 0)); //68
 		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_UI ? 1 : 0)); //69
+		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); //70
 		return s;
 	}
 
@@ -854,20 +868,30 @@ public class ActionSender {
 	/**
 	 * Send a private message
 	 */
-	public static void sendPrivateMessageReceived(Player player, Player sender, String message) {
+	public static void sendPrivateMessageReceived(Player player, Player sender, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
-		s.writeString(sender.getUsername());
-		s.writeString(sender.getUsername());// former name
+		if (!isGlobal) {
+			s.writeString(sender.getUsername());
+			s.writeString(sender.getUsername());// former name
+		}
+		else {
+			s.writeString("Global$" + sender.getUsername());
+			s.writeString("Global$" + sender.getUsername());
+		}
 		s.writeInt(sender.getIcon());
 		s.writeRSCString(message);
 		player.write(s.toPacket());
 	}
 
-	public static void sendPrivateMessageSent(Player player, long usernameHash, String message) {
+	public static void sendPrivateMessageSent(Player player, long usernameHash, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE_SENT.opcode);
-		s.writeString(DataConversions.hashToUsername(usernameHash));
+		if(!isGlobal) {
+			s.writeString(DataConversions.hashToUsername(usernameHash));
+		} else {
+			s.writeString("Global$");
+		}
 		s.writeRSCString(message);
 		player.write(s.toPacket());
 	}
@@ -1363,6 +1387,7 @@ public class ActionSender {
 			pb.writeByte(m.getPartyMembersTotal());
 			pb.writeByte(m.getInCombat());
 			pb.writeByte(m.getShareExp());
+			pb.writeLong(m.getExpShared2());
 		}
 		p.write(pb.toPacket());
 	}
@@ -1515,6 +1540,7 @@ public class ActionSender {
 		SEND_TRADE_WINDOW(92),
 		SEND_TRADE_OTHER_ITEMS(97),
 		SEND_SHOP_OPEN(101),
+		SEND_EXPSHARED(98),
 		SEND_IGNORE_LIST(109),
 		SEND_INPUT_BOX(110),
 		SEND_ON_TUTORIAL(111),

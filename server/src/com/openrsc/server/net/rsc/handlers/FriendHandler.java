@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -18,7 +19,8 @@ public final class FriendHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 		int pID = p.getID();
 
-		long friend = DataConversions.usernameToHash(p.readString());
+		String friendName = p.readString();
+		long friend = DataConversions.usernameToHash(friendName);
 
 		int packetOne = OpcodeIn.SOCIAL_ADD_FRIEND.getOpcode();
 		int packetTwo = OpcodeIn.SOCIAL_REMOVE_FRIEND.getOpcode();
@@ -76,7 +78,12 @@ public final class FriendHandler implements PacketHandler {
 			String message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(
 					DataConversions.getEncryptedString(p, 32576)));
-			player.addPrivateMessage(new PrivateMessage(player, message, friend));
+			if (friendName.toLowerCase().equals("global$") && player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
+			}
+			else {
+				player.addPrivateMessage(new PrivateMessage(player, message, friend));
+			}
 		} else if (pID == packetSix) {
 			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;

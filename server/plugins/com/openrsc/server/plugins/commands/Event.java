@@ -707,8 +707,10 @@ public final class Event implements CommandListener {
 				p.getSkills().setLevelTo(stat, level);
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s " + statName + " to level " + level);
+				p.getSkills().sendUpdateAll();
 				if(p.getUsernameHash() != player.getUsernameHash()) {
 					p.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
+					p.getSkills().sendUpdateAll();
 				}
 			}
 			else {
@@ -718,6 +720,7 @@ public final class Event implements CommandListener {
 
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s stats to level " + level);
+				p.getSkills().sendUpdateAll();
 				if(player.getParty() != null){
 					player.getParty().sendParty();
 				}
@@ -726,6 +729,7 @@ public final class Event implements CommandListener {
 						p.getParty().sendParty();
 					}
 					p.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+					p.getSkills().sendUpdateAll();
 				}
 			}
 		}
@@ -854,8 +858,10 @@ public final class Event implements CommandListener {
 				p.getSkills().setLevel(stat, level);
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s effective " + statName + " level " + level);
+				p.getSkills().sendUpdateAll();
 				if(p.getUsernameHash() != player.getUsernameHash()) {
 					p.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
+					p.getSkills().sendUpdateAll();
 				}
 			}
 			else {
@@ -865,8 +871,10 @@ public final class Event implements CommandListener {
 
 				p.checkEquipment();
 				player.message(messagePrefix + "You have set " + p.getUsername() + "'s effective levels to " + level);
+				p.getSkills().sendUpdateAll();
 				if(p.getUsernameHash() != player.getUsernameHash()) {
 					p.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
+					p.getSkills().sendUpdateAll();
 				}
 			}
 		}

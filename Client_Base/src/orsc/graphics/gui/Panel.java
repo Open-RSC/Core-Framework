@@ -591,7 +591,6 @@ public final class Panel {
 
 	public final void keyPress(int key) {
 		try {
-
 			if (key != 0) {
 				if (this.focusControlIndex != -1 && null != this.controlText[this.focusControlIndex]
 					&& this.controlVisible[this.focusControlIndex]) {

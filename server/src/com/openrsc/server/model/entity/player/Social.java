@@ -88,6 +88,9 @@ public class Social {
 		for (Long l : longListFromResultSet) {
 			friendList.put(l, 0);
 		}
+		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			friendList.put(Long.MIN_VALUE, 0);
+		}
 	}
 
 	public void addIgnore(List<Long> longListFromResultSet) {
