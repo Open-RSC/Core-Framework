@@ -137,46 +137,41 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			return true;
 		}
 
-		int amount = 10;
-		if (headlessArrows.getAmount() < amount) {
-			amount = headlessArrows.getAmount();
-		}
-		if (arrowHeads.getAmount() < amount) {
-			amount = arrowHeads.getAmount();
-		}
-
 		player.message("You attach "
 			+ arrowHeads.getDef(player.getWorld()).getName().toLowerCase()
 			+ " to some of your arrows");
-		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 40, "Fletching Attach Arrowheads", retrytimes, false) {
+		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 5 : 1001;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Attach Arrowheads", retrytimes, false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
-					getOwner().message("You need a fletching skill of "
-						+ headDef.getReqLevel() + " or above to do that");
-					interrupt();
-					return;
-				}
-				if (getOwner().getInventory().countId(arrowHeads.getID()) < 1
-						|| getOwner().getInventory().countId(headlessArrows.getID()) < 1) {
-					interrupt();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to train");
+				for (int i = 0; i < 10; ++i) {
+					if (getOwner().getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
+						getOwner().message("You need a fletching skill of "
+							+ headDef.getReqLevel() + " or above to do that");
 						interrupt();
 						return;
 					}
-				}
-				if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
-					&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
-					getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
-					getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
-				} else {
-					interrupt();
+					if (getOwner().getInventory().countId(arrowHeads.getID()) < 1
+						|| getOwner().getInventory().countId(headlessArrows.getID()) < 1) {
+						interrupt();
+						return;
+					}
+					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+							&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+							getOwner().message("You are too tired to gain experience, get some rest!");
+							interrupt();
+							continue;
+						}
+					}
+					if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
+						&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
+						getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
+						getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
+					} else {
+						interrupt();
+						return;
+					}
 				}
 			}
 		});
