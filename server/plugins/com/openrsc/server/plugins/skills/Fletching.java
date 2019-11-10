@@ -90,29 +90,33 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 		player.message("You attach feathers to some of your "
 			+ item.getDef(player.getWorld()).getName());
 		final int exp = experience;
-		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 40, "Fletching Attach Feathers", retrytimes, false) {
+		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 5 : 1001;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Attach Feathers", retrytimes, false) {
 			@Override
 			public void action() {
-				if (getOwner().getInventory().countId(feathers.getID()) < 1
+				for (int i = 0; i < 10; ++i) {
+					if (getOwner().getInventory().countId(feathers.getID()) < 1
 						|| getOwner().getInventory().countId(item.getID()) < 1) {
-					interrupt();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to train");
 						interrupt();
 						return;
 					}
-				}
-				if (getOwner().getInventory().remove(feathers.getID(), 1) > -1
-					&& getOwner().getInventory().remove(item.getID(), 1) > -1) {
-					addItem(getOwner(), itemID, 1);
-					getOwner().incExp(Skills.FLETCHING, exp, true);
-				} else {
-					interrupt();
+					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+							if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2) {
+								getOwner().message("You are too tired to gain experience, get some rest!");
+								interrupt();
+								return;
+							}
+						}
+
+					}
+					if (getOwner().getInventory().remove(feathers.getID(), 1) > -1
+						&& getOwner().getInventory().remove(item.getID(), 1) > -1) {
+						getOwner().getInventory().add(new Item(itemID, 1));
+						getOwner().incExp(Skills.FLETCHING, exp, true);
+					} else {
+						interrupt();
+					}
 				}
 			}
 		});
@@ -376,34 +380,38 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			amount = player.getInventory().countId(bolt);
 		if (player.getInventory().countId(tip) < amount)
 			amount = player.getInventory().countId(tip);
-		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, Skills.FLETCHING) : 1000 + amount;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 40, "Fletching Make Bolt", retrytimes, false) {
+		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 5 : 1001;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Make Bolt", retrytimes, false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
-					getOwner().message("You need a fletching skill of 34 to do that");
-					interrupt();
-					return;
-				}
-				if (getOwner().getInventory().countId(bolt) < 1
-						|| getOwner().getInventory().countId(tip) < 1) {
-					interrupt();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to train");
+				for (int i = 0; i < 10; ++i) {
+					if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
+						getOwner().message("You need a fletching skill of 34 to do that");
 						interrupt();
 						return;
 					}
+					if (getOwner().getInventory().countId(bolt) < 1
+						|| getOwner().getInventory().countId(tip) < 1) {
+						interrupt();
+						return;
+					}
+					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
+							if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2) {
+								getOwner().message("You are too tired to gain experience, get some rest!");
+								interrupt();
+								return;
+							}
+						}
+
+					}
+					if (getOwner().getInventory().remove(bolt, 1) > -1
+						&& getOwner().getInventory().remove(tip, 1) > -1) {
+						getOwner().message("");
+						getOwner().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), 1));
+						getOwner().incExp(Skills.FLETCHING, 25, true);
+					} else interrupt();
 				}
-				if (getOwner().getInventory().remove(bolt, 1) > -1
-					&& getOwner().getInventory().remove(tip, 1) > -1) {
-					getOwner().message("");
-					addItem(getOwner(), ItemId.OYSTER_PEARL_BOLTS.id(), 1);
-					getOwner().incExp(Skills.FLETCHING, 25, true);
-				} else interrupt();
 			}
 		});
 		return true;
