@@ -120,7 +120,7 @@ public class DiscordService implements Runnable{
 				{
 					reply = "To see the commands that are available, type !commands. Some commands require you to pair your discord account to your openrsc account. To do this, type ::pair in game to get your pairing token, then return to this DM and type !pair TOKEN";
 				} else if (message.getContentRaw().startsWith("!commands")) {
-					reply = "!auctions";
+					reply = "!auctions\n!stats\n!watch\n!pair\n!help";
 				} else if (message.getContentRaw().startsWith("!pair")) {
 					if (args.length != 2)
 					{
