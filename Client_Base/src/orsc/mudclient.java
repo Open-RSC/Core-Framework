@@ -12574,7 +12574,7 @@ public final class mudclient implements Runnable {
 			repositionCustomUI();
 			return handleTabUIClick_CUSTOM();
 		}
-		if (!C_CUSTOM_UI && !authenticSettings) {
+		if (!C_CUSTOM_UI) {
 			repositionAuthenticUI();
 		}
 		try {
