@@ -407,7 +407,6 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					}
 					if (getOwner().getInventory().remove(bolt, 1) > -1
 						&& getOwner().getInventory().remove(tip, 1) > -1) {
-						getOwner().message("");
 						getOwner().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), 1));
 						getOwner().incExp(Skills.FLETCHING, 25, true);
 					} else interrupt();
