@@ -99,7 +99,7 @@ public class PlayerSettings {
 		return attackedBy;
 	}
 
-	long lastAttackedBy(Player p) {
+	public long lastAttackedBy(Player p) {
 		Long time = attackedBy.get(p.getUsernameHash());
 		if (time != null) {
 			return time;
