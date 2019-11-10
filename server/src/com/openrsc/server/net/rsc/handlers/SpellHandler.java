@@ -496,6 +496,7 @@ public class SpellHandler implements PacketHandler {
 				}
 				player.message("@gre@You feel charged with magic power");
 				player.addCharge(6 * 60000);
+				player.getCache().store("charge_remaining", 6 * 60000);
 				// charge is on self
 				godSpellObject(player, player, 47);
 				finalizeSpell(player, spell, DEFAULT);

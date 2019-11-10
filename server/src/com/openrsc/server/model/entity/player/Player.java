@@ -198,6 +198,10 @@ public final class Player extends Mob {
 	 */
 	private long lastSkullEvent = 0;
 	/**
+	 * The time the player was charged
+	 */
+	private long lastChargeEvent = 0;
+	/**
 	 * Time of last trade/duel request
 	 */
 	private long lastTradeDuelRequest = 0;
@@ -570,9 +574,10 @@ public final class Player extends Mob {
 		}
 		chargeEvent.stop();
 		chargeEvent = null;
+		cache.remove("charge_remaining");
 	}
 
-	public void addCharge(int timeLeft) {
+	public void addCharge(long timeLeft) {
 		if (chargeEvent == null) {
 			chargeEvent = new DelayedEvent(getWorld(), this, timeLeft, "Charge Spell Removal") {
 				// 6 minutes taken from RS2.
@@ -700,6 +705,8 @@ public final class Player extends Mob {
 			updateTotalPlayed();
 			if (isSkulled())
 				updateSkullRemaining();
+			if (isCharged())
+				updateChargeRemaining();
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -740,6 +747,14 @@ public final class Player extends Mob {
 			cache.remove("skull_remaining");
 		} else if (getSkullTime() - System.currentTimeMillis() > 0) {
 			cache.store("skull_remaining", (getSkullTime() - System.currentTimeMillis()));
+		}
+	}
+
+	private void updateChargeRemaining() {
+		if ((getCache().getLong("charge_remaining") <= 0) || (getCache().hasKey("charge_remaining") && !isCharged())) { // Removes the charge remaining key once no longer needed
+			cache.remove("charge_remaining");
+		} else if (getChargeTime() - System.currentTimeMillis() > 0) {
+			cache.store("charge_remaining", (getChargeTime() - System.currentTimeMillis()));
 		}
 	}
 
@@ -1295,6 +1310,16 @@ public final class Player extends Mob {
 		if (isCharged()) {
 			return chargeEvent.timeTillNextRun();
 		}
+		return 0;
+	}
+
+	private long getChargeExpires() {
+		if (getCache().hasKey("charge_remaining"))
+			return getCache().getLong("charge_remaining");
+		if (!getCache().hasKey("charge_remaining"))
+			getChargeTime();
+		else
+			return 0;
 		return 0;
 	}
 
@@ -2151,6 +2176,10 @@ public final class Player extends Mob {
 
 	public void setSkullTimer(long timer) {
 		lastSkullEvent = timer;
+	}
+
+	public void setChargeTimer(long timer) {
+		lastChargeEvent = timer;
 	}
 
 	public void setAntidoteProtection() {

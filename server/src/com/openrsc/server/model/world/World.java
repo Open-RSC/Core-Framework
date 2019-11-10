@@ -592,6 +592,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				player.setSkullTimer(player.getCache().getLong("skull_remaining"));
 			}
 
+			if (player.getCache().hasKey("charge_remaining") && (player.getCache().getLong("charge_remaining") > 0)) {
+				player.addCharge(player.getCache().getLong("charge_remaining"));
+				player.setChargeTimer(player.getCache().getLong("charge_remaining"));
+			}
+
 			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
