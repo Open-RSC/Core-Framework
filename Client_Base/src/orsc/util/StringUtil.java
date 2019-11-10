@@ -1,12 +1,8 @@
 package orsc.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-
 import orsc.enumerations.MessageType;
+
+import java.io.*;
 
 public class StringUtil {
 
@@ -128,9 +124,17 @@ public class StringUtil {
 			case GAME:
 				return colour + sender + ": " + colour + msg;
 			case PRIVATE_RECIEVE:
-				return colour + sender + colour + " tells you: " + msg;
+				if (sender.toLowerCase().contains("global$")) {
+					return colour + sender.substring(7) + colour + " tells: " + msg;
+				} else {
+					return colour + sender + colour + " tells you: " + msg;
+				}
 			case PRIVATE_SEND:
-				return colour + "You tell " + sender + colour + ": " + msg;
+				if (sender.toLowerCase().equals("global$")) {
+					return colour + "You tell" + colour + ": " + msg;
+				} else {
+					return colour + "You tell " + sender + colour + ": " + msg;
+				}
 			case QUEST:
 				return colour + sender + ": " + colour + msg;
 			case CHAT:
@@ -162,6 +166,8 @@ public class StringUtil {
 		try {
 			if (str == null) {
 				return null;
+			} else if (str.toString().toLowerCase().equals("global$")) {
+				return "global$";
 			} else {
 				int strLeft = 0;
 

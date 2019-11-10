@@ -15,6 +15,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.io.WorldLoader;
+import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.GameObject;
@@ -88,6 +89,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
 	private ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
+
+	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<GlobalMessage>();
 
 	public DropTable gemTable;
 	public DropTable standardTable;
@@ -727,6 +730,14 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
+	public GlobalMessage getNextGlobalMessage() {
+		return globalMessageQueue.poll();
+	}
+
+	public void addGlobalMessage(GlobalMessage privateMessage) {
+		getGlobalMessageQueue().add(privateMessage);
+	}
+
 	/**
 	 * Removes an item from the server
 	 */
@@ -976,5 +987,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public boolean isTelegrabEnabled() {
 		return telegrabEnabled;
+	}
+
+	public Queue<GlobalMessage> getGlobalMessageQueue() {
+		return globalMessageQueue;
 	}
 }
