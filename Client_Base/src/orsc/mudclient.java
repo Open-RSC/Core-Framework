@@ -10202,7 +10202,9 @@ public final class mudclient implements Runnable {
 	void repositionAuthenticUI() {
 		int var3 = this.getSurface().width2 - 199;
 		byte var12 = 36;
-		panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
+		if (!authenticSettings) {
+			panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
+		}
 		panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
 		panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
 		panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
@@ -10233,21 +10235,10 @@ public final class mudclient implements Runnable {
 		byte var12 = 36;
 		panelClan.reposition(controlClanPanel, var3, var12 + 72, 196, 128);
 		panelPlayerTaskInfo.reposition(controlPlayerTaskInfoPanel, var3, 24 + var12 + 27, 196, 224);
-		if (!authenticSettings) {
-			if (C_CUSTOM_UI) {
-				repositionCustomUI();
-			} else {
-				panelSettings.reposition(controlSettingPanel, var3 + 1, 24 + var12 + 16, 195, 184);
-				panelSocial.reposition(controlSocialPanel, var3, var12 + 40, 196, 126);
-				panelMagic.reposition(controlMagicPanel, var3, 24 + var12, 196, 90);
-				panelPlayerInfo.reposition(controlPlayerInfoPanel, var3, 24 + var12, 196, 251);
-				panelQuestInfo.reposition(controlQuestInfoPanel, var3, 24 + var12, 196, 251);
-				panelMessageTabs.reposition(panelMessageChat, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-				panelMessageTabs.reposition(panelMessageEntry, 7, getGameHeight() - 10, getGameWidth() - 14, 14);
-				panelMessageTabs.reposition(panelMessageQuest, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-				panelMessageTabs.reposition(panelMessagePrivate, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-				panelMessageTabs.reposition(panelMessageClan, 5, getGameHeight() - 65, getGameWidth() - 10, 56);
-			}
+		if (!authenticSettings && C_CUSTOM_UI) {
+			repositionCustomUI();
+		} else {
+			repositionAuthenticUI();
 		}
 		return true;
 	}
@@ -12539,7 +12530,7 @@ public final class mudclient implements Runnable {
 			repositionCustomUI();
 			return handleTabUIClick_CUSTOM();
 		}
-		if (!C_CUSTOM_UI && !authenticSettings) {
+		if (!C_CUSTOM_UI) {
 			repositionAuthenticUI();
 		}
 		try {
