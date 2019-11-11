@@ -26,7 +26,7 @@ public final class GameLogger implements Runnable {
 	public GameLogger(Server server) {
 		this.server = server;
 
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DatabaseLogging").build());
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
 		running = new AtomicBoolean(false);
 		queries = new ArrayBlockingQueue<Query>(10000);
 	}
@@ -36,14 +36,14 @@ public final class GameLogger implements Runnable {
 	}
 
 	public void start() {
-		synchronized(running) {
+		synchronized (running) {
 			running.set(true);
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 		}
 	}
 
 	public void stop() {
-		synchronized(running) {
+		synchronized (running) {
 			running.set(false);
 		}
 	}
@@ -51,7 +51,7 @@ public final class GameLogger implements Runnable {
 	@Override
 	public void run() {
 		while (running.get()) {
-			synchronized(running) {
+			synchronized (running) {
 				if (queries.size() > 0 && getServer().getDatabaseConnection().isConnected()) {
 					pollNextQuery();
 				}

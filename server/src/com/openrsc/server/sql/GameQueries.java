@@ -1,6 +1,7 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.SkillDef;
 
 public class GameQueries {
@@ -26,6 +27,7 @@ public class GameQueries {
 	//public final String teleportStones
 
 	private final Server server;
+
 	public final Server getServer() {
 		return server;
 	}
@@ -39,7 +41,7 @@ public class GameQueries {
 		playerExp = "SELECT ";
 		playerCurExp = "SELECT ";
 
-		for (SkillDef skill : getServer().getConstants().getSkills().skills) {
+		for (SkillDef skill : Skills.skills) {
 			updateExperience = updateExperience + "`exp_" + skill.getShortName().toLowerCase() + "`=?, ";
 			updateStats = updateStats + "`cur_" + skill.getShortName().toLowerCase() + "`=?, ";
 			playerExp = playerExp + "`exp_" + skill.getShortName().toLowerCase() + "`, ";
@@ -71,7 +73,7 @@ public class GameQueries {
 			+ "`block_trade`, `block_duel`, `cameraauto`,"
 			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
 			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
-			+ "`skulled`, `charged`, `pass`, `salt`, `banned`, `bank_size` FROM `" + PREFIX + "players` WHERE `username`=?";
+			+ "`pass`, `salt`, `banned`, `bank_size` FROM `" + PREFIX + "players` WHERE `username`=?";
 		playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX + "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
 		playerEquipped = "SELECT `id`,`amount` FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
 		playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX + "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
@@ -92,7 +94,7 @@ public class GameQueries {
 		save_UpdateBasicInfo = "UPDATE `" + PREFIX + "players` SET `combat`=?, skill_total=?, " +
 			"`x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `iron_man`=?, `iron_man_restriction`=?, " +
 			"`hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, " +
-			"`headsprite`=?, `bodysprite`=?, `male`=?, `skulled`=?, `charged`=?, `combatstyle`=?, `muted`=?, `bank_size`=?," +
+			"`headsprite`=?, `bodysprite`=?, `male`=?, `combatstyle`=?, `muted`=?, `bank_size`=?," +
 			"`group_id`=? WHERE `id`=?";
 		save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 		save_DeleteAchievements = "DELETE FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
@@ -111,7 +113,6 @@ public class GameQueries {
 		npcDropSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
 		npcDropInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
 		npcDropUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
-
 
 		//unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 		//teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";

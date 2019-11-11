@@ -35,6 +35,7 @@ public class PlayerDatabase {
 	private boolean useTransactions = false;
 
 	private final Server server;
+
 	public final Server getServer() {
 		return server;
 	}
@@ -171,19 +172,6 @@ public class PlayerDatabase {
 				statement.executeBatch();
 			}
 
-			/*updateLongs(conn.getGameQueries().save_DeleteAchievements, s.getDatabaseID());
-			if (s.getAchievements().size() > 0) {
-				statement = conn.prepareStatement(conn.getGameQueries().save_AddAchievement);
-				Set<Integer> keys = s.getAchievements().keySet();
-				for (int achid : keys) {
-					statement.setInt(1, s.getDatabaseID());
-					statement.setInt(2, achid);
-					statement.setInt(3, s.getAchievementStatus(achid));
-					statement.addBatch();
-				}
-				statement.executeBatch();
-			}*/
-
 			s.getCache().store("last_spell_cast", s.getCastTimer());
 
 			updateLongs(getDatabaseConnection().getGameQueries().save_DeleteCache, s.getDatabaseID());
@@ -250,13 +238,11 @@ public class PlayerDatabase {
 			statement.setInt(17, s.getSettings().getAppearance().getHead());
 			statement.setInt(18, s.getSettings().getAppearance().getBody());
 			statement.setInt(19, s.isMale() ? 1 : 0);
-			statement.setLong(20, s.getSkullTime());
-			statement.setLong(21, s.getChargeTime());
-			statement.setInt(22, s.getCombatStyle());
-			statement.setLong(23, s.getMuteExpires());
-			statement.setLong(24, s.getBankSize());
-			statement.setLong(25, s.getGroupID());
-			statement.setInt(26, s.getDatabaseID());
+			statement.setInt(20, s.getCombatStyle());
+			statement.setLong(21, s.getMuteExpires());
+			statement.setLong(22, s.getBankSize());
+			statement.setLong(23, s.getGroupID());
+			statement.setInt(24, s.getDatabaseID());
 			statement.executeUpdate();
 
 			// PRIVACY SETTINGS
@@ -384,44 +370,6 @@ public class PlayerDatabase {
 		updateIntsLongs(getDatabaseConnection().getGameQueries().duelBlock, new int[]{on}, new long[]{user});
 	}
 
-	/*
-	private void addNpcKill(int player, int npc) {
-		try {
-			// Find an existing entry for this NPC/Player combo
-			PreparedStatement statementSelect = DatabaseConnection.getDatabaseConnection().prepareStatement(
-				conn.getGameQueries().npcKillSelect);
-			statementSelect.setInt(1, npc);
-			statementSelect.setInt(2, player);
-			ResultSet selectResult = statementSelect.executeQuery();
-			int kills = -1;
-			while (selectResult.next()) {
-				kills = selectResult.getInt("killCount");
-			}
-			if (kills == -1) {
-				PreparedStatement statementInsert = DatabaseConnection.getDatabaseConnection().prepareStatement(
-					conn.getGameQueries().npcKillInsert);
-				statementInsert.setInt(1, npc);
-				statementInsert.setInt(2, player);
-				int insertResult = statementInsert.executeUpdate();
-				kills = 1;
-			} else {
-				kills++;
-			}
-
-			PreparedStatement statementUpdate = DatabaseConnection.getDatabaseConnection().prepareStatement(
-				conn.getGameQueries().npcKillUpdate);
-			statementUpdate.setInt(1, kills);
-			statementUpdate.setInt(2, npc);
-			statementUpdate.setInt(3, player);
-			int updateResult = statementUpdate.executeUpdate();
-
-		} catch (SQLException e) {
-			LOGGER.catching(e);
-		}
-	}
-
-	 */
-
 	public void addNpcDrop(Player player, Npc npc, int dropId, int dropAmount) {
 		try {
 			PreparedStatement statementInsert = getServer().getDatabaseConnection().prepareStatement(
@@ -473,7 +421,7 @@ public class PlayerDatabase {
 
 			PreparedStatement statement = getDatabaseConnection().prepareStatement(getDatabaseConnection().getGameQueries().npcKillUpdate);
 			PreparedStatement statementInsert = getDatabaseConnection().prepareStatement(getDatabaseConnection().getGameQueries().npcKillInsert);
-			for (Iterator<Map.Entry<Integer, Integer>> it = player.getKillCache().entrySet().iterator(); it.hasNext();) {
+			for (Iterator<Map.Entry<Integer, Integer>> it = player.getKillCache().entrySet().iterator(); it.hasNext(); ) {
 				Map.Entry<Integer, Integer> e = it.next();
 				if (!uniqueIDMap.containsKey(e.getKey())) {
 					statementInsert.setInt(1, e.getValue());
@@ -490,9 +438,9 @@ public class PlayerDatabase {
 			}
 			statement.executeBatch();
 			statementInsert.executeBatch();
-			} catch (SQLException a) {
-				LOGGER.catching(a);
-			}
+		} catch (SQLException a) {
+			LOGGER.catching(a);
+		}
 		player.setKillCacheUpdated(false);
 	}
 
@@ -858,7 +806,7 @@ public class PlayerDatabase {
 		}
 
 		try {
-			return result.next();
+			return Objects.requireNonNull(result).next();
 		} catch (Exception e) {
 			return false;
 		}

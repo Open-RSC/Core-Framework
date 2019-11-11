@@ -1015,7 +1015,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemdef`
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`),
     KEY `id_2` (`id`),
-    KEY `name` (`name`)
+    KEY `name` (`name`),
+    KEY `name_2` (`name`)
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
@@ -5235,9 +5236,11 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         0, 0, 0, 0, 0, 99000),
        (2320, 0, -1, 'Hits cape', 'The cape worn by masters of hits', '', 0, 0, 0, 1, 1, 386, 2048, 11, 99, 0, 0, 0, 0,
         0, 0, 99000),
-       (2321, 2322, -1, 'Trick or treat cracker', 'Use on another player to pull it', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0,
+       (2321, 2322, -1, 'Trick or treat cracker', 'Use on another player to pull it', '', 0, 0, 0, 0, 0, 0, 0, -1, 0,
+        -1, 0,
         0, 0, 0, 0, 1),
-       (2322, -1, 2321, 'Trick or treat cracker', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0,
+       (2322, -1, 2321, 'Trick or treat cracker', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0,
+        0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
        (2323, 2324, -1, 'Fox mask', 'Struttin like a fox', '', 0, 0, 0, 0, 1, 387, 32, 5, 0, 0, 0, 0, 0, 0, 0, 0),
        (2324, -1, 2323, 'Fox mask', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
@@ -5256,6 +5259,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
     `strength`     int(10)                           DEFAULT NULL,
     `hits`         int(10)                           DEFAULT NULL,
     `defense`      int(10)                           DEFAULT NULL,
+    `ranged`       int(10)             NULL          DEFAULT NULL,
     `combatlvl`    int(10)             NOT NULL      DEFAULT 0,
     `isMembers`    tinyint(1) UNSIGNED NOT NULL      DEFAULT 0,
     `attackable`   tinyint(1)                        DEFAULT NULL,
@@ -5714,8 +5718,8 @@ VALUES (1, 0, 'Unicorn', 'It\'s a unicorn', '', '', 21, 23, 19, 23, 21, 0, 1, 0,
         -1, -1, -1, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, 0),
        (210, 209, 'Adventurer', 'A Warrior', '', '', 55, 60, 52, 58, 56, 0, 0, 0, 30, 5, 28, 37, -1, 110, -1, -1, -1,
         -1, -1, -1, -1, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, 0),
-       (211, 210, 'Adventurer', 'An archer', '', '', 35, 25, 10, 30, 25, 0, 0, 0, 30, 3, 4, 2, -1, 107, -1, -1, -1, 46,
-        -1, -1, 63, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, 0),
+       (211, 210, 'Adventurer', 'An archer', '', '', 35, 25, 10, 30, 25, 0, 0, 0, 30, 3, 4, 2, -1, 107, -1, -1, -1,
+        46, -1, -1, 63, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, 0),
        (212, 211, 'Leprechaun', 'A funny little man who lives in a tree', '', '', 20, 17, 16, 20, 18, 0, 0, 0, 30, 6, 1,
         2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 5271616, 5286432, 5286432, 15523536, 103, 141, 6, 6, 5, 0),
        (213, 212, 'Monk of entrana', 'A Peaceful monk', '', '', 12, 13, 15, 12, 13, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1,
@@ -40955,16 +40959,7 @@ VALUES (1, 'Where were you born?'),
        (17, 'What is your favourite food?'),
        (18, 'What is your favourite movie?');
 
-
-ALTER TABLE `openrsc_itemdef`
-    ADD FULLTEXT KEY `name_2` (`name`);
-ALTER TABLE `openrsc_npcdef`
-    ADD `ranged` INT(10) NULL DEFAULT NULL AFTER `defense`;
-UPDATE `openrsc_npcdef`
-SET `ranged` = 30
-WHERE `openrsc_npcdef`.`id` = 210;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `skulled`;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `charged`;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `onexp_mode`;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `forum_active`;
