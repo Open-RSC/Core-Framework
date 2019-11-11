@@ -418,7 +418,6 @@ CREATE TABLE IF NOT EXISTS `openrsc_players`
     `muted`                varchar(255)        NOT NULL DEFAULT '0',
     `kills`                int(10)             NOT NULL DEFAULT 0,
     `deaths`               int(10)                      DEFAULT 0,
-    `onexp_mode`           tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `iron_man`             tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT 1,
     `hc_ironman_death`     tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
