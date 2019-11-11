@@ -1,6 +1,5 @@
 package com.openrsc.server.sql;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;

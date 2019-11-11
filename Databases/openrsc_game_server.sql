@@ -1015,7 +1015,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemdef`
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`),
     KEY `id_2` (`id`),
-    KEY `name` (`name`)
+    KEY `name` (`name`),
+    KEY `name_2` (`name`)
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
@@ -5128,6 +5129,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
     `strength`     int(10)                           DEFAULT NULL,
     `hits`         int(10)                           DEFAULT NULL,
     `defense`      int(10)                           DEFAULT NULL,
+    `ranged`       int(10)             NULL          DEFAULT NULL,
     `combatlvl`    int(10)             NOT NULL      DEFAULT 0,
     `isMembers`    tinyint(1) UNSIGNED NOT NULL      DEFAULT 0,
     `attackable`   tinyint(1)                        DEFAULT NULL,
@@ -40569,16 +40571,7 @@ VALUES (1, 'Where were you born?'),
        (17, 'What is your favourite food?'),
        (18, 'What is your favourite movie?');
 
-
-ALTER TABLE `openrsc_itemdef`
-    ADD FULLTEXT KEY `name_2` (`name`);
-ALTER TABLE `openrsc_npcdef`
-    ADD `ranged` INT(10) NULL DEFAULT NULL AFTER `defense`;
-UPDATE `openrsc_npcdef`
-SET `ranged` = '30'
-WHERE `openrsc_npcdef`.`id` = 210;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `skulled`;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `charged`;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `onexp_mode`;
+ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `forum_active`;

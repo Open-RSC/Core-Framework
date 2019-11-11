@@ -24,6 +24,7 @@ public class DatabaseConnection {
 	private GameQueries gameQueries;
 
 	private final Server server;
+
 	public final Server getServer() {
 		return server;
 	}
@@ -38,9 +39,9 @@ public class DatabaseConnection {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			if (createConnection(getServer().getConfig().MYSQL_DB)) {
-				LOGGER.info(getServer().getName()+" : "+string + " - Connected to MySQL!");
+				LOGGER.info(getServer().getName() + " : " + string + " - Connected to MySQL!");
 
-				if(getServer().getConfig().WANT_PASSWORD_MASSAGE) {
+				if (getServer().getConfig().WANT_PASSWORD_MASSAGE) {
 					massagePasswords();
 				}
 			} else {
@@ -135,7 +136,7 @@ public class DatabaseConnection {
 		statements.put(statement, ps);
 		return ps;
 	}
-	
+
 	public java.sql.PreparedStatement prepareStatement(String statement, String[] generatedColumns)
 		throws SQLException {
 		if (statements.containsKey(statement))
@@ -153,9 +154,9 @@ public class DatabaseConnection {
 	private void massagePasswords() {
 		try {
 			ResultSet results = executeQuery("SELECT `id`, `username`, `pass`, `salt` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players`;");
-			while(results.next()) {
+			while (results.next()) {
 				String dbPass = results.getString("pass");
-				if(dbPass != null && !dbPass.isEmpty() && DataConversions.passwordNeedsRehash(dbPass)){
+				if (dbPass != null && !dbPass.isEmpty() && DataConversions.passwordNeedsRehash(dbPass)) {
 					String newPass = DataConversions.hashPassword(dbPass, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass` = ? WHERE `id` = ?");
@@ -168,7 +169,7 @@ public class DatabaseConnection {
 			}
 
 			results = executeQuery("SELECT `playerID`, `username`, `answer1`, `answer2`, `answer3`, `answer4`, `answer5`, `previous_pass`, `earlier_pass` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery`;");
-			while(results.next()) {
+			while (results.next()) {
 				String dbAnswer1 = results.getString("answer1");
 				String dbAnswer2 = results.getString("answer2");
 				String dbAnswer3 = results.getString("answer3");
@@ -177,7 +178,7 @@ public class DatabaseConnection {
 				String dbPreviousPass = results.getString("previous_pass");
 				String dbEarlierPass = results.getString("earlier_pass");
 
-				if(dbAnswer1 != null && !dbAnswer1.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer1)) {
+				if (dbAnswer1 != null && !dbAnswer1.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer1)) {
 					String newAnswer = DataConversions.hashPassword(dbAnswer1, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `answer1` = ? WHERE `playerID` = ?");
@@ -188,7 +189,7 @@ public class DatabaseConnection {
 					LOGGER.info("Massaged " + results.getString("username") + " (" + results.getString("playerID") + ") answer1 from: " + dbAnswer1 + ", to: " + newAnswer);
 				}
 
-				if(dbAnswer2 != null && !dbAnswer2.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer2)) {
+				if (dbAnswer2 != null && !dbAnswer2.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer2)) {
 					String newAnswer = DataConversions.hashPassword(dbAnswer2, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `answer2` = ? WHERE `playerID` = ?");
@@ -199,7 +200,7 @@ public class DatabaseConnection {
 					LOGGER.info("Massaged " + results.getString("username") + " (" + results.getString("playerID") + ") answer2 from: " + dbAnswer2 + ", to: " + newAnswer);
 				}
 
-				if(dbAnswer3 != null && !dbAnswer3.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer3)) {
+				if (dbAnswer3 != null && !dbAnswer3.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer3)) {
 					String newAnswer = DataConversions.hashPassword(dbAnswer3, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `answer3` = ? WHERE `playerID` = ?");
@@ -210,7 +211,7 @@ public class DatabaseConnection {
 					LOGGER.info("Massaged " + results.getString("username") + " (" + results.getString("playerID") + ") answer3 from: " + dbAnswer3 + ", to: " + newAnswer);
 				}
 
-				if(dbAnswer4 != null && !dbAnswer4.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer4)) {
+				if (dbAnswer4 != null && !dbAnswer4.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer4)) {
 					String newAnswer = DataConversions.hashPassword(dbAnswer4, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `answer4` = ? WHERE `playerID` = ?");
@@ -221,7 +222,7 @@ public class DatabaseConnection {
 					LOGGER.info("Massaged " + results.getString("username") + " (" + results.getString("playerID") + ") answer4 from: " + dbAnswer4 + ", to: " + newAnswer);
 				}
 
-				if(dbAnswer5 != null && !dbAnswer5.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer5)) {
+				if (dbAnswer5 != null && !dbAnswer5.isEmpty() && DataConversions.passwordNeedsRehash(dbAnswer5)) {
 					String newAnswer = DataConversions.hashPassword(dbAnswer5, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `answer5` = ? WHERE `playerID` = ?");
@@ -232,7 +233,7 @@ public class DatabaseConnection {
 					LOGGER.info("Massaged " + results.getString("username") + " (" + results.getString("playerID") + ") answer5 from: " + dbAnswer5 + ", to: " + newAnswer);
 				}
 
-				if(dbPreviousPass != null && !dbPreviousPass.isEmpty() && DataConversions.passwordNeedsRehash(dbPreviousPass)) {
+				if (dbPreviousPass != null && !dbPreviousPass.isEmpty() && DataConversions.passwordNeedsRehash(dbPreviousPass)) {
 					String newPass = DataConversions.hashPassword(dbPreviousPass, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `previous_pass` = ? WHERE `playerID` = ?");
@@ -243,7 +244,7 @@ public class DatabaseConnection {
 					LOGGER.info("Massaged " + results.getString("username") + " (" + results.getString("playerID") + ") previous_passw from: " + dbPreviousPass + ", to: " + newPass);
 				}
 
-				if(dbEarlierPass != null && !dbEarlierPass.isEmpty() && DataConversions.passwordNeedsRehash(dbEarlierPass)) {
+				if (dbEarlierPass != null && !dbEarlierPass.isEmpty() && DataConversions.passwordNeedsRehash(dbEarlierPass)) {
 					String newPass = DataConversions.hashPassword(dbEarlierPass, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `earlier_pass` = ? WHERE `playerID` = ?");
@@ -258,9 +259,9 @@ public class DatabaseConnection {
 			PreparedStatement pinStatement = prepareStatement("SELECT `playerID`, `key`, `value` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key` = ?;");
 			pinStatement.setString(1, "bank_pin");
 			results = pinStatement.executeQuery();
-			while(results.next()) {
+			while (results.next()) {
 				String dbPin = results.getString("value");
-				if(dbPin != null && !dbPin.isEmpty() && DataConversions.passwordNeedsRehash(dbPin)){
+				if (dbPin != null && !dbPin.isEmpty() && DataConversions.passwordNeedsRehash(dbPin)) {
 					String newPin = DataConversions.hashPassword(dbPin, null);
 
 					PreparedStatement updateStatement = prepareStatement("UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value` = ? WHERE `playerID` = ? AND `key` = ?");
@@ -273,14 +274,14 @@ public class DatabaseConnection {
 					usernameStatement.setInt(1, results.getInt("playerID"));
 					ResultSet usernameResults = usernameStatement.executeQuery();
 
-					if(usernameResults.next()) {
+					if (usernameResults.next()) {
 						LOGGER.info("Massaged " + usernameResults.getString("username") + " (" + results.getString("playerID") + ") bank_pin from: " + dbPin + ", to: " + newPin);
 					} else {
 						LOGGER.info("Massaged [Player Record Unavailable] (" + results.getString("playerID") + ") bank_pin from: " + dbPin + ", to: " + newPin);
 					}
 				}
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(0);
 		}
