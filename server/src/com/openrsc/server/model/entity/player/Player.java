@@ -419,6 +419,13 @@ public final class Player extends Mob {
 		return false;
 	}
 
+	public boolean isOneXp() {
+		if (getCache().hasKey("onexp_mode")) {
+			return getCache().getBoolean("onexp_mode");
+		}
+		return false;
+	}
+
 	public void resetCannonEvent() {
 		if (cannonEvent != null) {
 			cannonEvent.stop();
@@ -1426,13 +1433,21 @@ public final class Player extends Mob {
 	}
 
 	public void incQuestExp(int i, int amount) {
-		skills.addExperience(i, amount);
+		int appliedAmount = amount;
+		if (!isOneXp()) {
+			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
+		}
+		skills.addExperience(i, appliedAmount);
 	}
 
-	private double getExperienceRate(int skill) {
+	private List<Double> getExperienceRate(int skill) {
+		// total possible multiplier
 		double multiplier = 1.0;
+		// multiplier for the player
+		double effectiveMultiplier = 1.0;
+
 		/*
-		  Skilling Experience Rate
+		 Skilling Experience Rate
 		 */
 		if (skill >= 4 && skill <= getWorld().getServer().getConstants().getSkills().getSkillsCount() - 1) {
 			multiplier = getWorld().getServer().getConfig().SKILLING_EXP_RATE;
@@ -1443,8 +1458,9 @@ public final class Player extends Mob {
 				}
 			}
 		}
+
 		/*
-		  Combat Experience Rate
+		Combat Experience Rate
 		 */
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
 			multiplier = getWorld().getServer().getConfig().COMBAT_EXP_RATE;
@@ -1456,11 +1472,16 @@ public final class Player extends Mob {
 			}
 		}
 
+		if (!isOneXp()) {
+			effectiveMultiplier = multiplier;
+		}
+
 		/*
 		  Double Experience
 		 */
 		if (getWorld().getServer().getConfig().IS_DOUBLE_EXP) {
 			multiplier *= 2;
+			effectiveMultiplier *= 2;
 		}
 
 		/*
@@ -1472,10 +1493,13 @@ public final class Player extends Mob {
 				ActionSender.sendElixirTimer(this, 0);
 			} else {
 				multiplier += 1;
+				if (!isOneXp()) effectiveMultiplier += 1;
 			}
 		}
 
-		return multiplier;
+		double finalMultiplier = multiplier;
+		double finalEffectiveMultiplier = effectiveMultiplier;
+		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); }};
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
@@ -1516,11 +1540,14 @@ public final class Player extends Mob {
 				}
 			}
 		}
-		skillXP *= getExperienceRate(skill);
+		List<Double> multipliers = getExperienceRate(skill);
 		if (this.getParty() != null) {
 			PartyPlayer partyLeader = this.getParty().getLeader();
 			if (partyLeader.getShareExp() > 0) {
 				if (skill > 6) {
+					// apply combined multiplier
+					skillXP *= multipliers.get(0);
+					// todo: use effective multiplier when sharing to players on 1X
 					for (PartyPlayer p : this.getParty().getPlayers()) {
 						if (p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE) {
 							if (p.getPlayerReference().getUsername() != this.getUsername()) {
@@ -1542,12 +1569,18 @@ public final class Player extends Mob {
 						this.getParty().sendParty();
 					}
 				} else {
+					// cb skill -> apply effective multiplier
+					skillXP *= multipliers.get(1);
 					skills.addExperience(skill, (int) skillXP);
 				}
 			} else {
+				// no shared xp -> apply effective multiplier
+				skillXP *= multipliers.get(1);
 				skills.addExperience(skill, (int) skillXP);
 			}
 		} else {
+			// effective multiplier
+			skillXP *= multipliers.get(1);
 			skills.addExperience(skill, (int) skillXP);
 		}
 		// ActionSender.sendExperience(this, skill);
