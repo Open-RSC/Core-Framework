@@ -307,6 +307,7 @@ public class ServerConfiguration {
 	public final int DWARVEN_RING_BONUS = 3;
 	public List<String> valuableDrops;
 	public boolean WANT_CUSTOM_UI = false;
+	public int CHARACTER_CREATION_MODE = 0;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -431,6 +432,7 @@ public class ServerConfiguration {
 		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(props.getProperty("want_leftclick_webs"));
 		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(props.getProperty("want_custom_quests"));
 		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(props.getProperty("want_improved_pathfinding"));
+		CHARACTER_CREATION_MODE = Integer.parseInt(props.getProperty("character_creation_mode"));
 
 		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

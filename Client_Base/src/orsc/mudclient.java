@@ -325,18 +325,20 @@ public final class mudclient implements Runnable {
 	private boolean loadingArea = false;
 	public ORSCharacter localPlayer = new ORSCharacter();
 	private int logoutTimeout = 0;
-	private int m_Ai;
+	private int controlButtonAppearanceBottom2;
 	private int m_be;
 	private int m_Ce = 0;
 	private int m_Cg;
 	private int m_cl = 30;
-	private int m_dk = 1;
-	private int m_ed;
+	private int appearanceBodyGender = 1;
+	private int controlButtonAppearanceHair2;
 	private int cameraAutoMoveAmountX = 2;
-	private int m_Eg;
-	private int m_ek;
-	private int m_Ge;
-	private int m_hh = 0;
+	private int controlButtonAppearanceAccept;
+	private int playerMode1;
+	private int playerMode2;
+	private int controlButtonAppearanceTop2;
+	private int controlButtonAppearanceGender1;
+	private int appearanceSkinColour = 0;
 	private boolean runningAsApplet = true;
 	private boolean allowDebugCommands = !runningAsApplet || true;
 	private int optionsMenuCount = 0;
@@ -346,25 +348,25 @@ public final class mudclient implements Runnable {
 	private int tabEquipmentIndex = 0;
 	private int settingTab = 0;
 	private int loginButtonExistingUser;
-	private int m_Kj;
-	private int m_ld = 2;
+	private int controlButtonAppearanceHair1;
+	private int appearanceHairColour = 2;
 	private int characterBottomColour = 14;
-	private int m_Mj;
+	private int controlButtonAppearanceSkin2;
 	private int m_nj = -1;
-	private int m_Of;
+	private int controlButtonAppearanceGender2;
 	private int cameraAutoMoveFrameCount = 0;
 	private int m_Oj = 0;
 	private int cameraAutoMoveAmountZ = 2;
 	private int m_qd = 9;
 	private int m_rc = 0;
-	private int m_Re;
+	private int controlButtonAppearanceBottom1;
 	private int m_rf;
 	private boolean reportAbuse_isMute = false;
 	private int m_Wc = 0;
-	private int m_Wg = 8;
+	private int characterTopColour = 8;
 	private long lastWrite;
 	private int m_wk = -1;
-	private int m_Xc;
+	private int controlButtonAppearanceTop1;
 	private int loginScreenNumber = 0;
 	private int m_Xi;
 	private int lostPasswordButtonIdx;
@@ -372,7 +374,7 @@ public final class mudclient implements Runnable {
 	private int hideIpButtonIdx;
 	private int m_Zb = 0;
 	private int localPlayerServerIndex = -1;
-	private int m_Ze;
+	private int controlButtonAppearanceSkin1;
 	private Menu menuDuel;
 	private boolean menuDuel_Visible = false;
 	private int menuDuelX;
@@ -1834,7 +1836,10 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private void createAppearancePanel(int var1) {
+	private void createAppearancePanel(int var1, int type) {
+		// type 1 is for worlds with ironman and 1x mode selectors
+		// type 2 is for world with classes and global pk mode
+		int factor = type > 0 ? 2 : 1;
 		try {
 			this.panelAppearance = new Panel(this.getSurface(), 100);
 
@@ -1842,6 +1847,8 @@ public final class mudclient implements Runnable {
 			short var2 = 140;
 			byte var3 = 34;
 			int var6 = var2 + 116;
+			// divide in 2 if typed (modes)
+			var6 /= factor;
 			int yFromTopDistance = var3 - 10;
 			this.panelAppearance.addCenteredText(var6 - 55, yFromTopDistance + 110, "Front", 3, true);
 			this.panelAppearance.addCenteredText(var6, yFromTopDistance + 110, "Side", 3, true);
@@ -1859,23 +1866,23 @@ public final class mudclient implements Runnable {
 			this.panelAppearance.addCenteredText(var6 + var4, yFromTopDistance - 8, "Hair", 1, true);
 			this.panelAppearance.addCenteredText(var4 + var6, 8 + yFromTopDistance, "Color", 1, true);
 			this.panelAppearance.addSprite(var4 + (var6 - 40), yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
-			this.m_Kj = this.panelAppearance.addButton(var6 + var4 - 40, yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceHair1 = this.panelAppearance.addButton(var6 + var4 - 40, yFromTopDistance, 20, 20);
 			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
-			this.m_ed = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceHair2 = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
 			yFromTopDistance += 50;
 			this.panelAppearance.addDecoratedBox((var6 - var4), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance, "Gender", 1, true);
 			this.panelAppearance.addSprite(var6 - var4 - 40, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
-			this.m_Ge = this.panelAppearance.addButton(var6 - 40 - var4, yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceGender1 = this.panelAppearance.addButton(var6 - 40 - var4, yFromTopDistance, 20, 20);
 			this.panelAppearance.addSprite(40 - var4 + var6, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
-			this.m_Of = this.panelAppearance.addButton(40 + (var6 - var4), yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceGender2 = this.panelAppearance.addButton(40 + (var6 - var4), yFromTopDistance, 20, 20);
 			this.panelAppearance.addDecoratedBox((var4 + var6), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance - 8, "Top", 1, true);
 			this.panelAppearance.addCenteredText(var4 + var6, 8 + yFromTopDistance, "Color", 1, true);
 			this.panelAppearance.addSprite(var6 + (var4 - 40), yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
-			this.m_Xc = this.panelAppearance.addButton(var4 + (var6 - 40), yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceTop1 = this.panelAppearance.addButton(var4 + (var6 - 40), yFromTopDistance, 20, 20);
 			this.panelAppearance.addSprite(40 + var4 + var6, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
-			this.m_ek = this.panelAppearance.addButton(var6 - (-var4 - 40), yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceTop2 = this.panelAppearance.addButton(var6 - (-var4 - 40), yFromTopDistance, 20, 20);
 			yFromTopDistance += 50;
 			if (var1 != -24595) {
 				this.renderLoginScreenViewports(-127);
@@ -1885,23 +1892,53 @@ public final class mudclient implements Runnable {
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance - 8, "Skin", 1, true);
 			this.panelAppearance.addCenteredText(var6 - var4, yFromTopDistance + 8, "Color", 1, true);
 			this.panelAppearance.addSprite(var6 - 40 - var4, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
-			this.m_Ze = this.panelAppearance.addButton(var6 - var4 - 40, yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceSkin1 = this.panelAppearance.addButton(var6 - var4 - 40, yFromTopDistance, 20, 20);
 			this.panelAppearance.addSprite(var6 - var4 + 40, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
-			this.m_Mj = this.panelAppearance.addButton(var6 + (40 - var4), yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceSkin2 = this.panelAppearance.addButton(var6 + (40 - var4), yFromTopDistance, 20, 20);
 			this.panelAppearance.addDecoratedBox((var4 + var6), yFromTopDistance, 53, 41);
 			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance - 8, "Bottom", 1, true);
 			this.panelAppearance.addCenteredText(var4 + var6, yFromTopDistance + 8, "Color", 1, true);
 			this.panelAppearance.addSprite(var4 - 40 + var6, yFromTopDistance, spriteSelect(GUIPARTS.LEFTARROW.getDef()));
-			this.m_Re = this.panelAppearance.addButton(var6 - (40 - var4), yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceBottom1 = this.panelAppearance.addButton(var6 - (40 - var4), yFromTopDistance, 20, 20);
 			this.panelAppearance.addSprite(var6 + var4 + 40, yFromTopDistance, spriteSelect(GUIPARTS.RIGHTARROW.getDef()));
-			this.m_Ai = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
+			this.controlButtonAppearanceBottom2 = this.panelAppearance.addButton(40 + var4 + var6, yFromTopDistance, 20, 20);
 			yFromTopDistance += 82;
 			yFromTopDistance -= 35;
-			this.panelAppearance.addButtonBackground(var6, yFromTopDistance, 200, 30);
-			this.panelAppearance.addCenteredText(var6, yFromTopDistance, "Accept", 4, false);
-			this.m_Eg = this.panelAppearance.addButton(var6, yFromTopDistance, 200, 30);
+			this.panelAppearance.addButtonBackground(var6 * factor, yFromTopDistance, 200, 30);
+			this.panelAppearance.addCenteredText(var6 * factor, yFromTopDistance, "Accept", 4, false);
+			this.controlButtonAppearanceAccept = this.panelAppearance.addButton(var6 * factor, yFromTopDistance, 200, 30);
+
+			yFromTopDistance = 50;
+			if (type == 1) {
+				var6 = 372;
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "Each player mode has different", 0, true);
+				yFromTopDistance += 13;
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "challenges. But the choice you make here", 0, true);
+				yFromTopDistance += 13;
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "isn't strictly permanent, and you may", 0, true);
+				yFromTopDistance += 13;
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "request to change to regular at any time.", 0, true);
+				yFromTopDistance += 73;
+				this.panelAppearance.addDecoratedBox(var6, yFromTopDistance, 215, 125);
+				String modes_ironman[] = {
+					"Regular", "Ironman", "Ultimate", "Hardcore"
+				};
+				this.playerMode1 = this.panelAppearance.addVerticalList(var6, yFromTopDistance + 2, modes_ironman, 4, true);
+				yFromTopDistance += 75;
+				this.panelAppearance.addDecoratedBox(var6, yFromTopDistance + 21, 215, 60);
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "Do you wish to gain regular world xp", 0, true);
+				yFromTopDistance += 13;
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "rate? Note: By choosing no you can", 0, true);
+				yFromTopDistance += 13;
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "experience the veteran 1X xp rate!", 0, true);
+				yFromTopDistance += 13;
+				String modes_xp[] = {
+					"Yes please", "No, veteran"
+				};
+				this.playerMode2 = this.panelAppearance.addHorizontalList(var6, yFromTopDistance, modes_xp, 1, true);
+			}
 		} catch (RuntimeException var5) {
-			throw GenUtil.makeThrowable(var5, "client.J(" + var1 + ')');
+			throw GenUtil.makeThrowable(var5, "client.J(" + var1 + ',' + type + ')');
 		}
 	}
 
@@ -2451,7 +2488,9 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private void drawAppearancePanelCharacterSprites(int var1) {
+	private void drawAppearancePanelCharacterSprites(int var1, int type) {
+		// see createAppearancePanel for type
+		int factor = type > 0 ? 2 : 1;
 		try {
 
 			this.getSurface().interlace = false;
@@ -2459,6 +2498,9 @@ public final class mudclient implements Runnable {
 			this.panelAppearance.drawPanel();
 			short var2 = 140;
 			int var5 = var2 + 116;
+
+			var5 /= factor;
+
 			byte var3 = 50;
 			int y = var3 - 25;
 
@@ -2467,34 +2509,34 @@ public final class mudclient implements Runnable {
 				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour), 0), y, 102, (byte) 105, 64);
 
 			// body
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(m_dk), 0), var5 - 32 - 55, y, 64,
-				102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], 0, false, 0, 1);
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(appearanceBodyGender), 0), var5 - 32 - 55, y, 64,
+				102, this.getPlayerClothingColors()[this.characterTopColour], this.getPlayerSkinColors()[this.appearanceSkinColour], 0, false, 0, 1);
 
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(appearanceHeadType), 0),
-				var5 - 32 - 55, y, 64, 102, this.getPlayerHairColors()[this.m_ld],
-				this.getPlayerSkinColors()[this.m_hh], 0, false, 0, var1 + 13760);
+				var5 - 32 - 55, y, 64, 102, this.getPlayerHairColors()[this.appearanceHairColour],
+				this.getPlayerSkinColors()[this.appearanceSkinColour], 0, false, 0, var1 + 13760);
 
 			this.getSurface().spriteClip3(var5 - 32, this.getPlayerClothingColors()[this.characterBottomColour],
 				spriteSelect(EntityHandler.getAnimationDef(character2Colour), 6), y, 102, (byte) 105, 64);
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk), 6), var5 - 32, y,
-				64, 102, this.getPlayerClothingColors()[this.m_Wg], this.getPlayerSkinColors()[this.m_hh], 0, false, 0,
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.appearanceBodyGender), 6), var5 - 32, y,
+				64, 102, this.getPlayerClothingColors()[this.characterTopColour], this.getPlayerSkinColors()[this.appearanceSkinColour], 0, false, 0,
 				1);
 
 			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 6),
-				var5 - 32, y, 64, 102, this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh],
+				var5 - 32, y, 64, 102, this.getPlayerHairColors()[this.appearanceHairColour], this.getPlayerSkinColors()[this.appearanceSkinColour],
 				0, false, 0, 1);
 
 			this.getSurface().spriteClip3(var5 + 55 - 32, this.getPlayerClothingColors()[this.characterBottomColour],
 				spriteSelect(EntityHandler.getAnimationDef(this.character2Colour), 12), y, 102, (byte) 110, 64);
 
-			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.m_dk), 12),
-				55 + (var5 - 32), y, 64, 102, this.getPlayerClothingColors()[this.m_Wg],
-				this.getPlayerSkinColors()[this.m_hh], 0, false, 0, var1 + 13760);
+			this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getAnimationDef(this.appearanceBodyGender), 12),
+				55 + (var5 - 32), y, 64, 102, this.getPlayerClothingColors()[this.characterTopColour],
+				this.getPlayerSkinColors()[this.appearanceSkinColour], 0, false, 0, var1 + 13760);
 
 			this.getSurface().drawSpriteClipping(
 				spriteSelect(EntityHandler.getAnimationDef(this.appearanceHeadType), 12), var5 + 55 - 32, y, 64, 102,
-				this.getPlayerHairColors()[this.m_ld], this.getPlayerSkinColors()[this.m_hh], 0, false, 0, 1);
+				this.getPlayerHairColors()[this.appearanceHairColour], this.getPlayerSkinColors()[this.appearanceSkinColour], 0, false, 0, 1);
 			this.getSurface().drawSprite(spriteSelect(GUIPARTS.BLUEBAR.getDef()), 0, this.getGameHeight());
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
@@ -2504,7 +2546,7 @@ public final class mudclient implements Runnable {
 			}
 
 		} catch (RuntimeException var4) {
-			throw GenUtil.makeThrowable(var4, "client.GD(" + var1 + ')');
+			throw GenUtil.makeThrowable(var4, "client.GD(" + var1 + ',' + type + ')');
 		}
 	}
 
@@ -4477,7 +4519,7 @@ public final class mudclient implements Runnable {
 					// 256, this.screenOffsetY);
 					clientPort.draw();
 				} else if (this.showAppearanceChange) {
-					this.drawAppearancePanelCharacterSprites(-13759);
+					this.drawAppearancePanelCharacterSprites(-13759, Config.S_CHARACTER_CREATION_MODE);
 				} else if (this.showSetRecoveryQuestion) {
 					this.method_182();
 				} else if (this.showSetContactDetails) {
@@ -10194,15 +10236,15 @@ public final class mudclient implements Runnable {
 					& this.appearanceHeadGender * 4) == 0);
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Kj)) {
-				this.m_ld = (this.getPlayerHairColors().length + (this.m_ld - 1)) % this.getPlayerHairColors().length;
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceHair1)) {
+				this.appearanceHairColour = (this.getPlayerHairColors().length + (this.appearanceHairColour - 1)) % this.getPlayerHairColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_ed)) {
-				this.m_ld = (1 + this.m_ld) % this.getPlayerHairColors().length;
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceHair2)) {
+				this.appearanceHairColour = (1 + this.appearanceHairColour) % this.getPlayerHairColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Ge) || this.panelAppearance.isClicked(this.m_Of)) {
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceGender1) || this.panelAppearance.isClicked(this.controlButtonAppearanceGender2)) {
 				for (this.appearanceHeadGender = 3 - this.appearanceHeadGender; (3
 					& EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()) != 1
 					|| (EntityHandler.getAnimationDef(this.appearanceHeadType).getGenderModel()
@@ -10210,10 +10252,10 @@ public final class mudclient implements Runnable {
 					+ this.appearanceHeadType) % EntityHandler.animationCount()) {
 				}
 
-				while ((3 & EntityHandler.getAnimationDef(this.m_dk).getGenderModel()) != 2
+				while ((3 & EntityHandler.getAnimationDef(this.appearanceBodyGender).getGenderModel()) != 2
 					|| (this.appearanceHeadGender * 4
-					& EntityHandler.getAnimationDef(this.m_dk).getGenderModel()) == 0) {
-					this.m_dk = (this.m_dk + 1) % EntityHandler.animationCount();
+					& EntityHandler.getAnimationDef(this.appearanceBodyGender).getGenderModel()) == 0) {
+					this.appearanceBodyGender = (this.appearanceBodyGender + 1) % EntityHandler.animationCount();
 				}
 			}
 
@@ -10221,42 +10263,44 @@ public final class mudclient implements Runnable {
 			// this.getHostnameIp(113, -28);
 			// }
 
-			if (this.panelAppearance.isClicked(this.m_Xc)) {
-				this.m_Wg = (this.m_Wg - 1 + this.getPlayerClothingColors().length)
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceTop1)) {
+				this.characterTopColour = (this.characterTopColour - 1 + this.getPlayerClothingColors().length)
 					% this.getPlayerClothingColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_ek)) {
-				this.m_Wg = (this.m_Wg + 1) % this.getPlayerClothingColors().length;
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceTop2)) {
+				this.characterTopColour = (this.characterTopColour + 1) % this.getPlayerClothingColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Ze)) {
-				this.m_hh = (this.getPlayerSkinColors().length + (this.m_hh - 1)) % this.getPlayerSkinColors().length;
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceSkin1)) {
+				this.appearanceSkinColour = (this.getPlayerSkinColors().length + (this.appearanceSkinColour - 1)) % this.getPlayerSkinColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Mj)) {
-				this.m_hh = (1 + this.m_hh) % this.getPlayerSkinColors().length;
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceSkin2)) {
+				this.appearanceSkinColour = (1 + this.appearanceSkinColour) % this.getPlayerSkinColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Re)) {
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceBottom1)) {
 				this.characterBottomColour = (this.getPlayerClothingColors().length + this.characterBottomColour - 1)
 					% this.getPlayerClothingColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Ai)) {
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceBottom2)) {
 				this.characterBottomColour = (1 + this.characterBottomColour) % this.getPlayerClothingColors().length;
 			}
 
-			if (this.panelAppearance.isClicked(this.m_Eg)) {
+			if (this.panelAppearance.isClicked(this.controlButtonAppearanceAccept)) {
 				this.packetHandler.getClientStream().newPacket(235);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHeadGender);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHeadType);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.m_dk);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceBodyGender);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.character2Colour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.m_ld);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.m_Wg);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHairColour);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.characterTopColour);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.characterBottomColour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.m_hh);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceSkinColour);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.playerMode1);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.playerMode2);
 				this.packetHandler.getClientStream().finishPacket();
 				this.getSurface().blackScreen(true);
 				this.showAppearanceChange = false;
@@ -15383,7 +15427,7 @@ public final class mudclient implements Runnable {
 										clientPort.showLoadingProgress(100, "Starting game...");
 										this.createMessageTabPanel(56);
 										this.createLoginPanels(3845);
-										this.createAppearancePanel(var1 ^ 24649);
+										this.createAppearancePanel(var1 ^ 24649, Config.S_CHARACTER_CREATION_MODE);
 										this.createRecoveryQuestionPanel();
 										this.createPasswordRecoveryPanel();
 										this.createContactDetailsPanel();
@@ -15418,7 +15462,7 @@ public final class mudclient implements Runnable {
 										clientPort.showLoadingProgress(100, "Starting game...");
 										this.createMessageTabPanel(56);
 										this.createLoginPanels(3845);
-										this.createAppearancePanel(var1 ^ 24649);
+										this.createAppearancePanel(var1 ^ 24649, Config.S_CHARACTER_CREATION_MODE);
 										this.createRecoveryQuestionPanel();
 										this.createPasswordRecoveryPanel();
 										this.createContactDetailsPanel();
