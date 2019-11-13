@@ -1926,14 +1926,14 @@ public final class mudclient implements Runnable {
 				this.playerMode1 = this.panelAppearance.addVerticalList(var6, yFromTopDistance + 2, modes_ironman, 4, true);
 				yFromTopDistance += 75;
 				this.panelAppearance.addDecoratedBox(var6, yFromTopDistance + 21, 215, 60);
-				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "Do you wish to gain regular world xp", 0, true);
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "Do you wish to use the world's " + Config.S_SKILLING_EXP_RATE + "X", 0, true);
 				yFromTopDistance += 13;
-				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "rate? Note: By choosing no you can", 0, true);
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "xp rate? Note: By choosing no you can", 0, true);
 				yFromTopDistance += 13;
-				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "experience the veteran 1X xp rate!", 0, true);
+				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "experience the original 1X xp rate!", 0, true);
 				yFromTopDistance += 13;
 				String modes_xp[] = {
-					"Yes please", "No, veteran"
+					"Yes please", "No, original"
 				};
 				this.playerMode2 = this.panelAppearance.addHorizontalList(var6, yFromTopDistance, modes_xp, 1, true);
 			}
@@ -10427,8 +10427,8 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.characterTopColour);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.characterBottomColour);
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceSkinColour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.playerMode1);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.playerMode2);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.panelAppearance.getControlClickedListIndex(this.playerMode1));
+				this.packetHandler.getClientStream().writeBuffer1.putByte(this.panelAppearance.getControlClickedListIndex(this.playerMode2));
 				this.packetHandler.getClientStream().finishPacket();
 				this.getSurface().blackScreen(true);
 				this.showAppearanceChange = false;

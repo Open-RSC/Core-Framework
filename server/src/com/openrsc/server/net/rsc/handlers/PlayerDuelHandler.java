@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToMobAction;
@@ -33,7 +34,8 @@ public class PlayerDuelHandler implements PacketHandler {
 			return;
 		}
 
-		if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 			player.message("You are an Iron Man. You stand alone.");
 			unsetOptions(player);
 			unsetOptions(affectedPlayer);
@@ -74,7 +76,8 @@ public class PlayerDuelHandler implements PacketHandler {
 				return;
 			}
 
-			if (affectedPlayer.isIronMan(1) || affectedPlayer.isIronMan(2) || affectedPlayer.isIronMan(3)) {
+			if (affectedPlayer.isIronMan(IronmanMode.Ironman.id()) || affectedPlayer.isIronMan(IronmanMode.Ultimate.id())
+				|| affectedPlayer.isIronMan(IronmanMode.Hardcore.id()) || affectedPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
 				unsetOptions(player);
 				unsetOptions(affectedPlayer);

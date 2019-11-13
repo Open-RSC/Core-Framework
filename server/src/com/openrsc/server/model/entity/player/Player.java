@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
@@ -81,7 +82,7 @@ public final class Player extends Mob {
 	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
 	private final Object outgoingPacketsLock = new Object();
 	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
-	private int IRON_MAN_MODE = 0;
+	private int IRON_MAN_MODE = IronmanMode.None.id();
 	private int IRON_MAN_RESTRICTION = 1;
 	private int IRON_MAN_HC_DEATH = 0;
 	public int lastMineTry = -1;
@@ -387,6 +388,15 @@ public final class Player extends Mob {
 		this.IRON_MAN_MODE = i;
 	}
 
+	public void setOneXp(boolean isOneXp) {
+		if (getCache().hasKey("onexp_mode") && !isOneXp) {
+			getCache().remove("onexp_mode");
+		}
+		else if (!getCache().hasKey("onexp_mode") && isOneXp) {
+			getCache().store("onexp_mode", true);
+		}
+	}
+
 	public int getIronManRestriction() {
 		return IRON_MAN_RESTRICTION;
 	}
@@ -409,11 +419,13 @@ public final class Player extends Mob {
 	}
 
 	public boolean isIronMan(int mode) {
-		if (mode == 1 && getIronMan() == 1) {
+		if (mode == IronmanMode.Ironman.id() && getIronMan() == IronmanMode.Ironman.id()) {
 			return true;
-		} else if (mode == 2 && getIronMan() == 2) {
+		} else if (mode == IronmanMode.Ultimate.id() && getIronMan() == IronmanMode.Ultimate.id()) {
 			return true;
-		} else if (mode == 3 && getIronMan() == 3) {
+		} else if (mode == IronmanMode.Hardcore.id() && getIronMan() == IronmanMode.Hardcore.id()) {
+			return true;
+		} else if (mode == IronmanMode.Transfer.id() && getIronMan() == IronmanMode.Transfer.id()) {
 			return true;
 		}
 		return false;
@@ -1827,8 +1839,8 @@ public final class Player extends Mob {
 			if (!isStaff())
 				getInventory().dropOnDeath(mob);
 		}
-		if (isIronMan(3)) {
-			updateHCIronman(1);
+		if (isIronMan(IronmanMode.Hardcore.id())) {
+			updateHCIronman(IronmanMode.Ironman.id());
 			ActionSender.sendIronManMode(this);
 			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
 		}
@@ -3055,7 +3067,7 @@ public final class Player extends Mob {
 			itemFinal.setAttribute("npcdrop", true);
 		}
 
-		if (item.getAttribute("isIronmanItem", false) && getIronMan() == 0) {
+		if (item.getAttribute("isIronmanItem", false) && getIronMan() == IronmanMode.None.id()) {
 			message("That belongs to an Ironman player.");
 			return false;
 		}

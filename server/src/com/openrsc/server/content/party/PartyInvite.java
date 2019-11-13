@@ -1,6 +1,7 @@
 package com.openrsc.server.content.party;
 
 import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -17,11 +18,13 @@ public class PartyInvite {
 
 	public static void createPartyInvite(Player player, Player invited) {
 
-		if (invited.isIronMan(1) || invited.isIronMan(2) || invited.isIronMan(3)) {
+		if (invited.isIronMan(IronmanMode.Ironman.id()) || invited.isIronMan(IronmanMode.Ultimate.id())
+			|| invited.isIronMan(IronmanMode.Hardcore.id()) || invited.isIronMan(IronmanMode.Transfer.id())) {
 			player.message(invited.getUsername() + " is an Iron Man. They stand alone.");
 			return;
 		}
-		if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 			player.message("You are an Iron Man. You stand alone.");
 			return;
 		}

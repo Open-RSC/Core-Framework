@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.MiniEvent;
@@ -830,7 +831,9 @@ public class SpellHandler implements PacketHandler {
 							player.message("You're an Iron Man, so you can't loot items from players.");
 							return;
 						}
-						if (!affectedItem.belongsTo(player) && (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3))) {
+						if (!affectedItem.belongsTo(player)
+							&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+							|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
 							player.message("You're an Iron Man, so you can't take items that other players have dropped.");
 							return;
 						}

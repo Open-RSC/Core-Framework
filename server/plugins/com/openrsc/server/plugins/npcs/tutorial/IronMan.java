@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -106,11 +107,11 @@ public class IronMan implements TalkToNpcExecutiveListener,
 				}
 				return;
 			}
-			if (p.isIronMan(1)) {
+			if (p.isIronMan(IronmanMode.Ironman.id())) {
 				npcTalk(p, n, "Hail, Iron Man!");
-			} else if (p.isIronMan(2)) {
+			} else if (p.isIronMan(IronmanMode.Ultimate.id())) {
 				npcTalk(p, n, "Hail, Ultimate Iron Man!");
-			} else if (p.isIronMan(3)) {
+			} else if (p.isIronMan(IronmanMode.Hardcore.id())) {
 				npcTalk(p, n, "Hail, Hardcore Iron Man!");
 			} else {
 				npcTalk(p, n, "Hello, " + p.getUsername() + ". We're the Iron Man tutors.");
@@ -176,7 +177,7 @@ public class IronMan implements TalkToNpcExecutiveListener,
 	}
 
 	private void armourOption(Player p, Npc n) {
-		if ((!p.isIronMan(1)) && (!p.isIronMan(2) && (!p.isIronMan(3)))) {
+		if ((!p.isIronMan(IronmanMode.Ironman.id())) && (!p.isIronMan(IronmanMode.Ultimate.id()) && (!p.isIronMan(IronmanMode.Hardcore.id())))) {
 			npcTalk(p, n, "You're not an Iron Man.", "Our armour is only for them.");
 		} else {
 			if (p.getLocation().onTutorialIsland()) {
@@ -187,15 +188,15 @@ public class IronMan implements TalkToNpcExecutiveListener,
 					npcTalk(p, n, "There you go. Wear it with pride.");
 					p.playerServerMessage(MessageType.QUEST, "Try to hold on to this armour set.");
 					p.playerServerMessage(MessageType.QUEST, "You won't be able to get another set from the Iron Men.");
-					if (p.getIronMan() == 1) {
+					if (p.getIronMan() == IronmanMode.Ironman.id()) {
 						addItem(p, ItemId.IRONMAN_HELM.id(), 1);
 						addItem(p, ItemId.IRONMAN_PLATEBODY.id(), 1);
 						addItem(p, ItemId.IRONMAN_PLATELEGS.id(), 1);
-					} else if (p.getIronMan() == 2) {
+					} else if (p.getIronMan() == IronmanMode.Ultimate.id()) {
 						addItem(p, ItemId.ULTIMATE_IRONMAN_HELM.id(), 1);
 						addItem(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), 1);
 						addItem(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), 1);
-					} else if (p.getIronMan() == 3) {
+					} else if (p.getIronMan() == IronmanMode.Hardcore.id()) {
 						addItem(p, ItemId.HARDCORE_IRONMAN_HELM.id(), 1);
 						addItem(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), 1);
 						addItem(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), 1);

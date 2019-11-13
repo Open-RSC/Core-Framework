@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
@@ -24,7 +25,7 @@ public final class BankHandler implements PacketHandler {
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		int pID = p.getID();
-		if (player.isIronMan(2)) {
+		if (player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("As an Ultimate Iron Man, you cannot use the bank.");
 			player.resetBank();
 			return;

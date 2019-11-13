@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -1224,13 +1225,16 @@ public class Functions {
 			return;
 		}*/
 		/** iron men armours **/
-		else if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
+		else if ((item.getID() == ItemId.IRONMAN_HELM.id() || item.getID() == ItemId.IRONMAN_PLATEBODY.id()
+			|| item.getID() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
 			player.message("You need to be an Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
+		} else if ((item.getID() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getID() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
+			|| item.getID() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
+		} else if ((item.getID() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getID() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
+			|| item.getID() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return false;
 		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
