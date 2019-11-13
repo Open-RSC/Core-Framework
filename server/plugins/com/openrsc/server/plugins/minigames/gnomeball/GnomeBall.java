@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.Skills;
@@ -52,7 +53,8 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
-			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
+			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
+				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
 			} else {
 				// does not matter where the players are at, neither in the field or wild,

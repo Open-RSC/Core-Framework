@@ -74,9 +74,10 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		}
 
 		if (player.getWorld().getServer().getConfig().CHARACTER_CREATION_MODE == 1) {
-			// todo: make use of playerMode1 (ironman type) and playerMode2 (1X)
-			// also check if player is new (sets up values) or is from makeover mage
-			// ignores them unless is downgrade
+			if (player.getLastLogin() == 0L) {
+				player.setIronMan(playerMode1);
+				player.setOneXp(playerMode2 == 1);
+			}
 		}
 	}
 }

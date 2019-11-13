@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
@@ -65,7 +66,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 			for (int i = 0; i < amount; i++) {
 				Item itemBeingBought = new Item(itemID, 1);
-				if ((player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) && shop.getItemCount(itemID) > shop.getStock(itemID)) {
+				if ((player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))
+					&& shop.getItemCount(itemID) > shop.getStock(itemID)) {
 					player.message("Iron Men may not buy items that are over-stocked in a shop.");
 					break;
 				}

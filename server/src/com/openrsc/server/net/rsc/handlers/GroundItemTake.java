@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
@@ -54,11 +55,15 @@ public class GroundItemTake implements PacketHandler {
 					player.sendMemberErrorMessage();
 					return;
 				}
-				if (item.getLocation().inWilderness() && !item.belongsTo(player) && item.getAttribute("playerKill", false) && (player.isIronMan(2) || player.isIronMan(1) || player.isIronMan(3))) {
+				if (item.getLocation().inWilderness() && !item.belongsTo(player) && item.getAttribute("playerKill", false)
+					&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
 					player.message("You're an Iron Man, so you can't loot items from players.");
 					return;
 				}
-				if (!item.belongsTo(player) && (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3))) {
+				if (!item.belongsTo(player)
+					&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
 					player.message("You're an Iron Man, so you can't take items that other players have dropped.");
 					return;
 				}

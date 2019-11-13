@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
@@ -23,12 +24,12 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcEx
 	 * <p>
 	 * NPC: 734
 	 * START EAST: 272, 741 START WEST: 320, 741 GO
-	 * UNDER EAST: 248, 729 UNDER WEST: 296, 729 
+	 * UNDER EAST: 248, 729 UNDER WEST: 296, 729
 	 * FAIL - AFTER GO UNDER EAST: 254, 759
 	 * (SHARED) FAIL - AFTER GO UNDER WEST AND/OR QUIT MINI-GAME: 302, 759 GO
 	 * BACK FROM FAIL LOCATION: 550, 711
 	 */
-	
+
 	@Override
 	public int getMiniGameId() {
 		return Minigames.FISHING_TRAWLER;
@@ -57,7 +58,8 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcEx
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MURPHY_LAND.id()) { // Murphy on land
-			if (p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
+			if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
+				|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {
 				p.message("As an Iron Man, you cannot use the Trawler.");
 				return;
 			}

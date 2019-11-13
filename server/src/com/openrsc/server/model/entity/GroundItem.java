@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
@@ -46,7 +47,7 @@ public class GroundItem extends Entity {
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = System.currentTimeMillis();
 		setLocation(Point.location(x, y));
-		if (owner != null && owner.getIronMan() >= 1 && owner.getIronMan() <= 3)
+		if (owner != null && owner.getIronMan() >= IronmanMode.Ironman.id() && owner.getIronMan() <= IronmanMode.Transfer.id())
 			this.setAttribute("isIronmanItem", true);
 	}
 
@@ -167,7 +168,7 @@ public class GroundItem extends Entity {
 			return false;
 		if (getDef().isUntradable())
 			return false;
-		if (!belongsTo(p) && p.getIronMan() >= 1 && p.getIronMan() <= 3)
+		if (!belongsTo(p) && p.getIronMan() >= IronmanMode.Ironman.id() && p.getIronMan() <= IronmanMode.Transfer.id())
 			return false;
 
 		// One minute and four seconds to show to all.
