@@ -7112,6 +7112,10 @@ public final class mudclient implements Runnable {
 										var11 = "@or1@";
 									}
 
+									if (levelDifference == -1 && this.npcs[var9].npcId == 236) {
+										var11 = "@whi@";
+									}
+									
 									if (levelDifference < -3) {
 										var11 = "@or2@";
 									}
@@ -7153,20 +7157,37 @@ public final class mudclient implements Runnable {
 									}
 								} else if (this.selectedItemInventoryIndex < 0) {
 									if (EntityHandler.getNpcDef(var13).isAttackable()) {
-										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-											levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
-											"Attack",
-											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-												+ var11);
+										if(this.npcs[var9].npcId == 236){
+											if(levelDifference >= -1 && inWild){
+												this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex, MenuItemAction.NPC_ATTACK1,
+												"Attack",
+												"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+													+ var11);
+											} else {
+												this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
+												levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
+												"Attack",
+												"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+													+ var11);
+											}
+										} else {
+											this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
+												levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
+												"Attack",
+												"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+													+ var11);
+										}
 									}
 									if (developerMenu) {
 										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
 											MenuItemAction.DEV_REMOVE_NPC, "@gr2@Remove NPC",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
-									this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-										MenuItemAction.NPC_TALK_TO, "Talk-to",
-										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
+									if(this.npcs[var9].npcId != 236) {
+										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
+											MenuItemAction.NPC_TALK_TO, "Talk-to",
+											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
+									}
 
 									if (!EntityHandler.getNpcDef(var13).getCommand1().equals("")) {
 										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
@@ -7179,10 +7200,10 @@ public final class mudclient implements Runnable {
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
 
-									this.menuCommon.addCharacterItem(this.npcs[var9].npcId, MenuItemAction.NPC_EXAMINE,
-										"Examine",
-										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-											+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));
+										this.menuCommon.addCharacterItem(this.npcs[var9].npcId, MenuItemAction.NPC_EXAMINE,
+											"Examine",
+											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+												+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));									
 								} else {
 									this.menuCommon.addCharacterItem_WithID(this.npcs[var9].serverIndex,
 										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName(),
