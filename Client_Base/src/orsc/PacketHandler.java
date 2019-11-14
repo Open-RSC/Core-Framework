@@ -1606,6 +1606,24 @@ public class PacketHandler {
 					npc.attackingPlayerServerIndex = shooterServerIndex;
 					npc.incomingProjectileSprite = EntityHandler.projectiles.get(sprite);
 				}
+			} else if (updateType == 5) {
+				int skull = packetsIncoming.getUnsignedByte();
+				if (null != npc) {
+					npc.skull = skull;
+				}
+			} else if (updateType == 6) {
+				int wield = packetsIncoming.getUnsignedByte();
+				int wield2 = packetsIncoming.getUnsignedByte();
+				if (null != npc) {
+					npc.wield = wield;
+					npc.wield2 = wield2;
+				}
+			} else if (updateType == 7) {
+				int itemType = packetsIncoming.getShort();
+				if (null != npc) {
+					//npc.bubbleTimeout = 150;
+					npc.bubbleItem = itemType;
+				}
 			}
 		}
 	}

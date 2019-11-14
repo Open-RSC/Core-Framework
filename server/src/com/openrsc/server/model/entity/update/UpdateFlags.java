@@ -24,6 +24,15 @@ public class UpdateFlags {
 	 */
 	private AtomicReference<ChatMessage> chatMessage = new AtomicReference<ChatMessage>();
 	/**
+	 * Do we need to update npc Wields for players around?
+	 */
+	private AtomicReference<Wield> wield = new AtomicReference<Wield>();
+	private AtomicReference<Wield> wield2 = new AtomicReference<Wield>();
+	/**
+	 * Do we need to update npc skulls for players around?
+	 */
+	private AtomicReference<Skull> skull = new AtomicReference<Skull>();
+	/**
 	 * Do we need to get damage update for players around?
 	 */
 	private AtomicReference<Damage> damage = new AtomicReference<Damage>();
@@ -55,29 +64,42 @@ public class UpdateFlags {
 	private AtomicBoolean getAppearanceChanged() {
 		return appearanceChanged;
 	}
-
 	public void setAppearanceChanged(boolean b) {
 		this.appearanceChanged.set(b);
 	}
-
 	public ChatMessage getChatMessage() {
 		return chatMessage.get();
 	}
-
 	public void setChatMessage(ChatMessage message) {
 		this.chatMessage.set(message);
 	}
-
 	public AtomicReference<Damage> getDamage() {
 		return damage;
 	}
-
+	public AtomicReference<Skull> getSkull() {
+		return skull;
+	}
+	public AtomicReference<Wield> getWield() {
+		return wield;
+	}
+	public AtomicReference<Wield> getWield2() {
+		return wield2;
+	}
 	public AtomicReference<HpUpdate> getHpUpdate() {
 		return hpUpdate;
 	}
 
 	public void setDamage(Damage damage) {
 		this.damage.set(damage);
+	}
+	public void setSkull(Skull skull) {
+		this.skull.set(skull);
+	}
+	public void setWield(Wield wield) {
+		this.wield.set(wield);
+	}
+	public void setWield2(Wield wield2) {
+		this.wield2.set(wield2);
 	}
 
 	public void setHpUpdate(HpUpdate hpUpdate) {
@@ -99,6 +121,9 @@ public class UpdateFlags {
 	public boolean hasBubble() {
 		return getActionBubble().get() != null;
 	}
+	public boolean hasBubbleNpc() {
+		return getActionBubbleNpc().get() != null;
+	}
 
 	public boolean hasChatMessage() {
 		return getChatMessage() != null;
@@ -110,6 +135,15 @@ public class UpdateFlags {
 
 	public boolean hasTakenDamage() {
 		return getDamage().get() != null;
+	}
+	public boolean hasSkulled() {
+		return getSkull().get() != null;
+	}
+	public boolean changedWield() {
+		return getWield().get() != null;
+	}
+	public boolean changedWield2() {
+		return getWield2().get() != null;
 	}
 
 	public boolean hasTakenHpUpdate() {
@@ -123,6 +157,8 @@ public class UpdateFlags {
 		projectile.set(null);
 		actionBubble.set(null);
 		damage.set(null);
+		skull.set(null);
+		wield.set(null);
 		hpUpdate.set(null);
 		projectile.set(null);
 		chatMessage.set(null);
@@ -138,6 +174,8 @@ public class UpdateFlags {
 			", appearanceChanged=" + appearanceChanged +
 			", chatMessage=" + chatMessage +
 			", damage=" + damage +
+			", skull=" + skull +
+			", wield=" + wield +
 			", hpUpdate=" + hpUpdate +
 			", projectile=" + projectile +
 			'}';

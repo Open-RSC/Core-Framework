@@ -80,6 +80,17 @@ public class CombatScriptLoader {
 			LOGGER.catching(e);
 		}
 	}
+	public void checkAndExecuteCombatAggroScript(final Npc npc, final Mob mob) {
+		try {
+			for (CombatAggroScript script : combatAggroScripts.values()) {
+				if (script.shouldExecute(npc, mob)) {
+					script.executeScript(npc, mob);
+				}
+			}
+		} catch (Throwable e) {
+			LOGGER.catching(e);
+		}
+	}
 
 	public void load() {
 		try {

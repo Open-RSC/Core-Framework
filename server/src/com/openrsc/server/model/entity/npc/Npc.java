@@ -7,9 +7,12 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
+import com.openrsc.server.model.entity.update.Skull;
+import com.openrsc.server.model.entity.update.Wield;
 import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.HealEventNpc;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
@@ -43,6 +46,98 @@ public class Npc extends Mob {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
+	 * NPC Wields
+	 */
+	private int wield = -1;
+	public int getWield() {
+		return wield;
+	}
+	public void setWield(int wield) {
+		this.wield = wield;
+		getUpdateFlags().setWield(new Wield(this, wield, wield2));
+	}
+	private int wield2 = -1;
+	public int getWield2() {
+		return wield2;
+	}
+	public void setWield2(int wield2) {
+		this.wield2 = wield2;
+		getUpdateFlags().setWield2(new Wield(this, wield, wield2));
+	}
+	 /**
+	 * NPC Skulls
+	 */
+	private DelayedEvent skullEvent = null;
+	public void addSkull(int timeLeft) {
+		if (skullEvent == null) {
+			skullEvent = new DelayedEvent(getWorld(), ((Player) null), timeLeft, "NPC Add Skull") {
+				@Override
+				public void run() {
+					removeSkull();
+				}
+			};
+			getWorld().getServer().getGameEventHandler().add(skullEvent);
+			getUpdateFlags().setSkull(new Skull(this, 1));
+		}
+	}
+	public DelayedEvent getSkullEvent() {
+		return skullEvent;
+	}
+
+	public void setSkullEvent(DelayedEvent skullEvent) {
+		this.skullEvent = skullEvent;
+	}
+	
+	public long getSkullTime() {
+		if (isSkulled() && getSkullType() == 1) {
+			return skullEvent.timeTillNextRun();
+		}
+		return 0;
+	}
+	
+	public boolean isSkulled() {
+		return skullEvent != null;
+	}
+	
+	public int getSkullType() {
+		int type = 0;
+		if (isSkulled()) {
+			type = 1;
+		}
+		return type;
+	}
+	
+	public void removeSkull() {
+		if (skullEvent == null) {
+			return;
+		}
+		skullEvent.stop();
+		skullEvent = null;
+		getUpdateFlags().setAppearanceChanged(true);
+		getUpdateFlags().setSkull(new Skull(this, 0));
+	}
+	
+	private HashMap<String, Long> attackedBy = new HashMap<String, Long>();
+	public void addAttackedBy(Player p) {
+		attackedBy.put(p.getUsername(), System.currentTimeMillis());
+	}
+	public long lastAttackedBy(Player p) {
+		Long time = attackedBy.get(p.getUsername());
+		if (time != null) {
+			return time;
+		}
+		return 0;
+	}
+	
+	public void setSkulledOn(Player player) {
+		player.getSettings().addAttackedBy(this);
+		if (System.currentTimeMillis() - lastAttackedBy(player) > 1200000) {
+			addSkull(1200000);
+		}
+		player.getUpdateFlags().setAppearanceChanged(true);
+	}
+	 
+	/**
 	 * The current status of the player
 	 */
 	private Action status = Action.IDLE;
@@ -53,6 +148,27 @@ public class Npc extends Mob {
 	private RangeEventNpc rangeEventNpc;
 	private BankEventNpc bankEventNpc;
 	private ThrowingEvent throwingEvent;
+	private HealEventNpc healEventNpc;
+	public HealEventNpc getHealEventNpc() {
+		return healEventNpc;
+	}
+	public void setHealEventNpc(HealEventNpc event) {
+		if (healEventNpc != null) {
+			healEventNpc.stop();
+		}
+		healEventNpc = event;
+		getWorld().getServer().getGameEventHandler().add(healEventNpc);
+	}
+	public boolean isHealing() {
+		return healEventNpc != null;
+	}
+	public void resetHealing() {
+		if (healEventNpc != null) {
+			healEventNpc.stop();
+			healEventNpc = null;
+		}
+		setStatus(Action.IDLE);
+	}
 
 	public RangeEventNpc getRangeEventNpc() {
 		return rangeEventNpc;
@@ -81,6 +197,18 @@ public class Npc extends Mob {
 
 	public boolean isRanging() {
 		return rangeEventNpc != null || throwingEvent != null;
+	}
+	
+	public boolean isPkBotMelee() {
+		return getID() == 236;
+	}
+	
+	public boolean isPkBotArcher() {
+		return getID() == 210;
+	}
+	
+	public boolean isPkBot() {
+		return getID() == 210 || getID() == 236;
 	}
 
 	public boolean isBanking() {
@@ -188,6 +316,53 @@ public class Npc extends Mob {
 	 */
 	private NPCLoc loc;
 	private int armourPoints = 1;
+	
+	private int heals = 25;
+	public int getHeals() {
+		return heals;
+	}
+	public void setHeals(int heals) {
+		this.heals = heals;
+
+	}
+	public void retreatFromWild() {
+		if(getLocation().inWilderness()){
+			getOpponent().setLastOpponent(this);
+			setLastOpponent(getOpponent());
+			setRanAwayTimer();
+			if (getOpponent().isPlayer()) {
+				Player victimPlayer = ((Player) getOpponent());
+				victimPlayer.resetAll();
+				victimPlayer.message("Your opponent is retreating");
+				ActionSender.sendSound(victimPlayer, "retreat");
+			}
+			if (!isPkBotMelee()) {
+				setLastCombatState(CombatState.RUNNING);
+			}
+			setLastCombatState(CombatState.RUNNING);
+			getOpponent().setLastCombatState(CombatState.WAITING);
+			resetCombatEvent();
+
+			Point walkTo = Point.location(DataConversions.random(101, 114),
+			DataConversions.random(427, 428));
+			walk(walkTo.getX(), walkTo.getY());
+			for (Player p : getWorld().getPlayers()) {
+				p.message("85");
+			}
+		}
+	}
+	public void retreatFromWild2() {
+		if(getLocation().inWilderness()){
+			walkToEntityAStar2(103, 512);
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), ((Player) null), 90000, "Npc walk to wild") {
+				public void run() {
+					walkToEntityAStar2(108, 425);
+					setHeals(25);
+					stop();
+				}
+			});
+		}
+	}
 	/**
 	 * Holds players that did damage with combat
 	 */
@@ -446,11 +621,17 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponAimPoints() {
-		return weaponAimPoints;
+		if (this.getID() == 236) {
+			return 32;//m2h
+		} else
+			return weaponAimPoints;
 	}
 
 	public int getWeaponPowerPoints() {
-		return weaponPowerPoints;
+		if (this.getID() == 236) {
+			return 42;//m2h
+		} else
+			return weaponPowerPoints;
 	}
 
 	@Override
@@ -657,7 +838,7 @@ public class Npc extends Mob {
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;
 				Item rare = null;
-				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
+				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer() && owner.isPlayer()) {
 					if (getWorld().standardTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
@@ -668,10 +849,12 @@ public class Npc extends Mob {
 				}
 
 				if (rare != null) {
-					if (!handleRingOfAvarice((Player) mob, rare)) {
-						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						getWorld().registerItem(groundItem);
+					if(!owner.isNpc()){
+						if (!handleRingOfAvarice((Player) mob, rare)) {
+								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
+								groundItem.setAttribute("npcdrop", true);
+								getWorld().registerItem(groundItem);
+						}
 					}
 				}
 
@@ -684,10 +867,12 @@ public class Npc extends Mob {
 					total += drop.getWeight();
 					weightTotal += drop.getWeight();
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-							GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
-							groundItem.setAttribute("npcdrop", true);
-							getWorld().registerItem(groundItem);
+						if(!owner.isNpc()){
+							if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
+								GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
+								groundItem.setAttribute("npcdrop", true);
+								getWorld().registerItem(groundItem);
+							}
 						}
 						continue;
 					}
@@ -724,23 +909,27 @@ public class Npc extends Mob {
 									for (int count = 0; count < amount; count++) {
 
 										// Gem Drop Table + 1/128 chance to roll into very rare item
-										if (drop.getID() == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
-											dropID = Formulae.calculateGemDrop((Player) mob);
-											amount = 1;
+										if(!owner.isNpc()){
+											if (drop.getID() == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
+												dropID = Formulae.calculateGemDrop((Player) mob);
+												amount = 1;
+											}
 										}
 
 										// Herb Drop Table
-										else if (drop.getID() == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+										else if (!owner.isNpc() && drop.getID() == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
 											dropID = Formulae.calculateHerbDrop();
 										}
 
 										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
 											continue;
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
-											if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-												groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
-												groundItem.setAttribute("npcdrop", true);
-												getWorld().registerItem(groundItem);
+											if(!owner.isNpc()){
+												if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
+													groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
+													groundItem.setAttribute("npcdrop", true);
+													getWorld().registerItem(groundItem);
+												}
 											}
 										}
 									}
@@ -750,16 +939,20 @@ public class Npc extends Mob {
 										amount = Formulae.calculateGoldDrop(
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
-										if (Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
-											amount += Formulae.getSplendorBoost(amount);
-											((Player) mob).message("Your ring of splendor shines brightly!");
+										if(!owner.isNpc()){
+											if (Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
+												amount += Formulae.getSplendorBoost(amount);
+												((Player) mob).message("Your ring of splendor shines brightly!");
+											}
 										}
 									}
 
-									if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
-										GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
-										groundItem.setAttribute("npcdrop", true);
-										getWorld().registerItem(groundItem);
+									if(!owner.isNpc()){
+										if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
+											GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
+												getWorld().registerItem(groundItem);
+												groundItem.setAttribute("npcdrop", true);
+										}
 									}
 								}
 							}
@@ -1256,6 +1449,14 @@ public class Npc extends Mob {
 
 	public boolean addDeathListener(NpcLootEvent event) {
 		return deathListeners.add(event);
+	}
+	
+	private long healTimer = 0;
+	public boolean cantHeal() {
+		return healTimer - System.currentTimeMillis() > 0;
+	}
+	public void setHealTimer(long l) {
+		healTimer = System.currentTimeMillis() + l;
 	}
 
 	public void setExecutedAggroScript(boolean executed) {
