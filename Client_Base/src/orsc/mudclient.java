@@ -5729,6 +5729,93 @@ public final class mudclient implements Runnable {
 			int var16;
 			for (var15 = 0; var15 < 12; ++var15) {
 				var16 = this.getAnimDirLayer_To_CharLayer()[var11][var15];
+				if(npc.wield > 0 || npc.wield2 > 0){
+					int[] animID;
+					animID = new int[]{-1, -1, -1, -1, npc.wield, -1, -1, -1, -1, -1, npc.wield2, -1};
+					AnimationDef animationDef = EntityHandler.getAnimationDef(animID[var16]);
+					if (animID[var16] >= 0) {
+					byte spriteOffsetX = 0;
+					byte spriteOffsetY = 0;
+					int variant = var14;
+					if (var12 && var13 >= 1 && var13 <= 3 && animationDef.hasF()) {
+						variant = var14 + 15;
+					}
+					if (var13 != 5 || animationDef.hasA()) {
+						//int sprite = variant + animationDef.getNumber();
+						Sprite sprite = spriteSelect(animationDef, variant);
+						int something1 = sprite.getSomething1();
+						int something2 = sprite.getSomething2();
+						int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID[var16]), 0).getSomething1();
+						if (something1 != 0 && something2 != 0 && something3 != 0) {
+							int xOffset = (spriteOffsetX * width1) / something1;
+							int yOffset = (spriteOffsetY * height) / something2;
+							int spriteWidth = (something1 * width1) / something3;
+							xOffset -= (spriteWidth - width1) / 2;
+							int colorVariant = animationDef.getCharColour();// CacheValues.animationCharacterColour[animID];
+							int baseColor = 0;
+							if (colorVariant == 1) {
+								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+								colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
+							} else if (animID[var16] >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
+								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+							} else if (colorVariant != 2) {
+								if (colorVariant == 3) {
+									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+									colorVariant = def.getBottomColour();// CacheValues.npcColourBottom[npc.npcId];
+								}
+							} else {
+								colorVariant = def.getTopColour();// CacheValues.npcColourTop[npc.npcId];
+								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+							}
+
+							this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, spriteWidth, height,
+								colorVariant, baseColor, 0, var12, topPixelSkew, 1);
+						}
+					}
+				}
+				} else {
+				int animID = def.getSprite(var16);
+				AnimationDef animationDef = EntityHandler.getAnimationDef(animID);
+				if (animID >= 0) {
+					byte spriteOffsetX = 0;
+					byte spriteOffsetY = 0;
+					int variant = var14;
+					if (var12 && var13 >= 1 && var13 <= 3 && animationDef.hasF()) {
+						variant = var14 + 15;
+					}
+						if (var13 != 5 || animationDef.hasA()) {
+							//int sprite = variant + animationDef.getNumber();
+							Sprite sprite = spriteSelect(animationDef, variant);
+							int something1 = sprite.getSomething1();
+							int something2 = sprite.getSomething2();
+							int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID), 0).getSomething1();
+							if (something1 != 0 && something2 != 0 && something3 != 0) {
+								int xOffset = (spriteOffsetX * width1) / something1;
+								int yOffset = (spriteOffsetY * height) / something2;
+								int spriteWidth = (something1 * width1) / something3;
+								xOffset -= (spriteWidth - width1) / 2;
+								int colorVariant = animationDef.getCharColour();// CacheValues.animationCharacterColour[animID];
+								int baseColor = 0;
+								if (colorVariant == 1) {
+									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+									colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
+								} else if (animID >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
+									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+								} else if (colorVariant != 2) {
+									if (colorVariant == 3) {
+										baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+										colorVariant = def.getBottomColour();// CacheValues.npcColourBottom[npc.npcId];
+									}
+								} else {
+									colorVariant = def.getTopColour();// CacheValues.npcColourTop[npc.npcId];
+									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+								}
+								this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, spriteWidth, height,
+									colorVariant, baseColor, 0, var12, topPixelSkew, 1);
+							}
+						}
+					}
+				}
 				int animID = def.getSprite(var16);
 				AnimationDef animationDef = EntityHandler.getAnimationDef(animID);
 				if (animID >= 0) {
@@ -5772,7 +5859,7 @@ public final class mudclient implements Runnable {
 					}
 				}
 			}
-
+			
 			if (npc.messageTimeout > 0) {
 				this.characterDialogHalfWidth[this.characterDialogCount] = this.getSurface().stringWidth(1, npc.message)
 					/ 2;
@@ -5785,6 +5872,26 @@ public final class mudclient implements Runnable {
 				this.characterDialogX[this.characterDialogCount] = width1 / 2 + x;
 				this.characterDialogY[this.characterDialogCount] = y;
 				this.characterDialogString[this.characterDialogCount++] = npc.message;
+			}
+			
+			int skullX = topPixelSkew + x + width1 / 2;
+			int destWidth = overlayMovement * 16 / 100;
+			int destHeight = overlayMovement * 16 / 100;
+			if(npc.skull > 0) {
+				if(npc.direction == ORSCharacterDirection.COMBAT_A){
+					if(npc.skull > 0) {
+						this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2 - 20,
+						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
+					}
+				} else if(npc.direction == ORSCharacterDirection.COMBAT_B){
+					if(npc.skull > 0) {
+						this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2 + 20,
+						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
+					}
+				} else {
+					this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2,
+						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
+				}
 			}
 
 			if (npc.direction == ORSCharacterDirection.COMBAT_A || npc.direction == ORSCharacterDirection.COMBAT_B
@@ -5818,6 +5925,13 @@ public final class mudclient implements Runnable {
 				}
 
 			}
+			/*if (npc.bubbleItem == 221) {
+				this.characterBubbleX[this.characterBubbleCount] = width1 / 2 + x;
+				this.characterBubbleY[this.characterBubbleCount] = y;
+				this.characterBubbleScale[this.characterBubbleCount] = overlayMovement;
+				this.characterBubbleID[this.characterBubbleCount++] = npc.bubbleItem;
+			}
+			this.bubbleTimeout = npc.bubbleItem;*/ // should there be a strength pot bubble over npcs head
 		} catch (RuntimeException var28) {
 			throw GenUtil.makeThrowable(var28, "client.EC(" + y + ',' + topPixelSkew + ',' + var3 + ',' + height + ','
 				+ overlayMovement + ',' + npcIndex + ',' + width1 + ',' + x + ')');
@@ -5954,7 +6068,6 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-
 				if (player.messageTimeout > 0) {
 					this.characterDialogHalfWidth[this.characterDialogCount] = this.getSurface().stringWidth(1,
 						player.message) / 2;
@@ -5980,14 +6093,12 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-
 				if (player.bubbleTimeout > 0) {
 					this.characterBubbleX[this.characterBubbleCount] = x + width / 2;
 					this.characterBubbleY[this.characterBubbleCount] = y;
 					this.characterBubbleScale[this.characterBubbleCount] = overlayMovement;
 					this.characterBubbleID[this.characterBubbleCount++] = player.bubbleItem;
 				}
-
 				if (player.direction == ORSCharacterDirection.COMBAT_A
 					|| player.direction == ORSCharacterDirection.COMBAT_B || player.combatTimeout != 0) {
 					if (player.combatTimeout > 0) {
@@ -6003,7 +6114,6 @@ public final class mudclient implements Runnable {
 						this.characterHealthY[this.characterHealthCount] = y;
 						this.characterHealthBar[this.characterHealthCount++] = healthStep;
 					}
-
 					if (player.combatTimeout > 150) {
 						int var14 = x;
 						if (player.direction == ORSCharacterDirection.COMBAT_B) {
@@ -6018,7 +6128,6 @@ public final class mudclient implements Runnable {
 							0xFFFFFF, 0, 3, height / 2 + y + 5);
 					}
 				}
-
 				if (player.skullVisible == 1 && player.bubbleTimeout == 0) {
 					int skullX = topPixelSkew + x + width / 2;
 					if (player.direction == ORSCharacterDirection.COMBAT_A) {
@@ -6051,14 +6160,12 @@ public final class mudclient implements Runnable {
 					// y - destHeight / 2 - overlayMovement * 10 / 100,
 					// destWidth, destHeight, 5924);
 				}
-
 			}
 		} catch (RuntimeException var27) {
 			var27.printStackTrace();
 			throw GenUtil.makeThrowable(var27, "client.OB(" + topPixelSkew + ',' + width + ',' + var3 + ','
 				+ overlayMovement + ',' + x + ',' + y + ',' + height + ',' + index + ')');
 		}
-
 	}
 
 	private void drawPopupReport(boolean var1) {

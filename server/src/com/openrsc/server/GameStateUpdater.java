@@ -226,12 +226,27 @@ public final class GameStateUpdater {
 		ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<>();
 		ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<>();
 		ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<Skull> npcSkullsNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<Wield> npcWieldsNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<BubbleNpc> npcBubblesNeedingDisplayed = new ConcurrentLinkedQueue<>();
 
 		for (Npc npc : player.getLocalNpcs()) {
 			UpdateFlags updateFlags = npc.getUpdateFlags();
 			if (updateFlags.hasChatMessage()) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				npcMessagesNeedingDisplayed.add(chatMessage);
+			}
+			if (updateFlags.hasSkulled()) {
+				Skull skull = updateFlags.getSkull().get();
+				npcSkullsNeedingDisplayed.add(skull);
+			}
+			if (updateFlags.changedWield()) {
+				Wield wield = updateFlags.getWield().get();
+				npcWieldsNeedingDisplayed.add(wield);
+			}
+			if (updateFlags.changedWield2()) {
+				Wield wield2 = updateFlags.getWield2().get();
+				npcWieldsNeedingDisplayed.add(wield2);
 			}
 			if (updateFlags.hasTakenDamage()) {
 				Damage damage = updateFlags.getDamage().get();
@@ -241,9 +256,13 @@ public final class GameStateUpdater {
 				Projectile projectileFired = updateFlags.getProjectile().get();
 				npcProjectilesNeedingDisplayed.add(projectileFired);
 			}
+			if (updateFlags.hasBubbleNpc()) {
+					BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
+					npcBubblesNeedingDisplayed.add(bubble);
+			}
 		}
 		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
-			+ npcProjectilesNeedingDisplayed.size();
+			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
 		if (updateSize > 0) {
 			PacketBuilder npcAppearancePacket = new PacketBuilder();
 			npcAppearancePacket.setID(104);
@@ -278,6 +297,25 @@ public final class GameStateUpdater {
 					npcAppearancePacket.writeShort(projectile.getType());
 					npcAppearancePacket.writeShort(((Player) victim).getIndex());
 				}
+			}
+			Skull npcNeedingSkullUpdate;
+			while ((npcNeedingSkullUpdate = npcSkullsNeedingDisplayed.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingSkullUpdate.getIndex());
+				npcAppearancePacket.writeByte((byte) 5);
+				npcAppearancePacket.writeByte((byte) npcNeedingSkullUpdate.getSkull());
+			}
+			Wield npcNeedingWieldUpdate;
+			while ((npcNeedingWieldUpdate = npcWieldsNeedingDisplayed.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingWieldUpdate.getIndex());
+				npcAppearancePacket.writeByte((byte) 6);
+				npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield());
+				npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield2());
+			}
+			BubbleNpc npcNeedingBubbleUpdate;
+			while ((npcNeedingBubbleUpdate = npcBubblesNeedingDisplayed.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getOwner().getIndex());
+				npcAppearancePacket.writeByte((byte) 7);
+				npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getID());
 			}
 			player.write(npcAppearancePacket.toPacket());
 		}

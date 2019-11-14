@@ -10,6 +10,9 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.update.Skull;
+import com.openrsc.server.model.entity.update.Wield;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -1255,6 +1258,25 @@ public class ActionSender {
 
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
+				
+				for (Npc n : p.getWorld().getNpcs()) {
+					if(n.getSkullType() > 0){
+						n.getUpdateFlags().setSkull(new Skull(n, 1));
+					}
+				}
+				for (Npc n : p.getWorld().getNpcs()) {
+					if(n.getWield() > 0){
+						n.getUpdateFlags().setWield(new Wield(n, n.getWield(), n.getWield2()));
+						n.getUpdateFlags().setWield2(new Wield(n, n.getWield(), n.getWield2()));
+					}
+				}
+				for (Npc n : p.getWorld().getNpcs()) {
+					if(n.getWield2() > 0){
+						n.getUpdateFlags().setWield(new Wield(n, n.getWield(), n.getWield2()));
+						n.getUpdateFlags().setWield2(new Wield(n, n.getWield(), n.getWield2()));
+					}
+				}
+				
 				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + p.getWorld().getServer().getConfig().SERVER_NAME + "!", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
@@ -1306,7 +1328,7 @@ public class ActionSender {
 			LOGGER.catching(e);
 		}
 	}
-
+	
 	public static void sendOnlineList(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
 		pb.writeShort(player.getWorld().getPlayers().size());

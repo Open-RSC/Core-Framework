@@ -2,6 +2,7 @@ package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.model.entity.npc.Npc;
 
 import java.util.HashMap;
 
@@ -17,6 +18,7 @@ public class PlayerSettings {
 		GAME_SETTING_SOUND_EFFECTS = 2;
 
 	private HashMap<Long, Long> attackedBy = new HashMap<Long, Long>();
+	private HashMap<Integer, Long> attackedBy2 = new HashMap<Integer, Long>();
 
 	private boolean[] privacySettings = new boolean[4];
 	private boolean[] gameSettings = new boolean[3];
@@ -94,13 +96,26 @@ public class PlayerSettings {
 	void addAttackedBy(Player p) {
 		attackedBy.put(p.getUsernameHash(), System.currentTimeMillis());
 	}
+	public void addAttackedBy(Npc n) {
+		attackedBy2.put(n.getID(), System.currentTimeMillis());
+	}
 
 	HashMap<Long, Long> getAttackedBy() {
 		return attackedBy;
 	}
+	HashMap<Integer, Long> getAttackedBy2() {
+		return attackedBy2;
+	}
 
 	public long lastAttackedBy(Player p) {
 		Long time = attackedBy.get(p.getUsernameHash());
+		if (time != null) {
+			return time;
+		}
+		return 0;
+	}
+	long lastAttackedBy(Npc n) {
+		Long time = attackedBy2.get(n.getID());
 		if (time != null) {
 			return time;
 		}

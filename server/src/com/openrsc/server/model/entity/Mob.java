@@ -35,7 +35,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * The asynchronous logger.
 	 */
-	private GameTickEvent skullEventNpc = null;
+	private Point newLoc;
 
 	private long lastMovementTime		= 0;
 
@@ -43,65 +43,6 @@ public abstract class Mob extends Entity {
 		super(world);
 		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
 	}
-
-	public void addSkull(long timeLeft) {
-		if (skullEventNpc == null) {
-			skullEventNpc = new GameTickEvent(getWorld(), this, timeLeft, "NPC Add Skull") {
-
-				@Override
-				public void run() {
-					removeSkull();
-				}
-			};
-			getWorld().getServer().getGameEventHandler().add(skullEventNpc);
-			getUpdateFlags().setAppearanceChanged(true);
-		}
-	}
-
-	public GameTickEvent getSkullEventNpc() {
-		return skullEventNpc;
-	}
-
-	public void setSkullEventNpc(DelayedEvent skullEventNpc) {
-		this.skullEventNpc = skullEventNpc;
-	}
-
-	public long getSkullTime() {
-		if (isSkulled() && getSkullType() == 1) {
-			return skullEventNpc.timeTillNextRun();
-		}
-		return 0;
-	}
-
-	public boolean isSkulled() {
-		return skullEventNpc != null;
-	}
-
-	public int getSkullType() {
-		int type = 0;
-		if (isSkulled()) {
-			type = 1;
-		}
-		return type;
-	}
-
-	public void removeSkull() {
-		if (skullEventNpc == null) {
-			return;
-		}
-		skullEventNpc.stop();
-		skullEventNpc = null;
-		getUpdateFlags().setAppearanceChanged(true);
-	}
-
-	public void setSkulledOn(Mob mob) {
-		//mob.getSettings().addAttackedBy(this);
-		//if (System.currentTimeMillis() - getSettings().lastAttackedBy(mob) > 1200000) {
-		addSkull(1200000);
-		//}
-		mob.getUpdateFlags().setAppearanceChanged(true);
-	}
-
 	private static final Logger LOGGER = LogManager.getLogger();
 	protected final Skills skills = new Skills(this.getWorld(), this);
 	/**
@@ -174,6 +115,13 @@ public abstract class Mob extends Entity {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
+			if (((Npc) victim).isPkBot() && victim.getCombatTimer() > 3000) {
+				//setSuspiciousPlayer(true);
+				return true;
+			} else if (victim.isPkBotMelee()) {
+				//setSuspiciousPlayer(true);
+				return false;
+			}
 			if (!victim.getDef().isAttackable()) {
 				//setSuspiciousPlayer(true);
 				return false;
@@ -476,6 +424,63 @@ public abstract class Mob extends Entity {
 
 		return new int[]{newX, newY};
 	}
+	public int[] nextStep2(int myX, int myY, Point e) {
+		if (myX == e.getX() && myY == e.getY()) {
+			return new int[]{myX, myY};
+		}
+		int newX = myX, newY = myY;
+		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
+
+		if (myX > e.getX()) {
+			myXBlocked = isBlocking2(e, myX - 1, myY, 8); // Check right tiles
+			newX = myX - 1;
+		} else if (myX < e.getX()) {
+			myXBlocked = isBlocking2(e, myX + 1, myY, 2); // Check left tiles
+			newX = myX + 1;
+		}
+		if (myY > e.getY()) {
+			myYBlocked = isBlocking2(e, myX, myY - 1, 4); // Check top tiles
+			newY = myY - 1;
+		} else if (myY < e.getY()) {
+			myYBlocked = isBlocking2(e, myX, myY + 1, 1); // Check bottom tiles
+			newY = myY + 1;
+		}
+
+		// If both directions are blocked OR we are going straight and the
+		// direction is blocked
+		if ((myXBlocked && myYBlocked) || (myXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
+			return null;
+		}
+
+		if (newX > myX) {
+			newXBlocked = isBlocking2(e, newX, newY, 2); // Check dest tiles
+			// right wall
+		} else if (newX < myX) {
+			newXBlocked = isBlocking2(e, newX, newY, 8); // Check dest tiles left
+			// wall
+		}
+
+		if (newY > myY) {
+			newYBlocked = isBlocking2(e, newX, newY, 1); // Check dest tiles top
+			// wall
+		} else if (newY < myY) {
+			newYBlocked = isBlocking2(e, newX, newY, 4); // Check dest tiles
+			// bottom wall
+		}
+
+		// If both directions are blocked OR we are going straight and the
+		// direction is blocked
+		if ((newXBlocked && newYBlocked) || (newXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
+			return null;
+		}
+
+		// If only one direction is blocked, but it blocks both tiles
+		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) {
+			return null;
+		}
+
+		return new int[]{newX, newY};
+	}
 
 	private boolean isBlocking(Entity e, int x, int y, int bit) {
 		int val = getWorld().getTile(x, y).traversalMask;
@@ -491,6 +496,19 @@ public abstract class Mob extends Entity {
 		return (val & 64) != 0
 			&& (e instanceof Npc || e instanceof Player || (e instanceof GroundItem && !((GroundItem) e).isOn(x, y))
 			|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)));
+	}
+	private boolean isBlocking2(Point e, int x, int y, int bit) {
+		int val = getWorld().getTile(x, y).traversalMask;
+		if ((val & bit) != 0) {
+			return true;
+		}
+		if ((val & 16) != 0) {
+			return true;
+		}
+		if ((val & 32) != 0) {
+			return true;
+		}
+		return (val & 64) != 0;
 	}
 
 	public void cure() {
@@ -773,6 +791,29 @@ public abstract class Mob extends Entity {
 		};
 		getWorld().getServer().getGameEventHandler().add(followEvent);
 	}
+	public void setFollowingAstar(final Mob mob, final int radius) {
+		if (isFollowing()) {
+			resetFollowing();
+		}
+		final Mob me = this;
+		following = mob;
+		followEvent = new GameTickEvent(getWorld(), null, 1, "Player Following Mob") {
+			public void run() {
+				if (!me.withinRange(mob) || mob.isRemoved()
+					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
+					if (!mob.isFollowing())
+						resetFollowing();
+				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
+					me.resetPath();
+				} else if (me.finishedPath() && !me.withinRange(mob, radius)) {
+					me.walkToEntityAStar(mob.getX(), mob.getY());
+				} else if (mob.isRemoved()) {
+					resetFollowing();
+				}
+			}
+		};
+		getWorld().getServer().getGameEventHandler().add(followEvent);
+	}
 
 	public void setLastCombatState(CombatState lastCombatState) {
 		this.lastCombatState = lastCombatState;
@@ -912,7 +953,11 @@ public abstract class Mob extends Entity {
 				}
 			}
 
-			setLocation(victim.getLocation(), false);
+			if(this.isNpc() && ((Npc) this).isPkBot()){
+				setLocation(victim.getLocation(), true);
+			} else {
+				setLocation(victim.getLocation(), false);
+			}
 
 			setBusy(true);
 			setSprite(ourSprite);
@@ -970,11 +1015,34 @@ public abstract class Mob extends Entity {
 		}
 		getWalkingQueue().setPath(path);
 	}
+	public void walk2(int x, int y) {
+		getWalkingQueue().reset();
+		Path path = new Path(this, PathType.WALK_TO_POINT);
+		{
+			newLoc = new Point(x, y);
+			if(this.nextStep2(this.getX(), this.getY(), newLoc) != null){	
+				path.addStep(x, y);
+				path.finish();
+			}
+		}
+		getWalkingQueue().setPath(path);
+	}
 
 	public void walkToEntityAStar(int x, int y) {
 		getWalkingQueue().reset();
 			Point mobPos = new Point(this.getX(), this.getY());
 			AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), 20);
+			pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
+			Path newPath = pathFinder.findPath();
+			if (newPath == null)
+				walkToEntity(x,y);
+			else
+				getWalkingQueue().setPath(newPath);
+	}
+	public void walkToEntityAStar2(int x, int y) {
+		getWalkingQueue().reset();
+			Point mobPos = new Point(this.getX(), this.getY());
+			AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), 100);
 			pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
 			Path newPath = pathFinder.findPath();
 			if (newPath == null)

@@ -20,6 +20,9 @@ public final class ORSCharacter {
 	public int currentX;
 	public int currentZ;
 	public int damageTaken = 0;
+	public int skull = 0;
+	public int wield = 0;
+	public int wield2 = 0;
 	int healTaken = 0;
 	public String displayName;
 	public int[] layerAnimation = new int[12];
