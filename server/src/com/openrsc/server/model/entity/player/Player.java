@@ -438,13 +438,6 @@ public final class Player extends Mob {
 		return false;
 	}
 
-	public boolean isOneXp() {
-		if (getCache().hasKey("onexp_mode")) {
-			return getCache().getBoolean("onexp_mode");
-		}
-		return false;
-	}
-
 	public void resetCannonEvent() {
 		if (cannonEvent != null) {
 			cannonEvent.stop();
