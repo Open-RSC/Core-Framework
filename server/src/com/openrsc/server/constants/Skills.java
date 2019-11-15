@@ -12,15 +12,15 @@ import java.util.HashMap;
 public class Skills {
 
 	//public static final int SKILL_COUNT = 19;
-	public static final int MAXIMUM_EXP = 2000000000;
-	public static final int GLOBAL_LEVEL_LIMIT = 135;
+	public final int MAXIMUM_EXP = 2000000000;
+	public final int GLOBAL_LEVEL_LIMIT = 135;
 
 	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
 		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, SLAYER = 19, FARMING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
 
-	public static HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
-	public static ArrayList<SkillDef> skills;
+	public HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
+	public ArrayList<SkillDef> skills;
 
 	private final String[] SKILL_NAME;
 
@@ -98,7 +98,7 @@ public class Skills {
 		return skills.get(index);
 	}
 
-	public static int getLevelForExperience(int experience, int limit) {
+	public int getLevelForExperience(int experience, int limit) {
 		for (int level = 0; level < limit - 1; level++) {
 			if (experience >= experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level])
 				continue;

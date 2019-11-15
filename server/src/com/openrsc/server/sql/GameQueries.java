@@ -41,7 +41,7 @@ public class GameQueries {
 		playerExp = "SELECT ";
 		playerCurExp = "SELECT ";
 
-		for (SkillDef skill : Skills.skills) {
+		for (SkillDef skill : getServer().getConstants().getSkills().skills) {
 			updateExperience = updateExperience + "`exp_" + skill.getShortName().toLowerCase() + "`=?, ";
 			updateStats = updateStats + "`cur_" + skill.getShortName().toLowerCase() + "`=?, ";
 			playerExp = playerExp + "`exp_" + skill.getShortName().toLowerCase() + "`, ";

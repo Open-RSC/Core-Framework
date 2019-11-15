@@ -194,12 +194,12 @@ public class DiscordService implements Runnable{
 								if (!username.isEmpty()) {
 									StringBuilder rep = new StringBuilder();
 									rep.append("Stats for " + username + "`\n");
-									for (SkillDef skill: Skills.skills) {
+									for (SkillDef skill: getServer().getConstants().getSkills().skills) {
 										int experience = results.getInt("exp_" + skill.getShortName());
-										int level = Skills.getLevelForExperience(experience, server.getConfig().PLAYER_LEVEL_LIMIT);
+										int level = getServer().getConstants().getSkills().getLevelForExperience(experience, server.getConfig().PLAYER_LEVEL_LIMIT);
 										int tnl = 0;
-										if (level < Skills.GLOBAL_LEVEL_LIMIT)
-											tnl = Skills.experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level] - experience;
+										if (level < getServer().getConstants().getSkills().GLOBAL_LEVEL_LIMIT)
+											tnl = getServer().getConstants().getSkills().experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level] - experience;
 										rep.append(StringUtils.rightPad(skill.getLongName(),12," ") + ": " + String.format("%02d", level) + " (@ " + tnl + ")\n");
 									}
 									rep.append("`");
