@@ -152,7 +152,6 @@ public class NpcBehavior {
 									/*if(npc.nextStep2(npc.getX(), npc.getY(), newLoc) == null){	
 								} else {*/
 								npc.walkToEntityAStar2(newX, newY);
-									p.message("77");
 									npc.setWield(252);
 									npc.setWield2(80);
 								//}
