@@ -7147,7 +7147,7 @@ public final class mudclient implements Runnable {
 										var11 = "@or1@";
 									}
 
-									if (levelDifference == -1 && this.npcs[var9].npcId == 236) {
+									if (levelDifference == -1 && this.npcs[var9].npcId == 804) {
 										var11 = "@whi@";
 									}
 									
@@ -7192,7 +7192,7 @@ public final class mudclient implements Runnable {
 									}
 								} else if (this.selectedItemInventoryIndex < 0) {
 									if (EntityHandler.getNpcDef(var13).isAttackable()) {
-										if(this.npcs[var9].npcId == 236){
+										if(this.npcs[var9].npcId == 804){
 											if(levelDifference >= -1 && inWild){
 												this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex, MenuItemAction.NPC_ATTACK1,
 												"Attack",
@@ -7218,7 +7218,7 @@ public final class mudclient implements Runnable {
 											MenuItemAction.DEV_REMOVE_NPC, "@gr2@Remove NPC",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
-									if(this.npcs[var9].npcId != 236) {
+									if(this.npcs[var9].npcId != 804) {
 										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
 											MenuItemAction.NPC_TALK_TO, "Talk-to",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
@@ -15362,6 +15362,7 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
+			System.out.println(S_WANT_PK_BOTS + " 64");
 		}
 		try {
 			this.loadGameConfig(false);

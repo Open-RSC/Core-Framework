@@ -196,6 +196,7 @@ public class ServerConfiguration {
 	public boolean DISPLAY_LOGO_SPRITE = false;
 	public boolean SPAWN_AUCTION_NPCS = false;
 	public boolean SPAWN_IRON_MAN_NPCS = false;
+	public boolean WANT_PK_BOTS = false;
 	public boolean SHOW_FLOATING_NAMETAGS = false;
 	public boolean WANT_CLANS = false;
 	public boolean WANT_KILL_FEED = false;
@@ -367,6 +368,7 @@ public class ServerConfiguration {
 
 		SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
 		SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
+		WANT_PK_BOTS = Boolean.parseBoolean(props.getProperty("want_pk_bots"));
 		SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
 		WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
 		WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));

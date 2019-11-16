@@ -61,6 +61,14 @@ public class AttackHandler implements PacketHandler {
 				player.message("these ogres are for range combat training only");
 				return;
 			}
+			if (n.isPkBot() && !player.getLocation().inWilderness()) {
+				player.resetPath();
+				return;
+			}
+			if (n.isPkBot() && !n.getLocation().inWilderness()) {
+				player.resetPath();
+				return;
+			}
 		}
 
 		player.setStatus(Action.ATTACKING_MOB);

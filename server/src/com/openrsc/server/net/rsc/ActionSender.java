@@ -537,6 +537,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 70");
 			LOGGER.info(server.getConfig().CHARACTER_CREATION_MODE + " 71");
 			LOGGER.info(server.getConfig().SKILLING_EXP_RATE + " 72");
+			LOGGER.info(server.getConfig().WANT_PK_BOTS + " 73");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -631,6 +632,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); //70
 		s.writeByte((byte) server.getConfig().CHARACTER_CREATION_MODE); //71
 		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //72
+		s.writeByte((byte) (server.getConfig().WANT_PK_BOTS ? 1 : 0)); // 73
 		return s;
 	}
 

@@ -64,6 +64,7 @@ public class Config {
 	public static int S_PLAYER_INVENTORY_SLOTS = 30;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
+	public static boolean S_WANT_PK_BOTS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
 	public static boolean S_WANT_SKILL_MENUS = false;
 	public static boolean S_WANT_QUEST_MENUS = false;

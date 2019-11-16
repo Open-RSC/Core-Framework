@@ -806,7 +806,8 @@ public enum NpcId {
 	LUNDAIL(793),
 	AUCTIONEER(794),
 	AUCTION_CLERK(795),
-	SEDRIDOR(803);
+	SEDRIDOR(803),
+	PKBOT1(804);
 
 	private int npcId;
 

@@ -142,6 +142,11 @@ public class RangeEventNpc extends GameTickEvent {
 							return;
 						}
 					}
+					if (((Npc) getOwner()).isPkBot() && !target.getLocation().inWilderness()) {
+						getOwner().resetRange();
+						stop();
+						return;
+					}
 					int arrowID = -1;
 					int damage = Formulae.calcRangeHitNpc(getOwner(), getOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), 11);
 					if (Formulae.looseArrow(damage)) {

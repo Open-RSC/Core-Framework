@@ -200,7 +200,7 @@ public class Npc extends Mob {
 	}
 	
 	public boolean isPkBotMelee() {
-		return getID() == 236;
+		return getID() == 804;
 	}
 	
 	public boolean isPkBotArcher() {
@@ -208,7 +208,7 @@ public class Npc extends Mob {
 	}
 	
 	public boolean isPkBot() {
-		return getID() == 210 || getID() == 236;
+		return getID() == 804;
 	}
 
 	public boolean isBanking() {
@@ -621,14 +621,14 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponAimPoints() {
-		if (this.getID() == 236) {
+		if (this.getID() == 804) {
 			return 32;//m2h
 		} else
 			return weaponAimPoints;
 	}
 
 	public int getWeaponPowerPoints() {
-		if (this.getID() == 236) {
+		if (this.getID() == 804) {
 			return 42;//m2h
 		} else
 			return weaponPowerPoints;
