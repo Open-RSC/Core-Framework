@@ -13,12 +13,12 @@ public class Bandit implements CombatAggroScript, OnCombatStartScript {
 
 	@Override
 	public void executeScript(Mob attacker, Mob victim) {
-		/*if (attacker.isNpc()) {
+		if (attacker.isNpc()) {
 			Player player = (Player) victim;
 			Npc npc = (Npc) attacker;
 			
 			npcYell(player, npc, "You shall not pass");
-		}*/
+		}
 	}
 
 	@Override

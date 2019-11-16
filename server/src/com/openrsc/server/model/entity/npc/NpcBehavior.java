@@ -150,24 +150,16 @@ public class NpcBehavior {
 								newLoc = new Point(newX, newY);
 								//if(PathValidation.checkPath(p5.getWorld(), npc.getLocation(), newLoc)){
 									/*if(npc.nextStep2(npc.getX(), npc.getY(), newLoc) == null){	
-										for (Player p : p5.getWorld().getPlayers()) {
-											p.message("50");
-										}
 								} else {*/
 								npc.walkToEntityAStar2(newX, newY);
-								for (Player p : p5.getWorld().getPlayers()) {
 									p.message("77");
 									npc.setWield(252);
 									npc.setWield2(80);
 								//}
-								}
 							} else {
 								Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
 								Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
 								npc.walk(p.getX(), p.getY());
-								for (Player p12 : p5.getWorld().getPlayers()) {
-								p12.message("88");
-							}
 							}
 						}
 					}
@@ -496,9 +488,6 @@ public class NpcBehavior {
 			Point walkTo = Point.location(DataConversions.random(101, 114),
 			DataConversions.random(427, 428));
 			npc.walk(walkTo.getX(), walkTo.getY());
-			for (Player p : npc.getWorld().getPlayers()) {
-				p.message("55");
-			}
 		}
 	}
 	public void retreatFromWild2() {
@@ -526,9 +515,6 @@ public class NpcBehavior {
 				}
 			});*/
 			lastMovement = System.currentTimeMillis();
-			for (Player p : npc.getWorld().getPlayers()) {
-				p.message("75");
-			}
 		}
 	}
 
