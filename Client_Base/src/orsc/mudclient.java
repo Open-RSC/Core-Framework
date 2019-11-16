@@ -5859,7 +5859,7 @@ public final class mudclient implements Runnable {
 					}
 				}
 			}
-			
+
 			if (npc.messageTimeout > 0) {
 				this.characterDialogHalfWidth[this.characterDialogCount] = this.getSurface().stringWidth(1, npc.message)
 					/ 2;
@@ -5873,7 +5873,7 @@ public final class mudclient implements Runnable {
 				this.characterDialogY[this.characterDialogCount] = y;
 				this.characterDialogString[this.characterDialogCount++] = npc.message;
 			}
-			
+
 			int skullX = topPixelSkew + x + width1 / 2;
 			int destWidth = overlayMovement * 16 / 100;
 			int destHeight = overlayMovement * 16 / 100;
@@ -7150,7 +7150,7 @@ public final class mudclient implements Runnable {
 									if (levelDifference == -1 && this.npcs[var9].npcId == 804) {
 										var11 = "@whi@";
 									}
-									
+
 									if (levelDifference < -3) {
 										var11 = "@or2@";
 									}
@@ -7238,7 +7238,7 @@ public final class mudclient implements Runnable {
 										this.menuCommon.addCharacterItem(this.npcs[var9].npcId, MenuItemAction.NPC_EXAMINE,
 											"Examine",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-												+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));									
+												+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));
 								} else {
 									this.menuCommon.addCharacterItem_WithID(this.npcs[var9].serverIndex,
 										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName(),
@@ -14214,11 +14214,11 @@ public final class mudclient implements Runnable {
 				}
 			}
 			if (type == MessageType.GLOBAL_CHAT) {
-				if (this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] != this.panelMessageTabs.controlListCurrentSize[this.panelMessageQuest]
+				if (this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] != this.panelMessageTabs.controlListCurrentSize[this.panelMessagePrivate]
 					- 4) {
-					this.panelMessageTabs.addToList(msg, false, crownID, sender, formerName, this.panelMessageQuest);
+					this.panelMessageTabs.addToList(msg, false, crownID, sender, formerName, this.panelMessagePrivate);
 				} else {
-					this.panelMessageTabs.addToList(msg, true, crownID, sender, formerName, this.panelMessageQuest);
+					this.panelMessageTabs.addToList(msg, true, crownID, sender, formerName, this.panelMessagePrivate);
 				}
 			}
 			if (type == MessageType.CLAN_CHAT) {
