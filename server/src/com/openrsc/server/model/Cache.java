@@ -89,12 +89,12 @@ public class Cache {
 	 */
 	public int getInt(String key) {
 		if (!storage.containsKey(key))
-			throw new NoSuchElementException("No object found for that key");
+			throw new NoSuchElementException("No object found for that key: " + key);
 
 		Object value = storage.get(key);
 		if (!(value instanceof Integer)) {
 			throw new IllegalArgumentException(
-				"Object found, but not an Integer");
+				"Object found, but not an Integer: " + key);
 		}
 		return (Integer) value;
 	}
@@ -109,10 +109,10 @@ public class Cache {
 	 */
 	public String getString(String key) {
 		if (!storage.containsKey(key))
-			throw new NoSuchElementException("No object found for that key");
+			throw new NoSuchElementException("No object found for that key: " + key);
 		if (!(storage.get(key) instanceof String)) {
 			throw new IllegalArgumentException(
-				"Object found, but not an String");
+				"Object found, but not an String: " + key);
 		}
 		return (String) (storage.get(key));
 	}
@@ -127,10 +127,10 @@ public class Cache {
 	 */
 	public Boolean getBoolean(String key) {
 		if (!storage.containsKey(key))
-			throw new NoSuchElementException("No object found for that key");
+			throw new NoSuchElementException("No object found for that key: " + key);
 		if (!(storage.get(key) instanceof Boolean)) {
 			throw new IllegalArgumentException(
-				"Object found, but not a Boolean");
+				"Object found, but not a Boolean: " + key);
 		}
 		return (Boolean) (storage.get(key));
 	}
@@ -145,11 +145,11 @@ public class Cache {
 	 */
 	public long getLong(String key) {
 		if (!storage.containsKey(key))
-			throw new NoSuchElementException("No object found for that key");
+			throw new NoSuchElementException("No object found for that key: " + key);
 
 		Object value = storage.get(key);
 		if (!(value instanceof Long)) {
-			throw new IllegalArgumentException("Object found, but not a Long");
+			throw new IllegalArgumentException("Object found, but not a Long: " + key);
 		}
 		return (Long) value;
 	}

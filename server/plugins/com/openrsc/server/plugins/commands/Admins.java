@@ -1800,6 +1800,8 @@ public final class Admins implements CommandListener {
 				p.removeSkull();
 			} else {
 				p.addSkull(1200000);
+				player.getCache().store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
+				player.getCache().store("last_skull", System.currentTimeMillis()); // Sets the last time a player had a skull
 			}
 
 			String skullMessage = p.isSkulled() ? "added" : "removed";

@@ -28,6 +28,9 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		int trouserColour = (int) p.readByte();
 		int skinColour = (int) p.readByte();
 
+		int playerMode1 = (int) p.readByte();
+		int playerMode2 = (int) p.readByte();
+
 		int headSprite = headType + 1;
 		int bodySprite = bodyGender + 1;
 
@@ -67,6 +70,13 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		for (int i = 0; i < 12; i++) {
 			if (oldWorn[i] == oldAppearance[i]) {
 				player.updateWornItems(i, newAppearance[i]);
+			}
+		}
+
+		if (player.getWorld().getServer().getConfig().CHARACTER_CREATION_MODE == 1) {
+			if (player.getLastLogin() == 0L) {
+				player.setIronMan(playerMode1);
+				player.setOneXp(playerMode2 == 1);
 			}
 		}
 	}

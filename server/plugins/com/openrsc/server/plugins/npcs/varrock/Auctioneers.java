@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -45,7 +46,8 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 			menu = showMenu(player, npc, "I'd like to browse the auction house");
 		}
 		if (menu == 0) {
-			if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+				|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 				player.message("As an Iron Man, you cannot use the Auction.");
 				return;
 			}
@@ -107,7 +109,8 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 	public void onNpcCommand(Npc n, String command, Player p) {
 		if (n.getID() == AUCTIONEER) {
 			if (command.equalsIgnoreCase("Auction")) {
-				if (p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
+				if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
+					|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
@@ -142,7 +145,8 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 			}
 		} else if (n.getID() == AUCTION_CLERK) {
 			if (command.equalsIgnoreCase("Auction")) {
-				if (p.isIronMan(1) || p.isIronMan(2) || p.isIronMan(3)) {
+				if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
+					|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}

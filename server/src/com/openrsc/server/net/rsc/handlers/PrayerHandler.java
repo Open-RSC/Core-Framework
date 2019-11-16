@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -70,7 +71,7 @@ public class PrayerHandler implements PacketHandler {
 //			ActionSender.sendPrayers(player);
 			return;
 		}
-		if (prayerID == 8 && player.isIronMan(2)) {
+		if (prayerID == 8 && player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("Ultimate Iron Mens, cannot protect items");
 			player.getPrayers().resetPrayers();
 			return;

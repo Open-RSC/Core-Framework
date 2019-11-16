@@ -215,6 +215,7 @@ public class ServerConfiguration {
 	public boolean WANT_HIDE_IP = false;
 	public boolean WANT_REMEMBER = false;
 	public boolean WANT_GLOBAL_CHAT = false;
+	public boolean WANT_GLOBAL_FRIEND = false;
 	public boolean WANT_SKILL_MENUS = false;
 	public boolean WANT_QUEST_MENUS = false;
 	public boolean WANT_EXPERIENCE_ELIXIRS = false;
@@ -306,6 +307,7 @@ public class ServerConfiguration {
 	public final int DWARVEN_RING_BONUS = 3;
 	public List<String> valuableDrops;
 	public boolean WANT_CUSTOM_UI = false;
+	public int CHARACTER_CREATION_MODE = 0;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -384,6 +386,7 @@ public class ServerConfiguration {
 		WANT_HIDE_IP = Boolean.parseBoolean(props.getProperty("want_hide_ip"));
 		WANT_REMEMBER = Boolean.parseBoolean(props.getProperty("want_remember"));
 		WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
+		WANT_GLOBAL_FRIEND = Boolean.parseBoolean(props.getProperty("want_global_friend"));
 		WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
 		WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
 		WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));
@@ -429,6 +432,7 @@ public class ServerConfiguration {
 		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(props.getProperty("want_leftclick_webs"));
 		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(props.getProperty("want_custom_quests"));
 		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(props.getProperty("want_improved_pathfinding"));
+		CHARACTER_CREATION_MODE = Integer.parseInt(props.getProperty("character_creation_mode"));
 
 		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
 		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));

@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.clan.ClanPlayer;
@@ -76,15 +77,16 @@ public class InterfaceOptionHandler implements PacketHandler {
 						return;
 					}
 					if (mode > -1) {
-						if (mode == 1) {
-							if (!player.getLocation().onTutorialIsland() && (player.getIronMan() <= 0 || player.getIronMan() >= 4)) {
+						if (mode == IronmanMode.Ironman.id()) {
+							if (!player.getLocation().onTutorialIsland() && (player.getIronMan() <= IronmanMode.None.id() || player.getIronMan() > IronmanMode.Transfer.id())) {
 								player.message("You cannot become an Iron Man after leaving Tutorial Island.");
 								return;
 							}
-							if (player.getIronMan() == 1) {
+							if (player.getIronMan() == IronmanMode.Ironman.id()) {
 								return;
 							}
-							if (!player.getLocation().onTutorialIsland() && (player.getIronMan() == 2 || player.getIronMan() == 3)) {
+							if (!player.getLocation().onTutorialIsland()
+								&& (player.getIronMan() == IronmanMode.Ultimate.id() || player.getIronMan() == IronmanMode.Hardcore.id())) {
 								if (player.getIronManRestriction() == 0) {
 									if (player.getCache().hasKey("bank_pin")) {
 										Npc npc = Functions.getMultipleNpcsInArea(player, 11, 799, 800, 801);
@@ -102,30 +104,32 @@ public class InterfaceOptionHandler implements PacketHandler {
 								}
 								return;
 							}
-							player.setIronMan(1);
-						} else if (mode == 2) {
-							if (!player.getLocation().onTutorialIsland() && player.getIronMan() != 2) {
+							player.setIronMan(IronmanMode.Ironman.id());
+						} else if (mode == IronmanMode.Ultimate.id()) {
+							if (!player.getLocation().onTutorialIsland() && player.getIronMan() != IronmanMode.Ultimate.id()) {
 								player.message("You cannot become an Ultimate Iron Man after leaving Tutorial Island.");
 								return;
 							}
-							if (player.getIronMan() == 2) {
+							if (player.getIronMan() == IronmanMode.Ultimate.id()) {
 								return;
 							}
-							player.setIronMan(2);
-						} else if (mode == 3) {
-							if (!player.getLocation().onTutorialIsland() && player.getIronMan() != 3) {
+							player.setIronMan(IronmanMode.Ultimate.id());
+						} else if (mode == IronmanMode.Hardcore.id()) {
+							if (!player.getLocation().onTutorialIsland() && player.getIronMan() != IronmanMode.Hardcore.id()) {
 								player.message("You cannot become a Hardcore Iron Man after leaving Tutorial Island.");
 								return;
 							}
-							if (player.getIronMan() == 3) {
+							if (player.getIronMan() == IronmanMode.Hardcore.id()) {
 								return;
 							}
-							player.setIronMan(3);
+							player.setIronMan(IronmanMode.Hardcore.id());
 						} else {
-							if (player.getIronMan() == 0) {
+							if (player.getIronMan() == IronmanMode.None.id()) {
 								return;
 							}
-							if (!player.getLocation().onTutorialIsland() && (player.getIronMan() == 2 || player.getIronMan() == 3 || player.getIronMan() == 1)) {
+							if (!player.getLocation().onTutorialIsland()
+								&& (player.getIronMan() == IronmanMode.Ironman.id() || player.getIronMan() == IronmanMode.Ultimate.id()
+								|| player.getIronMan() == IronmanMode.Hardcore.id())) {
 								if (player.getIronManRestriction() == 0) {
 									if (player.getCache().hasKey("bank_pin")) {
 										Npc npc = Functions.getMultipleNpcsInArea(player, 11, 799, 800, 801);
@@ -143,7 +147,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 								}
 								return;
 							}
-							player.setIronMan(0);
+							player.setIronMan(IronmanMode.None.id());
 						}
 						ActionSender.sendIronManMode(player);
 					}
@@ -158,7 +162,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						return;
 					}
 					if (setting > -1) {
-						if (player.getIronMan() == 0) {
+						if (player.getIronMan() == IronmanMode.None.id()) {
 							return;
 						}
 						if (setting == 0) {
@@ -194,7 +198,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 10:
-				if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
@@ -413,7 +418,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 							ActionSender.sendBox(player, "Leave your current party before joining another", false);
 							return;
 						}
-						if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+						if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+							|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 							player.message("You are an Iron Man. You stand alone.");
 							return;
 						}
@@ -437,7 +443,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 						break;
 					case 2:
 						Player invited = player.getWorld().getPlayer(p.readShort());
-						if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+						if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+							|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 							player.message("You are an Iron Man. You stand alone.");
 							return;
 						}
@@ -564,7 +571,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 								return;
 							}
 						}
-						if (player.isIronMan(1) || player.isIronMan(2) || player.isIronMan(3)) {
+						if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+							|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 							player.message("You are an Iron Man. You stand alone.");
 							return;
 						}

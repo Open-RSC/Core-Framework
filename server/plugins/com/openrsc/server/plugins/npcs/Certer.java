@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.model.container.Item;
@@ -32,16 +33,16 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		if (certerDef == null) {
 			return;
 		}
-		
+
 		beginCertExchange(certerDef, p, n);
 	}
-	
+
 	private void beginCertExchange(CerterDef certerDef, Player p, Npc n) {
 		npcTalk(p, n, "Welcome to my " + certerDef.getType()
 			+ " exchange stall");
-		
+
 		String ending = (n.getID() == NpcId.MILES.id() || n.getID() == NpcId.CHUCK.id() || n.getID() == NpcId.WATTO.id() ? "s" : "");
-		
+
 		// First Certer Menu
 		int firstType = firstMenu(certerDef, ending, p, n);
 		switch(firstType) {
@@ -53,15 +54,15 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				break;
 			//case 2 handled separately
 		}
-		
+
 		int secondType = -1;
-		
+
 		//informational only
 		if (firstType != 2) {
 			// Second Certer Menu
 			secondType = secondMenu(certerDef, ending, p, n, firstType);
 		}
-		
+
 		// Final Certer Menu
 		switch (firstType) {
 			case 0: //cert to item
@@ -75,17 +76,17 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				break;
 		}
 	}
-	
+
 	private int firstMenu(CerterDef certerDef, String ending, Player p, Npc n) {
 		return showMenu(p, n, false, "I have some certificates to trade in",
 				"I have some " + certerDef.getType() + ending + " to trade in",
-				"What is a " + certerDef.getType() + " exchange stall?");	
+				"What is a " + certerDef.getType() + " exchange stall?");
 	}
-	
+
 	private int secondMenu(CerterDef certerDef, String ending, Player p, Npc n, int option) {
 		if (option == -1)
 			return -1;
-		
+
 		final String[] names = certerDef.getCertNames();
 		switch(option) {
 			case 0:
@@ -98,7 +99,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				return -1;
 		}
 	}
-	
+
 	private void decertMenu(CerterDef certerDef, String ending, Player p, Npc n, int index) {
 		final String[] names = certerDef.getCertNames();
 		p.message("How many certificates do you wish to trade in?");
@@ -117,7 +118,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		int itemID = certerDef.getItemID(index);
 		if (certAmount == 5) {
-			if (p.isIronMan(2)) {
+			if (p.isIronMan(IronmanMode.Ultimate.id())) {
 				p.message("As an Ultimate Iron Man. you cannot use certer bank exchange.");
 				return;
 			}
@@ -151,7 +152,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			}
 		}
 	}
-	
+
 	private void certMenu(CerterDef certerDef, String ending, Player p, Npc n, int index) {
 		final String[] names = certerDef.getCertNames();
 		p.message("How many " + certerDef.getType() + ending
@@ -171,7 +172,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		int itemID = certerDef.getItemID(index);
 		if (certAmount == 5) {
-			if (p.isIronMan(2)) {
+			if (p.isIronMan(IronmanMode.Ultimate.id())) {
 				p.message("As an Ultimate Iron Man. you cannot use certer bank exchange.");
 				return;
 			}
@@ -192,7 +193,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			certAmount += 1;
 			int itemAmount = certAmount * 5;
 			if (p.getInventory().countId(itemID) < itemAmount) {
-				p.message("You don't have that " + (ending.equals("") ? "much" : "many") 
+				p.message("You don't have that " + (ending.equals("") ? "much" : "many")
 						+ " " + certerDef.getType() + ending);
 				return;
 			}
@@ -204,7 +205,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			p.getInventory().add(new Item(certID, certAmount));
 		}
 	}
-	
+
 	private void infMenu(CerterDef certerDef, String ending, Player p, Npc n) {
 		String item;
 		switch(certerDef.getType()) {

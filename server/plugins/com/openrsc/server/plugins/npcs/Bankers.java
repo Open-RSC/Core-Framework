@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.event.rsc.GameNotifyEvent;
 import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -59,7 +60,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				"What is this place?");
 
 		if (menu == 0) {
-			if (player.isIronMan(2)) {
+			if (player.isIronMan(IronmanMode.Ultimate.id())) {
 				player.message("As an Ultimate Iron Man, you cannot use the bank.");
 				return;
 			}
@@ -185,7 +186,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						return;
 					}
-					if (player.getIronMan() > 0 && player.getIronManRestriction() == 0) {
+					if (player.getIronMan() > IronmanMode.None.id() && player.getIronManRestriction() == 0) {
 						message(player, npc, 1000, "Deleting your bankpin results in permanent iron man restriction",
 							"Are you sure you want to do it?");
 

@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.openrsc.client.R;
@@ -207,7 +211,7 @@ public class CacheUpdater extends Activity {
             builder.setTitle("Game Selection");
 
             // add a list
-            String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha testing)", "Open PK (alpha testing)", "Dev Testing"};
+            String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha testing)", "Open PK (alpha testing)", "Dev Testing", "Local Instance"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
                     case 0:
@@ -342,11 +346,66 @@ public class CacheUpdater extends Activity {
                         mainIntent_dev.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(mainIntent_dev);
                         finish();
+                        return;
+					case 5:
+						LinearLayout layout = new LinearLayout(CacheUpdater.this);
+
+						// TextView to enter ip
+						final EditText ipBox = new EditText(CacheUpdater.this);
+						ipBox.setHint("127.0.0.1");
+						layout.addView(ipBox);
+
+						// TextView to enter port
+						final EditText portBox = new EditText(CacheUpdater.this);
+						portBox.setHint("43594");
+						layout.addView(portBox);
+
+						new AlertDialog.Builder(CacheUpdater.this)
+							.setTitle("Local Instance")
+							.setMessage("Enter details for local instance")
+							.setView(layout)
+							.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+									String ip_local = "127.0.0.1";
+									String port_local = "43594";
+
+									if (!ipBox.getText().toString().trim().equals("")) {
+										ip_local = ipBox.getText().toString().trim();
+									}
+									if (!portBox.getText().toString().trim().equals("")) {
+										port_local = portBox.getText().toString().trim();
+									}
+
+									FileOutputStream fileout_local;
+									try {
+										fileout_local = new FileOutputStream(realPath.get() + "ip.txt");
+										OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
+										outputWriter.write(ip_local);
+										outputWriter.close();
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									try {
+										fileout_local = new FileOutputStream(realPath.get() + "port.txt");
+										OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
+										outputWriter.write(port_local);
+										outputWriter.close();
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									Intent mainIntent_dev = new Intent(CacheUpdater.this, GameActivity.class);
+									mainIntent_dev.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+									startActivity(mainIntent_dev);
+									finish();
+								}
+							})
+							.show();
                 }
             });
 
             AlertDialog dialog = builder.create();
-            dialog.show();
+
+			dialog.show();
         }
 
         @Override

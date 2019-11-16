@@ -1,5 +1,6 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.external.Gauntlets;
@@ -430,7 +431,7 @@ public class Inventory {
 		player.updateWornItems(affectedItem.getDef(player.getWorld()).getWieldPosition(),
 			player.getSettings().getAppearance().getSprite(affectedItem.getDef(player.getWorld()).getWieldPosition()),
 			affectedItem.getDef(player.getWorld()).getWearableId(), false);
-		
+
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
 				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(),null);
@@ -572,13 +573,16 @@ public class Inventory {
 			return;
 		}*/
 		/** iron men armours **/
-		else if ((item.getID() == 2135 || item.getID() == 2136 || item.getID() == 2137) && !player.isIronMan(1)) {
+		else if ((item.getID() == ItemId.IRONMAN_HELM.id() || item.getID() == ItemId.IRONMAN_PLATEBODY.id()
+			|| item.getID() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
 			player.message("You need to be an Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == 2138 || item.getID() == 2139 || item.getID() == 2140) && !player.isIronMan(2)) {
+		} else if ((item.getID() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getID() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
+			|| item.getID() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == 2141 || item.getID() == 2142 || item.getID() == 2143) && !player.isIronMan(3)) {
+		} else if ((item.getID() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getID() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
+			|| item.getID() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return false;
 		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
@@ -638,7 +642,7 @@ public class Inventory {
 		item.setWielded(true);
 		player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), item.getDef(player.getWorld()).getAppearanceId(),
 				item.getDef(player.getWorld()).getWearableId(), true);
-		
+
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
 			player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(),item);
@@ -686,8 +690,8 @@ public class Inventory {
 		deathItemsMap.values().forEach(elem -> deathItemsList.addAll(elem));
 		deathItemsMap.clear();
 		ListIterator<Item> iterator = deathItemsList.listIterator();
-		
-		if (!player.isIronMan(2)) {
+
+		if (!player.isIronMan(IronmanMode.Ultimate.id())) {
 			if (!player.isSkulled()) {
 				for (int items = 1; items <= 3 && iterator.hasNext(); items++) {
 					if (iterator.next().getDef(player.getWorld()).isStackable()) {
@@ -712,14 +716,14 @@ public class Inventory {
 				item.setWielded(false);
 			}
 			iterator.remove();
-			
+
 			log.addDroppedItem(item);
 			if (item.getDef(player.getWorld()).isUntradable()) {
 				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), player));
 			} else {
 				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
 				GroundItem groundItem = new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), dropOwner);
-				if (dropOwner.getIronMan() != 0) {
+				if (dropOwner.getIronMan() != IronmanMode.None.id()) {
 					groundItem.setAttribute("playerKill", true);
 				}
 				player.getWorld().registerItem(groundItem, 644000); // 10m 44s

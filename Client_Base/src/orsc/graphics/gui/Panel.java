@@ -215,6 +215,42 @@ public final class Panel {
 		}
 	}
 
+	public final int addHorizontalList(int x, int y, String entries[], int font, boolean useAltColour) {
+		try {
+			this.controlType[this.controlCount] = PanelControlType.HORIZONTAL_LIST;
+			this.controlVisible[this.controlCount] = true;
+			this.controlClicked[this.controlCount] = false;
+			this.controlArgInt[this.controlCount] = font;
+			this.controlUseAlternativeColour[this.controlCount] = useAltColour;
+			this.controlX[this.controlCount] = x;
+			this.controlY[this.controlCount] = y;
+			this.controlListEntryString[this.controlCount] = entries;
+			this.controlClickedListIndex[this.controlCount] = 0;
+			return this.controlCount++;
+		} catch (RuntimeException var10) {
+			throw GenUtil.makeThrowable(var10, "qa.LL(" + x + ',' + useAltColour + ','
+				+ "dummy" + ',' + entries.length + ',' + y + ',' + font + ')');
+		}
+	}
+
+	public final int addVerticalList(int x, int y, String entries[], int font, boolean useAltColour) {
+		try {
+			this.controlType[this.controlCount] = PanelControlType.CENTERED_LIST;
+			this.controlVisible[this.controlCount] = true;
+			this.controlClicked[this.controlCount] = false;
+			this.controlArgInt[this.controlCount] = font;
+			this.controlUseAlternativeColour[this.controlCount] = useAltColour;
+			this.controlX[this.controlCount] = x;
+			this.controlY[this.controlCount] = y;
+			this.controlListEntryString[this.controlCount] = entries;
+			this.controlClickedListIndex[this.controlCount] = 0;
+			return this.controlCount++;
+		} catch (RuntimeException var10) {
+			throw GenUtil.makeThrowable(var10, "qa.LL(" + x + ',' + ',' + useAltColour + ','
+				+ "dummy" + ',' + entries.length + ',' + y + ',' + font + ')');
+		}
+	}
+
 	public final int addScrollingList3(int x, int y, int width, int height, int listSize, int font,
 									   boolean useAltColor, int spaceHeight, int spaceTextHeight) {
 		try {

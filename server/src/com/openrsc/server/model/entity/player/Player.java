@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
@@ -81,7 +82,7 @@ public final class Player extends Mob {
 	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
 	private final Object outgoingPacketsLock = new Object();
 	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
-	private int IRON_MAN_MODE = 0;
+	private int IRON_MAN_MODE = IronmanMode.None.id();
 	private int IRON_MAN_RESTRICTION = 1;
 	private int IRON_MAN_HC_DEATH = 0;
 	public int lastMineTry = -1;
@@ -197,6 +198,10 @@ public final class Player extends Mob {
 	 * The time the player had a skull status from combat
 	 */
 	private long lastSkullEvent = 0;
+	/**
+	 * The time the player was charged
+	 */
+	private long lastChargeEvent = 0;
 	/**
 	 * Time of last trade/duel request
 	 */
@@ -383,6 +388,15 @@ public final class Player extends Mob {
 		this.IRON_MAN_MODE = i;
 	}
 
+	public void setOneXp(boolean isOneXp) {
+		if (getCache().hasKey("onexp_mode") && !isOneXp) {
+			getCache().remove("onexp_mode");
+		}
+		else if (!getCache().hasKey("onexp_mode") && isOneXp) {
+			getCache().store("onexp_mode", true);
+		}
+	}
+
 	public int getIronManRestriction() {
 		return IRON_MAN_RESTRICTION;
 	}
@@ -405,12 +419,28 @@ public final class Player extends Mob {
 	}
 
 	public boolean isIronMan(int mode) {
-		if (mode == 1 && getIronMan() == 1) {
+		if (mode == IronmanMode.Ironman.id() && getIronMan() == IronmanMode.Ironman.id()) {
 			return true;
-		} else if (mode == 2 && getIronMan() == 2) {
+		} else if (mode == IronmanMode.Ultimate.id() && getIronMan() == IronmanMode.Ultimate.id()) {
 			return true;
-		} else if (mode == 3 && getIronMan() == 3) {
+		} else if (mode == IronmanMode.Hardcore.id() && getIronMan() == IronmanMode.Hardcore.id()) {
 			return true;
+		} else if (mode == IronmanMode.Transfer.id() && getIronMan() == IronmanMode.Transfer.id()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isOneXp() {
+		if (getCache().hasKey("onexp_mode")) {
+			return getCache().getBoolean("onexp_mode");
+		}
+		return false;
+	}
+
+	public boolean isOneXp() {
+		if (getCache().hasKey("onexp_mode")) {
+			return getCache().getBoolean("onexp_mode");
 		}
 		return false;
 	}
@@ -570,9 +600,10 @@ public final class Player extends Mob {
 		}
 		chargeEvent.stop();
 		chargeEvent = null;
+		cache.remove("charge_remaining");
 	}
 
-	public void addCharge(int timeLeft) {
+	public void addCharge(long timeLeft) {
 		if (chargeEvent == null) {
 			chargeEvent = new DelayedEvent(getWorld(), this, timeLeft, "Charge Spell Removal") {
 				// 6 minutes taken from RS2.
@@ -700,6 +731,8 @@ public final class Player extends Mob {
 			updateTotalPlayed();
 			if (isSkulled())
 				updateSkullRemaining();
+			if (isCharged())
+				updateChargeRemaining();
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -738,9 +771,16 @@ public final class Player extends Mob {
 	private void updateSkullRemaining() {
 		if ((getCache().getLong("skull_remaining") <= 0) || (getCache().hasKey("skull_remaining") && !isSkulled())) { // Removes the skull remaining key once no longer needed
 			cache.remove("skull_remaining");
-		}
-		else if (getSkullTime() - System.currentTimeMillis() > 0) {
+		} else if (getSkullTime() - System.currentTimeMillis() > 0) {
 			cache.store("skull_remaining", (getSkullTime() - System.currentTimeMillis()));
+		}
+	}
+
+	private void updateChargeRemaining() {
+		if ((getCache().getLong("charge_remaining") <= 0) || (getCache().hasKey("charge_remaining") && !isCharged())) { // Removes the charge remaining key once no longer needed
+			cache.remove("charge_remaining");
+		} else if (getChargeTime() - System.currentTimeMillis() > 0) {
+			cache.store("charge_remaining", (getChargeTime() - System.currentTimeMillis()));
 		}
 	}
 
@@ -1299,6 +1339,16 @@ public final class Player extends Mob {
 		return 0;
 	}
 
+	private long getChargeExpires() {
+		if (getCache().hasKey("charge_remaining"))
+			return getCache().getLong("charge_remaining");
+		if (!getCache().hasKey("charge_remaining"))
+			getChargeTime();
+		else
+			return 0;
+		return 0;
+	}
+
 	public String getSleepword() {
 		return sleepword;
 	}
@@ -1402,13 +1452,21 @@ public final class Player extends Mob {
 	}
 
 	public void incQuestExp(int i, int amount) {
-		skills.addExperience(i, amount);
+		int appliedAmount = amount;
+		if (!isOneXp()) {
+			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
+		}
+		skills.addExperience(i, appliedAmount);
 	}
 
-	private double getExperienceRate(int skill) {
+	private List<Double> getExperienceRate(int skill) {
+		// total possible multiplier
 		double multiplier = 1.0;
+		// multiplier for the player
+		double effectiveMultiplier = 1.0;
+
 		/*
-		  Skilling Experience Rate
+		 Skilling Experience Rate
 		 */
 		if (skill >= 4 && skill <= getWorld().getServer().getConstants().getSkills().getSkillsCount() - 1) {
 			multiplier = getWorld().getServer().getConfig().SKILLING_EXP_RATE;
@@ -1419,8 +1477,9 @@ public final class Player extends Mob {
 				}
 			}
 		}
+
 		/*
-		  Combat Experience Rate
+		Combat Experience Rate
 		 */
 		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
 			multiplier = getWorld().getServer().getConfig().COMBAT_EXP_RATE;
@@ -1432,11 +1491,16 @@ public final class Player extends Mob {
 			}
 		}
 
+		if (!isOneXp()) {
+			effectiveMultiplier = multiplier;
+		}
+
 		/*
 		  Double Experience
 		 */
 		if (getWorld().getServer().getConfig().IS_DOUBLE_EXP) {
 			multiplier *= 2;
+			effectiveMultiplier *= 2;
 		}
 
 		/*
@@ -1448,10 +1512,13 @@ public final class Player extends Mob {
 				ActionSender.sendElixirTimer(this, 0);
 			} else {
 				multiplier += 1;
+				if (!isOneXp()) effectiveMultiplier += 1;
 			}
 		}
 
-		return multiplier;
+		double finalMultiplier = multiplier;
+		double finalEffectiveMultiplier = effectiveMultiplier;
+		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); }};
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
@@ -1492,11 +1559,14 @@ public final class Player extends Mob {
 				}
 			}
 		}
-		skillXP *= getExperienceRate(skill);
+		List<Double> multipliers = getExperienceRate(skill);
 		if (this.getParty() != null) {
 			PartyPlayer partyLeader = this.getParty().getLeader();
 			if (partyLeader.getShareExp() > 0) {
 				if (skill > 6) {
+					// apply combined multiplier
+					skillXP *= multipliers.get(0);
+					// todo: use effective multiplier when sharing to players on 1X
 					for (PartyPlayer p : this.getParty().getPlayers()) {
 						if (p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE) {
 							if (p.getPlayerReference().getUsername() != this.getUsername()) {
@@ -1507,23 +1577,29 @@ public final class Player extends Mob {
 						}
 					}
 					int p11 = partyLeader.getPartyMembersNotTired() - 1;
-					if(partyLeader.getPartyMembersNotTired() - 1 > 0){
+					if (partyLeader.getPartyMembersNotTired() - 1 > 0) {
 						int skill1 = skillXP / 4;
 						int p1 = partyLeader.getPartyMembersNotTired();
 						int p3 = partyLeader.getPartyMembersNotTired() - 1;
-						ActionSender.sendMessage(this, skill1 +" total exp. " + p1 + " members to share");
+						ActionSender.sendMessage(this, skill1 + " total exp. " + p1 + " members to share");
 						int shared = this.getExpShared() + skill1 / p1;
 						this.setExpShared(this.getExpShared() + skill1 / p1 * p3);
 						ActionSender.sendExpShared(this);
 						this.getParty().sendParty();
 					}
 				} else {
+					// cb skill -> apply effective multiplier
+					skillXP *= multipliers.get(1);
 					skills.addExperience(skill, (int) skillXP);
 				}
 			} else {
+				// no shared xp -> apply effective multiplier
+				skillXP *= multipliers.get(1);
 				skills.addExperience(skill, (int) skillXP);
 			}
 		} else {
+			// effective multiplier
+			skillXP *= multipliers.get(1);
 			skills.addExperience(skill, (int) skillXP);
 		}
 		// ActionSender.sendExperience(this, skill);
@@ -1770,8 +1846,8 @@ public final class Player extends Mob {
 			if (!isStaff())
 				getInventory().dropOnDeath(mob);
 		}
-		if (isIronMan(3)) {
-			updateHCIronman(1);
+		if (isIronMan(IronmanMode.Hardcore.id())) {
+			updateHCIronman(IronmanMode.Ironman.id());
 			ActionSender.sendIronManMode(this);
 			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
 		}
@@ -2154,6 +2230,10 @@ public final class Player extends Mob {
 		lastSkullEvent = timer;
 	}
 
+	public void setChargeTimer(long timer) {
+		lastChargeEvent = timer;
+	}
+
 	public void setAntidoteProtection() {
 		lastAntidote = System.currentTimeMillis();
 	}
@@ -2354,7 +2434,7 @@ public final class Player extends Mob {
 	public int getKills2() {
 		return kills2;
 	}
-	
+
 	public int getExpShared() {
 		return expShared;
 	}
@@ -2371,7 +2451,7 @@ public final class Player extends Mob {
 		this.kills2 = i;
 		ActionSender.sendKills2(this);
 	}
-	
+
 	public void setExpShared(int i) {
 		this.expShared = i;
 		ActionSender.sendExpShared(this);
@@ -2518,7 +2598,7 @@ public final class Player extends Mob {
 			return false;
 		}
 	}
-	
+
 	public Boolean getCustomUI() {
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_UI) {
 			if (getCache().hasKey("custom_ui")) {
@@ -2992,6 +3072,11 @@ public final class Player extends Mob {
 		Item itemFinal = new Item(item.getID(), item.getAmount());
 		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
 			itemFinal.setAttribute("npcdrop", true);
+		}
+
+		if (item.getAttribute("isIronmanItem", false) && getIronMan() == IronmanMode.None.id()) {
+			message("That belongs to an Ironman player.");
+			return false;
 		}
 
 		if (!this.getInventory().canHold(itemFinal)) {

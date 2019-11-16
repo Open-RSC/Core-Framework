@@ -328,7 +328,7 @@ public class PacketHandler {
 				// Kills2
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
-			
+
 			else if (opcode == 98)
 				mc.setExpShared(packetsIncoming.getShort());
 
@@ -819,7 +819,7 @@ public class PacketHandler {
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, properMagicTreeName, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
-		int wantCustomUI;
+		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate;
 
 		String logoSpriteID;
 
@@ -893,6 +893,9 @@ public class PacketHandler {
 			wantLeftclickWebs = this.getClientStream().getByte(); //67
 			npcKillMessages = this.getClientStream().getByte(); //68
 			wantCustomUI = this.getClientStream().getUnsignedByte(); //69
+			wantGlobalFriend = this.getClientStream().getUnsignedByte(); //70
+			characterCreationMode = this.getClientStream().getUnsignedByte(); //71
+			skillingExpRate = this.getClientStream().getUnsignedByte(); //72
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -963,6 +966,9 @@ public class PacketHandler {
 			wantLeftclickWebs = packetsIncoming.getByte(); //67
 			npcKillMessages = packetsIncoming.getByte(); //68
 			wantCustomUI = packetsIncoming.getUnsignedByte(); //69
+			wantGlobalFriend = packetsIncoming.getUnsignedByte(); //70
+			characterCreationMode = packetsIncoming.getUnsignedByte(); //71
+			skillingExpRate = packetsIncoming.getUnsignedByte(); //72
 		}
 
 		if (Config.DEBUG) {
@@ -1035,7 +1041,10 @@ public class PacketHandler {
 					"\nC_MOVE_PER_FRAME " + movePerFrame + // 66
 					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs + // 67
 					"\nS_NPC_KILL_MESSAGES " + npcKillMessages + // 68
-					"\nS_WANT_CUSTOM_UI " + wantCustomUI // 69
+					"\nS_WANT_CUSTOM_UI " + wantCustomUI + // 69
+					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
+					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
+					"\nS_SKILLING_EXP_RATE" + skillingExpRate //72
 					);
 		}
 
@@ -1110,6 +1119,9 @@ public class PacketHandler {
 		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //67
 		props.setProperty("S_NPC_KILL_MESSAGES", npcKillMessages == 1 ? "true" : "false"); //68
 		props.setProperty("S_WANT_CUSTOM_UI", wantCustomUI == 1 ? "true" : "false"); //69
+		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
+		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
+		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

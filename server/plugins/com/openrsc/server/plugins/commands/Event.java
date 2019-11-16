@@ -359,7 +359,7 @@ public final class Event implements CommandListener {
 			}
 
 			if (currentIp == null) {
-				player.message(messagePrefix + "An unknown error has occured!");
+				player.message(messagePrefix + "An unknown error has occurred!");
 				return;
 			}
 
