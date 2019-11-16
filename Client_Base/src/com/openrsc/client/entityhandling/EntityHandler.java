@@ -2136,7 +2136,15 @@ public class EntityHandler {
 			e.printStackTrace();
 		}*/
 	}
-
+	
+	private static void loadPkBotDefinitions() {
+		int[] sprites;
+		int i = npcs.size() - 1;
+		sprites = new int[]{0, 1, 2, -1, -1, 8, 87, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("PKBOT", "to follow", "", 39, 39, 39, 39, true, sprites, 45167296, 28067296, 33415270, 45523536, 145, 220, 6, 6, 5, i++));
+		
+	}
+	
 	private static void loadItemDefinitions() {
 		items.add(new ItemDef("Iron Mace", "A spiky mace", "", 63, 0, "items:0", false, true, 16, 15654365, false, false, 1290, -1, 0));
 		items.add(new ItemDef("Iron Short Sword", "A razor sharp sword", "", 91, 1, "items:1", false, true, 16, 15654365, false, false, 1291, -1, 1));
@@ -7056,6 +7064,7 @@ public class EntityHandler {
 	public static void load(boolean loadMembers) {
 		loadNpcDefinitionsA();
 		loadNpcDefinitionsB();
+		loadPkBotDefinitions();
 		loadItemDefinitions();
 		loadTextureDefinitions();
 		loadAnimationDefinitions();
