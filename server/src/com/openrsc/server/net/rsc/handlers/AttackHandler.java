@@ -62,10 +62,12 @@ public class AttackHandler implements PacketHandler {
 				return;
 			}
 			if (n.isPkBot() && !player.getLocation().inWilderness()) {
+				player.message("You must be in the wilderness to attack this mob");
 				player.resetPath();
 				return;
 			}
 			if (n.isPkBot() && !n.getLocation().inWilderness()) {
+				player.message("I can't get close enough");
 				player.resetPath();
 				return;
 			}
