@@ -7209,7 +7209,7 @@ public final class mudclient implements Runnable {
 											this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
 												levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
 												"Attack",
-												"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+												"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
 													+ var11);
 										}
 									}
