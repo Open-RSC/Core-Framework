@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -47,6 +46,7 @@ public class AttackHandler implements PacketHandler {
 				player.resetPath();
 				return;
 			}
+			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
 			if (pl.getLocation().inWilderness() && System.currentTimeMillis() - pl.getLastRun() < 3000) {
 				//player.resetPath();
@@ -62,10 +62,12 @@ public class AttackHandler implements PacketHandler {
 				return;
 			}
 			if (n.isPkBot() && !player.getLocation().inWilderness()) {
+				player.message("You must be in the wilderness to attack this mob");
 				player.resetPath();
 				return;
 			}
 			if (n.isPkBot() && !n.getLocation().inWilderness()) {
+				player.message("I can't get close enough");
 				player.resetPath();
 				return;
 			}
@@ -101,7 +103,7 @@ public class AttackHandler implements PacketHandler {
 					}
 					player.startCombat(mob);
 					if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
-						if(player.getParty() != null){
+						if (player.getParty() != null) {
 							player.getParty().sendParty();
 						}
 					}
