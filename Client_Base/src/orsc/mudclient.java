@@ -14143,8 +14143,9 @@ public final class mudclient implements Runnable {
 				crownID = 0;
 
 			if (this.messageTabSelected != MessageTab.ALL) {
-				if ((type == MessageType.FRIEND_STATUS || type == MessageType.PRIVATE_RECIEVE
-					|| type == MessageType.PRIVATE_SEND) && this.messageTabSelected != MessageTab.PRIVATE) {
+				if (((type == MessageType.FRIEND_STATUS || type == MessageType.PRIVATE_RECIEVE
+					|| type == MessageType.PRIVATE_SEND) && this.messageTabSelected != MessageTab.PRIVATE)
+					|| type == MessageType.GLOBAL_CHAT && this.messageTabSelected != MessageTab.PRIVATE) {
 					this.messageTabActivity_Private = 200;
 				}
 
@@ -14152,8 +14153,7 @@ public final class mudclient implements Runnable {
 					this.messageTabActivity_Chat = 100;
 				}
 
-				if (type == MessageType.QUEST && this.messageTabSelected != MessageTab.QUEST
-					|| type == MessageType.GLOBAL_CHAT && this.messageTabSelected != MessageTab.QUEST) {
+				if (type == MessageType.QUEST && this.messageTabSelected != MessageTab.QUEST) {
 					this.messageTabActivity_Quest = 200;
 				}
 				if (type == MessageType.CLAN_CHAT && this.messageTabSelected != MessageTab.CLAN) {
