@@ -2099,11 +2099,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16761440, 143190, 143190, 15523536, 145, 230, 6, 6, 5, i++));
 		sprites = new int[]{241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Gaia", "The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
-		sprites = new int[]{0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{0, 318, 319, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Iron Man", "An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 248, 249, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{0, 321, 322, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ultimate Iron Man", "An Ultimate Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{323, 324, 325, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Hardcore Iron Man", "A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Greatwood", "A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
@@ -4962,7 +4962,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("hood1", 0, 0, true, false, 0)); //312 - fishing hood
 			animations.add(new AnimationDef("warriorcape", 0, 0, true, false, 0)); //313 - warrior cape
 			animations.add(new AnimationDef("spottedcape", 7692086, 0, true, false, 0)); //314 - spotted cape
-			animations.add(new AnimationDef("attackcape", 0, 0, true, false, 0)); //317 - attack cape
+			animations.add(new AnimationDef("attackcape", 0, 0, true, false, 0)); //315 - attack cape
 
 			// Easter basket (missing, using peppermintstick instead) and Gaia NPC (missing, using evilhoodie instead)
 			animations.add(new AnimationDef("evilhoodie", 0, 0, true, false, 0)); //316 - NPC Gaia (missing)
