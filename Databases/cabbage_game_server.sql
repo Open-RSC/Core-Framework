@@ -6936,17 +6936,17 @@ VALUES (788, 787, 'Shadow Warrior', 'A sinsistar shadowy figure', '', '', 61, 68
         6, 6, 5, 0),
        (799, 798, 'Gaia', 'The earth queen with a rotten heart', '', '', 78, 79, 79, 80, 79, 0, 1, 1, 30, 241, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0),
-       (801, 799, 'Iron Man', 'An Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 245, 246, -1, -1, -1, -1, -1,
+       (800, 799, 'Iron Man', 'An Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 245, 246, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, 1),
-       (802, 800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 248, 249,
+       (801, 800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 248, 249,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1),
-       (803, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 250, 251, 252,
+       (802, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, 0, 0, 0, 0, 45, 250, 251, 252,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1),
-       (804, 802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, 300, 0, 1, 1, 30, 309, -1, -1,
+       (803, 802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, 300, 0, 1, 1, 30, 309, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0),
-       (805, 803, 'Wizard Sedridor', 'An old wizard', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81,
+       (804, 803, 'Wizard Sedridor', 'An old wizard', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81,
         -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0),
-	(806, 804, 'Pk Bot', '', '', '', 30, 65, 46, 1, 58, 39, 0, 1, 30, 6, 1, 2, -1, -1, 77, 76, 81,
+       (805, 804, 'Pk Bot', '', '', '', 30, 65, 46, 1, 58, 39, 0, 1, 30, 6, 1, 2, -1, -1, 77, 76, 81,
         -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0);
 DROP TABLE IF EXISTS `openrsc_npcdrops`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdrops`
@@ -40963,7 +40963,11 @@ VALUES (1, 'Where were you born?'),
        (17, 'What is your favourite food?'),
        (18, 'What is your favourite movie?');
 
-ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `skulled`;
-ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `charged`;
-ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `onexp_mode`;
-ALTER TABLE `openrsc_players` DROP COLUMN IF EXISTS `forum_active`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `skulled`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `charged`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `onexp_mode`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `forum_active`;
