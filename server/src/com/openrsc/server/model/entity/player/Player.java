@@ -1457,6 +1457,8 @@ public final class Player extends Mob {
 		double multiplier = 1.0;
 		// multiplier for the player
 		double effectiveMultiplier = 1.0;
+		// minimum multiplier (used shared xp party)
+		double minMultiplier = 1.0;
 
 		/*
 		 Skilling Experience Rate
@@ -1494,6 +1496,7 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().IS_DOUBLE_EXP) {
 			multiplier *= 2;
 			effectiveMultiplier *= 2;
+			minMultiplier *= 2;
 		}
 
 		/*
@@ -1511,7 +1514,8 @@ public final class Player extends Mob {
 
 		double finalMultiplier = multiplier;
 		double finalEffectiveMultiplier = effectiveMultiplier;
-		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); }};
+		double finalMinMultiplier = minMultiplier;
+		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); add(finalMinMultiplier); }};
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
@@ -1559,14 +1563,15 @@ public final class Player extends Mob {
 				if (skill > 6) {
 					// apply combined multiplier
 					skillXP *= multipliers.get(0);
-					// todo: use effective multiplier when sharing to players on 1X
+					double ratio;
 					for (PartyPlayer p : this.getParty().getPlayers()) {
 						if (p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE) {
+							ratio = p.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
 							if (p.getPlayerReference().getUsername() != this.getUsername()) {
-								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + skillXP * 4);
+								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
 								ActionSender.sendFatigue(this);
 							}
-							p.getPlayerReference().getSkills().addExperience(skill, (int) skillXP / p.getPartyMembersNotTired() - 1);
+							p.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / p.getPartyMembersNotTired() - 1);
 						}
 					}
 					int p11 = partyLeader.getPartyMembersNotTired() - 1;
