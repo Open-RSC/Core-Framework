@@ -3581,19 +3581,19 @@ public class EntityHandler {
 		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 15, -1, "items:438", true, false, 0, 0, false, false, -1, 1289, 2134));
 
 		// Ironman
-		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 6, -1, "items:154", false, true, 33, 11189164, false, true, -1, -1, 2135));
-		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 8, -1, "items:560", false, true, 322, 11189164, false, true, -1, -1, 2136));
-		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:280", false, true, 644, 11189164, false, true, -1, -1, 2137));
+		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 6, -1, "items:6", false, true, 33, 11189164, false, true, -1, -1, 2135));
+		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 8, -1, "items:8", false, true, 322, 11189164, false, true, -1, -1, 2136));
+		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:9", false, true, 644, 11189164, false, true, -1, -1, 2137));
 
 		// Ultimate ironman
-		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 6, -1, "items:154", false, true, 33, 16768685, false, true, -1, -1, 2138));
-		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 8, -1, "items:560", false, true, 322, 16768685, false, true, -1, -1, 2139));
-		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:280", false, true, 644, 16768685, false, true, -1, -1, 2140));
+		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 6, -1, "items:6", false, true, 33, 16768685, false, true, -1, -1, 2138));
+		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 8, -1, "items:8", false, true, 322, 16768685, false, true, -1, -1, 2139));
+		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:9", false, true, 644, 16768685, false, true, -1, -1, 2140));
 
 		// Hardcore ironman
-		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 6, -1, "items:154", false, true, 33, 10027084, false, true, -1, -1, 2141));
-		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 8, -1, "items:560", false, true, 322, 10027084, false, true, -1, -1, 2142));
-		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:280", false, true, 644, 10027084, false, true, -1, -1, 2143));
+		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 6, -1, "items:6", false, true, 33, 10027084, false, true, -1, -1, 2141));
+		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 8, -1, "items:8", false, true, 322, 10027084, false, true, -1, -1, 2142));
+		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:9", false, true, 644, 10027084, false, true, -1, -1, 2143));
 
 		// Orange feather helms
 		items.add(new ItemDef("Large Bronze Helmet", "A full face helmet with orange feather", "", 44, -1, "items:455", false, true, 33, 16737817, false, false, 2145, -1, 2144));
@@ -3807,6 +3807,7 @@ public class EntityHandler {
 		// Fox mask
 		items.add(new ItemDef("Fox mask", "Struttin' like a fox", "", 0, 86, "items:509", false, true, 32, 16730368, 16446686, false, false, 2324, -1, 2323));
 		items.add(new ItemDef("Fox mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2323, 2324));
+
 	}
 
 	// Bank note items

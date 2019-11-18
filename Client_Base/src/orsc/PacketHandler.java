@@ -469,6 +469,7 @@ public class PacketHandler {
 	}
 
 	private void setIronmanOptions() {
+		int p = packetsIncoming.getByte();
 		int iAction = packetsIncoming.getByte();
 		if (iAction == 0) {
 			mc.getIronmanInterface().setIronManMode(packetsIncoming.getByte());
