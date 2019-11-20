@@ -71,6 +71,9 @@ public class AttackHandler implements PacketHandler {
 				player.resetPath();
 				return;
 			}
+			if (n.isPkBot() && System.currentTimeMillis() - n.getCombatTimer() < 3000){
+				return;
+			}
 		}
 
 		player.setStatus(Action.ATTACKING_MOB);
@@ -81,6 +84,7 @@ public class AttackHandler implements PacketHandler {
 				public void execute() {
 					player.resetPath();
 					player.resetFollowing();
+
 					if (mob.inCombat() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 						player.message("I can't get close enough");
 						return;
