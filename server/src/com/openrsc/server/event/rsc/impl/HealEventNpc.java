@@ -93,9 +93,15 @@ public class HealEventNpc extends GameTickEvent {
 				if(owner.getSkills().getLevel(Skills.HITPOINTS) + 12 > owner.getSkills().getMaxStat(Skills.HITPOINTS)) {
 					owner.getSkills().setLevel(Skills.HITPOINTS, owner.getSkills().getMaxStat(Skills.HITPOINTS));
 					owner.setHeals(owner.getHeals() - 1);
+					for (Player p : owner.getWorld().getPlayers()) {
+						p.message("heals : " + owner.getHeals());
+					}
 				} else {
 					owner.getSkills().setLevel(Skills.HITPOINTS, cur + 12);
 					owner.setHeals(owner.getHeals() - 1);
+					for (Player p : owner.getWorld().getPlayers()) {
+						p.message("heals : " + owner.getHeals());
+					}
 				}
 			} else if(owner.inCombat() && owner.getLocation().inWilderness()){
 				owner.retreatFromWild();
