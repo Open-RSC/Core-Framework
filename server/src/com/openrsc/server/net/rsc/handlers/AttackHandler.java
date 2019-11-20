@@ -71,7 +71,7 @@ public class AttackHandler implements PacketHandler {
 				player.resetPath();
 				return;
 			}
-			if (n.isPkBot() && System.currentTimeMillis() - n.getCombatTimer() < 3000){
+			if (n.isPkBot() && System.currentTimeMillis() - n.getCombatTimer() < 3000 && System.currentTimeMillis() - n.getCombatTimer() != 0){
 				return;
 			}
 		}

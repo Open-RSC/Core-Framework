@@ -878,7 +878,13 @@ public abstract class Mob extends Entity {
 		synchronized (victim) {
 			boolean gotUnderAttack = false;
 
+			
 			if (this.isPlayer()) {
+				if (victim.isNpc()) {
+					if (((Npc) victim).isPkBot()) {
+						((Player) this).setSkulledOn(((Npc) victim));
+					}
+				}
 				((Player) this).resetAll();
 				((Player) this).setStatus(Action.FIGHTING_MOB);
 				((Player) this).produceUnderAttack();
@@ -912,7 +918,8 @@ public abstract class Mob extends Entity {
 			victim.setOpponent(this);
 			victim.setCombatTimer();
 
-			if (victim.isPlayer()) {
+				
+				if (victim.isPlayer()) {
 				assert victim instanceof Player;
 				Player playerVictim = (Player) victim;
 				if (this.isPlayer()) {

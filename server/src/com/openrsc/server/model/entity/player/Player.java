@@ -2292,6 +2292,15 @@ public final class Player extends Mob {
 
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
+	
+	public void setSkulledOn(Npc n) {
+		n.addAttackedBy(this);
+		if (System.currentTimeMillis() - getSettings().lastAttackedBy(n) > 1200000) {
+			addSkull(1200000);
+			cache.store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
+			cache.store("last_skull", System.currentTimeMillis() - getSettings().lastAttackedBy(n)); // Sets the last time a player had a skull
+		}
+	}
 
 	public void setSpellFail() {
 		lastSpellCast = System.currentTimeMillis() + 20000;
