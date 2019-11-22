@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity;
 
-import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -674,6 +673,8 @@ public abstract class Mob extends Entity {
 		return statRestorationEvent;
 	}
 
+	public void tryResyncStatEvent() { statRestorationEvent.tryResyncStat(); }
+
 	public UpdateFlags getUpdateFlags() {
 		return updateFlags;
 	}
@@ -1020,7 +1021,7 @@ public abstract class Mob extends Entity {
 		Path path = new Path(this, PathType.WALK_TO_POINT);
 		{
 			newLoc = new Point(x, y);
-			if(this.nextStep2(this.getX(), this.getY(), newLoc) != null){	
+			if(this.nextStep2(this.getX(), this.getY(), newLoc) != null){
 				path.addStep(x, y);
 				path.finish();
 			}

@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,14 +11,21 @@ import com.openrsc.server.model.world.World;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author n0m
+ * @revised Luis
+ * Hit restoration event is independent of the other stats
+ * The restoration tick may be re-synced if player has no stats to restore and new
+ * trigger occurs such as drinking a potion
  */
 public class StatRestorationEvent extends GameTickEvent {
 
 	private HashMap<Integer, Integer> restoringStats = new HashMap<Integer, Integer>();
-	private long lastRestoration = System.currentTimeMillis();
+	private AtomicReference<Boolean> restoringHits = new AtomicReference<Boolean>(false);
+	private long lastStatRestoration = System.currentTimeMillis();
+	private long lastHitRestoration = System.currentTimeMillis();
 
 	public StatRestorationEvent(World world, Mob mob) {
 		super(world, mob, 1, "Stat Restoration Event");
@@ -26,7 +34,8 @@ public class StatRestorationEvent extends GameTickEvent {
 	@Override
 	public void run() {
 
-		boolean restored = false;
+		boolean restoredStats = false;
+		boolean restoredHits = false;
 
 		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < 18; skillIndex++) {
@@ -35,44 +44,61 @@ public class StatRestorationEvent extends GameTickEvent {
 			}
 		}
 
-		// Tick each skill.
+		// Check for Hits
+		if (restoringHits.get()) {
+			long delay = 64000; // 64 seconds
+			if (getOwner().isPlayer()) {
+				Player player = (Player) getOwner();
+				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_HEAL)) {
+					delay = 32000;
+				}
+			}
+			if (System.currentTimeMillis() - this.lastHitRestoration > delay) {
+				normalizeLevel(Skills.HITS);
+				restoredHits = true;
+				if (getOwner().isPlayer() && ((Player) getOwner()).getParty() != null) {
+					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
+					if (getWorld().getServer().getConfig().WANT_PARTIES) {
+						if (((Player) getOwner()).getParty() != null) {
+							((Player) getOwner()).getParty().sendParty();
+						}
+					}
+				}
+			}
+		}
+
+		// Every other skill
 		Iterator<Entry<Integer, Integer>> it = restoringStats.entrySet().iterator();
 		while (it.hasNext()) {
 
 			Entry<Integer, Integer> set = it.next();
 			int stat = set.getKey();
 
-			long delay = 60000; // 60 seconds
+			long delay = 64000; // 64 seconds
 			if (getOwner().isPlayer()) {
 				Player player = (Player) getOwner();
-				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_HEAL) && stat == 3) {
-					delay = 30000;
-				} else if (player.getPrayers().isPrayerActivated(Prayers.RAPID_RESTORE) && stat != 3) {
-					delay = 30000;
+				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_RESTORE)) {
+					delay = 32000;
 				}
 			}
-			if (System.currentTimeMillis() - this.lastRestoration > delay) {
+			if (System.currentTimeMillis() - this.lastStatRestoration > delay) {
 				normalizeLevel(stat);
-				restored = true;
-				if(getOwner().isPlayer() && ((Player) getOwner()).getParty() != null){
-					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
-					if (getWorld().getServer().getConfig().WANT_PARTIES) {
-						if(((Player) getOwner()).getParty() != null){
-							((Player) getOwner()).getParty().sendParty();
-						}
-					}
-				}
+				restoredStats = true;
 				if (restoringStats.get(stat) == 0) {
 					it.remove();
-					if (getOwner().isPlayer() && stat != 3) {
+					if (getOwner().isPlayer()) {
 						Player p = (Player) getOwner();
-						p.message("Your " + getOwner().getWorld().getServer().getConstants().getSkills().getSkillName(stat) + " ability has returned to normal.");
+						p.message("Your " + getOwner().getWorld().getServer().getConstants().getSkills().getSkillName(stat).toLowerCase()
+							+ " ability has returned to normal.");
 					}
 				}
 			}
 		}
-		if (restored) {
-			this.lastRestoration = System.currentTimeMillis();
+		if (restoredHits) {
+			this.lastHitRestoration = System.currentTimeMillis();
+		}
+		if (restoredStats) {
+			this.lastStatRestoration = System.currentTimeMillis();
 		}
 	}
 
@@ -85,25 +111,51 @@ public class StatRestorationEvent extends GameTickEvent {
 	private void normalizeLevel(int skill) {
 		int cur = getOwner().getSkills().getLevel(skill);
 		int norm = getOwner().getSkills().getMaxStat(skill);
+		int diff = 0;
 
 		if (cur > norm) {
-			getOwner().getSkills().setLevel(skill, cur - 1);
+			getOwner().getSkills().setLevel(skill, cur - 1, true);
+			diff = -1;
 		} else if (cur < norm) {
-			getOwner().getSkills().setLevel(skill, cur + 1);
+			getOwner().getSkills().setLevel(skill, cur + 1, true);
+			diff = 1;
 		}
 
-		if (cur == norm)
-			restoringStats.put(skill, 0);
+		cur += diff;
+		if (cur == norm) {
+			if (skill == Skills.HITS) {
+				restoringHits.set(false);
+			} else {
+				restoringStats.put(skill, 0);
+			}
+		}
 	}
 
 	private void checkAndStartRestoration(int id) {
 		int curStat = getOwner().getSkills().getLevel(id);
 		int maxStat = getOwner().getSkills().getMaxStat(id);
-		if (restoringStats.containsKey(id)) {
-			return;
+		boolean toRestore = curStat > maxStat || curStat < maxStat;
+
+		if (id == Skills.HITS) {
+			if (restoringHits.get()) {
+				return;
+			}
+			if (toRestore) {
+				restoringHits.set(true);
+			}
+		} else {
+			if (restoringStats.containsKey(id)) {
+				return;
+			}
+			if (toRestore) {
+				restoringStats.put(id, 1);
+			}
 		}
-		if (curStat > maxStat || curStat < maxStat) {
-			restoringStats.put(id, 1);
+	}
+
+	public void tryResyncStat() {
+		if (restoringStats.size() == 0) {
+			this.lastStatRestoration = System.currentTimeMillis();
 		}
 	}
 }
