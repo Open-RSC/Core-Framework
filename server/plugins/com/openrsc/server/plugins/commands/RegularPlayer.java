@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.content.clan.ClanInvite;
+import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.model.entity.player.Group;
@@ -322,6 +323,15 @@ public final class RegularPlayer implements CommandListener {
 			player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
 		} else if (cmd.equalsIgnoreCase("leaveparty")) {
 			player.getParty().removePlayer(player.getUsername());
+		} else if (cmd.equalsIgnoreCase("joinclan")) {
+			String clanToJoin = args[0].replace("_", " ");
+			if (player.getWorld().getClanManager().getClan(clanToJoin) != null) {
+				if (player.getWorld().getClanManager().getClan(clanToJoin).getAllowSearchJoin() == 0) {
+					ClanInvite.createClanJoinRequest(player.getWorld().getClanManager().getClan(clanToJoin), player);
+				} else {
+					player.message(messagePrefix + "This clan is not accepting join requests");
+				}
+			}
 		} else if (cmd.equalsIgnoreCase("shareloot")) {
 			if (player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)) {
 				for (PartyPlayer m : player.getParty().getPlayers()) {

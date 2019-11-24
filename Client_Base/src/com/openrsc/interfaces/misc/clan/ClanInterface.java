@@ -389,7 +389,8 @@ public final class ClanInterface {
 			drawSubmitButton(graphics, x + 7, newY - 20, 394, 28, 18, 1, "Send Clan Request", false, new ButtonHandler() {
 				@Override
 				void handle() {
-					// MAGIC
+					getClient().sendCommandString("joinclan " + vc.getClanName());
+					//setVisible(false);
 				}
 			});
 		} else {

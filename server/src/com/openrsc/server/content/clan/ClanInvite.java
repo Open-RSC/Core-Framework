@@ -68,6 +68,20 @@ public class ClanInvite {
 			ActionSender.sendClanInvitationGUI(invited, player.getClan().getClanName(), player.getUsername());
 		}
 	}
+	public static void createClanJoinRequest(Clan c, Player requestor) {
+
+		if (requestor.getClan() != null) {
+			return;
+		}
+
+		if (c.getPlayers().size() >= Constants.MAX_CLAN_SIZE) {
+			requestor.message("This clan has reached the maximum clan members limit");
+			return;
+		}
+
+		requestor.message("You have joined " + c.getClanName());
+		c.addPlayer(requestor);
+	}
 
 	private void startTimeoutCounter() {
 		timeOutEvent = new SingleEvent(inviter.getWorld(), null, 60000, "Clan Invite") {
