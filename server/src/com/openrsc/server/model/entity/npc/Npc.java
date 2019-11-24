@@ -317,7 +317,7 @@ public class Npc extends Mob {
 	private NPCLoc loc;
 	private int armourPoints = 1;
 	
-	private int heals = 25;
+	private int heals = 24;
 	public int getHeals() {
 		return heals;
 	}
@@ -346,9 +346,6 @@ public class Npc extends Mob {
 			Point walkTo = Point.location(DataConversions.random(101, 114),
 			DataConversions.random(427, 428));
 			walk(walkTo.getX(), walkTo.getY());
-			for (Player p : getWorld().getPlayers()) {
-				p.message("85");
-			}
 		}
 	}
 	public void retreatFromWild2() {
@@ -622,14 +619,14 @@ public class Npc extends Mob {
 
 	public int getWeaponAimPoints() {
 		if (this.getID() == 804) {
-			return 32;//m2h
+			return 45;//a2h
 		} else
 			return weaponAimPoints;
 	}
 
 	public int getWeaponPowerPoints() {
 		if (this.getID() == 804) {
-			return 42;//m2h
+			return 55;//a2h+str ammy
 		} else
 			return weaponPowerPoints;
 	}

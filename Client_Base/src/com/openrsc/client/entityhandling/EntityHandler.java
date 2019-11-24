@@ -2142,7 +2142,7 @@ public class EntityHandler {
 		int i = npcs.size() - 1;
 		if (Config.S_WANT_PK_BOTS) {
 			sprites = new int[]{0, 1, 2, -1, -1, 8, 87, -1, -1, -1, -1, -1};
-			npcs.add(new NPCDef("PKBOT", "to follow", "", 39, 39, 39, 39, true, sprites, 45167296, 28067296, 33415270, 45523536, 145, 220, 6, 6, 5, i++));
+			npcs.add(new NPCDef("PKBOT", "to follow", "", 30, 59, 48, 1, true, sprites, 45167296, 28067296, 33415270, 45523536, 145, 220, 6, 6, 5, i++));
 		}
 	}
 

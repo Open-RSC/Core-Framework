@@ -53,7 +53,7 @@ public class NpcBehavior {
 				final GameObject object = npc.getViewArea().getGameObject(objectLocation);
 				if (npc.getHeals() < 5 && npc.getLocation().equals(byDoor) || npc.getLocation().equals(byDoor2) && object.getID() == 64) {
 					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
-					npc.walk(103, 510);
+					npc.walkToEntityAStar2(103, 510);
 				}
 				if (npc.getHeals() > 17 && npc.getLocation().equals(byDoor3) || npc.getLocation().equals(byDoor4) && object.getID() == 64) {
 					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
@@ -65,7 +65,7 @@ public class NpcBehavior {
 					});
 				}
 				if (npc.inCombat()) {
-					npc.setWield(52);
+					npc.setWield(51);
 					npc.setWield2(80);
 				}
 				if (npc.getHeals() < 1 && !npc.inCombat() && npc.getLocation().inWilderness()) {
@@ -81,7 +81,7 @@ public class NpcBehavior {
 						npc.resetRange();
 					} else if (!p5.inCombat()) {
 						target = p5;
-						npc.setWield(52);
+						npc.setWield(51);
 						npc.setWield2(80);
 						npc.resetRange();
 					} else if (p5.inCombat()) {
@@ -100,7 +100,6 @@ public class NpcBehavior {
 				if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getOpponent().getSkills().getLevel(Skills.HITPOINTS)) {
 					if (npc.getHeals() > 0) {
 						retreat();
-						//npc.setWield(252);
 						lastRetreat = System.currentTimeMillis();
 						npc.getWorld().getServer().getGameEventHandler().add(new HealEventNpc(npc.getWorld(), npc));
 					} else if (npc.getLocation().inWilderness()) {
@@ -169,7 +168,7 @@ public class NpcBehavior {
 								if (npc.nextStep(npc.getX(), npc.getY(), p5) == null) {
 								} else {
 									setFighting(target);
-									npc.setWield(52);
+									npc.setWield(51);
 									npc.setWield2(80);
 									npc.setSkulledOn(((Player) target));
 									//showBubbleNpc(npc, new Item(373));
@@ -472,7 +471,7 @@ public class NpcBehavior {
 
 			Point walkTo = Point.location(DataConversions.random(101, 114),
 				DataConversions.random(427, 428));
-			npc.walk(walkTo.getX(), walkTo.getY());
+			npc.walkToEntityAStar2(walkTo.getX(), walkTo.getY());
 		}
 	}
 
@@ -480,7 +479,7 @@ public class NpcBehavior {
 		if (npc.getLocation().inWilderness()) {
 			state = State.RETREAT;
 			//npc.walk(walkTo.getX(), walkTo.getY());
-			npc.walkToEntityAStar2(103, 510);
+			npc.walkToEntityAStar2(103, 510);//this is causing teleport
 			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 80000, "Npc walk back to wild") {
 				public void run() {
 					npc.walkToEntityAStar2(108, 425);
@@ -488,18 +487,6 @@ public class NpcBehavior {
 					stop();
 				}
 			});
-			/*npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 25000, "Npc walk to bank2") {
-				public void run() {
-					npc.walkToEntityAStar2(110, 506);
-					stop();
-				}
-			});
-			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 35000, "Npc walk to bank3") {
-				public void run() {
-					npc.walkToEntityAStar2(103, 512);
-					stop();
-				}
-			});*/
 			lastMovement = System.currentTimeMillis();
 		}
 	}
