@@ -80,12 +80,20 @@ public class Skills {
 		sendUpdate(skill);
 	}
 
-	public void setLevel(int skill, int level) {
+	public void setLevel(int skill, int level, boolean fromRestoreEvent) {
 		levels[skill] = level;
 		if (levels[skill] <= 0) {
 			levels[skill] = 0;
 		}
 		sendUpdate(skill);
+		if (skill != com.openrsc.server.constants.Skills.PRAYER
+			&& skill != com.openrsc.server.constants.Skills.HITS && !fromRestoreEvent) {
+			mob.tryResyncStatEvent();
+		}
+	}
+
+	public void setLevel(int skill, int level) {
+		setLevel(skill, level, false);
 	}
 
 	public void setExperience(int skill, int exp) {

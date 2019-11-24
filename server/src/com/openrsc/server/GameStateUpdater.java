@@ -415,8 +415,11 @@ public final class GameStateUpdater {
 				ChatMessage cm;
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
 					Player sender = (Player) cm.getSender();
+					boolean tutorialPlayer = sender.getLocation().onTutorialIsland() && !sender.isStaff();
+					boolean muted = sender.isMuted();
 
-					int chatType = sender.isMuted() || (sender.getLocation().onTutorialIsland() && !sender.isStaff()) ? 7 : (cm.getRecipient() == null ? 1 : 6);
+					int chatType = cm.getRecipient() == null ? (tutorialPlayer || muted ? 7 : 1)
+						: cm.getRecipient() instanceof Player ? (tutorialPlayer || muted ? 7 : 6) : 6;
 					appearancePacket.writeShort(cm.getSender().getIndex());
 					appearancePacket.writeByte(chatType);
 

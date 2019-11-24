@@ -2099,11 +2099,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16761440, 143190, 143190, 15523536, 145, 230, 6, 6, 5, i++));
 		sprites = new int[]{241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Gaia", "The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
-		sprites = new int[]{0, 245, 246, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{0, 318, 319, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Iron Man", "An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 248, 249, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{0, 321, 322, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ultimate Iron Man", "An Ultimate Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{250, 251, 252, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{323, 324, 325, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Hardcore Iron Man", "A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Greatwood", "A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
@@ -3581,19 +3581,19 @@ public class EntityHandler {
 		items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 15, -1, "items:438", true, false, 0, 0, false, false, -1, 1289, 2134));
 
 		// Ironman
-		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 6, -1, "items:154", false, true, 33, 11189164, false, true, -1, -1, 2135));
-		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 8, -1, "items:560", false, true, 322, 11189164, false, true, -1, -1, 2136));
-		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:280", false, true, 644, 11189164, false, true, -1, -1, 2137));
+		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, -1, "items:6", false, true, 33, 11189164, false, true, -1, -1, 2135));
+		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 11189164, false, true, -1, -1, 2136));
+		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 11189164, false, true, -1, -1, 2137));
 
 		// Ultimate ironman
-		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 6, -1, "items:154", false, true, 33, 16768685, false, true, -1, -1, 2138));
-		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 8, -1, "items:560", false, true, 322, 16768685, false, true, -1, -1, 2139));
-		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:280", false, true, 644, 16768685, false, true, -1, -1, 2140));
+		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, -1, "items:6", false, true, 33, 16768685, false, true, -1, -1, 2138));
+		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 16768685, false, true, -1, -1, 2139));
+		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 16768685, false, true, -1, -1, 2140));
 
 		// Hardcore ironman
-		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 6, -1, "items:154", false, true, 33, 10027084, false, true, -1, -1, 2141));
-		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 8, -1, "items:560", false, true, 322, 10027084, false, true, -1, -1, 2142));
-		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 9, -1, "items:280", false, true, 644, 10027084, false, true, -1, -1, 2143));
+		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, -1, "items:6", false, true, 33, 10027084, false, true, -1, -1, 2141));
+		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 10027084, false, true, -1, -1, 2142));
+		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 10027084, false, true, -1, -1, 2143));
 
 		// Orange feather helms
 		items.add(new ItemDef("Large Bronze Helmet", "A full face helmet with orange feather", "", 44, -1, "items:455", false, true, 33, 16737817, false, false, 2145, -1, 2144));
@@ -3807,6 +3807,7 @@ public class EntityHandler {
 		// Fox mask
 		items.add(new ItemDef("Fox mask", "Struttin' like a fox", "", 0, 86, "items:509", false, true, 32, 16730368, 16446686, false, false, 2324, -1, 2323));
 		items.add(new ItemDef("Fox mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2323, 2324));
+
 	}
 
 	// Bank note items
@@ -4962,7 +4963,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("hood1", 0, 0, true, false, 0)); //312 - fishing hood
 			animations.add(new AnimationDef("warriorcape", 0, 0, true, false, 0)); //313 - warrior cape
 			animations.add(new AnimationDef("spottedcape", 7692086, 0, true, false, 0)); //314 - spotted cape
-			animations.add(new AnimationDef("attackcape", 0, 0, true, false, 0)); //317 - attack cape
+			animations.add(new AnimationDef("attackcape", 0, 0, true, false, 0)); //315 - attack cape
 
 			// Easter basket (missing, using peppermintstick instead) and Gaia NPC (missing, using evilhoodie instead)
 			animations.add(new AnimationDef("evilhoodie", 0, 0, true, false, 0)); //316 - NPC Gaia (missing)
