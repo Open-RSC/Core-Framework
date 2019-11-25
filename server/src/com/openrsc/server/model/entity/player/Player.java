@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -1468,6 +1469,11 @@ public final class Player extends Mob {
 		if (!isOneXp()) {
 			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
 		}
+		if (isExperienceFrozen()) {
+			ActionSender.sendMessage(this, "You passed on " + appliedAmount/4 + " " +
+				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
+			return;
+		}
 		skills.addExperience(i, appliedAmount);
 	}
 
@@ -1538,12 +1544,9 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(int skill, int skillXP, boolean useFatigue) {
-		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (isExperienceFrozen()) {
+		if (isExperienceFrozen()) {
+			if (getWorld().getServer().getConfig().WANT_FATIGUE)
 				ActionSender.sendMessage(this, "You can not gain experience right now!");
-				return;
-			}
-		} else if (isExperienceFrozen()) {
 			return;
 		}
 
