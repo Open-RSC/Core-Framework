@@ -69,7 +69,7 @@ public class NpcBehavior {
 					npc.setWield2(80);
 				}
 				if (npc.getHeals() < 1 && !npc.inCombat() && npc.getLocation().inWilderness()) {
-					retreatFromWild2();
+					retreatFromWild3();
 				}
 				if (npc.getHeals() < 1 && npc.inCombat() && npc.getHitsMade() >= 3 && npc.getOpponent().getHitsMade() >= 3 && npc.getLocation().inWilderness()) {
 					retreatFromWild();
@@ -118,7 +118,7 @@ public class NpcBehavior {
 				}
 				if (npc.getHeals() < 1 && !npc.inCombat() && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.75) {
 					if (npc.getLocation().inWilderness()) {
-						retreatFromWild2();
+						retreatFromWild3();
 					}
 				}
 				if (target == null && !npc.isRanging()) {
@@ -477,6 +477,21 @@ public class NpcBehavior {
 			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 80000, "Npc walk back to wild") {
 				public void run() {
 					npc.walkToEntityAStar2(108, 425);
+					npc.setHeals(25);
+					stop();
+				}
+			});
+			lastMovement = System.currentTimeMillis();
+		}
+	}
+	
+	public void retreatFromWild3() {
+		if (npc.getLocation().inWilderness()) {
+			state = State.RETREAT;
+			npc.walkToEntityAStar2(218, 447);
+			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 80000, "Npc walk back to wild") {
+				public void run() {
+					npc.walkToEntityAStar2(214, 424);
 					npc.setHeals(25);
 					stop();
 				}
