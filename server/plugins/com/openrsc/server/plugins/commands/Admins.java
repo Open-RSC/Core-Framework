@@ -294,12 +294,22 @@ public final class Admins implements CommandListener {
 					rare = player.getWorld().gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
 				}
 				if (rdtHit) {
-					if (rareDrops.containsKey(rare.getDef(player.getWorld()).getName().toLowerCase())) {
-						int amount = rareDrops.get(rare.getDef(player.getWorld()).getName().toLowerCase());
-						rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), amount + rare.getAmount());
-					} else
-					{
-						rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), rare.getAmount());
+					if (rare == null) {
+						if (rareDrops.containsKey("miss")) {
+							int amount = rareDrops.get("miss");
+							rareDrops.put("miss", amount + 1);
+						} else
+						{
+							rareDrops.put("miss", 1);
+						}
+					} else {
+						if (rareDrops.containsKey(rare.getDef(player.getWorld()).getName().toLowerCase())) {
+							int amount = rareDrops.get(rare.getDef(player.getWorld()).getName().toLowerCase());
+							rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), amount + rare.getAmount());
+						} else
+						{
+							rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), rare.getAmount());
+						}
 					}
 				}
 			}
