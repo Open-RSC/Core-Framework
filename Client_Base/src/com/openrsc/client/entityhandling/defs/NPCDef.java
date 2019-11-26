@@ -56,6 +56,10 @@ public class NPCDef extends EntityDef {
 		this.combatSprite = combatSprite;
 	}
 
+	public void updateCommand1(String command) {
+		this.command1 = command;
+	}
+
 	public String getCommand1() {
 		return command1;
 	}

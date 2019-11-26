@@ -257,7 +257,10 @@ public class PacketHandler {
 			else if (opcode == 224) mc.setShowRecoveryDialogue(true);
 
 				// Quest Stage Update
-			else if (opcode == 5) updateQuestStage();
+			else if (opcode == 5) {
+				updateQuestStage();
+				mc.updateQuestCommandOptions();
+			}
 
 				// Show Bank
 			else if (opcode == 42) showBank();
