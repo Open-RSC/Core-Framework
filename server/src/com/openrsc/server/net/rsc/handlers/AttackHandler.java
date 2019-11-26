@@ -20,6 +20,7 @@ public class AttackHandler implements PacketHandler {
 			if (player.inCombat())
 				player.message("You are already busy fighting");
 
+			player.message("debug 88");
 			player.resetPath();
 
 			return;
@@ -38,6 +39,7 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob == null || affectedMob.equals(player)) {
 			player.resetPath();
+			player.message("debug 99");
 			return;
 		}
 		if (affectedMob.isPlayer()) {
@@ -73,6 +75,7 @@ public class AttackHandler implements PacketHandler {
 			}
 			if (n.isPkBot() && System.currentTimeMillis() - n.getCombatTimer() < 3000 && System.currentTimeMillis() - n.getCombatTimer() != 0){
 				player.resetPath();
+				player.message("debug 111");
 				return;
 			}
 		}
@@ -92,11 +95,13 @@ public class AttackHandler implements PacketHandler {
 					}
 					if (player.isBusy() || mob.isBusy() || !player.canReach(mob)
 						|| !player.checkAttack(mob, false) || player.getStatus() != Action.ATTACKING_MOB) {
+							player.message("debug 222");
 						return;
 					}
 					if (mob.isNpc()) {
 						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerAttackNpc",
 							new Object[]{player, (Npc) mob})) {
+								player.message("debug 333");
 							return;
 						}
 					}
@@ -117,6 +122,7 @@ public class AttackHandler implements PacketHandler {
 		} else {
 			if (player.isBusy() || !player.checkAttack(affectedMob, true)
 				|| player.getStatus() != Action.ATTACKING_MOB) {
+					player.message("debug 444");
 				return;
 			}
 			final Mob target = affectedMob;
