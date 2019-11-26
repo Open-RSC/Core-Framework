@@ -681,6 +681,25 @@ public final class Player extends Mob {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
+			if(((Npc) mob).isPkBot()){
+				int myWildLvl = getLocation().wildernessLevel();
+				int victimWildLvl = victim.getLocation().wildernessLevel();
+				if (myWildLvl < 1 || victimWildLvl < 1) {
+					message("You can't attack other pkbots here. Move to the wilderness");
+					return false;
+				}
+				int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
+				if (combDiff > myWildLvl) {
+					message("You can only attack pkbots within " + (myWildLvl) + " levels of your own here");
+					message("Move further into the wilderness for less restrictions");
+					return false;
+				}
+				if (combDiff > victimWildLvl) {
+					message("You can only attack pkbots within " + (victimWildLvl) + " levels of your own here");
+					message("Move further into the wilderness for less restrictions");
+					return false;
+				}
+			}
 			if (!victim.getDef().isAttackable()) {
 				setSuspiciousPlayer(true, "NPC isn't attackable");
 				return false;
