@@ -10,15 +10,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
+import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.quests.members.RuneMysteries;
 
 import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class AuburysRunes implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.FIRE_RUNE.id(),
 		50), new Item(ItemId.WATER_RUNE.id(), 50), new Item(ItemId.AIR_RUNE.id(), 50), new Item(ItemId.EARTH_RUNE.id(),
@@ -69,8 +72,20 @@ public final class AuburysRunes implements ShopInterface,
 				"send them my way");
 		}
 		else if (opt == 2) {
-			com.openrsc.server.plugins.quests.members.RuneMysteries.auburyDialog(p,n);
+			RuneMysteries.auburyDialog(p,n);
 		}
 	}
 
+	@Override
+	public void onNpcCommand(Npc n, String command, Player p) {
+		RuneMysteries.auburyDialog(p,n);
+	}
+
+	@Override
+	public boolean blockNpcCommand(Npc n, String command, Player p) {
+		return ( n.getID() == 54 &&
+			p.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
+			p.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
+			command.equalsIgnoreCase("teleport"));
+	}
 }

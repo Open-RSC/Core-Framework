@@ -64,6 +64,9 @@ public final class Quests {
 	public static final int MAPIDX_BASE = 2;
 	public static final int MAPIDX_VAR = 3;
 
+	public static final int QUEST_STAGE_NOT_STARTED = 0;
+	public static final int QUEST_STAGE_COMPLETED = -1;
+
 	public final HashMap<Integer, int[]> questData;
 
 	private final Constants constants;

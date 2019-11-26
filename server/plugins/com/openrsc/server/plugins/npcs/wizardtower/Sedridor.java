@@ -4,7 +4,9 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.quests.members.RuneMysteries;
 
@@ -15,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 
 
-public class Sedridor implements  TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Sedridor implements  TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -41,5 +43,18 @@ public class Sedridor implements  TalkToNpcExecutiveListener, TalkToNpcListener 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SEDRIDOR.id();
+	}
+
+	@Override
+	public void onNpcCommand(Npc n, String command, Player p) {
+		RuneMysteries.sedridorDialog(p,n, 0);
+	}
+
+	@Override
+	public boolean blockNpcCommand(Npc n, String command, Player p) {
+		return (n.getID() == 803 &&
+			p.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
+			p.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
+			command.equalsIgnoreCase("teleport"));
 	}
 }
