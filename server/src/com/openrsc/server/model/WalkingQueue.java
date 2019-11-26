@@ -186,6 +186,11 @@ public class WalkingQueue {
 		Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
+		
+		if(mob.isNpc()){
+			if (((Npc) mob).isPkBot())
+				return false;
+		}
 
 		Npc npc = region.getNpc(x, y);
 

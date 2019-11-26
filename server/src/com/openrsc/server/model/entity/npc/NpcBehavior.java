@@ -92,11 +92,9 @@ public class NpcBehavior {
 						npc.setSkulledOn(((Player) target));
 					}
 				} else if (!p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-					npc.getLoc().maxX + 9, npc.getLoc().maxY + 9)) {
+					npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) || !p5.getLocation().inWilderness()) {
 					target = null;
-				} /*else if(!npc.inCombat()){
-					target = null;
-				}*/
+				}
 				if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getOpponent().getSkills().getLevel(Skills.HITPOINTS)) {
 					if (npc.getHeals() > 0) {
 						retreat();
@@ -133,13 +131,9 @@ public class NpcBehavior {
 							int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
 							if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
 								newLoc = new Point(newX, newY);
-								//if(PathValidation.checkPath(p5.getWorld(), npc.getLocation(), newLoc)){
-									/*if(npc.nextStep2(npc.getX(), npc.getY(), newLoc) == null){
-								} else {*/
 								npc.walkToEntityAStar2(newX, newY);
 								npc.setWield(252);
 								npc.setWield2(80);
-								//}
 							} else {
 								Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
 									Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
