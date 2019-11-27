@@ -3,7 +3,6 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -63,7 +62,7 @@ public final class Player extends Mob {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	public final int MAX_FATIGUE = 75000;
+	public final int MAX_FATIGUE = 150000;
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
 	/**
 	 * Players cache is used to store various objects into database
@@ -1556,16 +1555,18 @@ public final class Player extends Mob {
 					ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 					return;
 				}
-				//if (fatigue >= 69750) {
+				//if (fatigue >= 139500) {
 				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
 				//}
-				if (skill >= 3 && useFatigue) {
-					fatigue += skillXP * 4;
-					if (fatigue > this.MAX_FATIGUE) {
-						fatigue = this.MAX_FATIGUE;
-					}
-					ActionSender.sendFatigue(this);
+				if (skill >= 4) {
+					fatigue += skillXP * 8;
+				} else if (skill >= 0 && skill <= 3) {
+					fatigue += skillXP * 5;
 				}
+				if (fatigue > this.MAX_FATIGUE) {
+					fatigue = this.MAX_FATIGUE;
+				}
+				ActionSender.sendFatigue(this);
 			}
 		}
 
@@ -2314,7 +2315,7 @@ public final class Player extends Mob {
 
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
-	
+
 	public void setSkulledOn(Npc n) {
 		n.addAttackedBy(this);
 		if (System.currentTimeMillis() - getSettings().lastAttackedBy(n) > 1200000) {

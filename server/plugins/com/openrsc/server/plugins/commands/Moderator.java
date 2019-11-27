@@ -224,7 +224,7 @@ public final class Moderator implements CommandListener {
 					+ " %"
 					+ "@gre@Name:@whi@ " + p.getUsername() + " %"
 					+ "@gre@Group:@whi@ " + p.getGroupID() + " %"
-					+ "@gre@Fatigue:@whi@ " + (p.getFatigue() / 750) + " %"
+					+ "@gre@Fatigue:@whi@ " + (p.getFatigue() / 1500) + " %"
 					+ "@gre@Group ID:@whi@ " + Group.GROUP_NAMES.get(p.getGroupID()) + " (" + p.getGroupID() + ") %"
 					+ "@gre@Busy:@whi@ " + (p.isBusy() ? "true" : "false") + " %"
 					+ "@gre@IP:@whi@ " + p.getLastIP() + " %"

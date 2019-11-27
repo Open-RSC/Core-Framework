@@ -323,7 +323,7 @@ public class ActionSender {
 	public static void sendFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_FATIGUE.opcode);
-		s.writeShort(player.getFatigue() / 750);
+		s.writeShort(player.getFatigue() / 1500);
 		player.write(s.toPacket());
 	}
 
@@ -1260,7 +1260,7 @@ public class ActionSender {
 
 				sendWakeUp(p, false, true);
 				sendLoginBox(p);
-				
+
 				for (Npc n : p.getWorld().getNpcs()) {
 					if(n.getSkullType() > 0){
 						n.getUpdateFlags().setSkull(new Skull(n, 1));
@@ -1278,7 +1278,7 @@ public class ActionSender {
 						n.getUpdateFlags().setWield2(new Wield(n, n.getWield(), n.getWield2()));
 					}
 				}
-				
+
 				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + p.getWorld().getServer().getConfig().SERVER_NAME + "!", 0);
 				if (p.isMuted()) {
 					sendMessage(p, "You are muted for "
@@ -1330,7 +1330,7 @@ public class ActionSender {
 			LOGGER.catching(e);
 		}
 	}
-	
+
 	public static void sendOnlineList(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
 		pb.writeShort(player.getWorld().getPlayers().size());

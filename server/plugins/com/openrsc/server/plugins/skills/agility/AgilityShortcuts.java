@@ -391,7 +391,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to swing on the rope");
 				return;
 			}
@@ -422,7 +422,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to swing on the rope");
 				return;
 			}
@@ -453,7 +453,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to balance on the ledge");
 				return;
 			}
@@ -487,7 +487,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to balance on the ledge");
 				return;
 			}
@@ -531,7 +531,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to climb up the rubble");
 				return;
 			}
@@ -548,7 +548,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to squeeze through the pipe");
 				return;
 			}
@@ -572,7 +572,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to squeeze through the pipe");
 				return;
 			}
@@ -760,7 +760,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to squeeze through the pipe");
 				return;
 			}
@@ -784,7 +784,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getFatigue() >= 69750) {
+			if (p.getFatigue() >= p.MAX_FATIGUE) {
 				p.message("You are too tired to squeeze through the pipe");
 				return;
 			}
