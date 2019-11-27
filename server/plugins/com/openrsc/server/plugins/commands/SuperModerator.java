@@ -362,9 +362,9 @@ public final class SuperModerator implements CommandListener {
 			p.setFatigue(fatigue * 750);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750) + "% by a staff member");
+				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 1500) + "% by a staff member");
 			}
-			player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 750 / 4) + "%");
+			player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 1500 / 4) + "%");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
 		} else if (cmd.equalsIgnoreCase("jail")) {
 			if (args.length != 1) {
