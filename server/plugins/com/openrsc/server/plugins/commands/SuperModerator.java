@@ -359,7 +359,7 @@ public final class SuperModerator implements CommandListener {
 				fatigue = 0;
 			if (fatigue > 100)
 				fatigue = 100;
-			p.setFatigue(fatigue * 750);
+			p.setFatigue(fatigue * 1500);
 
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 1500) + "% by a staff member");

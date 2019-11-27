@@ -350,7 +350,7 @@ public class ActionSender {
 	public static void sendSleepFatigue(Player player, int fatigue) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SLEEP_FATIGUE.opcode);
-		s.writeShort(fatigue / 750);
+		s.writeShort(fatigue / 1500);
 		player.write(s.toPacket());
 	}
 
