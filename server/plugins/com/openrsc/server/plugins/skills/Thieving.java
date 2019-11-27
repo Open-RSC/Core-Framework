@@ -26,6 +26,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Thieving extends Functions
 	implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener, ObjectActionExecutiveListener,
@@ -218,6 +219,7 @@ public class Thieving extends Functions
 		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 2, "Chest Thieving") {
 			public void init() {
 				boolean makeChestStuck = getPlayerOwner().getWorld().getServer().getConfig().LOOTED_CHESTS_STUCK;
+				AtomicReference<GameObject> tempChest = new AtomicReference<GameObject>();
 				addState(0, () -> {
 					if (getPlayerOwner().getSkills().getLevel(Skills.THIEVING) < req) {
 						getPlayerOwner().message("You find nothing");
@@ -240,22 +242,19 @@ public class Thieving extends Functions
 						return null;
 					}
 
-					GameObject tempChest = null;
 					getPlayerOwner().message("You find a trap on the chest");
 					if (!makeChestStuck) {
-						tempChest = new GameObject(getPlayerOwner().getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType());
-						replaceObject(obj, tempChest);
+						tempChest.set(new GameObject(getPlayerOwner().getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
+						replaceObject(obj, tempChest.get());
 					}
 					return nextState(2);
 				});
 				addState(1, () -> {
-					GameObject tempChest = null;
 					getPlayerOwner().message("You disable the trap");
 
 					message(getPlayerOwner(), "You open the chest");
-					if (!makeChestStuck && (tempChest = new GameObject(getPlayerOwner().getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType())) != null) {
-						tempChest.setLocation(obj.getLocation());
-						openChest(tempChest);
+					if (!makeChestStuck && tempChest.get() != null) {
+						openChest(tempChest.get());
 					} else {
 						replaceObjectDelayed(obj, respawnTime, 339);
 					}
