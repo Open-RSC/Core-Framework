@@ -71,15 +71,18 @@ public class NpcBehavior {
 				if (npc.getHeals() < 1 && !npc.inCombat() && npc.getLocation().inWilderness()) {
 					retreatFromWild3();
 				}
+				if (npc.getHeals() > 1 && !npc.getLocation().inWilderness()) {
+					npc.walkToEntityAStar2(214, 424);
+				}
 				if (npc.getHeals() < 1 && npc.inCombat() && npc.getHitsMade() >= 3 && npc.getOpponent().getHitsMade() >= 3 && npc.getLocation().inWilderness()) {
 					retreatFromWild();
 				}
 				if (npc.getHeals() > 0 && p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
 					npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - p5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && p5.getLocation().inWilderness() && combDiff2 < targetWildLvl2 && combDiff2 < myWildLvl2 && npc.withinRange(p5, 10) && npc.getLocation().inWilderness() && npc.getID() == 804) {
-					if (npc.nextStep(npc.getX(), npc.getY(), p5) == null) {
+					/*if (npc.nextStep(npc.getX(), npc.getY(), p5) == null) {
 						npc.walkToEntityAStar2(p5.getX(), p5.getY());
 						npc.resetRange();
-					} else if (!p5.inCombat()) {
+					} else */if (!p5.inCombat()) {
 						target = p5;
 						npc.setWield(51);
 						npc.setWield2(80);
