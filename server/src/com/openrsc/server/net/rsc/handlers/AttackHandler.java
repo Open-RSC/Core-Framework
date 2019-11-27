@@ -148,6 +148,11 @@ public class AttackHandler implements PacketHandler {
 							affectedPlayer.resetShop();
 						}
 					}
+					if (target.isNpc() && ((Npc) target).isPkBot()) {
+						assert target instanceof Npc;
+						Npc affectedNpc = (Npc) target;
+						getOwner().setSkulledOn(affectedNpc);
+					}
 					if (player.getRangeEquip() > 0) {
 						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));
 					} else {

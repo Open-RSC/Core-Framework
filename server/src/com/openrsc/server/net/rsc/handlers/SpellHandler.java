@@ -1179,6 +1179,9 @@ public class SpellHandler implements PacketHandler {
 						int damage = Formulae.calcSpellHit(max, player.getMagicPoints());
 
 						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, damage, 1));
+						if (((Npc) affectedMob).isNpc() && ((Npc) affectedMob).isPkBot()) {
+								player.setSkulledOn(((Npc) affectedMob));
+							}
 						player.setKillType(1);
 						finalizeSpell(player, spell, DEFAULT);
 						break;
