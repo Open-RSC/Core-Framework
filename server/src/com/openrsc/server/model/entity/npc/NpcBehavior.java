@@ -489,7 +489,7 @@ public class NpcBehavior {
 		if (npc.getLocation().inWilderness()) {
 			state = State.RETREAT;
 			npc.walkToEntityAStar2(218, 447);
-			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 80000, "Npc walk back to wild") {
+			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 50000, "Npc walk back to wild") {
 				public void run() {
 					npc.walkToEntityAStar2(214, 424);
 					npc.setHeals(25);
