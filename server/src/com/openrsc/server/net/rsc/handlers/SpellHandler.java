@@ -171,6 +171,10 @@ public class SpellHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+		if (pID == CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, idx)) {
+			// pre-teleport checks with self teleporting spell
+			return;
+		}
 		if (!Formulae.castSpell(spell, player.getSkills().getLevel(com.openrsc.server.constants.Skills.MAGIC), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
@@ -1190,36 +1194,41 @@ public class SpellHandler implements PacketHandler {
 		});
 	}
 
-	private void handleTeleport(Player player, SpellDef spell, int id) {
+	private boolean canTeleport(Player player, SpellDef spell, int id) {
+		boolean canTeleport = true;
 		if (player.getLocation().wildernessLevel() >= 20 || player.getLocation().isInFisherKingRealm()
 			|| player.getLocation().isInsideGrandTreeGround()
 			|| (player.getLocation().inModRoom() && !player.isAdmin())) {
 			player.message("A mysterious force blocks your teleport spell!");
 			player.message("You can't use teleport after level 20 wilderness");
-			return;
+			canTeleport = false;
 		}
 		// if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < 10000) {
 		//	player.message("You need to stay out of combat for 10 seconds before using a teleport.");
 		//	return;
 		//}
-		if (player.getInventory().countId(com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) > 0) {
+		else if (player.getInventory().countId(com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) > 0) {
 			message(player, "You can't teleport while holding Ana,",
 				"It's just too difficult to concentrate.");
-			return;
+			canTeleport = false;
 		}
-		if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {
+		else if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {
 			player.message("You don't know how to cast this spell yet");
 			player.message("You need to do the plague city quest");
-			return;
+			canTeleport = false;
 		}
-		if (!player.getCache().hasKey("watchtower_scroll") && id == 31) {
+		else if (!player.getCache().hasKey("watchtower_scroll") && id == 31) {
 			player.message("You cannot cast this spell");
 			player.message("You need to finish the watchtower quest first");
-			return;
+			canTeleport = false;
 		}
 		if (player.getLocation().inModRoom()) {
-			return;
+			canTeleport = false;
 		}
+		return canTeleport;
+	}
+
+	private void handleTeleport(Player player, SpellDef spell, int id) {
 		if (!checkAndRemoveRunes(player, spell)) {
 			return;
 		}

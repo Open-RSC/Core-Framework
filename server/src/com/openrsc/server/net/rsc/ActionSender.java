@@ -360,7 +360,7 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 50, "Send Friends List") {
+		player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 20, "Send Friends List") {
 			int currentFriend = 0;
 
 			@Override
