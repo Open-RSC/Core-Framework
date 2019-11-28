@@ -1,5 +1,6 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -62,8 +63,13 @@ public class WalkingQueue {
 			if (DEBUG && mob.isPlayer()) System.out.println("Failed adjacent check, not pathing.");
 			return;
 		}
-		if (mob.isNpc())
-			mob.setLocation(Point.location(destX, destY));
+		if (mob.isNpc()) {
+			NPCLoc loc = ((Npc) mob).getLoc();
+			if (Point.location(destX, destY).inBounds(loc.minX() - 12, loc.minY() - 12,
+				loc.maxX() + 12, loc.maxY() + 12) || (destX == 0 && destY == 0)) {
+				mob.setLocation(Point.location(destX, destY));
+			}
+		}
 		else {
 			Player p = (Player) mob;
 			p.setLocation(Point.location(destX, destY));
@@ -186,7 +192,7 @@ public class WalkingQueue {
 		Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
-		
+
 		if(mob.isNpc()){
 			if (((Npc) mob).isPkBot())
 				return false;
