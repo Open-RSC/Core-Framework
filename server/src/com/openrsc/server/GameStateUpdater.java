@@ -56,6 +56,7 @@ public final class GameStateUpdater {
 		this.npcs = getServer().getWorld().getNpcs();
 	}
 
+
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
 	public void sendUpdatePackets(Player p) {
 		// TODO: Should be private

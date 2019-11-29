@@ -657,6 +657,7 @@ public class Inventory {
 		// temporary map to sort - ideally should be comparator for item
 		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
 		ArrayList<Item> deathItemsList = new ArrayList<>();
+		ArrayList<Item> oldEquippedList = new ArrayList<>();
 		Integer key;
 		ArrayList<Item> value;
 		ItemDefinition def;
@@ -669,6 +670,7 @@ public class Inventory {
 					// stackable always lost
 					key = def.isStackable() ? -1 : def.getDefaultPrice();
 					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
+					oldEquippedList.add(equipped);
 					value.add(equipped);
 					deathItemsMap.put(key, value);
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
@@ -756,6 +758,9 @@ public class Inventory {
 		list.clear();
 		for (Item returnItem : deathItemsList) {
 			add(returnItem, false);
+			if (oldEquippedList.contains(returnItem)) {
+				wieldItem(returnItem, false);
+			}
 		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
 		&& !player.getInventory().hasItemId(fam_gloves)) {
@@ -763,6 +768,7 @@ public class Inventory {
 		}
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
+		ActionSender.sendUpdatedPlayer(player);
 		log.build();
 		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
