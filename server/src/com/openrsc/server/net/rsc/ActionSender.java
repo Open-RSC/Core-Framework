@@ -1231,6 +1231,14 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
+	public static void sendUpdatedPlayer(Player p) {
+		try {
+			p.getWorld().getServer().getGameUpdater().sendUpdatePackets(p);
+		} catch (Throwable e) {
+			LOGGER.catching(e);
+		}
+	}
+
 	static void sendLogin(Player p) {
 		try {
 			if (p.getWorld().registerPlayer(p)) {
