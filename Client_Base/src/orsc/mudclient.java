@@ -5729,60 +5729,60 @@ public final class mudclient implements Runnable {
 			int var16;
 			for (var15 = 0; var15 < 12; ++var15) {
 				var16 = this.getAnimDirLayer_To_CharLayer()[var11][var15];
-				if(npc.wield > 0 || npc.wield2 > 0){
+				if (npc.wield > 0 || npc.wield2 > 0) {
 					int[] animID;
 					animID = new int[]{-1, -1, -1, -1, npc.wield, -1, -1, -1, -1, -1, npc.wield2, -1};
 					AnimationDef animationDef = EntityHandler.getAnimationDef(animID[var16]);
 					if (animID[var16] >= 0) {
-					byte spriteOffsetX = 0;
-					byte spriteOffsetY = 0;
-					int variant = var14;
-					if (var12 && var13 >= 1 && var13 <= 3 && animationDef.hasF()) {
-						variant = var14 + 15;
-					}
-					if (var13 != 5 || animationDef.hasA()) {
-						//int sprite = variant + animationDef.getNumber();
-						Sprite sprite = spriteSelect(animationDef, variant);
-						int something1 = sprite.getSomething1();
-						int something2 = sprite.getSomething2();
-						int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID[var16]), 0).getSomething1();
-						if (something1 != 0 && something2 != 0 && something3 != 0) {
-							int xOffset = (spriteOffsetX * width1) / something1;
-							int yOffset = (spriteOffsetY * height) / something2;
-							int spriteWidth = (something1 * width1) / something3;
-							xOffset -= (spriteWidth - width1) / 2;
-							int colorVariant = animationDef.getCharColour();// CacheValues.animationCharacterColour[animID];
-							int baseColor = 0;
-							if (colorVariant == 1) {
-								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
-								colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
-							} else if (animID[var16] >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
-								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
-							} else if (colorVariant != 2) {
-								if (colorVariant == 3) {
+						byte spriteOffsetX = 0;
+						byte spriteOffsetY = 0;
+						int variant = var14;
+						if (var12 && var13 >= 1 && var13 <= 3 && animationDef.hasF()) {
+							variant = var14 + 15;
+						}
+						if (var13 != 5 || animationDef.hasA()) {
+							//int sprite = variant + animationDef.getNumber();
+							Sprite sprite = spriteSelect(animationDef, variant);
+							int something1 = sprite.getSomething1();
+							int something2 = sprite.getSomething2();
+							int something3 = this.spriteSelect(EntityHandler.getAnimationDef(animID[var16]), 0).getSomething1();
+							if (something1 != 0 && something2 != 0 && something3 != 0) {
+								int xOffset = (spriteOffsetX * width1) / something1;
+								int yOffset = (spriteOffsetY * height) / something2;
+								int spriteWidth = (something1 * width1) / something3;
+								xOffset -= (spriteWidth - width1) / 2;
+								int colorVariant = animationDef.getCharColour();// CacheValues.animationCharacterColour[animID];
+								int baseColor = 0;
+								if (colorVariant == 1) {
 									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
-									colorVariant = def.getBottomColour();// CacheValues.npcColourBottom[npc.npcId];
+									colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
+								} else if (animID[var16] >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
+									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+								} else if (colorVariant != 2) {
+									if (colorVariant == 3) {
+										baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+										colorVariant = def.getBottomColour();// CacheValues.npcColourBottom[npc.npcId];
+									}
+								} else {
+									colorVariant = def.getTopColour();// CacheValues.npcColourTop[npc.npcId];
+									baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
 								}
-							} else {
-								colorVariant = def.getTopColour();// CacheValues.npcColourTop[npc.npcId];
-								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
-							}
 
-							this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, spriteWidth, height,
-								colorVariant, baseColor, 0, var12, topPixelSkew, 1);
+								this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, spriteWidth, height,
+									colorVariant, baseColor, 0, var12, topPixelSkew, 1);
+							}
 						}
 					}
-				}
 				} else {
-				int animID = def.getSprite(var16);
-				AnimationDef animationDef = EntityHandler.getAnimationDef(animID);
-				if (animID >= 0) {
-					byte spriteOffsetX = 0;
-					byte spriteOffsetY = 0;
-					int variant = var14;
-					if (var12 && var13 >= 1 && var13 <= 3 && animationDef.hasF()) {
-						variant = var14 + 15;
-					}
+					int animID = def.getSprite(var16);
+					AnimationDef animationDef = EntityHandler.getAnimationDef(animID);
+					if (animID >= 0) {
+						byte spriteOffsetX = 0;
+						byte spriteOffsetY = 0;
+						int variant = var14;
+						if (var12 && var13 >= 1 && var13 <= 3 && animationDef.hasF()) {
+							variant = var14 + 15;
+						}
 						if (var13 != 5 || animationDef.hasA()) {
 							//int sprite = variant + animationDef.getNumber();
 							Sprite sprite = spriteSelect(animationDef, variant);
@@ -5877,16 +5877,16 @@ public final class mudclient implements Runnable {
 			int skullX = topPixelSkew + x + width1 / 2;
 			int destWidth = overlayMovement * 16 / 100;
 			int destHeight = overlayMovement * 16 / 100;
-			if(npc.skull > 0) {
-				if(npc.direction == ORSCharacterDirection.COMBAT_A){
-					if(npc.skull > 0) {
+			if (npc.skull > 0) {
+				if (npc.direction == ORSCharacterDirection.COMBAT_A) {
+					if (npc.skull > 0) {
 						this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2 - 20,
-						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
+							y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
 					}
-				} else if(npc.direction == ORSCharacterDirection.COMBAT_B){
-					if(npc.skull > 0) {
+				} else if (npc.direction == ORSCharacterDirection.COMBAT_B) {
+					if (npc.skull > 0) {
 						this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2 + 20,
-						y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
+							y - destHeight / 2 - overlayMovement * 10 / 100, destWidth, destHeight, 5924);
 					}
 				} else {
 					this.getSurface().drawSprite(spriteSelect(GUIPARTS.SKULL.getDef()), skullX - destWidth / 2,
@@ -6189,14 +6189,14 @@ public final class mudclient implements Runnable {
 				int var4 = this.getSurface().fontHeight(4);
 				short var5 = 400;
 				int var6 = (var2 > 0 ? 5 + var3 : 0) + 70;
-				int var7 = 256 - var5 / 2;
-				int var8 = 180 - var6 / 2;
+				int var7 = (getGameWidth() - var5) / 2;
+				int var8 = (getGameHeight() - var6) / 2;
 				this.getSurface().drawBox(var7, var8, var5, var6, 0);
 				this.getSurface().drawBoxBorder(var7, var5, var8, var6, 0xFFFFFF);
-				this.getSurface().drawColoredStringCentered(256, "Enter the name of the player you wish to report:",
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Enter the name of the player you wish to report:",
 					0xFFFF00, 0, 1, 5 + var8 + var3);
 				int var9 = var3 + 2;
-				this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4,
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4,
 					var4 + var8 + 5 + var9 + 3);
 				int var10 = var3 + var4 + 8 + var8 + var9 + 2;
 				int var11 = 0xFFFFFF;
@@ -6209,7 +6209,7 @@ public final class mudclient implements Runnable {
 					}
 
 					int var13 = this.getSurface().stringWidth(1, var12);
-					if (this.mouseX > 256 - var13 / 2 && this.mouseX < var13 / 2 + 256 && var10 - var3 < this.mouseY
+					if (this.mouseX > getGameWidth() / 2 - var13 / 2 && this.mouseX < var13 / 2 + getGameWidth() / 2 && var10 - var3 < this.mouseY
 						&& var10 > this.mouseY) {
 						if (this.mouseButtonClick != 0) {
 							this.reportAbuse_isMute = !this.reportAbuse_isMute;
@@ -6219,12 +6219,12 @@ public final class mudclient implements Runnable {
 						var11 = 0xFFFF00;
 					}
 
-					this.getSurface().drawColoredStringCentered(256, var12, var11, 0, 1, var10);
+					this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, var12, var11, 0, 1, var10);
 					var10 += 10 + var3;
 				}
 
 				var11 = 0xFFFFFF;
-				if (this.mouseX > 210 && this.mouseX < 228 && var10 - var3 < this.mouseY && var10 > this.mouseY) {
+				if (this.mouseX > getGameWidth() / 2 - 46 && this.mouseX < getGameWidth() / 2 - 28 && var10 - var3 < this.mouseY && var10 > this.mouseY) {
 					if (this.mouseButtonClick != 0) {
 						this.inputTextFinal = this.inputTextCurrent;
 						this.mouseButtonClick = 0;
@@ -6233,9 +6233,9 @@ public final class mudclient implements Runnable {
 					var11 = 0xFFFF00;
 				}
 
-				this.getSurface().drawString("OK", 210, var10, var11, 1);
+				this.getSurface().drawString("OK", getGameWidth() / 2 - 46, var10, var11, 1);
 				var11 = 0xFFFFFF;
-				if (this.mouseX > 264 && this.mouseX < 304 && this.mouseY > var10 - var3 && var10 > this.mouseY) {
+				if (this.mouseX > getGameWidth() / 2 + 8 && this.mouseX < getGameWidth() / 2 + 48 && this.mouseY > var10 - var3 && var10 > this.mouseY) {
 					var11 = 0xFFFF00;
 					if (this.mouseButtonClick != 0) {
 						this.mouseButtonClick = 0;
@@ -6243,7 +6243,7 @@ public final class mudclient implements Runnable {
 					}
 				}
 
-				this.getSurface().drawString("Cancel", 264, var10, var11, 1);
+				this.getSurface().drawString("Cancel", getGameWidth() / 2 + 8, var10, var11, 1);
 				if (this.mouseButtonClick == 1 && (this.mouseX < var7 || this.mouseX > var7 + var5 || var8 > this.mouseY
 					|| var8 + var6 < this.mouseY)) {
 					this.reportAbuse_State = 0;
@@ -6290,14 +6290,15 @@ public final class mudclient implements Runnable {
 					return;
 				}
 			}
+			y = (getGameHeight() - 70) / 2;
 			if (this.panelSocialPopup_Mode == SocialPopupMode.ADD_FRIEND) {
-				this.getSurface().drawBox(106, y, 300, 70, 0);
-				this.getSurface().drawBoxBorder(106, 300, y, 70, 0xFFFFFF);
+				this.getSurface().drawBox((getGameWidth() - 300) / 2, y, 300, 70, 0);
+				this.getSurface().drawBoxBorder((getGameWidth() - 300) / 2, 300, y, 70, 0xFFFFFF);
 				y += 20;
-				this.getSurface().drawColoredStringCentered(256, "Enter name to add to friends list", 0xFFFFFF, 0, 4,
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Enter name to add to friends list", 0xFFFFFF, 0, 4,
 					y);
 				y += 20;
-				this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4, y);
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4, y);
 				String localKey = StringUtil.displayNameToKey(this.localPlayer.accountName);
 				if (null != localKey && this.inputTextFinal.length() > 0) {
 					String friend = this.inputTextFinal.trim();
@@ -6310,13 +6311,13 @@ public final class mudclient implements Runnable {
 				}
 			}
 			if (this.panelSocialPopup_Mode == SocialPopupMode.MESSAGE_FRIEND) {
-				this.getSurface().drawBox(6, y, 500, 70, 0);
-				this.getSurface().drawBoxBorder(6, 500, y, 70, 0xFFFFFF);
+				this.getSurface().drawBox((getGameWidth() - 500) / 2, y, 500, 70, 0);
+				this.getSurface().drawBoxBorder((getGameWidth() - 500) / 2, 500, y, 70, 0xFFFFFF);
 				y += 20;
-				this.getSurface().drawColoredStringCentered(256, "Enter message to send to " + this.chatMessageTarget,
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Enter message to send to " + this.chatMessageTarget,
 					0xFFFFFF, 0, 4, y);
 				y += 20;
-				this.getSurface().drawColoredStringCentered(256, this.chatMessageInput + "*", 0xFFFFFF, 0, 4, y);
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, this.chatMessageInput + "*", 0xFFFFFF, 0, 4, y);
 				if (this.chatMessageInputCommit.length() > 0) {
 					String var3 = this.chatMessageInputCommit;
 					this.chatMessageInput = "";
@@ -6327,12 +6328,12 @@ public final class mudclient implements Runnable {
 			}
 
 			if (this.panelSocialPopup_Mode == SocialPopupMode.ADD_IGNORE) {
-				this.getSurface().drawBox(106, y, 300, 70, 0);
-				this.getSurface().drawBoxBorder(106, 300, y, 70, 0xFFFFFF);
+				this.getSurface().drawBox((getGameWidth() - 300) / 2, y, 300, 70, 0);
+				this.getSurface().drawBoxBorder((getGameWidth() - 300) / 2, 300, y, 70, 0xFFFFFF);
 				y += 20;
-				this.getSurface().drawColoredStringCentered(256, "Enter name to add to ignore list", 0xFFFFFF, 0, 4, y);
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Enter name to add to ignore list", 0xFFFFFF, 0, 4, y);
 				y += 20;
-				this.getSurface().drawColoredStringCentered(256, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4, y);
+				this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, this.inputTextCurrent + "*", 0xFFFFFF, 0, 4, y);
 				String localKey = StringUtil.displayNameToKey(this.localPlayer.accountName);
 				if (localKey != null && this.inputTextFinal.length() > 0) {
 					String ignore = this.inputTextFinal.trim();
@@ -6346,10 +6347,10 @@ public final class mudclient implements Runnable {
 			}
 
 			int color = 0xFFFFFF;
-			if (this.mouseX > x + 130 && this.mouseX < x + 170 && this.mouseY > y + 10 && this.mouseY < y + 28) {
+			if (this.mouseX > (getGameWidth() - 256) / 2 + 107 && this.mouseX < (getGameWidth() - 256) / 2 + 147 && this.mouseY > y + 10 && this.mouseY < y + 28) {
 				color = 0xFFFF00;
 			}
-			this.getSurface().drawColoredStringCentered(256, "Cancel", color, 0, 1, y + 23);
+			this.getSurface().drawColoredStringCentered((getGameWidth() - 256) / 2 + 256 / 2, "Cancel", color, 0, 1, y + 23);
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "client.GB(" + "dummy" + ')');
 		}
@@ -7192,18 +7193,18 @@ public final class mudclient implements Runnable {
 									}
 								} else if (this.selectedItemInventoryIndex < 0) {
 									if (EntityHandler.getNpcDef(var13).isAttackable()) {
-										if(this.npcs[var9].npcId == 804){
-											if(levelDifference >= -1 && inWild){
+										if (this.npcs[var9].npcId == 804) {
+											if (levelDifference >= -1 && inWild) {
 												this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex, MenuItemAction.NPC_ATTACK1,
-												"Attack",
-												"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-													+ var11);
+													"Attack",
+													"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+														+ var11);
 											} else {
 												this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-												levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
-												"Attack",
-												"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-													+ var11);
+													levelDifference >= 0 ? MenuItemAction.NPC_ATTACK1 : MenuItemAction.NPC_ATTACK2,
+													"Attack",
+													"@whi@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+														+ var11);
 											}
 										} else {
 											this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
@@ -7218,7 +7219,7 @@ public final class mudclient implements Runnable {
 											MenuItemAction.DEV_REMOVE_NPC, "@gr2@Remove NPC",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
-									if(this.npcs[var9].npcId != 804) {
+									if (this.npcs[var9].npcId != 804) {
 										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
 											MenuItemAction.NPC_TALK_TO, "Talk-to",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
@@ -7235,10 +7236,10 @@ public final class mudclient implements Runnable {
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
 
-										this.menuCommon.addCharacterItem(this.npcs[var9].npcId, MenuItemAction.NPC_EXAMINE,
-											"Examine",
-											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
-												+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));
+									this.menuCommon.addCharacterItem(this.npcs[var9].npcId, MenuItemAction.NPC_EXAMINE,
+										"Examine",
+										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName()
+											+ (localPlayer.isDev() ? " @or1@(" + this.npcs[var9].npcId + ")" : ""));
 								} else {
 									this.menuCommon.addCharacterItem_WithID(this.npcs[var9].serverIndex,
 										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName(),
