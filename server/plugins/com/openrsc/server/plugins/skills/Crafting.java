@@ -436,7 +436,6 @@ public class Crafting implements InvUseOnItemListener,
 		}
 
 		final int exp = xp;
-		final boolean fail = Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING));
 
 		showBubble(player, item);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
@@ -459,7 +458,7 @@ public class Crafting implements InvUseOnItemListener,
 				}
 				showBubble(getOwner(), item);
 				if (getOwner().getInventory().remove(item) > -1) {
-					if (fail) {
+					if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING))) {
 						getOwner().playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
 							+ potteryItem + " cracks in the oven, you throw it away.");
 					} else {
