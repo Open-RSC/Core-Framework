@@ -377,6 +377,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 						"I haven't finished it yet");
 					if (finished == 0) {
 						if (p.getInventory().countId(ItemId.LENS.id()) >= 1) {
+							removeItem(p, ItemId.LENS.id(), 1);
 							npcTalk(p, n,
 								"Wonderful, at last I can fix the telescope");
 							if (hasItem(p, ItemId.LENS_MOULD.id())) {
