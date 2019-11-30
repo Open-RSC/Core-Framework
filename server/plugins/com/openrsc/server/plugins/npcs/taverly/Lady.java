@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.taverly;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -9,8 +10,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -30,7 +30,8 @@ public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				// NOTHING HAPPENS
 			}
 		});
-		if (p.getQuestStage(Quests.MERLINS_CRYSTAL) >= 3 || p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1) {
+		if ((p.getQuestStage(Quests.MERLINS_CRYSTAL) >= 3 || p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1)
+			&& !hasItem(p, ItemId.EXCALIBUR.id())) {
 			defaultMenu.addOption(new Option("I seek the sword Exalibur") {
 				@Override
 				public void action() {
