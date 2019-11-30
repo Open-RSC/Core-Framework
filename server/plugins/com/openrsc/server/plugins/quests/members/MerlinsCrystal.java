@@ -66,8 +66,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 			Npc arhein = getNearestNpc(p, NpcId.ARHEIN.id(), 10);
 			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 2) {
 				p.playerServerMessage(MessageType.QUEST, "I have no reason to do that");
-			}
-			else if (arhein != null) {
+			} else if (arhein != null) {
 				npcTalk(p, arhein, "Oi get away from there!");
 			} else {
 				p.teleport(456, 3352, false);
@@ -98,15 +97,15 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 				p.getCache().store("magic_words", true);
 			}
 		} else if (obj.getID() == 295) {
-			p.teleport(p.getX(), p.getY()+944);
+			p.teleport(p.getX(), p.getY() + 944);
 			p.message("You climb up the ladder");
-			if (p.getQuestStage(this) != 3 && !p.getCache().hasKey("lady_test")) {
+			if ((p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 3) || !p.getCache().hasKey("lady_test")) {
 				return;
 			}
 			sleep(600);
 			Npc lady = getNearestNpc(p, NpcId.LADY_UPSTAIRS.id(), 5);
 			if (lady == null) {
-				lady = spawnNpc(NpcId.LADY_UPSTAIRS.id(), p.getX()-1, p.getY()-1, 60000, p);
+				lady = spawnNpc(NpcId.LADY_UPSTAIRS.id(), p.getX() - 1, p.getY() - 1, 60000, p);
 			}
 			sleep(600);
 			if (lady != null) {
@@ -157,7 +156,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, leFaye, "The lady of the lake has it");
 				npcTalk(p, leFaye, "I don't know if she will give it you though");
 				npcTalk(p, leFaye, "She can be rather temperamental");
-				int sub_opt2 = showMenu(p, leFaye, false, //do not send over 
+				int sub_opt2 = showMenu(p, leFaye, false, //do not send over
 					"OK I will go do all that",
 					"What are the magic words?");
 				if (sub_opt2 == 0) {
@@ -239,7 +238,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getX() == 277 && obj.getY() == 632) {
-			if (p.getQuestStage(this) != 3 && !p.getCache().hasKey("lady_test")) {
+			if ((p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 3) || !p.getCache().hasKey("lady_test")) {
 				doDoor(obj, p);
 				return;
 			} else {
@@ -260,7 +259,8 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 							npcTalk(p, beggar,
 								"Well if you get some you know where to come");
 							doDoor(obj, p);
-						} else if (p.getInventory().hasItemId(ItemId.BREAD.id())) {
+							beggar.remove();
+						} else {
 							message(p, "You give the bread to the beggar");
 							removeItem(p, ItemId.BREAD.id(), 1);
 							npcTalk(p, beggar, "Thankyou very much");
@@ -270,10 +270,11 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 								npcTalk(p, lady, "Well done you have passed my test",
 									"Here is Excalibur, guard it well");
 								addItem(p, ItemId.EXCALIBUR.id(), 1);
-								if (p.getCache().hasKey("lady_test")) {
-									p.getCache().remove("lady_test");
-								}
+								p.getCache().remove("lady_test");
 								lady.remove();
+							} else {
+								doDoor(obj, p);
+								beggar.remove();
 							}
 						}
 					} else if (opt == 1) {
@@ -282,6 +283,8 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 						doDoor(obj, p);
 						beggar.remove();
 					}
+				} else {
+					doDoor(obj, p);
 				}
 			}
 		}
@@ -301,7 +304,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		p.message("Suddenly a demon appears");
 		playerTalk(p, null, "Now what were those magic words?");
-		int opt = showMenu(p, n, false, //do not send over 
+		int opt = showMenu(p, n, false, //do not send over
 			"Snarthtrick Candanto Termon",
 			"Snarthon Candtrick Termanto", "Snarthanto Candon Termtrick");
 		if (opt == 1) {
@@ -328,7 +331,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock())
-				|| n.getID() == NpcId.SIR_GAWAIN.id() || n.getID() == NpcId.SIR_LANCELOT.id();
+			|| n.getID() == NpcId.SIR_GAWAIN.id() || n.getID() == NpcId.SIR_LANCELOT.id();
 	}
 
 	@Override
@@ -465,8 +468,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 			}
-		}
-		else if (n.getID() == NpcId.SIR_GAWAIN.id()) {
+		} else if (n.getID() == NpcId.SIR_GAWAIN.id()) {
 			if (p.getCache().hasKey("talked_to_gawain")) {
 				npcTalk(p, n, "Good day to you sir");
 				int option = showMenu(
@@ -551,8 +553,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 			}
-		}
-		else if (n.getID() == NpcId.SIR_LANCELOT.id()) {
+		} else if (n.getID() == NpcId.SIR_LANCELOT.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
