@@ -19,14 +19,12 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARMAID.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		if (!p.getCache().hasKey("barcrawl")
+		if (p.getCache().hasKey("barcrawl")
 			&& !p.getCache().hasKey("barthree")) {
-			NORMAL_ALES(p, n);
-		} else {
-			int barCrawlOpt = showMenu(p, n, false, //do not send over 
+			int barCrawlOpt = showMenu(p, n, false, //do not send over
 				"Hi what ales are you serving",
 				"I'm doing Alfred Grimhand's barcrawl");
 			if (barCrawlOpt == 0) {
@@ -53,9 +51,11 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 					playerTalk(p, n, "I don't have that much money on me");
 				}
 			}
+		} else {
+			NORMAL_ALES(p, n);
 		}
 	}
-	
+
 	private void NORMAL_ALES(Player p, Npc n) {
 		playerTalk(p, n, "Hi, what ales are you serving?");
 		npcTalk(p,
@@ -105,20 +105,20 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 				break;
 		}
 	}
-	
+
 	private void drinkAle(Player p) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.RANGED, Skills.FISHING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(p, skillIDs[i]);
 		}
 	}
-	
+
 	private void setAleEffect(Player p, int skillId) {
 		int reduction, currentStat, maxStat;
 		maxStat = p.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
-			maxStat < 45 ? 6 : 
+			maxStat < 45 ? 6 :
 			maxStat < 75 ? 7 : 8;
 		currentStat = p.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {
