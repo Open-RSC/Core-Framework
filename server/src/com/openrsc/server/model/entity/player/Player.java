@@ -2339,9 +2339,9 @@ public final class Player extends Mob {
 				}
 
 				if (bed) {
-					getOwner().sleepStateFatigue -= 16500;
+					getOwner().sleepStateFatigue -= 33000;
 				} else {
-					getOwner().sleepStateFatigue -= 4125;
+					getOwner().sleepStateFatigue -= 8250;
 				}
 
 				if (getOwner().sleepStateFatigue < 0) {

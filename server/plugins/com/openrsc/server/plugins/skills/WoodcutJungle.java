@@ -95,7 +95,7 @@ public class WoodcutJungle implements ObjectActionListener,
 		p.setBusy(true);
 		showBubble(p, new Item(axeId));
 		p.playerServerMessage(MessageType.QUEST, "You swing your " + p.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
-		if (p.getFatigue() >= 74920) {
+		if (p.getFatigue() >= 149840) {
 			if (p.getFatigue() < p.MAX_FATIGUE) {
 				p.message("You are getting very tired, you may get stuck if you continue into the jungle.");
 			}
