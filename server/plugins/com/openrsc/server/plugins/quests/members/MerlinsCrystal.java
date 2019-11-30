@@ -299,7 +299,6 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onDrop(Player p, Item i) {
-		p.getInventory().remove(i);
 		Npc n = spawnNpc(p.getWorld(), NpcId.THRANTAX.id(), p.getX(), p.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		p.message("Suddenly a demon appears");
@@ -325,6 +324,9 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 			playerTalk(p, n, "Snarthanto Candon Termtrick");
 		}
 		n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", p));
+		if (hasItem(p, ItemId.LIT_BLACK_CANDLE.id())) {
+			removeItem(p, ItemId.LIT_BLACK_CANDLE.id(), 1);
+		}
 		n.startCombat(p);
 	}
 

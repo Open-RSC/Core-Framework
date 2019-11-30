@@ -11,6 +11,7 @@ public class Retreats {
 	public Retreats(Constants constants) {
 		this.constants = constants;
 		npcData = new HashMap<Integer, Integer>() {{
+			put(NpcId.THRANTAX.id(), 18); //best known value of retreat, and no retreat is 21
 			put(NpcId.SOULESS_UNDEAD.id(), 15);
 			put(NpcId.ROWDY_GUARD.id(), 15);
 			put(NpcId.SHANTAY_PASS_GUARD_MOVING.id(), 15); //observed 13 but thought to be 15
