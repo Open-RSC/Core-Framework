@@ -5060,6 +5060,14 @@ public class EntityHandler {
 
 			// Fox mask
 			animations.add(new AnimationDef("wolfmask", 16730368, 16446686, 0, true, false, 0)); //387 - fox mask
+
+			// Spears
+			animations.add(new AnimationDef("spear", 0xBB4B12, 0, true, false, 0)); //388 - bronze spear
+			animations.add(new AnimationDef("spear", 0xAFA2A2, 0, true, false, 0)); //389 - iron spear
+			animations.add(new AnimationDef("spear", 0xAFAFAF, 0, true, false, 0)); //390 - steel spear
+			animations.add(new AnimationDef("spear", 0x708396, 0, true, false, 0)); //391 - mith spear
+			animations.add(new AnimationDef("spear", 0x839670, 0, true, false, 0)); //392 - addy spear
+			animations.add(new AnimationDef("spear", 48059, 0, true, false, 0)); //393 - rune spear
 		}
 	}
 

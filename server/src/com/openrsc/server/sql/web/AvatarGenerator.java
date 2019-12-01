@@ -470,7 +470,15 @@ public final class AvatarGenerator {
 				new AnimationDef("hitscape", 0, 0, true, false, 0), //386 hits cape
 
 				// Fox mask
-				new AnimationDef("wolfmask", 16730368, 0, true, false, 0) //387 - fox mask
+				new AnimationDef("wolfmask", 16730368, 0, true, false, 0), //387 - fox mask
+
+				// Recolored spears
+				new AnimationDef("spear", 0xBB4B12, 0, true, false, 0), //388 - bronze spear
+				new AnimationDef("spear", 0xAFA2A2, 0, true, false, 0), //389 - iron spear
+				new AnimationDef("spear", 0xAFAFAF, 0, true, false, 0), //390 - steel spear
+				new AnimationDef("spear", 0x708396, 0, true, false, 0), //391 - mith spear
+				new AnimationDef("spear", 0x839670, 0, true, false, 0), //392 - addy spear
+				new AnimationDef("spear", 48059, 0, true, false, 0) //393 - rune spear
 			};
 
 
