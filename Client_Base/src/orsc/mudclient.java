@@ -8853,10 +8853,6 @@ public final class mudclient implements Runnable {
 					"@whi@Clan Invitation - @gre@Receive", 17, null, null);
 			}
 
-			// report abuse
-			this.panelSettings.setListEntry(this.controlSettingPanel, index,
-				"@whi@Report Abuse", 18, null, null);
-
 			if (C_PARTY_INV) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 					"@whi@Party Invitation - @red@Block", 19, null, null);
@@ -8864,6 +8860,10 @@ public final class mudclient implements Runnable {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 					"@whi@Party Invitation - @gre@Receive", 19, null, null);
 			}
+
+			// report abuse - keep at bottom of list since it's not a toggle
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Report Abuse", 18, null, null);
 		}
 
 		// items on death menu option OR logout text if not enabled
