@@ -125,7 +125,7 @@ public class TrawlerCatch implements ObjectActionListener, ObjectActionExecutive
 	}
 
 	private boolean catchFish(int levelReq, int level) {
-		return Formulae.calcGatheringSuccessful(levelReq, level);
+		return Formulae.calcGatheringSuccessful(levelReq, level, 18);
 	}
 
 }
