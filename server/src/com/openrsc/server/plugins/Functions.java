@@ -97,7 +97,15 @@ public class Functions {
 
 	public static int getWoodcutAxe(Player p) {
 		int axeId = -1;
+
 		for (final int a : Formulae.woodcuttingAxeIDs) {
+			if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				if (p.getEquipment().hasEquipped(a) != -1) {
+					axeId = a;
+					break;
+				}
+			}
+
 			if (p.getInventory().countId(a) > 0) {
 				axeId = a;
 				break;
