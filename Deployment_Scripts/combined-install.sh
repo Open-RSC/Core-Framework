@@ -9,7 +9,7 @@ NC=$(tput sgr0) # No Color
   echo "Installing Certbot, Screen, Zip, Fail2Ban, Unzip, Git, Build-Essential, Software-Properties-Common, APT-Transport-HTTPS, CA-Certificates, Curl, and configuring the system timezone."
   echo ""
   sudo apt update && sudo make apt upgrade -y && sudo apt autoremove -y
-  sudo apt install git htop nano unzip zip fail2ban git build-essential apt-transport-https ca-certificates software-properties-common curl screen ack certbot mariadb-client libswt-gtk-4-java gtk3-nocsd openssh-server -y
+  sudo apt install git htop nano unzip zip fail2ban git build-essential apt-transport-https ca-certificates software-properties-common curl screen ack libswt-gtk-4-java gtk3-nocsd -y
   sudo dpkg-reconfigure tzdata
 
   # Java related
@@ -17,8 +17,8 @@ NC=$(tput sgr0) # No Color
   echo ""
   echo "Installing OpenJDK and Apache ant. Please wait."
   echo ""
-  sudo apt install openjdk-12-jdk ant -y
-  export JAVA_HOME=/usr/lib/jvm/java-12-openjdk-amd64
+  sudo apt install openjdk-11-jdk ant -y
+  export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
   # shellcheck disable=SC1090
   source ~/.bashrc
   source /etc/profile
@@ -28,7 +28,7 @@ NC=$(tput sgr0) # No Color
   echo ""
   echo "Setting Ubuntu Firewall permissions."
   echo ""
-  sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 43594/tcp && sudo ufw deny 3306/tcp
+  sudo ufw allow 80/tcp && sudo ufw allow 443/tcp && sudo ufw allow 55555/tcp && sudo ufw allow 43594/tcp && sudo ufw allow 43595/tcp && sudo ufw allow 43596/tcp && sudo ufw allow 43597/tcp && sudo ufw allow 43598/tcp && sudo ufw allow 43599/tcp && sudo ufw deny 3306/tcp
   sudo sed -i 's/DEFAULT_FORWARD_POLICY="DENY"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
 
   sudo ufw reload
