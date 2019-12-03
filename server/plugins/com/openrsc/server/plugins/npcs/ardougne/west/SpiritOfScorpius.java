@@ -27,7 +27,7 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SPIRIT_OF_SCORPIUS.id()) {
 			if (p.getQuestStage(Quests.OBSERVATORY_QUEST) != -1) {
-					npcTalk(p, n, "How dare you disturb me!");
+				npcTalk(p, n, "How dare you disturb me!");
 			} else {
 				if (p.getCache().hasKey("scorpius_mould")) {
 					int option;
