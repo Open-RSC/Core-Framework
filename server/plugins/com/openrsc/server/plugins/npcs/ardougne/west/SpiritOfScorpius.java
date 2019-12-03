@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.ardougne.west;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -26,13 +27,23 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SPIRIT_OF_SCORPIUS.id()) {
 			if (p.getQuestStage(Quests.OBSERVATORY_QUEST) != -1) {
-				npcTalk(p, n, "How dare you disturb me!");
+					npcTalk(p, n, "How dare you disturb me!");
 			} else {
 				if (p.getCache().hasKey("scorpius_mould")) {
-					int option = showMenu(p, n,
-						"I have come to seek a blessing",
-						"I need another unholy symbol mould",
-						"I have come to kill you");
+					int option;
+					if (p.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+						option = showMenu(p, n,
+							"I have come to seek a blessing",
+							"I need another unholy symbol mould",
+							"I have come to kill you",
+							"About symbol drops");
+					} else {
+						option = showMenu(p, n,
+							"I have come to seek a blessing",
+							"I need another unholy symbol mould",
+							"I have come to kill you");
+					}
+
 					if (option == 0) {
 						if (hasItem(p, ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id())) {
 							npcTalk(p, n, "I see you have the unholy symbol of our Lord",
@@ -62,6 +73,21 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 						}
 					} else if (option == 2) {
 						npcTalk(p, n, "The might of mortals to me is as the dust is to the sea!");
+					} else if (option == 3) {
+						if (!p.getCache().hasKey("want_unholy_symbol_drops"))
+							p.getCache().store("want_unholy_symbol_drops", true);
+
+						boolean wantDrops = p.getCache().getBoolean("want_unholy_symbol_drops");
+						final String words = wantDrops ? "are" : "are not";
+						npcTalk(p, n, "I see you " + words + " seeking the unholy symbol.",
+							"Do you wish to change your mind?");
+						int option2 = showMenu(p, n, "Yes", "No");
+						if (option2 == 0) {
+							p.getCache().store("want_unholy_symbol_drops", !wantDrops);
+							npcTalk(p, n, "Very well");
+						} else {
+							npcTalk(p, n, "How dare you disturb me!");
+						}
 					}
 					return;
 				}
@@ -82,8 +108,7 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 					npcTalk(p, n, "The might of mortals to me is as the dust is to the sea!");
 				}
 			}
-		}
-		else if (n.getID() == NpcId.GHOST_SCORPIUS.id()) {
+		} else if (n.getID() == NpcId.GHOST_SCORPIUS.id()) {
 			npcTalk(p, n, "We are waiting for you");
 			n.startCombat(p);
 		}

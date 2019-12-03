@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
@@ -383,6 +384,15 @@ public final class Admins implements CommandListener {
 				for (ItemDropDef drop : drops) {
 					if (drop == null) {
 						continue;
+					}
+					if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
+						if (player.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
+							continue;
+
+						if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
+							if (player.getCache().hasKey("want_unholy_symbol_drops") &&
+								!player.getCache().getBoolean("want_unholy_symbol_drops"))
+								continue;
 					}
 					dropID = drop.getID();
 					dropWeight = drop.getWeight();

@@ -704,8 +704,14 @@ public class Npc extends Mob {
 					total = 0;
 
 					for (ItemDropDef drop : drops) {
-						if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id() && owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1) {
-							continue;
+						if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
+							if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
+								continue;
+
+							if (owner.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
+								if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
+									!owner.getCache().getBoolean("want_unholy_symbol_drops"))
+									continue;
 						}
 
 						Item temp = new Item(drop.getID());
