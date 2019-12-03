@@ -36,7 +36,7 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 							"I have come to seek a blessing",
 							"I need another unholy symbol mould",
 							"I have come to kill you",
-							"About symbol drops");
+							"About mould drops");
 					} else {
 						option = showMenu(p, n,
 							"I have come to seek a blessing",
