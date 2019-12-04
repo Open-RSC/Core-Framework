@@ -125,7 +125,7 @@ public class Config {
 	public static boolean S_SHOW_UNIDENTIFIED_HERB_NAMES = false;
 	public static boolean S_WANT_QUEST_STARTED_INDICATOR = false;
 	public static boolean S_FISHING_SPOTS_DEPLETABLE = false;
-	public static boolean S_PROPER_MAGIC_TREE_NAME = false;
+	public static boolean S_IMPROVED_ITEM_OBJECT_NAMES = false;
 	public static boolean S_WANT_PARTIES = false;
 	public static boolean S_MINING_ROCKS_EXTENDED = false;
 	public static boolean S_WANT_CUSTOM_UI = false;

@@ -523,7 +523,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().SHOW_UNIDENTIFIED_HERB_NAMES + " 56");
 			LOGGER.info(server.getConfig().WANT_QUEST_STARTED_INDICATOR + " 57");
 			LOGGER.info(server.getConfig().FISHING_SPOTS_DEPLETABLE + " 58");
-			LOGGER.info(server.getConfig().PROPER_MAGIC_TREE_NAME + " 59");
+			LOGGER.info(server.getConfig().IMPROVED_ITEM_OBJECT_NAMES + " 59");
 			LOGGER.info(server.getConfig().WANT_RUNECRAFTING + " 60");
 			LOGGER.info(server.getConfig().WANT_CUSTOM_LANDSCAPE + " 61");
 			LOGGER.info(server.getConfig().WANT_EQUIPMENT_TAB + " 62");
@@ -618,7 +618,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
 		s.writeByte((byte) (server.getConfig().WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
 		s.writeByte((byte) (server.getConfig().FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
-		s.writeByte((byte) (server.getConfig().PROPER_MAGIC_TREE_NAME ? 1 : 0)); // 59
+		s.writeByte((byte) (server.getConfig().IMPROVED_ITEM_OBJECT_NAMES ? 1 : 0)); // 59
 		s.writeByte((byte) (server.getConfig().WANT_RUNECRAFTING ? 1 : 0)); //60
 		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
 		s.writeByte((byte) (server.getConfig().WANT_EQUIPMENT_TAB ? 1 : 0)); //62

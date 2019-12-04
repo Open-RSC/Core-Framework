@@ -259,7 +259,7 @@ public class ServerConfiguration {
 	public boolean WANT_QUEST_STARTED_INDICATOR = false;
 	public boolean WANT_CUSTOM_QUESTS = false;
 	public boolean FISHING_SPOTS_DEPLETABLE = false;
-	public boolean PROPER_MAGIC_TREE_NAME = false;
+	public boolean IMPROVED_ITEM_OBJECT_NAMES = false;
 	public boolean CRYSTAL_KEY_GIVES_XP = false;
 	public boolean LOOTED_CHESTS_STUCK = false;
 	public boolean WANT_RUNECRAFTING = false;
@@ -416,7 +416,7 @@ public class ServerConfiguration {
 		SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(props.getProperty("show_unidentified_herb_names"));
 		WANT_QUEST_STARTED_INDICATOR = Boolean.parseBoolean(props.getProperty("want_quest_started_indicator"));
 		FISHING_SPOTS_DEPLETABLE = Boolean.parseBoolean(props.getProperty("fishing_spots_depletable"));
-		PROPER_MAGIC_TREE_NAME = Boolean.parseBoolean(props.getProperty("proper_magic_tree_name"));
+		IMPROVED_ITEM_OBJECT_NAMES = Boolean.parseBoolean(props.getProperty("improved_item_object_names"));
 		CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(props.getProperty("crystal_key_gives_xp"));
 		LOOTED_CHESTS_STUCK = Boolean.parseBoolean(props.getProperty("looted_chests_stuck"));
 		WANT_RUNECRAFTING = Boolean.parseBoolean(props.getProperty("want_runecrafting"));

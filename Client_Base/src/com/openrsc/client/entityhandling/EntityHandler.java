@@ -2612,7 +2612,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Unfinished potion", "I need another ingredient to finish this Kwuarm potion", "", 54, 48, "items:48", false, false, 0, 11974326, true, false, 1691, -1, 461));
 		items.add(new ItemDef("Unfinished potion", "I need another ingredient to finish this Cadantine potion", "", 65, 48, "items:48", false, false, 0, 13743769, true, false, 1692, -1, 462));
 		items.add(new ItemDef("Unfinished potion", "I need another ingredient to finish this Dwarfweed potion", "", 70, 48, "items:48", false, false, 0, 10073809, true, false, 1693, -1, 463));
-		items.add(new ItemDef(Config.S_PROPER_MAGIC_TREE_NAME ? "Vial of Water" : "Vial", "It's full of water", "", 2, 48, "items:48", false, false, 0, 11197951, false, false, 1694, -1, 464));
+		items.add(new ItemDef(Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Vial of Water" : "Vial", "It's full of water", "", 2, 48, "items:48", false, false, 0, 11197951, false, false, 1694, -1, 464));
 		items.add(new ItemDef("Vial", "This vial is empty", "", 2, 144, "items:144", false, false, 0, 0, false, false, 1695, -1, 465));
 		items.add(new ItemDef("Unicorn horn", "Poor unicorn", "", 20, 145, "items:145", false, false, 0, 0, true, false, 1696, -1, 466));
 		items.add(new ItemDef("Blue dragon scale", "A large shiny scale", "", 50, 146, "items:146", false, false, 0, 0, true, false, 1697, -1, 467));
@@ -2838,10 +2838,10 @@ public class EntityHandler {
 		items.add(new ItemDef("scorpion cage", "It has 1 scorpion in it", "", 10, 212, "items:212", false, false, 0, 0, true, true, -1, -1, 687));
 		items.add(new ItemDef("scorpion cage", "It has 2 scorpions in it", "", 10, 212, "items:212", false, false, 0, 0, true, true, -1, -1, 688));
 		items.add(new ItemDef("scorpion cage", "It has 2 scorpions in it", "", 10, 212, "items:212", false, false, 0, 0, true, true, -1, -1, 689));
-		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "gold", "this needs refining", "", 150, 73, "items:73", false, false, 0, 16763980, true, true, -1, -1, 690));
-		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "gold bar", "this looks valuable", "", 300, 79, "items:79", false, false, 0, 16763980, true, true, -1, -1, 691));
-		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "Ruby ring", "A valuable ring", "", 2025, 123, "items:123", false, false, 0, 16724736, true, true, -1, -1, 692));
-		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "Ruby necklace", "I wonder if this is valuable", "", 2175, 57, "items:57", false, true, 1024, 16724736, true, true, -1, -1, 693));
+		items.add(new ItemDef((Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Perfect " : "") + "gold", "this needs refining", "", 150, 73, "items:73", false, false, 0, 16763980, true, true, -1, -1, 690));
+		items.add(new ItemDef((Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Perfect " : "") + "gold bar", "this looks valuable", "", 300, 79, "items:79", false, false, 0, 16763980, true, true, -1, -1, 691));
+		items.add(new ItemDef((Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Perfect " : "") + "Ruby ring", "A valuable ring", "", 2025, 123, "items:123", false, false, 0, 16724736, true, true, -1, -1, 692));
+		items.add(new ItemDef((Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Perfect " : "") + "Ruby necklace", "I wonder if this is valuable", "", 2175, 57, "items:57", false, true, 1024, 16724736, true, true, -1, -1, 693));
 		items.add(new ItemDef("Family crest", "The crest of a varrocian noble family", "", 10, 213, "items:213", false, false, 0, 0, true, true, -1, -1, 694));
 		items.add(new ItemDef("Crest fragment", "Part of the Fitzharmon family crest", "", 10, 214, "items:214", false, false, 0, 0, true, true, -1, -1, 695));
 		items.add(new ItemDef("Crest fragment", "Part of the Fitzharmon family crest", "", 10, 215, "items:215", false, false, 0, 0, true, true, -1, -1, 696));
@@ -6132,7 +6132,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Willow Tree", "A weeping willow", "Chop", "Examine", 1, 2, 2, 0, "willowtree", i++));
 		objects.add(new GameObjectDef("Maple Tree", "It's got nice shaped leaves", "Chop", "Examine", 1, 2, 2, 0, "mapletree", i++));
 		objects.add(new GameObjectDef("Yew Tree", "A tough looking yew tree", "Chop", "Examine", 1, 2, 2, 0, "yewtree", i++));
-		objects.add(new GameObjectDef(Config.S_PROPER_MAGIC_TREE_NAME ? "Magic Tree" : "Tree", "A magical tree", "Chop", "Examine", 1, 1, 1, 0, "magictree", i++));
+		objects.add(new GameObjectDef(Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Magic Tree" : "Tree", "A magical tree", "Chop", "Examine", 1, 1, 1, 0, "magictree", i++));
 		objects.add(new GameObjectDef("gate", "A gate guarded by a fierce barbarian", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("sign", "The forester's arms", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
 		objects.add(new GameObjectDef("flax", "A flax plant", Config.S_BATCH_PROGRESSION ? "pick" : "WalkTo", Config.S_BATCH_PROGRESSION ? "Examine" : "pick", 0, 1, 1, 0, "flax", i++));
