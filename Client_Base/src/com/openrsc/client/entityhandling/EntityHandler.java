@@ -2838,10 +2838,10 @@ public class EntityHandler {
 		items.add(new ItemDef("scorpion cage", "It has 1 scorpion in it", "", 10, 212, "items:212", false, false, 0, 0, true, true, -1, -1, 687));
 		items.add(new ItemDef("scorpion cage", "It has 2 scorpions in it", "", 10, 212, "items:212", false, false, 0, 0, true, true, -1, -1, 688));
 		items.add(new ItemDef("scorpion cage", "It has 2 scorpions in it", "", 10, 212, "items:212", false, false, 0, 0, true, true, -1, -1, 689));
-		items.add(new ItemDef("gold", "this needs refining", "", 150, 73, "items:73", false, false, 0, 16763980, true, true, -1, -1, 690));
-		items.add(new ItemDef("gold bar", "this looks valuable", "", 300, 79, "items:79", false, false, 0, 16763980, true, true, -1, -1, 691));
-		items.add(new ItemDef("Ruby ring", "A valuable ring", "", 2025, 123, "items:123", false, false, 0, 16724736, true, true, -1, -1, 692));
-		items.add(new ItemDef("Ruby necklace", "I wonder if this is valuable", "", 2175, 57, "items:57", false, true, 1024, 16724736, true, true, -1, -1, 693));
+		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "gold", "this needs refining", "", 150, 73, "items:73", false, false, 0, 16763980, true, true, -1, -1, 690));
+		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "gold bar", "this looks valuable", "", 300, 79, "items:79", false, false, 0, 16763980, true, true, -1, -1, 691));
+		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "Ruby ring", "A valuable ring", "", 2025, 123, "items:123", false, false, 0, 16724736, true, true, -1, -1, 692));
+		items.add(new ItemDef((Config.S_PROPER_MAGIC_TREE_NAME ? "Perfect " : "") + "Ruby necklace", "I wonder if this is valuable", "", 2175, 57, "items:57", false, true, 1024, 16724736, true, true, -1, -1, 693));
 		items.add(new ItemDef("Family crest", "The crest of a varrocian noble family", "", 10, 213, "items:213", false, false, 0, 0, true, true, -1, -1, 694));
 		items.add(new ItemDef("Crest fragment", "Part of the Fitzharmon family crest", "", 10, 214, "items:214", false, false, 0, 0, true, true, -1, -1, 695));
 		items.add(new ItemDef("Crest fragment", "Part of the Fitzharmon family crest", "", 10, 215, "items:215", false, false, 0, 0, true, true, -1, -1, 696));

@@ -235,14 +235,20 @@ public class Crafting implements InvUseOnItemListener,
 		}
 
 		int retrytimes = player.getInventory().countId(item.getID());
-		if (gem != 0) {
-			retrytimes = player.getInventory().countId(gems[gem]) < retrytimes ? player.getInventory().countId(gems[gem]) : retrytimes;
-		}
-		if (retrytimes <= 0) {
-			if (gem != 0 && player.getInventory().countId(gems[gem]) < 1) {
-				player.message("You don't have a " + reply.get() + ".");
+
+		//Perfect gold bars shouldn't be batched
+		if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
+			retrytimes = 1;
+		} else {
+			if (gem != 0) {
+				retrytimes = player.getInventory().countId(gems[gem]) < retrytimes ? player.getInventory().countId(gems[gem]) : retrytimes;
 			}
-			return;
+			if (retrytimes <= 0) {
+				if (gem != 0 && player.getInventory().countId(gems[gem]) < 1) {
+					player.message("You don't have a " + reply.get() + ".");
+				}
+				return;
+			}
 		}
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Gold Jewelry", retrytimes, false) {
