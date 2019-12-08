@@ -853,7 +853,7 @@ public class GraphicsController {
 						int lineEndsAt = lastBreak;
 						if (lastBreak <= lastLineTerm) {
 							lineEndsAt = lastBreak = i;
-							lineEndsAt++;
+							//lineEndsAt++; //this line breaks parsing of new line server messages that immediately start on new line
 						}
 
 						StringBuilder colourCode = new StringBuilder();

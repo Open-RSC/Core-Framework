@@ -27,7 +27,8 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			ItemId.SHAMAN_ROBE.id(), ItemId.SPELL_SCROLL.id(), ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(),
 			ItemId.LEVEL_1_CERTIFICATE.id(), ItemId.LEVEL_2_CERTIFICATE.id(), ItemId.LEVEL_3_CERTIFICATE.id(),
 			ItemId.DIGSITE_SCROLL.id(), ItemId.ASTROLOGY_BOOK.id(), ItemId.STONE_TABLET.id(),
-			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id());
+			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id(),
+			ItemId.NULODIONS_NOTES.id(), ItemId.OLD_JOURNAL.id());
 	}
 
 	@Override
@@ -129,6 +130,12 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 
 		else if (id == ItemId.STONE_TABLET.id())
 			handleStoneTablet(player);
+
+		else if (id == ItemId.NULODIONS_NOTES.id())
+			handleNulodionsNotes(player);
+
+		else if (id == ItemId.OLD_JOURNAL.id())
+			handleOldJournal(player);
 	}
 
 	private void handleOyster(Player player, int oyster) {
@@ -633,5 +640,98 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	private void handleStoneTablet(Player player) {
 		playerTalk(player, null, "It says:",
 			"Tremble mortal, before the altar of our dread lord zaros");
+	}
+
+	private void handleNulodionsNotes(Player player) {
+		player.message("the note reads....");
+		ActionSender.sendBox(player, "Ammo for the dwarf multi cannon must be made from steel bars% %"
+			+ "The bars must be heated in a furnace and used with the cannon ball mould.% %"
+			+ "Due to the cannon ball's extreame weight only so many can be carried before one must rest", true);
+	}
+
+	private void handleOldJournal(Player player) {
+		message(player, "the journal is old and covered in dust",
+			"inside are several chapters...");
+		int chapter = showMenu(player, "intro", "iban", "the ressurection", "the four elements");
+		int offset;
+		if (chapter == 0) {
+			readJournalChapter(player, 0);
+		} else if (chapter == 1) {
+			readJournalChapter(player, 1);
+		} else if (chapter == 2) {
+			readJournalChapter(player, 2);
+		} else if (chapter == 3) {
+			message(player, "you turn to the page titled 'the four elements'",
+				"there are four more chapters");
+			offset = showMenu(player, "flesh", "blood", "shadow", "conscience");
+			if (offset >= 0 && offset <= 3) {
+				readJournalChapter(player, offset + 3);
+			}
+		}
+	}
+
+	private void readJournalChapter(Player player, int chapter) {
+		if (chapter == 0) {
+			player.message("you turn to the page titled 'intro'");
+			ActionSender.sendBox(player, "% %@red@Gather round, all ye followers of the dark arts.% %" +
+				"@red@Read carefully the words that I hereby inscribe,% %" +
+				"@red@as I detail the heady the brew that is responsible for my @red@% %" +
+				"@red@greatest creation yet. @red@I am Kardia, the most wretched % %" +
+				"@red@witch in all the land,scorned by beauty and the world.% %" +
+				"@red@See what I have created: @red@the most powerful force% %" +
+				"@red@of darkness ever to be seen in human form!" , true);
+		} else if (chapter == 1) {
+			player.message("you turn to the page titled 'iban'");
+			ActionSender.sendBox(player, "@red@Iban was a Black Knight who had learned to fight under the%" +
+				"@red@great Darkquerius himself. Together they had taken on the @red@might of the White Knights, and the blood of a hundred @red@soldiers had been wiped from Iban's sword.% %" +
+				"@red@In many respects Iban was not so different from the White @red@Knights that he so mercilessly slaughtered: noble and @red@educated@red@ with a taste for the finer things in life. But there @red@was something that made him different: ambition. No, not @red@the simple desire to succeed or lead one's fellow @red@man. @red@This was an ambition that hungered for something beyond @red@the @red@mortal @red@realm", true);
+			int cont = showMenu(player, "continue reading", "close book");
+			if (cont == 0) {
+				ActionSender.sendBox(player, "%@red@..that was almost godlike in its insatiability.% %" +
+					"@red@But therein lay the essence of his darkness. @red@At its most @red@base level, Iban's fundamental impulse@red@ was a desire to @red@control the hearts and minds of his fellow man.@red@ To take @red@them beyond the @red@pale of mere allegiance,@red@ and corrupt @red@them into a pure force for evil.% %" +
+					"@red@ This was the fantasy that chased him in his dreams. A @red@whole legion of soul-less beings, their minds demented @red@from the sheer power that he had channelled through to @red@them.%" +
+					"@red@But dreams was all they ever were.@red@ As a mere mortal- @red@heroic though he was- this @red@was an ambition that Iban was @red@unable to achieve. Meeting his demise in the White @red@Knights' now @red@famous Dawn Ascent, Iban died with the @red@bitter taste of @red@failure in his mouth. Little did he know that @red@his death was only the beginning.", true);
+			}
+		} else if (chapter == 2) {
+			player.message("you turn to the page titled 'the ressurection'");
+			ActionSender.sendBox(player, "% %@red@I knew of Iban's life, though of course we had never met.% %" +
+				"@red@And @red@using the power of my dark arts, I vowed @red@to % %" +
+				"@red@resurrect this @red@once great warrior. I would raise @red@him again,% %" +
+				"@red@to fulfill @red@the @red@promise of his human life: to be a% %" +
+				"@red@Master of the Undead.", true);
+		} else if (chapter == 3) {
+			player.message("you turn to the page titled 'flesh'");
+			ActionSender.sendBox(player, "@red@Ibans Flesh% %" +
+				"@red@Taking a small doll to represent Iban, I smeared my effigy % %" +
+				"@red@with the four crucial elements that constitute a life.% %" +
+				"@red@Rooting around the desolate battlefield, I had been able to% %" +
+				"@red@steal a piece of Iban's cold flesh.% %" +
+				"@red@Now clasping some in my own hand, I smeared it over% %" +
+				"@red@my miniature idol, all the while chanting Iban's name.", true);
+		} else if (chapter == 4) {
+			player.message("you turn to the page titled 'blood'");
+			ActionSender.sendBox(player, "@red@Ibans Blood% %" +
+				"@red@I also needed some blood. By now, Iban's body was just a% %" +
+				"@red@hardened vessel-his life blood had literally drained from % %" +
+				"@red@him. But these caverns are home to the giant spider,% %" +
+				"@red@a venomous creature that is known to feed on human % %" +
+				"@red@blood.  Killing one of these spiders, I wiped my carved doll % %" +
+				"@red@in its blood.", true);
+		} else if (chapter == 5) {
+			player.message("you turn to the page titled 'shadow'");
+			ActionSender.sendBox(player, "@red@Ibans Shadow% %" +
+				"@red@Then came the hard part: recreating the parts of a man @red@that cannot be seen or touched: those intangible things @red@that are life itself. Using all the mystical force that I could @red@muster, I performed the ancient ritual of Incantia, a spell @red@so powerful that it nearly stole the life from my frail and @red@withered body. Opening my eyes again, I saw the three @red@demons that had been summoned. Standing in a triangle, @red@their energy @red@was focused on the doll. These demons @red@would be the keepers of @red@Iban's shadow. Black as night, @red@their shared spirit @red@would follow his undead body like an @red@angel of death.", true);
+		} else if (chapter == 6) {
+			player.message("you turn to the page titled 'conscience'");
+			ActionSender.sendBox(player, "@red@Ibans conscience% %" +
+				"@red@Finally, I had to construct that most unique thing, the one @red@element which seperates man from every other beast- his @red@conscience. A zombie does not need a mind: his is a @red@mindless destruction, borne of simple bloodlust. But for all @red@of Iban's life, he himself choose to take the evil path- @red@driven by such a monstrous ambition. This is what gave @red@him such potential- potential that I would now harness to @red@the fullest.", true);
+		}
+
+		if (chapter >= 3 && chapter <= 6) {
+			message(player, "there are four more chapters");
+			int chapterOpt = showMenu(player, "flesh", "blood", "shadow", "conscience");
+			if (chapterOpt >= 0)
+				readJournalChapter(player, chapterOpt + 3);
+		}
 	}
 }
