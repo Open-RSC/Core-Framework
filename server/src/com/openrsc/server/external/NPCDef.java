@@ -83,6 +83,7 @@ public class NPCDef extends EntityDef {
 	 * -1: Floor
 	 * 0: Natural round
 	 * 1: Ceil
+	 * Default: Cast to int without any Math function
 	 */
 	public int roundMode;
 
