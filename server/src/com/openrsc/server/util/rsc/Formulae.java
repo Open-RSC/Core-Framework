@@ -479,8 +479,8 @@ public final class Formulae {
 	/**
 	 * Calculate how much experience a Mob gives
 	 */
-	public static int combatExperience(Mob mob) { // OPEN RSC FORMULA
-		return ((mob.getCombatLevel() * 2) + 20);
+	public static int combatExperience(Mob mob, int roundMode) { // OPEN RSC FORMULA + PECULIARITIES OF ORIGINAL RSC
+		return ((mob.getCombatLevel(roundMode) * 2) + 20);
 	}
 
 	/**
@@ -582,23 +582,36 @@ public final class Formulae {
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatlevel(int[] stats) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED]);
+	public static int getCombatlevel(int[] stats, Integer roundMode) {
+		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], roundMode);
 	}
 
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range) {
+	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, Integer roundMode) {
 		double attack = att + str;
 		double defense = def + hits;
 		double mage = pray + magic;
 		mage /= 8D;
 
+		double level;
+
 		if (attack < ((double) range * 1.5D)) {
-			return (int) ((defense / 4D) + ((double) range * 0.375D) + mage);
+			level = ((defense / 4D) + ((double) range * 0.375D) + mage);
 		} else {
-			return (int) ((attack / 4D) + (defense / 4D) + mage);
+			level = ((attack / 4D) + (defense / 4D) + mage);
+		}
+
+		switch (roundMode != null ? roundMode : 9999) {
+			case -1:
+				return (int) Math.floor(level);
+			case 0:
+				return (int) Math.round(level);
+			case 1:
+				return (int) Math.ceil(level);
+			default:
+				return (int) level;
 		}
 	}
 

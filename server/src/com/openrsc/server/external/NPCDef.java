@@ -78,6 +78,14 @@ public class NPCDef extends EntityDef {
 	 */
 	public int walkModel, combatModel, combatSprite;
 
+	/**
+	 * Round Mode of xp given from mob (Xp = 2 * RoundMode(cb lvl) + 20)
+	 * -1: Floor
+	 * 0: Natural round
+	 * 1: Ceil
+	 */
+	public int roundMode;
+
 	public int getAtt() {
 		return attack;
 	}
@@ -168,4 +176,6 @@ public class NPCDef extends EntityDef {
 	public boolean isMembers() {
 		return members;
 	}
+
+	public int roundMode() { return roundMode; }
 }

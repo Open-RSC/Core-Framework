@@ -70,8 +70,8 @@ public class Skills {
 		return total;
 	}
 
-	public int getCombatLevel() {
-		return Formulae.getCombatlevel(getMaxStats());
+	public int getCombatLevel(Integer roundMode) {
+		return Formulae.getCombatlevel(getMaxStats(), roundMode);
 	}
 
 	public void setSkill(int skill, int level, int exp) {

@@ -879,7 +879,7 @@ public abstract class Mob extends Entity {
 		synchronized (victim) {
 			boolean gotUnderAttack = false;
 
-			
+
 			if (this.isPlayer()) {
 				if (victim.isNpc()) {
 					if (((Npc) victim).isPkBot()) {
@@ -919,7 +919,7 @@ public abstract class Mob extends Entity {
 			victim.setOpponent(this);
 			victim.setCombatTimer();
 
-				
+
 				if (victim.isPlayer()) {
 				assert victim instanceof Player;
 				Player playerVictim = (Player) victim;
@@ -1088,8 +1088,12 @@ public abstract class Mob extends Entity {
 		return skills;
 	}
 
+	public int getCombatLevel(int roundMode) {
+		return getSkills().getCombatLevel(roundMode);
+	}
+
 	public int getCombatLevel() {
-		return getSkills().getCombatLevel();
+		return getSkills().getCombatLevel(null);
 	}
 
 	public boolean isTeleporting() {

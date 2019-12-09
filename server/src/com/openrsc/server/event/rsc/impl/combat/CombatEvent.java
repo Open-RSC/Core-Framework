@@ -54,7 +54,7 @@ public class CombatEvent extends GameTickEvent {
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
 
-			int exp = Formulae.combatExperience(playerKilled);
+			int exp = Formulae.combatExperience(playerKilled, 0);
 			switch (playerKiller.getCombatStyle()) {
 				case 0:
 					for (int x = 0; x < 3; x++) {
@@ -62,16 +62,16 @@ public class CombatEvent extends GameTickEvent {
 					}
 					break;
 				case 1:
-					playerKiller.incExp(2, exp * 3, true);
+					playerKiller.incExp(Skills.STRENGTH, exp * 3, true);
 					break;
 				case 2:
-					playerKiller.incExp(0, exp * 3, true);
+					playerKiller.incExp(Skills.ATTACK, exp * 3, true);
 					break;
 				case 3:
-					playerKiller.incExp(1, exp * 3, true);
+					playerKiller.incExp(Skills.DEFENSE, exp * 3, true);
 					break;
 			}
-			playerKiller.incExp(3, exp, true);
+			playerKiller.incExp(Skills.HITS, exp, true);
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);

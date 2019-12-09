@@ -64,12 +64,12 @@ public final class EntityHandler {
 		this.server = server;
 		this.persistenceManager = new PersistenceManager(getServer());
 	}
-	
+
 	public void load() {
 		setupFileDefinitions();
 		setupDbDefinitions();
 	}
-	
+
 	public void unload() {
 		npcs = null;
 		items = null;
@@ -148,7 +148,7 @@ public final class EntityHandler {
 				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
 				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
 				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite` FROM `"
+				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode` FROM `"
 				+ getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
 			while (result.next()) {
 				NPCDef def = new NPCDef();
@@ -178,6 +178,7 @@ public final class EntityHandler {
 				def.walkModel = result.getInt("walkModel");
 				def.combatModel = result.getInt("combatModel");
 				def.combatSprite = result.getInt("combatSprite");
+				def.roundMode = result.getInt("roundMode");
 
 				ArrayList<ItemDropDef> drops = new ArrayList<ItemDropDef>();
 
@@ -335,7 +336,7 @@ public final class EntityHandler {
 	public ItemCookingDef getItemCookingDef(int id) {
 		return itemCooking.get(id);
 	}
-	
+
 	/**
 	 * @param id the entities ID
 	 * @return the ItemPerfectCookingDef with the given ID

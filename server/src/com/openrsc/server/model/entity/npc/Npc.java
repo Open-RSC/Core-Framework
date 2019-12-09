@@ -87,18 +87,18 @@ public class Npc extends Mob {
 	public void setSkullEvent(DelayedEvent skullEvent) {
 		this.skullEvent = skullEvent;
 	}
-	
+
 	public long getSkullTime() {
 		if (isSkulled() && getSkullType() == 1) {
 			return skullEvent.timeTillNextRun();
 		}
 		return 0;
 	}
-	
+
 	public boolean isSkulled() {
 		return skullEvent != null;
 	}
-	
+
 	public int getSkullType() {
 		int type = 0;
 		if (isSkulled()) {
@@ -106,7 +106,7 @@ public class Npc extends Mob {
 		}
 		return type;
 	}
-	
+
 	public void removeSkull() {
 		if (skullEvent == null) {
 			return;
@@ -116,7 +116,7 @@ public class Npc extends Mob {
 		getUpdateFlags().setAppearanceChanged(true);
 		getUpdateFlags().setSkull(new Skull(this, 0));
 	}
-	
+
 	private HashMap<String, Long> attackedBy = new HashMap<String, Long>();
 	public void addAttackedBy(Player p) {
 		attackedBy.put(p.getUsername(), System.currentTimeMillis());
@@ -128,7 +128,7 @@ public class Npc extends Mob {
 		}
 		return 0;
 	}
-	
+
 	public void setSkulledOn(Player player) {
 		player.getSettings().addAttackedBy(this);
 		if (System.currentTimeMillis() - lastAttackedBy(player) > 1200000) {
@@ -136,7 +136,7 @@ public class Npc extends Mob {
 		}
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
-	 
+
 	/**
 	 * The current status of the player
 	 */
@@ -198,15 +198,15 @@ public class Npc extends Mob {
 	public boolean isRanging() {
 		return rangeEventNpc != null || throwingEvent != null;
 	}
-	
+
 	public boolean isPkBotMelee() {
 		return getID() == 804;
 	}
-	
+
 	public boolean isPkBotArcher() {
 		return getID() == 210;
 	}
-	
+
 	public boolean isPkBot() {
 		return getID() == 804;
 	}
@@ -316,7 +316,7 @@ public class Npc extends Mob {
 	 */
 	private NPCLoc loc;
 	private int armourPoints = 1;
-	
+
 	private int heals = 24;
 	public int getHeals() {
 		return heals;
@@ -1066,7 +1066,7 @@ public class Npc extends Mob {
 		Mob playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
 
-		int totalCombatXP = Formulae.combatExperience(this);
+		int totalCombatXP = Formulae.combatExperience(this, getDef().roundMode);
 		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
@@ -1183,7 +1183,7 @@ public class Npc extends Mob {
 		Player playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
 
-		int totalCombatXP = Formulae.combatExperience(this);
+		int totalCombatXP = Formulae.combatExperience(this, 0);
 		// Melee damagers
 		for (int playerID : getCombatDamagers()) {
 
@@ -1453,7 +1453,7 @@ public class Npc extends Mob {
 	public boolean addDeathListener(NpcLootEvent event) {
 		return deathListeners.add(event);
 	}
-	
+
 	private long healTimer = 0;
 	public boolean cantHeal() {
 		return healTimer - System.currentTimeMillis() > 0;
