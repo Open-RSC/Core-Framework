@@ -212,10 +212,15 @@ public class AppFrame extends JFrame {
 
 		comboBox = new CheckCombo();
 		comboBox.combo.setBounds(600, local_y + 120, 190, 30);
-		comboBox.combo.setBackground(Color.black);
-		comboBox.combo.setForeground(Color.white);
 
 		this.bg.add(comboBox.combo);
+		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 508, 18);
+		this.progress.setBackground(new Color(45, 46, 42));
+		this.progress.setFont(Utils.getFont("Exo-Regular.otf", 1, 11.0f));
+		this.progress.setOpaque(true);
+		this.progress.setStringPainted(true);
+		this.progress.setBorderPainted(false);
+		this.bg.add(this.progress);
 	}
 
 
@@ -224,7 +229,6 @@ public class AppFrame extends JFrame {
 	}
 
 	public void setDownloadProgress(String f, float percent) {
-		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 508, 18);
 		if (percent >= 90) this.progress.setForeground(new Color(0, 153, 0));
 		else if (percent >= 80 && percent < 90) this.progress.setForeground(new Color(91, 153, 0));
 		else if (percent >= 70 && percent < 80) this.progress.setForeground(new Color(130, 153, 0));
@@ -234,14 +238,8 @@ public class AppFrame extends JFrame {
 		else if (percent >= 30 && percent < 40) this.progress.setForeground(new Color(153, 63, 0));
 		else if (percent >= 20 && percent < 30) this.progress.setForeground(new Color(153, 43, 0));
 		else this.progress.setForeground(new Color(153, 0, 0));
-		this.progress.setBackground(new Color(45, 46, 42));
-		this.progress.setFont(Utils.getFont("Exo-Regular.otf", 1, 11.0f));
-		this.progress.setOpaque(true);
-		this.progress.setStringPainted(true);
-		this.progress.setBorderPainted(false);
 		this.progress.setValue((int) percent);
 		this.progress.setString(f + " - " + (int) percent + "%");
-		this.bg.add(this.progress);
 		this.progress.repaint();
 	}
 
@@ -432,6 +430,7 @@ public class AppFrame extends JFrame {
 	}
 
 	//Spritepack combobox
+	public CheckCombo getSpriteCombo() { return this.comboBox; }
 	public CheckCombo.store[] getComboBoxState() {
 		int entryCount = comboBox.combo.getItemCount();
 		CheckCombo.store[] items = new CheckCombo.store[entryCount];

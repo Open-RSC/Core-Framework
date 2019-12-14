@@ -24,8 +24,10 @@ import orsc.graphics.three.RSModel;
 import orsc.graphics.three.Scene;
 import orsc.graphics.three.World;
 import orsc.graphics.two.Fonts;
-import orsc.graphics.two.GraphicsController;
 import orsc.graphics.two.MudClientGraphics;
+import orsc.graphics.two.SpriteArchive.Subspace;
+import orsc.graphics.two.SpriteArchive.Unpacker;
+import orsc.graphics.two.SpriteArchive.Workspace;
 import orsc.multiclient.ClientPort;
 import orsc.net.Network_Socket;
 import orsc.util.FastMath;
@@ -36,8 +38,6 @@ import java.io.*;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
@@ -12953,9 +12953,8 @@ public final class mudclient implements Runnable {
 		}
 
 		//Load & apply sprite packs
-		File configFile = new File(clientPort.getCacheLocation());
-		if (configFile.isDirectory()) {
-			configFile = new File(clientPort.getCacheLocation() + File.separator + "config.txt");
+		File configFile = new File(clientPort.getCacheLocation(), "config.txt");
+		if (configFile.exists()) {
 			if (configFile.exists()) {
 				ArrayList<String> activePacks = new ArrayList<>();
 				try {
@@ -12967,28 +12966,18 @@ public final class mudclient implements Runnable {
 							activePacks.add(packageName[0]);
 					}
 					br.close();
-
+					File packFolder = new File(clientPort.getCacheLocation(), "spritepacks");
+					Unpacker unpacker = new Unpacker();
+					Workspace workspace;
 					for (String filename : activePacks) {
-						ZipFile spritePack = new ZipFile(clientPort.getCacheLocation() + File.separator + filename + ".pack");
-						Enumeration<? extends ZipEntry> entries = spritePack.entries();
-						//Loop through each spritesheet in the sprite pack
-
-						while (entries.hasMoreElements()) {
-							List<Sprite> spriteGroup;
-							ZipEntry entry = entries.nextElement();
-							spriteGroup = GraphicsController.unpackSpriteData(spritePack, entry);
-							List<Sprite> defaultSprites = getSurface().spriteTree.get(entry.getName());
-							for (Sprite sprite : spriteGroup) {
-								for (int i = 0; i < defaultSprites.size(); i++) {
-									if (sprite.getID() == defaultSprites.get(i).getID()) {
-										defaultSprites.set(i, sprite);
-										break;
-									}
-								}
+						File pack = new File(packFolder, filename + ".osar");
+						workspace = unpacker.unpackArchive(pack);
+						for (Subspace subspace : workspace.getSubspaces()) {
+							Map<String, orsc.graphics.two.SpriteArchive.Entry> entries = getSurface().spriteTree.get(subspace.getName());
+							for (orsc.graphics.two.SpriteArchive.Entry entry: subspace.getEntryList()) {
+								entries.put(entry.getID(), entry);
 							}
-							getSurface().spriteTree.put(entry.getName(), defaultSprites);
 						}
-
 					}
 				} catch (IOException a) {
 					a.printStackTrace();
@@ -12996,9 +12985,6 @@ public final class mudclient implements Runnable {
 			}
 
 		}
-
-		//Create a hashmap of the animation names to their index in the sprite tree
-		getSurface().mapAnimations();
 	}
 
 	private void loadEntitiesAuthentic() {
@@ -13264,7 +13250,7 @@ public final class mudclient implements Runnable {
 		clientPort.showLoadingProgress(50, "Textures");
 		this.scene.setFrustum(0, 11, 7, EntityHandler.textureCount());
 		for (int i = 0; i < EntityHandler.textureCount(); i++) {
-			Sprite sprite = getSurface().spriteTree.get("textures").get(i);
+			Sprite sprite = getSurface().spriteTree.get("textures").get(String.valueOf(i)).getFrames()[0].getSprite();
 			int length = sprite.getWidth() * sprite.getHeight();
 			int[] pixels = sprite.getPixels();
 			int[] ai1 = new int[32768];

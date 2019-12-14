@@ -2,6 +2,7 @@ package com.loader.openrsc.util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -16,7 +17,8 @@ public class Utils {
 
 	public static Font getFont(final String fontName, final int type, final float size) {
 		try {
-			Font font = Font.createFont(0, Utils.class.getResource("/data/fonts/" + fontName).openStream());
+			File file = new File("src/data/fonts/" + fontName);
+			Font font = Font.createFont(0, file);
 			final GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			genv.registerFont(font);
 			font = font.deriveFont(type, size);
@@ -48,7 +50,9 @@ public class Utils {
 	}
 
 	public static ImageIcon getImage(final String name) {
-		return new ImageIcon(Utils.class.getResource("/data/images/" + name));
+		//return new ImageIcon(Utils.class.getResource("/data/images/" + name));
+		File file = new File("src/data/images/" + name);
+		return new ImageIcon(file.toPath().toString());
 	}
 
 	public static String getServerTime() {

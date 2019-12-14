@@ -3,38 +3,29 @@ package com.openrsc.android.updater;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.openrsc.client.R;
 import com.openrsc.client.android.GameActivity;
+import orsc.osConfig;
+import orsc.util.GenUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
-
-import orsc.osConfig;
-import orsc.util.GenUtil;
 
 public class CacheUpdater extends Activity {
 
@@ -42,6 +33,9 @@ public class CacheUpdater extends Activity {
 
     private TextView tv1;
     private boolean completed = false;
+
+    List<String> excludedFiles = new ArrayList<>();
+    List<String> refuseUpdate = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,93 +72,42 @@ public class CacheUpdater extends Activity {
 
         @Override
         protected String doInBackground(String... aurl) {
-            Properties oldChecksum = new Properties();
-            Properties newChecksum = new Properties();
-            try {
-                downloadFile("MD5CHECKSUM");
-                File f = new File(getFilesDir().getPath() + File.separator + "MD5CHECKSUM.old");
-                if (!f.exists()) {
-                    f.createNewFile();
-                }
-                FileInputStream fi = openFileInput("MD5CHECKSUM.old");
-                FileInputStream f2 = openFileInput("MD5CHECKSUM");
-                oldChecksum.load(fi);
-                newChecksum.load(f2);
-                fi.close();
-                f2.close();
-            } catch (Exception e) {
-                System.out.println(" ");
-                System.out.println(" ");
-                System.out.println("Unable to load checksums.");
-                System.out.println(" ");
-                System.out.println(" ");
-                System.exit(1);
-            }
-            try {
-                /* Update cache file */
-                for (Entry<Object, Object> e : oldChecksum.entrySet()) {
-                    for (Entry<Object, Object> e1 : newChecksum.entrySet()) {
-                        if (e1.getKey().equals(e.getKey()) && !e1.getValue().equals(e.getValue())) {
-                            deleteFile((String) e.getKey());
-                            downloadFile((String) e.getKey());
-                            publishProgress("Updating " + e.getKey() + "...\n");
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(" ");
-                System.out.println(" ");
-                System.out.println("Unable to update cache files.");
-                System.out.println(" ");
-                System.out.println(" ");
-                System.exit(1);
-            }
+			excludedFiles.add(osConfig.MD5_TABLENAME);
+			refuseUpdate.add("config.txt");
 
-            try {
-                publishProgress("Downloading game cache files");
-                /* Download new added files */
-                for (Object o : newChecksum.keySet()) {
-                    if (!oldChecksum.keySet().contains(o)) {
-                        downloadFile((String) o);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(" ");
-                System.out.println(" ");
-                System.out.println("Unable to download newly added files.");
-                System.out.println(" ");
-                System.out.println(" ");
-                System.exit(1);
-            }
+			File cacheHome = getFilesDir();
+			if (!cacheHome.exists())
+				cacheHome.mkdirs();
 
-            try {
-                for (Entry<Object, Object> entrySet : newChecksum.entrySet()) {
-                    String filename = (String) entrySet.getKey();
-                    String hash = (String) entrySet.getValue();
-                    boolean verified = false;
+			File md5Table = new File(cacheHome, osConfig.MD5_TABLENAME);
 
-                    while (!verified) {
-                        verified = verifyFile(filename, hash);
-                        if (!verified) {
-                            publishProgress("Re-downloading " + filename);
-                            deleteFile(filename);
-                            downloadFile(filename);
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println(" ");
-                System.out.println(" ");
-                System.out.println("Unable to verify data files");
-                System.out.println(" ");
-                System.out.println(" ");
-                System.exit(1);
-            }
+			if (md5Table.exists()) {
+				md5Table.delete();
+			}
 
-            File old = new File(getFilesDir(), "MD5CHECKSUM.old");
-            File new1 = new File(getFilesDir(), "MD5CHECKSUM");
-            old.delete();
-            new1.renameTo(old);
+			downloadFile(md5Table, getFilesDir().toString() + File.separator);
+
+			md5 localCache = new md5(md5Table.getParentFile(), "");
+			md5 remoteCache = new md5(md5Table, "");
+
+			for (md5.Entry entry : remoteCache.entries) {
+				if (excludedFiles.contains(entry.getRef().getName()))
+					continue;
+
+				File entryFile = new File(cacheHome, entry.getRef().toString());
+				entryFile.getParentFile().mkdirs();
+
+				String localSum = localCache.getRefSum(entryFile);
+				if (localSum != null) {
+					if (refuseUpdate.contains(entry.getRef().getName()) ||
+						localSum.equalsIgnoreCase(entry.getSum())) {
+						continue;
+					}
+				}
+
+				downloadFile(entryFile, getFilesDir().toString() + File.separator);
+			}
+
             publishProgress("Updating completed...");
             return null;
         }
@@ -418,33 +361,29 @@ public class CacheUpdater extends Activity {
             }
         }
 
-        void downloadFile(String filename) {
-            Log.d("Updater", "Downloading file: " + filename + " - " + getNiceName(filename));
-            HttpURLConnection connection;
-            try {
-                connection = (HttpURLConnection) new URL(osConfig.CACHE_URL + filename).openConnection();
-                connection.connect();
-                publishProgress("Downloading " + getNiceName(filename));
-                int fileLength = connection.getContentLength();
-                try (FileOutputStream fos = openFileOutput(filename, Context.MODE_PRIVATE)) {
-                    InputStream in = connection.getInputStream();
-                    byte[] buffer = new byte[1024];
-                    int total = 0;
-                    int len;
-                    while ((len = in.read(buffer)) > 0) {
-                        total += len;
-                        if (fileLength > 0) {
-                            int progress = (total * 100) / fileLength;
-                            publishProgress("Downloading " + filename, "" + progress);
-                        }
-                        fos.write(buffer, 0, len);
-                    }
-                    fos.flush();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+		private void downloadFile(File file, String prefix) {
+			try {
+				String fileURL = file.toString().replace(prefix, osConfig.CACHE_URL).replace(File.separator, "/");
+				String description = getDescription(file);
+				publishProgress("Downloading " + description, String.valueOf(0));
+				HttpURLConnection connection = (HttpURLConnection) new URL(fileURL).openConnection();
+				try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+					 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+					int filesize = connection.getContentLength();
+					byte dataBuffer[] = new byte[1024];
+					int bytesRead;
+					int totalRead = 0;
+					while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+						totalRead += bytesRead;
+						fileOutputStream.write(dataBuffer, 0, bytesRead);
+						publishProgress("Downloading " + description, "" + (100*totalRead/filesize));
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				connection.disconnect();
+			} catch (Exception a) { a.printStackTrace(); }
+		}
 
         public String getMD5Checksum(String filename) throws Exception {
             InputStream fis = openFileInput(filename);
@@ -489,4 +428,22 @@ public class CacheUpdater extends Activity {
         return "File";
     }
 
+	private String getDescription(File ref) {
+		int index = ref.getName().lastIndexOf('.');
+		if (index == -1)
+			return "General";
+		else {
+			String extension = ref.getName().substring(index + 1);
+			if (extension.equalsIgnoreCase("ospr"))
+				return "Graphics";
+			else if (extension.equalsIgnoreCase("wav"))
+				return "Audio";
+			else if (extension.equalsIgnoreCase("orsc"))
+				return "Graphics";
+			else if (extension.equalsIgnoreCase("jar"))
+				return "Executable";
+			else
+				return "General";
+		}
+	}
 }

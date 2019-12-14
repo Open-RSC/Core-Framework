@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,50 +48,83 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 	}
 
 	public CheckCombo() {
+		store[] stores = new CheckCombo.store[]{new store("none", true), new store("okay", false)};
+		init(stores);
+	}
 
+	public void setContents(store[] stores) {
+		this.combo = new JComboBox(stores);
+		this.combo.setRenderer(this);
+		this.combo.setBackground(Color.black);
+		this.combo.setForeground(Color.white);
+		this.combo.addActionListener(new CheckComboListener());
+		this.combo.addPopupMenuListener(new PopupMenuListener() {
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				keepMenuOpen = true;
+
+			}
+
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						combo.setPopupVisible(keepMenuOpen);
+					}
+				});
+			}
+
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+				keepMenuOpen = false;
+			}
+		});
+		this.combo.setVisible(true);
+	}
+
+	private void init(store[] stores) {
 		checkBox = new RadioButton("", new Rectangle(0,0,20,15));
 		checkBox.setContentAreaFilled(true);
+
+		setContents(stores);
+	}
+
+	public Component getListCellRendererComponent(JList list, Object value,
+												  int index, boolean isSelected, boolean cellHasFocus) {
+		store store = (store) value;
+		checkBox.setText(store.text);
+		checkBox.setSelected(((Boolean) store.state).booleanValue());
+		checkBox.setBackground(isSelected ? new Color(0, 32, 66) : Color.black);
+		checkBox.setForeground(isSelected ? Color.white : Color.white);
+
+		return checkBox;
+
+	}
+
+	public void loadSpritePacks() {
 		CheckCombo.store[] stores = null;
 
-		String path = Constants.CONF_DIR;
-		File thingy = new File(path);
-		System.out.println("" + thingy.getAbsolutePath());
 		try {
-			if (!thingy.isDirectory())
-				thingy.mkdir();
-
-			File configFile = new File(path + File.separator + "config.txt");
+			File configFile = new File(Constants.CONF_DIR, "config.txt");
 			configFile.createNewFile();
 
-			FilenameFilter textFilter = new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					String lowercaseName = name.toLowerCase();
-					if (lowercaseName.endsWith(".pack")) {
-						return true;
-					} else {
-						return false;
-					}
-				}
-			};
-			int spritePackCount = thingy.list(textFilter).length;
+			File spDir = new File(Constants.SPRITEPACK_DIR);
+			File[] spritePacks = spDir.listFiles(File::isDirectory);
 
-			if (spritePackCount > 0) {
+			if (spritePacks.length > 0) {
 				ArrayList<String> packsAvailable = new ArrayList<>();
 				Map<String, Boolean> packsSettings = new HashMap<>();
 
-				String[] files = thingy.list(textFilter);
-
-				for (int i = 0; i < files.length; i++) {
-					files[i] = files[i].substring(0, files[i].lastIndexOf('.'));
-					packsAvailable.add(files[i]);
-				}
+				for (File spritePack : spritePacks)
+					packsAvailable.add(spritePack.getName());
 
 				BufferedReader br = new BufferedReader(new FileReader(configFile));
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] packageName = line.split(":");
 					//Check to make sure the user hasn't deleted the pack
-					if (Arrays.asList(files).contains(packageName[0])) {
+					if (packsAvailable.contains(packageName[0])) {
 						packsSettings.put(packageName[0], Integer.parseInt(packageName[1]) == 1);
 					}
 
@@ -130,51 +164,8 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 		//Load the packs into the combo box
 		if (stores != null)
 			this.combo = new JComboBox(stores);
-		else {
-			stores = new CheckCombo.store[1];
-			stores[0] = new CheckCombo.store("none", true);
-			this.combo = new JComboBox(stores);
-		}
 
-		this.combo.setRenderer(this);
-		this.combo.addActionListener(new CheckComboListener());
-		this.combo.addPopupMenuListener(new PopupMenuListener() {
-			@Override
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				keepMenuOpen = true;
-
-			}
-
-			@Override
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						combo.setPopupVisible(keepMenuOpen);
-
-					}
-				});
-			}
-
-			@Override
-			public void popupMenuCanceled(PopupMenuEvent e) {
-				keepMenuOpen = false;
-			}
-		});
-		this.combo.setVisible(true);
-
-	}
-
-	public Component getListCellRendererComponent(JList list, Object value,
-												  int index, boolean isSelected, boolean cellHasFocus) {
-		store store = (store) value;
-		checkBox.setText(store.text);
-		checkBox.setSelected(((Boolean) store.state).booleanValue());
-		checkBox.setBackground(isSelected ? new Color(0, 32, 66) : Color.black);
-		checkBox.setForeground(isSelected ? Color.white : Color.white);
-
-		return checkBox;
-
+		this.combo.repaint();
 	}
 }
 

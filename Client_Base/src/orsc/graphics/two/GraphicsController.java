@@ -8,6 +8,7 @@ import com.openrsc.client.model.Sprite;
 import com.openrsc.data.DataConversions;
 import orsc.Config;
 import orsc.MiscFunctions;
+import orsc.graphics.two.SpriteArchive.*;
 import orsc.mudclient;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
@@ -55,8 +56,7 @@ public class GraphicsController {
 	private int[] m_tb;
 	private int[] m_Tb;
 	private int[] m_Wb;
-	public Map<String, List<Sprite>> spriteTree = new HashMap<>();
-	private static Map<String, Integer> animationMap = new HashMap<>();
+	public Map<String, Map<String, Entry>> spriteTree = new HashMap<>();
 	// public int[][] image2D_pixels;
 	private int[] m_Xb;
 	private ZipFile spriteArchive;
@@ -69,9 +69,7 @@ public class GraphicsController {
 			this.height2 = var2;
 			this.width2 = var1;
 			try {
-				if (Config.S_WANT_CUSTOM_SPRITES) {
-					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Custom_Sprites.orsc");
-				} else {
+				if (!Config.S_WANT_CUSTOM_SPRITES) {
 					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Authentic_Sprites.orsc");
 					sprites = new Sprite[var3];
 				}
@@ -314,14 +312,14 @@ public class GraphicsController {
 			return sprites[item.authenticSpriteID + mudclient.spriteItem];
 
 		String[] location = item.getSpriteLocation().split(":");
-		return spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
+		return spriteTree.get(location[0]).get(location[1]).getFrames()[0].getSprite();
 	}
 
 	public Sprite spriteSelect(AnimationDef animation, int offset) {
 		if (!Config.S_WANT_CUSTOM_SPRITES)
 			return sprites[animation.getNumber() + offset];
 
-		return spriteTree.get("animations").get(animationMap.get(animation.name) + offset);
+		return spriteTree.get(animation.category).get(animation.name).getFrames()[offset].getSprite();
 	}
 
 	public Sprite spriteSelect(SpriteDef sprite) {
@@ -330,41 +328,8 @@ public class GraphicsController {
 
 		String[] location = sprite.getSpriteLocation().split(":");
 
-		return spriteTree.get(location[0]).get(Integer.parseInt(location[1]));
+		return spriteTree.get(location[0]).get(location[1]).getFrames()[0].getSprite();
 	}
-	/*
-	public Sprite spriteSelect(int id) {
-		if (!Config.S_WANT_CUSTOM_SPRITES)
-			return this.sprites[id];
-		/**
-		 * Newest RSC cache: SAME VALUES.
-		 * <p>
-		 * mudclient.spriteMedia = 2000;
-		 * mudclient.spriteUtil = mudclient.spriteMedia + 100; 2100
-		 * mudclient.spriteItem = 50 + mudclient.spriteUtil; 2150
-		 * mudclient.spriteLogo = 1000 + mudclient.spriteItem; 3150
-		 * mudclient.spriteProjectile = 10 + mudclient.spriteLogo; 3160
-		 * mudclient.spriteTexture = 50 + mudclient.spriteProjectile; 3210
-
-
-		if (id < mudclient.spriteMedia) {
-			return spriteTree.get("animations").get(id);
-		} else if (id < mudclient.spriteUtil) {
-			return spriteTree.get("GUI").get(id - mudclient.spriteMedia);
-		} else if (id < mudclient.spriteItem) {
-			return spriteTree.get("GUIutil").get(id - mudclient.spriteUtil);
-		} else if (id < mudclient.spriteProjectile) {
-			return spriteTree.get("items").get(id - mudclient.spriteItem);
-		} else if (id < mudclient.spriteTexture) {
-			return spriteTree.get("projectiles").get(id - mudclient.spriteProjectile);
-		} else if (id < 3284) {
-			return spriteTree.get("textures").get(id - mudclient.spriteTexture);
-		} else
-			return spriteTree.get("crowns").get(id - 3284);
-
-	}
-
-	 */
 
 	public final void a(Sprite sprite, int var2, int var3, int var4, int var5) {
 		try {
@@ -2943,17 +2908,17 @@ public class GraphicsController {
 	}
 
 	public boolean fillSpriteTree() {
-		Enumeration<? extends ZipEntry> entries = spriteArchive.entries();
-		//Loop through each spritesheet
-		try {
-			while (entries.hasMoreElements()) {
-				List<Sprite> spriteGroup;
-				ZipEntry entry = entries.nextElement();
-				spriteGroup = unpackSpriteData(spriteArchive, entry);
-				spriteTree.put(entry.getName(), spriteGroup);
-			}
-		} catch (IOException a) {
-			a.printStackTrace();
+		File workspaceFile = new File(Config.F_CACHE_DIR, "Custom_Sprites.osar");
+		if (!workspaceFile.exists())
+			return false;
+
+		Unpacker unpacker = new Unpacker();
+		Workspace workspace = unpacker.unpackArchive(workspaceFile);
+		for (Subspace subspace : workspace.getSubspaces()) {
+			Map<String, Entry> entries = new HashMap<>();
+			for (Entry entry : subspace.getEntryList())
+				entries.put(entry.getID(), entry);
+			spriteTree.put(subspace.getName(), entries);
 		}
 
 		return true;
@@ -3065,25 +3030,6 @@ public class GraphicsController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
-		}
-	}
-
-	public void mapAnimations() {
-
-		List<Sprite> animationList = spriteTree.get("animations");
-
-		for (int i = 0; i < EntityHandler.animationCount(); i++) {
-			AnimationDef animation = EntityHandler.getAnimationDef(i);
-			if (!animationMap.containsKey(animation.getName())) {
-				int p = 0;
-				for (Sprite sprite : animationList) {
-					if (animation.getName().equalsIgnoreCase(sprite.getPackageName())) {
-						animationMap.put(animation.getName(), p);
-						break;
-					}
-					p++;
-				}
-			}
 		}
 	}
 }

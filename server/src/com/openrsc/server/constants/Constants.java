@@ -94,11 +94,11 @@ public final class Constants {
 	/**
 	 * Size in width of RSC Player Avatars
 	 */
-	public final static int AVATAR_WIDTH = 65;
+	public final static int AVATAR_WIDTH = 64;
 	/**
 	 * Size in height of RSC Player Avatars
 	 */
-	public final static int AVATAR_HEIGHT = 115;
+	public final static int AVATAR_HEIGHT = 102;
 	/**
 	 * Allowable character skin colours
 	 */
