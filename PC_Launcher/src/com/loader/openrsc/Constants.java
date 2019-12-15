@@ -1,5 +1,7 @@
 package com.loader.openrsc;
 
+import java.io.File;
+
 public class Constants {
 
 	// 43594 openrsc / 43595 cabbage / 43596 preservation / 43597 openpk / 43598 wk / 43599 dev
@@ -40,16 +42,16 @@ public class Constants {
 
 	// Launcher + Cache
 	public static final String Title = "Open RSC Game Launcher";
-	public static final String BASE_URL = "http://localhost/"; // Cache and client jar download locations depend on this
+	public static final String BASE_URL = "https://game.openrsc.com/"; // Cache and client jar download locations depend on this
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/";
-	public static final Double VERSION_NUMBER = 20191030.100000; //YYYYMMDD.HHMMSS format
-	public static final String VERSION_UPDATE_URL = "https://gitlab.openrsc.com/open-rsc/Game/raw/3.0.0/Launcher/src/com/loader/openrsc/Constants.java";
+	public static final Double VERSION_NUMBER = 20191214.100000; //YYYYMMDD.HHMMSS format
+	public static final String VERSION_UPDATE_URL = "https://gitlab.openrsc.com/open-rsc/Game/raw/3.0.0/PC_Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "https://game.openrsc.com/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";
 	public static final String MD5_TABLENAME = "MD5.SUM";
-	public static final String SPRITEPACK_DIR = CONF_DIR + "/spritepacks";
+	public static final String SPRITEPACK_DIR = CONF_DIR + File.separator + "video" + File.separator + "spritepacks";
 
 	// Link Buttons
 	public static final String BUTTON1 = "Discord";

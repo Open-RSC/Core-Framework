@@ -4,7 +4,6 @@ import com.loader.openrsc.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +51,15 @@ public class md5 {
 		}
 
 		return null;
+	}
+
+	public boolean hasRef(File ref) {
+		for (Entry entry : entries) {
+			if (entry.getRef().compareTo(ref) == 0)
+				return true;
+		}
+
+		return false;
 	}
 
 	public class Entry {

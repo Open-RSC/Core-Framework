@@ -87,20 +87,24 @@ public class Downloader {
 				download(entry.getRef());
 				hadUpdate = true;
 			}
+
+			//Delete unneeded files, while preserving sprite packs
+			for (md5.Entry entry : localCache.entries) {
+				if (entry.getRef().getParentFile().toString().equalsIgnoreCase(Constants.SPRITEPACK_DIR))
+					continue;
+
+				if (!remoteCache.hasRef(entry.getRef()))
+					entry.getRef().delete();
+			}
 		} catch (Exception e) {
 			System.out.println("Unable to load checksums.");
 			System.exit(1);
 		}
 
+		//Verify the cache
 		if (hadUpdate)
 			init();
-		//deleteNonExistant(old.keySet(), new1.keySet());
-		//updateIfNeeded(old.entrySet(), new1.entrySet());
-		//downloadNew(old.keySet(), new1.keySet());
-		//while (true) {
-			//if (verifyDownloads(new1.entrySet())) break;
-			//Verify and re-download until its all good.
-		//}
+
 	}
 
 	public void updateJar() {

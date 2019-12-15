@@ -19,7 +19,7 @@ public class Launcher {
 			Launcher.getPopup().setMessage("" + e);
 		}
 		Downloader updater = new Downloader();
-		//updater.updateJar();
+		updater.updateJar();
 
 		final AppFrame frame = new AppFrame();
 		frame.build();
@@ -30,8 +30,6 @@ public class Launcher {
 		String rscp = "rscp";
 		String local = "local";
 		String dev = "dev";
-		//TODO: change getimage and getfont back to using classpath resources
-		//TODO: uncomment updater.updateJar
 
 		// ORSC server status checker
 		new Thread(new StatusChecker(Constants.ORSC_SERVER_DOMAIN, orsc, Constants.ORSC_SERVER_PORT)).start();

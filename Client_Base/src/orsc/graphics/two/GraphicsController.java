@@ -70,7 +70,7 @@ public class GraphicsController {
 			this.width2 = var1;
 			try {
 				if (!Config.S_WANT_CUSTOM_SPRITES) {
-					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "Authentic_Sprites.orsc");
+					spriteArchive = new ZipFile(Config.F_CACHE_DIR + File.separator + "video" + File.separator + "Authentic_Sprites.orsc");
 					sprites = new Sprite[var3];
 				}
 			} catch (Exception e) {
@@ -2908,7 +2908,7 @@ public class GraphicsController {
 	}
 
 	public boolean fillSpriteTree() {
-		File workspaceFile = new File(Config.F_CACHE_DIR, "Custom_Sprites.osar");
+		File workspaceFile = new File(Config.F_CACHE_DIR, "video" + File.separator + "Custom_Sprites.osar");
 		if (!workspaceFile.exists())
 			return false;
 

@@ -17,9 +17,9 @@ public class Utils {
 
 	public static Font getFont(final String fontName, final int type, final float size) {
 		try {
-			File file = new File("src/data/fonts/" + fontName);
-			Font font = Font.createFont(0, file);
+			Font font = Font.createFont(0, Utils.class.getResource("/data/fonts/" + fontName).openStream());
 			final GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
 			genv.registerFont(font);
 			font = font.deriveFont(type, size);
 			return font;
@@ -50,9 +50,7 @@ public class Utils {
 	}
 
 	public static ImageIcon getImage(final String name) {
-		//return new ImageIcon(Utils.class.getResource("/data/images/" + name));
-		File file = new File("src/data/images/" + name);
-		return new ImageIcon(file.toPath().toString());
+		return new ImageIcon(Utils.class.getResource("/data/images/" + name));
 	}
 
 	public static String getServerTime() {

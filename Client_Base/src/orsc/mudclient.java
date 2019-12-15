@@ -715,7 +715,7 @@ public final class mudclient implements Runnable {
 	private boolean loadLogo() {
 		try {
 
-			byte[] Archive = unpackData("library.orsc", "Library", 0);
+			byte[] Archive = unpackData("video" + File.separator + "library.orsc", "Library", 0);
 			if (Archive == null) {
 				System.out.println("Library is empty");
 			}
@@ -12966,7 +12966,7 @@ public final class mudclient implements Runnable {
 							activePacks.add(packageName[0]);
 					}
 					br.close();
-					File packFolder = new File(clientPort.getCacheLocation(), "spritepacks");
+					File packFolder = new File(clientPort.getCacheLocation(), "video" + File.separator + "spritepacks");
 					Unpacker unpacker = new Unpacker();
 					Workspace workspace;
 					for (String filename : activePacks) {
@@ -13073,7 +13073,7 @@ public final class mudclient implements Runnable {
 	}
 
 	private void loadModels() {
-		byte[] models = unpackData("models.orsc", "3d models", 60);
+		byte[] models = unpackData("video" + File.separator + "models.orsc", "3d models", 60);
 
 		String[] modelNames = {"torcha2", "torcha3", "torcha4", "skulltorcha2", "skulltorcha3", "skulltorcha4",
 			"firea2", "firea3", "fireplacea2", "fireplacea3", "firespell2", "firespell3", "lightning2",
@@ -13231,7 +13231,7 @@ public final class mudclient implements Runnable {
 
 	private void loadSounds() {
 		try {
-			File folder = new File(F_CACHE_DIR + System.getProperty("file.separator"));
+			File folder = new File(F_CACHE_DIR, "audio");
 			File[] listOfFiles = folder.listFiles();
 
 			for (int i = 0; i < listOfFiles.length; i++)
@@ -13239,7 +13239,7 @@ public final class mudclient implements Runnable {
 					soundCache.put(listOfFiles[i].getName().toLowerCase(), listOfFiles[i]);
 				}
 
-			byte[] soundData = unpackData("sounds.mem", "Sound effects", 90);
+			byte[] soundData = unpackData("audio" + File.separator + "sounds.mem", "Sound effects", 90);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
