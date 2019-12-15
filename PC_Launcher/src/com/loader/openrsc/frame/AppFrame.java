@@ -12,13 +12,10 @@ import com.loader.openrsc.util.Utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.util.Enumeration;
 import java.util.Random;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
+import javax.swing.*;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
@@ -52,6 +49,13 @@ public class AppFrame extends JFrame {
 	//Sprite pack
 	private JLabel sprite_pack;
 	private CheckCombo comboBox;
+
+	private RadioButton rsccRadioButton;
+	private RadioButton orscRadioButton;
+	private RadioButton openpkRadioButton;
+	private RadioButton rscpRadioButton;
+	private RadioButton devRadioButton;
+	private RadioButton localRadioButton;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -294,12 +298,12 @@ public class AppFrame extends JFrame {
 		int local_radio_y = dev_radio_y + 28;
 
 		ButtonGroup group = new ButtonGroup();
-		RadioButton rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40));
-		RadioButton orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(rscc_radio_x, orsc_radio_y, 140, 40));
-		RadioButton openpkRadioButton = new RadioButton(Constants.OPENPK_GAME_NAME, new Rectangle(rscc_radio_x, openpk_radio_y, 260, 40));
-		RadioButton rscpRadioButton = new RadioButton(Constants.RSCP_GAME_NAME, new Rectangle(rscc_radio_x, rscp_radio_y, 260, 40));
-		RadioButton devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(rscc_radio_x, dev_radio_y, 140, 40));
-		RadioButton localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(rscc_radio_x, local_radio_y, 140, 40));
+		rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40));
+		orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(rscc_radio_x, orsc_radio_y, 140, 40));
+		openpkRadioButton = new RadioButton(Constants.OPENPK_GAME_NAME, new Rectangle(rscc_radio_x, openpk_radio_y, 260, 40));
+		rscpRadioButton = new RadioButton(Constants.RSCP_GAME_NAME, new Rectangle(rscc_radio_x, rscp_radio_y, 260, 40));
+		devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(rscc_radio_x, dev_radio_y, 140, 40));
+		localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(rscc_radio_x, local_radio_y, 140, 40));
 
 		rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 
@@ -310,12 +314,11 @@ public class AppFrame extends JFrame {
 		group.add(devRadioButton);
 		group.add(localRadioButton);
 
-		this.bg.add(orscRadioButton);
-		this.bg.add(rsccRadioButton);
-		this.bg.add(openpkRadioButton);
-		this.bg.add(rscpRadioButton);
-		this.bg.add(devRadioButton);
-		this.bg.add(localRadioButton);
+		for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements();) {
+			RadioButton button = (RadioButton) buttons.nextElement();
+			button.setEnabled(false);
+			this.bg.add(button);
+		}
 	}
 
 	private void addGameDescriptions() {
@@ -374,7 +377,7 @@ public class AppFrame extends JFrame {
 		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(localhostDescription);
 	}
-
+	
 	public JProgressBar getProgress() {
 		return this.progress;
 	}
@@ -440,5 +443,14 @@ public class AppFrame extends JFrame {
 		}
 
 		return items;
+	}
+
+	public void unlockGameSelection() {
+		rsccRadioButton.setEnabled(true);
+		orscRadioButton.setEnabled(true);
+		openpkRadioButton.setEnabled(true);
+		rscpRadioButton.setEnabled(true);
+		devRadioButton.setEnabled(true);
+		localRadioButton.setEnabled(true);
 	}
 }

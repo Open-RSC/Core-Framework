@@ -201,7 +201,7 @@ public class ButtonListener implements ActionListener {
 
 
 					ClientLauncher.launchClient();
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				return;

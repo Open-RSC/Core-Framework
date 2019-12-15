@@ -48,12 +48,21 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 	}
 
 	public CheckCombo() {
-		store[] stores = new CheckCombo.store[]{new store("none", true), new store("okay", false)};
-		init(stores);
+		init();
 	}
 
 	public void setContents(store[] stores) {
-		this.combo = new JComboBox(stores);
+		this.combo.removeAllItems();
+		for (store store : stores)
+			this.combo.addItem(store);
+		this.combo.repaint();
+	}
+
+	private void init() {
+		checkBox = new RadioButton("", new Rectangle(0,0,20,15));
+		checkBox.setContentAreaFilled(true);
+		store[] stores = new CheckCombo.store[]{new store("none", true)};
+		this.combo = new JComboBox();
 		this.combo.setRenderer(this);
 		this.combo.setBackground(Color.black);
 		this.combo.setForeground(Color.white);
@@ -81,23 +90,20 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 			}
 		});
 		this.combo.setVisible(true);
-	}
-
-	private void init(store[] stores) {
-		checkBox = new RadioButton("", new Rectangle(0,0,20,15));
-		checkBox.setContentAreaFilled(true);
-
 		setContents(stores);
 	}
 
 	public Component getListCellRendererComponent(JList list, Object value,
 												  int index, boolean isSelected, boolean cellHasFocus) {
-		store store = (store) value;
-		checkBox.setText(store.text);
-		checkBox.setSelected(((Boolean) store.state).booleanValue());
-		checkBox.setBackground(isSelected ? new Color(0, 32, 66) : Color.black);
-		checkBox.setForeground(isSelected ? Color.white : Color.white);
+		if (value != null) {
+			store store = (store) value;
+			checkBox.setText(store.text);
+			checkBox.setSelected(store.state);
+		} else
+			checkBox.setSelected(false);
 
+		this.combo.setBackground(Color.black);
+		this.combo.setForeground(Color.white);
 		return checkBox;
 
 	}
@@ -110,14 +116,17 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 			configFile.createNewFile();
 
 			File spDir = new File(Constants.SPRITEPACK_DIR);
-			File[] spritePacks = spDir.listFiles(File::isDirectory);
+			File[] spritePacks = spDir.listFiles(File::isFile);
 
 			if (spritePacks.length > 0) {
 				ArrayList<String> packsAvailable = new ArrayList<>();
 				Map<String, Boolean> packsSettings = new HashMap<>();
 
-				for (File spritePack : spritePacks)
-					packsAvailable.add(spritePack.getName());
+				for (File spritePack : spritePacks) {
+					int index = spritePack.getName().lastIndexOf('.');
+					String name = spritePack.getName().substring(0, index);
+					packsAvailable.add(name);
+				}
 
 				BufferedReader br = new BufferedReader(new FileReader(configFile));
 				String line;
@@ -163,7 +172,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 
 		//Load the packs into the combo box
 		if (stores != null)
-			this.combo = new JComboBox(stores);
+			setContents(stores);
 
 		this.combo.repaint();
 	}

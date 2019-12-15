@@ -18,24 +18,9 @@ public class ClientLauncher {
 		return frame;
 	}
 
-	public static void launchClient() throws InstantiationException,
-		IllegalAccessException,
-		IllegalArgumentException,
-		InvocationTargetException,
-		NoSuchMethodException,
-		SecurityException {
+	public static void launchClient() throws IllegalArgumentException,	SecurityException {
 
 		startProcess();
-		final JFrame applet = (JFrame) mainClass.getConstructor()
-			.newInstance();
-		AppFrame.get().dispose();
-		JFrame gameFrame = new JFrame(Constants.Title);
-		gameFrame.setMinimumSize(new Dimension(512 + 16, 334 + 49));
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.getContentPane().add(applet);
-		gameFrame.setAlwaysOnTop(false);
-		gameFrame.pack();
-		gameFrame.setVisible(true);
 	}
 
 	private static void exit() {

@@ -1,23 +1,24 @@
 package com.loader.openrsc.net;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.Launcher;
 import com.loader.openrsc.frame.AppFrame;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-import java.util.regex.Pattern;
+
 
 public class Downloader {
 
 	private ArrayList<String> excludedFiles = new ArrayList<>();
+	private ArrayList<String> refuseUpdate = new ArrayList<>();
+
+	public Downloader() {
+		excludedFiles.add(Constants.MD5_TABLENAME);
+		refuseUpdate.add("config.txt");
+	}
 
 	private static boolean checkVersionNumber() {
 		try {
@@ -48,8 +49,7 @@ public class Downloader {
 	}
 
 	public void init() {
-		excludedFiles.add(Constants.MD5_TABLENAME);
-		excludedFiles.add("config.txt");
+		boolean hadUpdate = false;
 
 		try {
 			AppFrame.get().getLaunch().setEnabled(false);
@@ -71,23 +71,29 @@ public class Downloader {
 			md5 remoteCache = new md5(MD5Table);
 
 			for (md5.Entry entry : remoteCache.entries) {
+				if (excludedFiles.contains(entry.getRef().getName()))
+					continue;
+
 				entry.getRef().getParentFile().mkdirs();
 
 				String localSum = localCache.getRefSum(entry.getRef());
 				if (localSum != null) {
-					if (excludedFiles.contains(entry.getRef().getName()) ||
+					if (refuseUpdate.contains(entry.getRef().getName()) ||
 						localSum.equalsIgnoreCase(entry.getSum())) {
 						continue;
 					}
 				}
 
 				download(entry.getRef());
+				hadUpdate = true;
 			}
 		} catch (Exception e) {
 			System.out.println("Unable to load checksums.");
 			System.exit(1);
 		}
 
+		if (hadUpdate)
+			init();
 		//deleteNonExistant(old.keySet(), new1.keySet());
 		//updateIfNeeded(old.entrySet(), new1.entrySet());
 		//downloadNew(old.keySet(), new1.keySet());
@@ -173,6 +179,7 @@ public class Downloader {
 				old.delete();
 
 			AppFrame.get().getLaunch().setEnabled(true);
+			AppFrame.get().unlockGameSelection();
 			AppFrame.get().getSpriteCombo().loadSpritePacks();
 			AppFrame.get().setDownloadProgress("Ready to play!", 100.0f);
 		} catch (Exception e) {
