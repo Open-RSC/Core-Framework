@@ -821,26 +821,63 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 		else if (n.getID() == NpcId.FEMI.id()) {
 			switch (p.getQuestStage(this)) {
 				case 10:
+					boolean smuggled = false;
+					boolean favor = false;
 					playerTalk(p, n, "i can't believe they won't let me in");
 					npcTalk(p, n, "i don't believe all this rubbish about an invasion",
 						"if mankind wanted to, they could have invaded before now");
 					playerTalk(p, n, "i really need to see king shareem",
 						"could you help sneak me in");
-					npcTalk(p, n, "well, as you helped me i suppose i could",
-						"we'll have to be careful",
-						"if i get caught i'll be in the cage");
-					playerTalk(p, n, "ok, what should i do");
-					npcTalk(p, n, "jump in the back of the cart",
-						"it's a food delivery, we should be fine");
-					message(p, "you hide in the cart",
-						"femi covers you with a sheet...",
-						"...and drags the cart to the gate",
-						"femi pulls you into the stronghold");
-					p.teleport(708, 510);
-					Npc femi = getNearestNpc(p, NpcId.FEMI_STRONGHOLD.id(), 2);
-					npcTalk(p, femi, "ok traveller, you'd better get going");
-					playerTalk(p, femi, "thanks again femi");
-					npcTalk(p, femi, "that's ok, all the best");
+					if(p.getCache().hasKey("helped_femi") && p.getCache().getBoolean("helped_femi")) {
+						npcTalk(p, n, "well, as you helped me i suppose i could",
+							"we'll have to be careful",
+							"if i get caught i'll be in the cage");
+						playerTalk(p, n, "ok, what should i do");
+						npcTalk(p, n, "jump in the back of the cart",
+							"it's a food delivery, we should be fine");
+						message(p, "you hide in the cart",
+							"femi covers you with a sheet...",
+							"...and drags the cart to the gate",
+							"femi pulls you into the stronghold");
+						smuggled = true;
+						favor = true;
+					} else {
+						npcTalk(p, n, "why should i help you, you wouldn't help me");
+						playerTalk(p, n, "erm i know, but this is an emergency");
+						npcTalk(p, n, "so was lifting that barrel",
+							"tell you what, let's call it a round 1000 gold piece's");
+						playerTalk(p, n, "1000 gold pieces");
+						npcTalk(p, n, "that's right 1000 and i'll sneak you in");
+						int option = showMenu(p, n, "no chance",
+							"ok then, here you go");
+						if (option == 0) {
+							// No extra dialogue
+						} else if (option == 1) {
+							if (p.getInventory().countId(ItemId.COINS.id()) >= 1000) {
+								npcTalk(p, n, "alright, jump in the back of the cart",
+									"it's a food delivery, we should be fine");
+								message(p, "you hide in the cart",
+									"femi covers you with a sheet...",
+									"...and drags the cart to the gate");
+								message(p, "you give femi 1000 gold coins");
+								removeItem(p, ItemId.COINS.id(), 1000);
+								message(p,"femi pulls you into the stronghold");
+								smuggled = true;
+							} else {
+								// Authentic behavior here not known
+								playerTalk(p, n, "Oh dear I don't seem to have enough money");
+							}
+						}
+					}
+					if (smuggled) {
+						p.teleport(708, 510);
+						Npc femi = getNearestNpc(p, NpcId.FEMI_STRONGHOLD.id(), 2);
+						npcTalk(p, femi, "ok traveller, you'd better get going");
+						if (favor) {
+							playerTalk(p, femi, "thanks again femi");
+							npcTalk(p, femi, "that's ok, all the best");
+						}
+					}
 					break;
 				default:
 					p.message("the little gnome is too busy to talk");
@@ -1156,8 +1193,9 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player p) {
-		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE, STRONGHOLD_GATE,
-				GLOUGH_CHEST_CLOSED, WATCH_TOWER_UP, WATCH_TOWER_DOWN, WATCH_TOWER_STONE_STAND, ROOT_ONE, ROOT_TWO, ROOT_THREE, PUSH_ROOT, PUSH_ROOT_BACK}, obj.getID());
+		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE,
+				GLOUGH_CHEST_CLOSED, WATCH_TOWER_UP, WATCH_TOWER_DOWN, WATCH_TOWER_STONE_STAND, ROOT_ONE, ROOT_TWO, ROOT_THREE, PUSH_ROOT, PUSH_ROOT_BACK}, obj.getID())
+			|| (obj.getID() == STRONGHOLD_GATE && p.getQuestStage(this) == 0);
 	}
 
 	@Override
