@@ -301,6 +301,7 @@ public class ServerConfiguration {
 	public boolean WANT_BARTER_WORMBRAINS = false;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = false;
 	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS = false;
+	public boolean CAN_USE_CRACKER_ON_SELF = false;
 
 	public final int RING_OF_RECOIL_LIMIT = 40;
 	public final int RING_OF_FORGING_USES = 75;
@@ -480,6 +481,7 @@ public class ServerConfiguration {
 		WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(props.getProperty("want_barter_wormbrains"));
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = Boolean.parseBoolean(props.getProperty("locked_post_quest_regions_accessible"));
 		CAN_RETRIEVE_POST_QUEST_ITEMS = Boolean.parseBoolean(props.getProperty("can_retrieve_post_quest_items"));
+		CAN_USE_CRACKER_ON_SELF = Boolean.parseBoolean(props.getProperty("can_use_cracker_on_self"));
 
 		// Walking/running related
 		MAX_WALKING_SPEED = Integer.parseInt(props.getProperty("max_walking_speed"));

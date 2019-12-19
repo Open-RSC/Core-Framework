@@ -47,13 +47,13 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				return;
 			}
 
-			/*if(!player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
+			if(!player.getWorld().getServer().getConfig().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
 				player.message(otherPlayer.getUsername() + " does not want to pull a cracker with you...");
 				return;
-			}*/
+			}
 
 			player.setBusy(true);
-			otherPlayer.setBusy(true);
+			//otherPlayer.setBusy(true);
 			player.face(otherPlayer);
 			//otherPlayer.face(player);
 
@@ -83,15 +83,12 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			player.getInventory().remove(item);
 
 			player.setBusy(false);
-			otherPlayer.setBusy(false);
+			//otherPlayer.setBusy(false);
 		}
 	}
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.CHRISTMAS_CRACKER.id()) {
-			return true;
-		}
-		return false;
+		return item.getID() == ItemId.CHRISTMAS_CRACKER.id();
 	}
 }
