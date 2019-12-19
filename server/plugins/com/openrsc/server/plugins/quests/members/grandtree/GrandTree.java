@@ -864,7 +864,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 								message(p,"femi pulls you into the stronghold");
 								smuggled = true;
 							} else {
-								// Authentic behavior here not known
+								// TODO: Authentic behavior here not known
 								playerTalk(p, n, "Oh dear I don't seem to have enough money");
 							}
 						}
