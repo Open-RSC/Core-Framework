@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
 
 public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -18,7 +18,7 @@ public class Man implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		int selected = p.getRandom().nextInt(13);
+		int selected = DataConversions.getRandom().nextInt(13);
 
 		playerTalk(p, n, "Hello", "How's it going?");
 

@@ -655,7 +655,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			}
 		}
 		else if (n.getID() == NpcId.SHIPYARD_WORKER_WHITE.id() || n.getID() == NpcId.SHIPYARD_WORKER_BLACK.id()) {
-			int selected = p.getRandom().nextInt(14);
+			int selected = DataConversions.getRandom().nextInt(14);
 			playerTalk(p, n, "hello");
 			if (selected == 0) {
 				npcTalk(p, n, "ouch");

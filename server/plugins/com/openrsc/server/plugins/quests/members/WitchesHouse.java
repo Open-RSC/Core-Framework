@@ -245,9 +245,9 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			if (shouldShock) {
 				int damage;
 				if (p.getSkills().getLevel(Skills.HITS) < 20) {
-					damage = p.getRandom().nextInt(9) + 1;
+					damage = DataConversions.getRandom().nextInt(9) + 1;
 				} else {
-					damage = p.getRandom().nextInt(14) + 1;
+					damage = DataConversions.getRandom().nextInt(14) + 1;
 				}
 				p.damage(damage);
 			} else {

@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -90,7 +91,7 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				sleep(800);
 				p.message("your insides feel terrible");
 				drinkAle(p);
-				p.damage(p.getRandom().nextInt(2) + 1);
+				p.damage(DataConversions.getRandom().nextInt(2) + 1);
 				sleep(800);
 				p.message("The bartender signs your card");
 				p.getCache().store("bartwo", true);
@@ -99,21 +100,21 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				playerTalk(p, n, "I don't have 50 coins");
 		}
 	}
-	
+
 	private void drinkAle(Player p) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH, Skills.SMITHING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(p, skillIDs[i]);
 		}
 	}
-	
+
 	private void setAleEffect(Player p, int skillId) {
 		int reduction, currentStat, maxStat;
 		maxStat = p.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
-			maxStat < 40 ? 6 : 
-			maxStat < 70 ? 7 : 
+			maxStat < 40 ? 6 :
+			maxStat < 70 ? 7 :
 			maxStat < 85 ? 8 : 9;
 		currentStat = p.getSkills().getLevel(skillId);
 		if (currentStat <= 9) {

@@ -1,14 +1,14 @@
 package com.openrsc.server.plugins.npcs.grandtree;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -22,7 +22,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GNOME_LOCAL_RED.id()) {
 			playerTalk(p, n, "hello");
-			int chatRandom = p.getRandom().nextInt(4);
+			int chatRandom = DataConversions.getRandom().nextInt(4);
 			switch (chatRandom) {
 				case 0:
 					npcTalk(p, n, "can't stop sorry, busy, busy, busy");
@@ -50,7 +50,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		else if (n.getID() == NpcId.GNOME_LOCAL_PURPLE.id()) {
 			playerTalk(p, n, "hello");
-			int chatRandom = p.getRandom().nextInt(4);
+			int chatRandom = DataConversions.getRandom().nextInt(4);
 			switch (chatRandom) {
 				case 0:
 					npcTalk(p, n, "hello traveller",
@@ -80,7 +80,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		else if (n.getID() == NpcId.GNOME_CHILD_GREEN_PURPLE.id() || n.getID() == NpcId.GNOME_CHILD_CREAM_PURPLE.id()) {
 			playerTalk(p, n, "hi there");
-			int chatRandom = p.getRandom().nextInt(6);
+			int chatRandom = DataConversions.getRandom().nextInt(6);
 			switch (chatRandom) {
 				case 0:
 					npcTalk(p, n, "hello, why aren't you green?");
@@ -122,7 +122,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		else if (n.getID() == NpcId.GNOME_CHILD_PURPLE_PINK.id()) {
 			playerTalk(p, n, "hello little man");
-			int chatRandom = p.getRandom().nextInt(9);
+			int chatRandom = DataConversions.getRandom().nextInt(9);
 			switch (chatRandom) {
 				case 0:
 					playerTalk(p, n, "how are you");
@@ -183,7 +183,7 @@ public class Gnomes implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		}
 		else if (n.getID() == NpcId.GNOME_CHILD_PINK_GREEN.id()) {
 			playerTalk(p, n, "hello");
-			int chatRandom = p.getRandom().nextInt(7);
+			int chatRandom = DataConversions.getRandom().nextInt(7);
 			switch (chatRandom) {
 				case 0:
 					npcTalk(p, n, "To be or not to be");

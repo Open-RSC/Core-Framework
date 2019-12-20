@@ -315,7 +315,6 @@ public class Npc extends Mob {
 	 * The location of this npc
 	 */
 	private NPCLoc loc;
-	private int armourPoints = 1;
 
 	private int heals = 24;
 	public int getHeals() {
@@ -375,8 +374,6 @@ public class Npc extends Mob {
 	private boolean shouldRespawn = true;
 	private boolean isRespawning = false;
 	private boolean executedAggroScript = false;
-	private int weaponAimPoints = 1;
-	private int weaponPowerPoints = 1;
 	private NpcBehavior npcBehavior;
 	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
 
@@ -501,10 +498,6 @@ public class Npc extends Mob {
 		setTeleporting(true);
 	}
 
-	public int getArmourPoints() {
-		return armourPoints;
-	}
-
 	public int getNPCCombatLevel() {
 		return getDef().combatLevel;
 	}
@@ -617,18 +610,22 @@ public class Npc extends Mob {
 		return new ArrayList<Integer>(rangeDamagers.keySet());
 	}
 
+	public int getArmourPoints() {
+		return getSkills().getLevel(Skills.DEFENSE);
+	}
+
 	public int getWeaponAimPoints() {
 		if (this.getID() == 804) {
 			return 45;//a2h
 		} else
-			return weaponAimPoints;
+			return getSkills().getLevel(Skills.ATTACK);
 	}
 
 	public int getWeaponPowerPoints() {
 		if (this.getID() == 804) {
 			return 55;//a2h+str ammy
 		} else
-			return weaponPowerPoints;
+			return getSkills().getLevel(Skills.STRENGTH);
 	}
 
 	@Override
@@ -1354,12 +1351,6 @@ public class Npc extends Mob {
 
 	}
 
-	public void setBonuses(int armour, int weapon, int aim) {
-		this.armourPoints = armour;
-		this.weaponAimPoints = aim;
-		this.weaponPowerPoints = weapon;
-	}
-
 	public void setShouldRespawn(boolean respawn) {
 		shouldRespawn = respawn;
 	}
@@ -1374,7 +1365,7 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		return "Warning! @yel@" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "@whi@";
+		return "[NPC:" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "]";
 	}
 
 	public void updatePosition() {

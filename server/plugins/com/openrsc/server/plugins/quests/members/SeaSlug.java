@@ -588,7 +588,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.SEASLUG.id()) {
-			int damage = p.getRandom().nextInt(8) + 1;
+			int damage = DataConversions.getRandom().nextInt(8) + 1;
 			p.message("you pick up the seaslug");
 			p.message("it sinks its teeth deep into you hand");
 			p.damage(damage);
@@ -612,7 +612,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 			}
 			if (p.getQuestStage(getQuestId()) >= 5) {
 				if (!hasItem(p, ItemId.LIT_TORCH.id())) {
-					int damage = p.getRandom().nextInt(1) + 7;
+					int damage = DataConversions.getRandom().nextInt(1) + 7;
 					p.message("You attempt to climb up the ladder");
 					p.message("the fishermen approach you");
 					p.message("and throw you back down the ladder");
