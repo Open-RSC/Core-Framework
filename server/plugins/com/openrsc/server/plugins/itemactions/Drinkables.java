@@ -76,7 +76,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 		else if (id == ItemId.DRAGON_BITTER.id())
 			handleDragonBitter(player, item);
-		
+
 		else if (id == ItemId.GROG.id())
 			handleGrog(player, item);
 
@@ -202,6 +202,9 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 
 		else if (id == ItemId.ONE_POTION_OF_ZAMORAK.id())
 			useZamorakPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
+
+		else if (id == ItemId.GLASS_MILK.id())
+			handleGlassMilk(player, item);
 
 		else
 			player.message("Nothing interesting happens");
@@ -520,6 +523,20 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		}
 	}
 
+	private void handleGlassMilk(Player player, Item item) {
+		showBubble(player, item);
+		player.message("You drink the cold milk");
+		player.getInventory().remove(item);
+		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
+		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+			int newHp = player.getSkills().getLevel(Skills.HITS) + 2;
+			if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
+				newHp = player.getSkills().getMaxStat(Skills.HITS);
+			}
+			player.getSkills().setLevel(Skills.HITS, newHp);
+		}
+	}
+
 	private void handleTea(Player player, Item item) {
 		showBubble(player, item);
 		// authentic does not send to quest tab
@@ -654,7 +671,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 2);
 		}
 	}
-	
+
 	private void handleGrog(Player player, Item item) {
 		player.playerServerMessage(MessageType.QUEST, "You drink the Grog");
 		showBubble(player, item);
