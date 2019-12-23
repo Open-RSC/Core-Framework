@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -43,7 +44,7 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 					message(p, "You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(p);
-					p.damage(p.getRandom().nextInt(2) + 1);
+					p.damage(DataConversions.getRandom().nextInt(2) + 1);
 					message(p, "The barmaid giggles",
 						"The barmaid signs your card");
 					p.getCache().store("barthree", true);

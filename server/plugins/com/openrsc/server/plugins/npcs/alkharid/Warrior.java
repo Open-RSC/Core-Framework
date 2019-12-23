@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
 
 public class Warrior implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -21,7 +21,7 @@ public class Warrior implements TalkToNpcListener, TalkToNpcExecutiveListener {
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		if (n.getID() == WARRIOR) {
-			int chatRandom = p.getRandom().nextInt(17);
+			int chatRandom = DataConversions.getRandom().nextInt(17);
 			playerTalk(p, n, "Hello", "How's it going?");
 			if (chatRandom == 0) {
 				npcTalk(p, n, "Very well, thank you");

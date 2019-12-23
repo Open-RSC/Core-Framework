@@ -38,14 +38,14 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	public boolean isMembers() {
 		return true;
 	}
-	
+
 	@Override
 	public void handleReward(final Player p) {
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GERTRUDES_CAT), true);
 		p.message("@gre@You haved gained 1 quest point!");
 		p.message("well done, you have completed gertrudes cat quest");
 	}
-	
+
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.GERTRUDE.id(), NpcId.SHILOP.id(), NpcId.WILOUGH.id(),
@@ -333,7 +333,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.GERTRUDES_CAT.id() && i.getY() == 2327) {
-			int damage = p.getRandom().nextInt(2) + 1;
+			int damage = DataConversions.getRandom().nextInt(2) + 1;
 			message(p, "you attempt to pick up the cat");
 			p.message("but the cat scratches you");
 			p.damage(damage);

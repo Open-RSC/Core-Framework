@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -16,7 +17,7 @@ public class Thief implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		int mood = p.getRandom().nextInt(13);
+		int mood = DataConversions.getRandom().nextInt(13);
 
 		playerTalk(p, n, "Hello", "How's it going?");
 

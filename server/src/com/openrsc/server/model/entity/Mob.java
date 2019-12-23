@@ -24,7 +24,6 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.openrsc.server.plugins.Functions.sleep;
@@ -48,7 +47,6 @@ public abstract class Mob extends Entity {
 	 * Used to block new requests when we are in the middle of one
 	 */
 	private final AtomicBoolean busy = new AtomicBoolean(false);
-	private final Random random = new Random();
 	/**
 	 * The path we are walking
 	 */
@@ -654,10 +652,6 @@ public abstract class Mob extends Entity {
 
 	public void setLastOpponent(Mob opponent) {
 		lastCombatWith = opponent;
-	}
-
-	public Random getRandom() {
-		return random;
 	}
 
 	public int getSprite() {
