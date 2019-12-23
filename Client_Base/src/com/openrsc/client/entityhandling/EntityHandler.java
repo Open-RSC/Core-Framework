@@ -3847,6 +3847,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Santa's hat", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2347, 2348));
 		items.add(new ItemDef("Antlers with red-nose", "Im Rudolph the reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, -1, -1, 2349));
 		items.add(new ItemDef("Antlers with red-nose", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2349, 2350));
+		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, -1, -1, 2351));
+		items.add(new ItemDef("Beverage glass", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2351, 2352));
 
 	}
 

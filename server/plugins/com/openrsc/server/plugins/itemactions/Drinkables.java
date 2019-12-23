@@ -527,7 +527,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		showBubble(player, item);
 		player.message("You drink the cold milk");
 		player.getInventory().remove(item);
-		player.getInventory().add(new Item(ItemId.BEER_GLASS.id()));
+		player.getInventory().add(new Item(ItemId.BEVERAGE_GLASS.id()));
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
 			int newHp = player.getSkills().getLevel(Skills.HITS) + 2;
 			if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
