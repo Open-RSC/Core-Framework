@@ -124,7 +124,7 @@ public final class AvatarGenerator {
 		animations.add(new AnimationDef("skirt", "equipment", 4210752, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment", 16036851, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment", 15609904, 0, true, false, 0));
-		animations.add(new AnimationDef("Skirt", "equipment", 8400921, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 8400921, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment", 7824998, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment", 7829367, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment", 2245205, 0, true, false, 0));
