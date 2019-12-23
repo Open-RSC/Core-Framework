@@ -43,7 +43,7 @@ public final class Harvesting implements ObjectActionListener,
 							if (obj != null && obj.getID() == object.getID()) {
 								GameObject newObject = new GameObject(getWorld(), object.getLocation(), depletedId, object.getDirection(), object.getType());
 								getWorld().replaceGameObject(object, newObject);
-								getWorld().delayedSpawnObject(obj.getLoc(), 600 * 1000);
+								getWorld().delayedSpawnObject(obj.getLoc(), 300 * 1000);
 							}
 						}
 					} else {
