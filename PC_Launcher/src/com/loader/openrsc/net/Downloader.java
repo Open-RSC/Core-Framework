@@ -17,6 +17,8 @@ public class Downloader {
 
 	public Downloader() {
 		excludedFiles.add(Constants.MD5_TABLENAME);
+		excludedFiles.add("android_version.txt");
+		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
 	}
 
@@ -91,6 +93,9 @@ public class Downloader {
 			//Delete unneeded files, while preserving sprite packs
 			for (md5.Entry entry : localCache.entries) {
 				if (entry.getRef().getParentFile().toString().equalsIgnoreCase(Constants.SPRITEPACK_DIR))
+					continue;
+
+				if (refuseUpdate.contains(entry.getRef().getName()))
 					continue;
 
 				if (!remoteCache.hasRef(entry.getRef()))
