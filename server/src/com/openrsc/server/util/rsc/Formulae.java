@@ -703,8 +703,8 @@ public final class Formulae {
 		if (objs.length == 1) {
 			Object obj = objs[0];
 			if (obj instanceof GameObjectLoc) {
-				x = ((GameObjectLoc) obj).x;
-				y = ((GameObjectLoc) obj).y;
+				x = ((GameObjectLoc) obj).getX();
+				y = ((GameObjectLoc) obj).getY();
 			} else if ((obj instanceof ItemLoc)) {
 				x = ((ItemLoc) obj).x;
 				y = ((ItemLoc) obj).y;

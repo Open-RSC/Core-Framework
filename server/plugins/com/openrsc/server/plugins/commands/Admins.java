@@ -12,10 +12,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemDropDef;
-import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -37,6 +34,7 @@ import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1933,6 +1931,53 @@ public final class Admins implements CommandListener {
 			});
 
 			player.message(messagePrefix + "You have spawned " + player.getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
+		}
+		else if(cmd.equalsIgnoreCase("holidayevent") || cmd.equalsIgnoreCase("toggleholiday")) {
+			GameObjectLoc[] locs = new GameObjectLoc[] {
+				new GameObjectLoc(1238, new Point(127, 648), 1, 0),
+				new GameObjectLoc(1238, new Point(123, 656), 2, 0),
+				new GameObjectLoc(1238, new Point(126, 656), 2, 0),
+				new GameObjectLoc(1238, new Point(126, 660), 2, 0),
+				new GameObjectLoc(1238, new Point(123, 660), 2, 0),
+				new GameObjectLoc(1238, new Point(127, 664), 0, 0),
+				new GameObjectLoc(1238, new Point(122, 664), 0, 0),
+				new GameObjectLoc(1238, new Point(122, 502), 0, 0),
+				new GameObjectLoc(1238, new Point(135, 505), 0, 0),
+				new GameObjectLoc(1238, new Point(133, 512), 0, 0),
+				new GameObjectLoc(1238, new Point(128, 511), 0, 0),
+				new GameObjectLoc(1238, new Point(126, 482), 0, 0),
+				new GameObjectLoc(1238, new Point(136, 482), 0, 0),
+				new GameObjectLoc(1238, new Point(131, 484), 0, 0),
+				new GameObjectLoc(1238, new Point(317, 541), 0, 0),
+				new GameObjectLoc(1238, new Point(317, 538), 0, 0),
+				new GameObjectLoc(1238, new Point(310, 541), 0, 0),
+				new GameObjectLoc(1238, new Point(310, 538), 0, 0)
+			};
+
+			final GameObject existingObject = player.getViewArea().getGameObject(locs[0].getLocation());
+
+			if(existingObject != null && existingObject.getType() != 1 && (existingObject.getID() != 1238 && existingObject.getID() != 1239)) {
+				player.message(messagePrefix + "Could not enable christmas trees because object exists: " + existingObject.getGameObjectDef().getName());
+				return;
+			}
+
+			boolean remove = existingObject != null && existingObject.getType() != 1 && (existingObject.getID() == 1238 || existingObject.getID() == 1239);
+
+			for(int i = 0; i < locs.length; i++) {
+				GameObjectLoc loc = locs[i];
+				GameObject object = player.getViewArea().getGameObject(loc.getLocation());
+
+				if(object != null) {
+					player.getWorld().unregisterGameObject(object);
+				}
+
+				if(!remove) {
+					GameObject newObject = new GameObject(player.getWorld(), loc);
+					player.getWorld().registerGameObject(newObject);
+				}
+			}
+
+			player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been " + (remove ? "disabled" : "enabled") + ".");
 		}
 	}
 }

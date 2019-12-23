@@ -36,14 +36,14 @@ public final class Harvesting implements ObjectActionListener,
 							getOwner().getInventory().add(present);
 							getOwner().playerServerMessage(MessageType.QUEST, "You get a nice looking present");
 						}
-						if (DataConversions.random(1, 1000) <= 3) {
+						if (DataConversions.random(1, 1000) <= 100) {
 							obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 							int depletedId = 1239;
 							interrupt();
 							if (obj != null && obj.getID() == object.getID()) {
 								GameObject newObject = new GameObject(getWorld(), object.getLocation(), depletedId, object.getDirection(), object.getType());
 								getWorld().replaceGameObject(object, newObject);
-								getWorld().delayedSpawnObject(obj.getLoc(), 600 * 1000);
+								getWorld().delayedSpawnObject(obj.getLoc(), 300 * 1000);
 							}
 						}
 					} else {

@@ -34,19 +34,19 @@ public class GameObject extends Entity {
 	public GameObject(World world, GameObjectLoc loc, VisibleCondition statement) {
 		super(world);
 
-		direction = loc.direction;
-		type = loc.type;
+		direction = loc.getDirection();
+		type = loc.getType();
 		this.loc = loc;
-		super.setID(loc.id);
+		super.setID(loc.getId());
 		this.statement = statement;
 	}
 
 	public GameObject(World world, GameObjectLoc loc) {
 		super(world);
-		direction = loc.direction;
-		type = loc.type;
+		direction = loc.getDirection();
+		type = loc.getType();
 		this.loc = loc;
-		super.setID(loc.id);
+		super.setID(loc.getId());
 	}
 
 	public GameObject(World world, Point location, int id, int direction, int type) {
@@ -61,7 +61,7 @@ public class GameObject extends Entity {
 	}
 
 	public String getOwner() {
-		return loc.owner;
+		return loc.getOwner();
 	}
 
 	public int containsItem() {

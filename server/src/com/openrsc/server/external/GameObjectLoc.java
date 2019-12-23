@@ -1,66 +1,72 @@
 package com.openrsc.server.external;
 
+import com.openrsc.server.model.Point;
+
 public class GameObjectLoc {
 	/**
 	 * The direction it faces
 	 */
-	public int direction;
+	private int direction;
 	/**
 	 * The id of the gameObject
 	 */
-	public int id;
+	private int id;
 	/**
 	 * Type of object - 0: Object, 1: WallObject
 	 */
-	public int type;
+	private int type;
 	/**
-	 * The objects x coord
+	 * The objects coords
 	 */
-	public int x;
-	/**
-	 * The objects y coord
-	 */
-	public int y;
-	public String owner = null;
+	private Point location;
 
-	public GameObjectLoc(int id, int x, int y, int direction, int type) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-		this.direction = direction;
-		this.type = type;
+	private String owner = null;
+
+	public GameObjectLoc(final int id, final Point location, final int direction, final int type) {
+		this(id, location, direction, type, null);
 	}
 
-	public GameObjectLoc(int id, int x, int y, int direction, int type, String owner) {
+	public GameObjectLoc(final int id, final int x, final int y, final int direction, final int type) {
+		this(id, x, y, direction, type, null);
+	}
+
+	public GameObjectLoc(final int id, final int x, final int y, final int direction, final int type, final String owner) {
+		this(id, new Point(x, y), direction, type, owner);
+	}
+
+	public GameObjectLoc(final int id, final Point location, final int direction, final int type, final String owner) {
 		this.id = id;
-		this.x = x;
-		this.y = y;
+		this.location = location;
 		this.direction = direction;
 		this.type = type;
 		this.owner = owner;
 	}
 
-	public String getOwner() {
+	public final String getOwner() {
 		return owner;
 	}
 
-	public int getDirection() {
+	public final int getDirection() {
 		return direction;
 	}
 
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 
-	public int getType() {
+	public final int getType() {
 		return type;
 	}
 
-	public int getX() {
-		return x;
+	public final Point getLocation() {
+		return location;
 	}
 
-	public int getY() {
-		return y;
+	public final int getX() {
+		return location.getX();
+	}
+
+	public final int getY() {
+		return location.getY();
 	}
 }
