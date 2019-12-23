@@ -46,17 +46,21 @@ elif [ "$compiling" == "2" ]; then
   sudo chmod 777 ../Website/downloads/*.jar
 
   # Cache
+  sudo chmod 777 -R 'Client_Base/Cache'
   yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/downloads/"
-  sudo rm ../Website/downloads/MD5CHECKSUM
-  sudo touch ../Website/downloads/MD5CHECKSUM && sudo chmod 777 ../Website/downloads/MD5CHECKSUM
-  md5sum ../Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee ../Website/downloads/MD5CHECKSUM
-  sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  sudo sed -i 's/index=/#index=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  sudo sed -i 's/openrsc.apk=/#openrsc.apk=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
-  sudo sed -i 's/android_version.txt=/#android_version.txt=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
-  sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  sudo sed -i 's/Cache=/#Cache=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  sudo sed -i 's/..\///g' "../Website/downloads/MD5CHECKSUM" # Removes ../
+  cd '../Website/downloads/' || exit
+  find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; > MD5.SUM
+  cd '../../Game' || exit
+  #sudo rm ../Website/downloads/MD5CHECKSUM
+  #sudo touch ../Website/downloads/MD5CHECKSUM && sudo chmod 777 ../Website/downloads/MD5CHECKSUM
+  #md5sum ../Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee ../Website/downloads/MD5CHECKSUM
+  #sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  #sudo sed -i 's/index=/#index=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  #sudo sed -i 's/openrsc.apk=/#openrsc.apk=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
+  #sudo sed -i 's/android_version.txt=/#android_version.txt=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
+  #sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  #sudo sed -i 's/Cache=/#Cache=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
+  #sudo sed -i 's/..\///g' "../Website/downloads/MD5CHECKSUM" # Removes ../
 fi
 
 clear
