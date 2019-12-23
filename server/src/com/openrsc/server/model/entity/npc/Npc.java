@@ -625,7 +625,7 @@ public class Npc extends Mob {
 		if (this.getID() == 804) {
 			return 55;//a2h+str ammy
 		} else
-			return getSkills().getLevel(Skills.STRENGTH);
+			return 0;
 	}
 
 	@Override
