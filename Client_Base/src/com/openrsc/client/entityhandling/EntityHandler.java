@@ -4887,7 +4887,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("cape", "equipment",16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("boots", "equipment",1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",1118481, 0, true, false, 0));
-		animations.add(new AnimationDef("Scythe", "equipment",0, 0, true, false, 0));
+		animations.add(new AnimationDef("scythe", "equipment",0, 0, true, false, 0));
 		/*
 		  Add custom animation below.
 		 */
