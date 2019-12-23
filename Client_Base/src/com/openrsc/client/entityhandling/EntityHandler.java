@@ -277,6 +277,18 @@ public class EntityHandler {
 		textures.add(new TextureDef("cavern", "crumbled"));
 		textures.add(new TextureDef("cavern2", "crumbled"));
 		textures.add(new TextureDef("lava", "flames"));
+
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			loadCustomTextureDefinitions();
+		}
+	}
+
+	private static void loadCustomTextureDefinitions() {
+		/*textures.add(new TextureDef("sapgift", ""));
+		textures.add(new TextureDef("emegift", ""));
+		textures.add(new TextureDef("rubygift", ""));
+		textures.add(new TextureDef("diagift", ""));
+		textures.add(new TextureDef("ornamenttree", ""));*/
 	}
 
 	public enum PROJECTILE_TYPES {
@@ -3808,6 +3820,36 @@ public class EntityHandler {
 		items.add(new ItemDef("Fox mask", "Struttin' like a fox", "", 0, 86, "items:509", false, true, 32, 16730368, 16446686, false, false, 2324, -1, 2323));
 		items.add(new ItemDef("Fox mask", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2323, 2324));
 
+		// Xmas items
+		items.add(new ItemDef("Christmas cape", "A cape worn on the holidays", "", 3, -1, "items:516", false, true, 2048, 16711680, false, false, -1, -1, 2325));
+		items.add(new ItemDef("Christmas cape", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2325, 2326));
+		items.add(new ItemDef("Santa's hat with beard", "It's a santa claus' hat with a beard!", "", 160, -1, "items:517", false, true, 32, 0, false, false, -1, -1, 2327));
+		items.add(new ItemDef("Santa's hat with beard", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2327, 2328));
+		items.add(new ItemDef("Christmas Apron", "An apron for the festivities", "", 2, -1, "items:518", false, true, 1024, 0, false, false, -1, -1, 2329));
+		items.add(new ItemDef("Christmas Apron", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2329, 2330));
+		items.add(new ItemDef("Glass of milk", "A glass of tasty milk", "drink", 2, -1, "items:519", false, false, 0, 0, false, false, -1, -1, 2331));
+		items.add(new ItemDef("Glass of milk", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2331, 2332));
+		items.add(new ItemDef("Cane cookie", "A tasty holiday cookie", "eat", 2, -1, "items:520", false, false, 0, 0, false, false, -1, -1, 2333));
+		items.add(new ItemDef("Cane cookie", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2333, 2334));
+		items.add(new ItemDef("Star cookie", "A tasty holiday cookie", "eat", 2, -1, "items:521", false, false, 0, 0, false, false, -1, -1, 2335));
+		items.add(new ItemDef("Star cookie", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2335, 2336));
+		items.add(new ItemDef("Tree cookie", "A tasty holiday cookie", "eat", 2, -1, "items:522", false, false, 0, 0, false, false, -1, -1, 2337));
+		items.add(new ItemDef("Tree cookie", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2337, 2338));
+		items.add(new ItemDef("Santa's Gloves", "These keep Santa's hands warm", "", 6, -1, "items:523", false, true, 256, 0, false, false, -1, -1, 2339));
+		items.add(new ItemDef("Santa's Gloves", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2339, 2340));
+		items.add(new ItemDef("Santa's Mittens", "Santa's favorite mittens", "", 6, -1, "items:524", false, true, 256, 0, false, false, -1, -1, 2341));
+		items.add(new ItemDef("Santa's Mittens", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2341, 2342));
+		items.add(new ItemDef("Santa's suit", "A suit full of joy", "", 8, -1, "items:466", false, true, 64, 1052688, false, false, -1, -1, 2343));
+		items.add(new ItemDef("Santa's suit", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2343, 2344));
+		items.add(new ItemDef("Santa's suit", "A suit full of joy", "", 8, -1, "items:465", false, true, 128, 1052688, false, false, -1, -1, 2345));
+		items.add(new ItemDef("Santa's suit", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2345, 2346));
+		items.add(new ItemDef("Santa's hat", "It's a santa claus' hat", "", 160, -1, "items:467", false, true, 32, 0, false, false, -1, -1, 2347));
+		items.add(new ItemDef("Santa's hat", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2347, 2348));
+		items.add(new ItemDef("Antlers with red-nose", "Im Rudolph the reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, -1, -1, 2349));
+		items.add(new ItemDef("Antlers with red-nose", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2349, 2350));
+		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, -1, -1, 2351));
+		items.add(new ItemDef("Beverage glass", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2351, 2352));
+
 	}
 
 	// Bank note items
@@ -5068,6 +5110,18 @@ public class EntityHandler {
 			animations.add(new AnimationDef("spear", "equipment", 0x708396, 0, true, false, 0)); //391 - mith spear
 			animations.add(new AnimationDef("spear", "equipment", 0x839670, 0, true, false, 0)); //392 - addy spear
 			animations.add(new AnimationDef("spear", "equipment", 48059, 0, true, false, 0)); //393 - rune spear
+
+			// Xmas
+			animations.add(new AnimationDef("xmasapron", "equipment",0, 0, true, false, 0)); //394
+			animations.add(new AnimationDef("xmascape", "equipment",0, 0, true, false, 0)); //395
+			animations.add(new AnimationDef("santabody", "equipment",0, 0, true, false, 0)); //396
+			animations.add(new AnimationDef("santalegs", "equipment",0, 0, true, false, 0)); //397
+			animations.add(new AnimationDef("santahat2", "equipment",0, 0, true, false, 0)); //398
+			animations.add(new AnimationDef("santamittens", "equipment",0, 0, true, false, 0)); //399
+			animations.add(new AnimationDef("satansgloveswht", "equipment",0, 0, true, false, 0)); //400
+			animations.add(new AnimationDef("greensantahat", "equipment",0, 0, true, false, 0)); //401
+			animations.add(new AnimationDef("antlers", "equipment",0, 0, true, false, 0)); //402
+
 		}
 	}
 
@@ -7069,6 +7123,10 @@ public class EntityHandler {
 
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i = 1236)); //yanille agility shortcut
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", ++i)); //yanille agility shortcut
+
+		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "XMASTREE", ++i));
+		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ORNAMENTTREE", ++i));
+		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "PINETREE", ++i));
 	}
 
 	public static void load(boolean loadMembers) {
