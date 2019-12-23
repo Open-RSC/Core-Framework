@@ -5288,11 +5288,8 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2347, 2346, -1, 'Santa\'s hat', 'It\'s a santa claus\' hat', '', 0, 0, 0, 0, 1, 401, 32, 5, 1, 1, 0, 0, 0, 0, 0, 160),
        (2348, -1, 2347, 'Santa\'s hat', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-       (2349, 2348, -1, 'Antlers', 'Im a reindeer!!!', '', 0, 0, 0, 0, 1, 402, 32, 5, 1, 1, 0, 0, 0, 0, 0, 3),
-       (2350, -1, 2349, 'Antlers', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-       (2351, 2350, -1, 'Rudolph\'s Nose', 'A nose unique to Rudolph', '', 0, 0, 0, 0, 1, 403, 32, 5, 1, 1, 0, 0, 0, 0, 0, 3),
-       (2352, -1, 2351, 'Rudolph\'s Nose', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
+       (2349, 2348, -1, 'Antlers with red-nose', 'Im Rudolph the reindeer!!!', '', 0, 0, 0, 0, 1, 402, 32, 5, 1, 1, 0, 0, 0, 0, 0, 3),
+       (2350, -1, 2349, 'Antlers with red-nose', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;

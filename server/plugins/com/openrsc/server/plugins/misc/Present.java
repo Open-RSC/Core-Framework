@@ -38,16 +38,15 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 		 */
 		holidayTable.addItemDrop(ItemId.CHRISTMAS_CRACKER.id(), 1, 64);
 		holidayTable.addItemDrop(ItemId.SANTAS_HAT.id(), 1, 64);
-		holidayTable.addItemDrop(ItemId.CHRISTMAS_CAPE.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.SANTAS_HAT_BEARD.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.CHRISTMAS_APRON.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.SANTAS_GLOVES.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.SANTAS_MITTENS.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.SANTAS_SUIT_TOP.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.SANTAS_SUIT_BOTTOM.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.GREEN_SANTAS_HAT.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.ANTLERS.id(), 1, 8);
-		holidayTable.addItemDrop(ItemId.RUDOLPHS_NOSE.id(), 1, 8);
+		holidayTable.addItemDrop(ItemId.CHRISTMAS_CAPE.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.SANTAS_HAT_BEARD.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.CHRISTMAS_APRON.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.SANTAS_GLOVES.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.SANTAS_MITTENS.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.SANTAS_SUIT_TOP.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.SANTAS_SUIT_BOTTOM.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.GREEN_SANTAS_HAT.id(), 1, 9);
+		holidayTable.addItemDrop(ItemId.RUDOLPHS_ANTLERS.id(), 1, 8);
 		holidayTable.addItemDrop(ItemId.GLASS_MILK.id(), 1, 12);
 		holidayTable.addItemDrop(ItemId.CANE_COOKIE.id(), 1, 12);
 		holidayTable.addItemDrop(ItemId.STAR_COOKIE.id(), 1, 12);

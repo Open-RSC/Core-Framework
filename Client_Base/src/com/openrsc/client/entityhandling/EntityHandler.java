@@ -3845,10 +3845,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Santa's suit", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2345, 2346));
 		items.add(new ItemDef("Santa's hat", "It's a santa claus' hat", "", 160, -1, "items:467", false, true, 32, 0, false, false, -1, -1, 2347));
 		items.add(new ItemDef("Santa's hat", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2347, 2348));
-		items.add(new ItemDef("Antlers", "Im a reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, -1, -1, 2349));
-		items.add(new ItemDef("Antlers", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2349, 2350));
-		items.add(new ItemDef("Rudolph's Nose", "A nose unique to Rudolph", "", 3, -1, "items:525", false, true, 32, 0, false, false, -1, -1, 2351));
-		items.add(new ItemDef("Rudolph's Nose", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2351, 2352));
+		items.add(new ItemDef("Antlers with red-nose", "Im Rudolph the reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, -1, -1, 2349));
+		items.add(new ItemDef("Antlers with red-nose", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2349, 2350));
 
 	}
 
@@ -5121,7 +5119,6 @@ public class EntityHandler {
 			animations.add(new AnimationDef("satansgloveswht", "equipment",0, 0, true, false, 0)); //400
 			animations.add(new AnimationDef("greensantahat", "equipment",0, 0, true, false, 0)); //401
 			animations.add(new AnimationDef("antlers", "equipment",0, 0, true, false, 0)); //402
-			animations.add(new AnimationDef("rudolphnose", "equipment",0, 0, true, false, 0)); //403
 
 		}
 	}
