@@ -4925,12 +4925,12 @@ public class EntityHandler {
 			animations.add(new AnimationDef("armorskirt", "equipment", 0x232323, 0, true, false, 0));
 
 			// Longbows
-			animations.add(new AnimationDef("longbow", "equipment", 8537122, 0, true, false, 0)); //253 - wooden longbow
-			animations.add(new AnimationDef("longbow", "equipment", 11300689, 0, true, false, 0));
-			animations.add(new AnimationDef("longbow", "equipment", 8941897, 0, true, false, 0));
-			animations.add(new AnimationDef("longbow", "equipment", 9132849, 0, true, false, 0));
-			animations.add(new AnimationDef("longbow", "equipment", 10310656, 0, true, false, 0));
-			animations.add(new AnimationDef("longbow", "equipment", 37281, 0, true, false, 0));
+			animations.add(new AnimationDef("longbow", "equipment", 8537122, 0, false, false, 0)); //253 - wooden longbow
+			animations.add(new AnimationDef("longbow", "equipment", 11300689, 0, false, false, 0));
+			animations.add(new AnimationDef("longbow", "equipment", 8941897, 0, false, false, 0));
+			animations.add(new AnimationDef("longbow", "equipment", 9132849, 0, false, false, 0));
+			animations.add(new AnimationDef("longbow", "equipment", 10310656, 0, false, false, 0));
+			animations.add(new AnimationDef("longbow", "equipment", 37281, 0, false, false, 0));
 
 			// Short swords
 			animations.add(new AnimationDef("shortsword", "equipment", 16737817, 0, true, false, 0)); //259 - bronze short sword
@@ -5121,7 +5121,6 @@ public class EntityHandler {
 			animations.add(new AnimationDef("satansgloveswht", "equipment",0, 0, true, false, 0)); //400
 			animations.add(new AnimationDef("greensantahat", "equipment",0, 0, true, false, 0)); //401
 			animations.add(new AnimationDef("antlers", "equipment",0, 0, true, false, 0)); //402
-
 		}
 	}
 
