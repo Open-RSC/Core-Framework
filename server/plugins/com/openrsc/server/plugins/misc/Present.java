@@ -232,13 +232,15 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 		/**
 		 * Ultra Rare Items
 		 */
-		ultraRareTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 18);
-		ultraRareTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 18);
-		ultraRareTable.addItemDrop(ItemId.DRAGON_SWORD.id(), 1, 10);
+		ultraRareTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 38);
+		ultraRareTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 36);
+		ultraRareTable.addItemDrop(ItemId.DRAGONSTONE.id(), 1, 19);
+		ultraRareTable.addItemDrop(ItemId.DRAGONSTONE.id(), 2, 3);
+		ultraRareTable.addItemDrop(ItemId.DRAGON_SWORD.id(), 1, 14);
 		ultraRareTable.addItemDrop(ItemId.DRAGON_AXE.id(), 1, 10);
-		ultraRareTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(), 1, 5);
-		ultraRareTable.addItemDrop(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 2);
-		ultraRareTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 1);
+		ultraRareTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(), 1, 2);
+		ultraRareTable.addItemDrop(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 4);
+		ultraRareTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 2);
 
 		/**
 		 * Bring all the tables together
@@ -248,11 +250,11 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 		presentDrops.addTableDrop(bronzeTable, 14);
 		presentDrops.addTableDrop(ironTable, 13);
 		presentDrops.addTableDrop(steelTable, 12);
-		presentDrops.addTableDrop(blackTable, 11);
+		presentDrops.addTableDrop(blackTable, 12);
 		presentDrops.addTableDrop(mithTable, 11);
 		presentDrops.addTableDrop(addyTable, 10);
 		presentDrops.addTableDrop(runeTable, 6);
-		presentDrops.addTableDrop(ultraRareTable, 3);
+		presentDrops.addTableDrop(ultraRareTable, 2);
 	}
 
 	@Override
