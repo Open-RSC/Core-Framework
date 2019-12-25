@@ -12,7 +12,7 @@ Admin Commands
   - Usage: `::saveall`
   - Saves all users currently logged in.
 - holidaydrop
-  - Usage: `::holidaydrop [hours] [item_id] ...`
+  - Usage: `::holidaydrop [total hours] [minute of hour] [item id] ...`
   - Performs a global holiday drop. More than one item may be specified by putting spaces between item IDs.
 - stopholidaydrop
   - Usage: `::stopholidaydrop`
