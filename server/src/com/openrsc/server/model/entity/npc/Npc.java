@@ -611,14 +611,14 @@ public class Npc extends Mob {
 	}
 
 	public int getArmourPoints() {
-		return getSkills().getLevel(Skills.DEFENSE);
+		return 0;
 	}
 
 	public int getWeaponAimPoints() {
 		if (this.getID() == 804) {
 			return 45;//a2h
 		} else
-			return getSkills().getLevel(Skills.ATTACK);
+			return 0;
 	}
 
 	public int getWeaponPowerPoints() {
@@ -1365,7 +1365,7 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		return "[NPC:" + getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + "]";
+		return "[NPC:" + getDef().getName() + "]";
 	}
 
 	public void updatePosition() {
