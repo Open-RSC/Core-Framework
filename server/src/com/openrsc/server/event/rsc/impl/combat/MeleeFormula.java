@@ -44,7 +44,7 @@ class MeleeFormula {
 	 * @return True if the attack is a hit, false if the attack is a miss
 	 */
 	private static boolean calculateAccuracy(double accuracy, double defence) {
-		int odds = (int)Math.min(166.0D, 256.0D * accuracy / (defence * 6));
+		int odds = (int)Math.min(212.0D, 255.0D * accuracy / (defence * 6));
 		int roll = DataConversions.random(0, 255);
 
 		//LOGGER.info(source + " has " + odds + "/256 to hit " + victim + ", rolled " + roll);
@@ -99,7 +99,7 @@ class MeleeFormula {
 			Prayers.ROCK_SKIN,
 			Prayers.STEEL_SKIN);
 
-		return (int) (defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus;
+		return (int) (defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus + defender.getArmourPoints();
 	}
 
 	private static int getMeleeAccuracy(Mob attacker) {
@@ -108,7 +108,7 @@ class MeleeFormula {
 			Prayers.IMPROVED_REFLEXES,
 			Prayers.INCREDIBLE_REFLEXES);
 
-		return (int) (attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus;
+		return (int) (attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus + attacker.getWeaponAimPoints();
 	}
 
 	private static int styleBonus(Mob mob, int skill) {
