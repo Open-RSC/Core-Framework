@@ -96,13 +96,13 @@ public class AttackHandler implements PacketHandler {
 						return;
 					}
 					if (mob.isNpc()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerAttackNpc",
+						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerAttackNpc",
 							new Object[]{player, (Npc) mob})) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerAttack",
+						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerAttack",
 							new Object[]{player, mob})) {
 							return;
 						}

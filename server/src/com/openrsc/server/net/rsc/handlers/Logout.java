@@ -8,7 +8,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public final class Logout implements PacketHandler {
 
 	public void handlePacket(Packet p, Player player) throws Exception {
-		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerLogout",
+		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerLogout",
 			new Object[]{player}, false)) {
 			ActionSender.sendCantLogout(player);
 			return;

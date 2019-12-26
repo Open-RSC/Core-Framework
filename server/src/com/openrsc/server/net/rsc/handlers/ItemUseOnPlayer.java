@@ -51,6 +51,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 					return;
 				}
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
+					player,
 					"InvUseOnPlayer",
 					new Object[]{player, affectedPlayer, item}))
 					return;

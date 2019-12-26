@@ -1305,7 +1305,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().blockDefaultAction(npc, "TalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}
@@ -1316,7 +1316,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().blockDefaultAction(npc, "IndirectTalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}

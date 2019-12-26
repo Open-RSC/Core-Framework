@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.npcs.grandtree;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -20,24 +19,13 @@ public class Brimstail implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
-		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0,"Talk to Brimstail") {
-			public void init() {
-				addState(0, () -> {
-					getPlayerOwner().setBusy(true);
-					Functions.playerTalk(getPlayerOwner(), "Hello");
-					return nextState(3);
-				});
-				addState(1, () -> {
-					getPlayerOwner().message("The gnome is chanting");
-					return nextState(3);
-				});
-				addState(2, () -> {
-					getPlayerOwner().message("he does not respond");
-					getPlayerOwner().setBusy(false);
-					return null;
-				});
-			}
-		});
+		p.setBusy(true);
+		Functions.playerTalk(p, "Hello");
+		Functions.sleep(1920);
+		p.message("The gnome is chanting");
+		Functions.sleep(1920);
+		p.message("he does not respond");
+		p.setBusy(false);
 	}
 
 	@Override
@@ -47,24 +35,13 @@ public class Brimstail implements TalkToNpcExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
-		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0,"Enter Brimstail Cave") {
-			public void init() {
-				addState(0, () -> {
-					getPlayerOwner().setBusy(true);
-					getPlayerOwner().message("you enter the cave");
-					return nextState(3);
-				});
-				addState(1, () -> {
-					getPlayerOwner().message("it leads to a ladder");
-					return nextState(3);
-				});
-				addState(2, () -> {
-					getPlayerOwner().message("you climb down");
-					getPlayerOwner().teleport(730, 3334, false);
-					getPlayerOwner().setBusy(false);
-					return null;
-				});
-			}
-		});
+		p.setBusy(true);
+		p.message("you enter the cave");
+		Functions.sleep(1920);
+		p.message("it leads to a ladder");
+		Functions.sleep(1920);
+		p.message("you climb down");
+		p.teleport(730, 3334, false);
+		p.setBusy(false);
 	}
 }

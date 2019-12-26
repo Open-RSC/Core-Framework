@@ -4,8 +4,16 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public abstract class GameTickEvent {
+import java.util.concurrent.Callable;
+
+public abstract class GameTickEvent implements Callable<Integer> {
+	/**
+	 * Logger instance
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	protected boolean running = true;
 	private Mob owner;
@@ -14,8 +22,18 @@ public abstract class GameTickEvent {
 	private long ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
+	private boolean allowDuplicateEvents = false;
 
-	public GameTickEvent(World world, Mob owner, long ticks, String descriptor) {
+	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean allowDuplicateEvents) {
+		this.world = world;
+		this.owner = owner;
+		this.descriptor = descriptor;
+		this.allowDuplicateEvents = allowDuplicateEvents;
+		this.setDelayTicks(ticks);
+		this.resetCountdown();
+	}
+
+	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor) {
 		this.world = world;
 		this.owner = owner;
 		this.descriptor = descriptor;
@@ -23,63 +41,44 @@ public abstract class GameTickEvent {
 		this.resetCountdown();
 	}
 
-	public boolean belongsTo(Mob owner2) {
-		return owner != null && owner.equals(owner2);
-	}
-
-	public Mob getOwner() {
-		return owner;
-	}
-
-	public boolean hasOwner() {
-		return owner != null;
-	}
-
 	public abstract void run();
 
 	public final long doRun() {
 		final long eventStart	= System.currentTimeMillis();
-		run();
+		countdown();
+		if (shouldRun()) {
+			run();
+			resetCountdown();
+		}
 		final long eventEnd		= System.currentTimeMillis();
 		final long eventTime	= eventEnd - eventStart;
 		lastEventDuration		= eventTime;
 		return eventTime;
 	}
 
-	public final boolean shouldRemove() {
-		return !running;
-	}
-
-	public long getTicksBeforeRun() {
-		return ticksBeforeRun;
+	@Override
+	public Integer call() {
+		try {
+			doRun();
+		} catch (Exception e) {
+			LOGGER.catching(e);
+			stop();
+			return 1;
+		}
+		return 0;
 	}
 
 	public final boolean shouldRun() {
 		return running && ticksBeforeRun <= 0;
 	}
 
-	public final void stop() {
+	public void stop() {
+		LOGGER.info("Stopping : " + getDescriptor() + " : " + getOwner());
 		running = false;
-	}
-
-	public long getDelayTicks() {
-		return delayTicks;
-	}
-
-	public String getDescriptor() {
-		return descriptor;
 	}
 
 	protected void setDelayTicks(long delayTicks) {
 		this.delayTicks = delayTicks;
-	}
-
-	protected Player getPlayerOwner() {
-		return owner != null && owner.isPlayer() ? (Player) owner : null;
-	}
-
-	public Npc getNpcOwner() {
-		return owner != null && owner.isNpc() ? (Npc) owner : null;
 	}
 
 	public void resetCountdown() {
@@ -94,11 +93,49 @@ public abstract class GameTickEvent {
 		return System.currentTimeMillis() + (ticksBeforeRun * getWorld().getServer().getConfig().GAME_TICK);
 	}
 
+	public final boolean shouldRemove() {
+		return !running;
+	}
+
+	public boolean belongsTo(Mob owner2) {
+		return owner != null && owner.equals(owner2);
+	}
+
+	public Mob getOwner() {
+		return owner;
+	}
+
+	public boolean hasOwner() {
+		return owner != null;
+	}
+
+	protected Player getPlayerOwner() {
+		return owner != null && owner.isPlayer() ? (Player) owner : null;
+	}
+
+	public Npc getNpcOwner() {
+		return owner != null && owner.isNpc() ? (Npc) owner : null;
+	}
+
+	public long getTicksBeforeRun() {
+		return ticksBeforeRun;
+	}
+
 	public final long getLastEventDuration() {
 		return lastEventDuration;
+	}
+
+	public long getDelayTicks() {
+		return delayTicks;
+	}
+
+	public String getDescriptor() {
+		return descriptor;
 	}
 
 	public World getWorld() {
 		return world;
 	}
+
+	public boolean isAllowDuplicateEvents() { return allowDuplicateEvents; }
 }

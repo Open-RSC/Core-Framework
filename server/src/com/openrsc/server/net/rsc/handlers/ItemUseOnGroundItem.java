@@ -70,7 +70,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 				}
 
 				if (player.getWorld().getServer().getPluginHandler()
-					.blockDefaultAction("InvUseOnGroundItem",
+					.blockDefaultAction(player, "InvUseOnGroundItem",
 						new Object[]{myItem, item, player})) {
 					return;
 				}

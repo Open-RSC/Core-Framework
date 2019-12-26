@@ -2,7 +2,6 @@ package com.openrsc.server.net;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
@@ -11,7 +10,9 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.MessageType;
 import com.vdurmont.emoji.EmojiParser;
+import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
@@ -20,7 +21,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.util.JsonUtils;
+import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.GitLabApiException;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,13 +41,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import net.dv8tion.jda.api.AccountType;
-import net.dv8tion.jda.api.JDABuilder;
-import org.gitlab4j.api.GitLabApi;
-import org.gitlab4j.api.GitLabApiException;
-
-import javax.security.auth.login.LoginException;
 
 public class DiscordService implements Runnable{
 	private static final int WATCHLIST_MAX_SIZE = 10;
@@ -460,7 +457,7 @@ public class DiscordService implements Runnable{
 
 	public void monitoringSendServerBehind(String message) {
 		try {
-			monitoringSendToDiscord(message + "\r\n" + getServer().buildProfilingDebugInformation(false));
+			monitoringSendToDiscord(message + "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false));
 		} catch(Exception e) {
 			LOGGER.catching(e);
 		}

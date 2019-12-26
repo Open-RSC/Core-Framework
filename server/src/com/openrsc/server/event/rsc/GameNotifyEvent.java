@@ -1,9 +1,12 @@
 package com.openrsc.server.event.rsc;
 
+import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.world.World;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GameNotifyEvent {
+public abstract class GameNotifyEvent extends GameStateEvent {
 
 	private GameStateEvent parentEvent;
 	private final Map<String, Object> inObjects = new ConcurrentHashMap<>();
@@ -12,42 +15,66 @@ public class GameNotifyEvent {
 	private int returnDelay;
 	private boolean triggered = false;
 
-	public void setParentEvent(GameStateEvent event) {
+	public GameNotifyEvent(final World world, final Mob owner, final int ticks, final String descriptor) {
+		super(world, owner, ticks, descriptor);
+	}
+
+	@Override
+	public void stop() {
+		super.stop();
+		trigger();
+	}
+
+	public void setParentEvent(final GameStateEvent event) {
 		this.parentEvent = event;
 	}
 
-	public void setTriggered(boolean val) {
-		triggered = val;
+	public void trigger() {
+		if(!isTriggered()) {
+			triggered = true;
+			restoreParent();
+			onTriggered();
+		}
 	}
 
-	public void restoreParent() {
+	public void onTriggered() {}
+
+	private void restoreParent() {
 		getParentEvent().setState(getReturnState());
 		getParentEvent().setDelayTicks(getReturnDelay());
 	}
 
-	public boolean isTriggered() { return this.triggered; }
+	public boolean isTriggered() { return triggered; }
 
-	public void addObjectOut(String name, Object item) {
+	public void addObjectOut(final String name, final Object item) {
 		outObjects.put(name, item);
 	}
 
-	public void addObjectIn(String name, Object item) {
+	public void addObjectIn(final String name, final Object item) {
 		inObjects.put(name, item);
 	}
 
-	public Object getObjectOut(String name) {
-		return this.outObjects.get(name);
+	public Object getObjectOut(final String name) {
+		return outObjects.get(name);
 	}
 
-	public Object getObjectIn(String name) {
-		return this.inObjects.get(name);
+	public boolean hasObjectOut(final String name) {
+		return outObjects.containsKey(name);
+	}
+
+	public Object getObjectIn(final String name) {
+		return inObjects.get(name);
+	}
+
+	public boolean hasObjectIn(final String name) {
+		return inObjects.containsKey(name);
 	}
 
 	public int getReturnState() {
 		return returnState;
 	}
 
-	public void setReturnState(int returnState) {
+	public void setReturnState(final int returnState) {
 		this.returnState = returnState;
 	}
 
@@ -55,7 +82,7 @@ public class GameNotifyEvent {
 		return returnDelay;
 	}
 
-	public void setReturnDelay(int returnDelay) {
+	public void setReturnDelay(final int returnDelay) {
 		this.returnDelay = returnDelay;
 	}
 

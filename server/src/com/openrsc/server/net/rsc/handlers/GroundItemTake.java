@@ -70,7 +70,7 @@ public class GroundItemTake implements PacketHandler {
 
 				player.resetAll();
 
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Pickup", new Object[]{player, item})) {
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "Pickup", new Object[]{player, item})) {
 					return;
 				}
 

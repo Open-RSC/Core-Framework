@@ -5,15 +5,15 @@ import com.openrsc.server.model.world.World;
 
 public abstract class MiniEvent extends SingleEvent {
 
-	protected MiniEvent(World world, Player owner, String descriptor) {
+	protected MiniEvent(final World world, final Player owner, final String descriptor) {
 		super(world, owner, 600, descriptor);
 	}
 
-	protected MiniEvent(World world, Player owner, int delay, String descriptor) {
+	protected MiniEvent(final World world, final Player owner, final int delay, final String descriptor) {
 		super(world, owner, delay, descriptor);
 	}
 
-	protected MiniEvent(World world, Player owner, int delay, String descriptor, boolean uniqueEvent) {
+	protected MiniEvent(final World world, final Player owner, final int delay, final String descriptor, final boolean uniqueEvent) {
 		super(world, owner, delay, descriptor, uniqueEvent);
 	}
 

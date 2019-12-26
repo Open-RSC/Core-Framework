@@ -56,7 +56,7 @@ public class WalkRequest implements PacketHandler {
 					}
 
 					if (opponent.isNpc()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerNpcRun",
+						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerNpcRun",
 							new Object[]{player, ((Npc) opponent)})) {
 							return;
 						}

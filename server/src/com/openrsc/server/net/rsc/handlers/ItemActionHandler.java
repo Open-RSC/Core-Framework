@@ -62,7 +62,7 @@ public class ItemActionHandler implements PacketHandler {
 
 		player.resetAll();
 
-		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("InvAction",
+		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "InvAction",
 			new Object[]{item, player, item.getDef(player.getWorld()).getCommand()[commandIndex]})) {
 			return;
 		}

@@ -44,6 +44,7 @@ public class ItemUseOnNpc implements PacketHandler {
 				player.resetAll();
 				player.face(affectedNpc);
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
+					player,
 					"InvUseOnNpc",
 					new Object[]{player, affectedNpc, item}))
 					return;

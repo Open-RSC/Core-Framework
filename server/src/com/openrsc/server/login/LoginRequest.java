@@ -1,7 +1,6 @@
 package com.openrsc.server.login;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class LoginRequest {
+public abstract class LoginRequest extends LoginExecutorProcess{
 	/**
 	 * The asynchronous logger.
 	 */
@@ -42,7 +41,7 @@ public abstract class LoginRequest {
 		this.setUsernameHash(DataConversions.usernameToHash(username));
 	}
 
-	private String getIpAddress() {
+	public String getIpAddress() {
 		return ipAddress;
 	}
 
@@ -82,7 +81,7 @@ public abstract class LoginRequest {
 		return server;
 	}
 
-	private int getClientVersion() {
+	public int getClientVersion() {
 		return clientVersion;
 	}
 
@@ -94,7 +93,7 @@ public abstract class LoginRequest {
 
 	public abstract void loadingComplete(Player loadedPlayer);
 
-	public void process() {
+	protected void processInternal() {
 		int loginResponse = validateLogin();
 		loginValidated(loginResponse);
 		if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
@@ -111,7 +110,7 @@ public abstract class LoginRequest {
 		LOGGER.info("Processed login request for " + getUsername() + " response: " + loginResponse);
 	}
 
-	private byte validateLogin() {
+	public byte validateLogin() {
 		PreparedStatement statement = null;
 		ResultSet playerSet = null;
 		int groupId = Group.USER;
@@ -132,7 +131,7 @@ public abstract class LoginRequest {
 				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
 			}
 
-			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= ServerConfiguration.MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
+			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 

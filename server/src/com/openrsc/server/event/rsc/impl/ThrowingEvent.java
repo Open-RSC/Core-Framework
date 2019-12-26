@@ -105,7 +105,7 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerRangeNpc",
+					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction(getOwner(), "PlayerRangeNpc",
 						new Object[]{getOwner(), target})) {
 						getPlayerOwner().resetRange();
 						stop();

@@ -17,7 +17,7 @@ import java.sql.ResultSet;
  *
  * @author Kenix
  */
-public class RecoveryChangeRequest {
+public class RecoveryChangeRequest extends LoginExecutorProcess{
 
 	/**
 	 * The asynchronous logger.
@@ -70,7 +70,7 @@ public class RecoveryChangeRequest {
 		return channel;
 	}
 
-	public void process() {
+	protected void processInternal() {
 		try {
 			LOGGER.info("Recovery questions change from: " + getPlayer().getCurrentIP());
 

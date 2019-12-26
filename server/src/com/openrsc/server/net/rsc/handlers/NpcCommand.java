@@ -42,7 +42,7 @@ public final class NpcCommand implements PacketHandler {
 					.getCommand2()).toLowerCase();
 				affectedNpc.resetPath();
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					"NpcCommand", new Object[]{affectedNpc, command, player})) {
+					player, "NpcCommand", new Object[]{affectedNpc, command, player})) {
 					return;
 				}
 			}

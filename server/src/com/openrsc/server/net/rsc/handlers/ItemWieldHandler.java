@@ -77,7 +77,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		if (pID == packetOne) {
 			if (!item.isWielded()) {
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					"Wield", new Object[]{player, item})) {
+					player, "Wield", new Object[]{player, item})) {
 					return;
 				}
 				player.getInventory().wieldItem(item, true);
@@ -85,20 +85,20 @@ public final class ItemWieldHandler implements PacketHandler {
 		} else if (pID == packetTwo) {
 			if (item.isWielded()) {
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					"UnWield", new Object[]{player, item}))
+					player, "UnWield", new Object[]{player, item}))
 					return;
 				player.getInventory().unwieldItem(item, true);
 			}
 		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetThree) {
 			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-				"Wield", new Object[]{player, item})) {
+				player, "Wield", new Object[]{player, item})) {
 				return;
 			}
 			player.getBank().wieldItem(idx, true);
 			ActionSender.showBank(player);
 		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetFour) {
 			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-				"UnWield", new Object[]{player, item}))
+				player, "UnWield", new Object[]{player, item}))
 				return;
 			player.getBank().unwieldItem(item, true);
 			ActionSender.showBank(player);

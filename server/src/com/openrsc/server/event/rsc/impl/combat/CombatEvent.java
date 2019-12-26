@@ -41,7 +41,7 @@ public class CombatEvent extends GameTickEvent {
 
 	private static void onDeath(Mob killed, Mob killer) {
 		if (killer.isPlayer() && killed.isNpc()) {
-			if (killed.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+			if (killed.getWorld().getServer().getPluginHandler().blockDefaultAction(killer, "PlayerKilledNpc",
 				new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
 			}

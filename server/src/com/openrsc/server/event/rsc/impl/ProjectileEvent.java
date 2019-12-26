@@ -104,7 +104,7 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 			if (caster.isNpc()) {
-				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction(caster, "PlayerKilledNpc",
 					new Object[]{(Player) opponent, (Npc) caster})) {
 					return;
 				}
@@ -156,7 +156,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Player playerCaster = (Player) caster;
 				Npc npcOpponent = (Npc) opponent;
-				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerKilledNpc",
+				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction(playerCaster, "PlayerKilledNpc",
 					new Object[]{playerCaster, npcOpponent})) {
 					return;
 				}

@@ -1,13 +1,11 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.content.clan.ClanInvite;
-import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
-import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
@@ -444,7 +442,7 @@ public final class RegularPlayer implements CommandListener {
 		} else if (cmd.equalsIgnoreCase("d")) {
 			String message = String.join(" ", args);
 			player.getWorld().getServer().getDiscordService().sendMessage("[InGame] " + player.getUsername() + ": " + message);
-			
+
 			for (Player p : player.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0);
 			}

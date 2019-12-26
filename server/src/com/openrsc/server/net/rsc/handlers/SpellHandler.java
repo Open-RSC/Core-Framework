@@ -214,7 +214,7 @@ public class SpellHandler implements PacketHandler {
 				if (player.withinRange(affectedPlayer, 4)) {
 					player.resetPath();
 				}
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMage",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerMage",
 					new Object[]{player, affectedPlayer, idx})) {
 					return;
 				}
@@ -263,7 +263,7 @@ public class SpellHandler implements PacketHandler {
 					}
 				}
 
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMageNpc",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerMageNpc",
 					new Object[]{player, affectedNpc})) {
 					return;
 				}
@@ -281,7 +281,7 @@ public class SpellHandler implements PacketHandler {
 					player.resetPath();
 					return;
 				}
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMageItem",
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerMageItem",
 					new Object[]{player, (Integer)item.getID(), (Integer)idx})) {
 					return;
 				}
@@ -305,7 +305,7 @@ public class SpellHandler implements PacketHandler {
 				return;
 			}
 
-			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerMageObject",
+			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerMageObject",
 				new Object[]{player, gameObject, spell})) {
 				return;
 			}

@@ -102,7 +102,7 @@ public final class ItemDropHandler implements PacketHandler {
 			player.setStatus(Action.IDLE);
 			return;
 		}
-		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
+		if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "Drop", new Object[]{player, item})) {
 			return;
 		}
 
@@ -170,7 +170,7 @@ public final class ItemDropHandler implements PacketHandler {
 					return;
 				}
 				ActionSender.sendSound(getOwner(), "dropobject");
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("Drop", new Object[]{player, item})) {
+				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "Drop", new Object[]{player, item})) {
 					stop();
 					player.setStatus(Action.IDLE);
 					return;

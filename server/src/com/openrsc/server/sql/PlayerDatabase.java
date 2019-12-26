@@ -42,7 +42,7 @@ public class PlayerDatabase {
 
 	public PlayerDatabase(Server server) {
 		this.server = server;
-		conn = new DatabaseConnection(getServer(), "PlayerDatabase");
+		conn = getServer().getDatabaseConnection();
 		/**
 		 * This prevents the connection from committing automatically every
 		 * query. It's here so we can cache update queries, enabling us to

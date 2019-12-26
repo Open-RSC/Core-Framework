@@ -18,7 +18,7 @@ import java.sql.ResultSet;
  *
  * @author Kenix
  */
-public class RecoveryAttemptRequest {
+public class RecoveryAttemptRequest extends LoginExecutorProcess{
 
 	/**
 	 * The asynchronous logger.
@@ -91,7 +91,7 @@ public class RecoveryAttemptRequest {
 		return server;
 	}
 
-	public void process() {
+	protected void processInternal() {
 		try {
 			server.getPacketFilter().addPasswordAttempt(getIpAddress());
 

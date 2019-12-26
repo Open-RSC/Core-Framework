@@ -14,6 +14,8 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
+import com.openrsc.server.login.PlayerRemoveRequest;
+import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
@@ -1641,7 +1643,7 @@ public final class Player extends Mob {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
-				getWorld().getServer().getPluginHandler().blockDefaultAction("CatGrowth", new Object[]{this});
+				getWorld().getServer().getPluginHandler().blockDefaultAction(this, "CatGrowth", new Object[]{this});
 			}
 		}
 	}
@@ -2022,7 +2024,7 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void sendOutgoingPackets() {
+	public void processOutgoingPackets() {
 		// Unsure if we want to clear right now. Probably OK not to since the player should be cleaned up when the channel is no longer open.
 		/*if(!channel.isOpen() || !isLoggedIn()) {
 			outgoingPackets.clear();
@@ -2144,7 +2146,7 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		getWorld().getServer().getLoginExecutor().addSaveRequest(this);
+		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this));
 	}
 
 	public void logout() {
@@ -2192,7 +2194,7 @@ public final class Player extends Mob {
 		getWorld().getClanManager().checkAndUnattachFromClan(this);
 		getWorld().getPartyManager().checkAndUnattachFromParty(this);
 
-		getWorld().getServer().getLoginExecutor().addRemoveRequest(this);
+		getWorld().getServer().getLoginExecutor().add(new PlayerRemoveRequest(getWorld().getServer(), this));
 	}
 
 	public void sendMemberErrorMessage() {
@@ -2356,7 +2358,7 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(int x, int y, boolean bubble) {
-		if (bubble && getWorld().getServer().getPluginHandler().blockDefaultAction("Teleport", new Object[]{this})) {
+		if (bubble && getWorld().getServer().getPluginHandler().blockDefaultAction(this, "Teleport", new Object[]{this})) {
 			return;
 		}
 		if (inCombat()) {

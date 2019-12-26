@@ -1,14 +1,12 @@
 package com.openrsc.server.plugins;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
-import com.openrsc.server.event.rsc.GameNotifyEvent;
-import com.openrsc.server.event.rsc.GameStateEvent;
+import com.openrsc.server.event.rsc.PluginTask;
+import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Path;
@@ -28,8 +26,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,11 +35,6 @@ import java.util.Optional;
  * @author n0m
  */
 public class Functions {
-
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static String getBankPinInput(Player player) {
 		ActionSender.sendBankPinInterface(player);
@@ -61,38 +52,6 @@ public class Functions {
 			return null;
 		}
 		return enteredPin;
-	}
-
-
-	public static GameNotifyEvent getBankPinInput(Player player, GameStateEvent parent) {
-		ActionSender.sendBankPinInterface(player);
-		player.setAttribute("bank_pin_entered", null);
-		ArrayList<String> pincheck = new ArrayList<>();
-		final GameNotifyEvent notifier = new GameNotifyEvent();
-		player.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(player.getWorld(), player, 0, "Get Bank Pin Input") {
-			public void init() {
-				player.getWorld().getServer().getGameEventHandler().add(notifier);
-				addState(0, () -> {
-					String enteredPin = player.getAttribute("bank_pin_entered", null);
-					if (enteredPin != null) {
-						pincheck.add(enteredPin);
-						return invoke(1, 0);
-					}
-					return invoke(0, 1);
-				});
-				addState(1, () -> {
-					String enteredPin = pincheck.get(0);
-					notifier.setTriggered(true);
-					if (enteredPin.equals("cancel")) {
-						ActionSender.sendCloseBankPinInterface(player);
-						return null;
-					}
-					notifier.addObjectOut("string_pin",enteredPin);
-					return null;
-				});
-			}
-		});
-		return notifier;
 	}
 
 	public static int getWoodcutAxe(Player p) {
@@ -1638,22 +1597,15 @@ public class Functions {
 		return false;
 	}
 
-	/**
-	 * Sleeps for one tick
-	 */
-	public static void sleep(Server server) {
-		// TODO: This should not exist.
-		sleep(server.getConfig().GAME_TICK);
-	}
-
-	public static void sleep(final int delay) {
-		// TODO: This should not exist.
+	public static void sleep(final int delayMs) {
 		try {
-			if (Thread.currentThread().getName().toLowerCase().contains("gamethread"))
+			PluginTask pluginTask = PluginTask.getContextPluginTask();
+			if (pluginTask == null)
 				return;
-			// System.out.println("Sleeping on " +
-			// Thread.currentThread().getName().toLowerCase());
-			Thread.sleep(delay);
+			// System.out.println("Sleeping on " + Thread.currentThread().getName());
+			int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getServer().getConfig().GAME_TICK);
+			pluginTask.setDelayTicks(ticks);
+			pluginTask.wait();
 		} catch (final InterruptedException e) {
 		}
 	}

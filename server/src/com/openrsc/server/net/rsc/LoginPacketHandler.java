@@ -79,11 +79,11 @@ public class LoginPacketHandler {
 							loadedPlayer.setChangingAppearance(true);
 						}
 
-						server.getPluginHandler().handleAction("PlayerLogin", new Object[]{loadedPlayer});
+						server.getPluginHandler().handleAction(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 						ActionSender.sendLogin(loadedPlayer);
 					}
 				};
-				server.getLoginExecutor().addLoginRequest(request);
+				server.getLoginExecutor().add(request);
 				break;
 
 			/* Registering */
@@ -100,7 +100,7 @@ public class LoginPacketHandler {
 
 				if (server.getPacketFilter().shouldAllowLogin(IP, true)) {
 					CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email);
-					server.getLoginExecutor().addCharacterCreateRequest(characterCreateRequest);
+					server.getLoginExecutor().add(characterCreateRequest);
 				}
 				break;
 
@@ -166,7 +166,7 @@ public class LoginPacketHandler {
 				}
 
 				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, channel, user, oldPass, newPass, answers);
-				server.getLoginExecutor().addRecoveryAttemptRequest(recoveryAttemptRequest);
+				server.getLoginExecutor().add(recoveryAttemptRequest);
 				break;
 		}
 	}

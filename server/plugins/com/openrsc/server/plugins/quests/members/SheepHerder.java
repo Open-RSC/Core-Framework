@@ -3,8 +3,8 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
+import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -219,7 +219,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void handleGateSounds(Player player) {
         player.playSound("opendoor");
 
-	   player.getWorld().getServer().getGameEventHandler().add(new PluginsUseThisEvent(player.getWorld(), 3000, "Sheep Herder Gate Sounds") {
+	   player.getWorld().getServer().getGameEventHandler().add(new SingleTickEvent(player.getWorld(), player, 3000, "Sheep Herder Gate Sounds") {
            @Override
            public void action() {
                player.playSound("opendoor");
