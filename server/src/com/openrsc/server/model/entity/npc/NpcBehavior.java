@@ -299,7 +299,7 @@ public class NpcBehavior {
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 					int range = 1;
 					if (!p.withinRange(npc, range) || !hasItem(p, ItemId.GNOME_BALL.id())
-						|| !inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0))
+						|| !inArray(p.getAttribute("gnomeball_npc", -1), -1, 0))
 						continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
 
 					//set tackle
@@ -397,8 +397,8 @@ public class NpcBehavior {
 	}
 
 	private synchronized void attemptTackle(Npc n, Player p) {
-		int otherNpcId = p.getSyncAttribute("gnomeball_npc", -1);
-		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || p.getSyncAttribute("throwing_ball_game", false)) {
+		int otherNpcId = p.getAttribute("gnomeball_npc", -1);
+		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || p.getAttribute("throwing_ball_game", false)) {
 			return;
 		}
 		lastTackleAttempt = System.currentTimeMillis();
@@ -410,11 +410,11 @@ public class NpcBehavior {
 			npcYell(p, npc, "grrrrr");
 			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
-			if (!inArray(p.getSyncAttribute("gnomeball_npc", -1), -1, 0) || p.getSyncAttribute("throwing_ball_game", false)) {
+			if (!inArray(p.getAttribute("gnomeball_npc", -1), -1, 0) || p.getAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
 				return;
 			}
-			p.setSyncAttribute("gnomeball_npc", npc.getID());
+			p.setAttribute("gnomeball_npc", npc.getID());
 			removeItem(p, ItemId.GNOME_BALL.id(), 1);
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
@@ -487,7 +487,7 @@ public class NpcBehavior {
 			lastMovement = System.currentTimeMillis();
 		}
 	}
-	
+
 	public void retreatFromWild3() {
 		if (npc.getLocation().inWilderness()) {
 			state = State.RETREAT;

@@ -34,7 +34,7 @@ public class GroundItem extends Entity {
 
 	public GroundItem(World world, int id, Point location) { // used for ::masks
 		super(world);
-		super.id = id;
+		super.setID(id);
 		super.location.set(location);
 		amount = 1;
 	}
@@ -134,7 +134,7 @@ public class GroundItem extends Entity {
 	}
 
 	public ItemDefinition getDef() {
-		return getWorld().getServer().getEntityHandler().getItemDef(id);
+		return getWorld().getServer().getEntityHandler().getItemDef(getID());
 	}
 
 	public ItemLoc getLoc() {
@@ -177,6 +177,6 @@ public class GroundItem extends Entity {
 
 	@Override
 	public String toString() {
-		return "Item(" + this.id + ", " + this.amount + ") location = " + location.toString();
+		return "Item(" + this.getID() + ", " + this.amount + ") location = " + location.toString();
 	}
 }

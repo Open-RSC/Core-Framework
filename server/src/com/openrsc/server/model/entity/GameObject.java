@@ -4,7 +4,6 @@ import com.openrsc.server.external.DoorDef;
 import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
 public class GameObject extends Entity {
@@ -29,20 +28,9 @@ public class GameObject extends Entity {
 	 */
 	private int type;
 
-	private VisibleCondition statement;
-
-	public GameObject(World world, GameObjectLoc loc, VisibleCondition statement) {
-		super(world);
-
-		direction = loc.getDirection();
-		type = loc.getType();
-		this.loc = loc;
-		super.setID(loc.getId());
-		this.statement = statement;
-	}
-
 	public GameObject(World world, GameObjectLoc loc) {
 		super(world);
+
 		direction = loc.getDirection();
 		type = loc.getType();
 		this.loc = loc;
@@ -144,16 +132,9 @@ public class GameObject extends Entity {
 	}
 
 	public String toString() {
-		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + id
+		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + getID()
 			+ "; dir = " + direction + "; location = "
 			+ location.toString() + ";";
-	}
-
-	public boolean isVisibleTo(Player p) {
-		if (statement == null)
-			return true;
-
-		return statement != null && statement.isVisibleTo(this, p);
 	}
 
 	public final Point[] getObjectBoundary() {

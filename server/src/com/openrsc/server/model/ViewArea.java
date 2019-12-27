@@ -44,7 +44,7 @@ public class ViewArea {
 
 	public GameObject getGameObject(int id, int x, int y) {
 		for (GameObject o : getGameObjectsInView()) {
-			if (o.id == id && o.getX() == x && o.getY() == y) {
+			if (o.getID() == id && o.getX() == x && o.getY() == y) {
 				return o;
 			}
 		}

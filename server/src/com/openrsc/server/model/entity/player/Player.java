@@ -34,8 +34,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
 import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
-import com.openrsc.server.net.rsc.handlers.Ping;
-import com.openrsc.server.net.rsc.handlers.WalkRequest;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -2175,8 +2173,8 @@ public final class Player extends Mob {
 		getCache().set("kitten_hunger", getAttribute("kitten_hunger", 0));
 		getCache().set("kitten_loneliness", getAttribute("kitten_loneliness", 0));
 		// any gnome ball progress
-		getCache().set("gnomeball_goals", getSyncAttribute("gnomeball_goals", 0));
-		getCache().set("gnomeball_npc", getSyncAttribute("gnomeball_npc", 0));
+		getCache().set("gnomeball_goals", getAttribute("gnomeball_goals", 0));
+		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
 		save();
 

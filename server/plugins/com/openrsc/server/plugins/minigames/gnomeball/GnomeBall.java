@@ -99,7 +99,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 				gnome_team.initializeIndirectTalkScript(player);
 			}
 		} else if (playerZone == Zone.ZONE_1XP_OUTER || playerZone == Zone.ZONE_1XP_INNER) {
-			player.setSyncAttribute("throwing_ball_game", true);
+			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
 			player.setBusyTimer(600);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
@@ -128,7 +128,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 				}
 			});
 		} else if (playerZone == Zone.ZONE_2XP_OUTER || playerZone == Zone.ZONE_2XP_INNER) {
-			player.setSyncAttribute("throwing_ball_game", true);
+			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = getNearestNpc(player, GnomeNpcs.GOALIE, 15);
 			player.setBusyTimer(600);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
@@ -181,10 +181,10 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 
 	private void loadIfNotMemory(Player p, String cacheName) {
 		//load from player cache if not present in memory
-		if((p.getSyncAttribute(cacheName, -1) == -1) && p.getCache().hasKey(cacheName)) {
-			p.setSyncAttribute(cacheName, p.getCache().getInt(cacheName));
-		} else if (p.getSyncAttribute(cacheName, -1) == -1) {
-			p.setSyncAttribute(cacheName, 0);
+		if((p.getAttribute(cacheName, -1) == -1) && p.getCache().hasKey(cacheName)) {
+			p.setAttribute(cacheName, p.getCache().getInt(cacheName));
+		} else if (p.getAttribute(cacheName, -1) == -1) {
+			p.setAttribute(cacheName, 0);
 		}
 	}
 
