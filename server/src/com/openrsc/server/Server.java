@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
-public final class Server implements Runnable {
+public class Server implements Runnable {
 
 	/**
 	 * The asynchronous logger.
@@ -47,7 +47,7 @@ public final class Server implements Runnable {
 	private static final Logger LOGGER;
 
 	private final GameStateUpdater gameUpdater;
-	public final GameEventHandler tickEventHandler;
+	private final GameEventHandler gameEventHandler;
 	private final DiscordService discordService;
 	private final GameTickEvent monitoring;
 	private final LoginExecutor loginExecutor;
@@ -155,7 +155,7 @@ public final class Server implements Runnable {
 		discordService = new DiscordService(this);
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
-		tickEventHandler = new GameEventHandler(this);
+		gameEventHandler = new GameEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
 		gameLogger = new GameLogger(this);
 		entityHandler = new EntityHandler(this);
@@ -422,7 +422,7 @@ public final class Server implements Runnable {
 	}
 
 	public final GameEventHandler getGameEventHandler() {
-		return tickEventHandler;
+		return gameEventHandler;
 	}
 
 	public final GameStateUpdater getGameUpdater() {

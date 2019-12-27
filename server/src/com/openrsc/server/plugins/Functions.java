@@ -74,14 +74,14 @@ public class Functions {
 	}
 
 	public static void teleport(Mob n, int x, int y) {
-		n.getWorld().getServer().tickEventHandler.submit(() -> {
+		n.getWorld().getServer().getGameEventHandler().submit(() -> {
 			n.resetPath();
 			n.setLocation(new Point(x, y), true);
 		}, "Teleport");
 	}
 
 	public static void walkMob(Mob n, Point... waypoints) {
-		n.getWorld().getServer().tickEventHandler.submit(() -> {
+		n.getWorld().getServer().getGameEventHandler().submit(() -> {
 			n.resetPath();
 			Path path = new Path(n, PathType.WALK_TO_POINT);
 			for (Point p : waypoints) {
@@ -334,7 +334,7 @@ public class Functions {
 
 	public static Npc spawnNpc(int id, int x, int y, final int time, final Player spawnedFor) {
 		final Npc npc = new Npc(spawnedFor.getWorld(), id, x, y);
-		spawnedFor.getWorld().getServer().tickEventHandler.submit(() -> {
+		spawnedFor.getWorld().getServer().getGameEventHandler().submit(() -> {
 			npc.setShouldRespawn(false);
 			npc.setAttribute("spawnedFor", spawnedFor);
 			spawnedFor.getWorld().registerNpc(npc);
@@ -349,7 +349,7 @@ public class Functions {
 
 	public static Npc spawnNpc(World world, int id, int x, int y) {
 		final Npc npc = new Npc(world, id, x, y);
-		world.getServer().tickEventHandler.submit(() -> {
+		world.getServer().getGameEventHandler().submit(() -> {
 			npc.setShouldRespawn(false);
 			world.registerNpc(npc);
 		}, "Spawn Permanent NPC Delayed");
@@ -359,7 +359,7 @@ public class Functions {
 	public static Npc spawnNpcWithRadius(Player p, int id, int x, int y, int radius, final int time) {
 
 		final Npc npc = new Npc(p.getWorld(), id, x, y, radius);
-		p.getWorld().getServer().tickEventHandler.submit(() -> {
+		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			npc.setShouldRespawn(false);
 			p.getWorld().registerNpc(npc);
 			p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, time, "Spawn Radius NPC Timed") {
@@ -374,7 +374,7 @@ public class Functions {
 	public static Npc spawnNpc(World world, int id, int x, int y, final int time) {
 
 		final Npc npc = new Npc(world, id, x, y);
-		world.getServer().tickEventHandler.submit(() -> {
+		world.getServer().getGameEventHandler().submit(() -> {
 			npc.setShouldRespawn(false);
 			world.registerNpc(npc);
 			world.getServer().getGameEventHandler().add(new SingleEvent(world, null, time, "Spawn NPC Timed") {
@@ -422,7 +422,7 @@ public class Functions {
 	}
 
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {
-		i.getWorld().getServer().tickEventHandler.submit(() -> {
+		i.getWorld().getServer().getGameEventHandler().submit(() -> {
 			if (i.getLoc() == null) {
 				i.getWorld().getServer().getGameEventHandler().add(new SingleEvent(i.getWorld(), null, time, "Spawn Ground Item Timed") {
 					public void action() {
@@ -434,7 +434,7 @@ public class Functions {
 	}
 
 	public static void removeNpc(final Npc npc) {
-		npc.getWorld().getServer().tickEventHandler.submit(() -> npc.setUnregistering(true), "Remove NPC");
+		npc.getWorld().getServer().getGameEventHandler().submit(() -> npc.setUnregistering(true), "Remove NPC");
 	}
 
 	/**
@@ -493,7 +493,7 @@ public class Functions {
 	 * @param stage
 	 */
 	public static void setQuestStage(final Player p, final int questID, final int stage) {
-		p.getWorld().getServer().tickEventHandler.submit(() -> p.updateQuestStage(questID, stage), "Set Quest Stage");
+		p.getWorld().getServer().getGameEventHandler().submit(() -> p.updateQuestStage(questID, stage), "Set Quest Stage");
 	}
 
 	/**
@@ -579,7 +579,7 @@ public class Functions {
 	 */
 	public static void addItem(final Player p, final int item, final int amt) {
 
-		p.getWorld().getServer().tickEventHandler.submit(() -> {
+		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			final Item items = new Item(item, amt);
 			if (!items.getDef(p.getWorld()).isStackable() && amt > 1) {
 				for (int i = 0; i < amt; i++) {
@@ -959,19 +959,19 @@ public class Functions {
 	}
 
 	public static void removeObject(final GameObject o) {
-		o.getWorld().getServer().tickEventHandler.submit(() -> o.getWorld().unregisterGameObject(o), "Remove Game Object");
+		o.getWorld().getServer().getGameEventHandler().submit(() -> o.getWorld().unregisterGameObject(o), "Remove Game Object");
 	}
 
 	public static void registerObject(final GameObject o) {
-		o.getWorld().getServer().tickEventHandler.submit(() -> o.getWorld().registerGameObject(o), "Add Game Object");
+		o.getWorld().getServer().getGameEventHandler().submit(() -> o.getWorld().registerGameObject(o), "Add Game Object");
 	}
 
 	public static void replaceObject(final GameObject o, final GameObject newObject) {
-		o.getWorld().getServer().tickEventHandler.submit(() -> o.getWorld().replaceGameObject(o, newObject), "Replace Game Object");
+		o.getWorld().getServer().getGameEventHandler().submit(() -> o.getWorld().replaceGameObject(o, newObject), "Replace Game Object");
 	}
 
 	public static void delayedSpawnObject(final World world, final GameObjectLoc loc, final int time) {
-		world.getServer().tickEventHandler.submit(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
+		world.getServer().getGameEventHandler().submit(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
 	}
 
 	public static void doGate(final Player p, final GameObject object, int replaceID) {
@@ -1290,7 +1290,7 @@ public class Functions {
 					npc.setBusyTimer(delay);
 				}
 				player.setBusy(true);
-				player.getWorld().getServer().tickEventHandler.submit(() -> player.message(message), "Message Player");
+				player.getWorld().getServer().getGameEventHandler().submit(() -> player.message(message), "Message Player");
 			}
 			sleep(delay);
 		}
@@ -1309,7 +1309,7 @@ public class Functions {
 				if (player.getInteractingNpc() != null) {
 					player.getInteractingNpc().setBusyTimer(1900);
 				}
-				player.getWorld().getServer().tickEventHandler.submit(() -> player.message("@que@" + message), "Multi Message Player");
+				player.getWorld().getServer().getGameEventHandler().submit(() -> player.message("@que@" + message), "Multi Message Player");
 				player.setBusyTimer(1900);
 			}
 			sleep(1900);
@@ -1333,7 +1333,7 @@ public class Functions {
 				}
 				npc.setBusy(true);
 				player.setBusy(true);
-				player.getWorld().getServer().tickEventHandler.submit(() -> {
+				player.getWorld().getServer().getGameEventHandler().submit(() -> {
 					npc.resetPath();
 					player.resetPath();
 
@@ -1367,7 +1367,7 @@ public class Functions {
 	public static void npcYell(final Player player, final Npc npc, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				player.getWorld().getServer().tickEventHandler.submit(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)), "NPC Yell");
+				player.getWorld().getServer().getGameEventHandler().submit(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)), "NPC Yell");
 			}
 		}
 	}
@@ -1388,7 +1388,7 @@ public class Functions {
 						return;
 					}
 				}
-				player.getWorld().getServer().tickEventHandler.submit(() -> {
+				player.getWorld().getServer().getGameEventHandler().submit(() -> {
 					if (npc != null) {
 						npc.resetPath();
 						npc.setBusyTimer(2500);
@@ -1424,7 +1424,7 @@ public class Functions {
 		if (!hasItem(p, id, amt)) {
 			return false;
 		}
-		p.getWorld().getServer().tickEventHandler.submit(() -> {
+		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			final Item item = new Item(id, 1);
 			if (!item.getDef(p.getWorld()).isStackable()) {
 				p.getInventory().remove(new Item(id, 1));
@@ -1448,7 +1448,7 @@ public class Functions {
 				return false;
 			}
 		}
-		p.getWorld().getServer().tickEventHandler.submit(() -> {
+		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			for (Item ir : items) {
 				p.getInventory().remove(ir);
 			}
@@ -1616,7 +1616,7 @@ public class Functions {
 	 */
 	public static Npc transform(final Npc n, final int newID, boolean onlyShift) {
 		final Npc newNpc = new Npc(n.getWorld(), newID, n.getX(), n.getY());
-		n.getWorld().getServer().tickEventHandler.submit(() -> {
+		n.getWorld().getServer().getGameEventHandler().submit(() -> {
 			newNpc.setShouldRespawn(false);
 			n.getWorld().registerNpc(newNpc);
 			if (onlyShift) {
@@ -1628,7 +1628,7 @@ public class Functions {
 	}
 
 	public static void temporaryRemoveNpc(final Npc n) {
-		n.getWorld().getServer().tickEventHandler.submit(() -> {
+		n.getWorld().getServer().getGameEventHandler().submit(() -> {
 			n.setShouldRespawn(true);
 			n.remove();
 		}, "Temporary Remove NPC");
