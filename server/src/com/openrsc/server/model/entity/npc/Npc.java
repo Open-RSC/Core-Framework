@@ -349,10 +349,10 @@ public class Npc extends Mob {
 	}
 	public void retreatFromWild2() {
 		if(getLocation().inWilderness()){
-			walkToEntityAStar2(103, 512);
+			walkToEntityAStar(103, 512, 200);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), ((Player) null), 90000, "Npc walk to wild") {
 				public void run() {
-					walkToEntityAStar2(108, 425);
+					walkToEntityAStar(108, 425, 200);
 					setHeals(25);
 					stop();
 				}
@@ -1487,4 +1487,8 @@ public class Npc extends Mob {
 		}
 		return false;
 	}
+
+	public boolean stateIsInvisible() { return false; };
+	public boolean stateIsInvulnerable() { return false; };
+
 }
