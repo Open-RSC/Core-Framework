@@ -12,17 +12,17 @@ public abstract class Entity {
 
 	private final World world;
 
-	protected final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
+	private final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
 	private int id;
 
-	protected int index;
+	private int index;
 
-	protected AtomicReference<Point> location = new AtomicReference<Point>();
+	private AtomicReference<Point> location = new AtomicReference<Point>();
 
-	protected AtomicReference<Region> region = new AtomicReference<Region>();
+	private AtomicReference<Region> region = new AtomicReference<Region>();
 
-	protected boolean removed = false;
+	private boolean removed = false;
 
 	public Entity(final World world) {
 		this.world = world;
@@ -142,7 +142,7 @@ public abstract class Entity {
 		return removed;
 	}
 
-	private void setRemoved(final boolean removed) {
+	protected void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 
@@ -156,7 +156,7 @@ public abstract class Entity {
 
 	public abstract boolean isOn(final int x, final int y);
 
-	public boolean isVisibleTo(final Entity entity) {
+	public boolean isInvisibleTo(final Entity observer) {
 		return true;
 	}
 

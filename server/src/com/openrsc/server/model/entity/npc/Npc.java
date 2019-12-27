@@ -428,7 +428,7 @@ public class Npc extends Mob {
 		 */
 		setUUID(UUID.randomUUID().toString());
 
-		getWorld().getServer().getGameEventHandler().add(statRestorationEvent);
+		getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 	}
 
 	/**

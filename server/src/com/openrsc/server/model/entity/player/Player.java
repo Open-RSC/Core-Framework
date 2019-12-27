@@ -22,6 +22,7 @@ import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -674,7 +675,7 @@ public final class Player extends Mob {
 				return false;
 			}
 
-			if (victim.isInvulnerable(mob) || victim.isInvisible(mob)) {
+			if (victim.isInvulnerableTo(this) || victim.isInvisibleTo(this)) {
 				message("You are not allowed to attack that person");
 				return false;
 			}
@@ -1473,7 +1474,7 @@ public final class Player extends Mob {
 				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
 			return;
 		}
-		skills.addExperience(i, appliedAmount);
+		getSkills().addExperience(i, appliedAmount);
 	}
 
 	private List<Double> getExperienceRate(int skill) {
@@ -1571,11 +1572,11 @@ public final class Player extends Mob {
 		}
 
 		if (getLocation().onTutorialIsland()) {
-			if (skills.getExperience(skill) + skillXP > 200) {
+			if (getSkills().getExperience(skill) + skillXP > 200) {
 				if (skill != 3) {
-					skills.setExperience(skill, 200);
+					getSkills().setExperience(skill, 200);
 				} else {
-					skills.setExperience(skill, 1200);
+					getSkills().setExperience(skill, 1200);
 				}
 			}
 		}
@@ -1611,17 +1612,17 @@ public final class Player extends Mob {
 				} else {
 					// cb skill -> apply effective multiplier
 					skillXP *= multipliers.get(1);
-					skills.addExperience(skill, (int) skillXP);
+					getSkills().addExperience(skill, (int) skillXP);
 				}
 			} else {
 				// no shared xp -> apply effective multiplier
 				skillXP *= multipliers.get(1);
-				skills.addExperience(skill, (int) skillXP);
+				getSkills().addExperience(skill, (int) skillXP);
 			}
 		} else {
 			// effective multiplier
 			skillXP *= multipliers.get(1);
-			skills.addExperience(skill, (int) skillXP);
+			getSkills().addExperience(skill, (int) skillXP);
 		}
 		// ActionSender.sendExperience(this, skill);
 	}
@@ -1735,7 +1736,7 @@ public final class Player extends Mob {
 			}
 			prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
 			getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
-			getWorld().getServer().getGameEventHandler().add(statRestorationEvent);
+			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 		}
 		this.loggedIn = loggedIn;
 	}
@@ -1893,7 +1894,7 @@ public final class Player extends Mob {
 		}
 		this.cure();
 		prayers.resetPrayers();
-		skills.normalize();
+		getSkills().normalize();
 		if (getWorld().getServer().getConfig().WANT_PARTIES) {
 			if (getParty() != null) {
 				this.getParty().sendParty();
@@ -2365,7 +2366,7 @@ public final class Player extends Mob {
 
 		if (bubble) {
 			for (Player p : getViewArea().getPlayersInView()) {
-				if (!isInvisible(p)) {
+				if (!isInvisibleTo(p)) {
 					ActionSender.sendTeleBubble(p, getX(), getY(), false);
 				}
 			}
@@ -2912,12 +2913,24 @@ public final class Player extends Mob {
 		}
 	}
 
+	public boolean hasHigherRankThan(final Entity observer) {
+		// Players always have a higher rank than NPCs/GameObject/GroundItem
+		if(!(observer instanceof Player)) {
+			return true;
+		}
+
+		final Player subject = this;
+		final Player obs = (Player)observer;
+
+		return subject.getGroupID() < obs.getGroupID();
+	}
+
 	public boolean toggleCacheInvisible() {
 		return setCacheInvisible(!cacheIsInvisible());
 	}
 
-	public boolean isInvisible(Mob m) {
-		return stateIsInvisible() && m.rankCheckInvisible(this);
+	public boolean isInvisibleTo(final Entity observer) {
+		return stateIsInvisible() && hasHigherRankThan(observer);
 	}
 
 	private boolean cacheIsInvisible() {
@@ -2937,8 +2950,8 @@ public final class Player extends Mob {
 		return invisible;
 	}
 
-	public boolean isInvulnerable(Mob m) {
-		return stateIsInvulnerable() && m.rankCheckInvulnerable(this);
+	public boolean isInvulnerableTo(final Entity observer) {
+		return stateIsInvulnerable() && hasHigherRankThan(observer);
 	}
 
 	private boolean cacheIsInvulnerable() {

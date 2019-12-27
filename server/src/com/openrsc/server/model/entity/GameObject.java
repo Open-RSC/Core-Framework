@@ -135,15 +135,10 @@ public class GameObject extends Entity {
 		return false;
 	}
 
-	public void remove() {
-		removed = true;
-		super.remove();
-	}
-
 	public String toString() {
 		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + getID()
 			+ "; dir = " + direction + "; location = "
-			+ location.toString() + ";";
+			+ getLocation().toString() + ";";
 	}
 
 	public String getOwner() {
@@ -176,10 +171,6 @@ public class GameObject extends Entity {
 
 	public void setType(final int type) {
 		this.type = type;
-	}
-
-	public boolean isRemoved() {
-		return removed;
 	}
 
 	public boolean isTelePoint() {

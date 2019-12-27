@@ -197,7 +197,7 @@ public class ThrowingEvent extends GameTickEvent {
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
+						target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
 						target.startPoisonEvent();
 					}
 				}

@@ -93,7 +93,7 @@ public class GroundItem extends Entity {
 	}
 
 	public void remove() {
-		if (!removed && loc != null && loc.getRespawnTime() > 0) {
+		if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
 			getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
 				public void run() {
 					getWorld().registerItem(new GroundItem(getWorld(), loc));
@@ -104,23 +104,23 @@ public class GroundItem extends Entity {
 		super.remove();
 	}
 
-	public boolean isVisibleTo(final Player p) {
+	public boolean isInvisibleTo(final Player p) {
 		if (belongsTo(p))
-			return true;
+			return false;
 		if (getDef().isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD)
-			return false;
+			return true;
 		if (getDef().isUntradable())
-			return false;
+			return true;
 		if (!belongsTo(p) && p.getIronMan() >= IronmanMode.Ironman.id() && p.getIronMan() <= IronmanMode.Transfer.id())
-			return false;
+			return true;
 
 		// One minute and four seconds to show to all.
-		return System.currentTimeMillis() - spawnedTime > 64000;
+		return System.currentTimeMillis() - spawnedTime <= 64000;
 	}
 
 	@Override
 	public String toString() {
-		return "Item(" + this.getID() + ", " + this.amount + ") location = " + location.toString();
+		return "Item(" + this.getID() + ", " + this.amount + ") location = " + getLocation().toString();
 	}
 
 	public ItemDefinition getDef() {

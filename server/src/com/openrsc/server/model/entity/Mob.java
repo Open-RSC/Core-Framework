@@ -11,7 +11,6 @@ import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
-import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.model.entity.update.UpdateFlags;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
@@ -19,144 +18,31 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.CollisionFlag;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.openrsc.server.plugins.Functions.sleep;
-
 public abstract class Mob extends Entity {
 
 	/**
 	 * The asynchronous logger.
 	 */
-	private Point newLoc;
-
-	private long lastMovementTime		= 0;
-
-	public Mob (World world) {
-		super(world);
-		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
-	}
 	private static final Logger LOGGER = LogManager.getLogger();
-	protected final Skills skills = new Skills(this.getWorld(), this);
-	/**
-	 * Used to block new requests when we are in the middle of one
-	 */
-	private final AtomicBoolean busy = new AtomicBoolean(false);
-	/**
-	 * The path we are walking
-	 */
-	private WalkToActionNpc walkToActionNpc;
 
-	public WalkToActionNpc getWalkToActionNpc() {
-		return walkToActionNpc;
-	}
-
-	public void setWalkToActionNpc(WalkToActionNpc action) {
-		this.walkToActionNpc = action;
-	}
-
+	private Point newLoc;
+	private long lastMovementTime = 0;
+	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
-	public int poisonDamage = 0;
-	/**
-	 * Tiles around us that we can see
-	 */
-	private ViewArea viewArea = new ViewArea(this);
 	private int killType = 0;
-
-	/**
-	 * RANGED
-	 */
-	public boolean checkAttack(Mob mob, boolean missile) {
-		if (mob.isPlayer()) {
-			Mob victim = (Mob) mob;
-			/*if (victim.inCombat() && victim.getDuel().isDuelActive()) {
-				Mob opponent = (Mob) getOpponent();
-				if (opponent != null && victim.equals(opponent)) {
-					return true;
-				}
-			}*/
-			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
-					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
-					return false;
-				}
-			}
-
-			int myWildLvl = getLocation().wildernessLevel();
-			int victimWildLvl = victim.getLocation().wildernessLevel();
-			if (myWildLvl < 1 || victimWildLvl < 1) {
-				//message("You can't attack other players here. Move to the wilderness");
-				return false;
-			}
-			int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
-			if (combDiff > myWildLvl) {
-				//message("You can only attack players within " + (myWildLvl) + " levels of your own here");
-				//message("Move further into the wilderness for less restrictions");
-				return false;
-			}
-			if (combDiff > victimWildLvl) {
-				//message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
-				//message("Move further into the wilderness for less restrictions");
-				return false;
-			}
-
-			/*if (victim.isInvulnerable(mob) || victim.isInvisible(mob)) {
-				//message("You are not allowed to attack that person");
-				return false;
-			}*/
-			return true;
-		} else if (mob.isNpc()) {
-			Npc victim = (Npc) mob;
-			if (((Npc) victim).isPkBot() && victim.getCombatTimer() > 3000) {
-				//setSuspiciousPlayer(true);
-				return true;
-			} else if (victim.isPkBotMelee()) {
-				//setSuspiciousPlayer(true);
-				return false;
-			}
-			if (!victim.getDef().isAttackable()) {
-				//setSuspiciousPlayer(true);
-				return false;
-			}
-			return true;
-		}
-		return true;
-	}
-
+	private int combatStyle = 0;
+	private int poisonDamage = 0;
 	private Action status = Action.IDLE;
-
-	public void setStatus(Action a) {
-		status = a;
-	}
-
 	private RangeEventNpc rangeEventNpc;
-
-	public RangeEventNpc getRangeEventNpc() {
-		return rangeEventNpc;
-	}
-
-	public void resetRange() {
-		if (rangeEventNpc != null) {
-			rangeEventNpc.stop();
-			rangeEventNpc = null;
-		}
-		setStatus(Action.IDLE);
-	}
-
-	public void setRangeEventNpc(RangeEventNpc event) {
-		if (rangeEventNpc != null) {
-			rangeEventNpc.stop();
-		}
-		rangeEventNpc = event;
-		setStatus(Action.RANGING_MOB);
-		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
-	}
-
+	private long lastRun = 0;
+	private boolean teleporting;
+	private int[][] mobSprites = new int[][]{{3, 2, 1}, {4, -1, 0}, {5, 6, 7}};
 	/**
 	 * Flag to indicate that this mob will be needed to be unregistered after
 	 * next update tick.
@@ -182,7 +68,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * The stat restore event
 	 */
-	protected StatRestorationEvent statRestorationEvent;
+	private StatRestorationEvent statRestorationEvent;
 	/**
 	 * If we are warned to move
 	 */
@@ -223,7 +109,6 @@ public abstract class Mob extends Entity {
 	 * The end state of the last combat encounter
 	 */
 	private CombatState lastCombatState = CombatState.WAITING;
-	private int[][] mobSprites = new int[][]{{3, 2, 1}, {4, -1, 0}, {5, 6, 7}};
 	/**
 	 * Has the sprite changed?
 	 */
@@ -232,11 +117,108 @@ public abstract class Mob extends Entity {
 	 * Holds all the update flags for the appearance packet.
 	 */
 	private UpdateFlags updateFlags = new UpdateFlags();
-	private long lastRun = 0;
-	private boolean teleporting;
+	/**
+	 * Used to block new requests when we are in the middle of one
+	 */
+	private final AtomicBoolean busy = new AtomicBoolean(false);
+	/**
+	 * The path we are walking
+	 */
+	private WalkToActionNpc walkToActionNpc;
+	/**
+	 * Tiles around us that we can see
+	 */
+	private ViewArea viewArea = new ViewArea(this);
 
-	public double[] getModifiers() {
-		return new double[]{1, 1, 1};
+	public Mob (final World world) {
+		super(world);
+		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
+	}
+
+	public boolean stateIsInvisible() {
+		return false;
+	}
+
+	public boolean stateIsInvulnerable() {
+		return false;
+	}
+
+	public int getWalkingTick() {
+		return getWorld().getServer().getConfig().WALKING_TICK;
+	}
+
+	/**
+	 * RANGED
+	 */
+	public boolean checkAttack(final Mob mob, final boolean missile) {
+		if (mob.isPlayer()) {
+			/*if (victim.inCombat() && victim.getDuel().isDuelActive()) {
+				Mob opponent = (Mob) getOpponent();
+				if (opponent != null && victim.equals(opponent)) {
+					return true;
+				}
+			}*/
+			if (!missile) {
+				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
+					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+					return false;
+				}
+			}
+
+			int myWildLvl = getLocation().wildernessLevel();
+			int victimWildLvl = mob.getLocation().wildernessLevel();
+			if (myWildLvl < 1 || victimWildLvl < 1) {
+				//message("You can't attack other players here. Move to the wilderness");
+				return false;
+			}
+			int combDiff = Math.abs(getCombatLevel() - mob.getCombatLevel());
+			if (combDiff > myWildLvl) {
+				//message("You can only attack players within " + (myWildLvl) + " levels of your own here");
+				//message("Move further into the wilderness for less restrictions");
+				return false;
+			}
+			if (combDiff > victimWildLvl) {
+				//message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
+				//message("Move further into the wilderness for less restrictions");
+				return false;
+			}
+
+			final Player victim = (Player)mob;
+			if (victim.isInvulnerableTo(this) || victim.isInvisibleTo(this)) {
+				victim.message("You are not allowed to attack that person");
+				return false;
+			}
+			return true;
+		} else if (mob.isNpc()) {
+			Npc victim = (Npc) mob;
+			if (((Npc) victim).isPkBot() && victim.getCombatTimer() > 3000) {
+				return true;
+			} else if (victim.isPkBotMelee()) {
+				return false;
+			}
+			if (!victim.getDef().isAttackable()) {
+				return false;
+			}
+			return true;
+		}
+		return true;
+	}
+
+	public void resetRange() {
+		if (rangeEventNpc != null) {
+			rangeEventNpc.stop();
+			rangeEventNpc = null;
+		}
+		setStatus(Action.IDLE);
+	}
+
+	public void setRangeEventNpc(RangeEventNpc event) {
+		if (rangeEventNpc != null) {
+			rangeEventNpc.stop();
+		}
+		rangeEventNpc = event;
+		setStatus(Action.RANGING_MOB);
+		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
 	}
 
 	public final boolean atObject(GameObject o) {
@@ -299,25 +281,6 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
-	private boolean canReachx(int minX, int maxX, int minY, int maxY) {
-		if (getX() >= minX && getX() <= maxX && getY() >= minY && getY() <= maxY) {
-			return true;
-		}
-		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
-			&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
-			return true;
-		}
-		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
-			&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
-			return true;
-		}
-		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
-			return true;
-		}
-		return false;
-	}
-
 	private boolean canReachDiagonal(int minX, int maxX, int minY, int maxY) {
 		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
 			&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
@@ -343,17 +306,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public final boolean canReach(Entity e) {
-		int[] currentCoords = {getX(), getY()};
-		while (currentCoords[0] != e.getX() || currentCoords[1] != e.getY()) {
-			currentCoords = nextStep(currentCoords[0], currentCoords[1], e);
-			if (currentCoords == null) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public final boolean canReachx(Entity e) {
 		int[] currentCoords = {getX(), getY()};
 		while (currentCoords[0] != e.getX() || currentCoords[1] != e.getY()) {
 			currentCoords = nextStep(currentCoords[0], currentCoords[1], e);
@@ -542,16 +494,6 @@ public abstract class Mob extends Entity {
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}
 
-	public void hpUpdate(int hpUpdate) {
-		int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITPOINTS) + hpUpdate;
-		skills.setLevel(3, newHp);
-		if (this.isPlayer()) {
-			Player p = (Player) this;
-			ActionSender.sendStat(p, 3);
-		}
-		getUpdateFlags().setHpUpdate(new HpUpdate(this, hpUpdate));
-	}
-
 	public void face(Entity entity) {
 		if (entity != null && entity.getLocation() != null) {
 			final int dir = Formulae.getDirection(this, entity.getX(), entity.getY());
@@ -570,6 +512,14 @@ public abstract class Mob extends Entity {
 
 	public boolean finishedPath() {
 		return getWalkingQueue().finished();
+	}
+
+	public void setStatus(Action a) {
+		status = a;
+	}
+
+	public RangeEventNpc getRangeEventNpc() {
+		return rangeEventNpc;
 	}
 
 	public String getUUID() {
@@ -595,8 +545,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public abstract int getCombatStyle();
-
-	private int combatStyle = 0;
 
 	public void setCombatStyle(int style) {
 		combatStyle = style;
@@ -681,6 +629,14 @@ public abstract class Mob extends Entity {
 		return walkingQueue;
 	}
 
+	public WalkToActionNpc getWalkToActionNpc() {
+		return walkToActionNpc;
+	}
+
+	public void setWalkToActionNpc(WalkToActionNpc action) {
+		this.walkToActionNpc = action;
+	}
+
 	public abstract int getWeaponAimPoints();
 
 	public abstract int getWeaponPowerPoints();
@@ -691,6 +647,10 @@ public abstract class Mob extends Entity {
 
 	public void incHitsMade() {
 		hitsMade++;
+	}
+
+	public double[] getModifiers() {
+		return new double[]{1, 1, 1};
 	}
 
 	public boolean inCombat() {
@@ -705,7 +665,16 @@ public abstract class Mob extends Entity {
 		this.lastRun = lastRun;
 	}
 
-	public boolean isBusy() {
+	/**
+	 * Sets the time when player should be freed from the busy mode.
+	 *
+	 * @param i
+	 */
+	public void setBusyTimer(int i) {
+		this.busyTimer = System.currentTimeMillis() + i;
+	}
+
+	public synchronized boolean isBusy() {
 		return busyTimer - System.currentTimeMillis() > 0 || busy.get();
 	}
 
@@ -748,15 +717,6 @@ public abstract class Mob extends Entity {
 
 	public void resetSpriteChanged() {
 		spriteChanged = false;
-	}
-
-	/**
-	 * Sets the time when player should be freed from the busy mode.
-	 *
-	 * @param i
-	 */
-	public void setBusyTimer(int i) {
-		this.busyTimer = System.currentTimeMillis() + i;
 	}
 
 	public void setCombatTimer() {
@@ -814,23 +774,6 @@ public abstract class Mob extends Entity {
 		this.lastCombatState = lastCombatState;
 	}
 
-	public void useNormalPotionNpc(final int affectedStat, final int percentageIncrease, final int modifier, final int left) {
-		//mob.message("You drink some of your " + item.getDef().getName().toLowerCase());
-		int baseStat = this.getSkills().getLevel(affectedStat) > this.getSkills().getMaxStat(affectedStat) ? this.getSkills().getMaxStat(affectedStat) : this.getSkills().getLevel(affectedStat);
-		int newStat = baseStat
-			+ DataConversions.roundUp((this.getSkills().getMaxStat(affectedStat) / 100D) * percentageIncrease)
-			+ modifier;
-		if (newStat > this.getSkills().getLevel(affectedStat)) {
-			this.getSkills().setLevel(affectedStat, newStat);
-		}
-		sleep(1200);
-		if (left <= 0) {
-			//player.message("You have finished your potion");
-		} else {
-			//player.message("You have " + left + " dose" + (left == 1 ? "" : "s") + " of potion left");
-		}
-	}
-
 	private void setLastMoved() {
 		lastMovement = System.currentTimeMillis();
 	}
@@ -869,7 +812,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public void startCombat(Mob victim) {
-
 		synchronized (victim) {
 			boolean gotUnderAttack = false;
 
@@ -982,7 +924,7 @@ public abstract class Mob extends Entity {
 		if (getAttribute("poisonEvent", null) != null) {
 			cure();
 		}
-		PoisonEvent poisonEvent = new PoisonEvent(getWorld(), this, poisonDamage);
+		PoisonEvent poisonEvent = new PoisonEvent(getWorld(), this, getPoisonDamage());
 		setAttribute("poisonEvent", poisonEvent);
 		getWorld().getServer().getGameEventHandler().add(poisonEvent);
 	}
@@ -1017,29 +959,17 @@ public abstract class Mob extends Entity {
 		}
 		getWalkingQueue().setPath(path);
 	}
-	public void walk2(int x, int y) {
-		getWalkingQueue().reset();
-		Path path = new Path(this, PathType.WALK_TO_POINT);
-		{
-			newLoc = new Point(x, y);
-			if(this.nextStep2(this.getX(), this.getY(), newLoc) != null){
-				path.addStep(x, y);
-				path.finish();
-			}
-		}
-		getWalkingQueue().setPath(path);
-	}
 
 	public void walkToEntityAStar(int x, int y) {
 		getWalkingQueue().reset();
-			Point mobPos = new Point(this.getX(), this.getY());
-			AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), 20);
-			pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
-			Path newPath = pathFinder.findPath();
-			if (newPath == null)
-				walkToEntity(x,y);
-			else
-				getWalkingQueue().setPath(newPath);
+		Point mobPos = new Point(this.getX(), this.getY());
+		AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), 20);
+		pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
+		Path newPath = pathFinder.findPath();
+		if (newPath == null)
+			walkToEntity(x,y);
+		else
+			getWalkingQueue().setPath(newPath);
 	}
 	public void walkToEntityAStar2(int x, int y) {
 		getWalkingQueue().reset();
@@ -1114,49 +1044,15 @@ public abstract class Mob extends Entity {
 		this.killType = i;
 	}
 
-	public boolean stateIsInvisible() {
-		return false;
-	}
-
-	public boolean stateIsInvulnerable() {
-		return false;
-	}
-
-	public boolean rankCheckInvisible(Mob m) {
-		if(!(this instanceof Player) || !(m instanceof Player)) {
-			return false;
-		}
-
-		Player visionPlayer = (Player) this;
-		Player playerToTest = (Player) m;
-
-		if(visionPlayer.isAdmin()) {
-			return false;
-		}
-
-		return visionPlayer.getGroupID() >= playerToTest.getGroupID();
-	}
-
-	public boolean rankCheckInvulnerable(Mob m) {
-		if(!(this instanceof Player) || !(m instanceof Player)) {
-			return false;
-		}
-
-		Player visionPlayer = (Player) this;
-		Player playerToTest = (Player) m;
-
-		if(visionPlayer.isAdmin()) {
-			return false;
-		}
-
-		return visionPlayer.getGroupID() >= playerToTest.getGroupID();
-	}
-
-	public int getWalkingTick() {
-		return getWorld().getServer().getConfig().WALKING_TICK;
-	}
-
 	public boolean isOn(final int x, final int y) {
 		return x == getX() && y == getY();
+	}
+
+	public int getPoisonDamage() {
+		return poisonDamage;
+	}
+
+	public void setPoisonDamage(int poisonDamage) {
+		this.poisonDamage = poisonDamage;
 	}
 }

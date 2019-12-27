@@ -157,7 +157,7 @@ public final class Event implements CommandListener {
 						return;
 					}
 
-					if(tpTo.isInvisible(player) && !player.isAdmin()) {
+					if(tpTo.isInvisibleTo(player) && !player.isAdmin()) {
 						player.message(messagePrefix + "You can not teleport to an invisible player.");
 						return;
 					}
