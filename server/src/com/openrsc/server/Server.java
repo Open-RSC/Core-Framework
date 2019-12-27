@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
@@ -48,7 +47,7 @@ public final class Server implements Runnable {
 	private static final Logger LOGGER;
 
 	private final GameStateUpdater gameUpdater;
-	private final GameEventHandler tickEventHandler;
+	public final GameEventHandler tickEventHandler;
 	private final DiscordService discordService;
 	private final GameTickEvent monitoring;
 	private final LoginExecutor loginExecutor;
@@ -327,23 +326,6 @@ public final class Server implements Runnable {
 			//if (PathValidation.DEBUG)
 			//	panel.repaint();
 		}
-	}
-
-	public void submitTask(Runnable r) {
-		scheduledExecutor.submit(r);
-	}
-
-	public void post(Runnable r, String descriptor) {
-		getGameEventHandler().add(new ImmediateEvent(getWorld(), descriptor) {
-			@Override
-			public void action() {
-				try {
-					r.run();
-				} catch (Throwable e) {
-					LOGGER.catching(e);
-				}
-			}
-		});
 	}
 
 	protected final long runGameEvents() {

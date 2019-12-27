@@ -1,6 +1,7 @@
 package com.openrsc.server;
 
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.NamedThreadFactory;
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +45,19 @@ public class GameEventHandler {
 			else
 				eventsToAdd.putIfAbsent(className + event.getOwner().getUUID() + "n", event);
 		}
+	}
+
+	public void submit(final Runnable r, final String descriptor) {
+		add(new ImmediateEvent(getServer().getWorld(), descriptor) {
+			@Override
+			public void action() {
+				try {
+					r.run();
+				} catch (Throwable e) {
+					LOGGER.catching(e);
+				}
+			}
+		});
 	}
 
 	public boolean contains(final GameTickEvent event) {

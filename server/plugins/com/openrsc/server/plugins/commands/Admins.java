@@ -92,7 +92,7 @@ public final class Admins implements CommandListener {
 	public void handleCommand(String cmd, String[] args, final Player player) {
 		int count1 = 0;
 		if (cmd.equalsIgnoreCase("cleannpcs")) {
-			player.getWorld().getServer().submitTask(() -> {
+			player.getWorld().getServer().getGameEventHandler().submit(() -> {
 				for (Npc n : player.getWorld().getNpcs()) {
 					if (n.getOpponent() instanceof Player) {
 						if (n.getOpponent().isUnregistering()) {
@@ -100,7 +100,7 @@ public final class Admins implements CommandListener {
 						}
 					}
 				}
-			});
+			}, "cleannpcs");
 			player.message(messagePrefix + "Cleaned " + count1 + " NPC opponent references.");
 		} else if (cmd.equalsIgnoreCase("saveall")) {
 			int count = 0;
@@ -110,7 +110,7 @@ public final class Admins implements CommandListener {
 			}
 			player.message(messagePrefix + "Saved " + count + " players on server!");
 		} else if (cmd.equalsIgnoreCase("cleanregions")) {
-			player.getWorld().getServer().submitTask(() -> {
+			player.getWorld().getServer().getGameEventHandler().submit(() -> {
 				final int HORIZONTAL_PLANES = (Constants.MAX_WIDTH / Constants.REGION_SIZE) + 1;
 				final int VERTICAL_PLANES = (Constants.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
 				for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
@@ -122,7 +122,7 @@ public final class Admins implements CommandListener {
 						}
 					}
 				}
-			});
+			}, "cleanregions");
 			player.message(messagePrefix + "Cleaned " + count1 + " regions.");
 		} else if (cmd.equalsIgnoreCase("holidaydrop")) {
 			if (args.length < 2) {
