@@ -6,7 +6,6 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
@@ -32,47 +31,27 @@ public class GroundItem extends Entity {
 	 */
 	private long spawnedTime = 0L;
 
-	public GroundItem(final World world, final int id, final Point location) {
-		super(world);
-		super.setID(id);
-		setLocation(location);
-		amount = 1;
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner) {
+		this(world, id, x, y, amount, owner, System.currentTimeMillis());
 	}
 
-	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner) {
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount) {
+		this(world, id, x, y, amount, null);
+	}
+
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final long spawnTime) {
+		this(world, id, x, y, amount, null, spawnTime);
+	}
+
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime) {
 		super(world);
 		setID(id);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
-		spawnedTime = System.currentTimeMillis();
+		spawnedTime = spawnTime;
 		setLocation(Point.location(x, y));
 		if (owner != null && owner.getIronMan() >= IronmanMode.Ironman.id() && owner.getIronMan() <= IronmanMode.Transfer.id())
 			this.setAttribute("isIronmanItem", true);
-	}
-
-	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Npc owner) {
-		super(world);
-		setID(id);
-		setAmount(amount);
-		spawnedTime = System.currentTimeMillis();
-		setLocation(Point.location(x, y));
-	}
-
-	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawntime) {
-		super(world);
-		setID(id);
-		setAmount(amount);
-		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
-		spawnedTime = spawntime;
-		setLocation(Point.location(x, y));
-	}
-
-	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Npc owner, final long spawntime) {
-		super(world);
-		setID(id);
-		setAmount(amount);
-		spawnedTime = spawntime;
-		setLocation(Point.location(x, y));
 	}
 
 	public GroundItem(final World world, final ItemLoc loc) {
@@ -84,7 +63,7 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(loc.x, loc.y));
 	}
 
-	public boolean is(final Entity o) {
+	public boolean equals(final Entity o) {
 		if (o instanceof GroundItem) {
 			GroundItem item = (GroundItem) o;
 			return item.getID() == getID() && item.getAmount() == getAmount()

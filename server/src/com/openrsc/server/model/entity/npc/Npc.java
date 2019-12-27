@@ -851,7 +851,7 @@ public class Npc extends Mob {
 				if (rare != null) {
 					if(!owner.isNpc()){
 						if (!handleRingOfAvarice((Player) mob, rare)) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
+								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount());
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
 						}
@@ -869,7 +869,7 @@ public class Npc extends Mob {
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
 						if(!owner.isNpc()){
 							if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
+								GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount());
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
 							}
@@ -926,7 +926,7 @@ public class Npc extends Mob {
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if(!owner.isNpc()){
 												if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-													groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
+													groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1);
 													groundItem.setAttribute("npcdrop", true);
 													getWorld().registerItem(groundItem);
 												}
@@ -949,7 +949,7 @@ public class Npc extends Mob {
 
 									if(!owner.isNpc()){
 										if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
-											GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
+											GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount);
 												getWorld().registerItem(groundItem);
 												groundItem.setAttribute("npcdrop", true);
 										}
