@@ -197,7 +197,6 @@ public class NpcBehavior {
 					}
 			}
 		} else if (state == State.ROAM) {
-
 			if (npc.inCombat()) {
 				state = State.COMBAT;
 				return;
@@ -213,6 +212,12 @@ public class NpcBehavior {
 				lastTarget = null;
 				int rand = DataConversions.random(0, 1);
 				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
+					//Plagued sheep shouldn't roam
+					if (npc.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() ||
+						npc.getID() == NpcId.SECOND_PLAGUE_SHEEP.id() ||
+						npc.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() ||
+						npc.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id())
+						return;
 					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
 					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
 					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
