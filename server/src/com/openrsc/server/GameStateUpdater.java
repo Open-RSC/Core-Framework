@@ -580,7 +580,7 @@ public final class GameStateUpdater {
 					it$.remove();
 					changed = true;
 				}
-			} else if (groundItem.isRemoved() || !groundItem.visibleTo(playerToUpdate)) {
+			} else if (groundItem.isRemoved() || !groundItem.isVisibleTo(playerToUpdate)) {
 				packet.writeShort(groundItem.getID() + 32768);
 				packet.writeByte(offsetX);
 				packet.writeByte(offsetY);
@@ -592,7 +592,7 @@ public final class GameStateUpdater {
 
 		for (GroundItem groundItem : playerToUpdate.getViewArea().getItemsInView()) {
 			if (!playerToUpdate.withinGridRange(groundItem) || groundItem.isRemoved()
-				|| !groundItem.visibleTo(playerToUpdate)
+				|| !groundItem.isVisibleTo(playerToUpdate)
 				|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
 				continue;
 			}

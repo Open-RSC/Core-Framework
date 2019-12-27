@@ -32,18 +32,17 @@ public class GroundItem extends Entity {
 	 */
 	private long spawnedTime = 0L;
 
-	public GroundItem(World world, int id, Point location) { // used for ::masks
+	public GroundItem(final World world, final int id, final Point location) {
 		super(world);
 		super.setID(id);
-		super.location.set(location);
+		setLocation(location);
 		amount = 1;
 	}
 
-	public GroundItem(World world, int id, int x, int y, int amount, Player owner) {
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner) {
 		super(world);
 		setID(id);
 		setAmount(amount);
-		//this.ownerUsernameHash = owner.getUsernameHash();
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = System.currentTimeMillis();
 		setLocation(Point.location(x, y));
@@ -51,16 +50,15 @@ public class GroundItem extends Entity {
 			this.setAttribute("isIronmanItem", true);
 	}
 
-	public GroundItem(World world, int id, int x, int y, int amount, Npc owner) {
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Npc owner) {
 		super(world);
 		setID(id);
 		setAmount(amount);
-		//this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = System.currentTimeMillis();
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(World world, int id, int x, int y, int amount, Player owner, long spawntime) {
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawntime) {
 		super(world);
 		setID(id);
 		setAmount(amount);
@@ -69,16 +67,15 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(World world, int id, int x, int y, int amount, Npc owner, long spawntime) {
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Npc owner, final long spawntime) {
 		super(world);
 		setID(id);
 		setAmount(amount);
-		//this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawntime;
 		setLocation(Point.location(x, y));
 	}
 
-	public GroundItem(World world, ItemLoc loc) {
+	public GroundItem(final World world, final ItemLoc loc) {
 		super(world);
 		this.loc = loc;
 		setID(loc.id);
@@ -87,28 +84,7 @@ public class GroundItem extends Entity {
 		setLocation(Point.location(loc.x, loc.y));
 	}
 
-	public boolean belongsTo(Player p) {
-		if (p.getParty() != null) {
-			for (Player p2 : getWorld().getPlayers()) {
-				if (Objects.requireNonNull(p.getParty()).getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
-					PartyPlayer p3 = p2.getParty().getLeader();
-					if (p3.getShareLoot() > 0) {
-						p = p2;
-						p.getUsernameHash();
-						p2.getUsernameHash();
-						return true;
-					}
-				}
-			}
-		}
-		return p.getUsernameHash() == ownerUsernameHash || ownerUsernameHash == 0;
-	}
-
-	public long getOwnerUsernameHash() {
-		return ownerUsernameHash;
-	}
-
-	public boolean is(Object o) {
+	public boolean is(final Entity o) {
 		if (o instanceof GroundItem) {
 			GroundItem item = (GroundItem) o;
 			return item.getID() == getID() && item.getAmount() == getAmount()
@@ -119,34 +95,22 @@ public class GroundItem extends Entity {
 		return false;
 	}
 
-	public int getAmount() {
-		return amount;
+	boolean isOn(final int x, final int y) {
+		return x == getX() && y == getY();
 	}
 
-	public void setAmount(int amount) {
-		if (getDef() != null) {
-			if (getDef().isStackable()) {
-				this.amount = amount;
-			} else {
-				this.amount = 1;
+	public boolean belongsTo(final Player p) {
+		if (p.getParty() != null) {
+			for (Player p2 : getWorld().getPlayers()) {
+				if (Objects.requireNonNull(p.getParty()).getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
+					PartyPlayer p3 = p2.getParty().getLeader();
+					if (p3.getShareLoot() > 0) {
+						return true;
+					}
+				}
 			}
 		}
-	}
-
-	public ItemDefinition getDef() {
-		return getWorld().getServer().getEntityHandler().getItemDef(getID());
-	}
-
-	public ItemLoc getLoc() {
-		return loc;
-	}
-
-	private long getSpawnedTime() {
-		return spawnedTime;
-	}
-
-	boolean isOn(int x, int y) {
-		return x == getX() && y == getY();
+		return p.getUsernameHash() == ownerUsernameHash || ownerUsernameHash == 0;
 	}
 
 	public void remove() {
@@ -161,7 +125,7 @@ public class GroundItem extends Entity {
 		super.remove();
 	}
 
-	public boolean visibleTo(Player p) {
+	public boolean isVisibleTo(final Player p) {
 		if (belongsTo(p))
 			return true;
 		if (getDef().isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD)
@@ -178,5 +142,35 @@ public class GroundItem extends Entity {
 	@Override
 	public String toString() {
 		return "Item(" + this.getID() + ", " + this.amount + ") location = " + location.toString();
+	}
+
+	public ItemDefinition getDef() {
+		return getWorld().getServer().getEntityHandler().getItemDef(getID());
+	}
+
+	public ItemLoc getLoc() {
+		return loc;
+	}
+
+	public long getOwnerUsernameHash() {
+		return ownerUsernameHash;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(final int amount) {
+		if (getDef() != null) {
+			if (getDef().isStackable()) {
+				this.amount = amount;
+			} else {
+				this.amount = 1;
+			}
+		}
+	}
+
+	private long getSpawnedTime() {
+		return spawnedTime;
 	}
 }

@@ -15,7 +15,7 @@ public class GroundItemTake implements PacketHandler {
 		int x = location.getX();
 		int y = location.getY();
 		for (GroundItem i : player.getViewArea().getItemsInView()) {
-			if (i.getID() == id && i.visibleTo(player) && i.getX() == x && i.getY() == y) {
+			if (i.getID() == id && i.isVisibleTo(player) && i.getX() == x && i.getY() == y) {
 				return i;
 			}
 		}
