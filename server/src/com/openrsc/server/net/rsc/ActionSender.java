@@ -10,13 +10,14 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
-import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.update.Skull;
-import com.openrsc.server.model.entity.update.Wield;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
+import com.openrsc.server.model.entity.update.Skull;
+import com.openrsc.server.model.entity.update.Wield;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
@@ -1270,20 +1271,20 @@ public class ActionSender {
 				sendLoginBox(p);
 
 				for (Npc n : p.getWorld().getNpcs()) {
-					if(n.getSkullType() > 0){
-						n.getUpdateFlags().setSkull(new Skull(n, 1));
+					if(n instanceof PkBot) {
+						PkBot bot = (PkBot)n;
+						if (bot.getSkullType() > 0) {
+							n.getUpdateFlags().setSkull(new Skull(n, 1));
+						}
 					}
 				}
 				for (Npc n : p.getWorld().getNpcs()) {
-					if(n.getWield() > 0){
-						n.getUpdateFlags().setWield(new Wield(n, n.getWield(), n.getWield2()));
-						n.getUpdateFlags().setWield2(new Wield(n, n.getWield(), n.getWield2()));
-					}
-				}
-				for (Npc n : p.getWorld().getNpcs()) {
-					if(n.getWield2() > 0){
-						n.getUpdateFlags().setWield(new Wield(n, n.getWield(), n.getWield2()));
-						n.getUpdateFlags().setWield2(new Wield(n, n.getWield(), n.getWield2()));
+					if(n instanceof PkBot) {
+						PkBot bot = (PkBot)n;
+						if (bot.getWield() > 0 || bot.getWield2() > 0) {
+							n.getUpdateFlags().setWield(new Wield(n, bot.getWield(), bot.getWield2()));
+							n.getUpdateFlags().setWield2(new Wield(n, bot.getWield(), bot.getWield2()));
+						}
 					}
 				}
 

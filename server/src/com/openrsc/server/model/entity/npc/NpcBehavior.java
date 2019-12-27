@@ -3,13 +3,9 @@ package com.openrsc.server.model.entity.npc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.rsc.impl.HealEventNpc;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.CombatState;
@@ -24,180 +20,21 @@ import static com.openrsc.server.plugins.Functions.*;
 public class NpcBehavior {
 
 	private long lastMovement;
-	private long lastRetreat;
 	private long lastTackleAttempt;
 	private static final int[] TACKLING_XP = {7, 10, 15, 20};
-	private Point newLoc;
 
 	protected Npc npc;
 
 	protected Mob target;
 	private State state = State.ROAM;
 
-	NpcBehavior(Npc npc) {
+	NpcBehavior(final Npc npc) {
 		this.npc = npc;
 	}
 
 	public void tick() {
 		Mob lastTarget;
-		if (npc.isPkBot() && npc.getWorld().getServer().getConfig().WANT_PK_BOTS) {
-			for (Player p5 : npc.getViewArea().getPlayersInView()) {
-				int combDiff2 = Math.abs(npc.getCombatLevel() - p5.getCombatLevel());
-				int targetWildLvl2 = p5.getLocation().wildernessLevel();
-				int myWildLvl2 = npc.getLocation().wildernessLevel();
-				final Point objectLocation = Point.location(102, 509);
-				final Point byDoor = Point.location(103, 509);
-				final Point byDoor2 = Point.location(102, 509);
-				final Point byDoor3 = Point.location(103, 510);
-				final Point byDoor4 = Point.location(102, 510);
-				final GameObject object = npc.getViewArea().getGameObject(objectLocation);
-				if (npc.getHeals() < 5 && npc.getLocation().equals(byDoor) || npc.getLocation().equals(byDoor2) && object.getID() == 64) {
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
-					npc.walkToEntityAStar(103, 510, 200);
-				}
-				if (npc.getHeals() > 17 && npc.getLocation().equals(byDoor3) || npc.getLocation().equals(byDoor4) && object.getID() == 64) {
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
-					npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 1500, "Npc walk back to wild2") {
-						public void run() {
-							npc.walkToEntityAStar(108, 425, 200);
-							stop();
-						}
-					});
-				}
-				if (npc.inCombat()) {
-					npc.setWield(51);
-					npc.setWield2(80);
-				}
-				if (npc.getHeals() < 1 && !npc.inCombat() && npc.getLocation().inWilderness()) {
-					retreatFromWild3();
-				}
-				if (npc.getHeals() > 1 && !npc.getLocation().inWilderness()) {
-					npc.walkToEntityAStar(214, 424, 200);
-				}
-				if (npc.getHeals() < 1 && npc.inCombat() && npc.getHitsMade() >= 3 && npc.getOpponent().getHitsMade() >= 3 && npc.getLocation().inWilderness()) {
-					retreatFromWild();
-				}
-				if (npc.getHeals() > 0 && p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-					npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) && System.currentTimeMillis() - p5.getCombatTimer() > 1000 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && !npc.inCombat() && p5.getLocation().inWilderness() && combDiff2 < targetWildLvl2 && combDiff2 < myWildLvl2 && npc.withinRange(p5, 10) && npc.getLocation().inWilderness() && npc.getID() == 804) {
-					/*if (npc.nextStep(npc.getX(), npc.getY(), p5) == null) {
-						npc.walkToEntityAStar2(p5.getX(), p5.getY());
-						npc.resetRange();
-					} else */if (!p5.inCombat()) {
-						target = p5;
-						npc.setWield(51);
-						npc.setWield2(80);
-						npc.resetRange();
-					} else if (p5.inCombat()) {
-						target = p5;
-						npc.setRangeEventNpc(new RangeEventNpc(npc.getWorld(), npc, target));
-						npc.setWield(252);
-						npc.setWield2(80);
-						npc.setSkulledOn(((Player) target));
-					}
-				} else if (!p5.getLocation().inBounds(npc.getLoc().minX - 9, npc.getLoc().minY - 9,
-					npc.getLoc().maxX + 9, npc.getLoc().maxY + 9) || !p5.getLocation().inWilderness()) {
-					target = null;
-				}
-				if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getOpponent().getSkills().getLevel(Skills.HITPOINTS)) {
-					if (npc.getHeals() > 0) {
-						retreat();
-						lastRetreat = System.currentTimeMillis();
-						npc.getWorld().getServer().getGameEventHandler().add(new HealEventNpc(npc.getWorld(), npc));
-					} else if (npc.getLocation().inWilderness()) {
-						retreatFromWild();
-						lastRetreat = System.currentTimeMillis();
-					}
-				}
-				if (npc.inCombat() && npc.getOpponent().getHitsMade() >= 3 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.33) {
-					if (npc.getHeals() > 0) {
-						retreat();
-						//npc.setWield(252);
-						lastRetreat = System.currentTimeMillis();
-						npc.getWorld().getServer().getGameEventHandler().add(new HealEventNpc(npc.getWorld(), npc));
-					} else if (npc.getLocation().inWilderness()) {
-						retreatFromWild();
-						lastRetreat = System.currentTimeMillis();
-					}
-				}
-				if (npc.getHeals() < 1 && !npc.inCombat() && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.75) {
-					if (npc.getLocation().inWilderness()) {
-						retreatFromWild3();
-					}
-				}
-				if (target == null && !npc.isRanging()) {
-					if (!npc.inCombat() && System.currentTimeMillis() - lastMovement > 900 && System.currentTimeMillis() - npc.getCombatTimer() > 900 && npc.finishedPath()) {
-						lastMovement = System.currentTimeMillis();
-						lastTarget = null;
-						int rand = DataConversions.random(0, 1);
-						if (!npc.isBusy() && rand == 1 && !npc.isRemoved() && npc.getHeals() > 0) {
-							int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
-							int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-							if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
-								newLoc = new Point(newX, newY);
-								npc.walkToEntityAStar(newX, newY, 200);
-								npc.setWield(252);
-								npc.setWield2(80);
-							} else {
-								Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
-									Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
-								npc.walk(p.getX(), p.getY());
-							}
-						}
-					}
-				} else
-					for (Player p3 : npc.getViewArea().getPlayersInView()) {
-						if (npc.inCombat() && npc.getID() == 804) {
-							target = npc.getOpponent();
-							if (npc.getHeals() > 0 && npc.getLocation().inWilderness() && target.getLocation().inWilderness()) {
-								npc.walkToEntityAStar(target.getX(), target.getY(), 200);
-							}
-						}
-						if (npc.getLocation().inWilderness() && npc.getID() == 804 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.82) {
-							if (npc.getHeals() > 0) {
-								npc.getWorld().getServer().getGameEventHandler().add(new HealEventNpc(npc.getWorld(), npc));
-							}
-						}
-						int combDiff = Math.abs(npc.getCombatLevel() - target.getCombatLevel());
-						int targetWildLvl = target.getLocation().wildernessLevel();
-						int myWildLvl = npc.getLocation().wildernessLevel();
-						if (System.currentTimeMillis() - target.getCombatTimer() > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && !npc.inCombat() && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 804) {
-							if (npc.withinRange(target, 2) && System.currentTimeMillis() - target.getCombatTimer() > 3250 && System.currentTimeMillis() - npc.getCombatTimer() > 3250 && !npc.inCombat() && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
-								if (npc.nextStep(npc.getX(), npc.getY(), p5) == null) {
-								} else {
-									setFighting(target);
-									npc.setWield(51);
-									npc.setWield2(80);
-									npc.setSkulledOn(((Player) target));
-									//showBubbleNpc(npc, new Item(373));
-								}
-							}
-						}
-						if (System.currentTimeMillis() - npc.getCombatTimer() > 1000 && System.currentTimeMillis() - target.getCombatTimer() > 1000 && !target.inCombat() && combDiff < targetWildLvl && combDiff < myWildLvl && npc.withinRange(target, 10) && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && npc.getID() == 804) {
-							if (npc.getHeals() > 0 && System.currentTimeMillis() - npc.getCombatTimer() > 1000 && System.currentTimeMillis() - target.getCombatTimer() > 1000 && !npc.inCombat() && !target.inCombat() && System.currentTimeMillis() - lastRetreat > 3250 && combDiff < targetWildLvl && combDiff < myWildLvl && npc.getLocation().inWilderness() && target.getLocation().inWilderness() && target != null && !npc.isRespawning() && !npc.isRemoved() && !target.isRemoved()) {
-								npc.walkToEntityAStar(target.getX(), target.getY(), 200);
-								npc.resetRange();
-							} else {
-								setRoaming();
-								return;
-							}
-						} else if (npc.inCombat() && (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness())) {
-							setRoaming();
-						} else
-							// Target is not in range.
-							if (System.currentTimeMillis() - target.getCombatTimer() > 3000 && System.currentTimeMillis() - npc.getCombatTimer() > 3000 && !npc.inCombat() && !target.inCombat() && npc.getID() == 804 && (combDiff > targetWildLvl || combDiff > myWildLvl || !npc.getLocation().inWilderness() || target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4) || target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4))) {
-								setRoaming();
-							} else if (!target.getLocation().inWilderness() && npc.getID() == 804) {
-								for (Player p : npc.getViewArea().getPlayersInView()) {
-									if (p.getLocation().inWilderness()) {
-										target = p;
-									} else
-										target = null;
-								}
-							}
-					}
-			}
-		} else if (state == State.ROAM) {
-
+		if (state == State.ROAM) {
 			if (npc.inCombat()) {
 				state = State.COMBAT;
 				return;
@@ -218,7 +55,7 @@ public class NpcBehavior {
 					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
 						npc.walk(newX, newY);
 					} else {
-						Point p = walkablePoint(npc, Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
+						Point p = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
 							Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
 						npc.walk(p.getX(), p.getY());
 					}
@@ -262,36 +99,6 @@ public class NpcBehavior {
 
 					break;
 				}
-				for (Npc pkBot : npc.getViewArea().getNpcsInView()) {
-
-					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
-					switch (NpcId.getById(npc.getID())) {
-						case BANDIT_AGGRESSIVE:
-							range = 5;
-							break;
-						case BLACK_KNIGHT:
-							range = 10;
-							break;
-						default:
-							break;
-					}
-
-					if (!canAggro28(pkBot) || !pkBot.withinRange(npc, range) || !pkBot.isPkBot())
-						continue; // Can't aggro or is not in range.
-
-					state = State.AGGRO;
-					target = pkBot;
-
-					if (npc.getLastOpponent() == pkBot && (pkBot.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
-						npc.setLastOpponent(null);
-						setRoaming();
-					} else {
-						//aggro behavior if any
-						new AggroEvent(npc.getWorld(), npc, pkBot);
-					}
-
-					break;
-				}
 			}
 			if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
 				npc.getDef().getName().toLowerCase().equals("gnome baller")
@@ -310,7 +117,7 @@ public class NpcBehavior {
 		} else if (state == State.AGGRO) {
 
 			// There should not be combat or aggro. Let's resume roaming.
-			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || (!npc.isPkBot() && target.inCombat())) && !npc.isFollowing()) {
+			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) && !npc.isFollowing()) {
 				setRoaming();
 			}
 
@@ -343,7 +150,7 @@ public class NpcBehavior {
 
 					if (npc.withinRange(target, 1)
 						&& npc.canReach(target)
-						&& !target.inCombat() && (!npc.isPkBot())) {
+						&& !target.inCombat()) {
 						setFighting(target);
 					}
 				}
@@ -359,7 +166,6 @@ public class NpcBehavior {
 				if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
 					&& npc.getOpponent().getHitsMade() >= 3) {
 					retreat();
-					lastRetreat = System.currentTimeMillis();
 				}
 			} else if (!npc.inCombat()) {
 				npc.setExecutedAggroScript(false);
@@ -396,7 +202,7 @@ public class NpcBehavior {
 		}
 	}
 
-	private synchronized void attemptTackle(Npc n, Player p) {
+	private synchronized void attemptTackle(final Npc n, final Player p) {
 		int otherNpcId = p.getAttribute("gnomeball_npc", -1);
 		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || p.getAttribute("throwing_ball_game", false)) {
 			return;
@@ -435,9 +241,7 @@ public class NpcBehavior {
 			victimPlayer.message("Your opponent is retreating");
 			ActionSender.sendSound(victimPlayer, "retreat");
 		}
-		if (!npc.isPkBotMelee()) {
-			npc.setLastCombatState(CombatState.RUNNING);
-		}
+		npc.setLastCombatState(CombatState.RUNNING);
 		npc.setLastCombatState(CombatState.RUNNING);
 		npc.getOpponent().setLastCombatState(CombatState.WAITING);
 		npc.resetCombatEvent();
@@ -445,62 +249,6 @@ public class NpcBehavior {
 		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
 			DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
 		npc.walk(walkTo.getX(), walkTo.getY());
-	}
-
-	public void retreatFromWild() {
-		if (npc.getLocation().inWilderness()) {
-			state = State.RETREAT;
-			npc.getOpponent().setLastOpponent(npc);
-			npc.setLastOpponent(npc.getOpponent());
-			npc.setRanAwayTimer();
-			if (npc.getOpponent().isPlayer()) {
-				Player victimPlayer = ((Player) npc.getOpponent());
-				victimPlayer.resetAll();
-				victimPlayer.message("Your opponent is retreating");
-				ActionSender.sendSound(victimPlayer, "retreat");
-			}
-			if (!npc.isPkBotMelee()) {
-				npc.setLastCombatState(CombatState.RUNNING);
-			}
-			npc.setLastCombatState(CombatState.RUNNING);
-			npc.getOpponent().setLastCombatState(CombatState.WAITING);
-			npc.resetCombatEvent();
-
-			Point walkTo = Point.location(DataConversions.random(101, 114),
-				DataConversions.random(427, 428));
-			npc.walkToEntityAStar(walkTo.getX(), walkTo.getY(), 200);
-		}
-	}
-
-	public void retreatFromWild2() {
-		if (npc.getLocation().inWilderness()) {
-			state = State.RETREAT;
-			//npc.walk(walkTo.getX(), walkTo.getY());
-			npc.walkToEntityAStar(103, 510, 200);//this is causing teleport
-			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 80000, "Npc walk back to wild") {
-				public void run() {
-					npc.walkToEntityAStar(108, 425, 200);
-					npc.setHeals(25);
-					stop();
-				}
-			});
-			lastMovement = System.currentTimeMillis();
-		}
-	}
-
-	public void retreatFromWild3() {
-		if (npc.getLocation().inWilderness()) {
-			state = State.RETREAT;
-			npc.walkToEntityAStar(218, 447, 200);
-			npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 50000, "Npc walk back to wild") {
-				public void run() {
-					npc.walkToEntityAStar(214, 424, 200);
-					npc.setHeals(25);
-					stop();
-				}
-			});
-			lastMovement = System.currentTimeMillis();
-		}
 	}
 
 	private void tackle_retreat() {
@@ -514,7 +262,7 @@ public class NpcBehavior {
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
-	private boolean canAggro(Mob p) {
+	private boolean canAggro(final Mob p) {
 		boolean outOfBounds = !p.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
 			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
 
@@ -524,7 +272,7 @@ public class NpcBehavior {
 			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
 
 		boolean shouldAttack = (npc.getDef().isAggressive() && (p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-			|| npc.getLocation().inWilderness())) || (npc.getLastOpponent() == p && !shouldRetreat(npc)) || (npc.getLastOpponent() == p && !shouldRetreat2(npc));
+			|| npc.getLocation().inWilderness())) || (npc.getLastOpponent() == p && !shouldRetreat(npc));
 
 		boolean closeEnough = npc.canReach(p);
 
@@ -533,46 +281,9 @@ public class NpcBehavior {
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
 
-	private boolean canAggro28(Mob p) {
-		boolean outOfBounds = !p.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
-			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
-
-		boolean playerOccupied = p.inCombat();
-		boolean playerCombatTimeout = System.currentTimeMillis()
-			- p.getCombatTimer() < (p.getCombatState() == CombatState.RUNNING
-			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
-
-		boolean shouldAttack = (npc.getDef().isAggressive() && (p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-			|| npc.getLocation().inWilderness())) || (npc.getLastOpponent() == p && !shouldRetreat(npc)) || (npc.getLastOpponent() == p && !shouldRetreat2(npc));
-
-		boolean closeEnough = npc.canReach(p);
-
-		return closeEnough && shouldAttack
-			&& (p instanceof Npc) && !outOfBounds && !playerOccupied && !playerCombatTimeout;
-	}
-
-	private boolean grandTreeGnome(Npc npc) {
+	private boolean grandTreeGnome(final Npc npc) {
 		String npcName = npc.getDef().getName();
 		return npcName.equalsIgnoreCase("gnome child") || npcName.equalsIgnoreCase("gnome local");
-	}
-
-	private boolean shouldRetreat2(Npc npc) {
-		if (npc.isPkBotMelee()) {
-			return npc.getSkills().getLevel(Skills.HITS) <= Math.ceil(npc.getSkills().getMaxStat(Skills.HITS) * 0.20);
-		}
-		return false;
-	}
-
-	private Point walkablePoint(Npc npc, Point minP, Point maxP) {
-		int currX = npc.getX();
-		int currY = npc.getY();
-		int radius = 8;
-		int newX = DataConversions.random(Math.max(minP.getX(), currX - radius), Math.min(maxP.getX(), currX + radius));
-		int newY = DataConversions.random(Math.max(minP.getY(), currY - radius), Math.min(maxP.getY(), currY + radius));
-		if (Point.location(newX, newY).inBounds(680, 491, 696, 511)) {
-			return Point.location(currX, currY);
-		}
-		return Point.location(newX, newY);
 	}
 
 	public State getBehaviorState() {
@@ -583,12 +294,12 @@ public class NpcBehavior {
 		return state == State.AGGRO;
 	}
 
-	public void setChasing(Player player) {
+	public void setChasing(final Player player) {
 		state = State.AGGRO;
 		target = player;
 	}
 
-	public void setChasing(Npc npc) {
+	public void setChasing(final Npc npc) {
 		state = State.AGGRO;
 		target = npc;
 	}
@@ -625,12 +336,12 @@ public class NpcBehavior {
 		state = State.ROAM;
 	}
 
-	private void setFighting(Mob target) {
+	private void setFighting(final Mob target) {
 		npc.startCombat(target);
 		state = State.COMBAT;
 	}
 
-	private boolean shouldRetreat(Npc npc) {
+	private boolean shouldRetreat(final Npc npc) {
 		if (!npc.getWorld().getServer().getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
 				return npc.getSkills().getLevel(Skills.HITS) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
@@ -638,10 +349,6 @@ public class NpcBehavior {
 		}
 
 		return false;
-	}
-
-	public void onKill(Mob killed) {
-
 	}
 
 	enum State {

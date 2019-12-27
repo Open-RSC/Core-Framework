@@ -5337,6 +5337,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
     `combatSprite` int(10)                           DEFAULT NULL,
     `canEdit`      tinyint(1)          NOT NULL,
     `roundMode`    tinyint(1)                        DEFAULT 0,
+    `pkBot`   	   tinyint(1)                        DEFAULT 0,
     PRIMARY KEY (`primary_id`)
 ) ENGINE = MyISAM
   AUTO_INCREMENT = 805
@@ -6146,8 +6147,10 @@ INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `comman
 (801, 800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 0, 322, 323, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
 (802, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 324, 325, 326, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
 (803, 802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, NULL, 300, 0, 1, 1, 30, 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0, 0),
-(804, 803, 'Wizard Sedridor', 'An old wizard', 'teleport', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
-(805, 804, 'Pk Bot', '', '', '', 30, 59, 48, 1, 59, 34, 0, 1, 1, 60, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0);
+(804, 803, 'Wizard Sedridor', 'An old wizard', 'teleport', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0);
+
+INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`, `combatSprite`, `canEdit`, `roundMode`, `pkBot`) VALUES
+(805, 804, 'Pk Bot', '', '', '', 30, 59, 48, 1, 59, 34, 0, 1, 1, 60, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0, true);
 
 
 DROP TABLE IF EXISTS `openrsc_npcdrops`;

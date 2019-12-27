@@ -14,28 +14,21 @@ public class NPCDef extends EntityDef {
 	public int defense;
 	public int strength;
 	public boolean attackable;
-
-	public NPCDef(String name, String description, String command1, int attack, int strength, int hits, int defense, boolean attackable, int[] sprites, int hairColour, int topColour, int bottomColour, int skinColour, int camera1, int camera2, int walkModel, int combatModel, int combatSprite, int id) {
-		super(name, description, id);
-		this.command1 = command1;
-		this.attack = attack;
-		this.strength = strength;
-		this.hits = hits;
-		this.defense = defense;
-		this.attackable = attackable;
-		this.sprites = sprites;
-		this.hairColour = hairColour;
-		this.topColour = topColour;
-		this.bottomColour = bottomColour;
-		this.skinColour = skinColour;
-		this.camera1 = camera1;
-		this.camera2 = camera2;
-		this.walkModel = walkModel;
-		this.combatModel = combatModel;
-		this.combatSprite = combatSprite;
-	}
+	public boolean pkBot;
 
 	public NPCDef(String name, String description, String command1, String command2, int attack, int strength, int hits, int defense, boolean attackable, int[] sprites, int hairColour, int topColour, int bottomColour, int skinColour, int camera1, int camera2, int walkModel, int combatModel, int combatSprite, int id) {
+		this(name, description, command1, command2, attack, strength, hits, defense, attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2, walkModel, combatModel, combatSprite, false, id);
+	}
+
+	public NPCDef(String name, String description, String command1, int attack, int strength, int hits, int defense, boolean attackable, int[] sprites, int hairColour, int topColour, int bottomColour, int skinColour, int camera1, int camera2, int walkModel, int combatModel, int combatSprite, int id) {
+		this(name, description, command1, null, attack, strength, hits, defense, attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2, walkModel, combatModel, combatSprite, false, id);
+	}
+
+	public NPCDef(String name, String description, String command1, int attack, int strength, int hits, int defense, boolean attackable, int[] sprites, int hairColour, int topColour, int bottomColour, int skinColour, int camera1, int camera2, int walkModel, int combatModel, int combatSprite, boolean pkBot, int id) {
+		this(name, description, command1, null, attack, strength, hits, defense, attackable, sprites, hairColour, topColour, bottomColour, skinColour, camera1, camera2, walkModel, combatModel, combatSprite, pkBot, id);
+	}
+
+	public NPCDef(String name, String description, String command1, String command2, int attack, int strength, int hits, int defense, boolean attackable, int[] sprites, int hairColour, int topColour, int bottomColour, int skinColour, int camera1, int camera2, int walkModel, int combatModel, int combatSprite, boolean pkBot, int id) {
 		super(name, description, id);
 		this.command1 = command1;
 		this.command2 = command2;
@@ -54,6 +47,7 @@ public class NPCDef extends EntityDef {
 		this.walkModel = walkModel;
 		this.combatModel = combatModel;
 		this.combatSprite = combatSprite;
+		this.pkBot = pkBot;
 	}
 
 	public void updateCommand1(String command) {

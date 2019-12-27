@@ -148,7 +148,7 @@ public final class EntityHandler {
 				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
 				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
 				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode` FROM `"
+				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode`, `pkBot` FROM `"
 				+ getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
 			while (result.next()) {
 				NPCDef def = new NPCDef();
@@ -179,6 +179,7 @@ public final class EntityHandler {
 				def.combatModel = result.getInt("combatModel");
 				def.combatSprite = result.getInt("combatSprite");
 				def.roundMode = result.getInt("roundMode");
+				def.pkBot = result.getBoolean("pkBot");
 
 				ArrayList<ItemDropDef> drops = new ArrayList<ItemDropDef>();
 

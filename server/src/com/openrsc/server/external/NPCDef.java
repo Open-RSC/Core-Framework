@@ -87,6 +87,11 @@ public class NPCDef extends EntityDef {
 	 */
 	public int roundMode;
 
+	/**
+	 * Is this NPC a PK bot?
+	 */
+	public boolean pkBot;
+
 	public int getAtt() {
 		return attack;
 	}
@@ -176,6 +181,10 @@ public class NPCDef extends EntityDef {
 
 	public boolean isMembers() {
 		return members;
+	}
+
+	public boolean isPkBot() {
+		return pkBot;
 	}
 
 	public int roundMode() { return roundMode; }

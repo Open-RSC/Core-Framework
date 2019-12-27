@@ -27,6 +27,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
@@ -63,14 +64,15 @@ public final class Player extends Mob {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+
 	public final int MAX_FATIGUE = 150000;
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
+
 	/**
 	 * Players cache is used to store various objects into database
 	 */
 	private final Cache cache = new Cache();
 	private final Map<Integer, Integer> killCache = new HashMap<>();
-
 	private boolean killCacheUpdated = false;
 	/**
 	 * Received packets from this player yet to be processed.
@@ -2316,7 +2318,7 @@ public final class Player extends Mob {
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public void setSkulledOn(Npc n) {
+	public void setSkulledOn(final PkBot n) {
 		n.addAttackedBy(this);
 		if (System.currentTimeMillis() - getSettings().lastAttackedBy(n) > 1200000) {
 			addSkull(1200000);
