@@ -1598,16 +1598,12 @@ public class Functions {
 	}
 
 	public static void sleep(final int delayMs) {
-		try {
-			PluginTask pluginTask = PluginTask.getContextPluginTask();
-			if (pluginTask == null)
-				return;
-			// System.out.println("Sleeping on " + Thread.currentThread().getName());
-			int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getServer().getConfig().GAME_TICK);
-			pluginTask.setDelayTicks(ticks);
-			pluginTask.wait();
-		} catch (final InterruptedException e) {
-		}
+		final PluginTask pluginTask = PluginTask.getContextPluginTask();
+		if (pluginTask == null)
+			return;
+		// System.out.println("Sleeping on " + Thread.currentThread().getName());
+		final int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getWorld().getServer().getConfig().GAME_TICK);
+		pluginTask.pause(ticks);
 	}
 
 	/**

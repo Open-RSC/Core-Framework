@@ -35,7 +35,7 @@ public class GameEventHandler {
 
 	public void add(final GameTickEvent event) {
 		final String className = String.valueOf(event.getClass());
-		if (event.isAllowDuplicateEvents() || !event.hasOwner()) {
+		if (event.allowsDuplicateEvents() || !event.hasOwner()) {
 			final UUID uuid = UUID.randomUUID();
 			eventsToAdd.putIfAbsent(className + uuid, event);
 		} else {

@@ -1,13 +1,13 @@
 package com.openrsc.server.event.rsc;
 
-import com.openrsc.server.Server;
+import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class PluginTask implements Callable<Integer> {
+public abstract class PluginTask extends GameTickEvent implements Callable<Integer> {
 	/**
 	 * The asynchronous logger.
 	 */
@@ -22,28 +22,25 @@ public abstract class PluginTask implements Callable<Integer> {
 		return PluginTask.tasksMap.get(Thread.currentThread().getName());
 	}
 
-	private final Server server;
-	private int delayTicks = 0;
-	private int ticksBeforeRun = 0;
-	private volatile boolean threadIsStarted = false;
+	private volatile boolean initialized = false;
+	private volatile boolean threadRunning = false;
+	private volatile boolean tickCompleted = false;
 
-	public PluginTask(final Server server) {
-		this.server = server;
+	public PluginTask(final World world) {
+		super(world, null, 0, null, true);
 	}
 
 	public Integer call() {
 		synchronized(this) {
-			final String threadName = Thread.currentThread().getName();
-
 			try {
-				setStarted();
-				tasksMap.put(threadName, this);
+				setInitialized(true);
+				registerPluginThread();
 				final int result = action();
-				tasksMap.remove(threadName);
+				unregisterPluginThread();
 				return result;
 			} catch (final Exception ex) {
 				LOGGER.catching(ex);
-				tasksMap.remove(threadName);
+				unregisterPluginThread();
 				return 0;
 			}
 		}
@@ -51,36 +48,59 @@ public abstract class PluginTask implements Callable<Integer> {
 
 	public abstract int action();
 
-	public synchronized void resetCountdown() {
-		ticksBeforeRun = delayTicks;
+	public void run() {
+		setDelayTicks(0);
+		notifyAll();
 	}
 
-	public synchronized void setDelayTicks(int delayTicks) {
-		resetCountdown();
-		this.ticksBeforeRun = this.delayTicks = delayTicks;
+	public synchronized void pause(final int ticks) {
+		try {
+			setDelayTicks(ticks);
+			setThreadRunning(false);
+			setTickCompleted(true);
+			wait();
+			setThreadRunning(true);
+			setTickCompleted(false);
+		} catch (final InterruptedException ex) {
+			LOGGER.catching(ex);
+		}
 	}
 
-	public synchronized void tick() {
-		ticksBeforeRun--;
+	private synchronized void registerPluginThread() {
+		final String threadName = Thread.currentThread().getName();
+		setThreadRunning(true);
+		setTickCompleted(false);
+		tasksMap.put(threadName, this);
 	}
 
-	public synchronized boolean canRun() {
-		return ticksBeforeRun <= 0;
+	private synchronized void unregisterPluginThread() {
+		final String threadName = Thread.currentThread().getName();
+		setThreadRunning(false);
+		setTickCompleted(false);
+		tasksMap.remove(threadName);
 	}
 
-	private synchronized void setStarted() {
-		threadIsStarted = true;
+	public synchronized boolean isInitialized() {
+		return initialized;
 	}
 
-	public synchronized int getDelayTicks() {
-		return delayTicks;
+	private synchronized void setInitialized(final boolean started) {
+		initialized = started;
 	}
 
-	public synchronized boolean isThreadStarted() {
-		return threadIsStarted;
+	public synchronized boolean isThreadRunning() {
+		return threadRunning;
 	}
 
-	public final Server getServer() {
-		return server;
+	private synchronized void setThreadRunning(boolean threadRunning) {
+		this.threadRunning = threadRunning;
+	}
+
+	public synchronized boolean isTickCompleted() {
+		return tickCompleted;
+	}
+
+	private synchronized void setTickCompleted(boolean tickCompleted) {
+		this.tickCompleted = tickCompleted;
 	}
 }

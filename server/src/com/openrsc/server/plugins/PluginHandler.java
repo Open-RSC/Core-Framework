@@ -21,8 +21,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -46,6 +45,7 @@ public final class PluginHandler {
 
 	private final Server server;
 
+	private ThreadPoolExecutor executor;
 	private final ThreadFactory threadFactory;
 
 	private URLClassLoader urlClassLoader;
@@ -287,6 +287,7 @@ public final class PluginHandler {
 		queue = new ConcurrentHashMap<String, Class<?>>();
 		loadedPlugins = new HashMap<String, Object>();
 		defaultHandler = null;
+		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(threadFactory);
 
 		loadJar();
 		initPlugins();
@@ -296,6 +297,7 @@ public final class PluginHandler {
 		reloading = true;
 
 		urlClassLoader.close();
+		getExecutor().shutdown();
 
 		getServer().getWorld().getQuests().clear();
 		getServer().getWorld().getMiniGames().clear();
@@ -312,6 +314,7 @@ public final class PluginHandler {
 		executivePlugins = null;
 		knownInterfaces = null;
 		queue = null;
+		executor = null;
 		loadedClassFiles = null;
 
 		defaultHandler = null;
@@ -411,7 +414,7 @@ public final class PluginHandler {
 
 					if (go) {
 						final String pluginName = c.getClass().getSimpleName() + "." + m.getName();
-						PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, new PluginTask(getServer()) {
+						final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, new PluginTask(world) {
 							@Override
 							public int action() {
 								try {
@@ -435,6 +438,10 @@ public final class PluginHandler {
 		}
 	}
 
+	public Future<Integer> submitPluginTask(final PluginTask pluginTask) {
+		return getExecutor().submit(pluginTask);
+	}
+
 	public Map<String, Set<Object>> getActionPlugins() {
 		return actionPlugins;
 	}
@@ -447,11 +454,11 @@ public final class PluginHandler {
 		return knownInterfaces;
 	}
 
-	public Server getServer() {
+	public final Server getServer() {
 		return server;
 	}
 
-	public ThreadFactory getThreadFactory() {
-		return threadFactory;
+	private final ThreadPoolExecutor getExecutor() {
+		return executor;
 	}
 }

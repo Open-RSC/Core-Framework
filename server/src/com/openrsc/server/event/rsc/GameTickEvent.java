@@ -45,7 +45,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 
 	public final long doRun() {
 		final long eventStart	= System.currentTimeMillis();
-		countdown();
+		tick();
 		if (shouldRun()) {
 			run();
 			resetCountdown();
@@ -73,19 +73,20 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	}
 
 	public void stop() {
-		LOGGER.info("Stopping : " + getDescriptor() + " : " + getOwner());
+		//if(!(this instanceof PluginTask)) LOGGER.info("Stopping : " + getDescriptor() + " : " + getOwner());
 		running = false;
 	}
 
 	protected void setDelayTicks(long delayTicks) {
 		this.delayTicks = delayTicks;
+		resetCountdown();
 	}
 
 	public void resetCountdown() {
 		ticksBeforeRun = delayTicks;
 	}
 
-	public void countdown() {
+	public void tick() {
 		ticksBeforeRun--;
 	}
 
@@ -137,5 +138,5 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		return world;
 	}
 
-	public boolean isAllowDuplicateEvents() { return allowDuplicateEvents; }
+	public boolean allowsDuplicateEvents() { return allowDuplicateEvents; }
 }

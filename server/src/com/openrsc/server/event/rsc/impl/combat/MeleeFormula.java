@@ -75,7 +75,7 @@ class MeleeFormula {
 		boolean isHit = calculateMeleeAccuracy(source, victim);
 		int damage = isHit ? calculateDamage(source) : 0;
 
-		LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
+		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
 		return damage;
 	}

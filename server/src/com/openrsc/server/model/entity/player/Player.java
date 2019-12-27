@@ -2010,9 +2010,8 @@ public final class Player extends Mob {
 				PacketHandler ph = PacketHandlerLookup.get(p.getValue().getID());
 				if (ph != null && p.getValue().getBuffer().readableBytes() >= 0) {
 					try {
-						if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
-							LOGGER.info("Handling Packet (CLASS: " + ph + "): "
-								+ this.username + " (ID: " + this.owner + ")");
+						/*if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
+							LOGGER.info("Handling Packet (CLASS: " + ph + "): " + this.username + " (ID: " + this.owner + ")");*/
 						ph.handlePacket(p.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
