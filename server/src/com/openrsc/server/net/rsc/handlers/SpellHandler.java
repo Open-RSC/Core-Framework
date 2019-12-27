@@ -20,6 +20,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
@@ -1184,7 +1185,7 @@ public class SpellHandler implements PacketHandler {
 
 						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, damage, 1));
 						if (((Npc) affectedMob).isNpc() && ((Npc) affectedMob).isPkBot()) {
-								player.setSkulledOn(((Npc) affectedMob));
+								player.setSkulledOn(((PkBot) affectedMob));
 							}
 						player.setKillType(1);
 						finalizeSpell(player, spell, DEFAULT);

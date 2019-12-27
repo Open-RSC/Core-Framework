@@ -9,7 +9,6 @@ import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.impl.BankEventNpc;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.external.*;
@@ -20,6 +19,7 @@ import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
@@ -1638,51 +1638,6 @@ public final class Admins implements CommandListener {
 				return;
 			}
 			player.message(n.getDef().getRanged() + "");
-		} else if (cmd.equalsIgnoreCase("bankeventnpc")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
-				return;
-			}
-
-			int id;
-			Npc n;
-			Npc j;
-			id = Integer.parseInt(args[0]);
-			n = player.getWorld().getNpc(95, 212, 220, 448, 453);
-			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
-			try {
-				if (n == null) {
-					player.message(messagePrefix + "Unable to find the banker");
-					return;
-				} else if (j == null) {
-					player.message(messagePrefix + "Unable to find the specified npc");
-					return;
-				}
-			} catch (NumberFormatException e) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
-				return;
-			}
-			j.setBankEventNpc(new BankEventNpc(player.getWorld(), j, n));
-		} else if (cmd.equalsIgnoreCase("addskull")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
-				return;
-			}
-
-			int id;
-			Npc j;
-			id = Integer.parseInt(args[0]);
-			j = player.getWorld().getNpc(id, player.getX() - 5, player.getX() + 5, player.getY() - 10, player.getY() + 10);
-			try {
-				if (j == null) {
-					player.message(messagePrefix + "Unable to find the specified npc");
-					return;
-				}
-			} catch (NumberFormatException e) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
-				return;
-			}
-			j.addSkull(1200000);
 		} else if (cmd.equalsIgnoreCase("getstats")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");
