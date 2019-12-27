@@ -74,7 +74,7 @@ public class GroundItem extends Entity {
 		return false;
 	}
 
-	boolean isOn(final int x, final int y) {
+	public boolean isOn(final int x, final int y) {
 		return x == getX() && y == getY();
 	}
 

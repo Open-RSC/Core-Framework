@@ -154,6 +154,8 @@ public abstract class Entity {
 		setRemoved(true);
 	}
 
+	public abstract boolean isOn(final int x, final int y);
+
 	public boolean isVisibleTo(final Entity entity) {
 		return true;
 	}

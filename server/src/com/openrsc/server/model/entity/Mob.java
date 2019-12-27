@@ -1155,4 +1155,8 @@ public abstract class Mob extends Entity {
 	public int getWalkingTick() {
 		return getWorld().getServer().getConfig().WALKING_TICK;
 	}
+
+	public boolean isOn(final int x, final int y) {
+		return x == getX() && y == getY();
+	}
 }
