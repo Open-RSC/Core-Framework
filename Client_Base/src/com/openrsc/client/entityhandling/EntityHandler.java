@@ -3850,6 +3850,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, -1, -1, 2351));
 		items.add(new ItemDef("Beverage glass", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2351, 2352));
 
+		//Dragon 2H
+		items.add(new ItemDef("dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, 2354, -1, 2353));
+		items.add(new ItemDef("dragon 2-handed Sword", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2353, 2354));
 	}
 
 	// Bank note items
@@ -5121,6 +5124,9 @@ public class EntityHandler {
 			animations.add(new AnimationDef("satansgloveswht", "equipment",0, 0, true, false, 0)); //400
 			animations.add(new AnimationDef("greensantahat", "equipment",0, 0, true, false, 0)); //401
 			animations.add(new AnimationDef("antlers", "equipment",0, 0, true, false, 0)); //402
+
+			//Dragon 2H
+			animations.add(new AnimationDef("2hander", "equipment", 16711748, 0, true, false, 0)); //403 d2h
 		}
 	}
 

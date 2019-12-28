@@ -3,8 +3,11 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
-import com.openrsc.server.event.rsc.SingleTickEvent;
+import com.openrsc.server.event.rsc.GameStateEvent;
+import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.model.AStarPathfinder;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -287,16 +290,52 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 					} else {
 						npcEvent.reset();
 					}
-
+					NPCLoc location = plagueSheep.getLoc();
 					switch (NpcId.getById(plagueSheep.getID())) {
 						case FIRST_PLAGUE_SHEEP:
+							//minX:576, maxX: 599. minY: 534, maxY: 566
 							if (p.getY() >= 563) {
-								teleport(plagueSheep, 580, 558);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											teleport(plagueSheep, 580, 558);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (p.getY() >= 559) {
-								teleport(plagueSheep, 585, 553);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											teleport(plagueSheep, 585, 553);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(582,555), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (p.getY() <= 558 && p.getY() > 542) {
-								teleport(plagueSheep, 594, 538);
-								walkMob(plagueSheep, new Point(588, 538), new Point(578, 546));
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											teleport(plagueSheep, 594, 538);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(587, 538), new Point(578, 546), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (p.getY() < 543) {
 								sheepYell(p);
 								p.message("the sheep jumps the gate into the enclosure");
@@ -307,20 +346,40 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							sheepYell(p);
 							break;
 						case SECOND_PLAGUE_SHEEP:
-							if (p.getY() >= 563) {
-								teleport(plagueSheep, 580, 558);
-								walkMob(plagueSheep, new Point(580, 561));
-							} else if (p.getY() >= 562) {
-								teleport(plagueSheep, 585, 553);
-							} else if (p.getY() >= 559) {
-								teleport(plagueSheep, 585, 553);
-								sleep(1200);
-								teleport(plagueSheep, 597, 537);
-								walkMob(plagueSheep, new Point(588, 538));
-							} else if (p.getY() >= 547) {
-								teleport(plagueSheep, 597, 537);
-								walkMob(plagueSheep, new Point(588, 538));
-							} else if (p.getY() <= 545) {
+							// minX:576, maxX: 599. minY: 534, maxY: 566
+							if (p.getY() >= 559) {
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											teleport(plagueSheep, 585, 553);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(582,555), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
+							} else if (p.getY() <= 558 && p.getY() > 542) {
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											teleport(plagueSheep, 585, 553);//intentionally add bug for authenticity
+											return nextState(2);
+										});
+										addState(1, () -> {
+											teleport(plagueSheep, 594, 538);
+											return nextState(2);
+										});
+										addState(2, () -> {
+											walkMob(plagueSheep, new Point(587, 538), new Point(581, 542), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
+							} else if (p.getY() < 543) {
 								sheepYell(p);
 								p.message("the sheep jumps the gate into the enclosure");
 								teleport(plagueSheep, 590, 546);
@@ -330,25 +389,87 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							sheepYell(p);
 							break;
 						case THIRD_PLAGUE_SHEEP:
+							//minx:570, maxX:624, minY:527, maxY: 566
 							if (plagueSheep.getX() > 618) {
-								p.message("the sheep runs to the east");
-								teleport(plagueSheep, 614, 531);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the east");
+											teleport(plagueSheep, 614, 531);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
+
 							} else if (plagueSheep.getX() < 619
 								&& plagueSheep.getX() > 612) {
-								p.message("the sheep runs to the east");
-								teleport(plagueSheep, 604, 531);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the east");
+											teleport(plagueSheep, 604, 531);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(614, 531), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (plagueSheep.getX() < 613
 								&& plagueSheep.getX() > 602) {
-								p.message("the sheep runs to the east");
-								teleport(plagueSheep, 594, 531);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the east");
+											teleport(plagueSheep, 594, 531);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(604, 531), new Point(614, 531), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (plagueSheep.getX() < 603
 								&& plagueSheep.getX() > 592) {
-								p.message("the sheep runs to the east");
-								teleport(plagueSheep, 584, 531);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the east");
+											teleport(plagueSheep, 584, 531);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(585,532), new Point(589,532), new Point(594, 531), new Point(604, 531), new Point(614, 531), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (plagueSheep.getX() < 593
 								&& plagueSheep.getX() > 582) {
-								p.message("the sheep runs to the southeast");
-								teleport(plagueSheep, 579, 543);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the southeast");
+											teleport(plagueSheep, 579, 543);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(589,532), new Point(594, 531), new Point(604, 531), new Point(614, 531), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (plagueSheep.getX() < 586) {
 								sheepYell(p);
 								p.message("the sheep jumps the gate into the enclosure");
@@ -358,50 +479,167 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							sheepYell(p);
 							break;
 						case FOURTH_PLAGUE_SHEEP:
+							//change db values. minX:581, maxX: 604. minY: 536, maxY: 606
 							if (plagueSheep.getX() == 603
 								&& plagueSheep.getY() < 589) {
-								p.message("the sheep runs to the south");
-								teleport(plagueSheep, 603, 595);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the south");
+											teleport(plagueSheep, 603, 595);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(603, 595);
+											walkMob(plagueSheep, new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
 							} else if (plagueSheep.getY() > 589
 								&& plagueSheep.getY() < 599) {
-								p.message("the sheep runs to the southeast");
-								teleport(plagueSheep, 591, 603);
-								walkMob(plagueSheep, new Point(596, 603), new Point(598, 599));
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the southeast");
+											teleport(plagueSheep, 591, 603);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(603, 595);
+											walkMob(plagueSheep, new Point(596, 603), new Point(598, 599), new Point(location.startX(), location.startY()));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(596, 603), new Point(598, 599));
 							} else if (plagueSheep.getY() > 598
 								&& plagueSheep.getY() < 604) {
-								p.message("the sheep runs over the river to the northeast");
-								teleport(plagueSheep, 587, 596);
-								walkMob(plagueSheep, new Point(589, 595), new Point(593, 595), new Point(595, 587));
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs over the river to the northeast");
+											teleport(plagueSheep, 587, 596);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(591, 603);
+											walkMob(plagueSheep, new Point(589, 595), new Point(593, 595), new Point(595, 587));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(589, 595), new Point(593, 595), new Point(595, 587));
 							} else if (plagueSheep.getY() > 583
 								&& plagueSheep.getY() < 588) {
-								p.message("the sheep runs to the north");
-								teleport(plagueSheep, 588, 578);
-								walkMob(plagueSheep, new Point(594, 584), new Point(594, 586));
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the north");
+											teleport(plagueSheep, 588, 578);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(587, 596);
+											walkMob(plagueSheep, new Point(594, 584), new Point(594, 586));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(594, 584), new Point(594, 586));
 							} else if (plagueSheep.getY() > 575
 								&& plagueSheep.getY() < 585) {
-								p.message("the sheep runs to the north");
-								teleport(plagueSheep, 588, 570);
-								walkMob(plagueSheep, new Point(594, 578), new Point(595, 578));
-							} else if (plagueSheep.getY() > 567
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the north");
+											teleport(plagueSheep, 588, 570);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(588, 578);
+											walkMob(plagueSheep, new Point(594, 578), new Point(595, 578));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(594, 578), new Point(595, 578));
+							}  else if (plagueSheep.getY() > 567
 								&& plagueSheep.getY() < 576) {
-								p.message("the sheep runs to the northeast");
-								teleport(plagueSheep, 589, 562);
-								walkMob(plagueSheep, new Point(594, 567), new Point(595, 567));
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the northeast");
+											teleport(plagueSheep, 589, 562);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(588, 570);
+											walkMob(plagueSheep, new Point(594, 567), new Point(595, 567));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(594, 567), new Point(595, 567));
 							} else if (plagueSheep.getY() > 565
 								&& plagueSheep.getY() < 568) {
-								p.message("the sheep runs to the northeast");
-								teleport(plagueSheep, 587, 552);
-								walkMob(plagueSheep, new Point(596, 567));
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the northeast");
+											teleport(plagueSheep, 587, 552);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(589, 562);
+											walkMob(plagueSheep, new Point(596, 567));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(596, 567));
 							} else if (plagueSheep.getY() > 551
 								&& plagueSheep.getY() < 562) {
-								p.message("the sheep runs to the northeast");
-								teleport(plagueSheep, 586, 547);
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the northeast");
+											teleport(plagueSheep, 586, 547);
+											return nextState(2);
+										});
+										addState(1, () -> {
+											walkMob(plagueSheep, new Point(598, 557));
+											return null;
+										});
+
+									}
+								});
 							} else if (plagueSheep.getY() > 547
 								&& plagueSheep.getY() < 552) {
-								p.message("the sheep runs to the northeast");
-								teleport(plagueSheep, 586, 539);
-								walkMob(plagueSheep, new Point(588, 549));
-							} else if (plagueSheep.getY() <= 548) {
+								p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Plague Sheep") {
+									public void init() {
+										addState(0, () -> {
+											p.message("the sheep runs to the northeast");
+											teleport(plagueSheep, 586, 539);
+											return nextState(2);
+										});
+										addState(1, () -> {
+//											plagueSheep.walkToEntityAStar(586, 547);
+											walkMob(plagueSheep, new Point(588, 549));
+											return null;
+										});
+
+									}
+								});
+								//walkMob(plagueSheep, new Point(588, 549));
+							} else if (plagueSheep.getY() <= 547) {
 								sheepYell(p);
 								p.message("the sheep jumps the gate into the enclosure");
 								teleport(plagueSheep, 590, 546);
