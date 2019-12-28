@@ -5292,8 +5292,9 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2350, -1, 2349, 'Antlers with red-nose', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
        (2351, 2350, -1, 'Beverage glass', 'A glass left after a tasty drink', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-       (2352, -1, 2351, 'Beverage glass', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+       (2352, -1, 2351, 'Beverage glass', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+       (2353, 2354, -1, 'dragon 2-handed Sword', 'A massive sword', '', 0, 0, 0, 0, 1, 403, 8216, 4, 60, 0, 0, 92, 92, 0, 0, 5000000),
+       (2354, -1, 2353, 'dragon 2-handed Sword', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
