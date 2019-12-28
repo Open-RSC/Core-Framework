@@ -3,11 +3,10 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.event.PluginsUseThisEvent;
 import com.openrsc.server.event.RestartableDelayedEvent;
 import com.openrsc.server.event.rsc.GameStateEvent;
+import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.external.NPCLoc;
-import com.openrsc.server.model.AStarPathfinder;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -299,7 +298,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 									public void init() {
 										addState(0, () -> {
 											teleport(plagueSheep, 580, 558);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(location.startX(), location.startY()));
@@ -313,7 +312,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 									public void init() {
 										addState(0, () -> {
 											teleport(plagueSheep, 585, 553);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(582,555), new Point(location.startX(), location.startY()));
@@ -327,7 +326,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 									public void init() {
 										addState(0, () -> {
 											teleport(plagueSheep, 594, 538);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(587, 538), new Point(578, 546), new Point(location.startX(), location.startY()));
@@ -352,7 +351,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 									public void init() {
 										addState(0, () -> {
 											teleport(plagueSheep, 585, 553);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(582,555), new Point(location.startX(), location.startY()));
@@ -366,11 +365,11 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 									public void init() {
 										addState(0, () -> {
 											teleport(plagueSheep, 585, 553);//intentionally add bug for authenticity
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											teleport(plagueSheep, 594, 538);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(2, () -> {
 											walkMob(plagueSheep, new Point(587, 538), new Point(581, 542), new Point(location.startX(), location.startY()));
@@ -396,7 +395,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the east");
 											teleport(plagueSheep, 614, 531);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(location.startX(), location.startY()));
@@ -413,7 +412,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the east");
 											teleport(plagueSheep, 604, 531);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(614, 531), new Point(location.startX(), location.startY()));
@@ -429,7 +428,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the east");
 											teleport(plagueSheep, 594, 531);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(604, 531), new Point(614, 531), new Point(location.startX(), location.startY()));
@@ -445,7 +444,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the east");
 											teleport(plagueSheep, 584, 531);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(585,532), new Point(589,532), new Point(594, 531), new Point(604, 531), new Point(614, 531), new Point(location.startX(), location.startY()));
@@ -461,7 +460,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the southeast");
 											teleport(plagueSheep, 579, 543);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(589,532), new Point(594, 531), new Point(604, 531), new Point(614, 531), new Point(location.startX(), location.startY()));
@@ -487,7 +486,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the south");
 											teleport(plagueSheep, 603, 595);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(603, 595);
@@ -504,7 +503,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the southeast");
 											teleport(plagueSheep, 591, 603);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(603, 595);
@@ -522,7 +521,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs over the river to the northeast");
 											teleport(plagueSheep, 587, 596);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(591, 603);
@@ -540,7 +539,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the north");
 											teleport(plagueSheep, 588, 578);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(587, 596);
@@ -558,7 +557,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the north");
 											teleport(plagueSheep, 588, 570);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(588, 578);
@@ -576,7 +575,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the northeast");
 											teleport(plagueSheep, 589, 562);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(588, 570);
@@ -594,7 +593,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the northeast");
 											teleport(plagueSheep, 587, 552);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(589, 562);
@@ -612,7 +611,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the northeast");
 											teleport(plagueSheep, 586, 547);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 											walkMob(plagueSheep, new Point(598, 557));
@@ -628,7 +627,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 										addState(0, () -> {
 											p.message("the sheep runs to the northeast");
 											teleport(plagueSheep, 586, 539);
-											return nextState(2);
+											return invokeNextState(2);
 										});
 										addState(1, () -> {
 //											plagueSheep.walkToEntityAStar(586, 547);
