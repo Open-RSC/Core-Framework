@@ -17,7 +17,7 @@ public class PluginTickEvent extends GameTickEvent {
 	private Future<Integer> future = null;
 
 	public PluginTickEvent(final World world, final Mob owner, final String descriptor, final PluginTask pluginTask) {
-		super(world, owner, 0, descriptor);
+		super(world, owner, 0, descriptor, true);
 		this.pluginTask = pluginTask;
 	}
 
