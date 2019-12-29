@@ -95,6 +95,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public DropTable gemTable;
 	public DropTable standardTable;
 	public DropTable ultraTable;
+	public DropTable kbdTable;
 
 	/**
 	 * Double ended queue to store snapshots into
@@ -868,6 +869,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable = new DropTable();
 		standardTable = new DropTable();
 		ultraTable = new DropTable();
+		kbdTable = new DropTable();
+
+		//KBD Specific table
+		kbdTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(), 1673, 51200);
+		kbdTable.addEmptyDrop(1273);
+		kbdTable.addItemDrop(ItemId.DRAGON_2_HANDED_SWORD.id(), 1, 25);
+		kbdTable.addItemDrop(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1, 2048);
 
 		//ITEMS
 		gemTable.addEmptyDrop(45);

@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
@@ -259,8 +256,8 @@ public final class Admins implements CommandListener {
 			System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
 		} */
 		else if (cmd.equalsIgnoreCase("simrdt")) {
-			if (args.length < 2 || args.length == 3) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+			if (args.length != 3) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
 				return;
 			}
 
@@ -268,7 +265,7 @@ public final class Admins implements CommandListener {
 			try {
 				npcID = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
 				return;
 			}
 
@@ -276,21 +273,55 @@ public final class Admins implements CommandListener {
 			try {
 				maxAttempts = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
+				return;
+			}
+
+			boolean RoW;
+			try {
+				RoW = Integer.parseInt(args[2]) == 1;
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
 				return;
 			}
 
 			HashMap<String, Integer> rareDrops = new HashMap<>();
 			for (int i = 0; i < maxAttempts; i++) {
+				//KDB Specific RDT
+				if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+					if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
+						if (player.getWorld().kbdTable.rollAccess(npcID, RoW)) {
+							Item kbdSpecificLoot = player.getWorld().kbdTable.rollItem(RoW, null);
+							if (kbdSpecificLoot != null) {
+								if (rareDrops.containsKey(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase())) {
+									int amount = rareDrops.get(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase());
+									rareDrops.put(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase(), amount + kbdSpecificLoot.getAmount());
+								} else
+								{
+									rareDrops.put(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase(), kbdSpecificLoot.getAmount());
+								}
+							} else {
+								if (rareDrops.containsKey("miss")) {
+									int amount = rareDrops.get("miss");
+									rareDrops.put("miss", amount + 1);
+								} else
+								{
+									rareDrops.put("miss", 1);
+								}
+							}
+						}
+					}
+				}
+
 				boolean rdtHit = false;
 				Item rare = null;
 
-				if (player.getWorld().standardTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+				if (player.getWorld().standardTable.rollAccess(npcID, RoW)) {
 					rdtHit = true;
-					rare = player.getWorld().standardTable.rollItem(Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), player);
-				} else if (player.getWorld().gemTable.rollAccess(npcID, Functions.isWielding(player, com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					rare = player.getWorld().standardTable.rollItem(RoW, null);
+				} else if (player.getWorld().gemTable.rollAccess(npcID, RoW)) {
 					rdtHit = true;
-					rare = player.getWorld().gemTable.rollItem(Functions.isWielding(player, ItemId.RING_OF_WEALTH.id()), player);
+					rare = player.getWorld().gemTable.rollItem(RoW, null);
 				}
 				if (rdtHit) {
 					if (rare == null) {

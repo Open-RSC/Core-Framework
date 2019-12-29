@@ -3850,9 +3850,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, -1, -1, 2351));
 		items.add(new ItemDef("Beverage glass", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2351, 2352));
 
-		//Dragon 2H
+		//New KBD Drops
 		items.add(new ItemDef("dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, 2354, -1, 2353));
 		items.add(new ItemDef("dragon 2-handed Sword", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2353, 2354));
+		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 50, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
+		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
 	}
 
 	// Bank note items

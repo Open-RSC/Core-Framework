@@ -5294,7 +5294,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2351, 2350, -1, 'Beverage glass', 'A glass left after a tasty drink', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
        (2352, -1, 2351, 'Beverage glass', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
        (2353, 2354, -1, 'dragon 2-handed Sword', 'A massive sword', '', 0, 0, 0, 0, 1, 403, 8216, 4, 60, 0, 0, 92, 92, 0, 0, 5000000),
-       (2354, -1, 2353, 'dragon 2-handed Sword', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+       (2354, -1, 2353, 'dragon 2-handed Sword', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+       (2355, 2356, -1, 'King Black Dragon scale', 'Taken from a monstrous beast', '', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 2500),
+       (2356, -1, 2355, 'King Black Dragon scale', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
