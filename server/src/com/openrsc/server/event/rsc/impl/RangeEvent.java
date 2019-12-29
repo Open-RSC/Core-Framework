@@ -25,7 +25,7 @@ import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 public class RangeEvent extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
-	
+
 	private int[][] allowedArrows = {{ItemId.SHORTBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Shortbow
 		{ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Longbow
 		{ItemId.OAK_SHORTBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Oak Shortbow
@@ -127,7 +127,7 @@ public class RangeEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerRangeNpc",
+					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction(getOwner(),"PlayerRangeNpc",
 						new Object[]{getOwner(), target})) {
 						getPlayerOwner().resetRange();
 						stop();
@@ -271,7 +271,7 @@ public class RangeEvent extends GameTickEvent {
 						}
 						fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
 						getPlayerOwner().damage(fireDamage);
-						
+
 						//reduce ranged level (case for KBD)
 						if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 							int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
@@ -296,7 +296,7 @@ public class RangeEvent extends GameTickEvent {
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
+						target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
 						target.startPoisonEvent();
 					}
 				}

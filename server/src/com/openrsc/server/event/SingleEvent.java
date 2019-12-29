@@ -10,11 +10,11 @@ import com.openrsc.server.model.world.World;
  */
 public abstract class SingleEvent extends DelayedEvent {
 
-	public SingleEvent(World world, Player owner, int delay, String descriptor) {
+	public SingleEvent(final World world, final Player owner, final int delay, final String descriptor) {
 		super(world, owner, delay, descriptor);
 	}
 
-	public SingleEvent(World world, Player owner, int delay, String descriptor, boolean uniqueEvent) {
+	public SingleEvent(final World world, final Player owner, final int delay, final String descriptor, final boolean uniqueEvent) {
 		super(world, owner, delay, descriptor, uniqueEvent);
 	}
 

@@ -1,12 +1,9 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,27 +12,55 @@ public abstract class Entity {
 
 	private final World world;
 
-	protected final Map<String, Object> attributes = new HashMap<String, Object>();
+	private final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
-	protected final Map<String, Object> syncAttributes = new ConcurrentHashMap<String, Object>();
+	private int id;
 
-	protected final ArrayList<VisibleCondition> visibleConditions = new ArrayList<VisibleCondition>();
+	private int index;
 
-	public int id;
+	private AtomicReference<Point> location = new AtomicReference<Point>();
 
-	protected int index;
+	private AtomicReference<Region> region = new AtomicReference<Region>();
 
-	protected AtomicReference<Point> location = new AtomicReference<Point>();
+	private boolean removed = false;
 
-	protected AtomicReference<Region> region = new AtomicReference<Region>();
-
-	protected boolean removed = false;
-
-	public Entity(World world) {
+	public Entity(final World world) {
 		this.world = world;
 	}
 
-	public final World getWorld() { return world; }
+	public void updateRegion() {
+		final Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
+		if (!newRegion.equals(getRegion())) {
+			if (getRegion() != null) {
+				region.get().removeEntity(this);
+			}
+
+			if (!isRemoved()) {
+				region.set(newRegion);
+				region.get().addEntity(this);
+			}
+		}
+	}
+
+	public boolean withinRange(final Entity e, final int radius) {
+		return withinRange(e.getLocation(), radius);
+	}
+
+	public boolean withinRange(final Point p, final int radius) {
+		int xDiff = Math.abs(getLocation().getX() - p.getX());
+		int yDiff = Math.abs(getLocation().getY() - p.getY());
+		return xDiff <= radius && yDiff <= radius;
+	}
+
+	public boolean withinRange90Deg(final Entity e, final int radius) {
+		return withinRange90Deg(e.getLocation(), radius);
+	}
+
+	public boolean withinRange90Deg(final Point p, final int radius) {
+		int xDiff = Math.abs(getLocation().getX() - p.getX());
+		int yDiff = Math.abs(getLocation().getY() - p.getY());
+		return xDiff <= radius && yDiff == 0 || xDiff == 0 && yDiff <= radius;
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T getAttribute(String string) {
@@ -51,25 +76,21 @@ public abstract class Entity {
 		return fail;
 	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> T getSyncAttribute(String string) {
-		return (T) syncAttributes.get(string);
+	public void removeAttribute(String string) {
+		attributes.remove(string);
 	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> T getSyncAttribute(String string, T fail) {
-		T object = (T) syncAttributes.get(string);
-		if (object != null) {
-			return object;
-		}
-		return fail;
+	public void setAttribute(String string, Object object) {
+		attributes.put(string, object);
 	}
+
+	public final World getWorld() { return world; }
 
 	public final int getID() {
 		return id;
 	}
 
-	public final void setID(int newid) {
+	protected final void setID(final int newid) {
 		id = newid;
 	}
 
@@ -77,7 +98,7 @@ public abstract class Entity {
 		return index;
 	}
 
-	public final void setIndex(int newIndex) {
+	public final void setIndex(final int newIndex) {
 		index = newIndex;
 	}
 
@@ -85,7 +106,7 @@ public abstract class Entity {
 		return location.get();
 	}
 
-	public void setLocation(Point p) {
+	public void setLocation(final Point p) {
 		/*if (this.isPlayer() && location != null) {
 			Player pl = (Player) this;
 			if (pl != null && getX() > 0 && getY() > 0) {
@@ -98,6 +119,11 @@ public abstract class Entity {
 		}*/
 		location.set(p);
 		updateRegion();
+	}
+
+	public void setInitialLocation(Point p) {
+		// Used when logging in a player in order to not cause exceptions of missing locations while updating the region
+		location.set(p);
 	}
 
 	public Region getRegion() {
@@ -116,13 +142,7 @@ public abstract class Entity {
 		return removed;
 	}
 
-	/***
-	 * Sets this entity to be removed on next updateCollections run.
-	 *
-	 * @param removed
-	 */
-
-	public void setRemoved(boolean removed) {
+	protected void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 
@@ -134,71 +154,10 @@ public abstract class Entity {
 		setRemoved(true);
 	}
 
-	public void removeAttribute(String string) {
-		attributes.remove(string);
-	}
+	public abstract boolean isOn(final int x, final int y);
 
-	public void setAttribute(String string, Object object) {
-		attributes.put(string, object);
-	}
-
-	public synchronized void setSyncAttribute(String string, Object object) {
-		syncAttributes.put(string, object);
-	}
-
-	public void setInitialLocation(Point p) {
-		location.set(p);
-	}
-
-	public void updateRegion() {
-		Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
-		if (!newRegion.equals(getRegion())) {
-			if (getRegion() != null) {
-				region.get().removeEntity(this);
-			}
-
-			if (!isRemoved()) {
-				region.set(newRegion);
-				region.get().addEntity(this);
-			}
-		}
-	}
-
-	public final boolean withinRange(Entity e, int radius) {
-		return withinRange(e.getLocation(), radius);
-	}
-
-	public final boolean withinRange(Point p, int radius) {
-		int xDiff = Math.abs(getLocation().getX() - p.getX());
-		int yDiff = Math.abs(getLocation().getY() - p.getY());
-		return xDiff <= radius && yDiff <= radius;
-	}
-	
-	public final boolean withinRange90Deg(Entity e, int radius) {
-		return withinRange90Deg(e.getLocation(), radius);
-	}
-	
-	public final boolean withinRange90Deg(Point p, int radius) {
-		int xDiff = Math.abs(getLocation().getX() - p.getX());
-		int yDiff = Math.abs(getLocation().getY() - p.getY());
-		return xDiff <= radius && yDiff == 0 || xDiff == 0 && yDiff <= radius;
-	}
-
-	public void addVisibleCondition(VisibleCondition statement) {
-		visibleConditions.add(statement);
-	}
-
-	public boolean isVisibleTo(Player p) {
-		for (VisibleCondition c : visibleConditions) {
-			if (!c.isVisibleTo(this, p)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public void removeVisibleCondition(VisibleCondition c) {
-		visibleConditions.remove(c);
+	public boolean isInvisibleTo(final Entity observer) {
+		return false;
 	}
 
 	public boolean isPlayer() {

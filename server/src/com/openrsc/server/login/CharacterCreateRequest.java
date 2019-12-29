@@ -8,7 +8,6 @@ import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.InetSocketAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -17,7 +16,7 @@ import java.sql.ResultSet;
  *
  * @author Kenix
  */
-public class CharacterCreateRequest {
+public class CharacterCreateRequest extends LoginExecutorProcess{
 
 	/**
 	 * The asynchronous logger.
@@ -84,9 +83,7 @@ public class CharacterCreateRequest {
 		return server;
 	}
 
-	public void process() {
-		final String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
-
+	protected void processInternal() {
 		try {
 			if (getUsername().length() < 2 || getUsername().length() > 12) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 7).toPacket());
@@ -109,13 +106,13 @@ public class CharacterCreateRequest {
 			}
 
 
-			ResultSet set = getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + IP
+			ResultSet set = getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + getIpAddress()
 				+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 60) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 minute
 
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
 				if (set.next()) {
 					set.close();
-					LOGGER.info(IP + " - Registration failed: Registered recently.");
+					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
 					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
 					getChannel().close();
 					return;
@@ -125,7 +122,7 @@ public class CharacterCreateRequest {
 			set = getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + getUsername() + "'");
 			if (set.next()) {
 				set.close();
-				LOGGER.info(IP + " - Registration failed: Username already in use.");
+				LOGGER.info(getIpAddress() + " - Registration failed: Forum Username already in use.");
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
 				getChannel().close();
 				return;
@@ -138,7 +135,7 @@ public class CharacterCreateRequest {
 			statement.setString(2, email);
 			statement.setString(3, DataConversions.hashPassword(getPassword(), null));
 			statement.setLong(4, System.currentTimeMillis() / 1000);
-			statement.setString(5, IP);
+			statement.setString(5, getIpAddress());
 			statement.executeUpdate();
 			statement = null;
 
@@ -150,8 +147,7 @@ public class CharacterCreateRequest {
 
 			if (!set.next()) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
-				getChannel().close();
-				LOGGER.info(IP + " - Registration failed: Player id not found.");
+				LOGGER.info(getIpAddress() + " - Registration failed: Player id not found.");
 				return;
 			}
 
@@ -182,12 +178,11 @@ public class CharacterCreateRequest {
 			statement.executeUpdate();
 			//---------------------------------------------------------------------------------------
 
-			LOGGER.info(IP + " - Registration successful");
+			LOGGER.info(getIpAddress() + " - Registration successful");
 			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-			getChannel().close();
 		} catch (Exception e) {
 			LOGGER.catching(e);
-			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
 			getChannel().close();
 		}
 	}

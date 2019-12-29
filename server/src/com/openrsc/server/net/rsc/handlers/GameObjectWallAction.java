@@ -40,6 +40,7 @@ public class GameObjectWallAction implements PacketHandler {
 				}
 
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
+					player,
 					"WallObjectAction",
 					new Object[]{object, click, player})) {
 					return;

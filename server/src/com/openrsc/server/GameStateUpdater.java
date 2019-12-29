@@ -171,11 +171,10 @@ public final class GameStateUpdater {
 		if (playerToUpdate.loggedIn()) {
 			for (Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
 				Player otherPlayer = it$.next();
-				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
-					|| otherPlayer.isTeleporting() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride || otherPlayer.inCombat() || otherPlayer.hasMoved()) {
+					|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
+					|| otherPlayer.inCombat() || otherPlayer.hasMoved()) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //???
@@ -200,11 +199,10 @@ public final class GameStateUpdater {
 			}
 
 			for (Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
-				boolean visibleConditionOverride = otherPlayer.isVisibleTo(playerToUpdate);
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
-					|| otherPlayer.isRemoved() || otherPlayer.isInvisible(playerToUpdate)
-					|| !visibleConditionOverride || (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
+					|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
+					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
 				byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
@@ -518,7 +516,7 @@ public final class GameStateUpdater {
 		//       a region is unloaded. It then instructs the client to only unload the region.
 		for (Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
 			GameObject o = it$.next();
-			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || !o.isVisibleTo(playerToUpdate)) {
+			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
 				int offsetX = o.getX() - playerToUpdate.getX();
 				int offsetY = o.getY() - playerToUpdate.getY();
 				//If the object is close enough we can use regular way to remove:
@@ -540,7 +538,7 @@ public final class GameStateUpdater {
 
 		for (GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-				|| !newObject.isVisibleTo(playerToUpdate) || newObject.getType() != 0
+				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
 				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
 				continue;
 			}
@@ -580,7 +578,7 @@ public final class GameStateUpdater {
 					it$.remove();
 					changed = true;
 				}
-			} else if (groundItem.isRemoved() || !groundItem.visibleTo(playerToUpdate)) {
+			} else if (groundItem.isRemoved() || groundItem.isInvisibleTo(playerToUpdate)) {
 				packet.writeShort(groundItem.getID() + 32768);
 				packet.writeByte(offsetX);
 				packet.writeByte(offsetY);
@@ -592,7 +590,7 @@ public final class GameStateUpdater {
 
 		for (GroundItem groundItem : playerToUpdate.getViewArea().getItemsInView()) {
 			if (!playerToUpdate.withinGridRange(groundItem) || groundItem.isRemoved()
-				|| !groundItem.visibleTo(playerToUpdate)
+				|| groundItem.isInvisibleTo(playerToUpdate)
 				|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
 				continue;
 			}
@@ -616,7 +614,7 @@ public final class GameStateUpdater {
 
 		for (Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
 			GameObject o = it$.next();
-			if (!playerToUpdate.withinGridRange(o) || (o.isRemoved() || !o.isVisibleTo(playerToUpdate))) {
+			if (!playerToUpdate.withinGridRange(o) || (o.isRemoved() || o.isInvisibleTo(playerToUpdate))) {
 				int offsetX = o.getX() - playerToUpdate.getX();
 				int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
@@ -635,7 +633,7 @@ public final class GameStateUpdater {
 		}
 		for (GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-				|| !newObject.isVisibleTo(playerToUpdate) || newObject.getType() != 1
+				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 1
 				|| playerToUpdate.getLocalWallObjects().contains(newObject)) {
 				continue;
 			}

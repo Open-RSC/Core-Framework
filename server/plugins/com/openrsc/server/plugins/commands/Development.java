@@ -393,8 +393,8 @@ public final class Development implements CommandListener {
 			else
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}
-		else if (cmd.equalsIgnoreCase("events") || cmd.equalsIgnoreCase("serverstats")) {
-			ActionSender.sendBox(player, player.getWorld().getServer().buildProfilingDebugInformation(true),true);
+		else if (cmd.equalsIgnoreCase("serverstats")) {
+			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
 		}
 	}
 }

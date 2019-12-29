@@ -16,7 +16,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		int x = location.getX();
 		int y = location.getY();
 		for (GroundItem i : player.getViewArea().getItemsInView()) {
-			if (i.getID() == id && i.visibleTo(player) && i.getX() == x && i.getY() == y) {
+			if (i.getID() == id && !i.isInvisibleTo(player) && i.getX() == x && i.getY() == y) {
 				return i;
 			}
 		}
@@ -70,7 +70,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 				}
 
 				if (player.getWorld().getServer().getPluginHandler()
-					.blockDefaultAction("InvUseOnGroundItem",
+					.blockDefaultAction(player, "InvUseOnGroundItem",
 						new Object[]{myItem, item, player})) {
 					return;
 				}

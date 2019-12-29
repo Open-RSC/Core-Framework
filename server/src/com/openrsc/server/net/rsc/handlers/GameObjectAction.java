@@ -44,6 +44,7 @@ public class GameObjectAction implements PacketHandler {
 					player.face(object.getX(), object.getY());
 				}
 				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
+					player,
 					"ObjectAction",
 					new Object[]{object, command, player})) {
 

@@ -164,7 +164,7 @@ public class RangeEventNpc extends GameTickEvent {
 					}
 					if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 						if (DataConversions.random(0, 100) <= 10) {
-							target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
+							target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
 							target.startPoisonEvent();
 						}
 					}

@@ -4,16 +4,9 @@ import com.openrsc.server.external.DoorDef;
 import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
 public class GameObject extends Entity {
-	/**
-	 * Returns the ID of an item contained in the object.
-	 *
-	 * @author Konijn
-	 */
-	private int containsItem = -1;
 	/**
 	 * The direction the object points in
 	 */
@@ -29,131 +22,21 @@ public class GameObject extends Entity {
 	 */
 	private int type;
 
-	private VisibleCondition statement;
-
-	public GameObject(World world, GameObjectLoc loc, VisibleCondition statement) {
+	public GameObject(final World world, final GameObjectLoc loc) {
 		super(world);
 
 		direction = loc.getDirection();
 		type = loc.getType();
 		this.loc = loc;
 		super.setID(loc.getId());
-		this.statement = statement;
 	}
 
-	public GameObject(World world, GameObjectLoc loc) {
-		super(world);
-		direction = loc.getDirection();
-		type = loc.getType();
-		this.loc = loc;
-		super.setID(loc.getId());
+	public GameObject(final World world, final Point location, final int id, final int direction, final int type) {
+		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction, type));
 	}
 
-	public GameObject(World world, Point location, int id, int direction, int type) {
-		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction,
-			type));
-	}
-
-	public GameObject(World world, Point location, int id, int direction, int type,
-					  String owner) {
-		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction,
-			type, owner));
-	}
-
-	public String getOwner() {
-		return loc.getOwner();
-	}
-
-	public int containsItem() {
-		return containsItem;
-	}
-
-	public void containsItem(int item) {
-		containsItem = item;
-	}
-
-	public boolean equals(Object o) {
-		if (o instanceof GameObject) {
-			GameObject go = (GameObject) o;
-			return go.getLocation().equals(getLocation())
-				&& go.getID() == getID()
-				&& go.getDirection() == getDirection()
-				&& go.getType() == getType();
-		}
-		return false;
-	}
-
-	public int getDirection() {
-		return direction;
-	}
-
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-
-	public DoorDef getDoorDef() {
-		return getWorld().getServer().getEntityHandler().getDoorDef(super.getID());
-	}
-
-	public GameObjectDef getGameObjectDef() {
-		return getWorld().getServer().getEntityHandler().getGameObjectDef(super.getID());
-	}
-
-	public GameObjectLoc getLoc() {
-		return loc;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public boolean isOn(int x, int y) {
-		int width, height;
-		if (type == 1) {
-			width = height = 1;
-		} else if (direction == 0 || direction == 4) {
-			width = getGameObjectDef().getWidth();
-			height = getGameObjectDef().getHeight();
-		} else {
-			height = getGameObjectDef().getWidth();
-			width = getGameObjectDef().getHeight();
-		}
-		if (type == 0) { // Object
-			return x >= getX() && x <= (getX() + width) && y >= getY()
-				&& y <= (getY() + height);
-		} else { // Door
-			return x == getX() && y == getY();
-		}
-	}
-
-	public boolean isRemoved() {
-		return removed;
-	}
-
-	public boolean isTelePoint() {
-		return getWorld().getServer().getEntityHandler().getObjectTelePoint(getLocation(), null) != null;
-	}
-
-	public void remove() {
-		removed = true;
-		super.remove();
-	}
-
-	public String toString() {
-		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + id
-			+ "; dir = " + direction + "; location = "
-			+ location.toString() + ";";
-	}
-
-	public boolean isVisibleTo(Player p) {
-		if (statement == null)
-			return true;
-
-		return statement != null && statement.isVisibleTo(this, p);
+	public GameObject(World world, Point location, int id, int direction, int type, String owner) {
+		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction, type, owner));
 	}
 
 	public final Point[] getObjectBoundary() {
@@ -220,5 +103,77 @@ public class GameObject extends Entity {
 			}
 		}
 		return new Point[]{Point.location(minX, minY), Point.location(maxX, maxY)};
+	}
+
+	public boolean isOn(final int x, final int y) {
+		int width, height;
+		if (type == 1) {
+			width = height = 1;
+		} else if (direction == 0 || direction == 4) {
+			width = getGameObjectDef().getWidth();
+			height = getGameObjectDef().getHeight();
+		} else {
+			height = getGameObjectDef().getWidth();
+			width = getGameObjectDef().getHeight();
+		}
+		if (type == 0) { // Object
+			return x >= getX() && x <= (getX() + width) && y >= getY()
+				&& y <= (getY() + height);
+		} else { // Door
+			return x == getX() && y == getY();
+		}
+	}
+
+	public boolean equals(final Object o) {
+		if (o instanceof GameObject) {
+			GameObject go = (GameObject) o;
+			return go.getLocation().equals(getLocation())
+				&& go.getID() == getID()
+				&& go.getDirection() == getDirection()
+				&& go.getType() == getType();
+		}
+		return false;
+	}
+
+	public String toString() {
+		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + getID()
+			+ "; dir = " + direction + "; location = "
+			+ getLocation().toString() + ";";
+	}
+
+	public String getOwner() {
+		return loc.getOwner();
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(final int direction) {
+		this.direction = direction;
+	}
+
+	public DoorDef getDoorDef() {
+		return getWorld().getServer().getEntityHandler().getDoorDef(super.getID());
+	}
+
+	public GameObjectDef getGameObjectDef() {
+		return getWorld().getServer().getEntityHandler().getGameObjectDef(super.getID());
+	}
+
+	public GameObjectLoc getLoc() {
+		return loc;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(final int type) {
+		this.type = type;
+	}
+
+	public boolean isTelePoint() {
+		return getWorld().getServer().getEntityHandler().getObjectTelePoint(getLocation(), null) != null;
 	}
 }

@@ -19,7 +19,7 @@ public class PlayerPoisonScript implements CombatScript {
 			if (p.isAntidoteProtected()) {
 				return;
 			}
-			p.poisonDamage = p.getSkills().getLevel(3);
+			p.setPoisonDamage(p.getSkills().getLevel(3));
 			p.startPoisonEvent();
 		}
 	}

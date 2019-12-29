@@ -4,12 +4,6 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
-import com.openrsc.server.model.entity.update.Skull;
-import com.openrsc.server.model.entity.update.Wield;
-import com.openrsc.server.event.rsc.impl.BankEventNpc;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
-import com.openrsc.server.event.rsc.impl.HealEventNpc;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
@@ -19,8 +13,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
-import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
@@ -28,282 +20,20 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class Npc extends Mob {
-	/**
-	 * Logger instance
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
-	/**
-	 * NPC Wields
-	 */
-	private int wield = -1;
-	public int getWield() {
-		return wield;
-	}
-	public void setWield(int wield) {
-		this.wield = wield;
-		getUpdateFlags().setWield(new Wield(this, wield, wield2));
-	}
-	private int wield2 = -1;
-	public int getWield2() {
-		return wield2;
-	}
-	public void setWield2(int wield2) {
-		this.wield2 = wield2;
-		getUpdateFlags().setWield2(new Wield(this, wield, wield2));
-	}
-	 /**
-	 * NPC Skulls
-	 */
-	private DelayedEvent skullEvent = null;
-	public void addSkull(int timeLeft) {
-		if (skullEvent == null) {
-			skullEvent = new DelayedEvent(getWorld(), ((Player) null), timeLeft, "NPC Add Skull") {
-				@Override
-				public void run() {
-					removeSkull();
-				}
-			};
-			getWorld().getServer().getGameEventHandler().add(skullEvent);
-			getUpdateFlags().setSkull(new Skull(this, 1));
-		}
-	}
-	public DelayedEvent getSkullEvent() {
-		return skullEvent;
-	}
+	private long healTimer = 0;
+	private boolean shouldRespawn = true;
+	private boolean isRespawning = false;
+	private boolean executedAggroScript = false;
+	private NpcBehavior npcBehavior;
+	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
 
-	public void setSkullEvent(DelayedEvent skullEvent) {
-		this.skullEvent = skullEvent;
-	}
-
-	public long getSkullTime() {
-		if (isSkulled() && getSkullType() == 1) {
-			return skullEvent.timeTillNextRun();
-		}
-		return 0;
-	}
-
-	public boolean isSkulled() {
-		return skullEvent != null;
-	}
-
-	public int getSkullType() {
-		int type = 0;
-		if (isSkulled()) {
-			type = 1;
-		}
-		return type;
-	}
-
-	public void removeSkull() {
-		if (skullEvent == null) {
-			return;
-		}
-		skullEvent.stop();
-		skullEvent = null;
-		getUpdateFlags().setAppearanceChanged(true);
-		getUpdateFlags().setSkull(new Skull(this, 0));
-	}
-
-	private HashMap<String, Long> attackedBy = new HashMap<String, Long>();
-	public void addAttackedBy(Player p) {
-		attackedBy.put(p.getUsername(), System.currentTimeMillis());
-	}
-	public long lastAttackedBy(Player p) {
-		Long time = attackedBy.get(p.getUsername());
-		if (time != null) {
-			return time;
-		}
-		return 0;
-	}
-
-	public void setSkulledOn(Player player) {
-		player.getSettings().addAttackedBy(this);
-		if (System.currentTimeMillis() - lastAttackedBy(player) > 1200000) {
-			addSkull(1200000);
-		}
-		player.getUpdateFlags().setAppearanceChanged(true);
-	}
-
-	/**
-	 * The current status of the player
-	 */
-	private Action status = Action.IDLE;
-
-	/**
-	 * RANGED
-	 */
-	private RangeEventNpc rangeEventNpc;
-	private BankEventNpc bankEventNpc;
-	private ThrowingEvent throwingEvent;
-	private HealEventNpc healEventNpc;
-	public HealEventNpc getHealEventNpc() {
-		return healEventNpc;
-	}
-	public void setHealEventNpc(HealEventNpc event) {
-		if (healEventNpc != null) {
-			healEventNpc.stop();
-		}
-		healEventNpc = event;
-		getWorld().getServer().getGameEventHandler().add(healEventNpc);
-	}
-	public boolean isHealing() {
-		return healEventNpc != null;
-	}
-	public void resetHealing() {
-		if (healEventNpc != null) {
-			healEventNpc.stop();
-			healEventNpc = null;
-		}
-		setStatus(Action.IDLE);
-	}
-
-	public RangeEventNpc getRangeEventNpc() {
-		return rangeEventNpc;
-	}
-
-	public BankEventNpc getBankEventNpc() {
-		return bankEventNpc;
-	}
-
-	public void setRangeEventNpc(RangeEventNpc event) {
-		if (rangeEventNpc != null) {
-			rangeEventNpc.stop();
-		}
-		rangeEventNpc = event;
-		setStatus(Action.RANGING_MOB);
-		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
-	}
-
-	public void setBankEventNpc(BankEventNpc event) {
-		if (bankEventNpc != null) {
-			bankEventNpc.stop();
-		}
-		bankEventNpc = event;
-		getWorld().getServer().getGameEventHandler().add(bankEventNpc);
-	}
-
-	public boolean isRanging() {
-		return rangeEventNpc != null || throwingEvent != null;
-	}
-
-	public boolean isPkBotMelee() {
-		return getID() == 804;
-	}
-
-	public boolean isPkBotArcher() {
-		return getID() == 210;
-	}
-
-	public boolean isPkBot() {
-		return getID() == 804;
-	}
-
-	public boolean isBanking() {
-		return bankEventNpc != null;
-	}
-
-	public void resetRange() {
-		if (rangeEventNpc != null) {
-			rangeEventNpc.stop();
-			rangeEventNpc = null;
-		}
-		if (throwingEvent != null) {
-			throwingEvent.stop();
-			throwingEvent = null;
-		}
-		setStatus(Action.IDLE);
-	}
-
-	public void resetBankEvent() {
-		if (bankEventNpc != null) {
-			bankEventNpc.stop();
-			bankEventNpc = null;
-		}
-		setStatus(Action.IDLE);
-	}
-
-	private long consumeTimer2 = 0;
-
-	public long getConsumeTimer2() {
-		return consumeTimer2;
-	}
-
-	public void setConsumeTimer2(int delay) {
-		consumeTimer2 = System.currentTimeMillis() + 0;
-	}
-
-	public void setConsumeTimer2() {
-		consumeTimer2 = System.currentTimeMillis();
-	}
-
-	public boolean checkAttack(Npc mob, boolean missile) {
-		if (mob.isPlayer()) {
-			Mob victim = (Mob) mob;
-			/*if (victim.inCombat() && victim.getDuel().isDuelActive()) {
-				Mob opponent = (Mob) getOpponent();
-				if (opponent != null && victim.equals(opponent)) {
-					return true;
-				}
-			}*/
-			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
-					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
-					return false;
-				}
-			}
-
-			int myWildLvl = getLocation().wildernessLevel();
-			int victimWildLvl = victim.getLocation().wildernessLevel();
-			if (myWildLvl < 1 || victimWildLvl < 1) {
-				//message("You can't attack other players here. Move to the wilderness");
-				return false;
-			}
-			int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
-			if (combDiff > myWildLvl) {
-				//message("You can only attack players within " + (myWildLvl) + " levels of your own here");
-				//message("Move further into the wilderness for less restrictions");
-				return false;
-			}
-			if (combDiff > victimWildLvl) {
-				//message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
-				//message("Move further into the wilderness for less restrictions");
-				return false;
-			}
-
-			/*if (victim.isInvulnerable(mob) || victim.isInvisible(mob)) {
-				//message("You are not allowed to attack that person");
-				return false;
-			}*/
-			return true;
-		} else if (mob.isNpc()) {
-			Npc victim = (Npc) mob;
-			if (!victim.getDef().isAttackable()) {
-				//setSuspiciousPlayer(true);
-				return false;
-			}
-			return true;
-		}
-		return true;
-	}
-	/*public int getRangeEquip() {
-		for (Item item : getInventory().getItems()) {
-			if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-				|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-				return item.getID();
-			}
-		}
-		return -1;
-	}*/
 	/**
 	 * The definition of this npc
 	 */
@@ -313,49 +43,6 @@ public class Npc extends Mob {
 	 */
 	private NPCLoc loc;
 
-	private int heals = 24;
-	public int getHeals() {
-		return heals;
-	}
-	public void setHeals(int heals) {
-		this.heals = heals;
-
-	}
-	public void retreatFromWild() {
-		if(getLocation().inWilderness()){
-			getOpponent().setLastOpponent(this);
-			setLastOpponent(getOpponent());
-			setRanAwayTimer();
-			if (getOpponent().isPlayer()) {
-				Player victimPlayer = ((Player) getOpponent());
-				victimPlayer.resetAll();
-				victimPlayer.message("Your opponent is retreating");
-				ActionSender.sendSound(victimPlayer, "retreat");
-			}
-			if (!isPkBotMelee()) {
-				setLastCombatState(CombatState.RUNNING);
-			}
-			setLastCombatState(CombatState.RUNNING);
-			getOpponent().setLastCombatState(CombatState.WAITING);
-			resetCombatEvent();
-
-			Point walkTo = Point.location(DataConversions.random(101, 114),
-			DataConversions.random(427, 428));
-			walk(walkTo.getX(), walkTo.getY());
-		}
-	}
-	public void retreatFromWild2() {
-		if(getLocation().inWilderness()){
-			walkToEntityAStar2(103, 512);
-			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), ((Player) null), 90000, "Npc walk to wild") {
-				public void run() {
-					walkToEntityAStar2(108, 425);
-					setHeals(25);
-					stop();
-				}
-			});
-		}
-	}
 	/**
 	 * Holds players that did damage with combat
 	 */
@@ -368,30 +55,25 @@ public class Npc extends Mob {
 	 * Holds players that did damage with range
 	 */
 	private Map<Integer, Integer> rangeDamagers = new HashMap<Integer, Integer>();
-	private boolean shouldRespawn = true;
-	private boolean isRespawning = false;
-	private boolean executedAggroScript = false;
-	private NpcBehavior npcBehavior;
-	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
 
-	public Npc(World world, int id, int x, int y) {
+	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
 	}
 
-	public Npc(World world, int id, int x, int y, int radius) {
+	public Npc(final World world, final int id, final int x, final int y, final int radius) {
 		this(world, new NPCLoc(id, x, y, x - radius, x + radius, y - radius, y + radius));
 	}
 
-	public Npc(World world, int id, int startX, int startY, int minX, int maxX, int minY, int maxY) {
+	public Npc(final World world, final int id, final int startX, final int startY, final int minX, final int maxX, final int minY, final int maxY) {
 		this(world, new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
 	}
 
-	public Npc(World world, Point location, int x, String username) {
+	protected Npc(final World world) {
+		// For PKbots only
 		super(world);
-		//Default constructor for NPC, this is useful for finding the name of an NPC without having to spawn an NPC.
 	}
 
-	public Npc(World world, NPCLoc loc) {
+	public Npc(final World world, final NPCLoc loc) {
 		super(world);
 
 		for (int i : Constants.UNDEAD_NPCS) {
@@ -409,7 +91,7 @@ public class Npc extends Mob {
 			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
 				+ loc.startX() + ", " + loc.startY() + ")");
 		}
-		this.npcBehavior = new NpcBehavior(this);
+		this.setNpcBehavior(new NpcBehavior(this));
 		this.loc = loc;
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
@@ -425,7 +107,7 @@ public class Npc extends Mob {
 		 */
 		setUUID(UUID.randomUUID().toString());
 
-		getWorld().getServer().getGameEventHandler().add(statRestorationEvent);
+		getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 	}
 
 	/**
@@ -434,7 +116,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @param damage
 	 */
-	public void addCombatDamage(Player p, int damage) {
+	public void addCombatDamage(final Player p, final int damage) {
 		if (combatDamagers.containsKey(p.getDatabaseID())) {
 			combatDamagers.put(p.getDatabaseID(), combatDamagers.get(p.getDatabaseID()) + damage);
 		} else {
@@ -448,7 +130,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @param damage
 	 */
-	public void addMageDamage(Player p, int damage) {
+	public void addMageDamage(final Player p, final int damage) {
 		if (mageDamagers.containsKey(p.getDatabaseID())) {
 			mageDamagers.put(p.getDatabaseID(), mageDamagers.get(p.getDatabaseID()) + damage);
 		} else {
@@ -462,7 +144,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @param damage
 	 */
-	public void addRangeDamage(Player p, int damage) {
+	public void addRangeDamage(final Player p, final int damage) {
 		if (rangeDamagers.containsKey(p.getDatabaseID())) {
 			rangeDamagers.put(p.getDatabaseID(), rangeDamagers.get(p.getDatabaseID()) + damage);
 		} else {
@@ -470,24 +152,7 @@ public class Npc extends Mob {
 		}
 	}
 
-	public void useNormalPotionNpc(final int affectedStat, final int percentageIncrease, final int modifier, final int left) {
-		//mob.message("You drink some of your " + item.getDef().getName().toLowerCase());
-		int baseStat = this.getSkills().getLevel(affectedStat) > this.getSkills().getMaxStat(affectedStat) ? this.getSkills().getMaxStat(affectedStat) : this.getSkills().getLevel(affectedStat);
-		int newStat = baseStat
-			+ DataConversions.roundUp((this.getSkills().getMaxStat(affectedStat) / 100D) * percentageIncrease)
-			+ modifier;
-		if (newStat > this.getSkills().getLevel(affectedStat)) {
-			this.getSkills().setLevel(affectedStat, newStat);
-		}
-		//sleep(1200);
-		if (left <= 0) {
-			//player.message("You have finished your potion");
-		} else {
-			//player.message("You have " + left + " dose" + (left == 1 ? "" : "s") + " of potion left");
-		}
-	}
-
-	public void displayNpcTeleportBubble(int x, int y) {
+	public void displayNpcTeleportBubble(final int x, final int y) {
 		for (Object o : getViewArea().getPlayersInView()) {
 			Player p = ((Player) o);
 			ActionSender.sendTeleBubble(p, x, y, false);
@@ -505,7 +170,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @return
 	 */
-	private int getCombatDamageDoneBy(Player p) {
+	private int getCombatDamageDoneBy(final Player p) {
 		if (p == null) {
 			return 0;
 		}
@@ -516,7 +181,7 @@ public class Npc extends Mob {
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
 
-	private int getCombatDamageDoneBy(Npc n) {
+	private int getCombatDamageDoneBy(final Npc n) {
 		if (n == null) {
 			return 0;
 		}
@@ -551,7 +216,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @return
 	 */
-	private int getMageDamageDoneBy(Player p) {
+	private int getMageDamageDoneBy(final Player p) {
 		if (p == null || !mageDamagers.containsKey(p.getDatabaseID())) {
 			return 0;
 		}
@@ -559,7 +224,7 @@ public class Npc extends Mob {
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
 
-	private int getMageDamageDoneBy(Npc n) {
+	private int getMageDamageDoneBy(final Npc n) {
 		if (n == null || !mageDamagers.containsKey(n.getID())) {
 			return 0;
 		}
@@ -582,7 +247,7 @@ public class Npc extends Mob {
 	 * @param p
 	 * @return
 	 */
-	private int getRangeDamageDoneBy(Player p) {
+	private int getRangeDamageDoneBy(final Player p) {
 		if (p == null || !rangeDamagers.containsKey(p.getDatabaseID())) {
 			return 0;
 		}
@@ -590,7 +255,7 @@ public class Npc extends Mob {
 		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
 	}
 
-	private int getRangeDamageDoneBy(Npc n) {
+	private int getRangeDamageDoneBy(final Npc n) {
 		if (n == null || !rangeDamagers.containsKey(n.getID())) {
 			return 0;
 		}
@@ -612,18 +277,15 @@ public class Npc extends Mob {
 	}
 
 	public int getWeaponAimPoints() {
-		if (this.getID() == 804) {
-			return 45;//a2h
-		} else
-			return 0;
+		return 0;
 	}
 
 	public int getWeaponPowerPoints() {
-		if (this.getID() == 804) {
-			return 55;//a2h+str ammy
-		} else
-			return 0;
+		return 0;
 	}
+
+	public boolean stateIsInvisible() { return false; };
+	public boolean stateIsInvulnerable() { return false; };
 
 	@Override
 	public void killedBy(Mob mob) {
@@ -673,10 +335,10 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					if (getWorld().standardTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					} else if (getWorld().gemTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
@@ -853,10 +515,10 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer() && owner.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					if (getWorld().standardTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.id, Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					} else if (getWorld().gemTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
 						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
@@ -865,7 +527,7 @@ public class Npc extends Mob {
 				if (rare != null) {
 					if(!owner.isNpc()){
 						if (!handleRingOfAvarice((Player) mob, rare)) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
+								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount());
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
 						}
@@ -883,7 +545,7 @@ public class Npc extends Mob {
 					if (drop.getWeight() == 0 && drop.getID() != -1) {
 						if(!owner.isNpc()){
 							if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
+								GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount());
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
 							}
@@ -940,7 +602,7 @@ public class Npc extends Mob {
 										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
 											if(!owner.isNpc()){
 												if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-													groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
+													groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1);
 													groundItem.setAttribute("npcdrop", true);
 													getWorld().registerItem(groundItem);
 												}
@@ -963,7 +625,7 @@ public class Npc extends Mob {
 
 									if(!owner.isNpc()){
 										if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
-											GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
+											GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount);
 												getWorld().registerItem(groundItem);
 												groundItem.setAttribute("npcdrop", true);
 										}
@@ -1072,7 +734,7 @@ public class Npc extends Mob {
 		}
 		return playerWithMostDamage;
 	}*/
-	private Mob handleLootAndXpDistribution(Mob attacker) {
+	private Mob handleLootAndXpDistribution(final Mob attacker) {
 
 		Mob playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
@@ -1189,7 +851,7 @@ public class Npc extends Mob {
 		return npcWithMostDamage;
 	}
 
-	private Player handleLootAndXpDistribution(Player attacker) {
+	private Player handleLootAndXpDistribution(final Player attacker) {
 
 		Player playerWithMostDamage = attacker;
 		int currentHighestDamage = 0;
@@ -1264,7 +926,7 @@ public class Npc extends Mob {
 		return playerWithMostDamage;
 	}
 
-	private Npc handleLootAndXpDistribution(Npc attacker) {
+	private Npc handleLootAndXpDistribution(final Npc attacker) {
 		Npc npcWithMostDamage = attacker;
 		int currentHighestDamage = 0;
 
@@ -1319,7 +981,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().blockDefaultAction("TalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().blockDefaultAction(npc, "TalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}
@@ -1330,7 +992,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().blockDefaultAction("IndirectTalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().blockDefaultAction(npc, "IndirectTalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}
@@ -1365,7 +1027,7 @@ public class Npc extends Mob {
 
 	}
 
-	public void setShouldRespawn(boolean respawn) {
+	public void setShouldRespawn(final boolean respawn) {
 		shouldRespawn = respawn;
 	}
 
@@ -1373,7 +1035,7 @@ public class Npc extends Mob {
 		return shouldRespawn;
 	}
 
-	public void teleport(int x, int y) {
+	public void teleport(final int x, final int y) {
 		setLocation(Point.location(x, y), true);
 	}
 
@@ -1382,8 +1044,12 @@ public class Npc extends Mob {
 		return "[NPC:" + getDef().getName() + "]";
 	}
 
+	public boolean isPkBot() {
+		return getDef().isPkBot() && this instanceof PkBot;
+	}
+
 	public void updatePosition() {
-		npcBehavior.tick();
+		getNpcBehavior().tick();
 		super.updatePosition();
 	}
 
@@ -1399,39 +1065,35 @@ public class Npc extends Mob {
 		getWorld().releaseUnderAttack(this);
 	}
 
-	public void setStatus(Action a) {
-		status = a;
-	}
-
 	public boolean isChasing() {
-		return npcBehavior.isChasing();
+		return getNpcBehavior().isChasing();
 	}
 
-	public void setChasing(Player player) {
-		npcBehavior.setChasing(player);
+	public void setChasing(final Player player) {
+		getNpcBehavior().setChasing(player);
 	}
 
-	public void setChasing(Npc npc) {
-		npcBehavior.setChasing(npc);
+	public void setChasing(final Npc npc) {
+		getNpcBehavior().setChasing(npc);
 	}
 
 	public Player getChasedPlayer() {
-		return npcBehavior.getChasedPlayer();
+		return getNpcBehavior().getChasedPlayer();
 	}
 
 	public Npc getChasedNpc() {
-		return npcBehavior.getChasedNpc();
+		return getNpcBehavior().getChasedNpc();
 	}
 
 	public NpcBehavior getBehavior() {
-		return npcBehavior;
+		return getNpcBehavior();
 	}
 
-	public void setBehavior(NpcBehavior behavior) {
-		this.npcBehavior = behavior;
+	public void setBehavior(final NpcBehavior behavior) {
+		this.setNpcBehavior(behavior);
 	}
 
-	public void setNPCLoc(NPCLoc loc2) {
+	public void setNPCLoc(final NPCLoc loc2) {
 		this.loc = loc2;
 	}
 
@@ -1447,7 +1109,7 @@ public class Npc extends Mob {
 		return isRespawning;
 	}
 
-	private void setRespawning(boolean isRespawning) {
+	private void setRespawning(final boolean isRespawning) {
 		this.isRespawning = isRespawning;
 	}
 
@@ -1455,19 +1117,19 @@ public class Npc extends Mob {
 		super.remove();
 	}
 
-	public boolean addDeathListener(NpcLootEvent event) {
+	public boolean addDeathListener(final NpcLootEvent event) {
 		return deathListeners.add(event);
 	}
 
-	private long healTimer = 0;
 	public boolean cantHeal() {
 		return healTimer - System.currentTimeMillis() > 0;
 	}
-	public void setHealTimer(long l) {
+
+	public void setHealTimer(final long l) {
 		healTimer = System.currentTimeMillis() + l;
 	}
 
-	public void setExecutedAggroScript(boolean executed) {
+	public void setExecutedAggroScript(final boolean executed) {
 		this.executedAggroScript = executed;
 	}
 
@@ -1475,7 +1137,7 @@ public class Npc extends Mob {
 		return this.executedAggroScript;
 	}
 
-	public static boolean handleRingOfAvarice(Player p, Item item) {
+	public static boolean handleRingOfAvarice(final Player p, final Item item) {
 		int slot = -1;
 		if (Functions.isWielding(p, ItemId.RING_OF_AVARICE.id())) {
 			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getID());
@@ -1500,5 +1162,25 @@ public class Npc extends Mob {
 			}
 		}
 		return false;
+	}
+
+	public Point walkablePoint(final Point minP, final Point maxP) {
+		final int currX = getX();
+		final int currY = getY();
+		final int radius = 8;
+		final int newX = DataConversions.random(Math.max(minP.getX(), currX - radius), Math.min(maxP.getX(), currX + radius));
+		final int newY = DataConversions.random(Math.max(minP.getY(), currY - radius), Math.min(maxP.getY(), currY + radius));
+		if (Point.location(newX, newY).inBounds(680, 491, 696, 511)) {
+			return Point.location(currX, currY);
+		}
+		return Point.location(newX, newY);
+	}
+
+	public NpcBehavior getNpcBehavior() {
+		return npcBehavior;
+	}
+
+	public void setNpcBehavior(final NpcBehavior npcBehavior) {
+		this.npcBehavior = npcBehavior;
 	}
 }

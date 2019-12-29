@@ -105,7 +105,7 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerRangeNpc",
+					if (target.getWorld().getServer().getPluginHandler().blockDefaultAction(getOwner(), "PlayerRangeNpc",
 						new Object[]{getOwner(), target})) {
 						getPlayerOwner().resetRange();
 						stop();
@@ -197,7 +197,7 @@ public class ThrowingEvent extends GameTickEvent {
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
-						target.poisonDamage = target.getSkills().getMaxStat(Skills.HITS);
+						target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
 						target.startPoisonEvent();
 					}
 				}

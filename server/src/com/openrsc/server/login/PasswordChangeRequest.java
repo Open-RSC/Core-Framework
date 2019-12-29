@@ -17,7 +17,7 @@ import java.sql.ResultSet;
  *
  * @author Kenix
  */
-public class PasswordChangeRequest {
+public class PasswordChangeRequest extends LoginExecutorProcess{
 
 	/**
 	 * The asynchronous logger.
@@ -70,7 +70,7 @@ public class PasswordChangeRequest {
 		return channel;
 	}
 
-	public void process() {
+	protected void processInternal() {
 		try {
 			LOGGER.info("Password change attempt from: " + getPlayer().getCurrentIP());
 			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");

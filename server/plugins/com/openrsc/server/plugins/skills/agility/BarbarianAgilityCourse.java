@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
@@ -55,20 +55,14 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 			}
 			p.setBusy(true);
 			p.message("You squeeze through the pipe");
-			p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "BarAGIPipe") {
-				public void init() {
-					addState(0, () -> {
-						if (getPlayerOwner().getY() <= 551) {
-							movePlayer(getPlayerOwner(), 487, 554);
-						} else {
-							movePlayer(getPlayerOwner(), 487, 551);
-						}
-						getPlayerOwner().incExp(Skills.AGILITY, 20, true);
-						getPlayerOwner().setBusy(false);
-						return null;
-					});
-				}
-			});
+			Functions.sleep(1920);
+			if (p.getY() <= 551) {
+				movePlayer(p, 487, 554);
+			} else {
+				movePlayer(p, 487, 551);
+			}
+			p.incExp(Skills.AGILITY, 20, true);
+			p.setBusy(false);
 			return;
 		}
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -83,73 +77,48 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 		switch (obj.getID()) {
 			case SWING:
 				p.message("You grab the rope and try and swing across");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "BarAGISwing") {
-					public void init() {
-						addState(0, () -> {
-							if (passObstacle) {
-								getPlayerOwner().message("You skillfully swing across the hole");
-								return invoke(1, 3);
-							} else {
-								getPlayerOwner().message("Your hands slip and you fall to the level below");
-								return invoke(2, 3);
-							}
-						});
-						addState(1, () -> {
-							movePlayer(getPlayerOwner(), 486, 559);
-							getPlayerOwner().incExp(Skills.AGILITY, 80, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-						addState(2, () -> {
-							movePlayer(getPlayerOwner(), 486, 3389);
-							getPlayerOwner().message("You land painfully on the spikes");
-							return invoke(3, 3);
-						});
-						addState(3, () -> {
-							int swingDamage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.HITS)) * 0.15D);
-							getPlayerOwner().damage(swingDamage);
-							playerTalk(getPlayerOwner(), "ouch");
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				Functions.sleep(1920);
+				if (passObstacle) {
+					p.message("You skillfully swing across the hole");
+					Functions.sleep(1920);
+					movePlayer(p, 486, 559);
+					p.incExp(Skills.AGILITY, 80, true);
+					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
+					p.setBusy(false);
+				} else {
+					p.message("Your hands slip and you fall to the level below");
+					Functions.sleep(1920);
+					movePlayer(p, 486, 3389);
+					p.message("You land painfully on the spikes");
+					Functions.sleep(1920);
+					int swingDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.15D);
+					p.damage(swingDamage);
+					playerTalk(p, "ouch");
+					p.setBusy(false);
+				}
 				break;
 			case LOG:
 				p.message("you stand on the slippery log");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "BarAGILog") {
-					public void init() {
-						addState(0, () -> {
-							if (passObstacle) {
-								movePlayer(getPlayerOwner(), 489, 563);
-								return invoke(2, 1);
-							} else {
-								int slipDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.1D);
-								getPlayerOwner().message("Your lose your footing and land in the water");
-								movePlayer(getPlayerOwner(), 490, 561);
-								getPlayerOwner().message("Something in the water bites you");
-								getPlayerOwner().damage(slipDamage);
-								getPlayerOwner().setBusy(false);
-								return null;
-							}
-						});
-						addState(1, () -> {
-							movePlayer(getPlayerOwner(), 490, 563);
-							return invoke(3, 1);
-						});
-						addState(2, () -> {
-							getPlayerOwner().message("and walk across");
-							movePlayer(getPlayerOwner(), 492, 563);
-							getPlayerOwner().incExp(Skills.AGILITY, 50, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
-							getPlayerOwner().face(495, 563);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-
-					}
-				});
+				Functions.sleep(1920);
+				if (passObstacle) {
+					movePlayer(p, 489, 563);
+					Functions.sleep(640);
+					movePlayer(p, 490, 563);
+					Functions.sleep(640);
+					p.message("and walk across");
+					movePlayer(p, 492, 563);
+					p.incExp(Skills.AGILITY, 50, true);
+					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
+					p.face(495, 563);
+					p.setBusy(false);
+				} else {
+					int slipDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.1D);
+					p.message("Your lose your footing and land in the water");
+					movePlayer(p, 490, 561);
+					p.message("Something in the water bites you");
+					p.damage(slipDamage);
+					p.setBusy(false);
+				}
 				break;
 			case NET:
 				p.message("You climb up the netting");
@@ -158,35 +127,25 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 				break;
 			case LEDGE:
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "BarAGILedge") {
-					public void init() {
-						addState(0, () -> {
-							if (obj.getX() != 498) {
-								return null;
-							}
-							getPlayerOwner().message("You put your foot on the ledge and try to edge across");
-							return invoke(1, 2);
-						});
-
-						addState(1, () -> {
-							if (passObstacle) {
-								movePlayer(getPlayerOwner(), 501, 1506);
-								getPlayerOwner().message("You skillfully balance across the hole");
-								getPlayerOwner().incExp(Skills.AGILITY, 80, true);
-								AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
-							} else {
-								int ledgeDamage = (int) Math.round((getPlayerOwner().getSkills().getLevel(Skills.HITS)) * 0.15D);
-								getPlayerOwner().message("you lose your footing and fall to the level below");
-								movePlayer(getPlayerOwner(), 499, 563);
-								getPlayerOwner().message("You land painfully on the spikes");
-								getPlayerOwner().damage(ledgeDamage);
-								playerTalk(getPlayerOwner(), null, "ouch");
-							}
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				if (obj.getX() != 498) {
+					return;
+				}
+				p.message("You put your foot on the ledge and try to edge across");
+				Functions.sleep(1280);
+				if (passObstacle) {
+					movePlayer(p, 501, 1506);
+					p.message("You skillfully balance across the hole");
+					p.incExp(Skills.AGILITY, 80, true);
+					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
+				} else {
+					int ledgeDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.15D);
+					p.message("you lose your footing and fall to the level below");
+					movePlayer(p, 499, 563);
+					p.message("You land painfully on the spikes");
+					p.damage(ledgeDamage);
+					playerTalk(p, null, "ouch");
+				}
+				p.setBusy(false);
 				break;
 			case HANDHOLDS:
 				p.message("You climb up the wall");
@@ -206,30 +165,20 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
-		p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "BarAGILowWalls") {
-			public void init() {
-				addState(0, () -> {
-					if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
-							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
-							getPlayerOwner().message("you are too tired to train");
-							return null;
-						}
-					}
-					getPlayerOwner().setBusy(true);
-					getPlayerOwner().message("You jump over the wall");
-					return invoke(1, 2);
-				});
-				addState(1, () -> {
-					movePlayer(getPlayerOwner(),
-						getPlayerOwner().getX() == obj.getX() ? getPlayerOwner().getX() - 1 : getPlayerOwner().getX() + 1, getPlayerOwner().getY());
-					getPlayerOwner().incExp(Skills.AGILITY, 20, true);
-					AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 300);
-					getPlayerOwner().setBusy(false);
-					return null;
-				});
+		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& p.getFatigue() >= p.MAX_FATIGUE) {
+				p.message("you are too tired to train");
+				return;
 			}
-		});
+		}
+		p.setBusy(true);
+		p.message("You jump over the wall");
+		Functions.sleep(1280);
+		movePlayer(p, p.getX() == obj.getX() ? p.getX() - 1 : p.getX() + 1, p.getY());
+		p.incExp(Skills.AGILITY, 20, true);
+		AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
+		p.setBusy(false);
 	}
 
 	private boolean succeed(Player player) {

@@ -7,6 +7,7 @@ import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
@@ -96,13 +97,13 @@ public class AttackHandler implements PacketHandler {
 						return;
 					}
 					if (mob.isNpc()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerAttackNpc",
+						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerAttackNpc",
 							new Object[]{player, (Npc) mob})) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction("PlayerAttack",
+						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerAttack",
 							new Object[]{player, mob})) {
 							return;
 						}
@@ -146,7 +147,7 @@ public class AttackHandler implements PacketHandler {
 					if (target.isNpc() && ((Npc) target).isPkBot()) {
 						assert target instanceof Npc;
 						Npc affectedNpc = (Npc) target;
-						getOwner().setSkulledOn(affectedNpc);
+						getOwner().setSkulledOn((PkBot)affectedNpc);
 					}
 					if (player.getRangeEquip() > 0) {
 						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));
@@ -157,5 +158,4 @@ public class AttackHandler implements PacketHandler {
 			});
 		}
 	}
-
 }

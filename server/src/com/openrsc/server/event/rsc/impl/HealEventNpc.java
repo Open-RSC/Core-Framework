@@ -1,24 +1,9 @@
 package com.openrsc.server.event.rsc.impl;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-
-import com.openrsc.server.Server;
-import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
-import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.Formulae;
-import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,16 +13,16 @@ import java.util.Map.Entry;
  * @author n0m
  */
 public class HealEventNpc extends GameTickEvent {
-	
+
 	private HashMap<Integer, Integer> restoringStats = new HashMap<Integer, Integer>();
 	private long lastHpRestoration = System.currentTimeMillis();
 	private long lastHeal = System.currentTimeMillis();
-	private Npc owner;
+	private PkBot owner;
 	private final World world;
 
 	private long lastRestoration = System.currentTimeMillis();
 
-	public HealEventNpc(World world, Npc npc) {
+	public HealEventNpc(World world, PkBot npc) {
 		super(world, npc, 1, "Heal Event Npc");
 		this.world = world;
 		this.owner = npc;

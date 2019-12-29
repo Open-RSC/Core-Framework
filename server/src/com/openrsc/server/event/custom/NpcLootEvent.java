@@ -75,10 +75,10 @@ public class NpcLootEvent extends SingleEvent {
 		ItemDefinition itemDef = n.getWorld().getServer().getEntityHandler().getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
-			getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
+			getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount));
 		} else {
 			for (int i = 0; i < itemAmount; i++) {
-				getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount, n2));
+				getWorld().registerItem(new GroundItem(n2.getWorld(), itemId, n.getX(), n.getY(), itemAmount));
 			}
 		}
 

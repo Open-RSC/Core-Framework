@@ -2,10 +2,10 @@ package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
@@ -48,42 +48,22 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 		switch (obj.getID()) {
 			case BALANCE_LOG:
 				p.message("you stand on the slippery log");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 0, "Gnome Agility Log") {
-					public void init() {
-						addState(0, () -> {
-							movePlayer(getPlayerOwner(), 692, 494);
-							return nextState(1);
-						});
-						addState(1, () -> {
-							movePlayer(getPlayerOwner(), 692, 495);
-							return nextState(1);
-						});
-						addState(2, () -> {
-							movePlayer(getPlayerOwner(), 692, 496);
-							return nextState(1);
-						});
-						addState(3, () -> {
-							movePlayer(getPlayerOwner(), 692, 497);
-							return nextState(1);
-						});
-						addState(4, () -> {
-							movePlayer(getPlayerOwner(), 692, 498);
-							return nextState(1);
-						});
-						addState(5, () -> {
-							movePlayer(getPlayerOwner(), 692, 499);
-							return nextState(1);
-						});
-						addState(6, () -> {
-							p.message("and walk across");
-							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-
-					}
-				});
+				movePlayer(p, 692, 494);
+				Functions.sleep(640);
+				movePlayer(p, 692, 495);
+				Functions.sleep(640);
+				movePlayer(p, 692, 496);
+				Functions.sleep(640);
+				movePlayer(p, 692, 497);
+				Functions.sleep(640);
+				movePlayer(p, 692, 498);
+				Functions.sleep(640);
+				movePlayer(p, 692, 499);
+				Functions.sleep(640);
+				p.message("and walk across");
+				p.incExp(Skills.AGILITY, 30, true);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
+				p.setBusy(false);
 				return;
 			case NET:
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_STARTINGNET.id(), 10);
@@ -91,18 +71,12 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 					npcTalk(p, gnomeTrainer, "move it, move it, move it");
 				}
 				p.message("you climb the net");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 3, "Gnome Agility Net") {
-					public void init() {
-						addState(0, () -> {
-							movePlayer(p, 692, 1448);
-							p.message("and pull yourself onto the platform");
-							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				Functions.sleep(1920);
+				movePlayer(p, 692, 1448);
+				p.message("and pull yourself onto the platform");
+				p.incExp(Skills.AGILITY, 30, true);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
+				p.setBusy(false);
 				return;
 			case WATCH_TOWER:
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_PLATFORM.id(), 10);
@@ -110,53 +84,33 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 					npcTalk(p, gnomeTrainer, "that's it, straight up, no messing around");
 				}
 				p.message("you pull yourself up the tree");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 2, "Gnome Agility Tower") {
-					public void init() {
-						addState(0, () -> {
-							movePlayer(getPlayerOwner(), 693, 2394);
-							getPlayerOwner().message("to the platform above");
-							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				Functions.sleep(1280);
+				movePlayer(p, 693, 2394);
+				p.message("to the platform above");
+				p.incExp(Skills.AGILITY, 30, true);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
+				p.setBusy(false);
 				return;
 			case ROPE_SWING:
 				p.message("you reach out and grab the rope swing");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 2, "Gnome Agility Rope") {
-					public void init() {
-						addState(0, () -> {
-							getPlayerOwner().message("you hold on tight");
-							return nextState(4);
-						});
-						addState(1, () -> {
-							movePlayer(getPlayerOwner(), 685, 2396);
-							getPlayerOwner().message("and swing to the oppisite platform");
-							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				Functions.sleep(1280);
+				p.message("you hold on tight");
+				Functions.sleep(2560);
+				movePlayer(p, 685, 2396);
+				p.message("and swing to the oppisite platform");
+				p.incExp(Skills.AGILITY, 30, true);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
+				p.setBusy(false);
 				return;
 			case LANDING:
 				p.message("you hang down from the tower");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 2, "Gnome Agility Landing") {
-					public void init() {
-						addState(0, () -> {
-							movePlayer(p, 683, 506);
-							p.message("and drop to the floor");
-							playerTalk(p, null, "ooof");
-							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				Functions.sleep(1280);
+				movePlayer(p, 683, 506);
+				p.message("and drop to the floor");
+				playerTalk(p, null, "ooof");
+				p.incExp(Skills.AGILITY, 30, true);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
+				p.setBusy(false);
 				return;
 			case SECOND_NET:
 				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENDINGNET.id(), 10);
@@ -164,22 +118,14 @@ public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExe
 					npcTalk(p, gnomeTrainer, "my granny can move faster than you");
 				}
 				p.message("you take a few steps back");
-				p.getWorld().getServer().getGameEventHandler().add(new GameStateEvent(p.getWorld(), p, 1, "Gnome Agility Net") {
-					public void init() {
-						addState(0, () -> {
-							movePlayer(getPlayerOwner(), 683, 505);
-							getPlayerOwner().message("and run towards the net");
-							return nextState(1);
-						});
-						addState(1, () -> {
-							movePlayer(getPlayerOwner(), 683, 501);
-							getPlayerOwner().incExp(Skills.AGILITY, 30, true);
-							AgilityUtils.completedObstacle(getPlayerOwner(), obj.getID(), obstacles, lastObstacle, 150);
-							getPlayerOwner().setBusy(false);
-							return null;
-						});
-					}
-				});
+				Functions.sleep(640);
+				movePlayer(p, 683, 505);
+				p.message("and run towards the net");
+				Functions.sleep(640);
+				movePlayer(p, 683, 501);
+				p.incExp(Skills.AGILITY, 30, true);
+				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
+				p.setBusy(false);
 				return;
 			case PIPE:
 				message(p, "you squeeze into the pipe", "and shuffle down into it");

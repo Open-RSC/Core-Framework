@@ -1,8 +1,6 @@
 package com.openrsc.server.model.entity.update;
 
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
-import com.openrsc.server.model.entity.npc.Npc;
 
 public class Wield	 {
 
@@ -11,7 +9,7 @@ public class Wield	 {
 	private int wield;
 	private int wield2;
 
-	public Wield(Mob mob, int wield, int wield2) {
+	public Wield(final Mob mob, final int wield, final int wield2) {
 		this.mob = mob;
 		this.setWield(wield);
 		this.setWield2(wield2);
