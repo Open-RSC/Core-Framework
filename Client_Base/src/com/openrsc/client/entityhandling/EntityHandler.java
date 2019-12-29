@@ -2123,6 +2123,9 @@ public class EntityHandler {
 		if (Config.S_WANT_RUNECRAFTING) {
 			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
+			loadPkBotDefinitions();
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63};
+			npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		}
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
@@ -7134,12 +7137,12 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "XMASTREE", ++i));
 		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ORNAMENTTREE", ++i));
 		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "PINETREE", ++i));
+		objects.add(new GameObjectDef("Tunnel entrance", "I wonder where this leads...", "enter", "Examine", 1, 3, 1, 0, "small caveentrance2", ++i));
 	}
 
 	public static void load(boolean loadMembers) {
 		loadNpcDefinitionsA();
 		loadNpcDefinitionsB();
-		loadPkBotDefinitions();
 		loadItemDefinitions();
 		loadTextureDefinitions();
 		loadAnimationDefinitions();
