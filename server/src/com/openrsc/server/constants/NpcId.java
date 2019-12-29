@@ -8,7 +8,7 @@ public enum NpcId {
 	 * 794 NPCs, but some need to be refactored and are commented at the moment.
 	 * Others are attackable monsters and don't have particular behavior
 	 */
-	
+
 	NOBODY(-1),
 	UNICORN(0),
 	BOB(1),
@@ -807,7 +807,8 @@ public enum NpcId {
 	AUCTIONEER(794),
 	AUCTION_CLERK(795),
 	SEDRIDOR(803),
-	PKBOT1(804);
+	PKBOT1(804),
+	SCOTRUTH(805);
 
 	private int npcId;
 

@@ -124,6 +124,16 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				sleep(2200);
 				owner.message("The ship arrives at Port Sarim");
 				break;
+			case 1241:
+				if (owner.getCache().hasKey("scotruth_to_chaos_altar")) {
+					owner.message("You step into the tunnel...");
+					owner.teleport(331,213, false);
+					sleep(4*owner.getWorld().getServer().getConfig().GAME_TICK);
+					owner.message("And find your way into the wilderness");
+				} else {
+					owner.message("You don't have permission to use this");
+				}
+				break;
 		}
 		// SMUGGLING GATE VARROCK
 		if (object.getX() == 94 && object.getY() == 521 && object.getID() == 60) {
@@ -177,6 +187,9 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			return true;
 		}
 		if (obj.getID() == 450) {
+			return true;
+		}
+		if (obj.getID() == 1241) { // Scotruth to chaos altar shortcut
 			return true;
 		}
 		return false;
