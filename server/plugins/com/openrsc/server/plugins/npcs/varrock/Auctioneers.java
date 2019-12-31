@@ -10,13 +10,8 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -51,34 +46,11 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 				player.message("As an Iron Man, you cannot use the Auction.");
 				return;
 			}
-			if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-				if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-					String pin = getBankPinInput(player);
-					boolean isPinValid = false;
-					if (pin == null) {
-						return;
-					}
-					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-						statement.setString(1, player.getUsername());
-						ResultSet result = statement.executeQuery();
-						if (result.next()) {
-							isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
-						}
-					} catch (SQLException e) {
-						LOGGER.catching(e);
-					}
-					if (!isPinValid) {
-						ActionSender.sendBox(player, "Incorrect bank pin", false);
-						return;
-					}
-					player.setAttribute("bankpin", true);
-					ActionSender.sendBox(player, "Bank pin correct", false);
-				}
+			if(validateBankPin(player)) {
+				npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+				player.setAttribute("auctionhouse", true);
+				ActionSender.sendOpenAuctionHouse(player);
 			}
-			npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
-			player.setAttribute("auctionhouse", true);
-			ActionSender.sendOpenAuctionHouse(player);
 		} else if (menu == 1) {
 			npcTalk(player, npc, "Yes of course " + (player.isMale() ? "Sir" : "Miss"),
 				"the costs is 1,000 coins");
@@ -114,34 +86,11 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
-						String pin = getBankPinInput(p);
-						boolean isPinValid = false;
-						if (pin == null) {
-							return;
-						}
-						try {
-							PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-							statement.setString(1, p.getUsername());
-							ResultSet result = statement.executeQuery();
-							if (result.next()) {
-								isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
-							}
-						} catch (SQLException e) {
-							LOGGER.catching(e);
-						}
-						if (!isPinValid) {
-							ActionSender.sendBox(p, "Incorrect bank pin", false);
-							return;
-						}
-						p.setAttribute("bankpin", true);
-						ActionSender.sendBox(p, "Bank pin correct", false);
-					}
+				if(validateBankPin(p)) {
+					p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
+					p.setAttribute("auctionhouse", true);
+					ActionSender.sendOpenAuctionHouse(p);
 				}
-				p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
-				p.setAttribute("auctionhouse", true);
-				ActionSender.sendOpenAuctionHouse(p);
 			}
 		} else if (n.getID() == AUCTION_CLERK) {
 			if (command.equalsIgnoreCase("Auction")) {
@@ -150,34 +99,11 @@ public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListene
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-					if (p.getCache().hasKey("bank_pin") && !p.getAttribute("bankpin", false)) {
-						String pin = getBankPinInput(p);
-						boolean isPinValid = false;
-						if (pin == null) {
-							return;
-						}
-						try {
-							PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-							statement.setString(1, p.getUsername());
-							ResultSet result = statement.executeQuery();
-							if (result.next()) {
-								isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
-							}
-						} catch (SQLException e) {
-							LOGGER.catching(e);
-						}
-						if (!isPinValid) {
-							ActionSender.sendBox(p, "Incorrect bank pin", false);
-							return;
-						}
-						p.setAttribute("bankpin", true);
-						ActionSender.sendBox(p, "Bank pin correct", false);
-					}
+				if(validateBankPin(p)) {
+					p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
+					p.setAttribute("auctionhouse", true);
+					ActionSender.sendOpenAuctionHouse(p);
 				}
-				p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
-				p.setAttribute("auctionhouse", true);
-				ActionSender.sendOpenAuctionHouse(p);
 			} else if (command.equalsIgnoreCase("Teleport")) {
 				n.face(p);
 				p.face(n);

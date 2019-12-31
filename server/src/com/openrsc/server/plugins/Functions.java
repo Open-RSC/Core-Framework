@@ -8,6 +8,8 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.login.BankPinChangeRequest;
+import com.openrsc.server.login.BankPinVerifyRequest;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Path;
 import com.openrsc.server.model.Path.PathType;
@@ -26,32 +28,145 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * @author n0m
- */
 public class Functions {
 
-	public static String getBankPinInput(Player player) {
+	private static String getBankPinInput(Player player) {
 		ActionSender.sendBankPinInterface(player);
-		player.setAttribute("bank_pin_entered", null);
+		player.setAttribute("bank_pin_entered", "");
 		String enteredPin = null;
 		while (true) {
-			enteredPin = player.getAttribute("bank_pin_entered", null);
-			if (enteredPin != null) {
+			enteredPin = player.getAttribute("bank_pin_entered", "");
+			if (enteredPin != "") {
 				break;
 			}
-			Functions.sleep(100);
+			Functions.sleep(640);
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
 			return null;
 		}
 		return enteredPin;
+	}
+
+	public static boolean removeBankPin(final Player player) {
+		BankPinChangeRequest request;
+		String oldPin;
+
+		if(!player.getCache().hasKey("bank_pin")) {
+			player.playerServerMessage(MessageType.QUEST, "You do not have a bank pin to remove");
+			return false;
+		}
+
+		oldPin = getBankPinInput(player);
+
+		if(oldPin == null) {
+			player.playerServerMessage(MessageType.QUEST, "You have cancelled removing your bank pin");
+			return false;
+		}
+
+		request = new BankPinChangeRequest(player.getWorld().getServer(), player, oldPin, null);
+		player.getWorld().getServer().getLoginExecutor().add(request);
+
+		while(!request.isProcessed()) {
+			Functions.sleep(640);
+		}
+
+		return true;
+	}
+
+	public static boolean setBankPin(final Player player) {
+		BankPinChangeRequest request;
+		String newPin;
+
+		if(player.getCache().hasKey("bank_pin")) {
+			player.playerServerMessage(MessageType.QUEST, "You already have a bank pin");
+			return false;
+		}
+
+		newPin = getBankPinInput(player);
+
+		if(newPin == null) {
+			player.playerServerMessage(MessageType.QUEST, "You have cancelled creating your bank pin");
+			return false;
+		}
+
+		request = new BankPinChangeRequest(player.getWorld().getServer(), player, null, newPin);
+		player.getWorld().getServer().getLoginExecutor().add(request);
+
+		while(!request.isProcessed()) {
+			Functions.sleep(640);
+		}
+
+		return true;
+	}
+
+	public static boolean changeBankPin(final Player player) {
+		BankPinChangeRequest request;
+		String newPin;
+		String oldPin;
+
+		if(!player.getCache().hasKey("bank_pin")) {
+			player.playerServerMessage(MessageType.QUEST, "You do not have a bank pin to change");
+			return false;
+		}
+
+		oldPin = getBankPinInput(player);
+
+		if(oldPin == null) {
+			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
+			return false;
+		}
+
+		newPin = getBankPinInput(player);
+
+		if(newPin == null) {
+			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
+			return false;
+		}
+
+		request = new BankPinChangeRequest(player.getWorld().getServer(), player, oldPin, newPin);
+		player.getWorld().getServer().getLoginExecutor().add(request);
+
+		while(!request.isProcessed()) {
+			Functions.sleep(640);
+		}
+
+		return true;
+	}
+
+	public static boolean validateBankPin(final Player player) {
+		BankPinVerifyRequest request;
+		String pin;
+
+		if (!player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
+			return true;
+		}
+
+		if(!player.getCache().hasKey("bank_pin")) {
+			player.setAttribute("bankpin", true);
+			return true;
+		}
+
+		if(player.getAttribute("bankpin", false)) {
+			return true;
+		}
+
+		pin = getBankPinInput(player);
+
+		request = new BankPinVerifyRequest(player.getWorld().getServer(), player, pin);
+		player.getWorld().getServer().getLoginExecutor().add(request);
+
+		while(!request.isProcessed()) {
+			Functions.sleep(640);
+		}
+
+		return player.getAttribute("bankpin", false);
 	}
 
 	public static int getWoodcutAxe(Player p) {

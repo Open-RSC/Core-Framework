@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
@@ -22,10 +21,6 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -389,38 +384,16 @@ public class ShantayPassNpcs implements ShopInterface,
 				p.message("As an Ultimate Iron Man, you cannot use the bank.");
 				return;
 			}
-			if (p.getCache().hasKey("bank_pin")
-				&& !p.getAttribute("bankpin", false)) {
-				String pin = Functions.getBankPinInput(p);
-				boolean isPinValid = false;
-				if (pin == null) {
-					return;
-				}
-				try {
-					PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-					statement.setString(1, p.getUsername());
-					ResultSet result = statement.executeQuery();
-					if (result.next()) {
-						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
-					}
-				} catch (SQLException e) {
-					LOGGER.catching(e);
-				}
-				if (!isPinValid) {
-					ActionSender.sendBox(p, "Incorrect bank pin", false);
-					return;
-				}
-				p.setAttribute("bankpin", true);
-				ActionSender.sendBox(p, "Bank pin correct", false);
-			}
 			if (!p.getCache().hasKey("shantay-chest")) {
 				message(p, "This chest is used by Shantay and his men.",
 					"They can put things in and out of storage for you.",
 					"You open the bank.");
 				p.getCache().store("shantay-chest", true);
 			}
-			p.setAccessingBank(true);
-			ActionSender.showBank(p);
+			if(validateBankPin(p)) {
+				p.setAccessingBank(true);
+				ActionSender.showBank(p);
+			}
 		}
 		if (obj.getID() == STONE_GATE && p.getY() < 735) {
 			if (command.equals("go through")) {
