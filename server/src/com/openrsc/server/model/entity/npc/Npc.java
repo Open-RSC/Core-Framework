@@ -316,7 +316,7 @@ public class Npc extends Mob {
 				//KDB Specific RDT
 				if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
 					if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-						if (getWorld().kbdTable.rollAccess(this.id, Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
+						if (getWorld().kbdTable.rollAccess(this.getID(), Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
 							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()), owner);
 							if (kbdSpecificLoot != null) {
 								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getID(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
