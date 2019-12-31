@@ -157,7 +157,7 @@ public abstract class Entity {
 	public abstract boolean isOn(final int x, final int y);
 
 	public boolean isInvisibleTo(final Entity observer) {
-		return true;
+		return false;
 	}
 
 	public boolean isPlayer() {
