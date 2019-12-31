@@ -2123,6 +2123,9 @@ public class EntityHandler {
 		if (Config.S_WANT_RUNECRAFTING) {
 			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
+			loadPkBotDefinitions();
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63};
+			npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		}
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
@@ -3850,9 +3853,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, -1, -1, 2351));
 		items.add(new ItemDef("Beverage glass", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2351, 2352));
 
-		//Dragon 2H
+		//New KBD Drops
 		items.add(new ItemDef("dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, 2354, -1, 2353));
 		items.add(new ItemDef("dragon 2-handed Sword", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2353, 2354));
+		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 50, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
+		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
 	}
 
 	// Bank note items
@@ -7132,12 +7137,12 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "XMASTREE", ++i));
 		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ORNAMENTTREE", ++i));
 		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "PINETREE", ++i));
+		objects.add(new GameObjectDef("Tunnel entrance", "I wonder where this leads...", "enter", "Examine", 1, 3, 1, 0, "small caveentrance2", ++i));
 	}
 
 	public static void load(boolean loadMembers) {
 		loadNpcDefinitionsA();
 		loadNpcDefinitionsB();
-		loadPkBotDefinitions();
 		loadItemDefinitions();
 		loadTextureDefinitions();
 		loadAnimationDefinitions();

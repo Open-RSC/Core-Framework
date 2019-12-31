@@ -495,6 +495,9 @@ public final class AvatarGenerator {
 		animations.add(new AnimationDef("greensantahat", "equipment",0, 0, true, false, 0)); //401
 		animations.add(new AnimationDef("antlers", "equipment",0, 0, true, false, 0)); //402
 
+		//Dragon 2H
+		animations.add(new AnimationDef("2hander", "equipment", 16711748, 0, true, false, 0)); //403 d2h
+
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");
 		if (workspaceFile.exists()) {

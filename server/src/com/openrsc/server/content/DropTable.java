@@ -51,7 +51,7 @@ public class DropTable {
 				if (drop.type == dropType.NOTHING)
 					return null;
 				else if (drop.type == dropType.ITEM) {
-					if (ringOfWealth)
+					if (ringOfWealth && p != null)
 						p.message("Your ring of wealth shines brightly!");
 					return new Item(drop.id, drop.amount);
 				} else if (drop.type == dropType.TABLE) {

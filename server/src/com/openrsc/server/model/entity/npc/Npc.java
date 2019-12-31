@@ -1,9 +1,6 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
@@ -314,8 +311,25 @@ public class Npc extends Mob {
 						owner.addNpcKill(this, false);
 				}
 
-
 				owner = handleLootAndXpDistribution(((Player) mob));
+
+				//KDB Specific RDT
+				if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+					if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+						if (getWorld().kbdTable.rollAccess(this.id, Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
+							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()), owner);
+							if (kbdSpecificLoot != null) {
+								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getID(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
+								groundItem.setAttribute("npcdrop", true);
+								getWorld().registerItem(groundItem);
+								getWorld().getServer().getLoginExecutor().getPlayerDatabase().addNpcDrop(
+									owner, this, kbdSpecificLoot.getID(), kbdSpecificLoot.getAmount());
+								if (kbdSpecificLoot.getID() == ItemId.DRAGON_2_HANDED_SWORD.id())
+									owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
+							}
+						}
+					}
+				}
 
 				//Determine if the RDT is hit first
 				boolean rdtHit = false;

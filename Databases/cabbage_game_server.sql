@@ -5294,7 +5294,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2351, 2350, -1, 'Beverage glass', 'A glass left after a tasty drink', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
        (2352, -1, 2351, 'Beverage glass', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
        (2353, 2354, -1, 'dragon 2-handed Sword', 'A massive sword', '', 0, 0, 0, 0, 1, 403, 8216, 4, 60, 0, 0, 92, 92, 0, 0, 5000000),
-       (2354, -1, 2353, 'dragon 2-handed Sword', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+       (2354, -1, 2353, 'dragon 2-handed Sword', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+       (2355, 2356, -1, 'King Black Dragon scale', 'Taken from a monstrous beast', '', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 2500),
+       (2356, -1, 2355, 'King Black Dragon scale', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
@@ -6148,11 +6151,9 @@ INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `comman
 (801, 800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 0, 322, 323, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
 (802, 801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 324, 325, 326, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
 (803, 802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, NULL, 300, 0, 1, 1, 30, 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0, 0),
-(804, 803, 'Wizard Sedridor', 'An old wizard', 'teleport', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0);
-
-INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`, `combatSprite`, `canEdit`, `roundMode`, `pkBot`) VALUES
-(805, 804, 'Pk Bot', '', '', '', 30, 59, 48, 1, 59, 34, 0, 1, 1, 60, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0, true);
-
+(804, 803, 'Wizard Sedridor', 'An old wizard', 'teleport', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(805, 804, 'Pk Bot', '', '', '', 30, 59, 48, 1, 59, 34, 0, 1, 1, 60, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(806, 805, 'Scot Ruth', 'A smelly, dirty dwarf', '', '', 20, 17, 16, 20, NULL, 18, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 0);
 
 DROP TABLE IF EXISTS `openrsc_npcdrops`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdrops`
@@ -11974,7 +11975,8 @@ VALUES (47, 109, 104, 114, 415, 410, 420, 3816),
        (795, 588, 587, 589, 756, 755, 757, 7575),
        (804, 212, 206, 225, 423, 419, 426, 7576),
        (804, 212, 206, 225, 423, 419, 426, 7577),
-       (795, 445, 444, 446, 3370, 3369, 3371, 7578);
+       (795, 445, 444, 446, 3370, 3369, 3371, 7578),
+       (806, 220, 219, 222, 3281, 3279, 3283, 7579);
 
 DROP TABLE IF EXISTS `openrsc_objects`;
 CREATE TABLE IF NOT EXISTS `openrsc_objects`
@@ -40138,7 +40140,8 @@ VALUES (312, 3348, 223, 0, 0, 28501),
        (784, 14, 0, 0, 0, 29346),
        (783, 15, 0, 0, 0, 29347),
        (781, 16, 0, 0, 0, 29348),
-       (780, 18, 0, 0, 0, 29349);
+       (780, 18, 0, 0, 0, 29349),
+       (223, 3281, 1241, 2, 0, 29350);
 
 DROP TABLE IF EXISTS `openrsc_recovery_questions`;
 CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions`
