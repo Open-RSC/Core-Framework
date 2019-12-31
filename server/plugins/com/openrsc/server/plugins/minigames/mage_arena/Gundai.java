@@ -10,13 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListene
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
-import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -31,33 +26,11 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			@Override
 			public void action() {
 				player.setAccessingBank(true);
-				if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-					if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-						String pin = getBankPinInput(player);
-						boolean isPinValid = false;
-						if (pin == null) {
-							return;
-						}
-						try {
-							PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-							statement.setString(1, player.getUsername());
-							ResultSet result = statement.executeQuery();
-							if (result.next()) {
-								isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
-							}
-						} catch (SQLException e) {
-							LOGGER.catching(e);
-						}
-						if (!isPinValid) {
-							ActionSender.sendBox(player, "Incorrect bank pin", false);
-							return;
-						}
-						player.setAttribute("bankpin", true);
-						ActionSender.sendBox(player, "Bank pin correct", false);
-					}
+				if(validateBankPin(player)) {
+					npcTalk(player, n, "no problem");
+					player.setAccessingBank(true);
+					ActionSender.showBank(player);
 				}
-				npcTalk(player, n, "no problem");
-				ActionSender.showBank(player);
 			}
 		});
 		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
@@ -66,80 +39,11 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 				public void action() {
 					int menu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 					if (menu == 0) {
-						if (!player.getCache().hasKey("bank_pin")) {
-							String bankPin = getBankPinInput(player);
-							if (bankPin == null) {
-								return;
-							}
-							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-								statement.setString(1, player.getUsername());
-								ResultSet result = statement.executeQuery();
-								if (result.next()) {
-									bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
-									player.getCache().store("bank_pin", bankPin);
-									//ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
-								}
-							} catch (SQLException e) {
-								LOGGER.catching(e);
-							}
-
-						} else {
-							ActionSender.sendBox(player, "You already have a bank pin", false);
-						}
+						setBankPin(player);
 					} else if (menu == 1) {
-						if (player.getCache().hasKey("bank_pin")) {
-							String bankPin = getBankPinInput(player);
-							boolean isPinValid = false;
-							if (bankPin == null) {
-								return;
-							}
-							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-								statement.setString(1, player.getUsername());
-								ResultSet result = statement.executeQuery();
-								if (result.next()) {
-									isPinValid = DataConversions.checkPassword(bankPin, result.getString("salt"), player.getCache().getString("bank_pin"));
-								}
-							} catch (SQLException e) {
-								LOGGER.catching(e);
-							}
-							if (!isPinValid) {
-								ActionSender.sendBox(player, "Incorrect bank pin", false);
-								return;
-							}
-							String changeTo = getBankPinInput(player);
-							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-								statement.setString(1, player.getUsername());
-								ResultSet result = statement.executeQuery();
-								if (result.next()) {
-									changeTo = DataConversions.hashPassword(changeTo, result.getString("salt"));
-									player.getCache().store("bank_pin", changeTo);
-									//ActionSender.sendBox(p, "Your new bank pin is " + bankPin, false);
-								}
-							} catch (SQLException e) {
-								LOGGER.catching(e);
-							}
-						} else {
-							player.message("You don't have a bank pin");
-						}
+						changeBankPin(player);
 					} else if (menu == 2) {
-						if (player.getCache().hasKey("bank_pin")) {
-							String bankPin = getBankPinInput(player);
-							if (bankPin == null) {
-								return;
-							}
-							if (!player.getCache().getString("bank_pin").equals(bankPin)) {
-								ActionSender.sendBox(player, "Incorrect bank pin", false);
-								return;
-							}
-							player.getCache().remove("bank_pin");
-
-							ActionSender.sendBox(player, "Your bank pin is removed", false);
-						} else {
-							player.message("You don't have a bank pin");
-						}
+						removeBankPin(player);
 					}
 				}
 			});
@@ -149,32 +53,9 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			defaultMenu.addOption(new Option("I'd like to collect my items from auction") {
 				@Override
 				public void action() {
-					if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-						if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-							String pin = getBankPinInput(player);
-							boolean isPinValid = false;
-							if (pin == null) {
-								return;
-							}
-							try {
-								PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-								statement.setString(1, player.getUsername());
-								ResultSet result = statement.executeQuery();
-								if (result.next()) {
-									isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
-								}
-							} catch (SQLException e) {
-								LOGGER.catching(e);
-							}
-							if (!isPinValid) {
-								ActionSender.sendBox(player, "Incorrect bank pin", false);
-								return;
-							}
-							player.setAttribute("bankpin", true);
-							ActionSender.sendBox(player, "Bank pin correct", false);
-						}
+					if(validateBankPin(player)) {
+						player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 					}
-					player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 				}
 			});
 		}
@@ -216,36 +97,13 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 	}
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
-		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-				String pin = getBankPinInput(player);
-				boolean isPinValid = false;
-				if (pin == null) {
-					return;
-				}
-				try {
-					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-					statement.setString(1, player.getUsername());
-					ResultSet result = statement.executeQuery();
-					if (result.next()) {
-						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
-					}
-				} catch (SQLException e) {
-					LOGGER.catching(e);
-				}
-				if (!isPinValid) {
-					ActionSender.sendBox(player, "Incorrect bank pin", false);
-					return;
-				}
-				player.setAttribute("bankpin", true);
-				ActionSender.sendBox(player, "Bank pin correct", false);
+		if(validateBankPin(player)) {
+			if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
+				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
+			} else {
+				player.setAccessingBank(true);
+				ActionSender.showBank(player);
 			}
-		}
-		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
-			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
-		} else {
-			player.setAccessingBank(true);
-			ActionSender.showBank(player);
 		}
 	}
 

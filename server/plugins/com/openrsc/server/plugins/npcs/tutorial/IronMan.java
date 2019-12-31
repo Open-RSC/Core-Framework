@@ -9,14 +9,9 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -35,28 +30,13 @@ public class IronMan implements TalkToNpcExecutiveListener,
 			if (p.getAttribute("ironman_delete", false)) {
 				if (p.getCache().hasKey("bank_pin")) {
 					message(p, n, 1000, "Enter your Bank PIN to downgrade your Iron Man status.");
-					String pin = getBankPinInput(p);
-					boolean isPinValid = false;
-					if (pin == null) {
-						return;
-					}
-					try {
-						PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-						statement.setString(1, p.getUsername());
-						ResultSet result = statement.executeQuery();
-						if (result.next()) {
-							isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), p.getCache().getString("bank_pin"));
-						}
-					} catch (SQLException e) {
-						LOGGER.catching(e);
-					}
-					if (!isPinValid) {
+
+					if (!validateBankPin(p)) {
 						ActionSender.sendBox(p, "Incorrect bank pin", false);
 						p.setAttribute("ironman_delete", false);
 						ActionSender.sendIronManInterface(p);
 						return;
 					}
-					p.setAttribute("bankpin", true);
 					p.setAttribute("ironman_delete", false);
 					p.message("You have correctly entered your PIN");
 					int id = p.getAttribute("ironman_mode");
@@ -76,27 +56,13 @@ public class IronMan implements TalkToNpcExecutiveListener,
 				if (menu != -1) {
 					if (menu == 0) {
 						if (!p.getCache().hasKey("bank_pin")) {
-							String bankPin = getBankPinInput(p);
-							if (bankPin == null) {
-								p.setAttribute("ironman_pin", false);
-								return;
+							if(setBankPin(p)) {
+								p.setIronManRestriction(0);
+								ActionSender.sendIronManMode(p);
+								ActionSender.sendIronManInterface(p);
 							}
-							try {
-								PreparedStatement statement = p.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + p.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-								statement.setString(1, p.getUsername());
-								ResultSet result = statement.executeQuery();
-								if (result.next()) {
-									bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
-									p.getCache().store("bank_pin", bankPin);
-									p.message("Your new PIN is now in effect.");
-									p.setIronManRestriction(0);
-									p.setAttribute("ironman_pin", false);
-									ActionSender.sendIronManMode(p);
-									ActionSender.sendIronManInterface(p);
-								}
-							} catch (SQLException e) {
-								LOGGER.catching(e);
-							}
+
+							p.setAttribute("ironman_pin", false);
 						}
 					} else if (menu == 1) {
 						ActionSender.sendIronManInterface(p);

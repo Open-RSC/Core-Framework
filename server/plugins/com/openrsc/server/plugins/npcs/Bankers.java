@@ -8,13 +8,8 @@ import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -62,33 +57,12 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 				player.message("As an Ultimate Iron Man, you cannot use the bank.");
 				return;
 			}
-			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-				String pin = getBankPinInput(player);
-				boolean isPinValid = false;
-				if (pin == null) {
-					return;
-				}
-				try {
-					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-					statement.setString(1, player.getUsername());
-					ResultSet result = statement.executeQuery();
-					if (result.next()) {
-						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
-					}
-				} catch (SQLException e) {
-					LOGGER.catching(e);
-				}
-				if (!isPinValid) {
-					ActionSender.sendBox(player, "Incorrect bank pin", false);
-					return;
-				}
-				player.setAttribute("bankpin", true);
-				player.message("You have correctly entered your PIN");
-			}
 
-			npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
-			player.setAccessingBank(true);
-			ActionSender.showBank(player);
+			if(validateBankPin(player)) {
+				npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+				player.setAccessingBank(true);
+				ActionSender.showBank(player);
+			}
 		} else if (menu == 1) {
 			npcTalk(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
 			int branchMenu = showMenu(player, npc, "And what do you do?",
@@ -104,135 +78,16 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 		} else if (menu == 2 && player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
 			int bankPinMenu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
-				if (!player.getCache().hasKey("bank_pin")) {
-					String bankPin = getBankPinInput(player);
-					if (bankPin == null) {
-						return;
-					}
-					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-						statement.setString(1, player.getUsername());
-						ResultSet result = statement.executeQuery();
-						if (result.next()) {
-							bankPin = DataConversions.hashPassword(bankPin, result.getString("salt"));
-							player.getCache().store("bank_pin", bankPin);
-							//ActionSender.sendBox(player, "Your new bank pin is " + bankPin, false);
-						}
-					} catch (SQLException e) {
-						LOGGER.catching(e);
-					}
-				} else {
-					ActionSender.sendBox(player, "You already have a bank pin", false);
-				}
+				setBankPin(player);
 			} else if (bankPinMenu == 1) {
-				if (player.getCache().hasKey("bank_pin")) {
-					String bankPin = getBankPinInput(player);
-					boolean isPinValid = false;
-					if (bankPin == null) {
-						return;
-					}
-					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-						statement.setString(1, player.getUsername());
-						ResultSet result = statement.executeQuery();
-						if (result.next()) {
-							isPinValid = DataConversions.checkPassword(bankPin, result.getString("salt"), player.getCache().getString("bank_pin"));
-						}
-					} catch (SQLException e) {
-						LOGGER.catching(e);
-					}
-					if (!isPinValid) {
-						ActionSender.sendBox(player, "Incorrect bank pin", false);
-						return;
-					}
-					String changeTo = getBankPinInput(player);
-					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-						statement.setString(1, player.getUsername());
-						ResultSet result = statement.executeQuery();
-						if (result.next()) {
-							changeTo = DataConversions.hashPassword(changeTo, result.getString("salt"));
-							player.getCache().store("bank_pin", changeTo);
-							//ActionSender.sendBox(player, "Your new bank pin is " + changeTo, false);
-						}
-					} catch (SQLException e) {
-						LOGGER.catching(e);
-					}
-
-
-				} else {
-					player.message("You don't have a bank pin");
-				}
+				changeBankPin(player);
 			} else if (bankPinMenu == 2) {
-				if (player.getCache().hasKey("bank_pin")) {
-					String bankPin = getBankPinInput(player);
-					boolean isPinValid = false;
-					if (bankPin == null) {
-						return;
-					}
-					try {
-						PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-						statement.setString(1, player.getUsername());
-						ResultSet result = statement.executeQuery();
-						if (result.next()) {
-							isPinValid = DataConversions.checkPassword(bankPin, result.getString("salt"), player.getCache().getString("bank_pin"));
-						}
-					} catch (SQLException e) {
-						LOGGER.catching(e);
-					}
-					if (!isPinValid) {
-						ActionSender.sendBox(player, "Incorrect bank pin", false);
-						return;
-					}
-					if (player.getIronMan() > IronmanMode.None.id() && player.getIronManRestriction() == 0) {
-						message(player, npc, 1000, "Deleting your bankpin results in permanent iron man restriction",
-							"Are you sure you want to do it?");
-
-						int deleteMenu = showMenu(player, "I want to do it!",
-							"No thanks.");
-						if (deleteMenu == 0) {
-							player.getCache().remove("bank_pin");
-							ActionSender.sendBox(player, "Your bank pin is removed", false);
-							player.message("Your iron man restriction status is now permanent.");
-							player.setIronManRestriction(1);
-							ActionSender.sendIronManMode(player);
-						} else if (deleteMenu == 1) {
-							player.message("You decide to not remove your Bank PIN.");
-						}
-					} else {
-						player.getCache().remove("bank_pin");
-						ActionSender.sendBox(player, "Your bank pin is removed", false);
-					}
-				} else {
-					player.message("You don't have a bank pin");
-				}
+				removeBankPin(player);
 			}
-
 		} else if ((menu == 2 || menu == 3) && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
-			if (player.getCache().hasKey("bank_pin") && !player.getAttribute("bankpin", false)) {
-				String pin = getBankPinInput(player);
-				boolean isPinValid = false;
-				if (pin == null) {
-					return;
-				}
-				try {
-					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-					statement.setString(1, player.getUsername());
-					ResultSet result = statement.executeQuery();
-					if (result.next()) {
-						isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
-					}
-				} catch (SQLException e) {
-					LOGGER.catching(e);
-				}
-				if (!isPinValid) {
-					ActionSender.sendBox(player, "Incorrect bank pin", false);
-					return;
-				}
-				player.setAttribute("bankpin", true);
-				ActionSender.sendBox(player, "Bank pin correct", false);
+			if(validateBankPin(player)) {
+				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			}
-			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 		}
 	}
 
@@ -259,33 +114,13 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 	}
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
-		String pin = getBankPinInput(player);
-		boolean isPinValid = false;
-		if (pin == null) {
-			return;
-		}
-		try {
-			PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
-			statement.setString(1, player.getUsername());
-			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				isPinValid = DataConversions.checkPassword(pin, result.getString("salt"), player.getCache().getString("bank_pin"));
+		if(validateBankPin(player)) {
+			if (auction) {
+				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
+			} else {
+				player.setAccessingBank(true);
+				ActionSender.showBank(player);
 			}
-		} catch (SQLException e) {
-			LOGGER.catching(e);
-		}
-		if (!isPinValid) {
-			ActionSender.sendBox(player, "Incorrect bank pin", false);
-			return;
-		}
-		player.setAttribute("bankpin", true);
-		player.message("You have correctly entered your PIN");
-
-		if (auction) {
-			player.getWorld().getMarket().addPlayerCollectItemsTask(player);
-		} else {
-			player.setAccessingBank(true);
-			ActionSender.showBank(player);
 		}
 	}
 }
