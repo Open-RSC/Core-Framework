@@ -5341,7 +5341,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
     `combatSprite` int(10)                           DEFAULT NULL,
     `canEdit`      tinyint(1)          NOT NULL,
     `roundMode`    tinyint(1)                        DEFAULT 0,
-    `pkBot`   	   tinyint(1)                        DEFAULT 0,
+    `pkBot`        tinyint(1)                        DEFAULT 0,
     PRIMARY KEY (`primary_id`)
 ) ENGINE = MyISAM
   AUTO_INCREMENT = 805
@@ -11976,7 +11976,7 @@ VALUES (47, 109, 104, 114, 415, 410, 420, 3816),
        (804, 212, 206, 225, 423, 419, 426, 7576),
        (804, 212, 206, 225, 423, 419, 426, 7577),
        (795, 445, 444, 446, 3370, 3369, 3371, 7578),
-       (806, 220, 219, 222, 3281, 3279, 3283, 7579);
+       (805, 220, 219, 222, 3281, 3279, 3283, 7579);
 
 DROP TABLE IF EXISTS `openrsc_objects`;
 CREATE TABLE IF NOT EXISTS `openrsc_objects`
