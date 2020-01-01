@@ -121,10 +121,12 @@ public class Cannon implements ObjectActionListener,
 				return;
 			}
 
-			//Disable placing a cannon in KBD's lair
-			if (player.getLocation().inBounds(562,3314,572,3332)) {
-				player.message("you can't set up the cannon here");
-				return;
+			//Disable placing a cannon in KBD's lair on non-authentic servers
+			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+				if (player.getLocation().inBounds(562,3314,572,3332)) {
+					player.message("you can't set up the cannon here");
+					return;
+				}
 			}
 
 			player.resetPath();
