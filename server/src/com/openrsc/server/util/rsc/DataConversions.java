@@ -16,6 +16,7 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -876,5 +877,14 @@ public final class DataConversions {
 		}
 
 		throw new NumberFormatException();
+	}
+
+	public static String formatBytes(final long memorySize)
+	{
+		final DecimalFormat df = new DecimalFormat("0");
+		final double base = Math.log(memorySize) / Math.log(1024);
+		final String suffixes[] = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+
+		return df.format(Math.pow(1024, base - Math.floor(base))) + suffixes[(int)Math.floor(base)];
 	}
 }

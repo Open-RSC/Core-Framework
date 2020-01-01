@@ -4,6 +4,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -193,7 +194,7 @@ public class GameEventHandler {
 		int i = 0;
 		StringBuilder s = new StringBuilder();
 		for (Map.Entry<String, Long> entry : eventsDurations.entrySet()) {
-			if (forInGame && i >= 17) // Only display first 17 elements of the hashmap
+			if (forInGame && i >= 16) // Only display first 17 elements of the hashmap
 				break;
 
 			String name = entry.getKey();
@@ -206,7 +207,8 @@ public class GameEventHandler {
 		String returnString = (
 			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + getServer().getLastTickDuration() + "ms " + getServer().getLastIncomingPacketsDuration() + "ms " + getServer().getLastEventsDuration() + "ms " + getServer().getLastGameStateDuration() + "ms " + getServer().getLastOutgoingPacketsDuration() + "ms" + newLine +
 				"Game Updater: " + getServer().getGameUpdater().getLastProcessPlayersDuration() + "ms " + getServer().getGameUpdater().getLastProcessNpcsDuration() + "ms " + getServer().getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getServer().getGameUpdater().getLastUpdateClientsDuration() + "ms " + getServer().getGameUpdater().getLastDoCleanupDuration() + "ms " + getServer().getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
-				"Threads: " + Thread.activeCount() + ", Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
+				"Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
+				"Threads: " + Thread.activeCount() + ", Total: " + DataConversions.formatBytes(Runtime.getRuntime().totalMemory()) + ", Free: " +  DataConversions.formatBytes(Runtime.getRuntime().freeMemory()) + ", Used: " + DataConversions.formatBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + newLine +
 				/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/
 				s
 		);
