@@ -44,37 +44,37 @@ public class GroundItemTake implements PacketHandler {
 			distance = 1;
 		}
 		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
-			public void execute() {
-				if (player.isBusy() || player.isRanging() || item == null || item.isRemoved()
-					|| getItem(id, location, player) == null || !player.canReach(item)
-					|| player.getStatus() != Action.TAKING_GITEM || item.getAmount() < 1) {
+			public void executeInternal() {
+				if (getPlayer().isBusy() || getPlayer().isRanging() || item == null || item.isRemoved()
+					|| getItem(id, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
+					|| getPlayer().getStatus() != Action.TAKING_GITEM || item.getAmount() < 1) {
 					return;
 				}
 
-				if (item.getDef().isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.sendMemberErrorMessage();
+				if (item.getDef().isMembersOnly() && !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().sendMemberErrorMessage();
 					return;
 				}
-				if (item.getLocation().inWilderness() && !item.belongsTo(player) && item.getAttribute("playerKill", false)
-					&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
-					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
-					player.message("You're an Iron Man, so you can't loot items from players.");
+				if (item.getLocation().inWilderness() && !item.belongsTo(getPlayer()) && item.getAttribute("playerKill", false)
+					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
+					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
+					getPlayer().message("You're an Iron Man, so you can't loot items from players.");
 					return;
 				}
-				if (!item.belongsTo(player)
-					&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
-					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
-					player.message("You're an Iron Man, so you can't take items that other players have dropped.");
-					return;
-				}
-
-				player.resetAll();
-
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "Pickup", new Object[]{player, item})) {
+				if (!item.belongsTo(getPlayer())
+					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
+					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
+					getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
 					return;
 				}
 
-				player.groundItemTake(item);
+				getPlayer().resetAll();
+
+				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(getPlayer(), "Pickup", new Object[]{getPlayer(), item}, true, this)) {
+					return;
+				}
+
+				getPlayer().groundItemTake(item);
 			}
 		});
 	}

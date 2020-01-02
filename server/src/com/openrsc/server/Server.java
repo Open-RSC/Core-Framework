@@ -68,8 +68,8 @@ public class Server implements Runnable {
 	private GameTickEvent updateEvent;
 	private ChannelFuture serverChannel;
 
-	private Boolean running = false;
-	private boolean initialized = false;
+	private volatile Boolean running = false;
+	private volatile boolean initialized = false;
 
 	private long serverStartedTime = 0;
 	private long lastIncomingPacketsDuration = 0;

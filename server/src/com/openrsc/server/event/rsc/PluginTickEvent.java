@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc;
 
+import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -14,14 +15,28 @@ public class PluginTickEvent extends GameTickEvent {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final PluginTask pluginTask;
+	private final WalkToAction walkToAction; // Storing the Player's context walkToAction so we can cancel the plugin if the walking is cancelled
 	private Future<Integer> future = null;
 
-	public PluginTickEvent(final World world, final Mob owner, final String descriptor, final PluginTask pluginTask) {
+	public PluginTickEvent(final World world, final Mob owner, final String descriptor, final WalkToAction walkToAction, final PluginTask pluginTask) {
 		super(world, owner, 0, descriptor, true);
+		this.walkToAction = walkToAction;
 		this.pluginTask = pluginTask;
 	}
 
 	public void run() {
+		// We want to cancel this plugin event if the most recently executed walk to action is not the same as this plugin's context walk to action.
+		if (walkToAction != null && walkToAction != getPlayerOwner().getLastExecutedWalkToAction()) {
+			if (getFuture() != null) {
+				// This will trigger PluginTask.pause()'s wait() call to generate an InterruptedException.
+				// We then throw a special PluginInterruptedException which can only be caught by PluginTask.action() or PluginTask.call().
+				// When these methods catch the exception it will return the thread which will close the PluginTask's thread down.
+				getFuture().cancel(true);
+			}
+			stop();
+			return;
+		}
+
 		// Submitting in run because we want to only run game code on tick bounds so we start the execution inside of a tick
 		if(getFuture() == null) {
 			submitPluginTask();

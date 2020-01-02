@@ -242,54 +242,54 @@ public class PlayerDuelHandler implements PacketHandler {
 
 				player.walkToEntity(affectedPlayer.getX(), affectedPlayer.getY());
 				player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, 0) {
-					public void execute() {
+					public void executeInternal() {
 						Player affectedPlayer = (Player) mob;
-						player.resetPath();
-						if (!player.canReach(affectedPlayer)) {
-							player.getDuel().resetAll();
+						getPlayer().resetPath();
+						if (!getPlayer().canReach(affectedPlayer)) {
+							getPlayer().getDuel().resetAll();
 							return;
 						}
 						affectedPlayer.resetPath();
 
-						player.resetAllExceptDueling();
+						getPlayer().resetAllExceptDueling();
 						affectedPlayer.resetAllExceptDueling();
 
-						player.setLocation(affectedPlayer.getLocation(), false);
+						getPlayer().setLocation(affectedPlayer.getLocation(), false);
 
 						// player.teleport(affectedPlayer.getX(),
 						// affectedPlayer.getY());
 
 
-						player.setSprite(9);
-						player.setOpponent(mob);
-						player.setCombatTimer();
+						getPlayer().setSprite(9);
+						getPlayer().setOpponent(mob);
+						getPlayer().setCombatTimer();
 
 						affectedPlayer.setSprite(8);
-						affectedPlayer.setOpponent(player);
+						affectedPlayer.setOpponent(getPlayer());
 						affectedPlayer.setCombatTimer();
 
 						Player attacker, opponent;
-						if (player.getCombatLevel() > affectedPlayer.getCombatLevel()) {
+						if (getPlayer().getCombatLevel() > affectedPlayer.getCombatLevel()) {
 							attacker = affectedPlayer;
-							opponent = player;
-						} else if (affectedPlayer.getCombatLevel() > player.getCombatLevel()) {
-							attacker = player;
+							opponent = getPlayer();
+						} else if (affectedPlayer.getCombatLevel() > getPlayer().getCombatLevel()) {
+							attacker = getPlayer();
 							opponent = affectedPlayer;
 						} else if (DataConversions.random(0, 1) == 1) {
-							attacker = player;
+							attacker = getPlayer();
 							opponent = affectedPlayer;
 						} else {
 							attacker = affectedPlayer;
-							opponent = player;
+							opponent = getPlayer();
 						}
 						//TEST
 						attacker.getDuel().setDuelActive(true);
 						opponent.getDuel().setDuelActive(true);
 
-						CombatEvent combatEvent = new CombatEvent(player.getWorld(), attacker, opponent);
+						CombatEvent combatEvent = new CombatEvent(getPlayer().getWorld(), attacker, opponent);
 						attacker.setCombatEvent(combatEvent);
 						opponent.setCombatEvent(combatEvent);
-						player.getWorld().getServer().getGameEventHandler().add(combatEvent);
+						getPlayer().getWorld().getServer().getGameEventHandler().add(combatEvent);
 					}
 				});
 			}

@@ -29,20 +29,20 @@ public final class NpcCommand implements PacketHandler {
 
 		player.setFollowing(affectedNpc, 0);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1) {
-			public void execute() {
-				player.resetFollowing();
-				player.resetPath();
-				if (player.isBusy() || player.isRanging()
-					|| !player.canReach(affectedNpc)) {
+			public void executeInternal() {
+				getPlayer().resetFollowing();
+				getPlayer().resetPath();
+				if (getPlayer().isBusy() || getPlayer().isRanging()
+					|| !getPlayer().canReach(affectedNpc)) {
 					return;
 				}
-				player.resetAll();
+				getPlayer().resetAll();
 				NPCDef def = affectedNpc.getDef();
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 				affectedNpc.resetPath();
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player, "NpcCommand", new Object[]{affectedNpc, command, player})) {
+				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+					getPlayer(), "NpcCommand", new Object[]{affectedNpc, command, getPlayer()}, true, this)) {
 					return;
 				}
 			}

@@ -735,7 +735,6 @@ public final class GameStateUpdater {
 			if (p.getWalkToAction() != null) {
 				if (p.getWalkToAction().shouldExecute()) {
 					p.getWalkToAction().execute();
-					p.setWalkToAction(null);
 				}
 			}
 		}

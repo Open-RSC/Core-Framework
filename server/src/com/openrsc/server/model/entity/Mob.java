@@ -7,7 +7,6 @@ import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
-import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
@@ -120,10 +119,6 @@ public abstract class Mob extends Entity {
 	 * Used to block new requests when we are in the middle of one
 	 */
 	private final AtomicBoolean busy = new AtomicBoolean(false);
-	/**
-	 * The path we are walking
-	 */
-	private WalkToActionNpc walkToActionNpc;
 	/**
 	 * Tiles around us that we can see
 	 */
@@ -832,14 +827,6 @@ public abstract class Mob extends Entity {
 
 	public WalkingQueue getWalkingQueue() {
 		return walkingQueue;
-	}
-
-	public WalkToActionNpc getWalkToActionNpc() {
-		return walkToActionNpc;
-	}
-
-	public void setWalkToActionNpc(final WalkToActionNpc action) {
-		this.walkToActionNpc = action;
 	}
 
 	public boolean hasMoved() {

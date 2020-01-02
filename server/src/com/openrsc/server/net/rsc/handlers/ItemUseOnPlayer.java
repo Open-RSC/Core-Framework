@@ -34,30 +34,30 @@ public class ItemUseOnPlayer implements PacketHandler {
 		player.setFollowing(affectedPlayer);
 		player.setStatus(Action.USING_Item_ON_PLAYER);
 		player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, radius) {
-			public void execute() {
-				player.resetPath();
-				player.resetFollowing();
-				if (!player.getInventory().contains(item)
-					|| !player.canReach(affectedPlayer) || player.isBusy()
-					|| player.isRanging()
-					|| player.getStatus() != Action.USING_Item_ON_PLAYER) {
+			public void executeInternal() {
+				getPlayer().resetPath();
+				getPlayer().resetFollowing();
+				if (!getPlayer().getInventory().contains(item)
+					|| !getPlayer().canReach(affectedPlayer) || getPlayer().isBusy()
+					|| getPlayer().isRanging()
+					|| getPlayer().getStatus() != Action.USING_Item_ON_PLAYER) {
 					return;
 				}
-				player.resetAll();
-				player.face(affectedPlayer);
-				if (item.getDef(player.getWorld()).isMembersOnly()
-					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.message(player.MEMBER_MESSAGE);
+				getPlayer().resetAll();
+				getPlayer().face(affectedPlayer);
+				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
+					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player,
+				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+					getPlayer(),
 					"InvUseOnPlayer",
-					new Object[]{player, affectedPlayer, item}))
+					new Object[]{getPlayer(), affectedPlayer, item}, true, this))
 					return;
 				switch (item.getID()) {
 					default:
-						player.message("Nothing interesting happens");
+						getPlayer().message("Nothing interesting happens");
 						break;
 				}
 			}

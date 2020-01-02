@@ -89,7 +89,8 @@ public final class Player extends Mob {
 	private int expShared = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
-	private WalkToAction walkToAction;
+	private volatile WalkToAction walkToAction;
+	private volatile WalkToAction lastExecutedWalkToAction;
 	private Trade trade;
 	private int databaseID;
 	private Clan clan;
@@ -2481,6 +2482,14 @@ public final class Player extends Mob {
 		ActionSender.sendKills2(this);
 	}
 
+	public synchronized WalkToAction getLastExecutedWalkToAction() {
+		return lastExecutedWalkToAction;
+	}
+
+	public synchronized void setLastExecutedWalkToAction(final WalkToAction lastExecutedWalkToAction) {
+		this.lastExecutedWalkToAction = lastExecutedWalkToAction;
+	}
+
 	public void setExpShared(final int i) {
 		this.expShared = i;
 		ActionSender.sendExpShared(this);
@@ -2508,11 +2517,11 @@ public final class Player extends Mob {
 		}
 	}
 
-	public WalkToAction getWalkToAction() {
+	public synchronized WalkToAction getWalkToAction() {
 		return walkToAction;
 	}
 
-	public void setWalkToAction(final WalkToAction action) {
+	public synchronized void setWalkToAction(final WalkToAction action) {
 		this.walkToAction = action;
 	}
 

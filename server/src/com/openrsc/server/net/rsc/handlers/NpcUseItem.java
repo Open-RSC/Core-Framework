@@ -26,32 +26,32 @@ public class NpcUseItem implements PacketHandler {
 		player.setFollowing(affectedNpc);
 		player.setStatus(Action.USING_Item_ON_NPC);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
-			public void execute() {
-				player.resetPath();
-				player.resetFollowing();
-				if (!player.getInventory().contains(item) || player.isBusy()
-					|| player.isRanging() || !player.canReach(affectedNpc)
+			public void executeInternal() {
+				getPlayer().resetPath();
+				getPlayer().resetFollowing();
+				if (!getPlayer().getInventory().contains(item) || getPlayer().isBusy()
+					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
 					|| affectedNpc.isBusy()
-					|| player.getStatus() != Action.USING_Item_ON_NPC) {
+					|| getPlayer().getStatus() != Action.USING_Item_ON_NPC) {
 					return;
 				}
-				player.resetAll();
+				getPlayer().resetAll();
 
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player,
+				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+					getPlayer(),
 					"InvUseOnNpc",
-					new Object[]{player, affectedNpc, item}))
+					new Object[]{getPlayer(), affectedNpc, item}, true, this))
 					return;
 
 				switch (affectedNpc.getID()) {
 
 					default:
-						player.message("Nothing interesting happens");
+						getPlayer().message("Nothing interesting happens");
 						break;
 				}
-				if (item.getDef(player.getWorld()).isMembersOnly()
-					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.message(player.MEMBER_MESSAGE);
+				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
+					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
 			}

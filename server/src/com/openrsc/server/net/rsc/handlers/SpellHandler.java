@@ -749,18 +749,18 @@ public class SpellHandler implements PacketHandler {
 	private void handleItemCast(Player player, final SpellDef spell, final int id, final GroundItem affectedItem) {
 		player.setStatus(Action.CASTING_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player, affectedItem.getLocation(), 4) {
-			public void execute() {
-				player.resetPath();
-				if (!canCast(player) || player.getViewArea().getGroundItem(affectedItem.getID(), location) == null
-					|| player.getStatus() != Action.CASTING_GITEM || affectedItem.isRemoved()) {
+			public void executeInternal() {
+				getPlayer().resetPath();
+				if (!canCast(getPlayer()) || getPlayer().getViewArea().getGroundItem(affectedItem.getID(), getLocation()) == null
+					|| getPlayer().getStatus() != Action.CASTING_GITEM || affectedItem.isRemoved()) {
 					return;
 				}
-				if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedItem.getLocation())) {
-					player.playerServerMessage(MessageType.QUEST, "I can't see the object from here");
-					player.resetPath();
+				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedItem.getLocation())) {
+					getPlayer().playerServerMessage(MessageType.QUEST, "I can't see the object from here");
+					getPlayer().resetPath();
 					return;
 				}
-				player.resetAllExceptDueling();
+				getPlayer().resetAllExceptDueling();
 				switch (id) {
 					case 16: // Telekinetic grab
 						// fluffs gets its own message
@@ -798,71 +798,71 @@ public class SpellHandler implements PacketHandler {
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.PRESENT.id()) {
 							return;
 						} else if (ungrabbables.contains(affectedItem.getID())) { // list of ungrabbable items sharing this message
-							player.playerServerMessage(MessageType.QUEST, "I can't use telekinetic grab on this object");
+							getPlayer().playerServerMessage(MessageType.QUEST, "I can't use telekinetic grab on this object");
 							return;
 						}
 
-						if (!player.getWorld().isTelegrabEnabled()) {
-							player.message("Telegrab has been disabled");
+						if (!getPlayer().getWorld().isTelegrabEnabled()) {
+							getPlayer().message("Telegrab has been disabled");
 							return;
 						}
 						if (affectedItem.getLocation().isInSeersPartyHall()) {
-							player.message("You can't cast this spell within the vicinity of the party hall");
+							getPlayer().message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.A_BLUE_WIZARDS_HAT.id()) {
-							player.message("The spell fizzles as the magical hat resists your spell.");
+							getPlayer().message("The spell fizzles as the magical hat resists your spell.");
 							return;
 						}
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.GERTRUDES_CAT.id()) {
-							player.message("I can't use telekinetic grab on the cat");
+							getPlayer().message("I can't use telekinetic grab on the cat");
 							return;
 						}
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
-							player.message("I can't use telekinetic grab on Ana");
+							getPlayer().message("I can't use telekinetic grab on Ana");
 							return;
 						}
 						//coin respawn in Rashiliyia's Tomb can't be telegrabbed
 						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id() && affectedItem.getLocation().equals(new Point(358, 3626))) {
-							player.message("The coins turn to dust in your inventory...");
+							getPlayer().message("The coins turn to dust in your inventory...");
 							return;
 						}
 						if (affectedItem.getLocation().inBounds(97, 1428, 106, 1440)) {
-							player.message("Telekinetic grab cannot be used in here");
+							getPlayer().message("Telekinetic grab cannot be used in here");
 							return;
 						}
 
-						if (affectedItem.getLocation().inWilderness() && affectedItem.belongsTo(player) && affectedItem.getAttribute("playerKill", false) && (player.isIronMan(2) || player.isIronMan(1) || player.isIronMan(3))) {
-							player.message("You're an Iron Man, so you can't loot items from players.");
+						if (affectedItem.getLocation().inWilderness() && affectedItem.belongsTo(getPlayer()) && affectedItem.getAttribute("playerKill", false) && (getPlayer().isIronMan(2) || getPlayer().isIronMan(1) || getPlayer().isIronMan(3))) {
+							getPlayer().message("You're an Iron Man, so you can't loot items from players.");
 							return;
 						}
-						if (!affectedItem.belongsTo(player)
-							&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
-							|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
-							player.message("You're an Iron Man, so you can't take items that other players have dropped.");
+						if (!affectedItem.belongsTo(getPlayer())
+							&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
+							|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
+							getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
 							return;
 						}
 
-						if (!checkAndRemoveRunes(player, spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
-						ActionSender.sendTeleBubble(player, location.getX(), location.getY(), true);
-						for (Player p : player.getViewArea().getPlayersInView()) {
-							ActionSender.sendTeleBubble(p, location.getX(), location.getY(), true);
+						ActionSender.sendTeleBubble(getPlayer(), getLocation().getX(), getLocation().getY(), true);
+						for (Player p : getPlayer().getViewArea().getPlayersInView()) {
+							ActionSender.sendTeleBubble(p, getLocation().getX(), getLocation().getY(), true);
 						}
 
-						player.getWorld().unregisterItem(affectedItem);
-						finalizeSpell(player, spell, "Spell successful");
-						player.getWorld().getServer().getGameLogger().addQuery(
-							new GenericLog(player.getWorld(), player.getUsername() + " telegrabbed " + affectedItem.getDef().getName()
+						getPlayer().getWorld().unregisterItem(affectedItem);
+						finalizeSpell(getPlayer(), spell, "Spell successful");
+						getPlayer().getWorld().getServer().getGameLogger().addQuery(
+							new GenericLog(getPlayer().getWorld(), getPlayer().getUsername() + " telegrabbed " + affectedItem.getDef().getName()
 								+ " x" + affectedItem.getAmount() + " from " + affectedItem.getLocation().toString()
-								+ " while standing at " + player.getLocation().toString()));
+								+ " while standing at " + getPlayer().getLocation().toString()));
 						Item item = new Item(affectedItem.getID(), affectedItem.getAmount());
 
 						if (affectedItem.getOwnerUsernameHash() == 0 || affectedItem.getAttribute("npcdrop", false)) {
 							item.setAttribute("npcdrop", true);
 						}
-						player.getInventory().add(item);
+						getPlayer().getInventory().add(item);
 						break;
 				}
 			}
@@ -895,35 +895,35 @@ public class SpellHandler implements PacketHandler {
 		player.setFollowing(affectedMob);
 		player.setStatus(Action.CASTING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4) {
-			public void execute() {
-				if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedMob.getLocation())) {
-					player.playerServerMessage(MessageType.QUEST, "I can't get a clear shot from here");
-					player.resetPath();
+			public void executeInternal() {
+				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedMob.getLocation())) {
+					getPlayer().playerServerMessage(MessageType.QUEST, "I can't get a clear shot from here");
+					getPlayer().resetPath();
 					return;
 				}
-				player.resetFollowing();
-				player.resetPath();
-				SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(spellID);
-				if (!canCast(player) || affectedMob.getSkills().getLevel(com.openrsc.server.constants.Skills.HITS) <= 0 || player.getStatus() != Action.CASTING_MOB) {
-					player.resetPath();
+				getPlayer().resetFollowing();
+				getPlayer().resetPath();
+				SpellDef spell = getPlayer().getWorld().getServer().getEntityHandler().getSpellDef(spellID);
+				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(com.openrsc.server.constants.Skills.HITS) <= 0 || getPlayer().getStatus() != Action.CASTING_MOB) {
+					getPlayer().resetPath();
 					return;
 				}
-				if (!player.checkAttack(affectedMob, true) && affectedMob.isPlayer()) {
-					player.resetPath();
+				if (!getPlayer().checkAttack(affectedMob, true) && affectedMob.isPlayer()) {
+					getPlayer().resetPath();
 					return;
 				}
-				if (!player.checkAttack(affectedMob, true) && affectedMob.isNpc()) {
-					player.message("I can't attack that");
-					player.resetPath();
+				if (!getPlayer().checkAttack(affectedMob, true) && affectedMob.isNpc()) {
+					getPlayer().message("I can't attack that");
+					getPlayer().resetPath();
 					return;
 				}
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
 					if (n.getID() == com.openrsc.server.constants.NpcId.DRAGON.id() || n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
-						player.playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
+						getPlayer().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
 						int fireDamage;
-						if (player.getInventory().wielding(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+						if (getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							if (n.getID() == com.openrsc.server.constants.NpcId.DRAGON.id()) {
 								percentage = 10;
 							} else if (n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
@@ -931,20 +931,20 @@ public class SpellHandler implements PacketHandler {
 							} else {
 								percentage = 0;
 							}
-							player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
+							getPlayer().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
-						fireDamage = (int) Math.floor(getCurrentLevel(player, com.openrsc.server.constants.Skills.HITS) * percentage / 100.0);
-						player.damage(fireDamage);
+						fireDamage = (int) Math.floor(getCurrentLevel(getPlayer(), com.openrsc.server.constants.Skills.HITS) * percentage / 100.0);
+						getPlayer().damage(fireDamage);
 
 						//reduce ranged level (case for KBD)
 						if (n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
-							int newLevel = getCurrentLevel(player, com.openrsc.server.constants.Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(player);
-							player.getSkills().setLevel(com.openrsc.server.constants.Skills.RANGED, newLevel);
+							int newLevel = getCurrentLevel(getPlayer(), com.openrsc.server.constants.Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayer());
+							getPlayer().getSkills().setLevel(com.openrsc.server.constants.Skills.RANGED, newLevel);
 						}
 					}
 
 				}
-				player.resetAllExceptDueling();
+				getPlayer().resetAllExceptDueling();
 				switch (spellID) {
 					/*
 					 * Confuse, reduces attack by 5% Weaken, reduces strength by 5%
@@ -989,14 +989,14 @@ public class SpellHandler implements PacketHandler {
 						final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
 							- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
 						if (newStat < maxWeaken) {
-							player.playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + player.getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
+							getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + getPlayer().getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
 							return;
 						}
-						if (!checkAndRemoveRunes(player, spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
 						final int stat = affectsStat;
-						player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, affectedMob, 1) {
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1) {
 							@Override
 							public void doSpell() {
 								affectedMob.getSkills().setLevel(stat, newStat);
@@ -1005,67 +1005,67 @@ public class SpellHandler implements PacketHandler {
 								}
 							}
 						});
-						finalizeSpell(player, spell, DEFAULT);
+						finalizeSpell(getPlayer(), spell, DEFAULT);
 						return;
 					case 19: // Crumble undead
 						if (affectedMob.isPlayer()) {
-							player.message("You can not use this spell on a Player");
+							getPlayer().message("You can not use this spell on a Player");
 							return;
 						}
 						Npc n = (Npc) affectedMob;
 						if (!n.getAttribute("isUndead", false)) {
-							player.playerServerMessage(MessageType.QUEST, "This spell can only be used on skeletons, zombies and ghosts");
+							getPlayer().playerServerMessage(MessageType.QUEST, "This spell can only be used on skeletons, zombies and ghosts");
 							return;
 						}
 						int damaga = DataConversions.random(3, Constants.CRUMBLE_UNDEAD_MAX);
-						if (!checkAndRemoveRunes(player, spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
 						if (DataConversions.random(0, 8) == 2)
 							damaga = 0;
 
-						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, damaga, 1));
-						finalizeSpell(player, spell, DEFAULT);
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damaga, 1));
+						finalizeSpell(getPlayer(), spell, DEFAULT);
 						return;
 
 					case 25: /* Iban Blast */
-						if (player.getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
-							player.message("you need to complete underground pass quest to cast this spell");
+						if (getPlayer().getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
+							getPlayer().message("you need to complete underground pass quest to cast this spell");
 							return;
 						}
-						if (!player.getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
-							player.message("you need the staff of iban to cast this spell");
+						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
+							getPlayer().message("you need the staff of iban to cast this spell");
 							return;
 						}
-						if (player.getCache().hasKey(spell.getName() + "_casts")
-							&& player.getCache().getInt(spell.getName() + "_casts") < 1) {
-							player.message("you need to recharge the staff of iban");
-							player.message("at iban's temple");
+						if (getPlayer().getCache().hasKey(spell.getName() + "_casts")
+							&& getPlayer().getCache().getInt(spell.getName() + "_casts") < 1) {
+							getPlayer().message("you need to recharge the staff of iban");
+							getPlayer().message("at iban's temple");
 							return;
 						}
-						if (!checkAndRemoveRunes(player, spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
-						if (player.getCache().hasKey(spell.getName() + "_casts")) {
-							int casts = player.getCache().getInt(spell.getName() + "_casts");
-							player.getCache().set(spell.getName() + "_casts", casts - 1);
+						if (getPlayer().getCache().hasKey(spell.getName() + "_casts")) {
+							int casts = getPlayer().getCache().getInt(spell.getName() + "_casts");
+							getPlayer().getCache().set(spell.getName() + "_casts", casts - 1);
 						}
-						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, Formulae.calcGodSpells(player, affectedMob, true), 1));
-						finalizeSpell(player, spell, DEFAULT);
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, true), 1));
+						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					case 33: // Guthix cast
 					case 34: // Saradomin cast
 					case 35: // Zamorak cast
-						if (!player.getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
-							player.message("you must weild the staff of guthix to cast this spell");
+						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
+							getPlayer().message("you must weild the staff of guthix to cast this spell");
 							return;
 						}
-						if (!player.getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
-							player.message("you must weild the staff of saradomin to cast this spell");
+						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
+							getPlayer().message("you must weild the staff of saradomin to cast this spell");
 							return;
 						}
-						if (!player.getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
-							player.message("you must weild the staff of zamorak to cast this spell");
+						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
+							getPlayer().message("you must weild the staff of zamorak to cast this spell");
 							return;
 						}
 					/*if (player.getLocation().inWilderness() && !player.getLocation().inMageArena()
@@ -1076,38 +1076,38 @@ public class SpellHandler implements PacketHandler {
 						return;
 					}*/
 
-						if (!player.getLocation().inMageArena()) {
-							if ((!player.getCache().hasKey(spell.getName() + "_casts"))
-								|| (player.getCache().hasKey(spell.getName() + "_casts")
-								&& player.getCache().getInt(spell.getName() + "_casts") < 100)) {
-								player.message("this spell can only be used in the mage arena");
-								player.message("You must learn this spell first, you need "
-									+ (player.getCache().hasKey(spell.getName() + "_casts")
-									? (100 - player.getCache().getInt(spell.getName() + "_casts")) : "100")
+						if (!getPlayer().getLocation().inMageArena()) {
+							if ((!getPlayer().getCache().hasKey(spell.getName() + "_casts"))
+								|| (getPlayer().getCache().hasKey(spell.getName() + "_casts")
+								&& getPlayer().getCache().getInt(spell.getName() + "_casts") < 100)) {
+								getPlayer().message("this spell can only be used in the mage arena");
+								getPlayer().message("You must learn this spell first, you need "
+									+ (getPlayer().getCache().hasKey(spell.getName() + "_casts")
+									? (100 - getPlayer().getCache().getInt(spell.getName() + "_casts")) : "100")
 									+ " more casts in the mage arena");
 								return;
 							}
 						}
-						if (!checkAndRemoveRunes(player, spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
-						if (player.getLocation().inMageArena()) {
-							if (player.getCache().hasKey(spell.getName() + "_casts")) {
-								int casts = player.getCache().getInt(spell.getName() + "_casts");
-								player.getCache().set(spell.getName() + "_casts", casts + 1);
+						if (getPlayer().getLocation().inMageArena()) {
+							if (getPlayer().getCache().hasKey(spell.getName() + "_casts")) {
+								int casts = getPlayer().getCache().getInt(spell.getName() + "_casts");
+								getPlayer().getCache().set(spell.getName() + "_casts", casts + 1);
 								if (casts == 99) {
-									player.message("Well done .. you can now use the " + spell.getName() + " outside the arena");
+									getPlayer().message("Well done .. you can now use the " + spell.getName() + " outside the arena");
 								}
 							} else {
-								player.getCache().set(spell.getName() + "_casts", 1);
+								getPlayer().getCache().set(spell.getName() + "_casts", 1);
 							}
 						}
 						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY()) == null) {
-							godSpellObject(player, affectedMob, spellID);
+							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
-						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, Formulae.calcGodSpells(player, affectedMob, false), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, false), 1));
 
-						finalizeSpell(player, spell, DEFAULT);
+						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					default:
 						if (spell.getReqLevel() == 62 || spell.getReqLevel() == 65 || spell.getReqLevel() == 70
@@ -1118,7 +1118,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}*/
 						}
-						if (!checkAndRemoveRunes(player, spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
 						/** SALARIN THE TWISTED - STRIKE SPELLS **/
@@ -1141,54 +1141,54 @@ public class SpellHandler implements PacketHandler {
 								secondAdditionalDamage = DataConversions.getRandom().nextInt(2); // 1 // max														// max.
 							}
 							// Shout message from NPC when being maged
-							affectedMob.getUpdateFlags().setChatMessage(new ChatMessage(affectedMob, "Aaarrgh my head", player));
+							affectedMob.getUpdateFlags().setChatMessage(new ChatMessage(affectedMob, "Aaarrgh my head", getPlayer()));
 							// Deal first damage
-							player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, firstDamage, 1));
+							getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, firstDamage, 1));
 							// Deal Second Damage
-							player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, 600, "Salarin the Twisted Strike") {
+							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), 600, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
-										if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
-											if(player.getParty() != null){
-												player.getParty().sendParty();
+										if (getPlayer().getWorld().getServer().getConfig().WANT_PARTIES) {
+											if(getPlayer().getParty() != null){
+												getPlayer().getParty().sendParty();
 											}
 										}
 									}
 									if (affectedMob.getSkills().getLevel(com.openrsc.server.constants.Skills.HITS) <= 0) {
-										affectedMob.killedBy(player);
+										affectedMob.killedBy(getPlayer());
 									}
 
 								}
 							});
 							// Send finalize spell without giving XP
-							player.lastCast = System.currentTimeMillis();
-							player.playSound("spellok");
-							player.playerServerMessage(MessageType.QUEST, "Cast spell successfully");
-							player.setCastTimer();
+							getPlayer().lastCast = System.currentTimeMillis();
+							getPlayer().playSound("spellok");
+							getPlayer().playerServerMessage(MessageType.QUEST, "Cast spell successfully");
+							getPlayer().setCastTimer();
 							return;
 						}
 
 						int max = -1;
-						for (int i = 0; i < player.getWorld().getServer().getConstants().SPELLS.length; i++) {
-							if (spell.getReqLevel() == player.getWorld().getServer().getConstants().SPELLS[i][0])
-								max = player.getWorld().getServer().getConstants().SPELLS[i][1];
+						for (int i = 0; i < getPlayer().getWorld().getServer().getConstants().SPELLS.length; i++) {
+							if (spell.getReqLevel() == getPlayer().getWorld().getServer().getConstants().SPELLS[i][0])
+								max = getPlayer().getWorld().getServer().getConstants().SPELLS[i][1];
 						}
 
-						if (player.getMagicPoints() > 30
-							|| (player.getInventory().wielding(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
+						if (getPlayer().getMagicPoints() > 30
+							|| (getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
-						int damage = Formulae.calcSpellHit(max, player.getMagicPoints());
+						int damage = Formulae.calcSpellHit(max, getPlayer().getMagicPoints());
 
-						player.getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(player.getWorld(), player, affectedMob, damage, 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1));
 						if (((Npc) affectedMob).isNpc() && ((Npc) affectedMob).isPkBot()) {
-								player.setSkulledOn(((PkBot) affectedMob));
+								getPlayer().setSkulledOn(((PkBot) affectedMob));
 							}
-						player.setKillType(1);
-						finalizeSpell(player, spell, DEFAULT);
+						getPlayer().setKillType(1);
+						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 				}
 			}

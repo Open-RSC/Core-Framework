@@ -5,6 +5,7 @@ import com.openrsc.server.event.custom.ShopRestockEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -37,7 +38,6 @@ import static org.apache.logging.log4j.util.Unbox.box;
  * No longer need to add paths to plugins.
  */
 public final class PluginHandler {
-
 	/**
 	 * The asynchronous logger.
 	 */
@@ -59,7 +59,7 @@ public final class PluginHandler {
 	private Map<String, Class<?>> queue;
 	private Map<String, Object> loadedPlugins;
 
-	public PluginHandler (Server server) {
+	public PluginHandler (final Server server) {
 		this.server = server;
 		threadFactory = new NamedThreadFactory(getServer().getName()+" : PluginThread");
 	}
@@ -324,15 +324,13 @@ public final class PluginHandler {
 		return blockDefaultAction(owner, interfce, data, true);
 	}
 
-	/**
-	 * @param interfce
-	 * @param data
-	 * @param callAction
-	 * @return
-	 */
-
 	public boolean blockDefaultAction(final Mob owner, final String interfce,
 									  final Object[] data, final boolean callAction) {
+		return blockDefaultAction(owner, interfce, data, callAction, null);
+	}
+
+	public boolean blockDefaultAction(final Mob owner, final String interfce,
+									  final Object[] data, final boolean callAction, final WalkToAction walkToAction) {
 		if (reloading) {
 			for (Object o : data) {
 				if (o instanceof Player) {
@@ -370,7 +368,7 @@ public final class PluginHandler {
 		}
 
 		if (callAction) {
-			handleAction(owner, interfce, data);
+			handleAction(owner, interfce, data, walkToAction);
 		}
 		return flagStop; // not sure why it matters if its false or true
 	}
@@ -379,11 +377,19 @@ public final class PluginHandler {
 		handleAction(owner, owner.getWorld(), interfce, data);
 	}
 
+	public void handleAction(final Mob owner, final String interfce, final Object[] data, final WalkToAction walkToAction) {
+		handleAction(owner, owner.getWorld(), interfce, data, walkToAction);
+	}
+
 	public void handleAction(final World world, final String interfce, final Object[] data) {
 		handleAction(null, world, interfce, data);
 	}
 
 	public void handleAction(final Mob owner, final World world, final String interfce, final Object[] data) {
+		handleAction(owner, world, interfce, data, null);
+	}
+
+	public void handleAction(final Mob owner, final World world, final String interfce, final Object[] data, final WalkToAction walkToAction) {
 		if (reloading) {
 			return;
 		}
@@ -414,11 +420,11 @@ public final class PluginHandler {
 
 					if (go) {
 						final String pluginName = c.getClass().getSimpleName() + "." + m.getName();
-						final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, new PluginTask(world) {
+						final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world) {
 							@Override
 							public int action() {
 								try {
-									LOGGER.info("Executing Plugin : " + pluginName + " : " + Arrays.deepToString(data));
+									LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
 									m.invoke(c,data);
 									return 1;
 								} catch (final Exception ex) {
