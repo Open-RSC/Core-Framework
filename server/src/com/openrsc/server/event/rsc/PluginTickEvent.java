@@ -27,14 +27,20 @@ public class PluginTickEvent extends GameTickEvent {
 	public void run() {
 		// We want to cancel this plugin event if the most recently executed walk to action is not the same as this plugin's context walk to action.
 		if (walkToAction != null && walkToAction != getPlayerOwner().getLastExecutedWalkToAction()) {
-			if (getFuture() != null) {
+			// If the task has not been submitted, then we just cancel this event
+			if (getFuture() == null || (!getPluginTask().isInitialized() && getFuture().cancel(false))) {
+
+				stop();
+				return;
+				/*
 				// This will trigger PluginTask.pause()'s wait() call to generate an InterruptedException.
 				// We then throw a special PluginInterruptedException which can only be caught by PluginTask.action() or PluginTask.call().
 				// When these methods catch the exception it will return the thread which will close the PluginTask's thread down.
 				getFuture().cancel(true);
+				stop();
+				return;
+				*/
 			}
-			stop();
-			return;
 		}
 
 		// Submitting in run because we want to only run game code on tick bounds so we start the execution inside of a tick
