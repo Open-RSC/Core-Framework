@@ -54,8 +54,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.plugins.Functions.sleep;
-
 /**
  * A single player.
  */
@@ -124,7 +122,7 @@ public final class Player extends Mob {
 	private BatchEvent batchEvent = null;
 	private String currentIP = "0.0.0.0";
 	private int incorrectSleepTries = 0;
-	private int questionOption;
+	private volatile int questionOption;
 
 	/**
 	 * Players cache is used to store various objects into database
@@ -1129,6 +1127,7 @@ public final class Player extends Mob {
 	}
 
 	public void setMenu(final Menu menu) {
+		resetMenuHandler();
 		this.menu = menu;
 	}
 
@@ -1137,6 +1136,7 @@ public final class Player extends Mob {
 	}
 
 	public void setMenuHandler(final MenuOptionListener menuHandler) {
+		resetMenuHandler();
 		menuHandler.setOwner(this);
 		this.menuHandler = menuHandler;
 	}
@@ -1158,11 +1158,11 @@ public final class Player extends Mob {
 		getCache().store("global_mute", l);
 	}
 
-	public int getOption() {
+	public synchronized int getOption() {
 		return questionOption;
 	}
 
-	public void setOption(final int option) {
+	public synchronized void setOption(final int option) {
 		this.questionOption = option;
 	}
 
@@ -1934,14 +1934,6 @@ public final class Player extends Mob {
 		ActionSender.sendPlayerServerMessage(this, type, string);
 	}
 
-	public void walkThenTeleport(final int x1, final int y1, final int x2, final int y2, final boolean bubble) {
-		walk(x1, y1);
-		while (!getWalkingQueue().finished()) {
-			sleep(1);
-		}
-		teleport(x2, y2, bubble);
-	}
-
 	public void teleport(final int x, final int y) {
 		teleport(x, y, false);
 	}
@@ -2114,6 +2106,7 @@ public final class Player extends Mob {
 	}
 
 	public void resetMenuHandler() {
+		setOption(-1);
 		menu = null;
 		menuHandler = null;
 		ActionSender.hideMenu(this);

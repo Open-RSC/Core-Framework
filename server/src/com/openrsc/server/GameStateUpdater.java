@@ -24,12 +24,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * @author n0m
- */
 public final class GameStateUpdater {
-
-
 	/**
 	 * The asynchronous logger.
 	 */

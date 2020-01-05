@@ -207,6 +207,14 @@ public class Functions {
 		}, "Walk Mob");
 	}
 
+	public static void walkThenTeleport(final Player player, final int x1, final int y1, final int x2, final int y2, final boolean bubble) {
+		player.walk(x1, y1);
+		while (!player.getWalkingQueue().finished()) {
+			sleep(1);
+		}
+		player.teleport(x2, y2, bubble);
+	}
+
 	public static boolean hasItemAtAll(Player p, int id) {
 		return p.getBank().contains(new Item(id)) || p.getInventory().contains(new Item(id));
 	}
@@ -1601,12 +1609,7 @@ public class Functions {
 	public static void showPlayerMenu(final Player player, final Npc npc, final String... options) {
 		player.resetMenuHandler();
 		player.setOption(-5);
-		player.setMenuHandler(new MenuOptionListener(options) {
-			@Override
-			public void handleReply(final int option, final String reply) {
-				player.setOption(option);
-			}
-		});
+		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
 	}
 
@@ -1620,54 +1623,45 @@ public class Functions {
 	}
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
-			final long start = System.currentTimeMillis();
-			if (npc != null) {
-				if (npc.isRemoved()) {
-					player.resetMenuHandler();
-					player.setOption(-1);
-					player.setBusy(false);
-					return -1;
-				}
-				npc.setBusy(true);
-			}
-			player.resetMenuHandler();
-			player.setOption(-1);
-			player.setMenuHandler(new MenuOptionListener(options) {
-				@Override
-				public void handleReply(final int option, final String reply) {
-					player.setOption(option);
-				}
-			});
-			ActionSender.sendMenu(player, options);
-
-			synchronized (player.getMenuHandler()) {
-				while (!player.checkUnderAttack()) {
-					if (player.getOption() != -1) {
-						if (npc != null && options[player.getOption()] != null) {
-							npc.setBusy(false);
-							if (sendToClient)
-								playerTalk(player, npc, options[player.getOption()]);
-						}
-						return player.getOption();
-					} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-						player.setOption(-1);
-						player.resetMenuHandler();
-						if (npc != null) {
-							npc.setBusy(false);
-							player.setBusyTimer(0);
-						}
-						return -1;
-					}
-					sleep(1);
-				}
-				player.releaseUnderAttack();
-				player.notify();
-				//player got busy (combat), free npc if any
-				if (npc != null) {
-					npc.setBusy(false);
-				}
+		final long start = System.currentTimeMillis();
+		if (npc != null) {
+			if (npc.isRemoved()) {
+				player.resetMenuHandler();
+				player.setBusy(false);
 				return -1;
 			}
+			npc.setBusy(true);
+		}
+		player.setMenuHandler(new MenuOptionListener(options));
+		ActionSender.sendMenu(player, options);
+
+		synchronized (player.getMenuHandler()) {
+			while (!player.checkUnderAttack()) {
+				if (player.getOption() != -1) {
+					if (npc != null && options[player.getOption()] != null) {
+						npc.setBusy(false);
+						if (sendToClient)
+							playerTalk(player, npc, options[player.getOption()]);
+					}
+					return player.getOption();
+				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+					player.resetMenuHandler();
+					if (npc != null) {
+						npc.setBusy(false);
+						player.setBusyTimer(0);
+					}
+					return -1;
+				}
+				sleep(1);
+			}
+			player.releaseUnderAttack();
+			player.notify();
+			//player got busy (combat), free npc if any
+			if (npc != null) {
+				npc.setBusy(false);
+			}
+			return -1;
+		}
 	}
 
 	public static void resetGnomeCooking(Player p) {

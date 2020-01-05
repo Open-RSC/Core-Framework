@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.itemactions;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -220,48 +219,46 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		String[] options;
 		options = new String[]{"Constructing the cannon", "Making ammo", "firing the cannon", "warrenty"};
 		message(player, "the manual has four pages");
-		player.setMenuHandler(new MenuOptionListener(options) {
-			public void handleReply(int option, String reply) {
-				if (owner.isBusy()) {
-					return;
-				}
-				if (option == 0) {
-					ActionSender.sendBox(owner, "Constructing the cannon% %"
-						+ "To construct the cannon, firstly set down Dwarf cannon base on the ground.% %"
-						+ "Next add the Dwarf cannon stand to the Dwarf cannon base.% %"
-						+ "Then add the Dwarf cannon barrels (this can be tiring work).% %"
-						+ "Last of all add the Dwarf cannon furnace which powers the cannon.% %"
-						+ "You should now have a fully set up dwarf multi cannon ready to go splat some nasty creatures.% % % %"
-						+ "@red@WARNING: You should be well rested before attempting to @red@lift the heavy cannon", true);
 
-				}
+		int option = showMenu(player, options);
 
-				else if (option == 1) {
-					ActionSender.sendBox(owner, "Making ammo% %"
-						+ "The ammo for the cannon is made from steel bars.% %"
-						+ "Firstly you must heat up a steel bar in a furnace% %"
-						+ "Then pour the molten steel into a cannon ammo mould% %"
-						+ "You should now have a ready to fire multi cannon ball% %", true);
-				}
+		if (player.isBusy()) {
+			return;
+		}
+		if (option == 0) {
+			ActionSender.sendBox(player, "Constructing the cannon% %"
+				+ "To construct the cannon, firstly set down Dwarf cannon base on the ground.% %"
+				+ "Next add the Dwarf cannon stand to the Dwarf cannon base.% %"
+				+ "Then add the Dwarf cannon barrels (this can be tiring work).% %"
+				+ "Last of all add the Dwarf cannon furnace which powers the cannon.% %"
+				+ "You should now have a fully set up dwarf multi cannon ready to go splat some nasty creatures.% % % %"
+				+ "@red@WARNING: You should be well rested before attempting to @red@lift the heavy cannon", true);
 
-				else if (option == 2) {
-					ActionSender.sendBox(owner, "Firing the cannon% %"
-						+ "The cannon will only fire when monsters are available to target.% %"
-						+ "If you are carrying enough ammo the multi cannon will fire up to 20 rounds before stopping.% %"
-						+ "The cannon will automatically target non friendly creatures.% %"
-						+ "@red@Warning - firing the cannon is exhausting work and can @red@leave adventurers too fatigued to carry the cannon, so @red@rest well before using", true);
-				}
+		}
 
-				else if (option == 3) {
-					ActionSender.sendBox(owner, "@red@Dwarf cannon warrenty% %"
-						+ "If your cannon is stolen or lost, after or during being set up, the dwarf engineer will happily replace the parts% %"
-						+ "However cannon parts that were given away or dropped will not be replaced for free% %"
-						+ "It is only possible to operate one cannon at a time% % % % % %"
-						+ "by order of the dwarwven black guard", true);
-				}
-			}
-		});
-		ActionSender.sendMenu(player, options);
+		else if (option == 1) {
+			ActionSender.sendBox(player, "Making ammo% %"
+				+ "The ammo for the cannon is made from steel bars.% %"
+				+ "Firstly you must heat up a steel bar in a furnace% %"
+				+ "Then pour the molten steel into a cannon ammo mould% %"
+				+ "You should now have a ready to fire multi cannon ball% %", true);
+		}
+
+		else if (option == 2) {
+			ActionSender.sendBox(player, "Firing the cannon% %"
+				+ "The cannon will only fire when monsters are available to target.% %"
+				+ "If you are carrying enough ammo the multi cannon will fire up to 20 rounds before stopping.% %"
+				+ "The cannon will automatically target non friendly creatures.% %"
+				+ "@red@Warning - firing the cannon is exhausting work and can @red@leave adventurers too fatigued to carry the cannon, so @red@rest well before using", true);
+		}
+
+		else if (option == 3) {
+			ActionSender.sendBox(player, "@red@Dwarf cannon warrenty% %"
+				+ "If your cannon is stolen or lost, after or during being set up, the dwarf engineer will happily replace the parts% %"
+				+ "However cannon parts that were given away or dropped will not be replaced for free% %"
+				+ "It is only possible to operate one cannon at a time% % % % % %"
+				+ "by order of the dwarwven black guard", true);
+		}
 	}
 
 	private void handleTreeGnomeTranslation(Player player) {
