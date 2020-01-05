@@ -360,7 +360,7 @@ public class Server implements Runnable {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000, "Shutdown for Update") {
+		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Shutdown for Update") {
 			public void action() {
 				unbind();
 				saveAndShutdown();
@@ -378,7 +378,7 @@ public class Server implements Runnable {
 		}
 		LOGGER.info("Players saved...");
 
-		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 6000, "Save and Shutdown") {
+		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 10, "Save and Shutdown") {
 			public void action() {
 				kill();
 				getDatabaseConnection().close();
@@ -387,18 +387,11 @@ public class Server implements Runnable {
 		getGameEventHandler().add(up);
 	}
 
-	public long timeTillShutdown() {
-		if (updateEvent == null) {
-			return -1;
-		}
-		return updateEvent.timeTillNextRun();
-	}
-
 	public boolean restart(int seconds) {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000, "Restart") {
+		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Restart") {
 			public void action() {
 				unbind();
 				//saveAndRestart();
@@ -407,6 +400,13 @@ public class Server implements Runnable {
 		};
 		getGameEventHandler().add(updateEvent);
 		return true;
+	}
+
+	public long timeTillShutdown() {
+		if (updateEvent == null) {
+			return -1;
+		}
+		return updateEvent.timeTillNextRun();
 	}
 
 	public final long getLastGameStateDuration() {
