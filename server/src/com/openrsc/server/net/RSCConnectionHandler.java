@@ -38,44 +38,40 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
-		try {
-			final Channel channel = ctx.channel();
+		final Channel channel = ctx.channel();
 
-			if(message instanceof Packet) {
+		if(message instanceof Packet) {
 
-				final Packet packet = (Packet) message;
-				Player player = null;
-				ConnectionAttachment att = channel.attr(attachment).get();
-				if (att != null) {
-					player = att.player.get();
-				}
-				if (player == null) {
-					if (packet.getID() == 19) {
-						if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
-							ctx.channel().close();
-
-							return;
-						}
-
-						ActionSender.sendInitialServerConfigs(getServer(), channel);
-					} else {
-						loginHandler.processLogin(packet, channel, getServer());
-					}
-				} else {
-					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), true)) {
+			final Packet packet = (Packet) message;
+			Player player = null;
+			ConnectionAttachment att = channel.attr(attachment).get();
+			if (att != null) {
+				player = att.player.get();
+			}
+			if (player == null) {
+				if (packet.getID() == 19) {
+					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
 						ctx.channel().close();
 
 						return;
 					}
 
-					player.addToPacketQueue(packet);
+					ActionSender.sendInitialServerConfigs(getServer(), channel);
+				} else {
+					loginHandler.processLogin(packet, channel, getServer());
 				}
+			} else {
+				if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), true)) {
+					ctx.channel().close();
+
+					return;
+				}
+
+				player.addToPacketQueue(packet);
 			}
-		} catch (Exception e) {
-			LOGGER.catching(e);
-		} finally {
-			ReferenceCountUtil.release(message);
 		}
+
+		ReferenceCountUtil.release(message);
 	}
 
 	@Override
@@ -113,11 +109,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e)  {
 		if (!getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
-			System.out.println("Exception caught in thread!\n" + e);
-
-			for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-				System.out.println(ste);
-			}
+			final Channel channel = ctx.channel();
+			final ConnectionAttachment att = channel.attr(attachment).get();
+			LOGGER.error("Exception caught in Network I/O : Remote address " + channel.remoteAddress() + " : isOpen " + channel.isOpen() + " : isActive " + channel.isActive() + " : isWritable " + channel.isWritable() + (att == null ? "" : " : Attached Player " + att.player.get()));
 			LOGGER.catching(e);
 		}
 
