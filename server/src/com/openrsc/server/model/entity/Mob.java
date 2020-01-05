@@ -821,7 +821,7 @@ public abstract class Mob extends Entity {
 		return updateFlags;
 	}
 
-	public ViewArea getViewArea() {
+	public synchronized ViewArea getViewArea() {
 		return viewArea;
 	}
 
