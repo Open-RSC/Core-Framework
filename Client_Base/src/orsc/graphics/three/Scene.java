@@ -1986,7 +1986,7 @@ public final class Scene {
 											var36 = this.m_A;
 											var37 = var36 - var8;
 										}
-
+										//walls
 										Shader.shadeScanline(var22 + var29 * var8, var20, (byte) 50,
 											var25 + var8 * var30, var38, var39 << 2, this.resourceDatabase[var5],
 											var8 + var33, var8 * var28 + var19, var26, 0, 0, this.pixelData, var23,
@@ -2122,7 +2122,7 @@ public final class Scene {
 										var36 = this.m_A;
 										var37 = var36 - var8;
 									}
-
+									//floors?
 									Shader.shadeScanline(var39, 1121159302, var23, var8 * var29 + var22, var20,
 										this.resourceDatabase[var5], var38, 0, var19 + var28 * var8, 0, this.pixelData,
 										var33 + var8, var25 + var8 * var30, var26, var37);
@@ -2161,7 +2161,7 @@ public final class Scene {
 										var36 = this.m_A;
 										var37 = var36 - var8;
 									}
-
+									//fountain spray & wooden fences
 									Shader.shadeScanline(var37, var30 * var8 + var25, 0, (byte) 25, 0, var20, var26,
 										var39, this.resourceDatabase[var5], this.pixelData, var8 + var33,
 										var8 * var28 + var19, 0, var23, var38, var29 * var8 + var22);
@@ -2355,7 +2355,6 @@ public final class Scene {
 
 	private void b(int var1, boolean var2) {
 		try {
-
 			if (!var2) {
 				this.m_K = false;
 			}
