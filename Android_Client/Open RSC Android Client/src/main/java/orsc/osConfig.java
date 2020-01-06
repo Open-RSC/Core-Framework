@@ -18,5 +18,4 @@ public class osConfig {
 	public static boolean C_VOLUME_TO_ROTATE = false;
 	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_LAST_ZOOM = 75;
-	public static int C_MOVE_PER_FRAME = 4;
 }

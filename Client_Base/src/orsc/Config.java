@@ -50,6 +50,7 @@ public class Config {
 	public static boolean C_PARTY_INV = false;
 	public static int C_ZOOM;
 	public static boolean C_CUSTOM_UI = false; // Enables a osrs style UI
+	public static int C_MOVE_PER_FRAME = 4;
 
 	/* Experience Config Menu */
 	public static int C_EXPERIENCE_COUNTER = 1;

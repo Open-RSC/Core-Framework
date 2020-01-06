@@ -10509,7 +10509,7 @@ public final class mudclient implements Runnable {
 							stepsToMove = 10 + waypointIndexCurrent - waypointIndexNext;
 						}
 
-						amountToMove = osConfig.C_MOVE_PER_FRAME;
+						amountToMove = Config.C_MOVE_PER_FRAME;
 						if (stepsToMove > 2) {
 							amountToMove = stepsToMove * amountToMove - amountToMove;
 						}
@@ -10624,7 +10624,7 @@ public final class mudclient implements Runnable {
 							stepsToMove = waypointIndexCurrent - waypointIndexNext;
 						}
 
-						amountToMove = osConfig.C_MOVE_PER_FRAME;
+						amountToMove = Config.C_MOVE_PER_FRAME;
 						if (stepsToMove > 2) {
 							amountToMove = (stepsToMove - 1) * amountToMove;
 						}
