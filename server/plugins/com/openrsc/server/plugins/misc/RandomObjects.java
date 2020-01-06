@@ -134,6 +134,10 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 					owner.message("You don't have permission to use this");
 				}
 				break;
+			case 1242:
+				owner.message("You row the boat and stop in Edgeville");
+				owner.teleport(206,449);
+				break;
 		}
 		// SMUGGLING GATE VARROCK
 		if (object.getX() == 94 && object.getY() == 521 && object.getID() == 60) {
@@ -190,6 +194,9 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 			return true;
 		}
 		if (obj.getID() == 1241) { // Scotruth to chaos altar shortcut
+			return true;
+		}
+		if (obj.getID() == 1242) { //Rowboat with a travel option (used for Lum->Edge)
 			return true;
 		}
 		return false;
