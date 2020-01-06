@@ -135,8 +135,10 @@ public class RandomObjects implements ObjectActionExecutiveListener, ObjectActio
 				}
 				break;
 			case 1242:
-				owner.message("You row the boat and stop in Edgeville");
+				owner.message("You enter the rowboat...");
+				sleep(3*owner.getWorld().getServer().getConfig().GAME_TICK);
 				owner.teleport(206,449);
+				owner.message("And stop in Edgeville");
 				break;
 		}
 		// SMUGGLING GATE VARROCK
