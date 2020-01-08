@@ -38,141 +38,17 @@ public final class Moderator implements CommandListener {
 
 	@Override
 	public void handleCommand(String cmd, String[] args, Player player) {
-		if (cmd.equalsIgnoreCase("gmute")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 or exclude for permanent)");
-				return;
-			}
+		if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
+			StringBuilder newStr = new StringBuilder();
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
+			for (String arg : args) {
+				newStr.append(arg).append(" ");
 			}
-
-			int minutes = -1;
-			if (args.length >= 2) {
-				try {
-					minutes = Integer.parseInt(args[1]);
-				} catch (NumberFormatException ex) {
-					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 or exclude for permanent)");
-					return;
-				}
-			} else {
-				minutes = player.isSuperMod() ? -1 : 15;
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
+			newStr.insert(0, player.getStaffName() + ": ");
+			for (Player p : player.getWorld().getPlayers()) {
+				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
 			}
-
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
-				return;
-			}
-
-			if (minutes == -1) {
-				if (!player.isSuperMod()) {
-					player.message(messagePrefix + "You are not allowed to mute indefinitely.");
-					return;
-				}
-				player.message(messagePrefix + "You have given " + p.getUsername() + " a permanent mute from ::g chat.");
-				if (p.getUsernameHash() != player.getUsernameHash()) {
-					p.message(messagePrefix + "You have received a permanent mute from (::g) chat.");
-				}
-				p.getCache().store("global_mute", -1);
-			} else {
-				if (!player.isSuperMod() && minutes > 120) {
-					player.message(messagePrefix + "You are not allowed to mute that user for more than 2 hours.");
-					return;
-				}
-				player.message(messagePrefix + "You have given " + p.getUsername() + " a " + minutes + " minute mute from ::g chat.");
-				if (p.getUsernameHash() != player.getUsernameHash()) {
-					p.message(messagePrefix + "You have received a " + minutes + " minute mute in (::g) chat.");
-				}
-				p.getCache().store("global_mute", (System.currentTimeMillis() + (minutes * 60000)));
-			}
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes in (::g) chat.")));
-		} else if (cmd.equalsIgnoreCase("mute")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 for permanent)");
-				return;
-			}
-
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-
-			int minutes = -1;
-			if (args.length >= 2) {
-				try {
-					minutes = Integer.parseInt(args[1]);
-				} catch (NumberFormatException ex) {
-					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 for permanent)");
-					return;
-				}
-			} else {
-				minutes = player.isSuperMod() ? -1 : 15;
-			}
-
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
-				return;
-			}
-
-			if (minutes == -1) {
-				if (!player.isSuperMod()) {
-					player.message(messagePrefix + "You are not allowed to mute indefinitely.");
-					return;
-				}
-				player.message("You have given " + p.getUsername() + " a permanent mute.");
-				if (p.getUsernameHash() != player.getUsernameHash()) {
-					p.message("You have received a permanent mute. Appeal is available on Discord.");
-				}
-				p.setMuteExpires(-1);
-			} else {
-				if (!player.isSuperMod() && minutes > 120) {
-					player.message(messagePrefix + "You are not allowed to mute that user for more than 2 hours.");
-					return;
-				}
-				player.message("You have given " + p.getUsername() + " a " + minutes + " minute mute.");
-				if (p.getUsernameHash() != player.getUsernameHash()) {
-					p.message("You have received a " + minutes + " minute mute. Appeal is available on Discord.");
-				}
-				p.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
-			}
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes")));
-		} else if (cmd.equalsIgnoreCase("kick")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
-				return;
-			}
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
-				return;
-			}
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 6, p, p.getUsername() + " has been kicked by " + player.getUsername()));
-			p.unregister(true, "You have been kicked by " + player.getUsername());
-			player.message(p.getUsername() + " has been kicked.");
-		} else if (cmd.equalsIgnoreCase("alert")) {
-			StringBuilder message = new StringBuilder();
-			if (args.length > 0) {
-				Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-
-				if (p != null) {
-					for (int i = 1; i < args.length; i++)
-						message.append(args[i]).append(" ");
-					ActionSender.sendBox(p, player.getStaffName() + ":@whi@ " + message, false);
-					player.message(messagePrefix + "Alerted " + p.getUsername());
-				} else
-					player.message(messagePrefix + "Invalid name or player is not online");
-			} else
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [message]");
 		} else if (cmd.equalsIgnoreCase("summon")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
@@ -196,17 +72,6 @@ public final class Moderator implements CommandListener {
 			player.message(messagePrefix + "You have summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
-			}
-		} else if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
-			StringBuilder newStr = new StringBuilder();
-
-			for (String arg : args) {
-				newStr.append(arg).append(" ");
-			}
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr.insert(0, player.getStaffName() + ": ");
-			for (Player p : player.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
 			}
 		} else if (cmd.equalsIgnoreCase("info") || cmd.equalsIgnoreCase("about")) {
 			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;

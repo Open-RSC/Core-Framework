@@ -1690,6 +1690,10 @@ public final class Player extends Mob {
 		return groupID == Group.MOD || isSuperMod();
 	}
 
+	public boolean isPlayerMod() {
+		return groupID == Group.PLAYER_MOD || isSuperMod();
+	}
+
 	public boolean isDev() {
 		return groupID == Group.DEV || isAdmin();
 	}
@@ -1699,7 +1703,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isStaff() {
-		return isEvent();
+		return isEvent() || isPlayerMod();
 	}
 
 	public boolean isChangingAppearance() {
@@ -2818,6 +2822,9 @@ public final class Player extends Mob {
 
 			if (isEvent())
 				return 0x014D33BD;
+
+			if (isPlayerMod())
+				return 0x03FFFFFF;
 
 			return 0;
 		} else {
