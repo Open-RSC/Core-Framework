@@ -12,7 +12,7 @@ Runescape Classic was shut down and abandoned after 17 years on August 6th, 2018
 
 
 ## How to Play<a name="play"></a>
-<a href="https://gitlab.openrsc.com/open-rsc/Single-Player">Windows Single Player</a>
+<a href="https://orsc.dev/open-rsc/Single-Player">Windows Single Player</a>
 
 <b>Run your own server:</b>
 
@@ -40,7 +40,7 @@ Feel free to join our Discord if you need help: <a href="https://discord.gg/KGvu
 ## Bug Reports, Discord, and Reddit<a name="bugs"></a>
 Feel free to submit bug reports in the repository issues section! If you would like to chat with developers and players of this project, join our Discord server!
 
-<a href="https://gitlab.openrsc.com/open-rsc/Game/issues">GitLab Issue Submission</a>
+<a href="https://orsc.dev/open-rsc/Game/issues">GitLab Issue Submission</a>
 
 <a href="https://discordapp.com/invite/94vVKND">Discord</a>
 
@@ -51,6 +51,6 @@ Feel free to submit bug reports in the repository issues section! If you would l
 
 ## In-Game Commands<a name="commands"></a>
 
-#### <a href="https://gitlab.openrsc.com/open-rsc/Game/blob/3.0.0/Commands.md">Click here for in-game command documentation.</a>
+#### <a href="https://orsc.dev/open-rsc/Game/blob/master/Commands.md">Click here for in-game command documentation.</a>
 
 [Return to top](#top)
