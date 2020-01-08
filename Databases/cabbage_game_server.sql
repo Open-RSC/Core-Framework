@@ -40141,7 +40141,8 @@ VALUES (312, 3348, 223, 0, 0, 28501),
        (783, 15, 0, 0, 0, 29347),
        (781, 16, 0, 0, 0, 29348),
        (780, 18, 0, 0, 0, 29349),
-       (223, 3281, 1241, 2, 0, 29350);
+       (223, 3281, 1241, 2, 0, 29350),
+       (119, 642, 1242, 6, 0, 29351);
 
 DROP TABLE IF EXISTS `openrsc_recovery_questions`;
 CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions`
