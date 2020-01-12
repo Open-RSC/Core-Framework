@@ -26,11 +26,11 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 			case "bug reports": {
-				Utils.openWebpage("https://gitlab.openrsc.com/open-rsc/Game/issues");
+				Utils.openWebpage("https://orsc.dev/open-rsc/Game/issues");
 				return;
 			}
 			case "bot reports": {
-				Utils.openWebpage("https://gitlab.openrsc.com/open-rsc/Game/issues");
+				Utils.openWebpage("https://orsc.dev/open-rsc/Game/issues");
 				return;
 			}
 			case "discord": {
