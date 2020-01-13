@@ -46,8 +46,8 @@ public class Constants {
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/";
-	public static final Double VERSION_NUMBER = 20191223.171500; //YYYYMMDD.HHMMSS format
-	public static final String VERSION_UPDATE_URL = "https://gitlab.openrsc.com/open-rsc/Game/raw/master/PC_Launcher/src/com/loader/openrsc/Constants.java";
+	public static final Double VERSION_NUMBER = 20200111.191500; //YYYYMMDD.HHMMSS format
+	public static final String VERSION_UPDATE_URL = "https://orsc.dev/open-rsc/Game/raw/master/PC_Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "https://game.openrsc.com/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";
 	public static final String MD5_TABLENAME = "MD5.SUM";
