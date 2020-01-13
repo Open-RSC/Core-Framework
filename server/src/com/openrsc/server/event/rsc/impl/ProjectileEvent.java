@@ -104,8 +104,11 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 			if (caster.isNpc()) {
-				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction(caster, "PlayerKilledNpc",
-					new Object[]{(Player) opponent, (Npc) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(caster, "PlayerKilledNpc", new Object[]{(Player) opponent, (Npc) caster})) {
+					return;
+				}
+			} else if(caster.isPlayer()) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(caster, "PlayerKilledPlayer", new Object[]{(Player) opponent, (Player) caster})) {
 					return;
 				}
 			}
@@ -154,13 +157,19 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 			if (opponent.isNpc() && caster.isPlayer()) {
-				Player playerCaster = (Player) caster;
-				Npc npcOpponent = (Npc) opponent;
-				if (caster.getWorld().getServer().getPluginHandler().blockDefaultAction(playerCaster, "PlayerKilledNpc",
-					new Object[]{playerCaster, npcOpponent})) {
+				final Player playerCaster = (Player) caster;
+				final Npc npcOpponent = (Npc) opponent;
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(playerCaster, "PlayerKilledNpc", new Object[]{playerCaster, npcOpponent})) {
 					return;
 				}
 				npcOpponent.killedBy(playerCaster);
+			} else if(opponent.isPlayer() && caster.isPlayer()) {
+				final Player playerCaster = (Player) caster;
+				final Player playerOpponent = (Player) opponent;
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(playerCaster, "PlayerKilledPlayer", new Object[]{playerCaster, playerOpponent})) {
+					return;
+				}
+				playerOpponent.killedBy(playerCaster);
 			} else {
 				opponent.killedBy(caster);
 			}

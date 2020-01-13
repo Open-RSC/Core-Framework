@@ -6,6 +6,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.StringUtil;
@@ -20,31 +21,24 @@ import java.util.Random;
 
 import static com.openrsc.server.plugins.commands.Event.LOGGER;
 
-public final class SuperModerator implements CommandListener {
+public final class SuperModerator implements CommandListener, CommandExecutiveListener {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isSuperMod();
 	}
 
 	@Override
-	public void handleCommand(String cmd, String[] args, Player player) {
+	public void onCommand(String cmd, String[] args, Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		if (cmd.equalsIgnoreCase("setcache") || cmd.equalsIgnoreCase("scache") || cmd.equalsIgnoreCase("storecache")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [cache_key] [cache_value]");

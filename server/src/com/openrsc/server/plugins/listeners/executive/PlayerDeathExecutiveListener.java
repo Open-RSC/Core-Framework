@@ -9,5 +9,5 @@ public interface PlayerDeathExecutiveListener {
 	 * @param p
 	 * @return
 	 */
-	public boolean blockPlayerDeath(Player p);
+	boolean blockPlayerDeath(Player p);
 }

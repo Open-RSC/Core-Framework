@@ -50,16 +50,8 @@ public class ItemUseOnPlayer implements PacketHandler {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
-				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
-					getPlayer(),
-					"InvUseOnPlayer",
-					new Object[]{getPlayer(), affectedPlayer, item}, true, this))
-					return;
-				switch (item.getID()) {
-					default:
-						getPlayer().message("Nothing interesting happens");
-						break;
-				}
+
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "InvUseOnPlayer", new Object[]{getPlayer(), affectedPlayer, item}, this);
 			}
 		});
 	}

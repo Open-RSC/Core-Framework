@@ -7,5 +7,5 @@ public interface PickupExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from picking up an item
 	 */
-	public boolean blockPickup(Player p, GroundItem i);
+	boolean blockPickup(Player p, GroundItem i);
 }

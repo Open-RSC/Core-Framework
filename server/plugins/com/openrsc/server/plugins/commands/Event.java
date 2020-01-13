@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public final class Event implements CommandListener {
+public final class Event implements CommandListener, CommandExecutiveListener {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
 
 	public static String messagePrefix = null;
@@ -36,21 +37,7 @@ public final class Event implements CommandListener {
 		Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
 		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641), Point.location(425,564)};
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isEvent();
 	}
 
@@ -59,7 +46,14 @@ public final class Event implements CommandListener {
 	 * Development usable commands in general
 	 */
 	@Override
-	public void handleCommand(String cmd, String[] args, Player player) {
+	public void onCommand(String cmd, String[] args, Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		if (cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp") || cmd.equalsIgnoreCase("town") || cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [town/player] OR ");

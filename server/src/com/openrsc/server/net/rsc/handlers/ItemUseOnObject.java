@@ -34,10 +34,10 @@ public class ItemUseOnObject implements PacketHandler {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
-				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"InvUseOnWallObject",
-					new Object[]{object, item, getPlayer()}, true, this))
+					new Object[]{object, item, getPlayer()}, this))
 					return;
 			}
 		});
@@ -49,7 +49,7 @@ public class ItemUseOnObject implements PacketHandler {
 		if ((object.getID() == 226 || object.getID() == 232) && player.withinRange(object, 2)) {
 			player.resetPath();
 			player.resetAll();
-			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
+			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
 				player, "InvUseOnObject", new Object[]{object, item, player}))
 				return;
 		}
@@ -73,16 +73,9 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler()
-					.blockDefaultAction(getPlayer(), "InvUseOnObject",
-						new Object[]{(GameObject) object, item, getPlayer()}, true, this))
+					.handlePlugin(getPlayer(), "InvUseOnObject",
+						new Object[]{(GameObject) object, item, getPlayer()}, this))
 					return;
-
-				// Using items on objects
-				switch (object.getID()) {
-					default:
-						// owner.message("Nothing interesting happens");
-						return;
-				}
 			}
 		});
 	}

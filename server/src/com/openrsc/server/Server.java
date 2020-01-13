@@ -225,7 +225,7 @@ public class Server implements Runnable {
 			bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
 			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
 			try {
-				getPluginHandler().handleAction(getWorld(), "Startup", new Object[]{});
+				getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
 				serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
 				LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
 			} catch (final InterruptedException e) {

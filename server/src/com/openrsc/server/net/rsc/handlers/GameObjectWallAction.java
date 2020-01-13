@@ -39,10 +39,10 @@ public class GameObjectWallAction implements PacketHandler {
 					return;
 				}
 
-				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"WallObjectAction",
-					new Object[]{object, click, getPlayer()}, true, this)) {
+					new Object[]{object, click, getPlayer()}, this)) {
 					return;
 				}
 

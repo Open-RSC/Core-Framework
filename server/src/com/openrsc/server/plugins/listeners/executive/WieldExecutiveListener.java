@@ -3,9 +3,9 @@ package com.openrsc.server.plugins.listeners.executive;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 
-public interface DropExecutiveListener {
+public interface WieldExecutiveListener {
 	/**
-	 * Return true if you wish to prevent a user from dropping an item
+	 * Return true if you wish to prevent a user from wielding an item
 	 */
-	boolean blockDrop(Player p, Item i, Boolean fromInventory);
+	void blockWield(Player player, Item item);
 }

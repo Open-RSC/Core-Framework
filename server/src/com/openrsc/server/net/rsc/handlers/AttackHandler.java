@@ -42,6 +42,7 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+
 		if (affectedMob.isPlayer()) {
 			if (affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
 				player.message("Here kolodion protects all from your attack");
@@ -97,21 +98,13 @@ public class AttackHandler implements PacketHandler {
 						return;
 					}
 					if (mob.isNpc()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(getPlayer(), "PlayerAttackNpc",
-							new Object[]{getPlayer(), (Npc) mob}, true, this)) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "PlayerAttackNpc", new Object[]{getPlayer(), (Npc) mob}, this)) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(getPlayer(), "PlayerAttack",
-							new Object[]{getPlayer(), mob}, true, this)) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "PlayerAttack", new Object[]{getPlayer(), mob}, this)) {
 							return;
-						}
-					}
-					getPlayer().startCombat(mob);
-					if (getPlayer().getWorld().getServer().getConfig().WANT_PARTIES) {
-						if (getPlayer().getParty() != null) {
-							getPlayer().getParty().sendParty();
 						}
 					}
 				}

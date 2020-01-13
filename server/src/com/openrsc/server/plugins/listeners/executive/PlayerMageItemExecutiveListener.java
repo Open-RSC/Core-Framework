@@ -8,5 +8,5 @@ public interface PlayerMageItemExecutiveListener {
 	 *
 	 * @return
 	 */
-	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID);
+	boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID);
 }

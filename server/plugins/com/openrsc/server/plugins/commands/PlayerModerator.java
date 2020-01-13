@@ -3,34 +3,28 @@ package com.openrsc.server.plugins.commands;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class PlayerModerator implements CommandListener {
+public final class PlayerModerator implements CommandListener, CommandExecutiveListener {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isMod() || player.isPlayerMod();
 	}
 
 	@Override
-	public void handleCommand(String cmd, String[] args, Player player) {
+	public void onCommand(String cmd, String[] args, Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		if (cmd.equalsIgnoreCase("gmute")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] (time in minutes, -1 or exclude for permanent)");

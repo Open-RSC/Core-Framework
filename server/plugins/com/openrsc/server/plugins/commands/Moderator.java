@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -13,31 +14,24 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 
-public final class Moderator implements CommandListener {
+public final class Moderator implements CommandListener, CommandExecutiveListener {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isMod();
 	}
 
 	@Override
-	public void handleCommand(String cmd, String[] args, Player player) {
+	public void onCommand(String cmd, String[] args, Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.
 			StringBuilder newStr = new StringBuilder();
 

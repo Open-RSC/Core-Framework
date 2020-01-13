@@ -11,7 +11,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcCommand implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet p, Player player) {
 		int pID = p.getID();
 		int serverIndex = p.readShort();
 		if (player.isBusy()) {
@@ -41,10 +41,7 @@ public final class NpcCommand implements PacketHandler {
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 				affectedNpc.resetPath();
-				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
-					getPlayer(), "NpcCommand", new Object[]{affectedNpc, command, getPlayer()}, true, this)) {
-					return;
-				}
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "NpcCommand", new Object[]{affectedNpc, command, getPlayer()}, this);
 			}
 		});
 		return;

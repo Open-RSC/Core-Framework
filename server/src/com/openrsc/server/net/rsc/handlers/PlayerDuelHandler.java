@@ -162,7 +162,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			player.getDuel().setDuelConfirmAccepted(true);
 
 			if (affectedPlayer.getDuel().isDuelConfirmAccepted()) {
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "Duel",
+				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Duel",
 					new Object[]{player, affectedPlayer})) {
 					return;
 				}

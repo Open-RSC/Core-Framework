@@ -801,7 +801,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 			evilUngadulu(p, affectedmob);
 		}
 	}
-	
+
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
 		return n.getID() == NpcId.UNGADULU.id() || n.getID() == NpcId.EVIL_UNGADULU.id();
@@ -1003,6 +1003,6 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 		static final int WHAT_DO_TOTEM_POLE = 24;
 		static final int KILLED_DEMON_AGAIN = 25;
 		static final int REPLACED_EVIL_TOTEM = 26;
-		
+
 	}
 }

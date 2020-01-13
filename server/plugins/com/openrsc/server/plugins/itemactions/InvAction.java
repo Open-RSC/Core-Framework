@@ -26,115 +26,140 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			ItemId.SHAMAN_ROBE.id(), ItemId.SPELL_SCROLL.id(), ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(),
 			ItemId.LEVEL_1_CERTIFICATE.id(), ItemId.LEVEL_2_CERTIFICATE.id(), ItemId.LEVEL_3_CERTIFICATE.id(),
 			ItemId.DIGSITE_SCROLL.id(), ItemId.ASTROLOGY_BOOK.id(), ItemId.STONE_TABLET.id(),
-			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id(),
-			ItemId.NULODIONS_NOTES.id(), ItemId.OLD_JOURNAL.id());
+			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id(), ItemId.NULODIONS_NOTES.id(), ItemId.OLD_JOURNAL.id(),
+			ItemId.BURNTPIE.id(), ItemId.BURNT_STEW.id(), ItemId.BURNT_CURRY.id(),
+			ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.SPADE.id());
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
 		int id = item.getID();
+
 		if (id == ItemId.OYSTER.id()) {
 			handleOyster(player, id);
 		}
-
-		else if (id == ItemId.SCRUMPLED_PIECE_OF_PAPER.id())
+		else if (id == ItemId.SCRUMPLED_PIECE_OF_PAPER.id()) {
 			handleScrumpledPieceOfPaper(player);
-
-		else if (id == ItemId.ASTROLOGY_BOOK.id())
+		}
+		else if (id == ItemId.ASTROLOGY_BOOK.id()) {
 			handleAstrologyBook(player);
-
-		else if (id == ItemId.BARCRAWL_CARD.id())
+		}
+		else if (id == ItemId.BARCRAWL_CARD.id()) {
 			handleBarcrawlCard(player);
-
-		else if (id == ItemId.INSTRUCTION_MANUAL.id())
+		}
+		else if (id == ItemId.INSTRUCTION_MANUAL.id()) {
 			handleInstructionManual(player);
-
-		else if (id == ItemId.TREE_GNOME_TRANSLATION.id())
+		}
+		else if (id == ItemId.TREE_GNOME_TRANSLATION.id()) {
 			handleTreeGnomeTranslation(player);
-
-		else if (id == ItemId.GLOUGHS_JOURNAL.id())
+		}
+		else if (id == ItemId.GLOUGHS_JOURNAL.id()) {
 			handleGloughsJournal(player);
-
-		else if (id == ItemId.INVOICE.id())
+		}
+		else if (id == ItemId.INVOICE.id()) {
 			handleInvoice(player);
-
-		else if (id == ItemId.GLOUGHS_NOTES.id())
+		}
+		else if (id == ItemId.GLOUGHS_NOTES.id()) {
 			handleGloughsNotes(player);
-
-		else if (id == ItemId.WAR_SHIP.id())
+		}
+		else if (id == ItemId.WAR_SHIP.id()) {
 			handleWarShip(player);
-
-		else if (id == ItemId.DIARY.id())
+		}
+		else if (id == ItemId.DIARY.id()) {
 			handleDiary(player);
-
-		else if (id == ItemId.DRY_STICKS.id())
+		}
+		else if (id == ItemId.DRY_STICKS.id()) {
 			handleDrySticks(player);
-
-		else if (id == ItemId.SCRUFFY_NOTE.id())
+		}
+		else if (id == ItemId.SCRUFFY_NOTE.id()) {
 			handleScruffyNote(player);
-
-		else if (id == ItemId.MAGIC_SCROLL.id())
+	    }
+		else if (id == ItemId.MAGIC_SCROLL.id()) {
 			handleMagicScroll(player);
-
-		else if (id == ItemId.SPELL_SCROLL.id())
+		}
+		else if (id == ItemId.SPELL_SCROLL.id()) {
 			handleSpellScroll(player);
-
-		else if (id == ItemId.TOURIST_GUIDE.id())
+		}
+		else if (id == ItemId.TOURIST_GUIDE.id()) {
 			handleTouristGuide(player);
-
-		else if (id == ItemId.MESSENGER_PIGEONS.id())
+		}
+		else if (id == ItemId.MESSENGER_PIGEONS.id()) {
 			handleMessengerPigeons(player);
-
-		else if (id == ItemId.JANGERBERRIES.id())
+		}
+		else if (id == ItemId.JANGERBERRIES.id()) {
 			handleJangerberries(player);
-
-		else if (id == ItemId.A_FREE_SHANTAY_DISCLAIMER.id())
+		}
+		else if (id == ItemId.A_FREE_SHANTAY_DISCLAIMER.id()) {
 			handleShantayDisclaimer(player);
-
-		else if (id == ItemId.TECHNICAL_PLANS.id())
+		}
+		else if (id == ItemId.TECHNICAL_PLANS.id()) {
 			handleTechnicalPlans(player);
-
-		else if (id == ItemId.ANA_IN_A_BARREL.id())
+		}
+		else if (id == ItemId.ANA_IN_A_BARREL.id()) {
 			handleAnaInABarrel(player);
-
-		else if (id == ItemId.RANDASS_JOURNAL.id())
+		}
+		else if (id == ItemId.RANDASS_JOURNAL.id()) {
 			handleRandassJournal(player);
-
-		else if (id == ItemId.A_DOLL_OF_IBAN.id())
+		}
+		else if (id == ItemId.A_DOLL_OF_IBAN.id()) {
 			handleADollOfIban(player);
-
-		else if (id == ItemId.STAFF_OF_IBAN_BROKEN.id())
+		}
+		else if (id == ItemId.STAFF_OF_IBAN_BROKEN.id()) {
 			handleStaffOfIban(player);
-
-		else if (id == ItemId.NIGHTSHADE.id())
+		}
+		else if (id == ItemId.NIGHTSHADE.id()) {
 			handleNightshade(player);
-
-		else if (id == ItemId.SHAMAN_ROBE.id())
+		}
+		else if (id == ItemId.SHAMAN_ROBE.id()) {
 			handleShamanRobe(player);
-
-		else if (id == ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id())
+		}
+		else if (id == ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id()) {
 			handleBookOfExperimentalChemistry(player);
-
-		else if (id == ItemId.LEVEL_1_CERTIFICATE.id())
+		}
+		else if (id == ItemId.LEVEL_1_CERTIFICATE.id()) {
 			handleLevelOneCertificate(player);
-
-		else if (id == ItemId.LEVEL_2_CERTIFICATE.id())
+		}
+		else if (id == ItemId.LEVEL_2_CERTIFICATE.id()) {
 			handleLevelTwoCertificate(player);
-
-		else if (id == ItemId.LEVEL_3_CERTIFICATE.id())
+		}
+		else if (id == ItemId.LEVEL_3_CERTIFICATE.id()) {
 			handleLevelThreeCertificate(player);
-
-		else if (id == ItemId.DIGSITE_SCROLL.id())
+		}
+		else if (id == ItemId.DIGSITE_SCROLL.id()) {
 			handleDigsiteScroll(player);
-
-		else if (id == ItemId.STONE_TABLET.id())
+		}
+		else if (id == ItemId.STONE_TABLET.id()) {
 			handleStoneTablet(player);
-
-		else if (id == ItemId.NULODIONS_NOTES.id())
+		}
+		else if (id == ItemId.NULODIONS_NOTES.id()) {
 			handleNulodionsNotes(player);
-
-		else if (id == ItemId.OLD_JOURNAL.id())
+		}
+		else if (id == ItemId.OLD_JOURNAL.id()) {
 			handleOldJournal(player);
+		}
+		else if (id == ItemId.BURNTPIE.id() && command.equalsIgnoreCase("empty dish")) {
+			player.message("you remove the burnt pie from the pie dish");
+			player.getInventory().replace(item.getID(), ItemId.PIE_DISH.id());
+		}
+		else if (id == ItemId.BURNT_STEW.id() && command.equalsIgnoreCase("empty")) {
+			player.message("you remove the burnt stew from the bowl");
+			player.getInventory().replace(item.getID(), ItemId.BOWL.id());
+		}
+		else if (id == ItemId.BURNT_CURRY.id() && command.equalsIgnoreCase("empty")) {
+			player.message("you remove the burnt curry from the bowl");
+			player.getInventory().replace(item.getID(), ItemId.BOWL.id());
+		}
+		else if (id == ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
+			player.message("You empty the plain water out of the Blessed Golden Bowl.");
+			player.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
+		}
+		else if (id == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
+			player.message("You empty the plain water out of the Golden Bowl.");
+			player.getInventory().replace(item.getID(), ItemId.GOLDEN_BOWL.id());
+		}
+		else if (id == ItemId.SPADE.id()) {
+			// nothing - no action/message was triggered with spade's dig option
+		}
 	}
 
 	private void handleOyster(Player player, int oyster) {

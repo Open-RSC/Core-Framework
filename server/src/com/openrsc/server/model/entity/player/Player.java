@@ -35,7 +35,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
-import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -296,7 +295,7 @@ public final class Player extends Mob {
 	/**
 	 * The current status of the player
 	 */
-	private Action status = Action.IDLE;
+	private volatile Action status = Action.IDLE;
 	/**
 	 * If the player has been sending suspicious packets
 	 */
@@ -853,19 +852,15 @@ public final class Player extends Mob {
 
 			if (unWield) {
 				getInventory().unwieldItem(item, false);
+				ActionSender.sendEquipmentStats(this);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getEquipment().get(slot) != null) {
-					ItemDropHandler doit = new ItemDropHandler();
-					if (item.getDef(getWorld()).isStackable())
-						doit.dropStackable(this, item, item.getAmount(), false);
-					else
-						doit.dropUnstackable(this, item, 1, false);
+					getWorld().getServer().getPluginHandler().handlePlugin(this, "Drop", new Object[]{this, item, false});
 				}
 			}
 
 		}
-		ActionSender.sendEquipmentStats(this);
 	}
 
 	public void checkEquipment() {
@@ -1374,11 +1369,11 @@ public final class Player extends Mob {
 		return DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D);
 	}
 
-	public Action getStatus() {
+	public synchronized Action getStatus() {
 		return status;
 	}
 
-	public void setStatus(Action a) {
+	public synchronized void setStatus(Action a) {
 		status = a;
 	}
 
@@ -1642,7 +1637,7 @@ public final class Player extends Mob {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
-				getWorld().getServer().getPluginHandler().blockDefaultAction(this, "CatGrowth", new Object[]{this});
+				getWorld().getServer().getPluginHandler().handlePlugin(this, "CatGrowth", new Object[]{this});
 			}
 		}
 	}
@@ -2353,7 +2348,7 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(final int x, final int y, final boolean bubble) {
-		if (bubble && getWorld().getServer().getPluginHandler().blockDefaultAction(this, "Teleport", new Object[]{this})) {
+		if (bubble && getWorld().getServer().getPluginHandler().handlePlugin(this, "Teleport", new Object[]{this})) {
 			return;
 		}
 		if (inCombat()) {

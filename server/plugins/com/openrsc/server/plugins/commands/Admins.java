@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
@@ -16,7 +19,6 @@ import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
@@ -26,6 +28,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -38,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-public final class Admins implements CommandListener {
+public final class Admins implements CommandListener, CommandExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
 
 	public static String messagePrefix = null;
@@ -67,26 +70,19 @@ public final class Admins implements CommandListener {
 		return location;
 	}
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isAdmin();
 	}
 
 	@Override
-	public void handleCommand(String cmd, String[] args, final Player player) {
+	public void onCommand(String cmd, String[] args, final Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		int count1 = 0;
 		if (cmd.equalsIgnoreCase("cleannpcs")) {
 			player.getWorld().getServer().getGameEventHandler().submit(() -> {

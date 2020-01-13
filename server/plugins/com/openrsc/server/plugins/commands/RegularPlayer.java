@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -25,31 +26,24 @@ import java.util.Random;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
-public final class RegularPlayer implements CommandListener {
+public final class RegularPlayer implements CommandListener, CommandExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if (messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if (badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.getWorld().getServer().getConfig().PLAYER_COMMANDS || player.isMod();
 	}
 
-	public void handleCommand(String cmd, String[] args, Player player) {
+	public void onCommand(String cmd, String[] args, Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		if (cmd.equalsIgnoreCase("gang")) {
 			if (isBlackArmGang(player)) {
 				player.message(messagePrefix + "You are a member of the Black Arm Gang");

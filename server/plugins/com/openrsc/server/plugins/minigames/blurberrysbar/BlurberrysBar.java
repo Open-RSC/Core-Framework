@@ -43,7 +43,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 	public void handleReward(Player p) {
 		//mini-game complete handled already
 	}
-	
+
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BLURBERRY.id();
@@ -334,7 +334,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i) {
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getID() == ItemId.FULL_COCKTAIL_GLASS.id() || i.getID() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			checkAndRemoveBlurberry(p, true);
 			return false;
@@ -482,7 +482,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 		addItem(player, ItemId.EQUA_LEAVES.id(), 1);
 		addItem(player, ItemId.COCKTAIL_GLASS.id(), 1);
 		playerTalk(player, npc, "ok i'll do best");
-		npcTalk(player, npc, "I'm sure you'll make a great " + 
+		npcTalk(player, npc, "I'm sure you'll make a great " +
 		(player.isMale() ? "bar man" : "bartender"));
 		player.getCache().set("blurberrys_bar", 6);
 	}

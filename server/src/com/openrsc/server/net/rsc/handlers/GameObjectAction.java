@@ -50,11 +50,10 @@ public class GameObjectAction implements PacketHandler {
 					getPlayer().face(object.getX(), object.getY());
 				}
 
-				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"ObjectAction",
 					new Object[]{object, command, getPlayer()},
-					true,
 					this)) {
 
 					return;

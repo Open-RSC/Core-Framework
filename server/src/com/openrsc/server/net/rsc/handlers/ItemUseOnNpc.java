@@ -43,10 +43,10 @@ public class ItemUseOnNpc implements PacketHandler {
 				}
 				getPlayer().resetAll();
 				getPlayer().face(affectedNpc);
-				if (getPlayer().getWorld().getServer().getPluginHandler().blockDefaultAction(
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"InvUseOnNpc",
-					new Object[]{getPlayer(), affectedNpc, item}, true, this))
+					new Object[]{getPlayer(), affectedNpc, item}, this))
 					return;
 
 				switch (affectedNpc.getID()) {

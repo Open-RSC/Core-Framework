@@ -660,80 +660,6 @@ public class Npc extends Mob {
 	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
-	/*private Player handleLootAndXpDistribution(Player attacker) {
-
-		Player playerWithMostDamage = attacker;
-		int currentHighestDamage = 0;
-
-		int totalCombatXP = Formulae.combatExperience(this);
-		// Melee damagers
-		for (int playerID : getCombatDamagers()) {
-
-			final Player p = getWorld().getPlayerID(playerID);
-			if (p == null)
-				continue;
-			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
-
-			if (damageDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = damageDoneByPlayer;
-			}
-
-			// Give the player their share of the experience.
-			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
-
-			switch (p.getCombatStyle()) {
-				case 0: //CONTROLLED
-					for (int x = 0; x < 3; x++) {
-						p.incExp(x, totalXP, true);
-					}
-					break;
-				case 1: //AGGRESSIVE
-					p.incExp(Skills.STRENGTH, totalXP * 3, true);
-					break;
-				case 2: //ACCURATE
-					p.incExp(Skills.ATTACK, totalXP * 3, true);
-					break;
-				case 3: //DEFENSIVE
-					p.incExp(Skills.DEFENSE, totalXP * 3, true);
-					break;
-			}
-			p.incExp(Skills.HITS, totalXP, true);
-		}
-
-		// Ranged damagers
-		for (int playerID : getRangeDamagers()) {
-			int newXP = 0;
-			Player p = getWorld().getPlayerID(playerID);
-			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
-			if (p == null)
-				continue;
-
-			if (dmgDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = dmgDoneByPlayer;
-			}
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(Skills.RANGED, newXP * 4, true);
-			ActionSender.sendStat(p, Skills.RANGED);
-		}
-
-		// Magic damagers
-		for (int playerID : getMageDamagers()) {
-
-			Player p = getWorld().getPlayerID(playerID);
-
-			int dmgDoneByPlayer = getMageDamageDoneBy(p);
-			if (p == null)
-				continue;
-
-			if (dmgDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = dmgDoneByPlayer;
-			}
-		}
-		return playerWithMostDamage;
-	}*/
 	private Mob handleLootAndXpDistribution(final Mob attacker) {
 
 		Mob playerWithMostDamage = attacker;
@@ -981,7 +907,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().blockDefaultAction(npc, "TalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().handlePlugin(npc, "TalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}
@@ -992,7 +918,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().blockDefaultAction(npc, "IndirectTalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().handlePlugin(npc, "IndirectTalkToNpc", new Object[]{p, npc});
 			}
 		});
 	}

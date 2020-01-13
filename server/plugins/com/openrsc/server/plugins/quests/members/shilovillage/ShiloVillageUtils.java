@@ -117,7 +117,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i) {
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return inArray(i.getID(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
 				ItemId.BONE_KEY.id(), ItemId.BONE_BEADS.id(), ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(),
 				ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id(), ItemId.BEADS_OF_THE_DEAD.id());
@@ -125,7 +125,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	//533
 	@Override
-	public void onDrop(Player p, Item i) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getID() == ItemId.RASHILIYA_CORPSE.id()) {
 			message(p, "The remains of Rashiliyia look quite delicate.",
 				"You sense that a spirit needs to be put to rest.");

@@ -56,7 +56,6 @@ public final class PluginHandler {
 	private Map<String, Set<Object>> actionPlugins;
 	private Map<String, Set<Object>> executivePlugins;
 	private List<Class<?>> knownInterfaces;
-	private Map<String, Class<?>> queue;
 	private Map<String, Object> loadedPlugins;
 
 	public PluginHandler (final Server server) {
@@ -284,7 +283,6 @@ public final class PluginHandler {
 		actionPlugins = new HashMap<String, Set<Object>>();
 		executivePlugins = new HashMap<String, Set<Object>>();
 		knownInterfaces = new ArrayList<Class<?>>();
-		queue = new ConcurrentHashMap<String, Class<?>>();
 		loadedPlugins = new HashMap<String, Object>();
 		defaultHandler = null;
 		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(threadFactory);
@@ -303,7 +301,6 @@ public final class PluginHandler {
 		getServer().getWorld().getMiniGames().clear();
 		getServer().getWorld().getShops().clear();
 
-		queue.clear();
 		actionPlugins.clear();
 		executivePlugins.clear();
 		knownInterfaces.clear();
@@ -313,133 +310,106 @@ public final class PluginHandler {
 		actionPlugins = null;
 		executivePlugins = null;
 		knownInterfaces = null;
-		queue = null;
 		executor = null;
 		loadedClassFiles = null;
 
 		defaultHandler = null;
 	}
 
-	public boolean blockDefaultAction(final Mob owner, final String interfce, final Object[] data) {
-		return blockDefaultAction(owner, interfce, data, true);
+	public boolean handlePlugin(final World world, final String interfce, final Object[] data) {
+		return handlePlugin(null, world, interfce, data, null);
 	}
 
-	public boolean blockDefaultAction(final Mob owner, final String interfce,
-									  final Object[] data, final boolean callAction) {
-		return blockDefaultAction(owner, interfce, data, callAction, null);
+	public boolean handlePlugin(final Mob owner, final String interfce, final Object[] data) {
+		return handlePlugin(owner, owner.getWorld(), interfce, data, null);
 	}
 
-	public boolean blockDefaultAction(final Mob owner, final String interfce,
-									  final Object[] data, final boolean callAction, final WalkToAction walkToAction) {
-		if (reloading) {
-			for (Object o : data) {
-				if (o instanceof Player) {
-					((Player) o).message("Plugins are being updated, please wait.");
+	public boolean handlePlugin(final Mob owner, final String interfce, final Object[] data, final WalkToAction walkToAction) {
+		return handlePlugin(owner, owner.getWorld(), interfce, data, walkToAction);
+	}
+
+	public boolean handlePlugin(final Mob owner, final World world, final String interfce, final Object[] data, final WalkToAction walkToAction) {
+		synchronized(actionPlugins) {
+			if (reloading) {
+				for (Object o : data) {
+					if (o instanceof Player) {
+						((Player) o).message("Plugins are being updated, please wait.");
+					}
+				}
+				return false;
+			}
+			boolean shouldBlockDefault = false;
+			if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
+				for (final Object c : executivePlugins.get(interfce + "ExecutiveListener")) {
+					try {
+						final Class<?>[] dataClasses = new Class<?>[data.length];
+						int i = 0;
+						for (final Object o : data) {
+							dataClasses[i++] = o.getClass();
+						}
+						final Method m = c.getClass().getMethod("block" + interfce, dataClasses);
+						final boolean shouldBlock = (Boolean) m.invoke(c, data);
+						if (shouldBlock) {
+							shouldBlockDefault = true;
+							invokePluginAction(owner, world, interfce, c, data, walkToAction);
+						}
+					} catch (final Exception e) {
+						LOGGER.catching(e);
+					}
 				}
 			}
-			return false;
-		}
-		boolean shouldBlock = false, flagStop = false;
-		queue.clear();
-		if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
-			for (final Object c : executivePlugins.get(interfce
-				+ "ExecutiveListener")) {
-				try {
-					final Class<?>[] dataClasses = new Class<?>[data.length];
-					int i = 0;
-					for (final Object o : data) {
-						dataClasses[i++] = o.getClass();
-					}
-					final Method m = c.getClass().getMethod("block" + interfce,
-						dataClasses);
-					shouldBlock = (Boolean) m.invoke(c, data);
-					if (shouldBlock) {
-						queue.put(interfce, c.getClass());
-						flagStop = true;
-					} else if (queue.size() > 1) {
 
-					} else if (queue.isEmpty()) {
-						queue.put(interfce, defaultHandler.getClass());
-					}
-				} catch (final Exception e) {
-					LOGGER.catching(e);
+			try {
+				if (!shouldBlockDefault) {
+					invokePluginAction(owner, world, interfce, defaultHandler, data, walkToAction);
 				}
+			} catch (final Exception e) {
+				LOGGER.catching(e);
 			}
+
+			return shouldBlockDefault;
 		}
-
-		if (callAction) {
-			handleAction(owner, interfce, data, walkToAction);
-		}
-		return flagStop; // not sure why it matters if its false or true
 	}
 
-	public void handleAction(final Mob owner, final String interfce, final Object[] data) {
-		handleAction(owner, owner.getWorld(), interfce, data);
-	}
-
-	public void handleAction(final Mob owner, final String interfce, final Object[] data, final WalkToAction walkToAction) {
-		handleAction(owner, owner.getWorld(), interfce, data, walkToAction);
-	}
-
-	public void handleAction(final World world, final String interfce, final Object[] data) {
-		handleAction(null, world, interfce, data);
-	}
-
-	public void handleAction(final Mob owner, final World world, final String interfce, final Object[] data) {
-		handleAction(owner, world, interfce, data, null);
-	}
-
-	public void handleAction(final Mob owner, final World world, final String interfce, final Object[] data, final WalkToAction walkToAction) {
+	private void invokePluginAction(final Mob owner, final World world, final String interfce, final Object cls, final Object[] data, final WalkToAction walkToAction) {
 		if (reloading) {
 			return;
 		}
 		if (actionPlugins.containsKey(interfce + "Listener")) {
-			for (final Object c : actionPlugins.get(interfce + "Listener")) {
+			try {
+				final Class<?>[] dataClasses = new Class<?>[data.length];
+				int i = 0;
+				for (final Object o : data) {
+					dataClasses[i++] = o.getClass();
+				}
+
 				try {
-					final Class<?>[] dataClasses = new Class<?>[data.length];
-					int i = 0;
-					for (final Object o : data) {
-						dataClasses[i++] = o.getClass();
-					}
-
-					final Method m = c.getClass().getMethod("on" + interfce,
-						dataClasses);
-					boolean go = false;
-
-					if (queue.containsKey(interfce)) {
-						for (final Class<?> clz : queue.values()) {
-							if (clz.getName().equalsIgnoreCase(
-								c.getClass().getName())) {
-								go = true;
-								break;
+					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
+					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
+					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world) {
+						@Override
+						public int action() {
+							try {
+								LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
+								m.invoke(cls, data);
+								return 1;
+							} catch (final Exception ex) {
+								LOGGER.catching(ex);
+								return 0;
 							}
 						}
-					} else {
-						go = true;
-					}
+					});
 
-					if (go) {
-						final String pluginName = c.getClass().getSimpleName() + "." + m.getName();
-						final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world) {
-							@Override
-							public int action() {
-								try {
-									LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
-									m.invoke(c,data);
-									return 1;
-								} catch (final Exception ex) {
-									LOGGER.catching(ex);
-									return 0;
-								}
-							}
-						});
-
-						getServer().getGameEventHandler().add(e);
-					}
-				} catch (final Exception e) {
-					System.err.println("Exception at plugin handling: ");
-					LOGGER.catching(e);
+					getServer().getGameEventHandler().add(e);
+				} catch (final NoSuchMethodException ex) {
+					LOGGER.info(ex.getMessage());
+					LOGGER.info(cls.getClass().getSimpleName() + ".on" + interfce + " : " + Arrays.deepToString(data));
+					// getClass().getMethod() failed because there is an executive listener, but NOT a corresponding action listener, OR
+					// there is no action listener defined in Default plugin
 				}
+			} catch (final Exception e) {
+				System.err.println("Exception at plugin handling: ");
+				LOGGER.catching(e);
 			}
 		}
 	}

@@ -6,5 +6,5 @@ public interface DepositListener {
 	/**
 	 * Called when a user deposits an item
 	 */
-	public void onDeposit(Player player, int itemID, int amount);
+	public void onDeposit(Player player, Integer itemID, Integer amount);
 }
