@@ -13496,6 +13496,7 @@ public final class mudclient implements Runnable {
 							this.m_Ce = loginResponse & 0x3;
 							this.m_Oj = (loginResponse >> 2) & 0xf;
 							this.resetGame((byte) -123);
+							clientPort.setTitle(Config.getServerName() + " -- " + getUsername());
 						} else {
 							if (loginResponse == 1) {
 								this.autoLoginTimeout = 0;
@@ -13859,7 +13860,9 @@ public final class mudclient implements Runnable {
 			this.getSurface().blackScreen(true);
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
+			clientPort.setTitle(Config.getServerName());
 			clientPort.draw();
+
 			int i;
 			for (i = 0; i < this.gameObjectInstanceCount; ++i) {
 				this.scene.removeModel(this.gameObjectInstanceModel[i]);
@@ -13981,6 +13984,7 @@ public final class mudclient implements Runnable {
 					} else {
 						this.packetHandler.getClientStream().newPacket(102);
 						this.packetHandler.getClientStream().finishPacket();
+						clientPort.setTitle(Config.getServerName());
 						this.logoutTimeout = 1000;
 						// this.createLoginPanels(3845);
 					}
@@ -15360,6 +15364,7 @@ public final class mudclient implements Runnable {
 				this.setFPS(getFPS(), (byte) 107); // Client FPS
 				this.setSurface(new MudClientGraphics(this.getGameWidth(), this.getGameHeight() + 12, 4501));
 
+				clientPort.setTitle(Config.getServerName());
 				clientPort.initGraphics();
 				getSurface().setIconsStart(0, 3284);
 				this.getSurface().mudClientRef = this;

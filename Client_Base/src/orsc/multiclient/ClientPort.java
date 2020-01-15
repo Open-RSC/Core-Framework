@@ -50,6 +50,8 @@ public interface ClientPort {
 
 	void closeKeyboard();
 
+	void setTitle(String title);
+
 	static boolean saveHideIp(int preference) {
 		FileOutputStream fileout;
 		try {

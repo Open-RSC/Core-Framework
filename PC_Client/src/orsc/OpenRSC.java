@@ -9,6 +9,7 @@ import java.io.File;
 
 public class OpenRSC extends ORSCApplet {
 
+	private static JFrame jframe;
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
@@ -17,7 +18,7 @@ public class OpenRSC extends ORSCApplet {
 
 	public static void createAndShowGUI() {
 		try {
-			JFrame jframe = new JFrame(Config.getServerNameWelcome());
+			jframe = new JFrame(Config.getServerNameWelcome());
 			final Applet applet = new OpenRSC();
 			applet.setPreferredSize(new Dimension(512, 334 + 12));
 			jframe.getContentPane().setLayout(new BorderLayout());
@@ -37,6 +38,10 @@ public class OpenRSC extends ORSCApplet {
 		} catch (HeadlessException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setTitle(String title) {
+		jframe.setTitle(title);
 	}
 
 	public String getCacheLocation() {
