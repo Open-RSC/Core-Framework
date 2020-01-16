@@ -44,6 +44,16 @@ public class OpenRSC extends ORSCApplet {
 		jframe.setTitle(title);
 	}
 
+	public void setIconImage(String serverName) {
+		switch (serverName) {
+			case "RSC Cabbage":
+				jframe.setIconImage(Utils.getImage("cabbage.icon.png").getImage());
+				break;
+			default:
+				jframe.setIconImage(Utils.getImage("icon.png").getImage());
+		}
+	}
+
 	public String getCacheLocation() {
 		return Config.F_CACHE_DIR + File.separator;
 	}

@@ -719,4 +719,8 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 	public void setTitle(String title) {
 	}
+
+	public void setIconImage(String serverName) {
+
+	}
 }
