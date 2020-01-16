@@ -60,7 +60,7 @@ public class AppFrame extends JFrame {
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
 		this.setUndecorated(true);
-		this.setTitle(Constants.ORSC_GAME_NAME);
+		this.setTitle(Constants.ORSC_GAME_NAME + " Game Launcher");
 		this.setIconImage(Utils.getImage("icon.png").getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		AppFrame.instance = this;
