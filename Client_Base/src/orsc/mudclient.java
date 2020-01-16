@@ -15365,6 +15365,7 @@ public final class mudclient implements Runnable {
 				this.setSurface(new MudClientGraphics(this.getGameWidth(), this.getGameHeight() + 12, 4501));
 
 				clientPort.setTitle(Config.getServerName());
+				clientPort.setIconImage(Config.getServerName());
 				clientPort.initGraphics();
 				getSurface().setIconsStart(0, 3284);
 				this.getSurface().mudClientRef = this;

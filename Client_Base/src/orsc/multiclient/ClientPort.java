@@ -52,6 +52,8 @@ public interface ClientPort {
 
 	void setTitle(String title);
 
+	void setIconImage(String serverName);
+
 	static boolean saveHideIp(int preference) {
 		FileOutputStream fileout;
 		try {
