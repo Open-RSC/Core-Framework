@@ -13,7 +13,7 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 	private void buryBonesHelper(Player owner, Item item) {
 		owner.message("You bury the "
 			+ item.getDef(owner.getWorld()).getName().toLowerCase());
-		owner.getInventory().remove(item);
+		owner.getInventory().remove(item.getID(), 1);
 		switch (ItemId.getById(item.getID())) {
 			case BONES:
 				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
