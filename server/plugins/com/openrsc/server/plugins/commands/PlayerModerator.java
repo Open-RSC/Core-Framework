@@ -137,23 +137,6 @@ public final class PlayerModerator implements CommandListener, CommandExecutiveL
 				p.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
 			}
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 0, p, p.getUsername() + " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes")));
-		} else if (cmd.equalsIgnoreCase("kick")) {
-			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
-				return;
-			}
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-			if (p == null) {
-				player.message(messagePrefix + "Invalid name or player is not online");
-				return;
-			}
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
-				player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
-				return;
-			}
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 6, p, p.getUsername() + " has been kicked by " + player.getUsername()));
-			p.unregister(true, "You have been kicked by " + player.getUsername());
-			player.message(p.getUsername() + " has been kicked.");
 		} else if (cmd.equalsIgnoreCase("alert")) {
 			StringBuilder message = new StringBuilder();
 			if (args.length > 0) {

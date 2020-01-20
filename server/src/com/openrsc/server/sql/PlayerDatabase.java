@@ -70,17 +70,19 @@ public class PlayerDatabase {
 				getDatabaseConnection().executeQuery("START TRANSACTION");
 
 			updateLongs(getDatabaseConnection().getGameQueries().save_DeleteBank, s.getDatabaseID());
-			if (s.getBank().size() > 0) {
-				statement = getDatabaseConnection().prepareStatement(getDatabaseConnection().getGameQueries().save_AddBank);
-				int slot = 0;
-				for (Item item : s.getBank().getItems()) {
-					statement.setInt(1, s.getDatabaseID());
-					statement.setInt(2, item.getID());
-					statement.setInt(3, item.getAmount());
-					statement.setInt(4, slot++);
-					statement.addBatch();
+			synchronized(s.getBank().getItems()) {
+				if (s.getBank().size() > 0) {
+					statement = getDatabaseConnection().prepareStatement(getDatabaseConnection().getGameQueries().save_AddBank);
+					int slot = 0;
+					for (Item item : s.getBank().getItems()) {
+						statement.setInt(1, s.getDatabaseID());
+						statement.setInt(2, item.getID());
+						statement.setInt(3, item.getAmount());
+						statement.setInt(4, slot++);
+						statement.addBatch();
+					}
+					statement.executeBatch();
 				}
-				statement.executeBatch();
 			}
 
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
@@ -131,13 +133,15 @@ public class PlayerDatabase {
 			if (s.getInventory().size() > 0) {
 				statement = getDatabaseConnection().prepareStatement(getDatabaseConnection().getGameQueries().save_AddInvItem);
 				int slot = 0;
-				for (Item item : s.getInventory().getItems()) {
-					statement.setInt(1, s.getDatabaseID());
-					statement.setInt(2, item.getID());
-					statement.setInt(3, item.getAmount());
-					statement.setInt(4, (item.isWielded() ? 1 : 0));
-					statement.setInt(5, slot++);
-					statement.addBatch();
+				synchronized(s.getInventory().getItems()) {
+					for (Item item : s.getInventory().getItems()) {
+						statement.setInt(1, s.getDatabaseID());
+						statement.setInt(2, item.getID());
+						statement.setInt(3, item.getAmount());
+						statement.setInt(4, (item.isWielded() ? 1 : 0));
+						statement.setInt(5, slot++);
+						statement.addBatch();
+					}
 				}
 				statement.executeBatch();
 			}

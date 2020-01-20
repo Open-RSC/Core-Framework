@@ -24,6 +24,7 @@ public class Bank {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	// TODO: Use an ItemContainer rather than a list here.
 	private List<Item> list = Collections.synchronizedList(new ArrayList<>());
 	private final Player player;
 	public static int PRESET_COUNT = 2;
@@ -144,6 +145,7 @@ public class Bank {
 	}
 
 	public List<Item> getItems() {
+		// TODO: This should be made private and all calls converted to use API on ItemContainer. This could stay public, IF we copy the list to a new list before returning.
 		synchronized(list) {
 			return list;
 		}

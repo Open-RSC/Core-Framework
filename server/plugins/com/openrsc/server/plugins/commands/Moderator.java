@@ -100,13 +100,16 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
+
 			List<Item> inventory = p.getInventory().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
-			for (Item invItem : inventory)
-				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
 
-			ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%"
-				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
+			synchronized(inventory) {
+				for (Item invItem : inventory)
+					itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
+			}
+
+			ActionSender.sendBox(player, "@lre@Inventory of " + p.getUsername() + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
 		} else if (cmd.equalsIgnoreCase("bank")) {
 			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (p == null) {
@@ -115,10 +118,12 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 			}
 			List<Item> inventory = p.getBank().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
-			for (Item bankItem : inventory)
-				itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef(player.getWorld()).getName());
-			ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%"
-				+ "@whi@" + StringUtils.join(itemStrings, ", "), true);
+			synchronized(inventory) {
+				for (Item bankItem : inventory) {
+					itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef(player.getWorld()).getName());
+				}
+			}
+			ActionSender.sendBox(player, "@lre@Bank of " + p.getUsername() + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
 		} else if (cmd.equalsIgnoreCase("announcement") || cmd.equalsIgnoreCase("announce") || cmd.equalsIgnoreCase("anouncement") || cmd.equalsIgnoreCase("anounce")) {
 			StringBuilder newStr = new StringBuilder();
 
@@ -131,6 +136,23 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 			for (Player p : player.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIcon());
 			}
+		} else if (cmd.equalsIgnoreCase("kick")) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
+				return;
+			}
+			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			if (p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+				player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
+				return;
+			}
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 6, p, p.getUsername() + " has been kicked by " + player.getUsername()));
+			p.unregister(true, "You have been kicked by " + player.getUsername());
+			player.message(p.getUsername() + " has been kicked.");
 		}
 	}
 }

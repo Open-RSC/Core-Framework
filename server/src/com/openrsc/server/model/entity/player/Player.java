@@ -1107,9 +1107,11 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			points = getEquipment().getMagic();
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getMagicBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getMagicBonus();
+					}
 				}
 			}
 		}
@@ -1173,9 +1175,11 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			points = getEquipment().getPrayer();
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getPrayerBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getPrayerBonus();
+					}
 				}
 			}
 		}
@@ -1229,10 +1233,12 @@ public final class Player extends Mob {
 				}
 			}
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-					return item.getID();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+						|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+						return item.getID();
+					}
 				}
 			}
 		}
@@ -1249,9 +1255,11 @@ public final class Player extends Mob {
 				}
 			}
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
-					return item.getID();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
+						return item.getID();
+					}
 				}
 			}
 		}
@@ -1400,9 +1408,11 @@ public final class Player extends Mob {
 	public int getArmourPoints() {
 		int points = 1;
 		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getArmourBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getArmourBonus();
+					}
 				}
 			}
 		} else {
@@ -1416,9 +1426,11 @@ public final class Player extends Mob {
 	public int getWeaponAimPoints() {
 		int points = 1;
 		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getWeaponAimBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getWeaponAimBonus();
+					}
 				}
 			}
 		} else {
@@ -1433,9 +1445,11 @@ public final class Player extends Mob {
 	public int getWeaponPowerPoints() {
 		int points = 1;
 		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getWeaponPowerBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getWeaponPowerBonus();
+					}
 				}
 			}
 		} else {
@@ -1910,9 +1924,11 @@ public final class Player extends Mob {
 			if (i != null)
 				return i.getID();
 		} else {
-			for (Item i : getInventory().getItems()) {
-				if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
-					return i.getID();
+			synchronized(getInventory().getItems()) {
+				for (Item i : getInventory().getItems()) {
+					if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
+						return i.getID();
+				}
 			}
 		}
 		return -1;

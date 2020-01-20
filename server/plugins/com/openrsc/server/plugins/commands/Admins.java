@@ -984,7 +984,9 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			p.getBank().getItems().clear();
+			synchronized(p.getBank().getItems()) {
+				p.getBank().getItems().clear();
+			}
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your bank has been wiped by an admin");
 			}

@@ -214,19 +214,23 @@ public class PlayerDuelHandler implements PacketHandler {
 							}
 						}
 					} else {
-						for (Item item : player.getInventory().getItems()) {
-							if (item.isWielded()) {
-								player.getInventory().unwieldItem(item, false);
+						synchronized(player.getInventory().getItems()) {
+							for (Item item : player.getInventory().getItems()) {
+								if (item.isWielded()) {
+									player.getInventory().unwieldItem(item, false);
+								}
 							}
 						}
 						ActionSender.sendSound(player, "click");
 						ActionSender.sendInventory(player);
 						ActionSender.sendEquipmentStats(player);
 
-						for (Item item : affectedPlayer.getInventory().getItems()) {
-							if (item.isWielded()) {
-								item.setWielded(false);
-								affectedPlayer.getInventory().unwieldItem(item, false);
+						synchronized(affectedPlayer.getInventory().getItems()) {
+							for (Item item : affectedPlayer.getInventory().getItems()) {
+								if (item.isWielded()) {
+									item.setWielded(false);
+									affectedPlayer.getInventory().unwieldItem(item, false);
+								}
 							}
 						}
 						ActionSender.sendSound(affectedPlayer, "click");
@@ -383,21 +387,25 @@ public class PlayerDuelHandler implements PacketHandler {
 				player.getDuel().setDuelSetting(i, b);
 				affectedPlayer.getDuel().setDuelSetting(i, b);
 			}
-			for (Item item : player.getDuel().getDuelOffer().getItems()) {
-				if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
-					player.getDuel().setDuelSetting(1, true);
-					affectedPlayer.getDuel().setDuelSetting(1, true);
-					player.message("When runes are staked, magic can't be used during the duel");
-					affectedPlayer.message("When runes are staked, magic can't be used during the duel");
+			synchronized(player.getDuel().getDuelOffer().getItems()) {
+				for (Item item : player.getDuel().getDuelOffer().getItems()) {
+					if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+						player.getDuel().setDuelSetting(1, true);
+						affectedPlayer.getDuel().setDuelSetting(1, true);
+						player.message("When runes are staked, magic can't be used during the duel");
+						affectedPlayer.message("When runes are staked, magic can't be used during the duel");
 
+					}
 				}
 			}
-			for (Item item : affectedPlayer.getDuel().getDuelOffer().getItems()) {
-				if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
-					player.getDuel().setDuelSetting(1, true);
-					affectedPlayer.getDuel().setDuelSetting(1, true);
-					player.message("When runes are staked, magic can't be used during the duel");
-					affectedPlayer.message("When runes are staked, magic can't be used during the duel");
+			synchronized(affectedPlayer.getDuel().getDuelOffer().getItems()) {
+				for (Item item : affectedPlayer.getDuel().getDuelOffer().getItems()) {
+					if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+						player.getDuel().setDuelSetting(1, true);
+						affectedPlayer.getDuel().setDuelSetting(1, true);
+						player.message("When runes are staked, magic can't be used during the duel");
+						affectedPlayer.message("When runes are staked, magic can't be used during the duel");
+					}
 				}
 			}
 			ActionSender.sendDuelSettingUpdate(player);

@@ -77,11 +77,13 @@ public class SpellHandler implements PacketHandler {
 				}
 			} else {
 				for (Item staff : getStaffs(e.getKey())) {
-					if (player.getInventory().contains(staff)) {
-						for (Item item : player.getInventory().getItems()) {
-							if (item.equals(staff) && item.isWielded()) {
-								skipRune = true;
-								break;
+					synchronized(player.getInventory().getItems()) {
+						if (player.getInventory().contains(staff)) {
+							for (Item item : player.getInventory().getItems()) {
+								if (item.equals(staff) && item.isWielded()) {
+									skipRune = true;
+									break;
+								}
 							}
 						}
 					}

@@ -304,28 +304,10 @@ Moderator Commands
   - Usage `::announcement [message]`
   - Alias: `::announce` or `::anouncement` or `::anounce`
   - Send an important message to every player on the server.
-------------------------
-Player Moderator Commands
-------------------------
-- gmute
-  - Usage: `::gmute [name] (time in minutes, -1 or exclude for permanent)`
-  - Mutes the specified player from global chat.
-  - Moderators are only allowed to mute for up to 2 hours.
-  - Player Moderators are only allowed to mute for up to 1 hour.
-  - You can not mute a staff member of equal or greater rank.
-- mute
-  - Usage: `::mute [name] (time in minutes, -1 or exclude for permanent)`
-  - Moderators are only allowed to mute for up to 2 hours.
-  - Player Moderators are only allowed to mute for up to 1 hour.
-  - Mutes the specified player from both in game and global chat.
-  - You can not mute a staff member of equal or greater rank.
 - kick
   - Usage: `::kick [player]`
   - Kicks the specified player from the server.
   - You can not kick a staff member of equal or greater rank.
-- alert
-  - Usage: `::alert [player] [message]`
-  - Sends the specified player an alert box message.
 ------------------------
 Event Commands
 ------------------------
@@ -404,6 +386,24 @@ Event Commands
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
   - If no stat is specified, then all stats are modified.
+------------------------
+Player Moderator Commands
+------------------------
+- gmute
+  - Usage: `::gmute [name] (time in minutes, -1 or exclude for permanent)`
+  - Mutes the specified player from global chat.
+  - Moderators are only allowed to mute for up to 2 hours.
+  - Player Moderators are only allowed to mute for up to 1 hour.
+  - You can not mute a staff member of equal or greater rank.
+- mute
+  - Usage: `::mute [name] (time in minutes, -1 or exclude for permanent)`
+  - Moderators are only allowed to mute for up to 2 hours.
+  - Player Moderators are only allowed to mute for up to 1 hour.
+  - Mutes the specified player from both in game and global chat.
+  - You can not mute a staff member of equal or greater rank.
+- alert
+  - Usage: `::alert [player] [message]`
+  - Sends the specified player an alert box message.
 ------------------------
 Regular Player Commands
 ------------------------

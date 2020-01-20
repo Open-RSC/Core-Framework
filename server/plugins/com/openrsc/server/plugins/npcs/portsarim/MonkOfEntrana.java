@@ -20,15 +20,17 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 	TalkToNpcListener {
 
 	private boolean CAN_GO(Player p) {
-		for (Item item : p.getInventory().getItems()) {
-			String name = item.getDef(p.getWorld()).getName().toLowerCase();
-			if (name.contains("dagger") || name.contains("scimitar")
-				|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
-				|| (name.contains("sword")
-				&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-				|| name.contains("mace") || name.contains("helmet")
-				|| name.contains("axe") || name.contains("recoil")) {
-				return true;
+		synchronized(p.getInventory().getItems()) {
+			for (Item item : p.getInventory().getItems()) {
+				String name = item.getDef(p.getWorld()).getName().toLowerCase();
+				if (name.contains("dagger") || name.contains("scimitar")
+					|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
+					|| (name.contains("sword")
+					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
+					|| name.contains("mace") || name.contains("helmet")
+					|| name.contains("axe") || name.contains("recoil")) {
+					return true;
+				}
 			}
 		}
 
@@ -106,7 +108,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 			return;
 		}
 	}
-	
+
 	@Override
 	public void onObjectAction(GameObject arg0, String arg1, Player p) {
 		Npc monk = getNearestNpc(p, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
@@ -117,7 +119,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 		}
 
 	}
-	
+
 	@Override
 	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
 		return (arg0.getID() == 240 && arg0.getLocation().equals(Point.location(257, 661)))
