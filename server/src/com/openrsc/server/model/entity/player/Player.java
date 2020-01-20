@@ -938,11 +938,11 @@ public final class Player extends Mob {
 		return bankSize - getBank().size();
 	}
 
-	public Bank getBank() {
+	public synchronized Bank getBank() {
 		return bank;
 	}
 
-	public void setBank(final Bank b) {
+	public synchronized void setBank(final Bank b) {
 		bank = b;
 	}
 
@@ -1066,20 +1066,19 @@ public final class Player extends Mob {
 		this.interactingNpc = interactingNpc;
 	}
 
-	public Inventory getInventory() {
+	public synchronized Inventory getInventory() {
 		return inventory.get();
 	}
 
-	public Equipment getEquipment() {
+	public synchronized Equipment getEquipment() {
 		return equipment.get();
 	}
 
-
-	public void setInventory(final Inventory i) {
+	public synchronized void setInventory(final Inventory i) {
 		inventory.set(i);
 	}
 
-	public void setEquipment(final Equipment e) {
+	public synchronized void setEquipment(final Equipment e) {
 		equipment.set(e);
 	}
 

@@ -76,9 +76,6 @@ public final class BankHandler implements PacketHandler {
 				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, depoItem, false, true})) {
 					continue;
 				}
-				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getID(), depoItem.getAmount()})) {
-					continue;
-				}
 			}
 		} else if (pID == packetSix && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) { // Set bank preset
 			int presetSlot = p.readShort();

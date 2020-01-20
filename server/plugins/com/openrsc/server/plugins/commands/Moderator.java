@@ -13,6 +13,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Moderator implements CommandListener, CommandExecutiveListener {
 
@@ -99,7 +100,7 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			ArrayList<Item> inventory = p.getInventory().getItems();
+			List<Item> inventory = p.getInventory().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
 			for (Item invItem : inventory)
 				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
@@ -112,7 +113,7 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			ArrayList<Item> inventory = p.getBank().getItems();
+			List<Item> inventory = p.getBank().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
 			for (Item bankItem : inventory)
 				itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef(player.getWorld()).getName());

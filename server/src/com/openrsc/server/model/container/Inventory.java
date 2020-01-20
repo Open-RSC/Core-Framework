@@ -23,7 +23,7 @@ public class Inventory {
 	 */
 	public static final int MAX_SIZE = 30;
 
-	private ArrayList<Item> list = new ArrayList<Item>();
+	private List<Item> list = Collections.synchronizedList(new ArrayList<>());
 
 	private Player player;
 
@@ -156,7 +156,7 @@ public class Inventory {
 		return freedSlots;
 	}
 
-	public ArrayList<Item> getItems() {
+	public List<Item> getItems() {
 		synchronized (list) {
 			return list;
 		}
@@ -627,7 +627,7 @@ public class Inventory {
 				}
 			}
 		} else {
-			ArrayList<Item> items = getItems();
+			List<Item> items = getItems();
 
 			for (Item i : items) {
 				if (item.wieldingAffectsItem(player.getWorld(), i) && i.isWielded()) {
@@ -773,5 +773,5 @@ public class Inventory {
 		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
 
-	public ArrayList getList() { return list;}
+	public List getList() { return list;}
 }

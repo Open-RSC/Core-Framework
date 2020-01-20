@@ -24,7 +24,7 @@ public class Bank {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private ArrayList<Item> list = new ArrayList<Item>();
+	private List<Item> list = Collections.synchronizedList(new ArrayList<>());
 	private final Player player;
 	public static int PRESET_COUNT = 2;
 	public Preset[] presets = new Preset[PRESET_COUNT];
@@ -54,131 +54,163 @@ public class Bank {
 	}
 
 	public int add(Item item) {
-		if (item.getAmount() <= 0) {
-			return -1;
-		}
-		for (int index = 0; index < list.size(); index++) {
-			Item existingStack = list.get(index);
-			if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-				long newAmount = Long.sum(existingStack.getAmount(), item.getAmount());
-				if (newAmount - Integer.MAX_VALUE >= 0) {
-					existingStack.setAmount(Integer.MAX_VALUE);
-					long newStackAmount = newAmount - Integer.MAX_VALUE;
-					item.setAmount((int) newStackAmount);
-				} else {
-					existingStack.setAmount((int) newAmount);
-					return index;
+		synchronized(list) {
+			if (item.getAmount() <= 0) {
+				return -1;
+			}
+			for (int index = 0; index < list.size(); index++) {
+				Item existingStack = list.get(index);
+				if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
+					long newAmount = Long.sum(existingStack.getAmount(), item.getAmount());
+					if (newAmount - Integer.MAX_VALUE >= 0) {
+						existingStack.setAmount(Integer.MAX_VALUE);
+						long newStackAmount = newAmount - Integer.MAX_VALUE;
+						item.setAmount((int) newStackAmount);
+					} else {
+						existingStack.setAmount((int) newAmount);
+						return index;
+					}
 				}
 			}
+			list.add(item);
+			return list.size() - 2;
 		}
-		list.add(item);
-		return list.size() - 2;
 	}
 
 	public boolean canHold(ArrayList<Item> items) {
-		return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(items);
+		synchronized(list) {
+			return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(items);
+		}
 	}
 
 	public boolean canHold(Item item) {
-		return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(item);
+		synchronized(list) {
+			return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(item);
+		}
 	}
 
 	public boolean contains(Item i) {
-		return list.contains(i);
+		synchronized(list) {
+			return list.contains(i);
+		}
 	}
 
 	public int countId(int id) {
-		for (Item i : list) {
-			if (i.getID() == id) {
-				return i.getAmount();
+		synchronized(list) {
+			for (Item i : list) {
+				if (i.getID() == id) {
+					return i.getAmount();
+				}
 			}
+			return 0;
 		}
-		return 0;
 	}
 
 	public boolean full() {
-		return list.size() >= getPlayer().getBankSize();
+		synchronized(list) {
+			return list.size() >= getPlayer().getBankSize();
+		}
 	}
 
 	public Item get(int index) {
-		if (index < 0 || index >= list.size()) {
-			return null;
+		synchronized(list) {
+			if (index < 0 || index >= list.size()) {
+				return null;
+			}
+			return list.get(index);
 		}
-		return list.get(index);
 	}
 
 	public Item get(Item item) {
-		for (Item i : list) {
-			if (item.equals(i)) {
-				return i;
+		synchronized(list) {
+			for (Item i : list) {
+				if (item.equals(i)) {
+					return i;
+				}
 			}
+			return null;
 		}
-		return null;
 	}
 
 	public int getFirstIndexById(int id) {
-		for (int index = 0; index < list.size(); index++) {
-			if (list.get(index).getID() == id) {
-				return index;
+		synchronized(list) {
+			for (int index = 0; index < list.size(); index++) {
+				if (list.get(index).getID() == id) {
+					return index;
+				}
 			}
+			return -1;
 		}
-		return -1;
 	}
 
-	public ArrayList<Item> getItems() {
-		return list;
+	public List<Item> getItems() {
+		synchronized(list) {
+			return list;
+		}
 	}
 
 	public int getRequiredSlots(Item item) {
-		return (list.contains(item) ? 0 : 1);
+		synchronized(list) {
+			return (list.contains(item) ? 0 : 1);
+		}
 	}
 
 	public int getRequiredSlots(List<Item> items) {
-		int requiredSlots = 0;
-		for (Item item : items) {
-			if (list.contains(item)) {
-				continue;
+		synchronized(list) {
+			int requiredSlots = 0;
+			for (Item item : items) {
+				if (list.contains(item)) {
+					continue;
+				}
+				requiredSlots++;
 			}
-			requiredSlots++;
+			return requiredSlots;
 		}
-		return requiredSlots;
 	}
 
 	public boolean hasItemId(int id) {
-		for (Item i : list) {
-			if (i.getID() == id)
-				return true;
-		}
+		synchronized(list) {
+			for (Item i : list) {
+				if (i.getID() == id)
+					return true;
+			}
 
-		return false;
+			return false;
+		}
 	}
 
 	public ListIterator<Item> iterator() {
-		return list.listIterator();
+		synchronized(list) {
+			return list.listIterator();
+		}
 	}
 
 	public void remove(int index) {
-		Item item = get(index);
-		if (item == null) {
-			return;
+		synchronized(list) {
+			Item item = get(index);
+			if (item == null) {
+				return;
+			}
+			remove(item.getID(), item.getAmount());
 		}
-		remove(item.getID(), item.getAmount());
 	}
 
 	public int remove(int id, int amount) {
-		Iterator<Item> iterator = list.iterator();
-		for (int index = 0; iterator.hasNext(); index++) {
-			Item i = iterator.next();
-			if (id == i.getID() && amount <= i.getAmount()) {
-				if (amount < i.getAmount()) {
-					i.setAmount(i.getAmount() - amount);
-				} else {
-					iterator.remove();
+		synchronized(list) {
+			Iterator<Item> iterator = list.iterator();
+			for (int index = 0; iterator.hasNext(); index++) {
+				Item i = iterator.next();
+				if (id == i.getID() && amount <= i.getAmount()) {
+					if (amount < i.getAmount()) {
+						i.setAmount(i.getAmount() - amount);
+					} else {
+						iterator.remove();
+					}
+					return index;
 				}
-				return index;
 			}
+			return -1;
 		}
-		return -1;
 	}
 
 	public int remove(Item item) {
@@ -186,72 +218,78 @@ public class Bank {
 	}
 
 	public int size() {
-		return list.size();
+		synchronized(list) {
+			return list.size();
+		}
 	}
 
 	public boolean swap(int slot, int to) {
-		if (slot <= 0 && to <= 0 && to == slot) {
+		synchronized(list) {
+			if (slot <= 0 && to <= 0 && to == slot) {
+				return false;
+			}
+			int idx = list.size() - 1;
+			if (to > idx) {
+				return false;
+			}
+			Item item = get(slot);
+			Item item2 = get(to);
+			if (item != null && item2 != null) {
+				list.set(slot, item2);
+				list.set(to, item);
+				return true;
+			}
 			return false;
 		}
-		int idx = list.size() - 1;
-		if (to > idx) {
-			return false;
-		}
-		Item item = get(slot);
-		Item item2 = get(to);
-		if (item != null && item2 != null) {
-			list.set(slot, item2);
-			list.set(to, item);
-			return true;
-		}
-		return false;
 	}
 
 	public boolean insert(int slot, int to) {
-		if (slot <= 0 && to <= 0 && to == slot) {
-			return false;
-		}
-		int idx = list.size() - 1;
-		if (to > idx) {
-			return false;
-		}
-		// we reset the item in the from slot
-		Item from = list.get(slot);
-		Item[] array = list.toArray(new Item[list.size()]);
-		if (slot >= array.length || from == null || to >= array.length) {
-			return false;
-		}
-		array[slot] = null;
-		// find which direction to shift in
-		if (slot > to) {
-			int shiftFrom = to;
-			int shiftTo = slot;
-			for (int i = (to + 1); i < slot; i++) {
-				if (array[i] == null) {
-					shiftTo = i;
-					break;
-				}
+		synchronized(list) {
+			if (slot <= 0 && to <= 0 && to == slot) {
+				return false;
 			}
-			Item[] slice = new Item[shiftTo - shiftFrom];
-			System.arraycopy(array, shiftFrom, slice, 0, slice.length);
-			System.arraycopy(slice, 0, array, shiftFrom + 1, slice.length);
-		} else {
-			int sliceStart = slot + 1;
-			int sliceEnd = to;
-			for (int i = (sliceEnd - 1); i >= sliceStart; i--) {
-				if (array[i] == null) {
-					sliceStart = i;
-					break;
-				}
+			int idx = list.size() - 1;
+			if (to > idx) {
+				return false;
 			}
-			Item[] slice = new Item[sliceEnd - sliceStart + 1];
-			System.arraycopy(array, sliceStart, slice, 0, slice.length);
-			System.arraycopy(slice, 0, array, sliceStart - 1, slice.length);
+			// we reset the item in the from slot
+			Item from = list.get(slot);
+			Item[] array = list.toArray(new Item[list.size()]);
+			if (slot >= array.length || from == null || to >= array.length) {
+				return false;
+			}
+			array[slot] = null;
+			// find which direction to shift in
+			if (slot > to) {
+				int shiftFrom = to;
+				int shiftTo = slot;
+				for (int i = (to + 1); i < slot; i++) {
+					if (array[i] == null) {
+						shiftTo = i;
+						break;
+					}
+				}
+				Item[] slice = new Item[shiftTo - shiftFrom];
+				System.arraycopy(array, shiftFrom, slice, 0, slice.length);
+				System.arraycopy(slice, 0, array, shiftFrom + 1, slice.length);
+			} else {
+				int sliceStart = slot + 1;
+				int sliceEnd = to;
+				for (int i = (sliceEnd - 1); i >= sliceStart; i--) {
+					if (array[i] == null) {
+						sliceStart = i;
+						break;
+					}
+				}
+				Item[] slice = new Item[sliceEnd - sliceStart + 1];
+				System.arraycopy(array, sliceStart, slice, 0, slice.length);
+				System.arraycopy(slice, 0, array, sliceStart - 1, slice.length);
+			}
+			// now fill in the target slot
+			array[to] = from;
+			list = new ArrayList<Item>(Arrays.asList(array));
+			return true;
 		}
-		// now fill in the target slot
-		array[to] = from;
-		list = new ArrayList<Item>(Arrays.asList(array));
-		return true;
 	}
 
 	public void setTab(int int1) {
@@ -296,7 +334,7 @@ public class Bank {
 		}
 
 		int amountToRemove = item.getDef(getPlayer().getWorld()).isStackable() ? item.getAmount() : 1;
-		withdrawItem(item.getID(), amountToRemove);
+		remove(item.getID(), amountToRemove);
 		for (int p = 0; p < Equipment.slots; p++) {
 			i = getPlayer().getEquipment().get(p);
 			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
@@ -338,6 +376,7 @@ public class Bank {
 		}
 
 		affectedItem.setWielded(false);
+		add(affectedItem);
 		if (sound) {
 			getPlayer().playSound("click");
 		}
@@ -347,8 +386,6 @@ public class Bank {
 			affectedItem.getDef(getPlayer().getWorld()).getWearableId(), false);
 		getPlayer().getEquipment().equip(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition(), null);
 		ActionSender.sendEquipmentStats(getPlayer());
-
-		depositItem(affectedItem.getID(), affectedItem.getAmount());
 		return true;
 	}
 
@@ -550,39 +587,13 @@ public class Bank {
 	}
 
 	public void attemptPresetLoadout(int slot) {
-		Map<Integer, Integer> itemsOwned = new LinkedHashMap<>();
-		Item tempItem;
+		synchronized(list) {
+			Map<Integer, Integer> itemsOwned = new LinkedHashMap<>();
+			Item tempItem;
 
-		//Loop through their bank and add it to the hashmap
-		for (int i = 0; i < list.size(); i++) {
-			tempItem = get(i);
-			if (tempItem != null) {
-				if (!itemsOwned.containsKey(tempItem.getID())) {
-					itemsOwned.put(tempItem.getID(), 0);
-				}
-				int hasAmount = itemsOwned.get(tempItem.getID());
-				hasAmount += tempItem.getAmount();
-				itemsOwned.put(tempItem.getID(), hasAmount);
-			}
-		}
-
-		//Loop through their inventory and add it to the hashmap
-		for (int i = 0; i < getPlayer().getInventory().size(); i++) {
-			tempItem = getPlayer().getInventory().get(i);
-			if (tempItem != null) {
-				if (!itemsOwned.containsKey(tempItem.getID())) {
-					itemsOwned.put(tempItem.getID(), 0);
-				}
-				int hasAmount = itemsOwned.get(tempItem.getID());
-				hasAmount += tempItem.getAmount();
-				itemsOwned.put(tempItem.getID(), hasAmount);
-			}
-		}
-
-		if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			//Loop through their equipment and add it to the hashmap
-			for (int i = 0; i < Equipment.slots; i++) {
-				tempItem = getPlayer().getEquipment().get(i);
+			//Loop through their bank and add it to the hashmap
+			for (int i = 0; i < list.size(); i++) {
+				tempItem = get(i);
 				if (tempItem != null) {
 					if (!itemsOwned.containsKey(tempItem.getID())) {
 						itemsOwned.put(tempItem.getID(), 0);
@@ -592,103 +603,131 @@ public class Bank {
 					itemsOwned.put(tempItem.getID(), hasAmount);
 				}
 			}
-		}
 
-		//Make sure they have enough space - disregard edge cases
-		if (itemsOwned.size() > getPlayer().getBankSize() + Inventory.MAX_SIZE) {
-			getPlayer().message("Your bank and inventory are critically full. Clean up before using presets.");
-			return;
-		}
+			//Loop through their inventory and add it to the hashmap
+			for (int i = 0; i < getPlayer().getInventory().size(); i++) {
+				tempItem = getPlayer().getInventory().get(i);
+				if (tempItem != null) {
+					if (!itemsOwned.containsKey(tempItem.getID())) {
+						itemsOwned.put(tempItem.getID(), 0);
+					}
+					int hasAmount = itemsOwned.get(tempItem.getID());
+					hasAmount += tempItem.getAmount();
+					itemsOwned.put(tempItem.getID(), hasAmount);
+				}
+			}
 
-		for (int i = 0; i < Equipment.slots; i++) {
-			if (getPlayer().getEquipment().get(i) != null)
-				getPlayer().getEquipment().remove(i);
-		}
+			if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				//Loop through their equipment and add it to the hashmap
+				for (int i = 0; i < Equipment.slots; i++) {
+					tempItem = getPlayer().getEquipment().get(i);
+					if (tempItem != null) {
+						if (!itemsOwned.containsKey(tempItem.getID())) {
+							itemsOwned.put(tempItem.getID(), 0);
+						}
+						int hasAmount = itemsOwned.get(tempItem.getID());
+						hasAmount += tempItem.getAmount();
+						itemsOwned.put(tempItem.getID(), hasAmount);
+					}
+				}
+			}
 
-		if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			//Attempt to equip the preset equipment
-			int wearableId;
-			for (int i = 0; i < presets[slot].equipment.length; i++) {
-				Item presetEquipment = presets[slot].equipment[i];
-				if (presetEquipment.getDef(getPlayer().getWorld()) == null)
-					continue;
+			//Make sure they have enough space - disregard edge cases
+			if (itemsOwned.size() > getPlayer().getBankSize() + Inventory.MAX_SIZE) {
+				getPlayer().message("Your bank and inventory are critically full. Clean up before using presets.");
+				return;
+			}
 
-				presetEquipment.setWielded(false);
-				if (itemsOwned.containsKey(presetEquipment.getID())) {
-					int presetAmount = presetEquipment.getAmount();
-					int ownedAmount = itemsOwned.get(presetEquipment.getID());
-					if (presetAmount > ownedAmount) {
+			for (int i = 0; i < Equipment.slots; i++) {
+				if (getPlayer().getEquipment().get(i) != null)
+					getPlayer().getEquipment().remove(i);
+			}
+
+			if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				//Attempt to equip the preset equipment
+				int wearableId;
+				for (int i = 0; i < presets[slot].equipment.length; i++) {
+					Item presetEquipment = presets[slot].equipment[i];
+					if (presetEquipment.getDef(getPlayer().getWorld()) == null)
+						continue;
+
+					presetEquipment.setWielded(false);
+					if (itemsOwned.containsKey(presetEquipment.getID())) {
+						int presetAmount = presetEquipment.getAmount();
+						int ownedAmount = itemsOwned.get(presetEquipment.getID());
+						if (presetAmount > ownedAmount) {
+							getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
+							presetAmount = ownedAmount;
+						}
+						if (presetAmount > 0) {
+							if (getPlayer().getSkills().getMaxStat(presetEquipment.getDef(getPlayer().getWorld()).getRequiredSkillIndex()) < presetEquipment.getDef(getPlayer().getWorld()).getRequiredLevel()) {
+								getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
+								continue;
+							}
+							getPlayer().getEquipment().equip(presetEquipment.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(presetEquipment.getID(), presetAmount));
+							wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
+							getPlayer().updateWornItems(i,
+								presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),
+								wearableId, true);
+							if (presetAmount == ownedAmount) {
+								itemsOwned.remove(presetEquipment.getID());
+							} else {
+								itemsOwned.put(presetEquipment.getID(), ownedAmount - presetAmount);
+							}
+						}
+					} else {
 						getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
+					}
+				}
+			}
+
+			getPlayer().getInventory().getList().clear();
+			//Attempt to load the preset inventory
+			for (int i = 0; i < presets[slot].inventory.length; i++) {
+				Item presetInventory = presets[slot].inventory[i];
+				if (presetInventory.getDef(getPlayer().getWorld()) == null) {
+					continue;
+				}
+				presetInventory.setWielded(false);
+				if (itemsOwned.containsKey(presetInventory.getID())) {
+					int presetAmount = presetInventory.getAmount();
+					int ownedAmount = itemsOwned.get(presetInventory.getID());
+					if (presetAmount > ownedAmount) {
+						getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
 						presetAmount = ownedAmount;
 					}
 					if (presetAmount > 0) {
-						if (getPlayer().getSkills().getMaxStat(presetEquipment.getDef(getPlayer().getWorld()).getRequiredSkillIndex()) < presetEquipment.getDef(getPlayer().getWorld()).getRequiredLevel()) {
-							getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
-							continue;
-						}
-						getPlayer().getEquipment().equip(presetEquipment.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(presetEquipment.getID(), presetAmount));
-						wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
-						getPlayer().updateWornItems(i,
-							presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),
-							wearableId, true);
+						getPlayer().getInventory().add(new Item(presetInventory.getID(), presetAmount), false);
 						if (presetAmount == ownedAmount) {
-							itemsOwned.remove(presetEquipment.getID());
+							itemsOwned.remove(presetInventory.getID());
 						} else {
-							itemsOwned.put(presetEquipment.getID(), ownedAmount - presetAmount);
+							itemsOwned.put(presetInventory.getID(), ownedAmount - presetAmount);
 						}
 					}
 				} else {
-					getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
-				}
-			}
-		}
-
-		getPlayer().getInventory().getList().clear();
-		//Attempt to load the preset inventory
-		for (int i = 0; i < presets[slot].inventory.length; i++) {
-			Item presetInventory = presets[slot].inventory[i];
-			if (presetInventory.getDef(getPlayer().getWorld()) == null) {
-				continue;
-			}
-			presetInventory.setWielded(false);
-			if (itemsOwned.containsKey(presetInventory.getID())) {
-				int presetAmount = presetInventory.getAmount();
-				int ownedAmount = itemsOwned.get(presetInventory.getID());
-				if (presetAmount > ownedAmount) {
 					getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
-					presetAmount = ownedAmount;
 				}
-				if (presetAmount > 0) {
-					getPlayer().getInventory().add(new Item(presetInventory.getID(), presetAmount), false);
-					if (presetAmount == ownedAmount) {
-						itemsOwned.remove(presetInventory.getID());
-					} else {
-						itemsOwned.put(presetInventory.getID(), ownedAmount - presetAmount);
-					}
+			}
+
+			Iterator<Map.Entry<Integer, Integer>> itr = itemsOwned.entrySet().iterator();
+
+			int slotCounter = 0;
+			list.clear();
+			while (itr.hasNext()) {
+				Map.Entry<Integer, Integer> entry = itr.next();
+
+				if (slotCounter < getPlayer().getBankSize()) {
+					//Their bank isn't full, stick it in the bank
+					add(new Item(entry.getKey(), entry.getValue()));
+				} else {
+					//Their bank is full, stick it in their inventory
+					getPlayer().getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
+					getPlayer().message("Your bank was too full and an item was placed into your inventory.");
 				}
-			} else {
-				getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
+				slotCounter++;
 			}
+			getPlayer().resetBank();
 		}
-
-		Iterator<Map.Entry<Integer, Integer>> itr = itemsOwned.entrySet().iterator();
-
-		int slotCounter = 0;
-		list.clear();
-		while (itr.hasNext()) {
-			Map.Entry<Integer, Integer> entry = itr.next();
-
-			if (slotCounter < getPlayer().getBankSize()) {
-				//Their bank isn't full, stick it in the bank
-				add(new Item(entry.getKey(), entry.getValue()));
-			} else {
-				//Their bank is full, stick it in their inventory
-				getPlayer().getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
-				getPlayer().message("Your bank was too full and an item was placed into your inventory.");
-			}
-			slotCounter++;
-		}
-		getPlayer().resetBank();
 	}
 
 	private static boolean isCert(int itemID) {
