@@ -10,10 +10,10 @@ class Group {
 	private static final int ADMIN = 1;
 	private static final int SUPER_MOD = 2;
 	private static final int MOD = 3;
-	private static final int PLAYER_MOD = 4;
 	private static final int DEV = 8;
 	private static final int EVENT = 9;
 	private static final int USER = 10;
+	private static final int PLAYER_MOD = 11;
 
 	static final int DEFAULT_GROUP = Group.USER;
 
@@ -24,10 +24,10 @@ class Group {
 		GROUP_NAMES.put(ADMIN, "Admin");
 		GROUP_NAMES.put(SUPER_MOD, "Super Moderator");
 		GROUP_NAMES.put(MOD, "Moderator");
-		GROUP_NAMES.put(PLAYER_MOD, "Player Moderator");
 		GROUP_NAMES.put(DEV, "Developer");
 		GROUP_NAMES.put(EVENT, "Event");
 		GROUP_NAMES.put(USER, "User");
+		GROUP_NAMES.put(PLAYER_MOD, "Player Moderator");
 	}
 
 	private static String getNameColour(int groupID) {
