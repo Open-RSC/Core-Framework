@@ -26,7 +26,7 @@ public class LoginResponse {
 	public static int NEED_TO_SET_DISPLAY_NAME = 23;
 	public static int WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS = 24;
 	public static int NONE_OF_YOUR_CHARACTERS_CAN_LOGIN = 25;
-	
+
 	/* adm0 is regular, adm1 suggests mute,
 	 * adm2 can attempt to directly mute
 	 * 64 - lvl2@0, lvl1@0 -adm0
@@ -48,6 +48,6 @@ public class LoginResponse {
 	 * 89 - lvl2@1, lvl1@6 -adm1
 	 */
 	//order from asc groupId
-	public static int[] LOGIN_SUCCESSFUL = {87, 86, 83, 82, 89, 89, 88, 88, 85, 84, 64};
+	public static int[] LOGIN_SUCCESSFUL = {87, 86, 83, 82, 89, 89, 88, 88, 85, 84, 64, 89};
 
 }
