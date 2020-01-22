@@ -10,8 +10,8 @@ import com.openrsc.android.render.RSCBitmapSurfaceView;
 import com.openrsc.client.model.Sprite;
 
 import java.io.ByteArrayInputStream;
+import java.util.Objects;
 
-import orsc.Config;
 import orsc.PacketHandler;
 import orsc.mudclient;
 import orsc.multiclient.ClientPort;
@@ -29,6 +29,15 @@ public class GameActivity extends Activity implements ClientPort {
         super.onCreate(savedInstanceState);
 
         gameView = new RSCBitmapSurfaceView(this) {
+            @Override
+            public void setTitle(String title) {
+
+            }
+
+            @Override
+            public void setIconImage(String serverName) {
+
+            }
         };
         setMudclient(new mudclient(this));
         setContentView(gameView);
@@ -147,13 +156,23 @@ public class GameActivity extends Activity implements ClientPort {
     public void drawKeyboard() {
         InputMethodManager imm = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        Objects.requireNonNull(imm).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         if (imm.isAcceptingText()) osConfig.F_SHOWING_KEYBOARD = true;
     }
 
     public void closeKeyboard() {
-        ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+        ((InputMethodManager) Objects.requireNonNull(getSystemService(Activity.INPUT_METHOD_SERVICE)))
                 .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         osConfig.F_SHOWING_KEYBOARD = false;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        
+    }
+
+    @Override
+    public void setIconImage(String serverName) {
+
     }
 }
