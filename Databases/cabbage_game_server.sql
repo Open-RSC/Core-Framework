@@ -40349,3 +40349,7 @@ ALTER TABLE `openrsc_players`
     DROP COLUMN IF EXISTS `onexp_mode`;
 ALTER TABLE `openrsc_players`
     DROP COLUMN IF EXISTS `forum_active`;
+ALTER TABLE `openrsc_curstats`
+    ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
+ALTER TABLE `openrsc_experience`
+    ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;
