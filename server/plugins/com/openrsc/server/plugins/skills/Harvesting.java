@@ -171,7 +171,7 @@ public final class Harvesting implements ObjectActionListener,
 		final boolean isSnapeGrass = obj.getGameObjectDef().getName().toLowerCase().contains("snape grass");
 
 		if (isSnapeGrass && player.getSkills().getLevel(Skills.HARVESTING) < 61) {
-			player.playerServerMessage(MessageType.QUEST, "You need at least level 61 "
+			player.playerServerMessage(MessageType.QUEST, "You need at least level 61 harvesting "
 				+ "to clip from the snape grass");
 			return;
 		}

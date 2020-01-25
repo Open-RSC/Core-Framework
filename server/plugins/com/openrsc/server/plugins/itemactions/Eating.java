@@ -31,7 +31,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 			int id = item.getID();
 			boolean isKebabVariant = false;
-			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id()) {
+			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id() || id == ItemId.RED_CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
