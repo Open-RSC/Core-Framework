@@ -392,7 +392,7 @@ public final class Harvesting implements ObjectActionListener,
 			p.getCache().set("uses_wcan", 1);
 		} else {
 			int uses = p.getCache().getInt("uses_wcan");
-			if (uses >= 8) {
+			if (uses >= 4) {
 				p.getInventory().remove(ItemId.WATERING_CAN.id(), 1);
 				p.getCache().remove("uses_wcan");
 			} else {
