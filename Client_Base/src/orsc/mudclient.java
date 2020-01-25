@@ -15356,6 +15356,7 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
 			System.out.println(S_WANT_PK_BOTS + " 64");
+			System.out.println(Config.S_WANT_HARVESTING + " 65");
 		}
 		try {
 			this.loadGameConfig(false);
@@ -16333,6 +16334,8 @@ public final class mudclient implements Runnable {
 
 		if (S_WANT_RUNECRAFTING)
 			addSkill("Runecrafting", "Runecraft");
+		if (S_WANT_HARVESTING)
+			addSkill("Harvesting");
 	}
 
 	private void addSkill(String skillname) {

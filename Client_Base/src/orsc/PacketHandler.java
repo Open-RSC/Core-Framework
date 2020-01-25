@@ -823,7 +823,7 @@ public class PacketHandler {
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
-		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate;
+		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting;
 
 		String logoSpriteID;
 
@@ -901,6 +901,7 @@ public class PacketHandler {
 			characterCreationMode = this.getClientStream().getUnsignedByte(); //71
 			skillingExpRate = this.getClientStream().getUnsignedByte(); //72
 			wantPkBots = this.getClientStream().getUnsignedByte(); // 73
+			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -975,6 +976,7 @@ public class PacketHandler {
 			characterCreationMode = packetsIncoming.getUnsignedByte(); //71
 			skillingExpRate = packetsIncoming.getUnsignedByte(); //72
 			wantPkBots = packetsIncoming.getUnsignedByte(); // 73
+			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
 		}
 
 		if (Config.DEBUG) {
@@ -1051,7 +1053,8 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
-					"\nS_WANT_PK_BOTS " + wantPkBots // 73
+					"\nS_WANT_PK_BOTS " + wantPkBots + // 73
+					 "\nS_WANT_HARVESTING " + wantHarvesting // 74
 					);
 		}
 
@@ -1130,6 +1133,7 @@ public class PacketHandler {
 		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
 		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
 		props.setProperty("S_WANT_PK_BOTS", wantPkBots == 1 ? "true" : "false"); // 73
+		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

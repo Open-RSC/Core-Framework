@@ -17,12 +17,12 @@ public class Skills {
 
 	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, SLAYER = 19, FARMING = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
+		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFTING = 18, HARVESTING = 19, SLAYER = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
 
 	public HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
 	public ArrayList<SkillDef> skills;
 
-	private final String[] SKILL_NAME;
+	//private final String[] SKILL_NAME;
 
 	private final Constants constants;
 
@@ -65,15 +65,18 @@ public class Skills {
 		if(constants.getServer().getConfig().WANT_RUNECRAFTING) {
 			skills.add(new SkillDef("Runecrafting", "Runecraft", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
 		}
+		if(constants.getServer().getConfig().WANT_HARVESTING) {
+			skills.add(new SkillDef("Harvesting", "Harvesting", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
+		}
 
-		if (constants.getServer().getConfig().WANT_RUNECRAFTING)
+		/*if (constants.getServer().getConfig().WANT_RUNECRAFTING)
 			SKILL_NAME = new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
 				"agility", "thieving", "runecraft"};
 		else
 			SKILL_NAME = new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
 				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-				"agility", "thieving"};
+				"agility", "thieving"};*/
 	}
 
 	public String getSkillName(int skillIndex) {

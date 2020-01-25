@@ -72,7 +72,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.message("You feel strangely heavier and more tired");
 			} else if (id == ItemId.EQUA_LEAVES.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the leaves..chewy but tasty");
-			
+
 			else if (id == ItemId.DWELLBERRIES.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the berrys..quite tasty");
 
@@ -81,7 +81,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 			else if (id == ItemId.LEMON_SLICES.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the lemon slices ..they're very sour");
-			
+
 			else if (id == ItemId.DICED_LEMON.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the lemon cubes ..they're very sour");
 
@@ -90,7 +90,16 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 			else if (id == ItemId.LIME_SLICES.id() || id == ItemId.LIME_CHUNKS.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase() + "..they're quite sour");
-			
+
+			else if (id == ItemId.GRAPEFRUIT.id())
+				player.playerServerMessage(MessageType.QUEST, "You eat the grapefruit ...it's somewhat bitter");
+
+			else if (id == ItemId.GRAPEFRUIT_SLICES.id())
+				player.playerServerMessage(MessageType.QUEST, "You eat the grapefruit slices ...they're somewhat bitter");
+
+			else if (id == ItemId.DICED_GRAPEFRUIT.id())
+				player.playerServerMessage(MessageType.QUEST, "You eat the grapefruit cubes ...they're somewhat bitter");
+
 			else if (id == ItemId.ORANGE.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the orange ...yum");
 
@@ -149,11 +158,11 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 					} else { // complete pies
 						origName = itemName;
 					}
-					
+
 					message = "You eat half of a" + (startsWithVowel(origName) ? "n " : " ") + origName;
 				} else if (itemName.contains("pizza")) {
 					message = "You eat half of the pizza";
-				} 
+				}
 				// cakes
 				else {
 					boolean isChocolate = itemName.contains("chocolate");
@@ -199,7 +208,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			addFoodResult(player, id);
 		}
 	}
-	
+
 	private void handleKebab(Player player, Item item) {
 		int rand = DataConversions.random(0, 31);
 		player.playerServerMessage(MessageType.QUEST, "You eat the Kebab");
@@ -242,7 +251,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			player.getSkills().setLevel(Skills.HITS, newStat);
 		}
 	}
-	
+
 	private void handleTastyKebab(Player player, Item item) {
 		player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "It heals some health");
@@ -264,17 +273,12 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				break;
 		}
 	}
-	
+
 	// cakes, pies and pizzas (except plain pizza) are eaten partially
 	private boolean eatenByParts(Player player, Item item) {
 		String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 		return itemName.contains("cake") || itemName.contains("pie")
 				|| (itemName.contains("pizza") && !itemName.contains("plain pizza"));
-	}
-	
-	private boolean startsWithVowel(String testString) {
-		String vowels = "aeiou";
-		return vowels.indexOf(Character.toLowerCase(testString.charAt(0))) != -1;
 	}
 
 	private void addFoodResult(Player player, int id) {
@@ -284,7 +288,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 		else if (id == ItemId.ANCHOVIE_PIZZA.id())
 			player.getInventory().add(new Item(ItemId.HALF_ANCHOVIE_PIZZA.id()));
-		
+
 		else if (id == ItemId.PINEAPPLE_PIZZA.id())
 			player.getInventory().add(new Item(ItemId.HALF_PINEAPPLE_PIZZA.id()));
 
@@ -317,7 +321,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
 			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
-		
+
 		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id())
 			player.getInventory().add(new Item(ItemId.BOWL.id()));
 	}

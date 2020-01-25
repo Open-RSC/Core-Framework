@@ -2128,6 +2128,11 @@ public class EntityHandler {
 			npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		}
 
+		if (Config.S_WANT_HARVESTING) {
+			sprites = new int[]{3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1};
+			npcs.add(new NPCDef("Gardener", "She takes care of the plants around", "", 25, 25, 10, 20, false, sprites, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, i++));
+		}
+
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
 			npcs.get(103).sprites = new int[]{3, 4, -1, -1, -1, -1, -1, 247, -1, -1, -1, -1};
@@ -3858,6 +3863,37 @@ public class EntityHandler {
 		items.add(new ItemDef("dragon 2-handed Sword", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2353, 2354));
 		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 50, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
 		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
+
+		//Harvesting
+		items.add(new ItemDef("red apple", "Seems tasty!", "eat", 1, -1, "items:534", false, false, 0, 0, false, false, -1, -1, 2357));
+		items.add(new ItemDef("red apple", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2357, 2358));
+		items.add(new ItemDef("grapefruit", "It's very fresh", "eat", 2, -1, "items:526", false, false, 0, 0, true, false, -1, -1, 2359));
+		items.add(new ItemDef("grapefruit", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2359, 2360));
+		items.add(new ItemDef("papaya", "Seems very tasty!", "eat", 2, -1, "items:527", false, false, 0, 0, true, false, -1, -1, 2361));
+		items.add(new ItemDef("papaya", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2361, 2362));
+		items.add(new ItemDef("coconut", "It can be cut up with a machette", "", 2, -1, "items:535", false, false, 0, 0, true, false, -1, -1, 2363));
+		items.add(new ItemDef("coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2363, 2364));
+		items.add(new ItemDef("Red Cabbage", "Yuck I don't like cabbage", "Eat", 1, -1, "items:529", false, false, 0, 0, false, false, -1, -1, 2365));
+		items.add(new ItemDef("Red Cabbage", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2365, 2366));
+		items.add(new ItemDef("Corn", "Some fresh picked corn", "eat", 2, -1, "items:528", false, false, 0, 0, false, false, -1, -1, 2367));
+		items.add(new ItemDef("Corn", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2367, 2368));
+		items.add(new ItemDef("White Pumpkin", "Wonder how it tastes", "eat", 2, -1, "items:536", false, false, 0, 0, true, false, -1, -1, 2369));
+		items.add(new ItemDef("White Pumpkin", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2369, 2370));
+		items.add(new ItemDef("Fruit Picker", "Useful for picking trees better", "", 10, -1, "items:530", false, false, 0, 0, false, false, -1, -1, 2371));
+		items.add(new ItemDef("Fruit Picker", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2371, 2372));
+		items.add(new ItemDef("Hand Shovel", "This will help get yield from bushes and allotments", "", 15, -1, "items:532", false, false, 0, 0, false, false, -1, -1, 2373));
+		items.add(new ItemDef("Hand Shovel", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2373, 2374));
+		items.add(new ItemDef("Herb Clippers", "Useful for picking up herbs out there", "", 25, -1, "items:531", false, false, 0, 0, true, false, -1, -1, 2375));
+		items.add(new ItemDef("Herb Clippers", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2375, 2376));
+		items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, -1, -1, 2377));
+		items.add(new ItemDef("Watering Can", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2377, 2378));
+
+		items.add(new ItemDef("grapefruit slices", "It's very fresh", "eat", 2, 291, "items:291", false, false, 0, 15435583, true, false, -1, -1, 2379));
+		items.add(new ItemDef("grapefruit slices", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, true, false, -1, 2379, 2380));
+		items.add(new ItemDef("Diced grapefruit", "Fresh chunks of grapefruit", "eat", 2, 293, "items:293", false, false, 0, 15435583, true, false, -1, -1, 2381));
+		items.add(new ItemDef("Diced grapefruit", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, true, false, -1, 2381, 2382));
+		items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, -1, -1, 2383));
+		items.add(new ItemDef("Half coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2383, 2384));
 	}
 
 	// Bank note items
@@ -7134,11 +7170,52 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i = 1236)); //yanille agility shortcut1336
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", ++i)); //yanille agility shortcut
 
-		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "XMASTREE", ++i)); //1338
-		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ORNAMENTTREE", ++i));
-		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "PINETREE", ++i));
+		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "xmastree", ++i)); //1238
+		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ornamenttree", ++i));
+		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "pinetree", ++i));
 		objects.add(new GameObjectDef("Tunnel entrance", "I wonder where this leads...", "enter", "Examine", 1, 3, 1, 0, "small caveentrance2", ++i));
 		objects.add(new GameObjectDef("Rowboat", "This looks usable", "Travel", "Examine", 1, 2, 2, 0, "rowboat", ++i));
+
+		//Harvesting Objects
+		if (Config.S_WANT_HARVESTING) {
+			objects.add(new GameObjectDef("Lemon Tree", "A tree filled with many ripe lemons", "Harvest", "Examine", 1, 1, 1, 0, "lemontree", i = 1243)); //1243
+			objects.add(new GameObjectDef("Lime Tree", "A tree filled with many ripe limes", "Harvest", "Examine", 1, 1, 1, 0, "limetree", ++i));
+			objects.add(new GameObjectDef("Apple Tree", "A tree filled with many ripe apples", "Harvest", "Examine", 1, 1, 1, 0, "appletree", ++i));
+			objects.add(new GameObjectDef("Orange Tree", "A tree filled with many ripe oranges", "Harvest", "Examine", 1, 1, 1, 0, "orangetree", ++i));
+			objects.add(new GameObjectDef("Grapefruit Tree", "A tree filled with many ripe grapefruits", "Harvest", "Examine", 1, 1, 1, 0, "grapefruittree", ++i));
+			objects.add(new GameObjectDef("Banana Palm", "A palm containing many ripe bananas", "Harvest", "Examine", 1, 1, 1, 0, "bananapalm", ++i));
+			objects.add(new GameObjectDef("Coconut Palm", "A palm containing many ripe coconuts", "Harvest", "Examine", 1, 1, 1, 0, "coconutpalm", ++i));
+			objects.add(new GameObjectDef("Papaya Palm", "A palm containing many ripe papayas", "Harvest", "Examine", 1, 1, 1, 0, "papayapalm", ++i));
+			objects.add(new GameObjectDef("Pineapple Plant", "A plant with many nice ripe pineapples", "Harvest", "Examine", 1, 1, 1, 0, "pineappleplant", ++i));
+			objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedtree", ++i));
+			objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm", ++i));
+			objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm2", ++i));
+			objects.add(new GameObjectDef("Exhausted Plant", "A plant that got its produce taken away", "WalkTo", "Examine", 1, 1, 1, 0, "depletedplant", ++i));
+			objects.add(new GameObjectDef("Redberry Bush", "A bush containing some redberries", "Harvest", "Examine", 1, 1, 1, 0, "redberrybush", ++i)); //1256
+			objects.add(new GameObjectDef("Cadavaberry Bush", "A bush containing some cadavaberries", "Harvest", "Examine", 1, 1, 1, 0, "cadavaberrybush", ++i));
+			objects.add(new GameObjectDef("Dwellberry Bush", "A bush filled with mysterious dwellberries", "Harvest", "Examine", 1, 1, 1, 0, "dwellberrybush", ++i));
+			objects.add(new GameObjectDef("Jangerberry Bush", "A bush having the mysterious jangerberries", "Harvest", "Examine", 1, 1, 1, 0, "jangerberrybush", ++i));
+			objects.add(new GameObjectDef("Whiteberry Bush", "A bush containing some whiteberries", "Harvest", "Examine", 1, 1, 1, 0, "whiteberrybush", ++i));
+			objects.add(new GameObjectDef("Depleted Bush", "A bush that once contained berries", "WalkTo", "Examine", 1, 1, 1, 0, "depletedbush", ++i));
+			objects.add(new GameObjectDef("Cabbage", "Oooh some cabbage", "Harvest", "Examine", 0, 1, 1, 0, "greencabbage", ++i)); //1262
+			objects.add(new GameObjectDef("Red Cabbage", "Oooh some red cabbage", "Harvest", "Examine", 0, 1, 1, 0, "redcabbage", ++i));
+			objects.add(new GameObjectDef("White Pumpkin", "A pumpkin ready for harvest", "Harvest", "Examine", 0, 1, 1, 0, "pumpkinwhite", ++i));
+			objects.add(new GameObjectDef("Potato Plant", "Some nice looking potatoes growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "potatoplant", ++i));
+			objects.add(new GameObjectDef("Onion Plant", "Some nice onions growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "onionplant", ++i));
+			objects.add(new GameObjectDef("Garlic Plant", "Some garlic growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "garlicplant", ++i));
+			objects.add(new GameObjectDef("Tomato Plant", "This plant has some good looking tomatoes", "Harvest", "Examine", 0, 1, 1, 0, "tomatoplant", ++i));
+			objects.add(new GameObjectDef("Corn Plant", "This plant contains ripe corn", "Harvest", "Examine", 0, 1, 1, 0, "cornplant", ++i));
+			objects.add(new GameObjectDef("Damaged Ground", "Disturbed ground left after a harvest", "WalkTo", "Examine", 0, 1, 1, 0, "dugupsoil1", ++i));
+			objects.add(new GameObjectDef("Depleted tomato plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedtomato", ++i));
+			objects.add(new GameObjectDef("Depleted corn plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedcorn", ++i));
+			objects.add(new GameObjectDef("Snape Grass", "Some interesting snape grass growing here", "Clip", "Examine", 1, 1, 1, 0, "snapegrass", ++i));
+			objects.add(new GameObjectDef("Herb", "I wonder what herb is around", "Clip", "Examine", 1, 1, 1, 0, "herb", ++i));
+			objects.add(new GameObjectDef("Pumpkin", "A pumpkin of autumn", "Collect", "Examine", 0, 1, 1, 0, "pumpkin", ++i));
+			objects.add(new GameObjectDef("Soil Mound", "A pile of very good soil", "WalkTo", "Examine", 1, 1, 1, 0, "soilmound", ++i));
+			objects.add(new GameObjectDef("Barrel of water", "A barrel filled with filtered water", "WalkTo", "Examine", 1, 1, 1, 0, "barrelwater", ++i));
+			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
+			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
+		}
 	}
 
 	public static void load(boolean loadMembers) {

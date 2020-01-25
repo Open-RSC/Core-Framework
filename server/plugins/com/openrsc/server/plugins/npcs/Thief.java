@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -12,7 +13,8 @@ public class Thief implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return inArray(n.getID(), 64, 351, 352);
+		return inArray(n.getID(),
+			NpcId.THIEF_GENERIC.id(), NpcId.THIEF_BLANKET.id(), NpcId.HEAD_THIEF.id());
 	}
 
 	@Override
