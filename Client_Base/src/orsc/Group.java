@@ -42,7 +42,7 @@ class Group {
 			case SUPER_MOD:
 				return "@blu@";
 			case MOD:
-				return "@bl1";
+				return "@bl1@";
 			case DEV:
 				return "@red@";
 			case EVENT:
