@@ -16253,6 +16253,11 @@ public final class mudclient implements Runnable {
 		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
+		} else if (skillGuideChosen.equalsIgnoreCase("Harvesting")) {
+			skillGuideChosenTabs.add("Allotments");
+			skillGuideChosenTabs.add("Fruits");
+			skillGuideChosenTabs.add("Bushes");
+			skillGuideChosenTabs.add("Herbs");
 		}
 	}
 
