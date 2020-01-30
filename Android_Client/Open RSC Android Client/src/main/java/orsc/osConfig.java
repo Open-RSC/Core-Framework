@@ -3,7 +3,7 @@ package orsc;
 public class osConfig {
 	/* Android: */
 	public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client or it will crash on launch, needs to be set as public for the Android client to use
-	public static final String DL_URL = "openrsc.com"; // needs to be set as public for the Android client to use
+	public static final String DL_URL = "game.openrsc.com"; // needs to be set as public for the Android client to use
 	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
 	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/";
 	public static final String MD5_TABLENAME = "MD5.SUM";
