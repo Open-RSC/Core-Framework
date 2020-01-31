@@ -46,7 +46,7 @@ public class Constants {
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/";
-	public static final Double VERSION_NUMBER = 20200130.111000; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20200130.214000; //YYYYMMDD.HHMMSS format
 	public static final String VERSION_UPDATE_URL = "https://orsc.dev/open-rsc/Game/raw/master/PC_Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "http://game.openrsc.com/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";
