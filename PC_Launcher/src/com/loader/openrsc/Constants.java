@@ -8,13 +8,13 @@ public class Constants {
 
 	// RSC Cabbage
 	public static final String RSCC_GAME_NAME = "RSC Cabbage";
-	public static final String RSCC_WORLD_STATS_URL = "https://openrsc.com/stats"; // Used for the world statistics
+	public static final String RSCC_WORLD_STATS_URL = "https://rsccabbage.com"; // Used for the world statistics
 	static final String RSCC_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int RSCC_SERVER_PORT = 43595;
 
 	// Open RSC
 	public static final String ORSC_GAME_NAME = "Open RSC";
-	public static final String ORSC_WORLD_STATS_URL = "https://openrsc.com/orscstats"; // Used for the world statistics
+	public static final String ORSC_WORLD_STATS_URL = "https://openrsc.com"; // Used for the world statistics
 	static final String ORSC_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int ORSC_SERVER_PORT = 43594;
 
