@@ -28,7 +28,6 @@ public class Launcher {
 		String orsc = "orsc";
 		String openpk = "openpk";
 		String rscp = "rscp";
-		String local = "local";
 		String dev = "dev";
 
 		// ORSC server status checker
@@ -42,9 +41,6 @@ public class Launcher {
 
 		// RSCP server status checker
 		new Thread(new StatusChecker(Constants.RSCP_SERVER_DOMAIN, rscp, Constants.RSCP_SERVER_PORT)).start();
-
-		// Localhost server status checker
-		new Thread(new StatusChecker(Constants.LOCALHOST_SERVER_DOMAIN, local, Constants.LOCALHOST_SERVER_PORT)).start();
 
 		// Dev World server status checker
 		new Thread(new StatusChecker(Constants.DEV_SERVER_DOMAIN, dev, Constants.DEV_SERVER_PORT)).start();

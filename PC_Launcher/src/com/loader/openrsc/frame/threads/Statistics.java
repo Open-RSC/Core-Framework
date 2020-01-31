@@ -35,12 +35,8 @@ public class Statistics implements Runnable {
 		try {
 			Document document = Jsoup.connect(Constants.OPENPK_WORLD_STATS_URL).get();
 
-			for (Element getopenpkOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getrsccOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getopenpkOnline.text() + "</span></html>");
-			}
-
-			for (Element getopenpkLogins48 : document.select("a[href$=\"logins48\"]")) {
-				AppFrame.get().getrsccLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getopenpkLogins48.text() + "</span></html>");
+			for (Element getorscOnline : document.select("a[href$=\"online\"]")) {
+				AppFrame.get().getorscOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getopenpkOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}
@@ -49,12 +45,8 @@ public class Statistics implements Runnable {
 		try {
 			Document document = Jsoup.connect(Constants.RSCP_WORLD_STATS_URL).get();
 
-			for (Element getrscpOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getrsccOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getrscpOnline.text() + "</span></html>");
-			}
-
-			for (Element getrscpLogins48 : document.select("a[href$=\"logins48\"]")) {
-				AppFrame.get().getrsccLogins48().setText("<html>Online Last 48 Hours: <span style='color:00FF00;'>" + getrscpLogins48.text() + "</span></html>");
+			for (Element getorscOnline : document.select("a[href$=\"online\"]")) {
+				AppFrame.get().getorscOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getorscOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}*/

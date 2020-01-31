@@ -3,29 +3,15 @@ package com.loader.openrsc.frame.elements;
 import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.listeners.CheckComboListener;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Rectangle;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 public class CheckCombo extends JComboBox implements ListCellRenderer {
 	public RadioButton checkBox;
