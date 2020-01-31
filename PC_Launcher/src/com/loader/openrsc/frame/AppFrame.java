@@ -135,23 +135,23 @@ public class AppFrame extends JFrame {
 		 * RSC Preservation
 		 */
 		// Server status check - spaced 12px apart
-		/*(this.rscp_status = new JLabel(Constants.RSCP_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		(this.rscp_status = new JLabel(Constants.RSCP_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.rscp_status.setFont(Utils.getFont("Helvetica.otf", 0, 12.0f));
 		int rscp_x = 600;
 		int rscp_y = 94;
 		this.rscp_status.setBounds(rscp_x, rscp_y + 12, 327, 15);
-		this.bg.add(this.rscp_status);*/
+		//this.bg.add(this.rscp_status); // Disabled on purpose
 
 		/*
 		 * Dev World
 		 */
 		// Server status check - spaced 12px apart
-		/*(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
+		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
 		this.dev_status.setFont(Utils.getFont("Helvetica.otf", 0, 12.0f));
 		int dev_x = 600;
 		int dev_y = 110;
 		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
-		this.bg.add(this.dev_status);*/
+		//this.bg.add(this.dev_status); // Disabled on purpose
 
 		/*
 		 * Sprite pack
@@ -217,16 +217,16 @@ public class AppFrame extends JFrame {
 		orscRadioButton = new RadioButton(new Rectangle(127, 313, 140, 40));
 		rsccRadioButton = new RadioButton(new Rectangle(385, 313, 140, 40));
 		openpkRadioButton = new RadioButton(new Rectangle(612, 313, 260, 40));
-		//rscpRadioButton = new RadioButton(new Rectangle(x, y, 260, 40));
-		//devRadioButton = new RadioButton(new Rectangle(x, y, 140, 40));
+		rscpRadioButton = new RadioButton(new Rectangle(612, 313, 260, 40));
+		devRadioButton = new RadioButton(new Rectangle(612, 313, 140, 40));
 
 		rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 
 		group.add(orscRadioButton);
 		group.add(rsccRadioButton);
 		group.add(openpkRadioButton);
-		group.add(rscpRadioButton);
-		group.add(devRadioButton);
+		//group.add(rscpRadioButton);
+		//group.add(devRadioButton);
 
 		for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements(); ) {
 			RadioButton button = (RadioButton) buttons.nextElement();
@@ -272,19 +272,16 @@ public class AppFrame extends JFrame {
 
 	// RSCP section
 	public JLabel getrscpStatus() {
-		//return this.rscp_status;
-		return null;
+		return this.rscp_status;
 	}
 
-	public JLabel getpreservationOnline() {
-		//return this.rscp_online;
-		return null;
+	public JLabel getrscpOnline() {
+		return this.rscp_online;
 	}
 
 	// Dev World section
 	public JLabel getdevStatus() {
-		//return this.dev_status;
-		return null;
+		return this.dev_status;
 	}
 
 	// Spritepack combobox

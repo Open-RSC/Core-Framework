@@ -42,13 +42,13 @@ public class Statistics implements Runnable {
 		}
 
 		// RSCP
-		/*try {
+		try {
 			Document document = Jsoup.connect(Constants.RSCP_WORLD_STATS_URL).get();
 
-			for (Element getrscpOnline : document.select("a[href$=\"online\"]")) {
+			for (Element getrscpOnline : document.select("a[href$=\"NULLonline\"]")) { // Broken on purpose until a website is operating
 				AppFrame.get().getrscpOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getrscpOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
-		}*/
+		}
 	}
 }
