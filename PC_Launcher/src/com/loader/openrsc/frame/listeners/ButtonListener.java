@@ -8,28 +8,22 @@ import com.loader.openrsc.util.Utils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
+import java.io.*;
 
 public class ButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(final ActionEvent event) {
 		final String action = event.getActionCommand().toLowerCase();
 		switch (action) {
-			case "rsc wiki": {
+			case "reneral rsc wiki": {
 				Utils.openWebpage("https://classic.runescape.wiki");
 				return;
 			}
-			case "bug reports": {
-				Utils.openWebpage("https://orsc.dev/open-rsc/Game/issues");
+			case "our wiki": {
+				Utils.openWebpage("https://openrsc.com/wiki");
 				return;
 			}
-			case "bot reports": {
+			case "bug reports": {
 				Utils.openWebpage("https://orsc.dev/open-rsc/Game/issues");
 				return;
 			}
@@ -157,18 +151,7 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
-			/*case "place holder": {
-				Utils.openWebpage("https://www.google.com");
-				return;
-			}
-			case "place holder2": {
-				Utils.openWebpage("https://www.google2.com");
-				return;
-			}
-			case "place holder3": {
-				Utils.openWebpage("https://www.google3.com");
-				return;
-			}*/
+
 			case "minimize": {
 				AppFrame.get().setState(1);
 				return;

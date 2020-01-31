@@ -1,21 +1,14 @@
 package com.loader.openrsc.frame;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.frame.elements.CheckCombo;
-import com.loader.openrsc.frame.elements.ControlButton;
-import com.loader.openrsc.frame.elements.LaunchButton;
-import com.loader.openrsc.frame.elements.LinkButton;
-import com.loader.openrsc.frame.elements.RadioButton;
+import com.loader.openrsc.frame.elements.*;
 import com.loader.openrsc.frame.listeners.PositionListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Enumeration;
 import java.util.Random;
-
-import javax.swing.*;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
@@ -46,8 +39,6 @@ public class AppFrame extends JFrame {
 	// Localhost section
 	private JLabel local_status;
 
-	//Sprite pack
-	private JLabel sprite_pack;
 	private CheckCombo comboBox;
 
 	private RadioButton rsccRadioButton;
@@ -209,10 +200,11 @@ public class AppFrame extends JFrame {
 		 * Sprite pack
 		 */
 
-		this.sprite_pack = new JLabel("Available sprite packs:");
-		this.sprite_pack.setForeground(Color.WHITE);
-		this.sprite_pack.setBounds(600, local_y + 100, 150, 15);
-		this.bg.add(this.sprite_pack);
+		//Sprite pack
+		JLabel sprite_pack = new JLabel("Available sprite packs:");
+		sprite_pack.setForeground(Color.WHITE);
+		sprite_pack.setBounds(600, local_y + 100, 150, 15);
+		this.bg.add(sprite_pack);
 
 		comboBox = new CheckCombo();
 		comboBox.combo.setBounds(600, local_y + 120, 190, 30);
@@ -255,30 +247,6 @@ public class AppFrame extends JFrame {
 		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(link_button_x + 130, link_button_y, 119, 40)));
 		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(link_button_x + 260, link_button_y, 119, 40)));
 		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(link_button_x + 390, link_button_y, 119, 40)));
-
-		/*JLabel friends;
-		(friends = new JLabel("Great 3rd party RSC private servers to also check out:")).setBounds(70, 375, 600, 25);
-		friends.setForeground(new Color(255, 255, 255, 220));
-		friends.setFont(Utils.getFont("Exo-Regular.otf", 1, 17.0f));
-		this.bg.add(friends);
-
-		int friend_link_x = 75;
-		int friend_link_y = 400;
-		this.bg.add(new LinkText("RSC Arch Angel", new Rectangle(friend_link_x, friend_link_y, 140, 20)));
-		//this.bg.add(new LinkText("Placeholder", new Rectangle(friend_link_x + 145, friend_link_y, 150, 20)));
-		//this.bg.add(new LinkText("Placeholder", new Rectangle(friend_link_x + (150), friend_link_y, 150, 20)));
-
-		JLabel spacer1;
-		(spacer1 = new JLabel("|")).setBounds(friend_link_x + 150, 400, 10, 20);
-		spacer1.setForeground(new Color(255, 0, 0, 220));
-		spacer1.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
-		this.bg.add(spacer1);*/
-
-		/*JLabel spacer2;
-		(spacer2 = new JLabel("|")).setBounds(friend_link_x + 285, 400, 10, 20);
-		spacer2.setForeground(new Color(255, 0, 0, 220));
-		spacer2.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
-		this.bg.add(spacer2);*/
 
 		// Launch button section
 		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
@@ -377,7 +345,7 @@ public class AppFrame extends JFrame {
 		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
 		this.bg.add(localhostDescription);
 	}
-	
+
 	public JProgressBar getProgress() {
 		return this.progress;
 	}
@@ -437,7 +405,7 @@ public class AppFrame extends JFrame {
 	public CheckCombo.store[] getComboBoxState() {
 		int entryCount = comboBox.combo.getItemCount();
 		CheckCombo.store[] items = new CheckCombo.store[entryCount];
-		JComboBox entry = (JComboBox) comboBox.combo;
+		JComboBox entry = comboBox.combo;
 		for (int p = 0; p < entryCount; p++) {
 			items[p] = (CheckCombo.store) entry.getItemAt(p);
 		}
