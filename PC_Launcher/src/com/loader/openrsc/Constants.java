@@ -26,7 +26,7 @@ public class Constants {
 
 	// Open PK
 	public static final String OPENPK_GAME_NAME = "Open PK";
-	public static final String OPENPK_WORLD_STATS_URL = "https://openrsc.com"; // Used for the world statistics
+	public static final String OPENPK_WORLD_STATS_URL = "https://storkpk.org"; // Used for the world statistics
 	static final String OPENPK_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
 	static final int OPENPK_SERVER_PORT = 43597;
 

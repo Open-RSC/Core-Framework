@@ -4,17 +4,12 @@ import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.elements.ControlButton;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.WindowConstants;
-import javax.swing.border.LineBorder;
 
 public class PopupFrame
 	extends JFrame {
@@ -49,7 +44,7 @@ public class PopupFrame
 		msg.setForeground(Color.WHITE);
 		msg.setHorizontalAlignment(0);
 		msg.setBounds(0, 45, 300, 25);
-		msg.setFont(Utils.getFont("Exo-Regular.otf", 0, 12.0F));
+		msg.setFont(Utils.getFont("Helvetica.otf", 0, 12.0F));
 		add(msg);
 
 		ControlButton close = new ControlButton(3, 110, 100, 75, 25);

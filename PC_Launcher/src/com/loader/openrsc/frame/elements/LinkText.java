@@ -19,7 +19,7 @@ public class LinkText extends JButton implements MouseListener {
 		//this.setIcon(Utils.getImage("button.png"));
 		//this.setRolloverIcon(Utils.getImage("button_hover.png"));
 		this.setHorizontalTextPosition(0);
-		this.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.setFont(Utils.getFont("Helvetica.otf", 1, 12.0f));
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);
 		this.setForeground(Color.WHITE);

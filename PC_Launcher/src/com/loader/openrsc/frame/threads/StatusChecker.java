@@ -23,7 +23,7 @@ public class StatusChecker implements Runnable {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
-				String color = isOnline ? "#00FF00" : "#FF0000";
+				String color = isOnline ? "#90c040" : "#FF0000";
 				AppFrame.get().getrsccStatus().setText("<html>RSC Cabbage: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -37,7 +37,7 @@ public class StatusChecker implements Runnable {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
-				String color = isOnline ? "#00FF00" : "#FF0000";
+				String color = isOnline ? "#90c040" : "#FF0000";
 				AppFrame.get().getorscStatus().setText("<html>Open RSC: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -51,7 +51,7 @@ public class StatusChecker implements Runnable {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
-				String color = isOnline ? "#00FF00" : "#FF0000";
+				String color = isOnline ? "#90c040" : "#FF0000";
 				AppFrame.get().getopenpkStatus().setText("<html>Open PK: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -65,7 +65,7 @@ public class StatusChecker implements Runnable {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
-				String color = isOnline ? "#00FF00" : "#FF0000";
+				String color = isOnline ? "#90c040" : "#FF0000";
 				AppFrame.get().getrscpStatus().setText("<html>RSC Preservation: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -79,7 +79,7 @@ public class StatusChecker implements Runnable {
 			try {
 				boolean isOnline = isOnline();
 				String text = isOnline ? "Online" : "Offline";
-				String color = isOnline ? "#00FF00" : "#FF0000";
+				String color = isOnline ? "#90c040" : "#FF0000";
 				AppFrame.get().getdevStatus().setText("<html>Dev World: <span style='color:" + color + ";'>" + text + "</span></html>");
 			} catch (Exception e1) {
 				e1.printStackTrace();

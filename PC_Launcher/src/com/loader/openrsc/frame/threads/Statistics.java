@@ -16,7 +16,7 @@ public class Statistics implements Runnable {
 			Document document = Jsoup.connect(Constants.RSCC_WORLD_STATS_URL).get();
 
 			for (Element getrsccOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getrsccOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getrsccOnline.text() + "</span></html>");
+				AppFrame.get().getrsccOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getrsccOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}
@@ -26,27 +26,27 @@ public class Statistics implements Runnable {
 			Document document = Jsoup.connect(Constants.ORSC_WORLD_STATS_URL).get();
 
 			for (Element getorscOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getorscOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getorscOnline.text() + "</span></html>");
+				AppFrame.get().getorscOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getorscOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}
 
-		/*// OpenPK
+		// OpenPK
 		try {
 			Document document = Jsoup.connect(Constants.OPENPK_WORLD_STATS_URL).get();
 
-			for (Element getorscOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getorscOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getopenpkOnline.text() + "</span></html>");
+			for (Element getopenpkOnline : document.select("a[href$=\"NULLonline\"]")) { // Broken on purpose until a website is operating
+				AppFrame.get().getopenpkOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getopenpkOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}
 
 		// RSCP
-		try {
+		/*try {
 			Document document = Jsoup.connect(Constants.RSCP_WORLD_STATS_URL).get();
 
-			for (Element getorscOnline : document.select("a[href$=\"online\"]")) {
-				AppFrame.get().getorscOnline().setText("<html>Players Online: <span style='color:00FF00;'>" + getorscOnline.text() + "</span></html>");
+			for (Element getrscpOnline : document.select("a[href$=\"online\"]")) {
+				AppFrame.get().getrscpOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getrscpOnline.text() + "</span></html>");
 			}
 		} catch (Exception ignored) {
 		}*/

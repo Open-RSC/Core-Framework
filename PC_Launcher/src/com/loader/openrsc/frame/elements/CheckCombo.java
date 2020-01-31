@@ -45,7 +45,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 	}
 
 	private void init() {
-		checkBox = new RadioButton("", new Rectangle(0,0,20,15));
+		checkBox = new RadioButton(new Rectangle(0, 0, 20, 15));
 		checkBox.setContentAreaFilled(true);
 		store[] stores = new CheckCombo.store[]{new store("none", true)};
 		this.combo = new JComboBox();
@@ -132,10 +132,10 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 				PrintWriter writer = new PrintWriter(write);
 				while (look.hasNext()) {
 					//Check to see if the user added a pack
-					String nextPack = (String)look.next();
+					String nextPack = (String) look.next();
 					if (packsSettings.get(nextPack) == null) {
 						writer.println(nextPack + ":0");
-						packsSettings.put(nextPack,false);
+						packsSettings.put(nextPack, false);
 					}
 				}
 				writer.close();
@@ -147,7 +147,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 					int j = 0;
 					while (it.hasNext()) {
 						Map.Entry pair = (Map.Entry) it.next();
-						stores[j++] = new store((String) pair.getKey(), (Boolean)pair.getValue());
+						stores[j++] = new store((String) pair.getKey(), (Boolean) pair.getValue());
 					}
 				}
 

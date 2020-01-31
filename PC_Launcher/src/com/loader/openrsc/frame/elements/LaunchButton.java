@@ -3,15 +3,12 @@ package com.loader.openrsc.frame.elements;
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
-
-import static java.awt.Cursor.DEFAULT_CURSOR;
-import static java.awt.Cursor.HAND_CURSOR;
-import static java.awt.Cursor.getPredefinedCursor;
+import static java.awt.Cursor.*;
 
 public class LaunchButton extends JButton implements MouseListener {
 	private static final long serialVersionUID = -3245141651685683983L;
@@ -21,7 +18,7 @@ public class LaunchButton extends JButton implements MouseListener {
 		this.setIcon(Utils.getImage("launch.png"));
 		this.setRolloverIcon(Utils.getImage("launch_hover.png"));
 		this.setHorizontalTextPosition(0);
-		this.setFont(Utils.getFont("Exo-Regular.otf", 1, 20.0f));
+		this.setFont(Utils.getFont("Helvetica.otf", 1, 18.0f));
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);
 		this.setForeground(Color.WHITE);
