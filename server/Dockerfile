@@ -18,8 +18,8 @@ EXPOSE 43597
 EXPOSE 43598
 EXPOSE 43599
 
-CMD ant compile_core
-CMD ant compile_plugins
+RUN ant compile_core
+RUN ant compile_plugins
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
 RUN chmod +x /wait
