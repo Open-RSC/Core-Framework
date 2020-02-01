@@ -14,5 +14,5 @@ ps:
 console:
 	@docker-compose logs -f
 
-compile
+compile:
 	docker-compose build
