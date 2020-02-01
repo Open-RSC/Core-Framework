@@ -157,14 +157,14 @@ public class AppFrame extends JFrame {
 		 * Sprite pack
 		 */
 		// Sprite pack
-		JLabel sprite_pack = new JLabel("Available sprite packs");
+		/*JLabel sprite_pack = new JLabel("Available sprite packs");
 		sprite_pack.setFont(Utils.getFont("Helvetica.otf", 1, 13.0f));
 		sprite_pack.setForeground(Color.WHITE);
 		sprite_pack.setBounds(585, 116, 150, 15);
-		this.bg.add(sprite_pack);
+		this.bg.add(sprite_pack);*/
 
 		comboBox = new CheckCombo();
-		comboBox.combo.setBounds(585, 132, 150, 30);
+		//comboBox.combo.setBounds(585, 132, 150, 30);
 
 		this.bg.add(comboBox.combo);
 		(this.progress = new JProgressBar(0, 100)).setBounds(58, 453, 508, 18);
