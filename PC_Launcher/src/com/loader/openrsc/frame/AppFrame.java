@@ -183,11 +183,11 @@ public class AppFrame extends JFrame {
 
 		// Radio button section
 		ButtonGroup group = new ButtonGroup();
-		orscRadioButton = new RadioButton(new Rectangle(127, 313, 140, 40));
-		rsccRadioButton = new RadioButton(new Rectangle(385, 313, 140, 40));
-		openpkRadioButton = new RadioButton(new Rectangle(612, 313, 260, 40));
-		rscpRadioButton = new RadioButton(new Rectangle(612, 313, 260, 40));
-		devRadioButton = new RadioButton(new Rectangle(612, 313, 140, 40));
+		orscRadioButton = new RadioButton(new Rectangle(183, 226, 105, 105));
+		rsccRadioButton = new RadioButton(new Rectangle(496, 222, 105, 105));
+		openpkRadioButton = new RadioButton(new Rectangle(607, 225, 105, 105));
+		//rscpRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
+		//devRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
 
 		rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 
