@@ -70,56 +70,46 @@ public class AppFrame extends JFrame {
 		/*
 		 * Open RSC
 		 */
-		// Online player count - spaced 16px apart
+		// Online player count
 		(this.orsc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int orsc_x = 110;
-		int orsc_y = 290;
-		this.orsc_online.setBounds(orsc_x, orsc_y + 13, 327, 15);
+		this.orsc_online.setBounds(187, 315, 327, 15);
 		this.bg.add(this.orsc_online);
 
 		/*
 		 * RSC Cabbage
 		 */
-		// Online player count - spaced 16px apart
+		// Online player count
 		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int rscc_x = 360;
-		int rscc_y = 290;
-		this.rscc_online.setBounds(rscc_x, rscc_y + 13, 327, 15);
+		this.rscc_online.setBounds(511, 318, 327, 15);
 		this.bg.add(this.rscc_online);
 
 		/*
 		 * Open PK
 		 */
-		// Online player count - spaced 16px apart
+		// Online player count
 		(this.openpk_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int openpk_x = 593;
-		int openpk_y = 290;
-		this.openpk_online.setBounds(openpk_x, openpk_y + 13, 327, 15);
+		this.openpk_online.setBounds(615, 315, 327, 15);
 		this.bg.add(this.openpk_online);
 
 		/*
 		 * RSC Preservation
 		 */
-		// Online player count - spaced 16px apart
+		// Online player count
 		(this.rscp_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int rscp_x = 600;
-		int rscp_y = 94;
-		this.rscp_online.setBounds(rscp_x, rscp_y + 12, 327, 15);
+		this.rscp_online.setBounds(600, 315, 327, 15);
 		//this.bg.add(this.rscp_online); // Disabled on purpose
 
 		/*
 		 * Dev World
 		 */
-		// Online player count - spaced 16px apart
+		// Online player count
 		(this.dev_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int dev_x = 600;
-		int dev_y = 110;
-		this.dev_online.setBounds(dev_x, dev_y + 12, 327, 15);
+		this.dev_online.setBounds(600, 315, 327, 15);
 		//this.bg.add(this.dev_online); // Disabled on purpose
 
 		/*
@@ -166,30 +156,30 @@ public class AppFrame extends JFrame {
 
 	private void addButtons() {
 		// Link button section
-		int link_button_width = 102;
+		int link_button_width = 130;
 		int link_button_height = 74;
-		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(115, 357, link_button_width, link_button_height)));
-		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(270, 357, link_button_width, link_button_height)));
-		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(428, 357, link_button_width, link_button_height)));
-		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(581, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(101, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(256, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(414, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(567, 357, link_button_width, link_button_height)));
 
 		// Launch button section
 		(this.launch = new LaunchButton()).setBounds(297, 209, 198, 146);
 		this.bg.add(this.launch);
 
 		// Control button section
-		this.bg.add(new ControlButton(1, 720, 40, 10, 11)); // Minimize button
-		this.bg.add(new ControlButton(2, 738, 40, 10, 11)); // Exit button +18px x
+		this.bg.add(new ControlButton(1, 695, 60, 10, 11)); // Minimize button
+		this.bg.add(new ControlButton(2, 715, 60, 10, 11)); // Exit button
 
 		// Radio button section
 		ButtonGroup group = new ButtonGroup();
-		orscRadioButton = new RadioButton(new Rectangle(183, 226, 105, 105));
+		orscRadioButton = new RadioButton(new Rectangle(173, 226, 105, 105));
 		rsccRadioButton = new RadioButton(new Rectangle(496, 222, 105, 105));
 		openpkRadioButton = new RadioButton(new Rectangle(607, 225, 105, 105));
 		//rscpRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
 		//devRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
 
-		rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
+		//rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 
 		group.add(orscRadioButton);
 		group.add(rsccRadioButton);
