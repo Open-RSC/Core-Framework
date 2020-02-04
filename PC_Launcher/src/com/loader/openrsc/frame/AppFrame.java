@@ -17,24 +17,11 @@ public class AppFrame extends JFrame {
 	private JProgressBar progress;
 	private JLabel checkLabel;
 
-	// ORSC section
-	private JLabel orsc_status;
 	private JLabel orsc_online;
-
-	// RSCC section
-	private JLabel rscc_status;
 	private JLabel rscc_online;
-
-	// Open PK section
-	private JLabel openpk_status;
 	private JLabel openpk_online;
-
-	// RSC Preservation section
-	private JLabel rscp_status;
 	private JLabel rscp_online;
-
-	// Dev World section
-	private JLabel dev_status;
+	private JLabel dev_online;
 
 	private CheckCombo comboBox;
 
@@ -74,90 +61,72 @@ public class AppFrame extends JFrame {
 
 	private void addGameSelection() {
 		// Version text
-		JLabel subText;
-		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(335, 490, 170, 15);
+		/*JLabel subText; // Disabled unless needed for debugging purposes
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(630, 39, 170, 15);
 		subText.setForeground(new Color(255, 255, 255, 220));
 		subText.setFont(Utils.getFont("Helvetica.otf", 1, 10.0f));
-		this.bg.add(subText);
+		this.bg.add(subText);*/
 
 		/*
 		 * Open RSC
 		 */
-		// Server status check - spaced 12px apart
-		(this.orsc_status = new JLabel(Constants.ORSC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.orsc_status.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int orsc_x = 110;
-		int orsc_y = 290;
-		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
-		this.bg.add(this.orsc_status);
-
 		// Online player count - spaced 16px apart
 		(this.orsc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		int orsc_x = 110;
+		int orsc_y = 290;
 		this.orsc_online.setBounds(orsc_x, orsc_y + 13, 327, 15);
 		this.bg.add(this.orsc_online);
 
 		/*
 		 * RSC Cabbage
 		 */
-		// Server status check - spaced 12px apart
-		(this.rscc_status = new JLabel(Constants.RSCC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.rscc_status.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int rscc_x = 360;
-		int rscc_y = 290;
-		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
-		this.bg.add(this.rscc_status);
-
 		// Online player count - spaced 16px apart
 		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		int rscc_x = 360;
+		int rscc_y = 290;
 		this.rscc_online.setBounds(rscc_x, rscc_y + 13, 327, 15);
 		this.bg.add(this.rscc_online);
 
 		/*
 		 * Open PK
 		 */
-		// Server status check - spaced 12px apart
-		(this.openpk_status = new JLabel(Constants.OPENPK_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.openpk_status.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		int openpk_x = 593;
-		int openpk_y = 290; //
-		this.openpk_status.setBounds(openpk_x, openpk_y, 327, 15);
-		this.bg.add(this.openpk_status);
-
 		// Online player count - spaced 16px apart
 		(this.openpk_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
 		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		int openpk_x = 593;
+		int openpk_y = 290;
 		this.openpk_online.setBounds(openpk_x, openpk_y + 13, 327, 15);
 		this.bg.add(this.openpk_online);
 
 		/*
 		 * RSC Preservation
 		 */
-		// Server status check - spaced 12px apart
-		(this.rscp_status = new JLabel(Constants.RSCP_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.rscp_status.setFont(Utils.getFont("Helvetica.otf", 0, 12.0f));
+		// Online player count - spaced 16px apart
+		(this.rscp_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
 		int rscp_x = 600;
 		int rscp_y = 94;
-		this.rscp_status.setBounds(rscp_x, rscp_y + 12, 327, 15);
-		//this.bg.add(this.rscp_status); // Disabled on purpose
+		this.rscp_online.setBounds(rscp_x, rscp_y + 12, 327, 15);
+		//this.bg.add(this.rscp_online); // Disabled on purpose
 
 		/*
 		 * Dev World
 		 */
-		// Server status check - spaced 12px apart
-		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.dev_status.setFont(Utils.getFont("Helvetica.otf", 0, 12.0f));
+		// Online player count - spaced 16px apart
+		(this.dev_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
 		int dev_x = 600;
 		int dev_y = 110;
-		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
-		//this.bg.add(this.dev_status); // Disabled on purpose
+		this.dev_online.setBounds(dev_x, dev_y + 12, 327, 15);
+		//this.bg.add(this.dev_online); // Disabled on purpose
 
 		/*
 		 * Sprite pack
 		 */
 		// Sprite pack
-		/*JLabel sprite_pack = new JLabel("Available sprite packs");
+		/*JLabel sprite_pack = new JLabel("Available sprite packs"); // Disabled on purpose
 		sprite_pack.setFont(Utils.getFont("Helvetica.otf", 1, 13.0f));
 		sprite_pack.setForeground(Color.WHITE);
 		sprite_pack.setBounds(585, 116, 150, 15);
@@ -167,7 +136,7 @@ public class AppFrame extends JFrame {
 		//comboBox.combo.setBounds(585, 132, 150, 30);
 
 		this.bg.add(comboBox.combo);
-		(this.progress = new JProgressBar(0, 100)).setBounds(58, 453, 508, 18);
+		(this.progress = new JProgressBar(0, 100)).setBounds(125, 477, 540, 28);
 		this.progress.setBackground(new Color(45, 46, 42));
 		this.progress.setOpaque(true);
 		this.progress.setStringPainted(true);
@@ -197,15 +166,15 @@ public class AppFrame extends JFrame {
 
 	private void addButtons() {
 		// Link button section
-		int link_button_x = 58;
-		int link_button_y = 410;
-		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(link_button_x, link_button_y, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(link_button_x + 130, link_button_y, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(link_button_x + 260, link_button_y, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(link_button_x + 390, link_button_y, 119, 40)));
+		int link_button_width = 102;
+		int link_button_height = 74;
+		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(115, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(270, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(428, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(581, 357, link_button_width, link_button_height)));
 
 		// Launch button section
-		(this.launch = new LaunchButton()).setBounds(578, 410, 158, 60);
+		(this.launch = new LaunchButton()).setBounds(297, 209, 198, 146);
 		this.bg.add(this.launch);
 
 		// Control button section
@@ -243,45 +212,20 @@ public class AppFrame extends JFrame {
 		return this.launch;
 	}
 
-	// RSCC section
-	public JLabel getrsccStatus() {
-		return this.rscc_status;
-	}
-
 	public JLabel getrsccOnline() {
 		return this.rscc_online;
-	}
-
-	// ORSC section
-	public JLabel getorscStatus() {
-		return this.orsc_status;
 	}
 
 	public JLabel getorscOnline() {
 		return this.orsc_online;
 	}
 
-	// Open PK section
-	public JLabel getopenpkStatus() {
-		return this.openpk_status;
-	}
-
 	public JLabel getopenpkOnline() {
 		return this.openpk_online;
 	}
 
-	// RSCP section
-	public JLabel getrscpStatus() {
-		return this.rscp_status;
-	}
-
 	public JLabel getrscpOnline() {
 		return this.rscp_online;
-	}
-
-	// Dev World section
-	public JLabel getdevStatus() {
-		return this.dev_status;
 	}
 
 	// Spritepack combobox
