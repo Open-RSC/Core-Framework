@@ -812,7 +812,8 @@ public enum NpcId {
 	SEDRIDOR(803),
 	PKBOT1(804),
 	SCOTRUTH(805),
-	GARDENER(806);
+	GARDENER(806),
+	SILICIUS(807);
 
 	private int npcId;
 

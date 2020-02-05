@@ -208,17 +208,23 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;
 	}
 
-	private void cookMethod(Player p, int itemID, int product, boolean hasBubble, String... messages) {
-		if (hasItem(p, itemID, 1)) {
-			if (hasBubble)
-				showBubble(p, new Item(itemID));
-			p.playSound("cooking");
-			message(p, messages);
-			removeItem(p, itemID, 1);
-			addItem(p, product, 1);
-		} else {
-			p.message("You don't have all the ingredients");
-		}
+	private void cookMethod(final Player p, final int itemID, final int product, final boolean hasBubble, final String... messages) {
+		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", p.getInventory().countId(itemID), false) {
+			@Override
+			public void action() {
+				if (hasItem(p, itemID, 1)) {
+					if (hasBubble)
+						showBubble(p, new Item(itemID));
+					p.playSound("cooking");
+					message(p, messages);
+					removeItem(p, itemID, 1);
+					addItem(p, product, 1);
+				} else {
+					p.message("You don't have all the ingredients");
+					interrupt();
+				}
+			}
+		});
 	}
 
 	private String cookingOnMessage(Player p, Item item, GameObject object, boolean needsOven) {
