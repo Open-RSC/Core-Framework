@@ -351,9 +351,10 @@ public class Thieving extends Functions
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
-			player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, 3000, "Pickpocket Check") {
+			player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, 2, "Pickpocket Check") {
 				public void run() {
 					getPlayerOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
+					stop();
 				}
 			});
 			return;
