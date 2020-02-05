@@ -1710,8 +1710,19 @@ public final class Player extends Mob {
 		return groupID == Group.EVENT || isMod() || isDev();
 	}
 
-	public boolean isStaff() {
-		return isEvent() || isPlayerMod();
+	public boolean hasElevatedPriveledges() {
+		switch (groupID) {
+			case Group.OWNER:
+			case Group.ADMIN:
+			case Group.SUPER_MOD:
+			case Group.MOD:
+				return true;
+		}
+		return false;
+	}
+
+	public boolean isDefaultUser() {
+		return groupID == Group.DEFAULT_GROUP;
 	}
 
 	public boolean isChangingAppearance() {
@@ -1877,7 +1888,7 @@ public final class Player extends Mob {
 		if (stake) {
 			getDuel().dropOnDeath();
 		} else {
-			if (!isStaff())
+			if (!hasElevatedPriveledges())
 				getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(IronmanMode.Hardcore.id())) {

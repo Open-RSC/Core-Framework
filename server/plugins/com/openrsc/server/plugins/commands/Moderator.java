@@ -54,7 +54,7 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not summon a staff member of equal or greater rank.");
 				return;
 			}
@@ -146,7 +146,7 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
 				return;
 			}
