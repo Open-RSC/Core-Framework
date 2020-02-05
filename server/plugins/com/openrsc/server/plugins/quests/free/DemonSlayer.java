@@ -31,7 +31,7 @@ public class DemonSlayer implements QuestInterface,
 	public String getQuestName() {
 		return "Demon slayer";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
@@ -79,7 +79,7 @@ public class DemonSlayer implements QuestInterface,
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return DataConversions.inArray(new int[] { NpcId.GYPSY.id(), NpcId.SIR_PRYSIN.id(), 
+		return DataConversions.inArray(new int[] { NpcId.GYPSY.id(), NpcId.SIR_PRYSIN.id(),
 				NpcId.TRAIBORN_THE_WIZARD.id(), NpcId.CAPTAIN_ROVIN.id() }, n.getID());
 	}
 
@@ -1006,8 +1006,7 @@ public class DemonSlayer implements QuestInterface,
 					} else if (choice == 1) {
 						gypsyDialogue(p, n, GypsyConversation.SILVERLIGHT);
 					}
-				}
-				if (choice == 1) {
+				} else if (choice == 1) {
 					npcTalk(p,
 						n,
 						"Silverlight has been passed down through Wally's descendents",

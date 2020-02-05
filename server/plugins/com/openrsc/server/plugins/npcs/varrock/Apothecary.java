@@ -65,8 +65,8 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 			if (hasItem(p, ItemId.COINS.id(), 5)
 				&& hasItem(p, ItemId.LIMPWURT_ROOT.id(), 1)
 				&& hasItem(p, ItemId.RED_SPIDERS_EGGS.id(), 1)) {
-				playerTalk(p, n, "I have the root and spiders eggs needed to make it",
-					"Well give me them and 5 gold and I'll make you your potion");
+				playerTalk(p, n, "I have the root and spiders eggs needed to make it");
+				npcTalk(p, n, "Well give me them and 5 gold and I'll make you your potion");
 				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
 				if (sub_option == 0) {
 					int cointimes = p.getInventory().countId(ItemId.COINS.id()) / 5;

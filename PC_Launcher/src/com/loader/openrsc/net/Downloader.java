@@ -151,37 +151,6 @@ public class Downloader {
 
 	}
 
-//	private boolean verifyDownloads(Set<Entry<Object, Object>> set) {
-//		boolean verified = true;
-//		for (Entry<Object, Object> entry : set) {
-//
-//			System.out.println("---------------------------------------");
-//			String fileName = (String) entry.getKey();
-//			String hash = (String) entry.getValue();
-//
-//			System.out.println(fileName + ": " + hash);
-//			File downloadedFile = new File(Constants.CONF_DIR + File.separator + File.separator + fileName);
-//			System.out.println(downloadedFile.toPath().toAbsolutePath());
-//			String downloadedFileHash = null;
-//			try {
-//				downloadedFileHash = md5.getMD5Checksum(downloadedFile).toLowerCase();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				Launcher.getPopup().setMessage("" + e);
-//			}
-//
-//			assert downloadedFileHash != null;
-//			if (!downloadedFileHash.equalsIgnoreCase(hash)) {
-//				Launcher.getPopup().setMessage(downloadedFile.getName() + " hash:" + downloadedFileHash + " doesn't match MD5: " + hash + " re-downloading");
-//				load(fileName, true);
-//				verified = false;
-//			}
-//			AppFrame.get().getLaunch().setEnabled(true);
-//			AppFrame.get().setDownloadProgress("Game is now ready to be started!", 100);
-//		}
-//		return verified;
-//	}
-
 	public void doneLoading() {
 		try {
 			File old = new File(Constants.CONF_DIR, Constants.MD5_TABLENAME);
@@ -206,20 +175,22 @@ public class Downloader {
 			try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
 				 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
 				int filesize = connection.getContentLength();
-				byte dataBuffer[] = new byte[1024];
+				byte[] dataBuffer = new byte[1024];
 				int bytesRead;
 				int totalRead = 0;
 				while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
 					totalRead += bytesRead;
 					fileOutputStream.write(dataBuffer, 0, bytesRead);
-					AppFrame.get().setDownloadProgress(description, (float)(totalRead * 100 / filesize));
+					AppFrame.get().setDownloadProgress(description, (float) (totalRead * 100 / filesize));
 				}
 				AppFrame.get().setDownloadProgress(description, 100.0f);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			connection.disconnect();
-		} catch (Exception a) { a.printStackTrace(); }
+		} catch (Exception a) {
+			a.printStackTrace();
+		}
 	}
 
 	private String getDescription(File ref) {

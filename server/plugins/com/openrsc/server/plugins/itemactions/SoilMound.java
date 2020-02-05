@@ -29,11 +29,11 @@ public class SoilMound implements InvUseOnObjectListener,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Soil", player.getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
-				if (removeItem(getOwner(), itemID, 1)) {
+				if (getOwner().getInventory().hasInInventory(itemID)) {
 					showBubble(getOwner(), item);
 					sleep(300);
 					getOwner().message("you fill the bucket with soil");
-					addItem(getOwner(), refilledID, 1);
+					getOwner().getInventory().replace(itemID, refilledID,true);
 				} else {
 					interrupt();
 				}
