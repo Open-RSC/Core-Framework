@@ -7,14 +7,11 @@ import com.loader.openrsc.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
 	private JLabel bg;
-	private LaunchButton launch;
 	private JProgressBar progress;
-	private JLabel checkLabel;
 
 	private JLabel orsc_online;
 	private JLabel rscc_online;
@@ -22,17 +19,16 @@ public class AppFrame extends JFrame {
 	private JLabel rscp_online;
 
 	private CheckCombo comboBox;
-
-	private RadioButton rsccRadioButton;
-	private RadioButton orscRadioButton;
-	private RadioButton openpkRadioButton;
-	private RadioButton rscpRadioButton;
-	private RadioButton devRadioButton;
+	private LaunchButton launch1;
+	private LaunchButton launch2;
+	private LaunchButton launch3;
+	private LaunchButton launch4;
+	private LaunchButton launch5;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
 		this.setUndecorated(true);
-		this.setTitle(Constants.ORSC_GAME_NAME + " Game Launcher");
+		this.setTitle(Constants.Title);
 		this.setIconImage(Utils.getImage("icon.png").getImage());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		AppFrame.instance = this;
@@ -43,10 +39,7 @@ public class AppFrame extends JFrame {
 	}
 
 	public void build() {
-		Random rand = new Random();
-		int value = rand.nextInt(6);
 		(this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 800, 560);
-
 		this.add(this.bg);
 		this.addGameSelection();
 		this.addButtons();
@@ -111,16 +104,6 @@ public class AppFrame extends JFrame {
 		dev_online.setBounds(600, 315, 327, 15);
 		//this.bg.add(this.dev_online); // Disabled on purpose
 
-		/*
-		 * Sprite pack
-		 */
-		// Sprite pack
-		/*JLabel sprite_pack = new JLabel("Available sprite packs"); // Disabled on purpose
-		sprite_pack.setFont(Utils.getFont("Helvetica.otf", 1, 13.0f));
-		sprite_pack.setForeground(Color.WHITE);
-		sprite_pack.setBounds(585, 116, 150, 15);
-		this.bg.add(sprite_pack);*/
-
 		comboBox = new CheckCombo();
 		//comboBox.combo.setBounds(585, 132, 150, 30);
 
@@ -131,11 +114,6 @@ public class AppFrame extends JFrame {
 		this.progress.setStringPainted(true);
 		this.progress.setBorderPainted(false);
 		this.bg.add(this.progress);
-	}
-
-
-	public JLabel getCheckLabel() {
-		return this.checkLabel;
 	}
 
 	public void setDownloadProgress(String f, float percent) {
@@ -178,16 +156,24 @@ public class AppFrame extends JFrame {
 
 		// Launch buttons
 		String openrsc = "openrsc";
-		(this.launch = new LaunchButton(openrsc)).setBounds(230, 209, launch_button_width, launch_button_height);
-		this.bg.add(this.launch);
+		(this.launch1 = new LaunchButton(openrsc)).setBounds(230, 209, launch_button_width, launch_button_height);
+		this.bg.add(this.launch1);
 
 		String cabbage = "cabbage";
-		(this.launch = new LaunchButton(cabbage)).setBounds(297, 209, launch_button_width, launch_button_height);
-		this.bg.add(this.launch);
+		(this.launch2 = new LaunchButton(cabbage)).setBounds(297, 209, launch_button_width, launch_button_height);
+		this.bg.add(this.launch2);
 
 		String openpk = "openpk";
-		(this.launch = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
-		this.bg.add(this.launch);
+		(this.launch3 = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
+		this.bg.add(this.launch3);
+
+		String preservation = "preservation";
+		//(this.launch3 = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
+		//this.bg.add(this.launch4);
+
+		String dev = "dev";
+		//(this.launch3 = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
+		//this.bg.add(this.launch5);
 
 
 		// Control button size
@@ -198,37 +184,30 @@ public class AppFrame extends JFrame {
 		this.bg.add(new ControlButton(1, 695, 60, control_button_width, control_button_height)); // Minimize button
 		//this.bg.add(new ControlButton(2, 715, 60, control_button_width, control_button_height)); // Exit button
 		this.bg.add(new ControlButton(3, 715, 60, control_button_width, control_button_height)); // Delete cache button
-
-
-		// Radio buttons
-		ButtonGroup group = new ButtonGroup();
-		//orscRadioButton = new RadioButton(new Rectangle(173, 226, 105, 105));
-		//rsccRadioButton = new RadioButton(new Rectangle(496, 222, 105, 105));
-		//openpkRadioButton = new RadioButton(new Rectangle(607, 225, 105, 105));
-		//rscpRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
-		//devRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
-
-		//rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
-
-		//group.add(orscRadioButton);
-		//group.add(rsccRadioButton);
-		//group.add(openpkRadioButton);
-		//group.add(rscpRadioButton);
-		//group.add(devRadioButton);
-
-		/*for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements(); ) {
-			RadioButton button = (RadioButton) buttons.nextElement();
-			button.setEnabled(false);
-			this.bg.add(button);
-		}*/
 	}
 
 	public JProgressBar getProgress() {
 		return this.progress;
 	}
 
-	public LaunchButton getLaunch() {
-		return this.launch;
+	public LaunchButton getLaunchopenrsc() {
+		return this.launch1;
+	}
+
+	public LaunchButton getLaunchcabbage() {
+		return this.launch2;
+	}
+
+	public LaunchButton getLaunchopenpk() {
+		return this.launch3;
+	}
+
+	public LaunchButton getLaunchpreservation() {
+		return this.launch4;
+	}
+
+	public LaunchButton getLaunchdev() {
+		return this.launch5;
 	}
 
 	public JLabel getrsccOnline() {
@@ -261,13 +240,5 @@ public class AppFrame extends JFrame {
 		}
 
 		return items;
-	}
-
-	public void unlockGameSelection() {
-		//rsccRadioButton.setEnabled(true);
-		//orscRadioButton.setEnabled(true);
-		//openpkRadioButton.setEnabled(true);
-		//rscpRadioButton.setEnabled(true);
-		//devRadioButton.setEnabled(true);
 	}
 }

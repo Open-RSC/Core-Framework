@@ -55,7 +55,11 @@ public class Downloader {
 		boolean hadUpdate = false;
 
 		try {
-			AppFrame.get().getLaunch().setEnabled(false);
+			AppFrame.get().getLaunchopenrsc().setEnabled(false);
+			AppFrame.get().getLaunchcabbage().setEnabled(false);
+			AppFrame.get().getLaunchopenpk().setEnabled(false);
+			//AppFrame.get().getLaunchpreservation().setEnabled(false);
+			//AppFrame.get().getLaunchdev().setEnabled(false);
 			AppFrame.get().setDownloadProgress("Checking for updates...", 100.0f);
 
 			File file = new File(Constants.CONF_DIR);
@@ -156,9 +160,11 @@ public class Downloader {
 			File old = new File(Constants.CONF_DIR, Constants.MD5_TABLENAME);
 			if (old.exists())
 				old.delete();
-
-			AppFrame.get().getLaunch().setEnabled(true);
-			AppFrame.get().unlockGameSelection();
+			AppFrame.get().getLaunchopenrsc().setEnabled(true);
+			AppFrame.get().getLaunchcabbage().setEnabled(true);
+			AppFrame.get().getLaunchopenpk().setEnabled(true);
+			//AppFrame.get().getLaunchpreservation().setEnabled(true);
+			//AppFrame.get().getLaunchdev().setEnabled(true);
 			AppFrame.get().getSpriteCombo().loadSpritePacks();
 			AppFrame.get().setDownloadProgress("Ready to play!", 100.0f);
 		} catch (Exception e) {

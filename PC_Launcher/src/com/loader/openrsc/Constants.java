@@ -3,39 +3,10 @@ package com.loader.openrsc;
 import java.io.File;
 
 public class Constants {
-
-	// 43594 openrsc / 43595 cabbage / 43596 preservation / 43597 openpk / 43598 wk / 43599 dev
-
-	// RSC Cabbage
-	public static final String RSCC_GAME_NAME = "RSC Cabbage";
 	public static final String RSCC_WORLD_STATS_URL = "https://rsccabbage.com"; // Used for the world statistics
-	static final String RSCC_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
-	static final int RSCC_SERVER_PORT = 43595;
-
-	// Open RSC
-	public static final String ORSC_GAME_NAME = "Open RSC";
 	public static final String ORSC_WORLD_STATS_URL = "https://openrsc.com"; // Used for the world statistics
-	static final String ORSC_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
-	static final int ORSC_SERVER_PORT = 43594;
-
-	// RSC Preservation
-	public static final String RSCP_GAME_NAME = "RSC Preservation";
 	public static final String RSCP_WORLD_STATS_URL = "https://openrsc.com"; // Used for the world statistics
-	static final String RSCP_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
-	static final int RSCP_SERVER_PORT = 43596;
-
-	// Open PK
-	public static final String OPENPK_GAME_NAME = "Open PK";
 	public static final String OPENPK_WORLD_STATS_URL = "https://storkpk.org"; // Used for the world statistics
-	static final String OPENPK_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
-	static final int OPENPK_SERVER_PORT = 43597;
-
-	// Dev World
-	public static final String DEV_GAME_NAME = "Dev World";
-	static final String DEV_SERVER_DOMAIN = "game.openrsc.com"; // Used for the server status display
-	static final int DEV_SERVER_PORT = 43599;
-
-	// Launcher + Cache
 	public static final String Title = "Open RSC Game Launcher";
 	public static final String BASE_URL = "http://game.openrsc.com/"; // Cache and client jar download locations depend on this
 	public static final String CONF_DIR = "Cache";

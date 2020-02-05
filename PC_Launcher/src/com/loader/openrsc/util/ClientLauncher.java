@@ -16,7 +16,6 @@ public class ClientLauncher {
 	}
 
 	public static void launchClient() throws IllegalArgumentException, SecurityException {
-
 		startProcess();
 	}
 

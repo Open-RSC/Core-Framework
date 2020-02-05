@@ -9,10 +9,6 @@ import com.loader.openrsc.util.Utils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Comparator;
 
 public class ButtonListener implements ActionListener {
 	@Override
@@ -38,14 +34,14 @@ public class ButtonListener implements ActionListener {
 
 			case "openrsc": {
 				String ip = "game.openrsc.com";
-				int port = 43594;
+				String port = "43594";
 				set(ip, port);
 				launch();
 				return;
 			}
 			case "cabbage": {
 				String ip = "game.openrsc.com";
-				int port = 43595;
+				String port = "43595";
 				set(ip, port);
 				launch();
 				return;
@@ -53,7 +49,7 @@ public class ButtonListener implements ActionListener {
 
 			case "preservation": {
 				String ip = "game.openrsc.com";
-				int port = 43596;
+				String port = "43596";
 				set(ip, port);
 				launch();
 				return;
@@ -61,7 +57,7 @@ public class ButtonListener implements ActionListener {
 
 			case "openpk": {
 				String ip = "game.openrsc.com";
-				int port = 43597;
+				String port = "43597";
 				set(ip, port);
 				launch();
 				return;
@@ -69,7 +65,7 @@ public class ButtonListener implements ActionListener {
 
 			case "wk": {
 				String ip = "game.openrsc.com";
-				int port = 43598;
+				String port = "43598";
 				set(ip, port);
 				launch();
 				return;
@@ -77,7 +73,7 @@ public class ButtonListener implements ActionListener {
 
 			case "dev": {
 				String ip = "game.openrsc.com";
-				int port = 43599;
+				String port = "43599";
 				set(ip, port);
 				launch();
 				return;
@@ -94,16 +90,42 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "delete": {
-				Path f = Paths.get(Constants.CONF_DIR);
-				try {
-					Files.walk(f)
-						.sorted(Comparator.reverseOrder())
-						.map(Path::toFile)
-						.forEach(File::delete);
-				} catch (IOException e) {
-					e.printStackTrace();
+				// Deletes all cache files except for .txt files and .wav files
+
+				File folder = new File(Constants.CONF_DIR);
+				File[] fList = folder.listFiles();
+				assert fList != null;
+				for (File file : fList) {
+					String extension = String.valueOf(file);
+					if (!extension.endsWith(".txt")) {
+						new File(String.valueOf(file)).delete();
+					}
 				}
-				return;
+
+				File video = new File(Constants.CONF_DIR + "/video");
+				File[] vList = video.listFiles();
+				assert vList != null;
+				for (File file : vList) {
+					String extension = String.valueOf(file);
+					if (extension.endsWith(".orsc")) {
+						new File(String.valueOf(file)).delete();
+					}
+					if (extension.endsWith(".osar")) {
+						new File(String.valueOf(file)).delete();
+					}
+				}
+
+				File spritepacks = new File(Constants.CONF_DIR + "/video/spritepacks");
+				File[] sList = spritepacks.listFiles();
+				assert sList != null;
+				for (File file : sList) {
+					String extension = String.valueOf(file);
+					if (extension.endsWith(".osar")) {
+						new File(String.valueOf(file)).delete();
+					}
+				}
+
+				System.exit(0);
 			}
 
 			default:
@@ -112,7 +134,8 @@ public class ButtonListener implements ActionListener {
 		System.out.println(action);
 	}
 
-	private void set(String ip, int port) {
+	private void set(String ip, String port) {
+		// Sets the IP and port
 		FileOutputStream fileout;
 		try {
 			fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
