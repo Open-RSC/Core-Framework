@@ -7,7 +7,6 @@ import com.loader.openrsc.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Enumeration;
 import java.util.Random;
 
 public class AppFrame extends JFrame {
@@ -21,7 +20,6 @@ public class AppFrame extends JFrame {
 	private JLabel rscc_online;
 	private JLabel openpk_online;
 	private JLabel rscp_online;
-	private JLabel dev_online;
 
 	private CheckCombo comboBox;
 
@@ -107,9 +105,10 @@ public class AppFrame extends JFrame {
 		 * Dev World
 		 */
 		// Online player count
-		(this.dev_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.dev_online.setBounds(600, 315, 327, 15);
+		JLabel dev_online;
+		(dev_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		dev_online.setBounds(600, 315, 327, 15);
 		//this.bg.add(this.dev_online); // Disabled on purpose
 
 		/*
@@ -154,44 +153,74 @@ public class AppFrame extends JFrame {
 		this.progress.repaint();
 	}
 
-	private void addButtons() {
-		// Link button section
+	public void addButtons() {
+		// Link button size
 		int link_button_width = 130;
 		int link_button_height = 74;
-		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(101, 357, link_button_width, link_button_height)));
-		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(256, 357, link_button_width, link_button_height)));
-		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(414, 357, link_button_width, link_button_height)));
-		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(567, 357, link_button_width, link_button_height)));
 
-		// Launch button section
-		(this.launch = new LaunchButton()).setBounds(297, 209, 198, 146);
+		// Link buttons
+		final String BUTTON1 = "Discord";
+		this.bg.add(new LinkButton(BUTTON1, new Rectangle(101, 357, link_button_width, link_button_height)));
+
+		final String BUTTON2 = "Bug Reports";
+		this.bg.add(new LinkButton(BUTTON2, new Rectangle(256, 357, link_button_width, link_button_height)));
+
+		final String BUTTON3 = "Our Wiki";
+		this.bg.add(new LinkButton(BUTTON3, new Rectangle(414, 357, link_button_width, link_button_height)));
+
+		final String BUTTON4 = "RSC Wiki";
+		this.bg.add(new LinkButton(BUTTON4, new Rectangle(567, 357, link_button_width, link_button_height)));
+
+
+		// Launch button size
+		int launch_button_width = 100;
+		int launch_button_height = 100;
+
+		// Launch buttons
+		String openrsc = "openrsc";
+		(this.launch = new LaunchButton(openrsc)).setBounds(230, 209, launch_button_width, launch_button_height);
 		this.bg.add(this.launch);
 
-		// Control button section
-		this.bg.add(new ControlButton(1, 695, 60, 10, 11)); // Minimize button
-		this.bg.add(new ControlButton(2, 715, 60, 10, 11)); // Exit button
+		String cabbage = "cabbage";
+		(this.launch = new LaunchButton(cabbage)).setBounds(297, 209, launch_button_width, launch_button_height);
+		this.bg.add(this.launch);
 
-		// Radio button section
+		String openpk = "openpk";
+		(this.launch = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
+		this.bg.add(this.launch);
+
+
+		// Control button size
+		int control_button_width = 10;
+		int control_button_height = 11;
+
+		// Control buttons
+		this.bg.add(new ControlButton(1, 695, 60, control_button_width, control_button_height)); // Minimize button
+		//this.bg.add(new ControlButton(2, 715, 60, control_button_width, control_button_height)); // Exit button
+		this.bg.add(new ControlButton(3, 715, 60, control_button_width, control_button_height)); // Delete cache button
+
+
+		// Radio buttons
 		ButtonGroup group = new ButtonGroup();
-		orscRadioButton = new RadioButton(new Rectangle(173, 226, 105, 105));
-		rsccRadioButton = new RadioButton(new Rectangle(496, 222, 105, 105));
-		openpkRadioButton = new RadioButton(new Rectangle(607, 225, 105, 105));
+		//orscRadioButton = new RadioButton(new Rectangle(173, 226, 105, 105));
+		//rsccRadioButton = new RadioButton(new Rectangle(496, 222, 105, 105));
+		//openpkRadioButton = new RadioButton(new Rectangle(607, 225, 105, 105));
 		//rscpRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
 		//devRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
 
 		//rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 
-		group.add(orscRadioButton);
-		group.add(rsccRadioButton);
-		group.add(openpkRadioButton);
+		//group.add(orscRadioButton);
+		//group.add(rsccRadioButton);
+		//group.add(openpkRadioButton);
 		//group.add(rscpRadioButton);
 		//group.add(devRadioButton);
 
-		for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements(); ) {
+		/*for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements(); ) {
 			RadioButton button = (RadioButton) buttons.nextElement();
 			button.setEnabled(false);
 			this.bg.add(button);
-		}
+		}*/
 	}
 
 	public JProgressBar getProgress() {
@@ -235,10 +264,10 @@ public class AppFrame extends JFrame {
 	}
 
 	public void unlockGameSelection() {
-		rsccRadioButton.setEnabled(true);
-		orscRadioButton.setEnabled(true);
-		openpkRadioButton.setEnabled(true);
-		rscpRadioButton.setEnabled(true);
-		devRadioButton.setEnabled(true);
+		//rsccRadioButton.setEnabled(true);
+		//orscRadioButton.setEnabled(true);
+		//openpkRadioButton.setEnabled(true);
+		//rscpRadioButton.setEnabled(true);
+		//devRadioButton.setEnabled(true);
 	}
 }

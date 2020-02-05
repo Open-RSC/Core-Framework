@@ -47,10 +47,4 @@ public class Constants {
 	public static final String JAR_FILENAME = "OpenRSC.jar";
 	public static final String MD5_TABLENAME = "MD5.SUM";
 	public static final String SPRITEPACK_DIR = CONF_DIR + File.separator + "video" + File.separator + "spritepacks";
-
-	// Link Buttons
-	public static final String BUTTON1 = "Discord";
-	public static final String BUTTON2 = "Bug Reports";
-	public static final String BUTTON3 = "Our Wiki";
-	public static final String BUTTON4 = "RSC Wiki";
 }

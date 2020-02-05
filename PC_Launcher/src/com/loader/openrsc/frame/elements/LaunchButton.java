@@ -13,15 +13,15 @@ import static java.awt.Cursor.*;
 public class LaunchButton extends JButton implements MouseListener {
 	private static final long serialVersionUID = -3245141651685683983L;
 
-	public LaunchButton() {
-		this.setIcon(Utils.getImage("launch.png"));
-		this.setRolloverIcon(Utils.getImage("launch_hover.png"));
+	public LaunchButton(String game) {
+		this.setIcon(Utils.getImage(game + "_logo.png"));
+		//this.setRolloverIcon(Utils.getImage(logo + "_hover.png"));
 		this.setHorizontalTextPosition(0);
 		this.setFont(Utils.getFont("Helvetica.otf", 1, 18.0f));
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);
 		this.setForeground(Color.WHITE);
-		this.setActionCommand("launch");
+		this.setActionCommand(game);
 		this.addActionListener(new ButtonListener());
 		this.addMouseListener(this);
 	}
