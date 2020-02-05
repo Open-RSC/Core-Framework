@@ -1,7 +1,6 @@
 package com.loader.openrsc.frame.elements;
 
 import com.loader.openrsc.frame.listeners.ButtonListener;
-import com.loader.openrsc.util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +12,8 @@ public class RadioButton extends JRadioButton implements MouseListener {
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
 		this.setForeground(Color.WHITE);
-		this.setIcon(Utils.getImage("toggle-off.png"));
-		this.setSelectedIcon(Utils.getImage("toggle-on.png"));
+		//this.setIcon(Utils.getImage("toggle-off.png"));
+		//this.setSelectedIcon(Utils.getImage("toggle-on.png"));
 		this.addMouseListener(this);
 		this.setFocusable(false);
 		this.setBounds(bounds);

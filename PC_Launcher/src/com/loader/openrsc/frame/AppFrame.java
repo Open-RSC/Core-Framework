@@ -11,6 +11,7 @@ import java.awt.*;
 public class AppFrame extends JFrame {
 	private static AppFrame instance;
 	private JLabel bg;
+	private JLabel logo;
 	private JProgressBar progress;
 
 	private JLabel orsc_online;
@@ -24,6 +25,14 @@ public class AppFrame extends JFrame {
 	private LaunchButton launch3;
 	private LaunchButton launch4;
 	private LaunchButton launch5;
+
+	private int preservation_x = 113;
+	private int openrsc_x = 233;
+	private int cabbage_x = 353;
+	private int openpk_x = 473;
+	private int dev_x = 593;
+	private int launch_button_y = 218;
+	private int link_button_y = 359;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -41,6 +50,8 @@ public class AppFrame extends JFrame {
 	public void build() {
 		(this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 800, 560);
 		this.add(this.bg);
+		(this.logo = new JLabel(Utils.getImage("rslogo.png"))).setBounds(242, 86, 312, 100);
+		this.bg.add(this.logo);
 		this.addGameSelection();
 		this.addButtons();
 		this.addMouseListener(new PositionListener(this));
@@ -48,72 +59,6 @@ public class AppFrame extends JFrame {
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-	}
-
-	private void addGameSelection() {
-		// Version text
-		/*JLabel subText; // Disabled unless needed for debugging purposes
-		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(630, 39, 170, 15);
-		subText.setForeground(new Color(255, 255, 255, 220));
-		subText.setFont(Utils.getFont("Helvetica.otf", 1, 10.0f));
-		this.bg.add(subText);*/
-
-		/*
-		 * Open RSC
-		 */
-		// Online player count
-		(this.orsc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.orsc_online.setBounds(187, 315, 327, 15);
-		this.bg.add(this.orsc_online);
-
-		/*
-		 * RSC Cabbage
-		 */
-		// Online player count
-		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.rscc_online.setBounds(511, 318, 327, 15);
-		this.bg.add(this.rscc_online);
-
-		/*
-		 * Open PK
-		 */
-		// Online player count
-		(this.openpk_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.openpk_online.setBounds(615, 315, 327, 15);
-		this.bg.add(this.openpk_online);
-
-		/*
-		 * RSC Preservation
-		 */
-		// Online player count
-		(this.rscp_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.rscp_online.setBounds(600, 315, 327, 15);
-		//this.bg.add(this.rscp_online); // Disabled on purpose
-
-		/*
-		 * Dev World
-		 */
-		// Online player count
-		JLabel dev_online;
-		(dev_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		dev_online.setBounds(600, 315, 327, 15);
-		//this.bg.add(this.dev_online); // Disabled on purpose
-
-		comboBox = new CheckCombo();
-		//comboBox.combo.setBounds(585, 132, 150, 30);
-
-		this.bg.add(comboBox.combo);
-		(this.progress = new JProgressBar(0, 100)).setBounds(125, 477, 540, 28);
-		this.progress.setBackground(new Color(45, 46, 42));
-		this.progress.setOpaque(true);
-		this.progress.setStringPainted(true);
-		this.progress.setBorderPainted(false);
-		this.bg.add(this.progress);
 	}
 
 	public void setDownloadProgress(String f, float percent) {
@@ -138,16 +83,16 @@ public class AppFrame extends JFrame {
 
 		// Link buttons
 		final String BUTTON1 = "Discord";
-		this.bg.add(new LinkButton(BUTTON1, new Rectangle(101, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(BUTTON1, new Rectangle(101, link_button_y, link_button_width, link_button_height)));
 
 		final String BUTTON2 = "Bug Reports";
-		this.bg.add(new LinkButton(BUTTON2, new Rectangle(256, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(BUTTON2, new Rectangle(256, link_button_y, link_button_width, link_button_height)));
 
 		final String BUTTON3 = "Our Wiki";
-		this.bg.add(new LinkButton(BUTTON3, new Rectangle(414, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(BUTTON3, new Rectangle(414, link_button_y, link_button_width, link_button_height)));
 
 		final String BUTTON4 = "RSC Wiki";
-		this.bg.add(new LinkButton(BUTTON4, new Rectangle(567, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(BUTTON4, new Rectangle(567, link_button_y, link_button_width, link_button_height)));
 
 
 		// Launch button size
@@ -155,24 +100,24 @@ public class AppFrame extends JFrame {
 		int launch_button_height = 100;
 
 		// Launch buttons
+		String preservation = "preservation";
+		//(this.launch4 = new LaunchButton(openpk)).setBounds(preservation_x, 209, launch_button_width, launch_button_height);
+		//this.bg.add(this.launch4);
+
 		String openrsc = "openrsc";
-		(this.launch1 = new LaunchButton(openrsc)).setBounds(230, 209, launch_button_width, launch_button_height);
+		(this.launch1 = new LaunchButton(openrsc)).setBounds(openrsc_x, launch_button_y, launch_button_width, launch_button_height);
 		this.bg.add(this.launch1);
 
 		String cabbage = "cabbage";
-		(this.launch2 = new LaunchButton(cabbage)).setBounds(297, 209, launch_button_width, launch_button_height);
+		(this.launch2 = new LaunchButton(cabbage)).setBounds(cabbage_x, launch_button_y - 3, launch_button_width, launch_button_height);
 		this.bg.add(this.launch2);
 
 		String openpk = "openpk";
-		(this.launch3 = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
+		(this.launch3 = new LaunchButton(openpk)).setBounds(openpk_x, launch_button_y, launch_button_width, launch_button_height);
 		this.bg.add(this.launch3);
 
-		String preservation = "preservation";
-		//(this.launch3 = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
-		//this.bg.add(this.launch4);
-
 		String dev = "dev";
-		//(this.launch3 = new LaunchButton(openpk)).setBounds(100, 209, launch_button_width, launch_button_height);
+		//(this.launch5 = new LaunchButton(openpk)).setBounds(dev_x, launch_button_y, launch_button_width, launch_button_height);
 		//this.bg.add(this.launch5);
 
 
@@ -182,8 +127,74 @@ public class AppFrame extends JFrame {
 
 		// Control buttons
 		this.bg.add(new ControlButton(1, 695, 60, control_button_width, control_button_height)); // Minimize button
-		//this.bg.add(new ControlButton(2, 715, 60, control_button_width, control_button_height)); // Exit button
-		this.bg.add(new ControlButton(3, 715, 60, control_button_width, control_button_height)); // Delete cache button
+		this.bg.add(new ControlButton(2, 715, 60, control_button_width, control_button_height)); // Exit button
+		this.bg.add(new ControlButton(3, 670, 488, 15, 15)); // Delete cache button
+	}
+
+	private void addGameSelection() {
+		// Version text
+		/*JLabel subText; // Disabled unless needed for debugging purposes
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(630, 39, 170, 15);
+		subText.setForeground(new Color(255, 255, 255, 220));
+		subText.setFont(Utils.getFont("Helvetica.otf", 1, 10.0f));
+		this.bg.add(subText);*/
+
+		/*
+		 * RSC Preservation
+		 */
+		// Online player count
+		(this.rscp_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
+		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.rscp_online.setBounds(preservation_x + 10, launch_button_y + 95, 327, 15);
+		//this.bg.add(this.rscp_online); // Disabled on purpose
+
+		/*
+		 * Open RSC
+		 */
+		// Online player count
+		(this.orsc_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
+		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.orsc_online.setBounds(openrsc_x + 10, launch_button_y + 95, 327, 15);
+		this.bg.add(this.orsc_online);
+
+		/*
+		 * RSC Cabbage
+		 */
+		// Online player count
+		(this.rscc_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
+		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.rscc_online.setBounds(cabbage_x + 10, launch_button_y + 95, 327, 15);
+		this.bg.add(this.rscc_online);
+
+		/*
+		 * Open PK
+		 */
+		// Online player count
+		(this.openpk_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
+		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.openpk_online.setBounds(openpk_x + 10, launch_button_y + 95, 327, 15);
+		this.bg.add(this.openpk_online);
+
+		/*
+		 * Dev World
+		 */
+		// Online player count
+		JLabel dev_online;
+		(dev_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
+		dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		dev_online.setBounds(dev_x + 10, launch_button_y + 100, 95, 15);
+		//this.bg.add(this.dev_online); // Disabled on purpose
+
+		comboBox = new CheckCombo();
+		//comboBox.combo.setBounds(585, 132, 150, 30);
+
+		this.bg.add(comboBox.combo);
+		(this.progress = new JProgressBar(0, 100)).setBounds(125, 488, 540, 18);
+		this.progress.setBackground(new Color(45, 46, 42));
+		this.progress.setOpaque(true);
+		this.progress.setStringPainted(true);
+		this.progress.setBorderPainted(false);
+		this.bg.add(this.progress);
 	}
 
 	public JProgressBar getProgress() {

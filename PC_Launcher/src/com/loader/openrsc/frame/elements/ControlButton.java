@@ -24,7 +24,7 @@ public class ControlButton extends JButton {
 			this.addActionListener(new ButtonListener());
 		}
 		if (buttonType == 3) {
-			final String image = "close";
+			final String image = "delete";
 			this.setRolloverIcon(Utils.getImage(image + "_hover.png"));
 			this.setIcon(Utils.getImage(image + ".png"));
 			this.setRolloverIcon(Utils.getImage(image + "_hover.png"));
