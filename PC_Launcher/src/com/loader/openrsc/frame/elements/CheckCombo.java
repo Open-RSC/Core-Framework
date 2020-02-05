@@ -3,29 +3,15 @@ package com.loader.openrsc.frame.elements;
 import com.loader.openrsc.Constants;
 import com.loader.openrsc.frame.listeners.CheckComboListener;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Rectangle;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 public class CheckCombo extends JComboBox implements ListCellRenderer {
 	public RadioButton checkBox;
@@ -59,7 +45,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 	}
 
 	private void init() {
-		checkBox = new RadioButton("", new Rectangle(0,0,20,15));
+		checkBox = new RadioButton(new Rectangle(0, 0, 20, 15));
 		checkBox.setContentAreaFilled(true);
 		store[] stores = new CheckCombo.store[]{new store("none", true)};
 		this.combo = new JComboBox();
@@ -146,10 +132,10 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 				PrintWriter writer = new PrintWriter(write);
 				while (look.hasNext()) {
 					//Check to see if the user added a pack
-					String nextPack = (String)look.next();
+					String nextPack = (String) look.next();
 					if (packsSettings.get(nextPack) == null) {
 						writer.println(nextPack + ":0");
-						packsSettings.put(nextPack,false);
+						packsSettings.put(nextPack, false);
 					}
 				}
 				writer.close();
@@ -161,7 +147,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 					int j = 0;
 					while (it.hasNext()) {
 						Map.Entry pair = (Map.Entry) it.next();
-						stores[j++] = new store((String) pair.getKey(), (Boolean)pair.getValue());
+						stores[j++] = new store((String) pair.getKey(), (Boolean) pair.getValue());
 					}
 				}
 

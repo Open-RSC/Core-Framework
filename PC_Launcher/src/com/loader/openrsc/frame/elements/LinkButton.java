@@ -3,13 +3,10 @@ package com.loader.openrsc.frame.elements;
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.JButton;
 
 public class LinkButton extends JButton implements MouseListener {
 	private static final long serialVersionUID = 3503904237989217533L;
@@ -19,7 +16,7 @@ public class LinkButton extends JButton implements MouseListener {
 		this.setIcon(Utils.getImage("button.png"));
 		this.setRolloverIcon(Utils.getImage("button_hover.png"));
 		this.setHorizontalTextPosition(0);
-		this.setFont(Utils.getFont("Exo-Regular.otf", 1, 12.0f));
+		this.setFont(Utils.getFont("Helvetica.otf", 1, 11.0f));
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);
 		this.setForeground(Color.WHITE);

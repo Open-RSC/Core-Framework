@@ -17,27 +17,11 @@ public class AppFrame extends JFrame {
 	private JProgressBar progress;
 	private JLabel checkLabel;
 
-	// ORSC section
-	private JLabel orsc_status;
 	private JLabel orsc_online;
-	private JLabel orsc_logins48;
-
-	// RSCC section
-	private JLabel rscc_status;
 	private JLabel rscc_online;
-	private JLabel rscc_logins48;
-
-	// Open PK section
-	private JLabel openpk_status;
-
-	// RSC Preservation section
-	private JLabel rscp_status;
-
-	// Dev World section
-	private JLabel dev_status;
-
-	// Localhost section
-	private JLabel local_status;
+	private JLabel openpk_online;
+	private JLabel rscp_online;
+	private JLabel dev_online;
 
 	private CheckCombo comboBox;
 
@@ -46,7 +30,6 @@ public class AppFrame extends JFrame {
 	private RadioButton openpkRadioButton;
 	private RadioButton rscpRadioButton;
 	private RadioButton devRadioButton;
-	private RadioButton localRadioButton;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -64,26 +47,11 @@ public class AppFrame extends JFrame {
 	public void build() {
 		Random rand = new Random();
 		int value = rand.nextInt(6);
-		if (value == 0) {
-			(this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 800, 560);
-		} else if (value == 1) {
-			(this.bg = new JLabel(Utils.getImage("background2.png"))).setBounds(0, 0, 800, 560);
-		} else if (value == 2) {
-			(this.bg = new JLabel(Utils.getImage("background3.png"))).setBounds(0, 0, 800, 560);
-		} else if (value == 3) {
-			(this.bg = new JLabel(Utils.getImage("background4.png"))).setBounds(0, 0, 800, 560);
-		} else if (value == 4) {
-			(this.bg = new JLabel(Utils.getImage("background5.png"))).setBounds(0, 0, 800, 560);
-		} else if (value == 5) {
-			(this.bg = new JLabel(Utils.getImage("background6.png"))).setBounds(0, 0, 800, 560);
-		} else if (value == 6) {
-			(this.bg = new JLabel(Utils.getImage("background7.png"))).setBounds(0, 0, 800, 560);
-		}
+		(this.bg = new JLabel(Utils.getImage("background.png"))).setBounds(0, 0, 800, 560);
 
 		this.add(this.bg);
 		this.addGameSelection();
 		this.addButtons();
-		this.addGameDescriptions();
 		this.addMouseListener(new PositionListener(this));
 		this.addMouseMotionListener(new PositionListener(this));
 		this.pack();
@@ -92,127 +60,74 @@ public class AppFrame extends JFrame {
 	}
 
 	private void addGameSelection() {
-		// Header text
-		JLabel text;
-		(text = new JLabel(Constants.Title)).setBounds(250, 19, 600, 45);
-		text.setForeground(new Color(255, 255, 255, 220));
-		text.setFont(Utils.getFont("Exo-Regular.otf", 1, 24.0f));
-		this.bg.add(text);
-
 		// Version text
-		JLabel subText;
-		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(650, 54, 170, 15);
+		/*JLabel subText; // Disabled unless needed for debugging purposes
+		(subText = new JLabel("Version " + String.format("%8.6f", Constants.VERSION_NUMBER))).setBounds(630, 39, 170, 15);
 		subText.setForeground(new Color(255, 255, 255, 220));
-		subText.setFont(Utils.getFont("Exo-Regular.otf", 1, 10.0f));
-		this.bg.add(subText);
-
-		/*
-		 * RSC Cabbage
-		 */
-		// Server status check - spaced 12px apart
-		(this.rscc_status = new JLabel(Constants.RSCC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.rscc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int rscc_x = 630;
-		int rscc_y = 142;
-		this.rscc_status.setBounds(rscc_x, rscc_y, 327, 15);
-		this.bg.add(this.rscc_status);
-
-		// Online player count - spaced 16px apart
-		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.rscc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_online.setBounds(rscc_x, rscc_y + 13, 327, 15);
-		this.bg.add(this.rscc_online);
-
-		// Logged in the last 48 hours - spaced 16px apart
-		(this.rscc_logins48 = new JLabel("Online Last 48 Hours: N/A")).setForeground(Color.WHITE);
-		this.rscc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.rscc_logins48.setBounds(rscc_x, rscc_y + 26, 327, 15);
-		this.bg.add(this.rscc_logins48);
+		subText.setFont(Utils.getFont("Helvetica.otf", 1, 10.0f));
+		this.bg.add(subText);*/
 
 		/*
 		 * Open RSC
 		 */
-		// Server status check - spaced 12px apart
-		(this.orsc_status = new JLabel(Constants.ORSC_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.orsc_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int orsc_x = 630;
-		int orsc_y = rscc_y + 52; // 192
-		this.orsc_status.setBounds(orsc_x, orsc_y, 327, 15);
-		this.bg.add(this.orsc_status);
-
-		// Online player count - spaced 16px apart
+		// Online player count
 		(this.orsc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
-		this.orsc_online.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_online.setBounds(orsc_x, orsc_y + 13, 327, 15);
+		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.orsc_online.setBounds(187, 315, 327, 15);
 		this.bg.add(this.orsc_online);
 
-		// Logged in the last 48 hours - spaced 16px apart
-		(this.orsc_logins48 = new JLabel("Online Last 48 Hours: N/A")).setForeground(Color.WHITE);
-		this.orsc_logins48.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		this.orsc_logins48.setBounds(orsc_x, orsc_y + 26, 327, 15);
-		this.bg.add(this.orsc_logins48);
+		/*
+		 * RSC Cabbage
+		 */
+		// Online player count
+		(this.rscc_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.rscc_online.setBounds(511, 318, 327, 15);
+		this.bg.add(this.rscc_online);
 
 		/*
 		 * Open PK
 		 */
-		// Server status check - spaced 12px apart
-		(this.openpk_status = new JLabel(Constants.OPENPK_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.openpk_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int openpk_x = 630;
-		int openpk_y = orsc_y + 39; //
-		this.openpk_status.setBounds(openpk_x, openpk_y + 12, 327, 15);
-		this.bg.add(this.openpk_status);
+		// Online player count
+		(this.openpk_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.openpk_online.setBounds(615, 315, 327, 15);
+		this.bg.add(this.openpk_online);
 
 		/*
 		 * RSC Preservation
 		 */
-		// Server status check - spaced 12px apart
-		(this.rscp_status = new JLabel(Constants.RSCP_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.rscp_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int rscp_x = 630;
-		int rscp_y = openpk_y + 26; //
-		this.rscp_status.setBounds(rscp_x, rscp_y + 12, 327, 15);
-		this.bg.add(this.rscp_status);
+		// Online player count
+		(this.rscp_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.rscp_online.setBounds(600, 315, 327, 15);
+		//this.bg.add(this.rscp_online); // Disabled on purpose
 
 		/*
 		 * Dev World
 		 */
-		// Server status check - spaced 12px apart
-		(this.dev_status = new JLabel(Constants.DEV_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.dev_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int dev_x = 630;
-		int dev_y = rscp_y + 26; //
-		this.dev_status.setBounds(dev_x, dev_y + 12, 327, 15);
-		this.bg.add(this.dev_status);
-
-		/*
-		 * Localhost
-		 */
-		// Server status check - spaced 12px apart
-		(this.local_status = new JLabel(Constants.LOCALHOST_GAME_NAME + ": N/A")).setForeground(Color.WHITE);
-		this.local_status.setFont(Utils.getFont("Exo-Regular.otf", 0, 11.0f));
-		int local_x = 630;
-		int local_y = dev_y + 26; //
-		this.local_status.setBounds(local_x, local_y + 12, 327, 15);
-		this.bg.add(this.local_status);
+		// Online player count
+		(this.dev_online = new JLabel("Players Online: N/A")).setForeground(Color.WHITE);
+		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.dev_online.setBounds(600, 315, 327, 15);
+		//this.bg.add(this.dev_online); // Disabled on purpose
 
 		/*
 		 * Sprite pack
 		 */
-
-		//Sprite pack
-		JLabel sprite_pack = new JLabel("Available sprite packs:");
+		// Sprite pack
+		/*JLabel sprite_pack = new JLabel("Available sprite packs"); // Disabled on purpose
+		sprite_pack.setFont(Utils.getFont("Helvetica.otf", 1, 13.0f));
 		sprite_pack.setForeground(Color.WHITE);
-		sprite_pack.setBounds(600, local_y + 100, 150, 15);
-		this.bg.add(sprite_pack);
+		sprite_pack.setBounds(585, 116, 150, 15);
+		this.bg.add(sprite_pack);*/
 
 		comboBox = new CheckCombo();
-		comboBox.combo.setBounds(600, local_y + 120, 190, 30);
+		//comboBox.combo.setBounds(585, 132, 150, 30);
 
 		this.bg.add(comboBox.combo);
-		(this.progress = new JProgressBar(0, 100)).setBounds(27, 530, 508, 18);
+		(this.progress = new JProgressBar(0, 100)).setBounds(125, 477, 540, 28);
 		this.progress.setBackground(new Color(45, 46, 42));
-		this.progress.setFont(Utils.getFont("Exo-Regular.otf", 1, 11.0f));
 		this.progress.setOpaque(true);
 		this.progress.setStringPainted(true);
 		this.progress.setBorderPainted(false);
@@ -241,109 +156,42 @@ public class AppFrame extends JFrame {
 
 	private void addButtons() {
 		// Link button section
-		int link_button_x = 28;
-		int link_button_y = 480;
-		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(link_button_x, link_button_y, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(link_button_x + 130, link_button_y, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(link_button_x + 260, link_button_y, 119, 40)));
-		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(link_button_x + 390, link_button_y, 119, 40)));
+		int link_button_width = 130;
+		int link_button_height = 74;
+		this.bg.add(new LinkButton(Constants.BUTTON1, new Rectangle(101, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON2, new Rectangle(256, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON3, new Rectangle(414, 357, link_button_width, link_button_height)));
+		this.bg.add(new LinkButton(Constants.BUTTON4, new Rectangle(567, 357, link_button_width, link_button_height)));
 
 		// Launch button section
-		(this.launch = new LaunchButton()).setBounds(617, 477, 174, 69);
+		(this.launch = new LaunchButton()).setBounds(297, 209, 198, 146);
 		this.bg.add(this.launch);
 
 		// Control button section
-		this.bg.add(new ControlButton(1, 755, 8, 10, 11)); // Minimize button
-		this.bg.add(new ControlButton(2, 773, 8, 10, 11)); // Exit button +18px x
+		this.bg.add(new ControlButton(1, 695, 60, 10, 11)); // Minimize button
+		this.bg.add(new ControlButton(2, 715, 60, 10, 11)); // Exit button
 
 		// Radio button section
-		int rscc_radio_x = 30;
-		int rscc_radio_y = 142;
-		int orsc_radio_y = rscc_radio_y + 28;
-		int openpk_radio_y = orsc_radio_y + 28;
-		int rscp_radio_y = openpk_radio_y + 28;
-		int dev_radio_y = rscp_radio_y + 28;
-		int local_radio_y = dev_radio_y + 28;
-
 		ButtonGroup group = new ButtonGroup();
-		rsccRadioButton = new RadioButton(Constants.RSCC_GAME_NAME, new Rectangle(rscc_radio_x, rscc_radio_y, 140, 40));
-		orscRadioButton = new RadioButton(Constants.ORSC_GAME_NAME, new Rectangle(rscc_radio_x, orsc_radio_y, 140, 40));
-		openpkRadioButton = new RadioButton(Constants.OPENPK_GAME_NAME, new Rectangle(rscc_radio_x, openpk_radio_y, 260, 40));
-		rscpRadioButton = new RadioButton(Constants.RSCP_GAME_NAME, new Rectangle(rscc_radio_x, rscp_radio_y, 260, 40));
-		devRadioButton = new RadioButton(Constants.DEV_GAME_NAME, new Rectangle(rscc_radio_x, dev_radio_y, 140, 40));
-		localRadioButton = new RadioButton(Constants.LOCALHOST_GAME_NAME, new Rectangle(rscc_radio_x, local_radio_y, 140, 40));
+		orscRadioButton = new RadioButton(new Rectangle(173, 226, 105, 105));
+		rsccRadioButton = new RadioButton(new Rectangle(496, 222, 105, 105));
+		openpkRadioButton = new RadioButton(new Rectangle(607, 225, 105, 105));
+		//rscpRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
+		//devRadioButton = new RadioButton(new Rectangle(612, 226, 105, 105));
 
-		rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
+		//rsccRadioButton.setSelected(true); // First radio button is selected by default as launcher will overwrite "Cache/ip.txt" anyway at launch
 
 		group.add(orscRadioButton);
 		group.add(rsccRadioButton);
 		group.add(openpkRadioButton);
-		group.add(rscpRadioButton);
-		group.add(devRadioButton);
-		group.add(localRadioButton);
+		//group.add(rscpRadioButton);
+		//group.add(devRadioButton);
 
-		for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements();) {
+		for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements(); ) {
 			RadioButton button = (RadioButton) buttons.nextElement();
 			button.setEnabled(false);
 			this.bg.add(button);
 		}
-	}
-
-	private void addGameDescriptions() {
-		int rscc_x = 143;
-		int rscc_y = 152;
-		int orsc_x = 165;
-		int orsc_y = rscc_y + 29; // 188
-		int openpk_y = orsc_y + 29; //
-		int rscp_y = openpk_y + 29; //
-		int openpk_x = 185;
-		int rscp_x = 250;
-		int dev_x = 150;
-		int dev_y = rscp_y + 27; // 215
-		int local_x = 165;
-		int local_y = dev_y + 29; // 242
-
-		// RSC Cabbage
-		JLabel rsccDescription;
-		(rsccDescription = new JLabel("-> 5x xp rate, runs 30% faster, auction house, batched skills, etc")).setBounds(orsc_x, rscc_y, 600, 18);
-		rsccDescription.setForeground(new Color(255, 255, 255, 220));
-		rsccDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
-		this.bg.add(rsccDescription);
-
-		// Open RSC
-		JLabel orscDescription;
-		(orscDescription = new JLabel("-> 1x xp rate, bank notes, quick banking, near-authentic")).setBounds(rscc_x, orsc_y, 600, 18);
-		orscDescription.setForeground(new Color(255, 255, 255, 220));
-		orscDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
-		this.bg.add(orscDescription);
-
-		// Open PK
-		JLabel openpkDescription;
-		(openpkDescription = new JLabel("-> Stork PK remake")).setBounds(openpk_x, openpk_y, 600, 18);
-		openpkDescription.setForeground(new Color(255, 255, 255, 220));
-		openpkDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
-		this.bg.add(openpkDescription);
-
-		// RSC Preservation
-		JLabel rscpDescription;
-		(rscpDescription = new JLabel("-> authentic RSC")).setBounds(rscp_x, rscp_y, 600, 18);
-		rscpDescription.setForeground(new Color(255, 255, 255, 220));
-		rscpDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
-		this.bg.add(rscpDescription);
-
-		// Dev World
-		JLabel devDescription;
-		(devDescription = new JLabel("-> experimental world for testing the latest code")).setBounds(dev_x, dev_y, 600, 18);
-		devDescription.setForeground(new Color(255, 255, 255, 220));
-		devDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
-		this.bg.add(devDescription);
-
-		// Single Player
-		JLabel localhostDescription;
-		(localhostDescription = new JLabel("-> requires first starting the single player server")).setBounds(local_x, local_y, 600, 18);
-		localhostDescription.setForeground(new Color(255, 255, 255, 220));
-		localhostDescription.setFont(Utils.getFont("Exo-Regular.otf", 0, 13.0f));
-		this.bg.add(localhostDescription);
 	}
 
 	public JProgressBar getProgress() {
@@ -354,54 +202,27 @@ public class AppFrame extends JFrame {
 		return this.launch;
 	}
 
-	// RSCC section
-	public JLabel getrsccStatus() {
-		return this.rscc_status;
-	}
-
 	public JLabel getrsccOnline() {
 		return this.rscc_online;
-	}
-
-	public JLabel getrsccLogins48() {
-		return this.rscc_logins48;
-	}
-
-	// ORSC section
-	public JLabel getorscStatus() {
-		return this.orsc_status;
 	}
 
 	public JLabel getorscOnline() {
 		return this.orsc_online;
 	}
 
-	public JLabel getorscLogins48() {
-		return this.orsc_logins48;
+	public JLabel getopenpkOnline() {
+		return this.openpk_online;
 	}
 
-	// Open PK section
-	public JLabel getopenpkStatus() {
-		return this.openpk_status;
+	public JLabel getrscpOnline() {
+		return this.rscp_online;
 	}
 
-	// RSCP section
-	public JLabel getrscpStatus() {
-		return this.rscp_status;
+	// Spritepack combobox
+	public CheckCombo getSpriteCombo() {
+		return this.comboBox;
 	}
 
-	// Dev World section
-	public JLabel getdevStatus() {
-		return this.dev_status;
-	}
-
-	// Localhost section
-	public JLabel getlocalStatus() {
-		return this.local_status;
-	}
-
-	//Spritepack combobox
-	public CheckCombo getSpriteCombo() { return this.comboBox; }
 	public CheckCombo.store[] getComboBoxState() {
 		int entryCount = comboBox.combo.getItemCount();
 		CheckCombo.store[] items = new CheckCombo.store[entryCount];
@@ -419,6 +240,5 @@ public class AppFrame extends JFrame {
 		openpkRadioButton.setEnabled(true);
 		rscpRadioButton.setEnabled(true);
 		devRadioButton.setEnabled(true);
-		localRadioButton.setEnabled(true);
 	}
 }

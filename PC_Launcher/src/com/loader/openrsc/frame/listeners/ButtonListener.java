@@ -15,7 +15,7 @@ public class ButtonListener implements ActionListener {
 	public void actionPerformed(final ActionEvent event) {
 		final String action = event.getActionCommand().toLowerCase();
 		switch (action) {
-			case "reneral rsc wiki": {
+			case "rsc wiki": {
 				Utils.openWebpage("https://classic.runescape.wiki");
 				return;
 			}
@@ -71,7 +71,7 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
-			case "open pk (alpha)": {
+			case "open pk": {
 				String ip = "game.openrsc.com";
 				String port = "43597";
 				FileOutputStream fileout;
@@ -91,7 +91,7 @@ public class ButtonListener implements ActionListener {
 				}
 				return;
 			}
-			case "rsc preservation (alpha)": {
+			case "rsc preservation": {
 				String ip = "game.openrsc.com";
 				String port = "43596";
 				FileOutputStream fileout;
@@ -114,26 +114,6 @@ public class ButtonListener implements ActionListener {
 			case "dev world": {
 				String ip = "game.openrsc.com";
 				String port = "43599";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				return;
-			}
-			case "single player": {
-				String ip = "localhost";
-				String port = "43594";
 				FileOutputStream fileout;
 				try {
 					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");

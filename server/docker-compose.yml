@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ant runserver
+    ports:
+      - "43594:43594"
+      - "43595:43595"
+      - "43596:43596"
+      - "43597:43597"
+      - "43598:43598"
+      - "43599:43599"
+    volumes:
+      - ./avatars:/usr/server/avatars
+      - ./logs:/usr/server/logs
+    network_mode: host
