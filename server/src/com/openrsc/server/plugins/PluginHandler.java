@@ -241,8 +241,8 @@ public final class PluginHandler {
 		}
 
 		//Look for quests specifically
+		Class<?> interfce = QuestInterface.class;
 		for (final Class<?> plugin : loadedClassFiles) {
-			Class<?> interfce = QuestInterface.class;
 			if (!interfce.isAssignableFrom(plugin)) {
 				continue;
 			}
