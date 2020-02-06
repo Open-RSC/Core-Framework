@@ -158,6 +158,7 @@ public final class PluginHandler {
 				if (!interfce.isAssignableFrom(plugin)) {
 					continue;
 				}
+
 				Object instance = plugin.getConstructor().newInstance();
 				if (instance instanceof DefaultHandler && defaultHandler == null) {
 					defaultHandler = instance;
@@ -175,16 +176,7 @@ public final class PluginHandler {
 					instance = loadedPlugins.get(instance.getClass().getName());
 				} else {
 					loadedPlugins.put(instance.getClass().getName(), instance);
-					if (instance instanceof QuestInterface) {
-						final QuestInterface q = (QuestInterface) instance;
-						try {
-							getServer().getWorld().registerQuest(q);
-						} catch (final Exception e) {
-							LOGGER.error("Error registering quest " + q.getQuestName());
-							LOGGER.catching(e);
-							continue;
-						}
-					} else if (instance instanceof MiniGameInterface) {
+					if (instance instanceof MiniGameInterface) {
 						final MiniGameInterface m = (MiniGameInterface) instance;
 						try {
 							getServer().getWorld().registerMiniGame(m);
@@ -221,19 +213,6 @@ public final class PluginHandler {
 					loadedPlugins.put(instance.getClass().getName(), instance);
 
 					if (Arrays.asList(instance.getClass().getInterfaces())
-						.contains(QuestInterface.class)) {
-						final QuestInterface q = (QuestInterface) instance;
-						try {
-							getServer().getWorld().registerQuest(
-								(QuestInterface) instance);
-						} catch (final Exception e) {
-							LOGGER.error(
-								"Error registering quest "
-									+ q.getQuestName());
-							LOGGER.catching(e);
-							continue;
-						}
-					} else if (Arrays.asList(instance.getClass().getInterfaces())
 							.contains(MiniGameInterface.class)) {
 						final MiniGameInterface m = (MiniGameInterface) instance;
 						try {
@@ -260,6 +239,31 @@ public final class PluginHandler {
 				}
 			}
 		}
+
+		//Look for quests specifically
+		Class<?> interfce = QuestInterface.class;
+		for (final Class<?> plugin : loadedClassFiles) {
+			if (!interfce.isAssignableFrom(plugin)) {
+				continue;
+			}
+			Object instance = plugin.getConstructor().newInstance();
+
+			if (Arrays.asList(instance.getClass().getInterfaces())
+			.contains(QuestInterface.class)) {
+				final QuestInterface q = (QuestInterface) instance;
+				try {
+					getServer().getWorld().registerQuest(
+						(QuestInterface) instance);
+				} catch (final Exception e) {
+					LOGGER.error(
+						"Error registering quest "
+							+ q.getQuestName());
+					LOGGER.catching(e);
+					continue;
+				}
+			}
+		}
+
 		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
 		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
 		LOGGER.info("\t Loaded total of {}", box(loadedPlugins.size()) + " plugin handlers.");

@@ -57,7 +57,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
 				return;
 			}
@@ -125,7 +125,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
 				return;
 			}
@@ -150,7 +150,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
@@ -193,7 +193,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
@@ -273,7 +273,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 					if (p == null)
 						continue;
 
-					if (p.isStaff())
+					if (!p.isDefaultUser() && !p.isPlayerMod())
 						continue;
 
 					p.summon(player);
@@ -316,7 +316,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				if (p == null)
 					continue;
 
-				if (p.isStaff())
+				if (!p.isDefaultUser() && !p.isPlayerMod())
 					continue;
 
 				p.returnFromSummon();
@@ -336,7 +336,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not fatigue a staff member of equal or greater rank.");
 				return;
 			}
@@ -378,7 +378,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff()) {
+			if (p.hasElevatedPriveledges()) {
 				player.message(messagePrefix + "You can not jail a staff member.");
 				return;
 			}
@@ -399,7 +399,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff()) {
+			if (p.hasElevatedPriveledges()) {
 				player.message(messagePrefix + "You can not release a staff member.");
 				return;
 			}
@@ -452,7 +452,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
 				return;
 			}
@@ -518,7 +518,7 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			if (p != null && p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (p != null && !p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
 				return;
 			}

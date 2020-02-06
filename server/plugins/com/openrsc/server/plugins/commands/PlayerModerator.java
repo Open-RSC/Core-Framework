@@ -50,7 +50,7 @@ public final class PlayerModerator implements CommandListener, CommandExecutiveL
 				minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
 				return;
 			}
@@ -106,7 +106,7 @@ public final class PlayerModerator implements CommandListener, CommandExecutiveL
 				minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
 				return;
 			}
