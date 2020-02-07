@@ -23,6 +23,7 @@ public class Smelting implements InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
 
 	public static final int FURNACE = 118;
+	public static final int LAVA_FURNACE = 1280;
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
@@ -101,6 +102,27 @@ public class Smelting implements InvUseOnObjectListener,
 				}
 			} else {
 				handleRegularSmelting(item, p, obj);
+			}
+		} else if (obj.getID() == LAVA_FURNACE) {
+			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			if (stage != 2) {
+				p.message("You don't have permission to use this");
+				return;
+			}
+			int amount = 0;
+			if (item.getID() == ItemId.DRAGON_SWORD.id())
+				amount = 1;
+			else if (item.getID() == ItemId.DRAGON_AXE.id())
+				amount = 2;
+			else {
+				p.message("Nothing interesting happens");
+				return;
+			}
+			if (p.getInventory().remove(item.getID(), 1) > -1) {
+				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
+				sleep(p.getWorld().getServer().getConfig().GAME_TICK * 5);
+				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
+				addItem(p, ItemId.DRAGON_BAR.id(), amount);
 			}
 		}
 	}
@@ -271,7 +293,8 @@ public class Smelting implements InvUseOnObjectListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getID());
+		return (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getID()))
+			|| obj.getID() == LAVA_FURNACE;
 	}
 
 	enum Smelt {

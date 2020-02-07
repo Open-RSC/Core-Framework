@@ -3907,6 +3907,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2385));
 		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2386));
 		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2387));
+		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, 79, "items:79", false, false, 0, 56797, false, false, 1643, -1, 2388));
 	}
 
 	// Bank note items

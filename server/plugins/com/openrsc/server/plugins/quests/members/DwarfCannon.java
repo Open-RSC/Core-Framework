@@ -458,10 +458,10 @@ public class DwarfCannon
 							"i will talk to our best smithy",
 							"he works at the new lava forge deep underground",
 							"as our ally you will have access to its power",
-							"also please take this and read it",
-							"its a recipe for my grandmama's brew",
-							"we use it to sharpen our smithy skills",
-							"you may find it useful");
+							"also please take this and read it");
+						p.message("Gramat hands you a note");
+						npcTalk(p, n, "if you follow the steps on the note",
+							"you will have something far better than rune");
 						p.message("You have completed the dwarf youth rescue miniquest!");
 					} else {
 						playerTalk(p, n, "i do, but it's damaged",
@@ -477,10 +477,19 @@ public class DwarfCannon
 					break;
 			}
 		} else if (n.getID() == NpcId.DWARVEN_SMITHY.id()) {
-			npcTalk(p, n, "this is our reason for digging",
-				"it's the latest in dwarven technology",
-				"this furnace uses the intense heat of lava",
-				"our enemies will suffer from its forgings");
+			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			if (stage == 2) {
+				npcTalk(p, n, "oi " + p.getUsername(),
+					"Gramat told me about you",
+					"this forge is yours to use",
+					"it's hot enough to melt the strongest of metals",
+					"dragon long swords smelt to one bar",
+					"dragon axes smelt to two");
+			} else
+				npcTalk(p, n, "this is our reason for digging",
+					"it's the latest in dwarven technology",
+					"this furnace uses the intense heat of lava",
+					"our enemies will suffer from its forgings");
 		} else if (n.getID() == NpcId.DWARVEN_YOUTH.id()) {
 			if (p.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
 			&& p.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
