@@ -56,7 +56,19 @@ public class Ladders {
 			player.teleport(606, 3556);
 			player.message("You go up the stairs");
 			return;
+		} else if (obj.getID() == 223 && obj.getX() == 271 && obj.getY() == 3340) {
+			//Ladder from dwarven mine to lava forge
+			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")) {
+				player.teleport(329,3419,false);
+			} else
+				player.message("you don't have access to this area");
+			return;
+		} else if (obj.getID() == 5 && obj.getX() == 329 && obj.getY() == 3418) {
+			//Ladder from lava forge to dwarven mine
+			player.teleport(271, 3339, false);
+			return;
 		}
+
 		TelePoint telePoint = player.getWorld().getServer().getEntityHandler().getObjectTelePoint(obj
 			.getLocation(), command);
 		if (telePoint != null) {

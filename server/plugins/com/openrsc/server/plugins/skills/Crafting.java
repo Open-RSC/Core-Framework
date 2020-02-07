@@ -58,9 +58,41 @@ public class Crafting implements InvUseOnItemListener,
 		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item2, item1);
 		} else if (item1.getID() == ItemId.NEEDLE.id()) {
-			makeLeather(player, item1, item2);
+			if (item2.getID() == ItemId.TEDDY_HEAD.id() || item2.getID() == ItemId.TEDDY_BOTTOM.id()) {
+				if (player.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& player.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())
+					&& player.getInventory().hasInInventory(ItemId.THREAD.id())) {
+					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
+						player.getInventory().remove(ItemId.TEDDY_HEAD.id(), 1);
+						player.getInventory().remove(ItemId.TEDDY_BOTTOM.id(), 1);
+						player.getInventory().remove(ItemId.THREAD.id(), 1);
+						player.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
+						player.message("You stitch together the teddy parts");
+					} else
+						player.message("You need level 15 crafting to fix the teddy");
+				} else
+					player.message("You need the two teddy halves and some thread");
+			} else
+				makeLeather(player, item1, item2);
+			return;
 		} else if (item2.getID() == ItemId.NEEDLE.id()) {
-			makeLeather(player, item2, item1);
+			if (item1.getID() == ItemId.TEDDY_HEAD.id() || item1.getID() == ItemId.TEDDY_BOTTOM.id()) {
+				if (player.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& player.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())
+					&& player.getInventory().hasInInventory(ItemId.THREAD.id())) {
+					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
+						player.getInventory().remove(ItemId.TEDDY_HEAD.id(), 1);
+						player.getInventory().remove(ItemId.TEDDY_BOTTOM.id(), 1);
+						player.getInventory().remove(ItemId.THREAD.id(), 1);
+						player.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
+						player.message("You stitch together the teddy parts");
+					} else
+						player.message("You need level 15 crafting to fix the teddy");
+				} else
+					player.message("You need the two teddy halves and some thread");
+			} else
+				makeLeather(player, item2, item1);
+			return;
 		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item1, item2);
 		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id()) {
@@ -656,8 +688,10 @@ public class Crafting implements InvUseOnItemListener,
 
 	private void makeLeather(Player player, final Item needle, final Item leather) {
 		if (leather.getID() != ItemId.LEATHER.id()) {
+			player.message("Nothing interesting happens");
 			return;
 		}
+
 		if (player.getInventory().countId(ItemId.THREAD.id()) < 1) {
 			player.message("You need some thread to make anything out of leather");
 			return;

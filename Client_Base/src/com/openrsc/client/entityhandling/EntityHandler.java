@@ -2133,6 +2133,15 @@ public class EntityHandler {
 			npcs.add(new NPCDef("Gardener", "She takes care of the plants around", "", 25, 25, 10, 20, false, sprites, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, i++));
 		}
 
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Gramat", "He looks worried", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Dwarven Smithy", "A master of metals", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Dwarven Youth", "He is upset", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 90, 130, 6, 6, 5, i++));
+		sprites = new int[]{164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Balrog", "A massive black demon", "", 999, 250, 80, 200, true, sprites, 0, 0, 0, 0, 450, 480, 11, 11, 30, i++));
+
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
 			npcs.get(103).sprites = new int[]{3, 4, -1, -1, -1, -1, -1, 247, -1, -1, -1, -1};
@@ -3894,6 +3903,10 @@ public class EntityHandler {
 		items.add(new ItemDef("Diced grapefruit", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, true, false, -1, 2381, 2382));
 		items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, -1, -1, 2383));
 		items.add(new ItemDef("Half coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2383, 2384));
+
+		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2385));
+		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2386));
+		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2387));
 	}
 
 	// Bank note items
@@ -7215,6 +7228,7 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Barrel of water", "A barrel filled with filtered water", "WalkTo", "Examine", 1, 1, 1, 0, "barrelwater", ++i));
 			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
 			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
+			objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1280
 		}
 	}
 
