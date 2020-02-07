@@ -118,6 +118,10 @@ public class Smelting implements InvUseOnObjectListener,
 				p.message("Nothing interesting happens");
 				return;
 			}
+			if (getCurrentLevel(p, Skills.SMITHING) < 90) {
+				p.message("90 smithing is required to use this forge");
+				return;
+			}
 			if (p.getInventory().remove(item.getID(), 1) > -1) {
 				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
 				sleep(p.getWorld().getServer().getConfig().GAME_TICK * 5);
