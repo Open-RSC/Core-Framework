@@ -20,17 +20,38 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Smithing implements InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
 
+	private final int DORICS_ANVIL = 177;
+	private final int ANVIL = 50;
+	private final int LAVA_ANVIL = 1281;
+
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 177 || obj.getID() == 50;
+		return obj.getID() == ANVIL
+			|| obj.getID() == DORICS_ANVIL
+			|| obj.getID() == LAVA_ANVIL;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, final Item item, final Player player) {
 
+		if (obj.getID() == LAVA_ANVIL) {
+			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")
+			&& player.getCache().getInt("miniquest_dwarf_youth_rescue") == 2) {
+				if (item.getID() == ItemId.DRAGON_BAR.id()) {
+					if (getCurrentLevel(player, Skills.SMITHING) < 90) {
+						player.message("You need 90 smithing to work dragon metal");
+						return;
+					}
+					if (player.getInventory().remove(ItemId.DRAGON_BAR.id(), 1) > -1) {
+						addItem(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
+						//player.incExp(Skills.SMITHING, 300, true);
+					}
+				}
+			}
+		}
 		// Doric's Anvil
-		if (obj.getID() == 177 && !allowDorics(player)) return;
+		if (obj.getID() == DORICS_ANVIL && !allowDorics(player)) return;
 
 		if (!smithingChecks(obj, item, player)) return;
 

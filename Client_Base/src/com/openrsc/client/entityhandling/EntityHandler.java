@@ -3907,7 +3907,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2385));
 		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2386));
 		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2387));
-		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, 79, "items:79", false, false, 0, 56797, false, false, 1643, -1, 2388));
+		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 56797, true, false, -1, -1, 2388));
+		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2389));
+		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2390));
 	}
 
 	// Bank note items
@@ -7230,6 +7232,7 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
 			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
 			objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1280
+			objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", i++));//1281
 		}
 	}
 
