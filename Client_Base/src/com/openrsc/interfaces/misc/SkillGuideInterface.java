@@ -928,8 +928,10 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(165, "9","Herb - Guam (chance)"));
 				skillItems.add(new SkillItem(435, "14","Herb - Marrentil (chance)"));
 				skillItems.add(new SkillItem(436, "19","Herb - Tarromin (chance)"));
+				skillItems.add(new SkillItem(622, "23","Sea weed"));
 				skillItems.add(new SkillItem(437, "26","Herb - Harralander (chance)"));
 				skillItems.add(new SkillItem(438, "32","Herb - Ranarr Weed (chance)"));
+				skillItems.add(new SkillItem(220, "42","Limpwurt Root"));
 				skillItems.add(new SkillItem(439, "44","Herb - Irit Leaf (chance)"));
 				skillItems.add(new SkillItem(440, "50","Herb - Avantoe (chance)"));
 				skillItems.add(new SkillItem(441, "56","Herb - Kwuarm (chance)"));

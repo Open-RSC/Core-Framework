@@ -14,7 +14,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -39,13 +40,17 @@ public final class Harvesting implements ObjectActionListener,
 		}
 	}
 
-	private static class HerbLevelXPPair {
+	private static class ItemLevelXPTrio {
+		private int itemId;
 		private int level;
 		private int xp;
-		HerbLevelXPPair(int level, int xp) {
+		ItemLevelXPTrio(int itemId, int level, int xp) {
+			this.itemId = itemId;
 			this.level = level;
 			this.xp = xp;
 		}
+
+		int getItemId() { return itemId; }
 
 		int getLevel() {
 			return level;
@@ -56,20 +61,48 @@ public final class Harvesting implements ObjectActionListener,
 		}
 	}
 
-	private static TreeMap<Integer, HerbLevelXPPair> clipLevels = new TreeMap<Integer, HerbLevelXPPair>();
+	enum HerbsProduce {
+		HERB(1274, new ItemLevelXPTrio(ItemId.UNIDENTIFIED_GUAM_LEAF.id(), 9, 50),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_MARRENTILL.id(),14, 60),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_TARROMIN.id(), 19, 72),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_HARRALANDER.id(), 26, 96),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_RANARR_WEED.id(), 32, 122),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_IRIT_LEAF.id(), 44, 194),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_AVANTOE.id(), 50, 246),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_KWUARM.id(), 56, 312),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_CADANTINE.id(), 67, 480),
+			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_DWARF_WEED.id(), 79, 768)),
+		SEAWEED(1280, new ItemLevelXPTrio(ItemId.SEAWEED.id(), 23, 84),
+			new ItemLevelXPTrio(ItemId.EDIBLE_SEAWEED.id(), 23, 84)),
+		LIMPWURTROOT(1281, new ItemLevelXPTrio(ItemId.LIMPWURT_ROOT.id(), 42, 144)),
+		SNAPEGRASS(1273, new ItemLevelXPTrio(ItemId.SNAPE_GRASS.id(), 61, 328));
 
-	static {
-		clipLevels.put(ItemId.UNIDENTIFIED_GUAM_LEAF.id(), new HerbLevelXPPair(9, 50));
-		clipLevels.put(ItemId.UNIDENTIFIED_MARRENTILL.id(), new HerbLevelXPPair(14, 60));
-		clipLevels.put(ItemId.UNIDENTIFIED_TARROMIN.id(), new HerbLevelXPPair(19, 72));
-		clipLevels.put(ItemId.UNIDENTIFIED_HARRALANDER.id(), new HerbLevelXPPair(26, 96));
-		clipLevels.put(ItemId.UNIDENTIFIED_RANARR_WEED.id(), new HerbLevelXPPair(32, 122));
-		clipLevels.put(ItemId.UNIDENTIFIED_IRIT_LEAF.id(), new HerbLevelXPPair(44, 194));
-		clipLevels.put(ItemId.UNIDENTIFIED_AVANTOE.id(), new HerbLevelXPPair(50, 246));
-		clipLevels.put(ItemId.UNIDENTIFIED_KWUARM.id(), new HerbLevelXPPair(56, 312));
-		clipLevels.put(ItemId.SNAPE_GRASS.id(), new HerbLevelXPPair(61, 328));
-		clipLevels.put(ItemId.UNIDENTIFIED_CADANTINE.id(), new HerbLevelXPPair(67, 480));
-		clipLevels.put(ItemId.UNIDENTIFIED_DWARF_WEED.id(), new HerbLevelXPPair(79, 768));
+		private int objId;
+		private ArrayList<ItemLevelXPTrio> produceTable;
+		HerbsProduce(int objId, ItemLevelXPTrio... produce) {
+			this.objId = objId;
+			produceTable = new ArrayList<>();
+			produceTable.addAll(Arrays.asList(produce));
+		}
+
+		public static HerbsProduce find(int objId) {
+			for (HerbsProduce h : HerbsProduce.values()) {
+				if (h.objId == objId) {
+					return h;
+				}
+			}
+			return null;
+		}
+
+		public ItemLevelXPTrio get(int itemId) {
+			for (ItemLevelXPTrio i : produceTable) {
+				if (i.itemId == itemId) {
+					return i;
+				}
+			}
+			return null;
+		}
+
 	}
 
 	private final int[] itemsFruitTree = new int[]{
@@ -168,11 +201,13 @@ public final class Harvesting implements ObjectActionListener,
 		if (!harvestingChecks(object, player)) return;
 
 		GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-		final boolean isSnapeGrass = obj.getGameObjectDef().getName().toLowerCase().contains("snape grass");
+		final String objName = obj.getGameObjectDef().getName().toLowerCase();
+		final HerbsProduce prodEnum = HerbsProduce.find(object.getID());
+		int reqLevel = prodEnum != null ? prodEnum.produceTable.get(0).getLevel() : 1;
 
-		if (isSnapeGrass && player.getSkills().getLevel(Skills.HARVESTING) < 61) {
-			player.playerServerMessage(MessageType.QUEST, "You need at least level 61 harvesting "
-				+ "to clip from the snape grass");
+		if (!objName.contains("herb") && player.getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
+			player.playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
+				+ " harvesting to clip from the " + objName);
 			return;
 		}
 
@@ -191,7 +226,12 @@ public final class Harvesting implements ObjectActionListener,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
 			@Override
 			public void action() {
-				int prodId = isSnapeGrass ? ItemId.SNAPE_GRASS.id() : Formulae.calculateHerbDrop();
+				// herb uses herb drop table
+				// seaweed 1/4 chance to be edible
+				int prodId = !objName.contains("herb")
+					? (objName.contains("sea weed") && DataConversions.random(1, 4) == 1 ? prodEnum.produceTable.get(1).getItemId()
+					: prodEnum.produceTable.get(0).getItemId() ) : Formulae.calculateHerbDrop();
+				int reqLevel = prodEnum.produceTable.get(0).getLevel();
 				final Item produce = new Item(prodId);
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
@@ -201,14 +241,14 @@ public final class Harvesting implements ObjectActionListener,
 						return;
 					}
 				}
-				if (isSnapeGrass && getOwner().getSkills().getLevel(Skills.HARVESTING) < 61) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need at least level 61 harvesting "
-						+ "to clip from the snape grass");
+				if (!objName.contains("herb") && getOwner().getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
+					getOwner().playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
+						+ " harvesting to clip from the " + objName);
 					interrupt();
 					return;
 				}
 
-				if (getProduce(clipLevels.get(prodId).getLevel(), getOwner().getSkills().getLevel(Skills.HARVESTING))) {
+				if (getProduce(prodEnum.get(prodId).getLevel(), getOwner().getSkills().getLevel(Skills.HARVESTING))) {
 					//check if the object is still up
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
@@ -216,10 +256,11 @@ public final class Harvesting implements ObjectActionListener,
 						interrupt();
 					} else {
 						getOwner().getInventory().add(produce);
-						getOwner().playerServerMessage(MessageType.QUEST, "You get " + (isSnapeGrass ? "some grass" : "a herb"));
-						getOwner().incExp(Skills.HARVESTING, clipLevels.get(prodId).getXp(), true);
+						getOwner().playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
+							: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
+						getOwner().incExp(Skills.HARVESTING, prodEnum.get(prodId).getXp(), true);
 					}
-					if (DataConversions.random(1, 100) <= (isSnapeGrass ? 20 : 10)) {
+					if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
 						obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						int depId = 1270;
 						interrupt();
