@@ -3870,8 +3870,8 @@ public class EntityHandler {
 		//New KBD Drops
 		items.add(new ItemDef("dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, 2354, -1, 2353));
 		items.add(new ItemDef("dragon 2-handed Sword", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2353, 2354));
-		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 50, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
-		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
+		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 2500, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
+		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 2500, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
 
 		//Harvesting
 		items.add(new ItemDef("red apple", "Seems tasty!", "eat", 1, -1, "items:534", false, false, 0, 0, false, false, -1, -1, 2357));
@@ -3896,7 +3896,6 @@ public class EntityHandler {
 		items.add(new ItemDef("Herb Clippers", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2375, 2376));
 		items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, -1, -1, 2377));
 		items.add(new ItemDef("Watering Can", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2377, 2378));
-
 		items.add(new ItemDef("grapefruit slices", "It's very fresh", "eat", 2, 291, "items:291", false, false, 0, 15435583, true, false, -1, -1, 2379));
 		items.add(new ItemDef("grapefruit slices", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, true, false, -1, 2379, 2380));
 		items.add(new ItemDef("Diced grapefruit", "Fresh chunks of grapefruit", "eat", 2, 293, "items:293", false, false, 0, 15435583, true, false, -1, -1, 2381));
@@ -3904,13 +3903,16 @@ public class EntityHandler {
 		items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, -1, -1, 2383));
 		items.add(new ItemDef("Half coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2383, 2384));
 
+		//Dwarf miniquest & Dragon Scale Mail
 		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2385));
 		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2386));
 		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2387));
-		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 56797, true, false, -1, -1, 2388));
-		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2389));
-		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2390));
-		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, 7, "items:7", false, true, 64, 15654365, false, false, -1, -1, 2391));
+		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 16711748, true, false, 2389, -1, 2388));
+		items.add(new ItemDef("Dragon bar", "Swap this note at any bank for the equivalent item.", "", 100000, 438, "items:438", true, false, 0, 0, true, false, -1, 2388, 2389));
+		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2390));
+		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2391));
+		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:dragonscalemail", false, true, 64, 15654365, false, false, 2393, -1, 2392));
+		items.add(new ItemDef("Dragon Scale Mail", "Swap this note at any bank for the equivalent item.", "", 1500000, 438, "items:438", true, false, 0, 0, true, false, -1, 2392, 2393));
 	}
 
 	// Bank note items

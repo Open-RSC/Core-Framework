@@ -22,7 +22,7 @@ public class Smithing implements InvUseOnObjectListener,
 
 	private final int DORICS_ANVIL = 177;
 	private final int ANVIL = 50;
-	private final int LAVA_ANVIL = 1281;
+	private final int LAVA_ANVIL = 1285;
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,

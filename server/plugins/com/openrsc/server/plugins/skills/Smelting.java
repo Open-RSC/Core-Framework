@@ -23,7 +23,7 @@ public class Smelting implements InvUseOnObjectListener,
 	InvUseOnObjectExecutiveListener {
 
 	public static final int FURNACE = 118;
-	public static final int LAVA_FURNACE = 1280;
+	public static final int LAVA_FURNACE = 1284;
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
