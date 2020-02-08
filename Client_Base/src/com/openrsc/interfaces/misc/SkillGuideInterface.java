@@ -803,6 +803,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(410, "45", "White Wolf Mountain vine climb"));
 				skillItems.add(new SkillItem(410, "49", "Yanille Agility Dungeon pipe"));
 				skillItems.add(new SkillItem(410, "50", "Kharazi Jungle cave entrance"));
+				skillItems.add(new SkillItem(410, "55", "Entrana wall rubble"));
 				skillItems.add(new SkillItem(410, "57", "Yanille Agility Dungeon rope swing"));
 				skillItems.add(new SkillItem(410, "67", "Yanille Agility Dungeon pile of rubble"));
 				skillItems.add(new SkillItem(410, "70", "Taverly Dungeon pipe crawl"));

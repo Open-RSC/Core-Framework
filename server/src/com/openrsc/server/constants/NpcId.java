@@ -815,7 +815,9 @@ public enum NpcId {
 	GARDENER(806),
 	GRAMAT(807),
 	DWARVEN_SMITHY(808),
-	DWARVEN_YOUTH(809);
+	DWARVEN_YOUTH(809),
+	BALROG(810),
+	SILICIUS(811);
 
 	private int npcId;
 

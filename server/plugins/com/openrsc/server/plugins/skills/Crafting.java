@@ -5,19 +5,23 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCraftingDef;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemGemDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -650,6 +654,7 @@ public class Crafting implements InvUseOnItemListener,
 		Item result;
 		int reqLvl, exp;
 		String resultGen;
+		Random numGen = new Random();
 		switch (type) {
 			case 0:
 				result = new Item(ItemId.EMPTY_VIAL.id(), 1);
@@ -673,10 +678,10 @@ public class Crafting implements InvUseOnItemListener,
 			default:
 				return;
 		}
-
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getID()), false) {
 			@Override
 			public void action() {
+				final Item resultClone = result.clone();
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
 					getOwner().message(
 						"You need a crafting level of " + reqLvl + " to make " + resultGen);
@@ -692,8 +697,48 @@ public class Crafting implements InvUseOnItemListener,
 					}
 				}
 				if (getOwner().getInventory().remove(glass) > -1) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
-					getOwner().getInventory().add(result);
+					String message = "You make a " + resultClone.getDef(getWorld()).getName();
+
+					//Special handling for vials
+					if (result.getID() == ItemId.EMPTY_VIAL.id()) {
+						if (getOwner().getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+							int amnt = 0;
+							double breakChance = 60.0d - 25.0d/2178.0d * Math.pow((getCurrentLevel(getOwner(), Skills.CRAFTING)-33),2);
+							for (int loop = 0; loop < 15; ++loop) {
+								double hit = numGen.nextDouble() * 99 + 1;
+								if (hit > breakChance) {
+									amnt++;
+								}
+							}
+							message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
+							resultClone.setAmount(amnt);
+							if (getOwner().getLocation().inBounds(418, 559, 421,563)) {
+								resultClone.setID(getOwner().getWorld().getServer().getEntityHandler().getItemDef(result.getID()).getNoteID());
+							}
+						}
+					}
+
+					getOwner().playerServerMessage(MessageType.QUEST, message);
+
+					if (!resultClone.getDef(getOwner().getWorld()).isStackable() && resultClone.getAmount() > 1) {
+						int owedVials = resultClone.getAmount() - 1;
+						int space = getOwner().getInventory().getFreeSlots();
+						while (owedVials > 0) {
+							if (space > 0) {
+								getOwner().getInventory().add(resultClone);
+								--space;
+							} else {
+								getOwner().getWorld().registerItem(
+									new GroundItem(getOwner().getWorld(), resultClone.getID(), getOwner().getX(), getOwner().getY(), 1, getOwner()),
+									94000);
+								getOwner().getWorld().getServer().getGameLogger().addQuery(new GenericLog(getOwner().getWorld(), getOwner().getUsername() + " dropped(inventory full) "
+									+ resultClone.getID() + " x" + "1" + " at " + getOwner().getLocation().toString()));
+							}
+							--owedVials;
+						}
+					}
+
+					getOwner().getInventory().add(resultClone);
 					getOwner().incExp(Skills.CRAFTING, exp, true);
 				}
 			}

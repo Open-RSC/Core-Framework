@@ -16,6 +16,14 @@ public class Item implements Comparable<Item> {
 
 	private boolean wielded = false;
 
+	@Override
+	public Item clone() {
+		Item retVal = new Item(this.id, this.amount);
+		retVal.setWielded(this.wielded);
+		retVal.setIndex(this.index);
+		return retVal;
+	}
+
 	public enum WearableID {
 		NOTHING(0),
 		CROSSBOW(16),
@@ -102,7 +110,7 @@ public class Item implements Comparable<Item> {
 	public ItemCookingDef getCookingDef(World world) {
 		return world.getServer().getEntityHandler().getItemCookingDef(id);
 	}
-	
+
 	public ItemPerfectCookingDef getPerfectCookingDef(World world) {
 		return world.getServer().getEntityHandler().getItemPerfectCookingDef(id);
 	}
