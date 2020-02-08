@@ -5356,7 +5356,7 @@ public final class mudclient implements Runnable {
 							if (intOverflowCheck < Integer.MAX_VALUE) {
 								var4 = Integer.parseInt(str);
 							}
-							bank.sendDeposit(var4);
+							bank.sendDeposit(var4, this.bank.getUncertMode());
 						}
 					} catch (NumberFormatException var9) {
 						System.out.println("Deposit X number format exception: " + var9);
@@ -13928,6 +13928,8 @@ public final class mudclient implements Runnable {
 				MessageHistory.messageHistoryColor[j] = null;
 				MessageHistory.messageHistoryType[j] = MessageType.GAME;
 			}
+
+			bank.resetUncertMode();
 
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.UD(" + var1 + ')');
