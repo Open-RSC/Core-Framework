@@ -703,9 +703,9 @@ public class Crafting implements InvUseOnItemListener,
 					if (result.getID() == ItemId.EMPTY_VIAL.id()) {
 						if (getOwner().getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 							int amnt = 0;
-							double breakChance = 60.0d - 25.0d/2178.0d * Math.pow((getCurrentLevel(getOwner(), Skills.CRAFTING)-33),2);
-							for (int loop = 0; loop < 15; ++loop) {
-								double hit = numGen.nextDouble() * 99 + 1;
+							double breakChance = 91.66667 - getCurrentLevel(getOwner(), Skills.CRAFTING)/1.32;
+							for (int loop = 0; loop < 6; ++loop) {
+								double hit = numGen.nextDouble() * 99;
 								if (hit > breakChance) {
 									amnt++;
 								}

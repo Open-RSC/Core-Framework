@@ -5333,7 +5333,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2389, -1, 2388, 'Dragon bar', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000),
        (2390, -1, -1, 'Chipped Dragon Scale', 'A piece of dragon scale', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 500),
        (2391, -1, -1, 'Dragon Metal Chain', 'A dragon chain mail reinforced with dragon scales', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1500000),
-       (2392, 2393, -1, 'Dragon Scale Mail', 'A series of connected metal rings', '', 0, 0, 0, 0, 1, 26, 64, 6, 40, 1,
+       (2392, 2393, -1, 'Dragon Scale Mail', 'A series of connected metal rings', '', 0, 0, 0, 0, 1, 404, 64, 6, 40, 1,
         65, 0, 0, 0, 0, 50000),
        (2393, -1, 2392, 'Dragon Scale Mail', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500000);
 
@@ -12054,7 +12054,7 @@ VALUES (47, 109, 104, 114, 415, 410, 420, 3816),
        (290, 292, 290, 303, 3417, 3417, 3419, 7607),
        (290, 300, 290, 303, 3417, 3417, 3419, 7608),
        (810, 314, 314, 314, 3422, 3422, 3422, 7609),
-       (811, 419, 418, 421, 562, 561, 563, 7589);
+       (811, 419, 418, 421, 562, 561, 563, 7610);
 
 DROP TABLE IF EXISTS `openrsc_objects`;
 CREATE TABLE IF NOT EXISTS `openrsc_objects`
@@ -40365,7 +40365,7 @@ VALUES (312, 3348, 223, 0, 0, 28501),
        (271, 3340, 223, 0, 0, 29493),
        (329, 3418, 5, 0, 0, 29494),
        (320, 3424, 1284, 0, 0, 29495),
-       (322, 3422, 1285, 0, 0, 29496);
+       (322, 3422, 1285, 0, 0, 29496),
        (434, 550, 1286, 2, 0, 29497);
        
 DROP TABLE IF EXISTS `openrsc_recovery_questions`;

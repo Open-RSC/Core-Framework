@@ -3915,7 +3915,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon bar", "Swap this note at any bank for the equivalent item.", "", 100000, 438, "items:438", true, false, 0, 0, true, false, -1, 2388, 2389));
 		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2390));
 		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2391));
-		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:dragonscalemail", false, true, 64, 15654365, false, false, 2393, -1, 2392));
+		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, 2393, -1, 2392));
 		items.add(new ItemDef("Dragon Scale Mail", "Swap this note at any bank for the equivalent item.", "", 1500000, 438, "items:438", true, false, 0, 0, true, false, -1, 2392, 2393));
 	}
 
@@ -5191,6 +5191,9 @@ public class EntityHandler {
 
 			//Dragon 2H
 			animations.add(new AnimationDef("2hander", "equipment", 16711748, 0, true, false, 0)); //403 d2h
+
+			//Dragon Scale Mail
+			animations.add(new AnimationDef("dragonscalemail", "equipment",0, 0, true, false, 0));//404
 		}
 	}
 
