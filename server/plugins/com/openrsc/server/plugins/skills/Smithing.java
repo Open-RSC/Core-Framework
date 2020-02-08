@@ -39,16 +39,23 @@ public class Smithing implements InvUseOnObjectListener,
 			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")
 			&& player.getCache().getInt("miniquest_dwarf_youth_rescue") == 2) {
 				if (item.getID() == ItemId.DRAGON_BAR.id()) {
+					if (!player.getInventory().hasInInventory(ItemId.HAMMER.id()))
+					{
+						player.message("You need a hammer to do that");
+						return;
+					}
 					if (getCurrentLevel(player, Skills.SMITHING) < 90) {
 						player.message("You need 90 smithing to work dragon metal");
 						return;
 					}
 					if (player.getInventory().remove(ItemId.DRAGON_BAR.id(), 1) > -1) {
 						addItem(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
-						//player.incExp(Skills.SMITHING, 300, true);
+						player.incExp(Skills.SMITHING, 1000, true);
 					}
-				}
+				} else
+					player.message("Nothing interesting happens");
 			}
+			return;
 		}
 		// Doric's Anvil
 		if (obj.getID() == DORICS_ANVIL && !allowDorics(player)) return;

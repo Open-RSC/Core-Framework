@@ -51,8 +51,10 @@ public class Crafting implements InvUseOnItemListener,
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
 		if (item1.getID() == ItemId.CHISEL.id()) {
 			doCutGem(player, item1, item2);
+			return;
 		} else if (item2.getID() == ItemId.CHISEL.id()) {
 			doCutGem(player, item2, item1);
+			return;
 		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item1, item2);
 		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
@@ -572,8 +574,10 @@ public class Crafting implements InvUseOnItemListener,
 				if (player.getInventory().remove(ItemId.KING_BLACK_DRAGON_SCALE.id(),1) > -1) {
 					player.message("You chip the massive scale into 5 pieces");
 					addItem(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
+					player.incExp(Skills.CRAFTING,1300,true);
 				}
-			}
+			} else
+				player.message("Nothing interesting happens");
 			return;
 		}
 

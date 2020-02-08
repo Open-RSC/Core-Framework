@@ -3910,6 +3910,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 56797, true, false, -1, -1, 2388));
 		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2389));
 		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2390));
+		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, 7, "items:7", false, true, 64, 15654365, false, false, -1, -1, 2391));
 	}
 
 	// Bank note items
@@ -7232,7 +7233,7 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
 			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
 			objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1280
-			objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", i++));//1281
+			objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", ++i));//1281
 		}
 	}
 
