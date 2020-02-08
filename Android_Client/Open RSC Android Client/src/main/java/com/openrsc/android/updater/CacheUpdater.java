@@ -3,7 +3,6 @@ package com.openrsc.android.updater;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -79,41 +78,41 @@ public class CacheUpdater extends Activity {
 
         @Override
         protected String doInBackground(String... aurl) {
-			excludedFiles.add(osConfig.MD5_TABLENAME);
-			refuseUpdate.add("config.txt");
+            excludedFiles.add(osConfig.MD5_TABLENAME);
+            refuseUpdate.add("config.txt");
 
-			File cacheHome = getFilesDir();
-			if (!cacheHome.exists())
-				cacheHome.mkdirs();
+            File cacheHome = getFilesDir();
+            if (!cacheHome.exists())
+                cacheHome.mkdirs();
 
-			File md5Table = new File(cacheHome, osConfig.MD5_TABLENAME);
+            File md5Table = new File(cacheHome, osConfig.MD5_TABLENAME);
 
-			if (md5Table.exists()) {
-				md5Table.delete();
-			}
+            if (md5Table.exists()) {
+                md5Table.delete();
+            }
 
-			downloadFile(md5Table, getFilesDir().toString() + File.separator);
+            downloadFile(md5Table, getFilesDir().toString() + File.separator);
 
-			md5 localCache = new md5(md5Table.getParentFile(), "");
-			md5 remoteCache = new md5(md5Table, "");
+            md5 localCache = new md5(md5Table.getParentFile(), "");
+            md5 remoteCache = new md5(md5Table, "");
 
-			for (md5.Entry entry : remoteCache.entries) {
-				if (excludedFiles.contains(entry.getRef().getName()))
-					continue;
+            for (md5.Entry entry : remoteCache.entries) {
+                if (excludedFiles.contains(entry.getRef().getName()))
+                    continue;
 
-				File entryFile = new File(cacheHome, entry.getRef().toString());
-				entryFile.getParentFile().mkdirs();
+                File entryFile = new File(cacheHome, entry.getRef().toString());
+                entryFile.getParentFile().mkdirs();
 
-				String localSum = localCache.getRefSum(entryFile);
-				if (localSum != null) {
-					if (refuseUpdate.contains(entry.getRef().getName()) ||
-						localSum.equalsIgnoreCase(entry.getSum())) {
-						continue;
-					}
-				}
+                String localSum = localCache.getRefSum(entryFile);
+                if (localSum != null) {
+                    if (refuseUpdate.contains(entry.getRef().getName()) ||
+                            localSum.equalsIgnoreCase(entry.getSum())) {
+                        continue;
+                    }
+                }
 
-				downloadFile(entryFile, getFilesDir().toString() + File.separator);
-			}
+                downloadFile(entryFile, getFilesDir().toString() + File.separator);
+            }
 
             publishProgress("Updating completed...");
             return null;
@@ -161,10 +160,10 @@ public class CacheUpdater extends Activity {
             builder.setTitle("Game Selection");
 
             // add a list
-            String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha testing)", "Open PK (alpha testing)", "Dev Testing", "Local Instance"};
+            String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha)", "Open PK (beta)", "Dev Testing", "Local Instance"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
-                    case 0:
+                    case 0: // RSC Cabbage
                         String ip_cabbage = "androidcheck.openrsc.com";
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
@@ -197,7 +196,7 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_cabbage);
                         finish();
                         return;
-                    case 1:
+                    case 1: // Open RSC
                         String ip_openrsc = "androidcheck.openrsc.com";
                         String port_openrsc = "43594";
                         FileOutputStream fileout_openrsc;
@@ -222,7 +221,7 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_openrsc);
                         finish();
                         return;
-                    case 2:
+                    case 2: // RSC Preservation
                         String ip_preservation = "androidcheck.openrsc.com";
                         String port_preservation = "43596";
                         FileOutputStream fileout_preservation;
@@ -247,7 +246,7 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_preservation);
                         finish();
                         return;
-                    case 3:
+                    case 3: // Open PK
                         String ip_openpk = "androidcheck.openrsc.com";
                         String port_openpk = "43597";
                         FileOutputStream fileout_openpk;
@@ -272,7 +271,7 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_openpk);
                         finish();
                         return;
-                    case 4:
+                    case 4: // Dev
                         String ip_dev = "androidcheck.openrsc.com";
                         String port_dev = "43599";
                         FileOutputStream fileout_dev;
@@ -297,65 +296,63 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_dev);
                         finish();
                         return;
-					case 5:
-						LinearLayout layout = new LinearLayout(CacheUpdater.this);
+                    case 5: // Manual
+                        LinearLayout layout = new LinearLayout(CacheUpdater.this);
 
-						// TextView to enter ip
-						final EditText ipBox = new EditText(CacheUpdater.this);
-						ipBox.setHint("127.0.0.1");
-						layout.addView(ipBox);
+                        // TextView to enter ip
+                        final EditText ipBox = new EditText(CacheUpdater.this);
+                        ipBox.setHint("192.168.1.100");
+                        layout.addView(ipBox);
 
-						// TextView to enter port
-						final EditText portBox = new EditText(CacheUpdater.this);
-						portBox.setHint("43594");
-						layout.addView(portBox);
+                        // TextView to enter port
+                        final EditText portBox = new EditText(CacheUpdater.this);
+                        portBox.setHint("43594");
+                        layout.addView(portBox);
 
-						new AlertDialog.Builder(CacheUpdater.this)
-							.setTitle("Local Instance")
-							.setMessage("Enter details for local instance")
-							.setView(layout)
-							.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int whichButton) {
-									String ip_local = "127.0.0.1";
-									String port_local = "43594";
+                        new AlertDialog.Builder(CacheUpdater.this)
+                                .setTitle("Local Instance")
+                                .setMessage("Enter details for local instance")
+                                .setView(layout)
+                                .setPositiveButton("Enter", (dialog1, whichButton) -> {
+                                    String ip_local = "192.168.1.100";
+                                    String port_local = "43594";
 
-									if (!ipBox.getText().toString().trim().equals("")) {
-										ip_local = ipBox.getText().toString().trim();
-									}
-									if (!portBox.getText().toString().trim().equals("")) {
-										port_local = portBox.getText().toString().trim();
-									}
+                                    if (!ipBox.getText().toString().trim().equals("")) {
+                                        ip_local = ipBox.getText().toString().trim();
+                                    }
+                                    if (!portBox.getText().toString().trim().equals("")) {
+                                        port_local = portBox.getText().toString().trim();
+                                    }
 
-									FileOutputStream fileout_local;
-									try {
-										fileout_local = new FileOutputStream(realPath.get() + "ip.txt");
-										OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
-										outputWriter.write(ip_local);
-										outputWriter.close();
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-									try {
-										fileout_local = new FileOutputStream(realPath.get() + "port.txt");
-										OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
-										outputWriter.write(port_local);
-										outputWriter.close();
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-									Intent mainIntent_dev = new Intent(CacheUpdater.this, GameActivity.class);
-									mainIntent_dev.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-									startActivity(mainIntent_dev);
-									finish();
-								}
-							})
-							.show();
+                                    FileOutputStream fileout_local;
+                                    try {
+                                        fileout_local = new FileOutputStream(realPath.get() + "ip.txt");
+                                        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
+                                        outputWriter.write(ip_local);
+                                        outputWriter.close();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        fileout_local = new FileOutputStream(realPath.get() + "port.txt");
+                                        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
+                                        outputWriter.write(port_local);
+                                        outputWriter.close();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent mainIntent_dev1 = new Intent(CacheUpdater.this, GameActivity.class);
+                                    mainIntent_dev1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(mainIntent_dev1);
+                                    finish();
+                                })
+                                .show();
                 }
             });
 
             AlertDialog dialog = builder.create();
 
-			dialog.show();
+            dialog.show();
         }
 
         @Override
@@ -368,29 +365,31 @@ public class CacheUpdater extends Activity {
             }
         }
 
-		private void downloadFile(File file, String prefix) {
-			try {
-				String fileURL = file.toString().replace(prefix, osConfig.CACHE_URL).replace(File.separator, "/");
-				String description = getDescription(file);
-				publishProgress("Downloading " + description, String.valueOf(0));
-				HttpURLConnection connection = (HttpURLConnection) new URL(fileURL).openConnection();
-				try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
-					 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-					int filesize = connection.getContentLength();
-					byte dataBuffer[] = new byte[1024];
-					int bytesRead;
-					int totalRead = 0;
-					while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-						totalRead += bytesRead;
-						fileOutputStream.write(dataBuffer, 0, bytesRead);
-						publishProgress("Downloading " + description, "" + (100*totalRead/filesize));
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				connection.disconnect();
-			} catch (Exception a) { a.printStackTrace(); }
-		}
+        private void downloadFile(File file, String prefix) {
+            try {
+                String fileURL = file.toString().replace(prefix, osConfig.CACHE_URL).replace(File.separator, "/");
+                String description = getDescription(file);
+                publishProgress("Downloading " + description, String.valueOf(0));
+                HttpURLConnection connection = (HttpURLConnection) new URL(fileURL).openConnection();
+                try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+                     FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                    int filesize = connection.getContentLength();
+                    byte dataBuffer[] = new byte[1024];
+                    int bytesRead;
+                    int totalRead = 0;
+                    while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                        totalRead += bytesRead;
+                        fileOutputStream.write(dataBuffer, 0, bytesRead);
+                        publishProgress("Downloading " + description, "" + (100 * totalRead / filesize));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                connection.disconnect();
+            } catch (Exception a) {
+                a.printStackTrace();
+            }
+        }
 
         public String getMD5Checksum(String filename) throws Exception {
             InputStream fis = openFileInput(filename);
@@ -435,22 +434,22 @@ public class CacheUpdater extends Activity {
         return "File";
     }
 
-	private String getDescription(File ref) {
-		int index = ref.getName().lastIndexOf('.');
-		if (index == -1)
-			return "General";
-		else {
-			String extension = ref.getName().substring(index + 1);
-			if (extension.equalsIgnoreCase("ospr"))
-				return "Graphics";
-			else if (extension.equalsIgnoreCase("wav"))
-				return "Audio";
-			else if (extension.equalsIgnoreCase("orsc"))
-				return "Graphics";
-			else if (extension.equalsIgnoreCase("jar"))
-				return "Executable";
-			else
-				return "General";
-		}
-	}
+    private String getDescription(File ref) {
+        int index = ref.getName().lastIndexOf('.');
+        if (index == -1)
+            return "General";
+        else {
+            String extension = ref.getName().substring(index + 1);
+            if (extension.equalsIgnoreCase("ospr"))
+                return "Graphics";
+            else if (extension.equalsIgnoreCase("wav"))
+                return "Audio";
+            else if (extension.equalsIgnoreCase("orsc"))
+                return "Graphics";
+            else if (extension.equalsIgnoreCase("jar"))
+                return "Executable";
+            else
+                return "General";
+        }
+    }
 }
