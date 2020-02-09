@@ -22,7 +22,7 @@ public class TutorialHandler implements PacketHandler {
 			if (player.getCache().hasKey("tutorial")) {
 				player.getCache().remove("tutorial");
 			}
-			player.teleport(122, 647, false);
+			player.teleport(120, 648, false);
 			player.message("Skipped tutorial, welcome to Lumbridge");
 			ActionSender.sendPlayerOnTutorial(player);
 		}
