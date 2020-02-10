@@ -5331,10 +5331,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2387, -1, -1, 'Teddy', 'A fluffy teddy', '', 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2),
        (2388, 2389, -1, 'Dragon bar', 'it\'s a bar of dragon metal', '', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 100000),
        (2389, -1, 2388, 'Dragon bar', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100000),
-       (2390, -1, -1, 'Chipped Dragon Scale', 'A piece of dragon scale', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 500),
-       (2391, -1, -1, 'Dragon Metal Chain', 'A dragon chain mail reinforced with dragon scales', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1500000),
-       (2392, 2393, -1, 'Dragon Scale Mail', 'A series of connected metal rings', '', 0, 0, 0, 0, 1, 404, 64, 6, 40, 1,
-        65, 0, 0, 0, 0, 50000),
+       (2390, -1, -1, 'Chipped Dragon Scale', 'a piece of dragon scale', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 500),
+       (2391, -1, -1, 'Dragon Metal Chain', 'a loop of dragon metal', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1000),
+       (2392, 2393, -1, 'Dragon Scale Mail', 'a dragon chain mail reinforced with dragon scales', '', 0, 0, 0, 0, 1, 404, 64, 6, 60, 1,
+        95, 10, 6, 0, 0, 1500000),
        (2393, -1, 2392, 'Dragon Scale Mail', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500000);
 
 
