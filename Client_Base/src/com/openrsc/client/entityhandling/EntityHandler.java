@@ -3908,15 +3908,16 @@ public class EntityHandler {
 		items.add(new ItemDef("Half coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2383, 2384));
 
 		//Dwarf miniquest & Dragon Scale Mail
-		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2385));
-		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2386));
-		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:538", false, false, 0, 16777124, false, true, -1, -1, 2387));
+		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:543", false, false, 0, 16777124, false, true, -1, -1, 2385));
+		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:544", false, false, 0, 16777124, false, true, -1, -1, 2386));
+		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:542", false, false, 0, 16777124, false, true, -1, -1, 2387));
 		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 16711748, true, false, 2389, -1, 2388));
 		items.add(new ItemDef("Dragon bar", "Swap this note at any bank for the equivalent item.", "", 100000, 438, "items:438", true, false, 0, 0, true, false, -1, 2388, 2389));
-		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2390));
-		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:kbdscale", true, false, 0, 0, true, false, -1, -1, 2391));
+		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:546", true, false, 0, 0, true, false, -1, -1, 2390));
+		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:547", true, false, 0, 0, true, false, -1, -1, 2391));
 		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, 2393, -1, 2392));
 		items.add(new ItemDef("Dragon Scale Mail", "Swap this note at any bank for the equivalent item.", "", 1500000, 438, "items:438", true, false, 0, 0, true, false, -1, 2392, 2393));
+		items.add(new ItemDef("Dwarf Smithy Note", "Details how to make the Dragon Scale Mail", "read", 1, 234, "items:234", false, false, 0, 0, true, true, -1, -1, 2394));
 	}
 
 	// Bank note items

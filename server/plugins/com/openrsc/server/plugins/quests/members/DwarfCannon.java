@@ -453,22 +453,24 @@ public class DwarfCannon
 						playerTalk(p, n, "i do, and i fixed it");
 						p.message("You hand over the teddy");
 						p.getCache().set("miniquest_dwarf_youth_rescue", 2);
-						p.getInventory().remove(ItemId.TEDDY.id());
+						p.getInventory().remove(ItemId.TEDDY.id(), 1);
 						npcTalk(p, n, "yet again you've proven a friend to us",
 							"i will talk to our best smithy",
 							"he works at the new lava forge deep underground",
 							"as our ally you will have access to its power",
-							"also please take this and read it");
+							"please take this and read it");
 						p.message("Gramat hands you a note");
+						addItem(p, ItemId.DWARF_SMITHY_NOTE.id(), 1);
 						npcTalk(p, n, "if you follow the steps on the note",
-							"you will have something far better than rune");
+							"you will be rewarded in combat");
 						p.message("You have completed the dwarf youth rescue miniquest!");
 					} else {
 						playerTalk(p, n, "i do, but it's damaged",
 							"let me repair it first");
 						npcTalk(p, n, "he loves that teddy",
 							"and i love him",
-							"when you repair it bring to me");
+							"sew it with some needle and thread",
+							"then return to me");
 					}
 					break;
 				case 2:
@@ -491,26 +493,29 @@ public class DwarfCannon
 					"this furnace uses the intense heat of lava",
 					"our enemies will suffer from its forgings");
 		} else if (n.getID() == NpcId.DWARVEN_YOUTH.id()) {
-			if (p.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
-			&& p.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
-				npcTalk(p, n, "have you found teddy?");
-				playerTalk(p, n, "well.. yes?");
-				npcTalk(p, n, "teddy! i'm so happy!",
-					"let me see him!");
-				playerTalk(p, n, "it's too dangerous here",
-					"let's go back first");
-				npcTalk(p, n, "ok. i have extra runes",
-					"please give teddy to my father");
-				p.teleport(271, 3339, true);
-				playerTalk(p, null, "i'd better repair this",
-					"i bet i could sew it",
-					"with a needle and some thread");
-				p.getCache().set("miniquest_dwarf_youth_rescue",1);
-			} else {
-				npcTalk(p, n, "please help me",
-					"i want to return to father",
-					"but I've lost my teddy",
-					"i can't leave him behind");
+			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			if (stage < 1) {
+				if (p.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& p.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
+					npcTalk(p, n, "have you found teddy?");
+					playerTalk(p, n, "well.. yes?");
+					npcTalk(p, n, "teddy! i'm so happy!",
+						"let me see him!");
+					playerTalk(p, n, "it's too dangerous here",
+						"let's go back first");
+					npcTalk(p, n, "ok. i have extra runes",
+						"please give teddy to my father");
+					p.teleport(271, 3339, true);
+					playerTalk(p, null, "i'd better repair this",
+						"i bet i could sew it",
+						"with a needle and some thread");
+					p.getCache().set("miniquest_dwarf_youth_rescue",1);
+				} else {
+					npcTalk(p, n, "please help me",
+						"i want to return to father",
+						"but I've lost my teddy",
+						"i can't leave him behind");
+				}
 			}
 		}
 	}
