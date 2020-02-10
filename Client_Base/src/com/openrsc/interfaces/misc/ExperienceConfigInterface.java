@@ -61,8 +61,6 @@ public final class ExperienceConfigInterface {
 			@Override
 			void handle() {
 				if (!selectSkillMenu) {
-					mc.packetHandler.getClientStream().newPacket(212);
-					mc.packetHandler.getClientStream().finishPacket();
 					setVisible(false);
 				}
 			}

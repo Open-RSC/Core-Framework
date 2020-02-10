@@ -804,12 +804,15 @@ public class DemonSlayer implements QuestInterface,
 							"I'm good at knowing these things");
 					} else if (choice3 == 2) {
 						npcTalk(p, n, "In the scheme of things you are very young");
-						int choice2 = showMenu(p, n,
+						int choice2 = showMenu(p, n, false, //do not send over
 							"Ok but how old are you",
 							"Oh if its in the scheme of things that's ok");
 						if (choice2 == 0) {
-							gypsyDialogue(p, n, GypsyConversation.HOW_OLD);
+							playerTalk(p, n, "Ok but how old are you?");
+							// goes to count the number of legs ...
+							gypsyDialogue(p, n, GypsyConversation.HOW_OLD_TWO);
 						} else if (choice2 == 1) {
+							playerTalk(p, n, "Oh if its in the scheme of things that's ok");
 							npcTalk(p, n, "You show wisdom for one so young");
 						}
 					}
@@ -845,12 +848,13 @@ public class DemonSlayer implements QuestInterface,
 				break;
 			case GypsyConversation.HOW_OLD:
 				npcTalk(p, n, "Older than you imagine");
-				int choice = showMenu(p, n,
+				int choice = showMenu(p, n, false, //do not send over
 					"Believe me, I have a good imagination",
 					"How do you know how old I think you are?",
 					"Oh pretty old then");
 				if (choice == 0) {
 					// Believe me, I have a good imagination
+					playerTalk(p, n, "Believe me, I have a good imagination");
 					npcTalk(p, n, "You seem like just the sort of person",
 						"Who would want their fortune told then");
 					choice = showMenu(p, n, "No, I don't believe in that stuff",
@@ -864,6 +868,7 @@ public class DemonSlayer implements QuestInterface,
 					}
 				} else if (choice == 1) {
 					// How do you know how old I think you are?
+					playerTalk(p, n, "How do you know how old I think you are");
 					npcTalk(p, n, "I have the power to know",
 						"Just as I have the power to foresee the future");
 					choice = showMenu(p, n, "Ok what am I thinking now?",
@@ -881,6 +886,7 @@ public class DemonSlayer implements QuestInterface,
 					}
 				} else if (choice == 2) {
 					// Oh pretty old then
+					playerTalk(p, n, "Oh pretty old then");
 					npcTalk(p, n, "Yes I'm old", "Don't rub it in");
 				}
 				break;
@@ -888,7 +894,7 @@ public class DemonSlayer implements QuestInterface,
 				npcTalk(p, n,
 					"Count the number of legs of the chairs in the blue moon inn",
 					"And multiply that number by seven");
-				playerTalk(p, n, "Err yeah whatever");
+				playerTalk(p, n, "Errr yeah whatever");
 				break;
 			case GypsyConversation.QUEST_START:// Quest Start
 				if (p.getInventory().hasItemId(ItemId.COINS.id()))

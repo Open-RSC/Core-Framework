@@ -79,8 +79,6 @@ public final class DoSkillInterface {
 		this.drawButton(x + width - 35, y + 5, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.packetHandler.getClientStream().newPacket(212);
-				mc.packetHandler.getClientStream().finishPacket();
 				setVisible(false);
 			}
 		});
@@ -139,8 +137,6 @@ public final class DoSkillInterface {
 				&& !rightClickMenu) {
 				mc.getSurface().drawBoxAlpha(curX - (boxWidth - 48) / 2, spriteY - 2, boxWidth, boxHeight, boxColor, 92);
 				if (mc.mouseButtonClick == 1 && boxColor != 0x000000) {
-					mc.packetHandler.getClientStream().newPacket(212);
-					mc.packetHandler.getClientStream().finishPacket();
 					setVisible(false);
 					itemSelected = curItem.getItemID();
 					// send make all
