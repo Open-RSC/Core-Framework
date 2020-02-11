@@ -3918,6 +3918,15 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, 2393, -1, 2392));
 		items.add(new ItemDef("Dragon Scale Mail", "Swap this note at any bank for the equivalent item.", "", 1500000, 438, "items:438", true, false, 0, 0, true, false, -1, 2392, 2393));
 		items.add(new ItemDef("Dwarf Smithy Note", "Details how to make the Dragon Scale Mail", "read", 1, 234, "items:234", false, false, 0, 0, true, true, -1, -1, 2394));
+
+		//New leather items
+		items.add(new ItemDef("Leather chaps", "They seem like decent protection", "", 14, -1, "items:512", false, true, 644, 0, false, false, 2396, -1, 2395));
+		items.add(new ItemDef("Leather chaps", "Swap this note at any bank for the equivalent item.", "", 14, 438, "items:438", true, false, 0, 0, true, false, -1, 2395, 2396));
+		items.add(new ItemDef("Leather top", "Stylish leather top", "", 21, -1, "items:511", false, true, 322, 0, false, false, 2398, -1, 2397));
+		items.add(new ItemDef("Leather top", "Swap this note at any bank for the equivalent item.", "", 21, 438, "items:438", true, false, 0, 0, true, false, -1, 2397, 2398));
+		items.add(new ItemDef("Leather skirt", "A ladies skirt made of leather", "", 14, -1, "items:513", false, true, 128, 0, false, false, 2400, -1, 2399));
+		items.add(new ItemDef("Leather skirt", "Swap this note at any bank for the equivalent item.", "", 14, 438, "items:438", true, false, 0, 0, true, false, -1, 2399, 2400));
+
 	}
 
 	// Bank note items
@@ -5234,6 +5243,14 @@ public class EntityHandler {
 			animations.add(new AnimationDef("elementalstaff", "equipment", 0x642E01, 0, 0, true, false, 0)); //424
 			//fire
 			animations.add(new AnimationDef("elementalstaff", "equipment", 0xD40203, 0, 0, true, false, 0)); //425
+
+			//New Leather Items
+			//Chaps
+			animations.add(new AnimationDef("leatherchaps", "equipment", 0, 0, 0, true, false, 0)); //426
+			//Female Top
+			animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
+			//Female Skirt
+			animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
 		}
 	}
 
