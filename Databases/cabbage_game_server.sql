@@ -5336,10 +5336,13 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2392, 2393, -1, 'Dragon Scale Mail', 'a dragon chain mail reinforced with dragon scales', '', 0, 0, 0, 0, 1, 404, 64, 6, 60, 1,
         95, 10, 6, 0, 0, 1500000),
        (2393, -1, 2392, 'Dragon Scale Mail', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500000),
-       (2394, -1, -1, 'Dwarf Smithy Note', 'Details how to make the Dragon Scale Mail', 'read', 0, 1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1);
-
-
-
+       (2394, -1, -1, 'Dwarf Smithy Note', 'Details how to make the Dragon Scale Mail', 'read', 0, 1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1),
+       (2395, 2396, -1, 'Leather chaps', 'They seem like decent protection', '', 0, 0, 0, 0, 1, 426, 644, 2, 1, 1, 4, 0, 0, 0, 0, 14),
+       (2396, -1, 2395, 'Leather chaps', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
+       (2397, 2398, -1, 'Leather top', 'A stylish leather top', '', 1, 0, 0, 0, 1, 427, 322, 1, 1, 1, 10, 0, 0, 0, 0, 21),
+       (2398, -1, 2397, 'Leather top', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
+       (2399, 2400, -1, 'Leather skirt', 'A ladies skirt made of leather', '', 0, 0, 0, 0, 1, 428, 128, 7, 1, 1, 3, 0, 0, 0, 0, 14),
+       (2400, -1, 2393, 'Leather skirt', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
