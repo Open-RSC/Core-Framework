@@ -6,12 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.*;
 
 
@@ -344,64 +339,42 @@ public class Bank {
 		return true;
 	}
 
-	public void loadPreset(int slot, Blob inventoryItems, Blob equipmentItems) {
-		try {
-			InputStream readBlob = inventoryItems.getBinaryStream();
-			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			int nRead;
-			byte[] data = new byte[1024];
-			while ((nRead = readBlob.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
-			readBlob.close();
-			ByteBuffer blobData = ByteBuffer.wrap(buffer.toByteArray());
-			byte[] itemID = new byte[2];
-			for (int i = 0; i < Inventory.MAX_SIZE; i++) {
-				itemID[0] = blobData.get();
-				if (itemID[0] == -1)
-					continue;
-				itemID[1] = blobData.get();
-				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-				ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
-				if (item == null)
-					continue;
+	public void loadPreset(int slot, byte[] inventoryItems, byte[] equipmentItems) {
+		ByteBuffer blobData = ByteBuffer.wrap(inventoryItems);
+		byte[] itemID = new byte[2];
+		for (int i = 0; i < Inventory.MAX_SIZE; i++) {
+			itemID[0] = blobData.get();
+			if (itemID[0] == -1)
+				continue;
+			itemID[1] = blobData.get();
+			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+			if (item == null)
+				continue;
 
-				presets[slot].inventory[i].setID(itemIDreal);
-				if (item.isStackable())
-					presets[slot].inventory[i].setAmount(blobData.getInt());
-				else
-					presets[slot].inventory[i].setAmount(1);
-			}
+			presets[slot].inventory[i].setID(itemIDreal);
+			if (item.isStackable())
+				presets[slot].inventory[i].setAmount(blobData.getInt());
+			else
+				presets[slot].inventory[i].setAmount(1);
+		}
 
-			readBlob = equipmentItems.getBinaryStream();
-			buffer = new ByteArrayOutputStream();
-			while ((nRead = readBlob.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
+		blobData = ByteBuffer.wrap(equipmentItems);
+		for (int i = 0; i < Equipment.slots; i++) {
+			itemID[0] = blobData.get();
+			if (itemID[0] == -1)
+				continue;
+			itemID[1] = blobData.get();
+			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+			if (item == null)
+				continue;
 
-			blobData = ByteBuffer.wrap(buffer.toByteArray());
-			for (int i = 0; i < Equipment.slots; i++) {
-				itemID[0] = blobData.get();
-				if (itemID[0] == -1)
-					continue;
-				itemID[1] = blobData.get();
-				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-				ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
-				if (item == null)
-					continue;
-
-				presets[slot].equipment[i].setID(itemIDreal);
-				if (item.isStackable())
-					presets[slot].equipment[i].setAmount(blobData.getInt());
-				else
-					presets[slot].equipment[i].setAmount(1);
-			}
-		} catch (IOException a) {
-			a.printStackTrace();
-		} catch (SQLException b) {
-			b.printStackTrace();
+			presets[slot].equipment[i].setID(itemIDreal);
+			if (item.isStackable())
+				presets[slot].equipment[i].setAmount(blobData.getInt());
+			else
+				presets[slot].equipment[i].setAmount(1);
 		}
 	}
 

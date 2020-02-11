@@ -1,6 +1,12 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
@@ -16,7 +22,6 @@ import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
@@ -26,8 +31,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.sql.query.logs.ChatLog;
-import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -535,11 +538,15 @@ public final class Admins implements CommandListener {
 			}
 
 			ItemLoc item = new ItemLoc(id, x, y, amount, respawnTime);
-			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "grounditems`(`id`, `x`, `y`, `amount`, `respawn`) VALUES ('"
-					+ item.getId() + "','" + item.getX() + "','" + item.getY() + "','" + item.getAmount()
-					+ "','" + item.getRespawnTime() + "')");
+
+			try {
+				player.getWorld().getServer().getDatabase().addItemSpawn(item);
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
+				player.message("Database Error! " + ex.getMessage());
+				return;
+			}
+
 			player.getWorld().registerItem(new GroundItem(player.getWorld(), item));
 			player.message(messagePrefix + "Added ground item to database: " + player.getWorld().getServer().getEntityHandler().getItemDef(item.getId()).getName() + " with item ID " + item.getId() + " at " + itemLocation);
 		} else if (cmd.equalsIgnoreCase("rgi") || cmd.equalsIgnoreCase("rgitem") || cmd.equalsIgnoreCase("rgrounditem") || cmd.equalsIgnoreCase("removegi") || cmd.equalsIgnoreCase("removegitem") || cmd.equalsIgnoreCase("removegrounditem")) {
@@ -585,11 +592,15 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
+			try {
+				player.getWorld().getServer().getDatabase().removeItemSpawn(itemr.getLoc());
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
+				player.message("Database Error! " + ex.getMessage());
+				return;
+			}
+
 			player.message(messagePrefix + "Removed ground item from database: " + itemr.getDef().getName() + " with item ID " + itemr.getID());
-			player.getWorld().getServer().getDatabaseConnection()
-				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "grounditems` WHERE `x` = '" + itemr.getX() + "' AND `y` =  '" + itemr.getY()
-					+ "' AND `id` = '" + itemr.getID() + "'");
 			player.getWorld().unregisterItem(itemr);
 		} else if (cmd.equalsIgnoreCase("shutdown")) {
 			int seconds = 0;

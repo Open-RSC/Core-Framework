@@ -8,7 +8,7 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.query.logs.GenericLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class ItemDropHandler implements PacketHandler {
