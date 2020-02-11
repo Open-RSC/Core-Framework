@@ -1258,7 +1258,7 @@ public class SpellHandler implements PacketHandler {
 				player.teleport(312, 552, true);
 				break;
 			case 22: // Camelot
-				player.teleport(465, 456, true);
+				player.teleport(456, 456, true);
 				break;
 			case 26: // Ardougne
 				player.teleport(588, 621, true);

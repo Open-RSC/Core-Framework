@@ -172,6 +172,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_curstats`
     `cur_agility`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
     `cur_thieving`   tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
     `cur_runecraft`  tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
     PRIMARY KEY (`id`),
     KEY `playerID` (`playerID`)
 ) ENGINE = InnoDB
@@ -214,6 +215,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_experience`
     `exp_agility`    int(9) UNSIGNED  NOT NULL DEFAULT 0,
     `exp_thieving`   int(9) UNSIGNED  NOT NULL DEFAULT 0,
     `exp_runecraft`  int(9) UNSIGNED  NOT NULL DEFAULT 0,
+    `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `playerID` (`playerID`)
 ) ENGINE = InnoDB

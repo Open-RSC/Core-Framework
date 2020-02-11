@@ -26,9 +26,11 @@ public class StatRestorationEvent extends GameTickEvent {
 	private AtomicReference<Boolean> restoringHits = new AtomicReference<Boolean>(false);
 	private long lastStatRestoration = System.currentTimeMillis();
 	private long lastHitRestoration = System.currentTimeMillis();
+	private long numberSkills;
 
 	public StatRestorationEvent(World world, Mob mob) {
 		super(world, mob, 1, "Stat Restoration Event");
+		numberSkills = world.getServer().getConstants().getSkills().getSkillsCount();
 	}
 
 	@Override
@@ -38,8 +40,8 @@ public class StatRestorationEvent extends GameTickEvent {
 		boolean restoredHits = false;
 
 		// Add new skills to the restoration cycle
-		for (int skillIndex = 0; skillIndex < 18; skillIndex++) {
-			if (skillIndex != com.openrsc.server.constants.Skills.PRAYER) {
+		for (int skillIndex = 0; skillIndex < numberSkills; skillIndex++) {
+			if (skillIndex != Skills.PRAYER) {
 				checkAndStartRestoration(skillIndex);
 			}
 		}

@@ -12,12 +12,12 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SandPit implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
-	
+
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		return obj.getID() == 302 && item.getID() == ItemId.BUCKET.id();
 	}
-	
+
 	@Override
 	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
 		final int itemID = item.getID();
@@ -29,11 +29,11 @@ InvUseOnObjectExecutiveListener {
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
-				if (removeItem(getOwner(), itemID, 1)) {
+				if (getOwner().getInventory().hasInInventory(itemID)) {
 					showBubble(getOwner(), item);
 					sleep(300);
 					getOwner().message("you fill the bucket with sand");
-					addItem(getOwner(), refilledID, 1);
+					getOwner().getInventory().replace(itemID, refilledID,true);
 				} else {
 					interrupt();
 				}

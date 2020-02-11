@@ -3,13 +3,10 @@ package com.loader.openrsc.frame.elements;
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.JCheckBox;
 
 public class CheckboxButton extends JCheckBox implements MouseListener {
 	public CheckboxButton(final String text, final Rectangle bounds) {
@@ -19,7 +16,7 @@ public class CheckboxButton extends JCheckBox implements MouseListener {
 		this.setForeground(Color.WHITE);
 		this.setIcon(Utils.getImage("unchecked.png"));
 		this.setSelectedIcon(Utils.getImage("checked.png"));
-		this.setFont(Utils.getFont("Exo-Regular.otf", 0, 16.0f));
+		this.setFont(Utils.getFont("Helvetica.otf", 0, 16.0f));
 		this.addMouseListener(this);
 		this.setFocusable(false);
 		this.setBounds(bounds);

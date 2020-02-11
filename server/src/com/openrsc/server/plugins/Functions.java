@@ -241,6 +241,11 @@ public class Functions {
 		return false;
 	}
 
+	public static boolean startsWithVowel(String testString) {
+		String vowels = "aeiou";
+		return vowels.indexOf(Character.toLowerCase(testString.charAt(0))) != -1;
+	}
+
 	public static void kill(Npc mob, Player killedBy) {
 		mob.killedBy(killedBy);
 	}

@@ -34,7 +34,6 @@ public class DragonFireBreath implements OnCombatStartScript {
 		if (attacker.isNpc() || victim.getID() == NpcId.DRAGON.id() || victim.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 			player.playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 			int maxHit = 65; // ELVARG & KING BLACK DRAGON - MAXIMUM HIT FOR BOTH
-			boolean wearingShield = false;
 			int percentage;
 			int fireDamage;
 			if (dragon.getID() == NpcId.BABY_BLUE_DRAGON.id()) {
@@ -44,18 +43,23 @@ public class DragonFireBreath implements OnCombatStartScript {
 			} else if (dragon.getID() == NpcId.RED_DRAGON.id() || dragon.getID() == NpcId.BLACK_DRAGON.id()) {
 				maxHit = 55; // 50+
 			}
+			double reduction = 1.0;
 			if (player.getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
-				maxHit = (int) Math.ceil(maxHit * 0.2D); // shield lowers by about 80% of the max
+				reduction -= 0.8;// shield lowers by about 80% of the max
 				player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
-				wearingShield = true;
 			}
+			if (player.getInventory().wielding(ItemId.DRAGON_SCALE_MAIL.id())) {
+				reduction -= 0.1;
+				player.playerServerMessage(MessageType.QUEST, "Your scale mail prevents some of the damage from the flames");
+			}
+			maxHit = (int) Math.ceil(maxHit * reduction);
 			if (player.isRanging() && (dragon.getID() == NpcId.DRAGON.id() || dragon.getID() == NpcId.KING_BLACK_DRAGON.id())) {
-				if (!wearingShield) {
+				if (reduction == 1.0) {
 					percentage = 20;
 				} else if (dragon.getID() == NpcId.DRAGON.id()) {
-					percentage = 10;
+					percentage = 8 + (int)(10 * reduction);
 				} else if (dragon.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-					percentage = 4;
+					percentage = 3 + (int)(5 * reduction);
 				} else {
 					percentage = 0;
 				}
@@ -67,7 +71,7 @@ public class DragonFireBreath implements OnCombatStartScript {
 				player.message("You are fried");
 			}
 			player.damage(fireDamage);
-			
+
 			//reduce ranged level (case for KBD if engaging with melee or ranging)
 			if (dragon.getID() == NpcId.KING_BLACK_DRAGON.id() && (player.isRanging() || attacker.isPlayer())) {
 				int newLevel = getCurrentLevel(player, Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(player);

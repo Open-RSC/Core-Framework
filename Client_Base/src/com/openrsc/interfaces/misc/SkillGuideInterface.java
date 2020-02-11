@@ -72,8 +72,6 @@ public final class SkillGuideInterface {
 		this.drawButton(x + 394, y + 6, 30, 30, "X", 5, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.packetHandler.getClientStream().newPacket(212);
-				mc.packetHandler.getClientStream().finishPacket();
 				skillGuide.resetScrollIndex(skillGuideScroll);
 				curTab = 0;
 				setVisible(false);
@@ -803,6 +801,7 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(410, "45", "White Wolf Mountain vine climb"));
 				skillItems.add(new SkillItem(410, "49", "Yanille Agility Dungeon pipe"));
 				skillItems.add(new SkillItem(410, "50", "Kharazi Jungle cave entrance"));
+				skillItems.add(new SkillItem(410, "55", "Entrana wall rubble"));
 				skillItems.add(new SkillItem(410, "57", "Yanille Agility Dungeon rope swing"));
 				skillItems.add(new SkillItem(410, "67", "Yanille Agility Dungeon pile of rubble"));
 				skillItems.add(new SkillItem(410, "70", "Taverly Dungeon pipe crawl"));
@@ -896,6 +895,48 @@ public final class SkillGuideInterface {
 				skillItems.add(new SkillItem(32, "95","Water Rune x6"));
 				skillItems.add(new SkillItem(35, "98","Mind Rune x8"));
 				skillItems.add(new SkillItem(33, "99","Air Rune x10"));
+			}
+		}
+		if (mc.getSkillGuideChosen().equalsIgnoreCase("Harvesting")) {
+			if (curTab == 0) {
+				skillItems.add(new SkillItem(348, "1","Potato"));
+				skillItems.add(new SkillItem(241, "5","Onion"));
+				skillItems.add(new SkillItem(18, "7","Cabbage"));
+				skillItems.add(new SkillItem(218, "9","Garlic"));
+				skillItems.add(new SkillItem(320, "12","Tomato"));
+				skillItems.add(new SkillItem(2367, "20","Corn"));
+				skillItems.add(new SkillItem(2365, "30","Red Cabbage"));
+				skillItems.add(new SkillItem(2369, "47","White Pumpkin"));
+			} else if (curTab == 1) {
+				skillItems.add(new SkillItem(855, "15","Lemon Tree"));
+				skillItems.add(new SkillItem(863, "21","Lime Tree"));
+				skillItems.add(new SkillItem(2357, "27","Apple Tree"));
+				skillItems.add(new SkillItem(249, "33","Banana Palm"));
+				skillItems.add(new SkillItem(857, "39","Orange Tree"));
+				skillItems.add(new SkillItem(2359, "46","Grapefruit Tree"));
+				skillItems.add(new SkillItem(861, "51","Pineapple Plant"));
+				skillItems.add(new SkillItem(2361, "57","Papaya Palm"));
+				skillItems.add(new SkillItem(2363, "68","Coconut Palm"));
+			} else if (curTab == 2) {
+				skillItems.add(new SkillItem(236, "10","Redberry Bush"));
+				skillItems.add(new SkillItem(55, "22","Cadavaberry Bush"));
+				skillItems.add(new SkillItem(765, "36","Dwellberry Bush"));
+				skillItems.add(new SkillItem(936, "48","Jangerberry Bush"));
+				skillItems.add(new SkillItem(471, "59","Whiteberry Bush"));
+			} else if (curTab == 3) {
+				skillItems.add(new SkillItem(165, "9","Herb - Guam (chance)"));
+				skillItems.add(new SkillItem(435, "14","Herb - Marrentil (chance)"));
+				skillItems.add(new SkillItem(436, "19","Herb - Tarromin (chance)"));
+				skillItems.add(new SkillItem(622, "23","Sea weed"));
+				skillItems.add(new SkillItem(437, "26","Herb - Harralander (chance)"));
+				skillItems.add(new SkillItem(438, "32","Herb - Ranarr Weed (chance)"));
+				skillItems.add(new SkillItem(220, "42","Limpwurt Root"));
+				skillItems.add(new SkillItem(439, "44","Herb - Irit Leaf (chance)"));
+				skillItems.add(new SkillItem(440, "50","Herb - Avantoe (chance)"));
+				skillItems.add(new SkillItem(441, "56","Herb - Kwuarm (chance)"));
+				skillItems.add(new SkillItem(469, "61","Snape Grass"));
+				skillItems.add(new SkillItem(442, "67","Herb - Cadantine (chance)"));
+				skillItems.add(new SkillItem(443, "79","Herb - Dwarf Weed (chance)"));
 			}
 		}
 	}

@@ -57,6 +57,7 @@ public final class EntityHandler {
 	private HashMap<Point, TelePoint> objectTelePoints;
 	private HashMap<Integer, ObjectWoodcuttingDef> objectWoodcutting;
 	private HashMap<Integer, ObjectRunecraftingDef> objectRunecrafting;
+	private HashMap<Integer, ObjectHarvestingDef> objectHarvesting;
 	private PrayerDef[] prayers;
 	private TileDef[] tiles;
 
@@ -100,6 +101,7 @@ public final class EntityHandler {
 		objectWoodcutting = null;
 		objectRunecrafting = null;
 		objectFishing = null;
+		objectHarvesting = null;
 		objectTelePoints = null;
 		certers = null;
 	}
@@ -131,6 +133,7 @@ public final class EntityHandler {
 		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load("defs/extras/ObjectWoodcutting.xml.gz");
 		objectRunecrafting = (HashMap<Integer, ObjectRunecraftingDef>) getPersistenceManager().load("defs/extras/ObjectRunecrafting.xml.gz");
 		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load("defs/extras/ObjectFishing.xml.gz");
+		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml.gz");
 		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml.gz");
 		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml.gz");
 	}
@@ -447,6 +450,14 @@ public final class EntityHandler {
 			return null;
 		}
 		return defs[click];
+	}
+
+	/**
+	 * @param id the entities ID
+	 * @return the ObjectHarvestingDef with the given ID
+	 */
+	public ObjectHarvestingDef getObjectHarvestingDef(int id) {
+		return objectHarvesting.get(id);
 	}
 
 	/**

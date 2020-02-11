@@ -12,10 +12,10 @@ public class Group {
 	public static final int ADMIN = 1;
 	public static final int SUPER_MOD = 2;
 	public static final int MOD = 3;
-	public static final int PLAYER_MOD = 4;
 	public static final int DEV = 8;
 	public static final int EVENT = 9;
 	public static final int USER = 10;
+	public static final int PLAYER_MOD = 11;
 
 	public static final int DEFAULT_GROUP = Group.USER;
 
@@ -26,10 +26,10 @@ public class Group {
 		GROUP_NAMES.put(ADMIN, "Admin");
 		GROUP_NAMES.put(SUPER_MOD, "Super Moderator");
 		GROUP_NAMES.put(MOD, "Moderator");
-		GROUP_NAMES.put(PLAYER_MOD, "Player Moderator");
 		GROUP_NAMES.put(DEV, "Developer");
 		GROUP_NAMES.put(EVENT, "Event");
 		GROUP_NAMES.put(USER, "User");
+		GROUP_NAMES.put(PLAYER_MOD, "Player Moderator");
 	}
 
 	public static String getNameColour(World world, int groupID) {
@@ -44,7 +44,7 @@ public class Group {
 			case SUPER_MOD:
 				return "@blu@";
 			case MOD:
-				return "@bl1";
+				return "@bl1@";
 			case DEV:
 				return "@red@";
 			case EVENT:

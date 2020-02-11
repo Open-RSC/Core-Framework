@@ -4,7 +4,7 @@
 
 First, download the latest release of Open RSC Single Player as this is designed for Windows with virtually zero set up required:
 
-https://gitlab.openrsc.com/open-rsc/Single-Player/-/releases
+https://orsc.dev/open-rsc/Single-Player/-/releases
 
 ## Installing Java
 

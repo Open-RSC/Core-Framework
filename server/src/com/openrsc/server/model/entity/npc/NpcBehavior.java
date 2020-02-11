@@ -176,10 +176,10 @@ public class NpcBehavior {
 			} else if (!npc.inCombat()) {
 				npc.setExecutedAggroScript(false);
 				if (npc.getDef().isAggressive() &&
-					((lastTarget != null &&
-						lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)) ||
-						npc.getLocation().inWilderness())
-				) {
+					(lastTarget != null &&
+						(lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) ||
+						(lastTarget.getLocation().inWilderness() && npc.getLocation().inWilderness()))
+				)) {
 					state = State.AGGRO;
 					if (lastTarget != null)
 						target = lastTarget;
@@ -268,6 +268,12 @@ public class NpcBehavior {
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
+	private boolean shouldContinueChase(final Npc n, final Mob p) {
+		return p.getLocation().inWilderness()
+			|| (!p.getLocation().inWilderness() && !npc.getLocation().inWilderness() &&
+			p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1));
+	}
+
 	private boolean canAggro(final Mob p) {
 		boolean outOfBounds = !p.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
 			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
@@ -278,7 +284,8 @@ public class NpcBehavior {
 			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
 
 		boolean shouldAttack = (npc.getDef().isAggressive() && (p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-			|| npc.getLocation().inWilderness())) || (npc.getLastOpponent() == p && !shouldRetreat(npc));
+			|| (p.getLocation().inWilderness() && npc.getLocation().inWilderness())))
+			|| (npc.getLastOpponent() == p && shouldContinueChase(npc, p) && !shouldRetreat(npc));
 
 		boolean closeEnough = npc.canReach(p);
 

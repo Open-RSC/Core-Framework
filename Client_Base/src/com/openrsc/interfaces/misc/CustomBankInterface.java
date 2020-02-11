@@ -7,12 +7,13 @@ import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
+import orsc.util.BankUtil;
 import orsc.util.GenUtil;
 
 import java.util.ArrayList;
 
 import static orsc.Config.*;
-import static orsc.osConfig.*;
+import static orsc.osConfig.C_MENU_SIZE;
 
 public final class CustomBankInterface extends BankInterface {
 	private static int fontSize = Config.isAndroid() ? C_MENU_SIZE : 1;
@@ -38,6 +39,7 @@ public final class CustomBankInterface extends BankInterface {
 	private int draggingInventoryID = -1;
 	private int draggingBankSlot = -1;
 	private boolean swapNoteMode;
+	private boolean swapCertMode;
 	private int x, y;
 	private int[] bankItemSelector = {0, 0, 40, 80, 120, 160, 200};
 	private BankTabShow bankTabShow = BankTabShow.FIRST_ITEM_IN_TAB;
@@ -849,10 +851,14 @@ public final class CustomBankInterface extends BankInterface {
 					selectedBankSlot = -1;
 				}
 			} else if (selectedInventorySlot > -1) {
+				final boolean L_WANT_CERT_DEPOSIT = Config.S_WANT_CERT_DEPOSIT && BankUtil.isCert(mc.getInventoryItems()[selectedInventorySlot]);
 				// Recalcs menu height and width based on fontSize
-				menuHeight = fontSizeHeight * 6;
+				menuHeight = fontSizeHeight * (L_WANT_CERT_DEPOSIT ? 8 : 6);
 
 				menuWidth = mc.getSurface().stringWidth(fontSize, "Deposit-All") + 8;
+				if (BankUtil.isCert(mc.getInventoryItems()[selectedInventorySlot])) {
+					menuWidth = mc.getSurface().stringWidth(fontSize, "Uncert+Deposit-All") + 8;
+				}
 				int checkMenuWidth = mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(mc.getInventoryItems()[selectedInventorySlot]).getName()) + 8;
 				if (menuWidth < checkMenuWidth) {
 					menuWidth = checkMenuWidth;
@@ -911,6 +917,7 @@ public final class CustomBankInterface extends BankInterface {
 						&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 5 + 15) {
 						i5 = 0xFDFF21;
 						if (mc.getMouseClick() == 1) {
+							tryChangeCertMode(false);
 							mc.showItemModX(InputXPrompt.bankDepositX, InputXAction.BANK_DEPOSIT, true);
 							mc.setMouseClick(0);
 							rightClickMenu = false;
@@ -924,12 +931,35 @@ public final class CustomBankInterface extends BankInterface {
 							sendDeposit(Integer.MAX_VALUE);
 						}
 					}
+					int i7 = 0xffffff;
+					if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 6 + 16
+						&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 7 + 15) {
+						i7 = 0xFDFF21;
+						if (mc.getMouseClick() == 1) {
+							tryChangeCertMode(true);
+							mc.showItemModX(InputXPrompt.bankDepositX, InputXAction.BANK_DEPOSIT, true);
+							mc.setMouseClick(0);
+							rightClickMenu = false;
+						}
+					}
+					int i8 = 0xffffff;
+					if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 7 + 16
+						&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 8 + 15) {
+						i8 = 0xFDFF21;
+						if (mc.getMouseClick() == 1) {
+							sendDeposit(Integer.MAX_VALUE, true);
+						}
+					}
 					drawString("Deposit-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight + 15, fontSize, i);
 					drawString("Deposit-5", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 2 + 15, fontSize, is);
 					drawString("Deposit-10", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 3 + 15, fontSize, i3);
 					drawString("Deposit-50", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 4 + 15, fontSize, i4);
 					drawString("Deposit-X", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 5 + 15, fontSize, i5);
 					drawString("Deposit-All", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 6 + 15, fontSize, i6);
+					if (L_WANT_CERT_DEPOSIT) {
+						drawString("Uncert+Deposit-X", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 7 + 15, fontSize, i7);
+						drawString("Uncert+Deposit-All", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 8 + 15, fontSize, i8);
+					}
 				} else {
 					rightClickMenu = false;
 					selectedInventorySlot = -1;
@@ -975,6 +1005,28 @@ public final class CustomBankInterface extends BankInterface {
 		return true;
 	}
 
+	private void tryChangeCertMode(boolean mode) {
+		if (swapCertMode != mode) {
+			sendCertMode(mode);
+			swapCertMode = mode;
+		}
+	}
+
+	public boolean getUncertMode() {
+		return swapCertMode;
+	}
+
+	public void resetUncertMode() {
+		swapCertMode = false;
+	}
+
+	private void sendCertMode(boolean mode) {
+		mc.packetHandler.getClientStream().newPacket(199);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
+		mc.packetHandler.getClientStream().writeBuffer1.putByte(mode ? 1 : 0);
+		mc.packetHandler.getClientStream().finishPacket();
+	}
+
 	private void sendNoteMode() {
 		mc.packetHandler.getClientStream().newPacket(199);
 		mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
@@ -1004,6 +1056,11 @@ public final class CustomBankInterface extends BankInterface {
 	}
 
 	public void sendDeposit(int i) {
+		this.sendDeposit(i, false);
+	}
+
+	public void sendDeposit(int i, boolean uncertMode) {
+		tryChangeCertMode(uncertMode);
 		if (Config.S_WANT_CUSTOM_BANKS) {
 			mc.packetHandler.getClientStream().newPacket(23);
 			mc.packetHandler.getClientStream().writeBuffer1.putShort(mc.getInventoryItems()[selectedInventorySlot]);
@@ -1017,6 +1074,9 @@ public final class CustomBankInterface extends BankInterface {
 			mc.setMouseButtonDown(0);
 			if (mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot]) < 1) {
 				selectedInventorySlot = -1;
+			}
+			if (swapCertMode && BankUtil.isCert(mc.getInventoryItems()[selectedInventorySlot])) {
+				if (!bankItems.contains(BankUtil.uncertedID(mc.getInventoryItems()[selectedInventorySlot]))) this.selectedBankSlot = -1;
 			}
 		} else {
 			// Authentic Bank Deposit

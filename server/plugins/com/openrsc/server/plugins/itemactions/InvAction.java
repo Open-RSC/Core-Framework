@@ -28,7 +28,8 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			ItemId.DIGSITE_SCROLL.id(), ItemId.ASTROLOGY_BOOK.id(), ItemId.STONE_TABLET.id(),
 			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id(), ItemId.NULODIONS_NOTES.id(), ItemId.OLD_JOURNAL.id(),
 			ItemId.BURNTPIE.id(), ItemId.BURNT_STEW.id(), ItemId.BURNT_CURRY.id(),
-			ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.SPADE.id());
+			ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.SPADE.id(),
+			ItemId.DWARF_SMITHY_NOTE.id());
 	}
 
 	@Override
@@ -133,6 +134,8 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		}
 		else if (id == ItemId.NULODIONS_NOTES.id()) {
 			handleNulodionsNotes(player);
+		} else if (id == ItemId.DWARF_SMITHY_NOTE.id()) {
+			handleDwarfSmithyNote(player);
 		}
 		else if (id == ItemId.OLD_JOURNAL.id()) {
 			handleOldJournal(player);
@@ -670,7 +673,17 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			+ "The bars must be heated in a furnace and used with the cannon ball mould.% %"
 			+ "Due to the cannon ball's extreame weight only so many can be carried before one must rest", true);
 	}
-
+	private void handleDwarfSmithyNote(Player player) {
+		player.message("the note reads....");
+		ActionSender.sendBox(player, "How to obtain the Dragon Scale Mail% %"
+			+ "Required Items:% %"
+			+ "500 Dragon Metal Chains% "
+			+ "150 Chipped Dragon Scales% %"
+			+ "Dragon metal chains can be smithed(req 90) from dragon metal bars (one bar -> 50 chains)% "
+			+ "Speak to the dwarven smithy for details to obtain dragon bars% %"
+			+ "Chipped dragon scales are crafted(req 90, chisel) from King Black Dragon scales% %"
+			+ "One all items are prepared, seek out Wayne in Falador", true);
+	}
 	private void handleOldJournal(Player player) {
 		message(player, "the journal is old and covered in dust",
 			"inside are several chapters...");

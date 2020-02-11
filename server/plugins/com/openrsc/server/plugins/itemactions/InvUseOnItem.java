@@ -125,6 +125,14 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			return;
 		}
 
+		else if (compareItemsIds(item1, item2, ItemId.COCONUT.id(), ItemId.MACHETTE.id())) {
+			if (player.getInventory().remove(new Item(ItemId.COCONUT.id())) > -1) {
+				player.message("You slice open the coconut with the machette");
+				player.getInventory().add(new Item(ItemId.HALF_COCONUT.id()));
+			}
+			return;
+		}
+
 
 		/*
 		 * Combine Dyes
@@ -296,6 +304,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				|| compareItemsIds(item1, item2, ItemId.RAW_CHICKEN.id(), ItemId.BOWL_OF_WATER.id())
 				|| compareItemsIds(item1, item2, ItemId.RAW_RAT_MEAT.id(), ItemId.BOWL_OF_WATER.id())
 				|| compareItemsIds(item1, item2, ItemId.RAW_BEAR_MEAT.id(), ItemId.BOWL_OF_WATER.id()))
+			return true;
+		else if (compareItemsIds(item1, item2, ItemId.COCONUT.id(), ItemId.MACHETTE.id()))
 			return true;
 		/*
 		 * prince ali rescue dye wig and yellow die to blond wig

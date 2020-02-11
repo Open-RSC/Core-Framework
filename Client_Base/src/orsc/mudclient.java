@@ -5356,7 +5356,7 @@ public final class mudclient implements Runnable {
 							if (intOverflowCheck < Integer.MAX_VALUE) {
 								var4 = Integer.parseInt(str);
 							}
-							bank.sendDeposit(var4);
+							bank.sendDeposit(var4, this.bank.getUncertMode());
 						}
 					} catch (NumberFormatException var9) {
 						System.out.println("Deposit X number format exception: " + var9);
@@ -13929,6 +13929,8 @@ public final class mudclient implements Runnable {
 				MessageHistory.messageHistoryType[j] = MessageType.GAME;
 			}
 
+			bank.resetUncertMode();
+
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.UD(" + var1 + ')');
 		}
@@ -15356,6 +15358,7 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
 			System.out.println(S_WANT_PK_BOTS + " 64");
+			System.out.println(Config.S_WANT_HARVESTING + " 65");
 		}
 		try {
 			this.loadGameConfig(false);
@@ -16252,6 +16255,11 @@ public final class mudclient implements Runnable {
 		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
+		} else if (skillGuideChosen.equalsIgnoreCase("Harvesting")) {
+			skillGuideChosenTabs.add("Allotments");
+			skillGuideChosenTabs.add("Fruits");
+			skillGuideChosenTabs.add("Bushes");
+			skillGuideChosenTabs.add("Herbs");
 		}
 	}
 
@@ -16333,6 +16341,8 @@ public final class mudclient implements Runnable {
 
 		if (S_WANT_RUNECRAFTING)
 			addSkill("Runecrafting", "Runecraft");
+		if (S_WANT_HARVESTING)
+			addSkill("Harvesting");
 	}
 
 	private void addSkill(String skillname) {

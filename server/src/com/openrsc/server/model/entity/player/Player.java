@@ -1710,8 +1710,19 @@ public final class Player extends Mob {
 		return groupID == Group.EVENT || isMod() || isDev();
 	}
 
-	public boolean isStaff() {
-		return isEvent() || isPlayerMod();
+	public boolean hasElevatedPriveledges() {
+		switch (groupID) {
+			case Group.OWNER:
+			case Group.ADMIN:
+			case Group.SUPER_MOD:
+			case Group.MOD:
+				return true;
+		}
+		return false;
+	}
+
+	public boolean isDefaultUser() {
+		return groupID == Group.DEFAULT_GROUP;
 	}
 
 	public boolean isChangingAppearance() {
@@ -1877,7 +1888,7 @@ public final class Player extends Mob {
 		if (stake) {
 			getDuel().dropOnDeath();
 		} else {
-			if (!isStaff())
+			if (!hasElevatedPriveledges())
 				getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(IronmanMode.Hardcore.id())) {
@@ -1890,9 +1901,11 @@ public final class Player extends Mob {
 		this.setLastOpponent(null);
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
-			setLocation(Point.location(122, 647), true);
+			setLocation(Point.location(120, 648), true);
+			face(120, 643);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
+			face(getCache().getInt("death_location_x"), getCache().getInt("death_location_y") - 5);
 		}
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);
@@ -2346,9 +2359,9 @@ public final class Player extends Mob {
 				}
 
 				if (bed) {
-					getOwner().sleepStateFatigue -= 33000;
+					getOwner().sleepStateFatigue -= 42000;
 				} else {
-					getOwner().sleepStateFatigue -= 8250;
+					getOwner().sleepStateFatigue -= 8400;
 				}
 
 				if (getOwner().sleepStateFatigue < 0) {
@@ -3165,7 +3178,7 @@ public final class Player extends Mob {
 				if (hitter.isPlayer()) {
 					((Player) hitter).resetAll();
 				}
-				this.teleport(122, 647, false);
+				this.teleport(120, 648, false);
 				this.message("Your ring of Life shines brightly");
 				this.getInventory().shatter(ItemId.RING_OF_LIFE.id());
 				return true;

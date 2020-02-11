@@ -62,7 +62,7 @@ backup:
 
 # Call via "sudo make restore name=20191017-0226-EDT-cabbage.zip db=cabbage"
 restore:
-	unzip -p Backups/${name} | sudo docker exec -i mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db}
+	unzip -p Backups/${name} | sudo docker exec -i mysql mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db}
 
 # Call via "sudo clear-backups days=90"
 clear-backups:

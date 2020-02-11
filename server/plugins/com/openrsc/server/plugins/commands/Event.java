@@ -120,7 +120,7 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not teleport a staff member of equal or greater rank.");
 				return;
 			}
@@ -199,7 +199,7 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not return a staff member of equal or greater rank.");
 				return;
 			}
@@ -231,12 +231,12 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && !player.isSuperMod()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && !player.isSuperMod()) {
 				player.message(messagePrefix + "You can not make other users invisible.");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not change the invisible state of a staff member of equal or greater rank.");
 				return;
 			}
@@ -280,12 +280,12 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && !player.isSuperMod()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && !player.isSuperMod()) {
 				player.message(messagePrefix + "You can not make other users invisible.");
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not change the invulnerable state of a staff member of equal or greater rank.");
 				return;
 			}
@@ -687,7 +687,7 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
 				return;
 			}
@@ -838,7 +838,7 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 				return;
 			}
 
-			if(p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if(!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
 				return;
 			}

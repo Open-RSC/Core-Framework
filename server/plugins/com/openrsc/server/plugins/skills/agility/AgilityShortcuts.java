@@ -41,7 +41,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 	private static final int YANILLE_WATCHTOWER_HANDHOLDS = 658;
 	private static final int TAVERLY_PIPE = 1236;
 	private static final int TAVERLY_PIPE_RETURN = 1237;
-
+	private static final int ENTRANA_RUBBLE = 1286;
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command,
@@ -65,7 +65,8 @@ public class AgilityShortcuts implements ObjectActionListener,
 			SHILO_VILLAGE_ROCKS_TO_BRIDGE,
 			SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP,
 			TAVERLY_PIPE,
-			TAVERLY_PIPE_RETURN);
+			TAVERLY_PIPE_RETURN,
+			ENTRANA_RUBBLE);
 	}
 
 	@Override
@@ -559,6 +560,29 @@ public class AgilityShortcuts implements ObjectActionListener,
 			p.incExp(Skills.AGILITY, 30, true);
 			p.setBusy(false);
 			break;
+			case ENTRANA_RUBBLE:
+				if (getCurrentLevel(p, Skills.AGILITY) < 55) {
+					p.message("You need an agility level of 55 to climb the rubble");
+					p.setBusy(false);
+					return;
+				}
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (p.getFatigue() >= p.MAX_FATIGUE) {
+						p.message("You are too tired to climb the rubble");
+						p.setBusy(false);
+						return;
+					}
+				}
+				sleep(p.getWorld().getServer().getConfig().GAME_TICK);
+				if (p.getLocation().getY() < 550) {
+					movePlayer(p, 434, 551);
+					p.incExp(Skills.AGILITY, 15, true);
+				} else {
+					movePlayer(p, 434, 549);
+					p.incExp(Skills.AGILITY, 15, true);
+				}
+				p.setBusy(false);
+				break;
 		}
 
 		p.setBusy(false);

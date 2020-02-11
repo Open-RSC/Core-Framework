@@ -13,7 +13,7 @@ today! Here are the guidelines we'd like you to follow:
 ## <a name="submit-pr"></a> Merge Request Submission Guidelines
 Before you submit your merge request consider the following guidelines:
 
-* Search [GitLab](https://gitlab.openrsc.com/open-rsc/Game/merge_requests) for an open or closed Merge Request
+* Search [GitLab](https://orsc.dev/open-rsc/Game/merge_requests) for an open or closed Merge Request
   that relates to your submission. You don't want to duplicate effort.
 * Create the [development environment](#install)
 * Make your changes in a new git branch:
@@ -105,8 +105,8 @@ If you choose to install everything manually and not use the set up scripts, the
 ## <a name="pre"></a> Before You Start:
 
 1. Download RSC+ to use for replaying authentic content: https://github.com/OrN/rscplus
-2. Clone the Game repo and set up as you wish: https://gitlab.openrsc.com/open-rsc/Game
-3. Download any replays you need: https://gitlab.openrsc.com/open-rsc/RSC-Plus-Replays
+2. Clone the Game repo and set up as you wish: https://orsc.dev/open-rsc/Game
+3. Download any replays you need: https://orsc.dev/open-rsc/RSC-Plus-Replays
 
 ## <a name="standards"></a> Code Standards:
 
