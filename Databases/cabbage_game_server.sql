@@ -5335,7 +5335,9 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2391, -1, -1, 'Dragon Metal Chain', 'a loop of dragon metal', '', 0, 1, 1, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1000),
        (2392, 2393, -1, 'Dragon Scale Mail', 'a dragon chain mail reinforced with dragon scales', '', 0, 0, 0, 0, 1, 404, 64, 6, 60, 1,
         95, 10, 6, 0, 0, 1500000),
-       (2393, -1, 2392, 'Dragon Scale Mail', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500000);
+       (2393, -1, 2392, 'Dragon Scale Mail', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1500000),
+       (2394, -1, -1, 'Dwarf Smithy Note', 'Details how to make the Dragon Scale Mail', 'read', 0, 1, 0, 1, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1);
+
 
 
 
