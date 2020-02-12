@@ -4832,7 +4832,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         0, 0, 0, 0, 0, 0, 0, 0, 3075),
        (2110, 0, -1, 'Spotted cape', 'A dark brown spotted cape', '', 0, 0, 0, 1, 1, 314, 2048, 11, 1, 1, 2, 0, 0, 0, 0,
         2),
-       (2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 243, 2048, 11, 99, 0, 0, 0,
+       (2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 315, 2048, 11, 99, 0, 0, 0,
         0, 0, 0, 99000),
        (2112, 0, -1, 'Blood egg', 'Happy Easter', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 10),
        (2113, 0, -1, 'Easter egg', 'A cracked open easter egg - Happy Easter!', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1,
@@ -5342,7 +5342,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2397, 2398, -1, 'Leather top', 'A stylish leather top', '', 1, 0, 0, 0, 1, 427, 322, 1, 1, 1, 10, 0, 0, 0, 0, 21),
        (2398, -1, 2397, 'Leather top', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
        (2399, 2400, -1, 'Leather skirt', 'A ladies skirt made of leather', '', 0, 0, 0, 0, 1, 428, 128, 7, 1, 1, 3, 0, 0, 0, 0, 14),
-       (2400, -1, 2393, 'Leather skirt', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14);
+       (2400, -1, 2393, 'Leather skirt', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
+       (2401, 0, -1, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 0, 0, 0, 0, 0, 99000),
+       (2402, 0, -1, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 0, 0, 0, 0, 0, 99000),
+       (2403, 0, -1, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 0, 0, 0, 0, 0, 99000);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`

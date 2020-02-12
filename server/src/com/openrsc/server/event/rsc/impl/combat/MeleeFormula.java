@@ -4,11 +4,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
+
+import static com.openrsc.server.constants.ItemId.ATTACK_CAPE;
 
 class MeleeFormula {
 	/**
@@ -71,7 +74,10 @@ class MeleeFormula {
 	 * @return The amount to hit.
 	 */
 	public static int getDamage(final Mob source, final Mob victim) {
-		final boolean isHit = calculateMeleeAccuracy(source, victim);
+		boolean isHit = calculateMeleeAccuracy(source, victim);
+		if ( source != null && source instanceof Player &&
+			SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit))
+			isHit = calculateMeleeAccuracy(source, victim);
 		final int damage = isHit ? calculateDamage(source) : 0;
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);

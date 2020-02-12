@@ -3566,7 +3566,7 @@ public class EntityHandler {
 		// Skill capes
 		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "", 99000, -1, "items:444", false, true, 2048, 0, false, true, -1, -1, 2103));
 		items.add(new ItemDef("Fishing hood", "Fishing skillcape hood", "", 99000, -1, "items:444", false, true, 33, 0, false, true, -1, -1, 2104));
-		items.add(new ItemDef("Cooking cape", "The cape worn by the world's best chefs", "", 99000, -1, "items:445", false, true, 2048, 0, false, true, -1, -1, 2105));
+		items.add(new ItemDef("Cooking cape", "The cape worn by the world's best chefs", "", 99000, -1, "items:481", false, true, 2048, 0, false, true, -1, -1, 2105));
 
 		// Exp elixir and teleport stone
 		items.add(new ItemDef("Experience Elixir", "A mysterious experience elixir produced by the Apothecary", "Drink", 2250, -1, "items:446", true, false, 0, 0, false, true, -1, -1, 2106));
@@ -3576,7 +3576,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Warrior cape", "A red cape worn by warriors", "", 3075, -1, "items:448", false, true, 2048, 0, false, false, 2109, -1, 2108));
 		items.add(new ItemDef("Warrior cape", "Swap this note at any bank for the equivalent item.", "", 3075, -1, "items:438", true, false, 0, 0, false, false, -1, 2108, 2109));
 		items.add(new ItemDef("Spotted cape", "A dark brown spotted cape", "", 2, -1, "items:449", false, true, 2048, 7692086, false, true, -1, -1, 2110));
-		items.add(new ItemDef("Attack cape", "The cape worn by masters of attack", "", 99000, -1, "items:445", false, true, 2048, 0, false, true, -1, -1, 2111));
+		items.add(new ItemDef("Attack cape", "The cape worn by masters of attack", "", 99000, -1, "items:480", false, true, 2048, 0, false, true, -1, -1, 2111));
 
 		// Easter eggs and baskets
 		items.add(new ItemDef("Blood egg", "Happy Easter!", "eat", 10, -1, "items:450", false, false, 0, 0, false, false, -1, -1, 2112));
@@ -3927,6 +3927,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Leather skirt", "A ladies skirt made of leather", "", 14, -1, "items:513", false, true, 128, 0, false, false, 2400, -1, 2399));
 		items.add(new ItemDef("Leather skirt", "Swap this note at any bank for the equivalent item.", "", 14, 438, "items:438", true, false, 0, 0, true, false, -1, 2399, 2400));
 
+		//Skill Cape Batch One
+		//attack, cooking above
+		items.add(new ItemDef("Thieving cape", "The cape worn by masters of thieving", "", 99000, -1, "items:496", false, true, 2048, 0, false, false, -1, -1, 2401));
+		items.add(new ItemDef("Fletching cape", "The cape worn by masters of fletching", "", 99000, -1, "items:486", false, true, 2048, 0, false, false, -1, -1, 2402));
+		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, -1, -1, 2403));
 	}
 
 	// Bank note items
@@ -5251,6 +5256,13 @@ public class EntityHandler {
 			animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
 			//Female Skirt
 			animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
+
+			//Skill Cape Batch One
+			//animations.add(new AnimationDef("attackcape", "equipment", 0, 0, true, false, 0)); //315
+			//animations.add(new AnimationDef("cookingcape", "equipment", 0, 0, true, false, 0)); //311
+			animations.add(new AnimationDef("thievingcape", "equipment", 0, 0, true, false, 0)); //429
+			animations.add(new AnimationDef("fletchingcape", "equipment", 0, 0, true, false, 0)); //430
+			animations.add(new AnimationDef("miningcape", "equipment", 0, 0, true, false, 0)); //431
 		}
 	}
 
