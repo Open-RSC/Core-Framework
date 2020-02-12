@@ -25,7 +25,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener, NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
 
 	private static final Logger LOGGER = LogManager.getLogger(TouristTrap.class);
-	
+
 	/**
 	 * Player isWielding
 	 **/
@@ -3005,22 +3005,24 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 			}
 		} else {
-			for (Item item : p.getInventory().getItems()) {
-				if (item.isWielded() && item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getID())) {
-					continue;
-				}
-				wieldpos = item.getDef(p.getWorld()).getWieldPosition();
-				if (item.isWielded() && wieldPos.contains(wieldpos)) {
-					if (wieldpos == 3) {
-						if (item.getDef(p.getWorld()).getName().toLowerCase().contains("shield")) {
-							hasArmour = true;
-						} else {
+			synchronized (p.getInventory().getItems()) {
+				for (Item item : p.getInventory().getItems()) {
+					if (item.isWielded() && item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getID())) {
+						continue;
+					}
+					wieldpos = item.getDef(p.getWorld()).getWieldPosition();
+					if (item.isWielded() && wieldPos.contains(wieldpos)) {
+						if (wieldpos == 3) {
+							if (item.getDef(p.getWorld()).getName().toLowerCase().contains("shield")) {
+								hasArmour = true;
+							} else {
+								hasWeapon = true;
+							}
+						} else if (wieldpos == 4) {
 							hasWeapon = true;
+						} else {
+							hasArmour = true;
 						}
-					} else if (wieldpos == 4) {
-						hasWeapon = true;
-					} else {
-						hasArmour = true;
 					}
 				}
 			}

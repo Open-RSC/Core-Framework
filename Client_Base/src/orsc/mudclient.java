@@ -5356,7 +5356,7 @@ public final class mudclient implements Runnable {
 							if (intOverflowCheck < Integer.MAX_VALUE) {
 								var4 = Integer.parseInt(str);
 							}
-							bank.sendDeposit(var4);
+							bank.sendDeposit(var4, this.bank.getUncertMode());
 						}
 					} catch (NumberFormatException var9) {
 						System.out.println("Deposit X number format exception: " + var9);
@@ -10509,7 +10509,7 @@ public final class mudclient implements Runnable {
 							stepsToMove = 10 + waypointIndexCurrent - waypointIndexNext;
 						}
 
-						amountToMove = osConfig.C_MOVE_PER_FRAME;
+						amountToMove = Config.C_MOVE_PER_FRAME;
 						if (stepsToMove > 2) {
 							amountToMove = stepsToMove * amountToMove - amountToMove;
 						}
@@ -10624,7 +10624,7 @@ public final class mudclient implements Runnable {
 							stepsToMove = waypointIndexCurrent - waypointIndexNext;
 						}
 
-						amountToMove = osConfig.C_MOVE_PER_FRAME;
+						amountToMove = Config.C_MOVE_PER_FRAME;
 						if (stepsToMove > 2) {
 							amountToMove = (stepsToMove - 1) * amountToMove;
 						}
@@ -13496,6 +13496,7 @@ public final class mudclient implements Runnable {
 							this.m_Ce = loginResponse & 0x3;
 							this.m_Oj = (loginResponse >> 2) & 0xf;
 							this.resetGame((byte) -123);
+							clientPort.setTitle(Config.getServerName() + " -- " + getUsername());
 						} else {
 							if (loginResponse == 1) {
 								this.autoLoginTimeout = 0;
@@ -13859,7 +13860,9 @@ public final class mudclient implements Runnable {
 			this.getSurface().blackScreen(true);
 			// this.getSurface().draw(this.graphics, this.screenOffsetX, 256,
 			// this.screenOffsetY);
+			clientPort.setTitle(Config.getServerName());
 			clientPort.draw();
+
 			int i;
 			for (i = 0; i < this.gameObjectInstanceCount; ++i) {
 				this.scene.removeModel(this.gameObjectInstanceModel[i]);
@@ -13926,6 +13929,8 @@ public final class mudclient implements Runnable {
 				MessageHistory.messageHistoryType[j] = MessageType.GAME;
 			}
 
+			bank.resetUncertMode();
+
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.UD(" + var1 + ')');
 		}
@@ -13981,6 +13986,7 @@ public final class mudclient implements Runnable {
 					} else {
 						this.packetHandler.getClientStream().newPacket(102);
 						this.packetHandler.getClientStream().finishPacket();
+						clientPort.setTitle(Config.getServerName());
 						this.logoutTimeout = 1000;
 						// this.createLoginPanels(3845);
 					}
@@ -15352,6 +15358,7 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
 			System.out.println(S_WANT_PK_BOTS + " 64");
+			System.out.println(Config.S_WANT_HARVESTING + " 65");
 		}
 		try {
 			this.loadGameConfig(false);
@@ -15360,6 +15367,8 @@ public final class mudclient implements Runnable {
 				this.setFPS(getFPS(), (byte) 107); // Client FPS
 				this.setSurface(new MudClientGraphics(this.getGameWidth(), this.getGameHeight() + 12, 4501));
 
+				clientPort.setTitle(Config.getServerName());
+				clientPort.setIconImage(Config.getServerName());
 				clientPort.initGraphics();
 				getSurface().setIconsStart(0, 3284);
 				this.getSurface().mudClientRef = this;
@@ -16246,6 +16255,11 @@ public final class mudclient implements Runnable {
 		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
+		} else if (skillGuideChosen.equalsIgnoreCase("Harvesting")) {
+			skillGuideChosenTabs.add("Allotments");
+			skillGuideChosenTabs.add("Fruits");
+			skillGuideChosenTabs.add("Bushes");
+			skillGuideChosenTabs.add("Herbs");
 		}
 	}
 
@@ -16327,6 +16341,8 @@ public final class mudclient implements Runnable {
 
 		if (S_WANT_RUNECRAFTING)
 			addSkill("Runecrafting", "Runecraft");
+		if (S_WANT_HARVESTING)
+			addSkill("Harvesting");
 	}
 
 	private void addSkill(String skillname) {

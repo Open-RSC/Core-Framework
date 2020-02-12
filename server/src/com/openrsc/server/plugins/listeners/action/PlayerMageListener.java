@@ -6,5 +6,5 @@ public interface PlayerMageListener {
 	/**
 	 * Called when you mage a Player
 	 */
-	public void onPlayerMage(Player player, Player affectedPlayer, int spell);
+	public void onPlayerMage(Player player, Player affectedPlayer, Integer spell);
 }

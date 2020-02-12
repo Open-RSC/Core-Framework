@@ -159,24 +159,26 @@ public class Duel implements ContainerListener {
 	public void dropOnDeath() {
 		DeathLog log = new DeathLog(player, duelRecipient, true);
 		Player duelOpponent = getDuelRecipient();
-		for (Item item : getDuelOffer().getItems()) {
-			Item affectedItem = player.getInventory().get(item);
-			if (affectedItem == null) {
-				if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getID())) {
-					player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
-						player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
-						item.getDef(player.getWorld()).getWearableId(), false);
-					player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(),null);
+		synchronized(getDuelOffer().getItems()) {
+			for (Item item : getDuelOffer().getItems()) {
+				Item affectedItem = player.getInventory().get(item);
+				if (affectedItem == null) {
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getID())) {
+						player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
+							player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
+							item.getDef(player.getWorld()).getWearableId(), false);
+						player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(), null);
+						log.addDroppedItem(item);
+						player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+					}
+					LOGGER.info("Missing staked item [" + item.getID() + ", " + item.getAmount()
+						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
+					continue;
+				} else {
+					player.getInventory().remove(item);
 					log.addDroppedItem(item);
 					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 				}
-				LOGGER.info("Missing staked item [" + item.getID() + ", " + item.getAmount()
-					+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
-				continue;
-			} else {
-				player.getInventory().remove(item);
-				log.addDroppedItem(item);
-				player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 			}
 		}
 		log.build();

@@ -7,5 +7,5 @@ public interface DropListener {
 	/**
 	 * Called when a user drops an item
 	 */
-	public void onDrop(Player p, Item i);
+	public void onDrop(Player p, Item i, Boolean fromInventory);
 }

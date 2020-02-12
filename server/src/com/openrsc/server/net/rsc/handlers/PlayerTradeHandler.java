@@ -12,7 +12,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerTradeHandler implements PacketHandler {
 
@@ -137,70 +137,74 @@ public class PlayerTradeHandler implements PacketHandler {
 			player.getTrade().setTradeConfirmAccepted(true);
 
 			if (affectedPlayer.getTrade().isTradeConfirmAccepted()) {
-				ArrayList<Item> myOffer = player.getTrade().getTradeOffer().getItems();
-				ArrayList<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
+				List<Item> myOffer = player.getTrade().getTradeOffer().getItems();
+				List<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
 
-				int myRequiredSlots = player.getInventory().getRequiredSlots(theirOffer);
-				int myAvailableSlots = (30 - player.getInventory().size())
-					+ player.getInventory().getFreedSlots(myOffer);
+				synchronized(myOffer) {
+					synchronized(theirOffer) {
+						int myRequiredSlots = player.getInventory().getRequiredSlots(theirOffer);
+						int myAvailableSlots = (30 - player.getInventory().size())
+							+ player.getInventory().getFreedSlots(myOffer);
 
-				int theirRequiredSlots = affectedPlayer.getInventory().getRequiredSlots(myOffer);
-				int theirAvailableSlots = (30 - affectedPlayer.getInventory().size())
-					+ affectedPlayer.getInventory().getFreedSlots(theirOffer);
+						int theirRequiredSlots = affectedPlayer.getInventory().getRequiredSlots(myOffer);
+						int theirAvailableSlots = (30 - affectedPlayer.getInventory().size())
+							+ affectedPlayer.getInventory().getFreedSlots(theirOffer);
 
-				if (theirRequiredSlots > theirAvailableSlots) {
-					player.message("Other player doesn't have enough inventory space to receive the objects");
-					affectedPlayer.message("You don't have enough inventory space to receive the objects");
-					player.getTrade().resetAll();
-					return;
-				}
-				if (myRequiredSlots > myAvailableSlots) {
-					player.message("You don't have enough inventory space to receive the objects");
-					affectedPlayer.message("Other player doesn't have enough inventory space to receive the objects");
-					player.getTrade().resetAll();
-					return;
-				}
+						if (theirRequiredSlots > theirAvailableSlots) {
+							player.message("Other player doesn't have enough inventory space to receive the objects");
+							affectedPlayer.message("You don't have enough inventory space to receive the objects");
+							player.getTrade().resetAll();
+							return;
+						}
+						if (myRequiredSlots > myAvailableSlots) {
+							player.message("You don't have enough inventory space to receive the objects");
+							affectedPlayer.message("Other player doesn't have enough inventory space to receive the objects");
+							player.getTrade().resetAll();
+							return;
+						}
 
-				for (Item item : myOffer) {
-					Item affectedItem = player.getInventory().get(item);
-					if (affectedItem == null) {
-						player.setSuspiciousPlayer(true, "trade item is null");
+						for (Item item : myOffer) {
+							Item affectedItem = player.getInventory().get(item);
+							if (affectedItem == null) {
+								player.setSuspiciousPlayer(true, "trade item is null");
+								player.getTrade().resetAll();
+								return;
+							}
+							if (affectedItem.isWielded()) {
+								player.getInventory().unwieldItem(affectedItem, false);
+							}
+							player.getInventory().remove(item);
+						}
+						for (Item item : theirOffer) {
+							Item affectedItem = affectedPlayer.getInventory().get(item);
+							if (affectedItem == null) {
+								affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
+								player.getTrade().resetAll();
+								return;
+							}
+							if (affectedItem.isWielded()) {
+								affectedPlayer.getInventory().unwieldItem(affectedItem, false);
+							}
+							affectedPlayer.getInventory().remove(item);
+						}
+
+						for (Item item : myOffer) {
+							affectedPlayer.getInventory().add(item);
+						}
+						for (Item item : theirOffer) {
+							player.getInventory().add(item);
+						}
+
+						player.getWorld().getServer().getGameLogger().addQuery(
+							new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
+						player.save();
+						affectedPlayer.save();
+						player.message("Trade completed successfully");
+
+						affectedPlayer.message("Trade completed successfully");
 						player.getTrade().resetAll();
-						return;
 					}
-					if (affectedItem.isWielded()) {
-						player.getInventory().unwieldItem(affectedItem, false);
-					}
-					player.getInventory().remove(item);
 				}
-				for (Item item : theirOffer) {
-					Item affectedItem = affectedPlayer.getInventory().get(item);
-					if (affectedItem == null) {
-						affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
-						player.getTrade().resetAll();
-						return;
-					}
-					if (affectedItem.isWielded()) {
-						affectedPlayer.getInventory().unwieldItem(affectedItem, false);
-					}
-					affectedPlayer.getInventory().remove(item);
-				}
-
-				for (Item item : myOffer) {
-					affectedPlayer.getInventory().add(item);
-				}
-				for (Item item : theirOffer) {
-					player.getInventory().add(item);
-				}
-
-				player.getWorld().getServer().getGameLogger().addQuery(
-					new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
-				player.save();
-				affectedPlayer.save();
-				player.message("Trade completed successfully");
-
-				affectedPlayer.message("Trade completed successfully");
-				player.getTrade().resetAll();
 			}
 		} else if (pID == packetThree) { // Trade declined
 			affectedPlayer = player.getTrade().getTradeRecipient();

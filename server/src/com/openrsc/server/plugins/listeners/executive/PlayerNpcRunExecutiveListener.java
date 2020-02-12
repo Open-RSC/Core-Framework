@@ -7,5 +7,5 @@ public interface PlayerNpcRunExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from running from npc
 	 */
-	public boolean blockPlayerNpcRun(Player p, Npc n);
+	boolean blockPlayerNpcRun(Player p, Npc n);
 }

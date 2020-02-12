@@ -4,10 +4,10 @@ public class osConfig {
 	/* Android: */
 	public static boolean F_ANDROID_BUILD = true; // This MUST be true if Android client or it will crash on launch, needs to be set as public for the Android client to use
 	public static final String DL_URL = "game.openrsc.com"; // needs to be set as public for the Android client to use
-	public static final String ANDROID_DOWNLOAD_PATH = "https://" + DL_URL + "/downloads/";
-	public static final String CACHE_URL = "https://" + DL_URL + "/downloads/";
+	public static final String ANDROID_DOWNLOAD_PATH = "http://" + DL_URL + "/downloads/";
+	public static final String CACHE_URL = "http://" + DL_URL + "/downloads/";
 	public static final String MD5_TABLENAME = "MD5.SUM";
-	public static final int ANDROID_CLIENT_VERSION = 84; // Important! Depends on web server android_version.txt to check for an updated version
+	public static final int ANDROID_CLIENT_VERSION = 95; // Important! Depends on web server android_version.txt to check for an updated version
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
@@ -18,5 +18,4 @@ public class osConfig {
 	public static boolean C_VOLUME_TO_ROTATE = false;
 	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_LAST_ZOOM = 75;
-	public static int C_MOVE_PER_FRAME = 4;
 }

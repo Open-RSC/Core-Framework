@@ -4,7 +4,6 @@ import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -55,10 +54,8 @@ public final class ItemWieldHandler implements PacketHandler {
 		} else if (pID == packetFour) {
 			int wieldPos = player.getWorld().getServer().getEntityHandler().getItemDef(idx).getWieldPosition();
 			item = player.getEquipment().get(wieldPos);
-			if (item.getID() != idx)
+			if (item != null && item.getID() != idx)
 				item = null;
-
-
 		}
 
 		if (item == null || !item.isWieldable(player.getWorld())) {
@@ -76,33 +73,16 @@ public final class ItemWieldHandler implements PacketHandler {
 		}
 		if (pID == packetOne) {
 			if (!item.isWielded()) {
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player, "Wield", new Object[]{player, item})) {
-					return;
-				}
-				player.getInventory().wieldItem(item, true);
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Wield", new Object[]{player, item, true, false});
 			}
 		} else if (pID == packetTwo) {
 			if (item.isWielded()) {
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player, "UnWield", new Object[]{player, item}))
-					return;
-				player.getInventory().unwieldItem(item, true);
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, item, true, false});
 			}
 		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetThree) {
-			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-				player, "Wield", new Object[]{player, item})) {
-				return;
-			}
-			player.getBank().wieldItem(idx, true);
-			ActionSender.showBank(player);
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Wield", new Object[]{player, item, true, true});
 		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == packetFour) {
-			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-				player, "UnWield", new Object[]{player, item}))
-				return;
-			player.getBank().unwieldItem(item, true);
-			ActionSender.showBank(player);
-			ActionSender.sendEquipmentStats(player, item.getDef(player.getWorld()).getWieldPosition());
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, item, true, true});
 		}
 	}
 }

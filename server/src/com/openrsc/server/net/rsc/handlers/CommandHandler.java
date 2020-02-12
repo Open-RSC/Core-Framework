@@ -18,7 +18,7 @@ public final class CommandHandler implements PacketHandler {
 				args = s.substring(firstSpace + 1).trim().split(" ");
 			}
 
-			player.getWorld().getServer().getPluginHandler().handleAction(player, "Command",
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
 				new Object[]{cmd.toLowerCase(), args, player});
 		}
 	}

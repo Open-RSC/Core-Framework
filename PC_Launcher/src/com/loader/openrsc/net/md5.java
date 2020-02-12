@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -35,7 +36,7 @@ public class md5 {
 	private void loadFromDirectory(File directory) {
 		File[] files = directory.listFiles();
 
-		for (File file : files) {
+		for (File file : Objects.requireNonNull(files)) {
 			if (file.isDirectory()) {
 				loadFromDirectory(file);
 			} else if (file.isFile()){
@@ -62,7 +63,7 @@ public class md5 {
 		return false;
 	}
 
-	public class Entry {
+	public static class Entry {
 		private String sum;
 		private File ref;
 
@@ -93,14 +94,13 @@ public class md5 {
 			md.update(fileData);
 			byte[] hashData = md.digest();
 
-			StringBuffer hexString = new StringBuffer();
+			StringBuilder hexString = new StringBuilder();
 
-			for (int i = 0; i < hashData.length; i++) {
-				if ((0xff & hashData[i]) < 0x10) {
-					hexString.append("0"
-						+ Integer.toHexString((0xFF & hashData[i])));
+			for (byte hashDatum : hashData) {
+				if ((0xff & hashDatum) < 0x10) {
+					hexString.append("0").append(Integer.toHexString((0xFF & hashDatum)));
 				} else {
-					hexString.append(Integer.toHexString(0xFF & hashData[i]));
+					hexString.append(Integer.toHexString(0xFF & hashDatum));
 				}
 			}
 

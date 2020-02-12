@@ -852,20 +852,22 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	private boolean CANT_GO(Player p) {
-		for (Item item : p.getInventory().getItems()) {
-			String name = item.getDef(p.getWorld()).getName().toLowerCase();
-			if (name.contains("dagger") || name.contains("scimitar")
-				|| name.contains("bow") || name.contains("mail")
-				|| name.contains("plated") || item.getID() == ItemId.RUNE_SKIRT.id()
-				|| name.contains("shield") || (name.contains("sword")
-				&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-				|| name.contains("mace") || name.contains("helmet")
-				|| name.contains("axe") || name.contains("throwing knife")
-				|| name.contains("spear")) {
-				return true;
+		synchronized(p.getInventory().getItems()) {
+			for (Item item : p.getInventory().getItems()) {
+				String name = item.getDef(p.getWorld()).getName().toLowerCase();
+				if (name.contains("dagger") || name.contains("scimitar")
+					|| name.contains("bow") || name.contains("mail")
+					|| name.contains("plated") || item.getID() == ItemId.RUNE_SKIRT.id()
+					|| name.contains("shield") || (name.contains("sword")
+					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
+					|| name.contains("mace") || name.contains("helmet")
+					|| name.contains("axe") || name.contains("throwing knife")
+					|| name.contains("spear")) {
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	class HADLEY {

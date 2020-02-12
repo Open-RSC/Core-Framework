@@ -68,8 +68,8 @@ public class Server implements Runnable {
 	private GameTickEvent updateEvent;
 	private ChannelFuture serverChannel;
 
-	private Boolean running = false;
-	private boolean initialized = false;
+	private volatile Boolean running = false;
+	private volatile boolean initialized = false;
 
 	private long serverStartedTime = 0;
 	private long lastIncomingPacketsDuration = 0;
@@ -234,7 +234,7 @@ public class Server implements Runnable {
 			bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
 			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
 			try {
-				getPluginHandler().handleAction(getWorld(), "Startup", new Object[]{});
+				getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
 				serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
 				LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
 			} catch (final InterruptedException e) {
@@ -369,7 +369,7 @@ public class Server implements Runnable {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000, "Shutdown for Update") {
+		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Shutdown for Update") {
 			public void action() {
 				unbind();
 				saveAndShutdown();
@@ -387,7 +387,7 @@ public class Server implements Runnable {
 		}
 		LOGGER.info("Players saved...");
 
-		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 6000, "Save and Shutdown") {
+		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 10, "Save and Shutdown") {
 			public void action() {
 				kill();
 				try {
@@ -400,18 +400,11 @@ public class Server implements Runnable {
 		getGameEventHandler().add(up);
 	}
 
-	public long timeTillShutdown() {
-		if (updateEvent == null) {
-			return -1;
-		}
-		return updateEvent.timeTillNextRun();
-	}
-
 	public boolean restart(int seconds) {
 		if (updateEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000, "Restart") {
+		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Restart") {
 			public void action() {
 				unbind();
 				//saveAndRestart();
@@ -420,6 +413,13 @@ public class Server implements Runnable {
 		};
 		getGameEventHandler().add(updateEvent);
 		return true;
+	}
+
+	public long timeTillShutdown() {
+		if (updateEvent == null) {
+			return -1;
+		}
+		return updateEvent.timeTillNextRun();
 	}
 
 	public final long getLastGameStateDuration() {

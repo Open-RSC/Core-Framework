@@ -79,7 +79,7 @@ public class LoginPacketHandler {
 							loadedPlayer.setChangingAppearance(true);
 						}
 
-						server.getPluginHandler().handleAction(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+						server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 						ActionSender.sendLogin(loadedPlayer);
 					}
 				};

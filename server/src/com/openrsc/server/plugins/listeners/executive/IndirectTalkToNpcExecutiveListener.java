@@ -7,5 +7,5 @@ public interface IndirectTalkToNpcExecutiveListener {
 	/**
 	 * Return true to block a player from indirectly talking to a npc
 	 */
-	public boolean blockIndirectTalkToNpc(Player p, Npc n);
+	boolean blockIndirectTalkToNpc(Player p, Npc n);
 }

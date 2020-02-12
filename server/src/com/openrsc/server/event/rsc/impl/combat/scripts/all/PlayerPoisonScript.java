@@ -41,10 +41,12 @@ public class PlayerPoisonScript implements CombatScript {
 						return true;
 				}
 			} else {
-				for (Item i : p.getInventory().getItems()) {
-					if (i.getDef(attacker.getWorld()).getName().toLowerCase().contains("poisoned")
-						&& i.isWielded()) {
-						return true;
+				synchronized (p.getInventory().getItems()) {
+					for (Item i : p.getInventory().getItems()) {
+						if (i.getDef(attacker.getWorld()).getName().toLowerCase().contains("poisoned")
+							&& i.isWielded()) {
+							return true;
+						}
 					}
 				}
 			}

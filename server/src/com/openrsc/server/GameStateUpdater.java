@@ -24,12 +24,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * @author n0m
- */
 public final class GameStateUpdater {
-
-
 	/**
 	 * The asynchronous logger.
 	 */
@@ -94,7 +89,7 @@ public final class GameStateUpdater {
 		if (curTime - player.getLastPing() >= 30000) {
 			player.unregister(false, "Ping time-out");
 		} else if (player.warnedToMove()) {
-			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.isStaff()) {
+			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.hasElevatedPriveledges()) {
 				player.unregister(false, "Movement time-out");
 			} else if (player.hasMoved()) {
 				player.setWarnedToMove(false);
@@ -414,7 +409,7 @@ public final class GameStateUpdater {
 				ChatMessage cm;
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
 					Player sender = (Player) cm.getSender();
-					boolean tutorialPlayer = sender.getLocation().onTutorialIsland() && !sender.isStaff();
+					boolean tutorialPlayer = sender.getLocation().onTutorialIsland() && !sender.hasElevatedPriveledges();
 					boolean muted = sender.isMuted();
 
 					int chatType = cm.getRecipient() == null ? (tutorialPlayer || muted ? 7 : 1)
@@ -735,7 +730,6 @@ public final class GameStateUpdater {
 			if (p.getWalkToAction() != null) {
 				if (p.getWalkToAction().shouldExecute()) {
 					p.getWalkToAction().execute();
-					p.setWalkToAction(null);
 				}
 			}
 		}

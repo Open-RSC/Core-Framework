@@ -17,27 +17,27 @@ public class ItemUseOnObject implements PacketHandler {
 							final GameObject object, final int dir, final Item item) {
 		player.setStatus(Action.USING_Item_ON_DOOR);
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
-			public void execute() {
-				player.resetPath();
-				GameObject obj = player.getViewArea().getWallObjectWithDir(
+			public void executeInternal() {
+				getPlayer().resetPath();
+				GameObject obj = getPlayer().getViewArea().getWallObjectWithDir(
 					object.getLocation(), object.getDirection());
-				if (player.isBusy() || player.isRanging()
-					|| !player.getInventory().hasItemId(item.getID()) || obj == null
+				if (getPlayer().isBusy() || getPlayer().isRanging()
+					|| !getPlayer().getInventory().hasItemId(item.getID()) || obj == null
 					|| !obj.equals(object)
-					|| player.getStatus() != Action.USING_Item_ON_DOOR) {
+					|| getPlayer().getStatus() != Action.USING_Item_ON_DOOR) {
 					return;
 				}
-				player.resetAll();
+				getPlayer().resetAll();
 
-				if (item.getDef(player.getWorld()).isMembersOnly()
-					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.message(player.MEMBER_MESSAGE);
+				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
+					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player,
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
+					getPlayer(),
 					"InvUseOnWallObject",
-					new Object[]{object, item, player}))
+					new Object[]{object, item, getPlayer()}, this))
 					return;
 			}
 		});
@@ -49,40 +49,33 @@ public class ItemUseOnObject implements PacketHandler {
 		if ((object.getID() == 226 || object.getID() == 232) && player.withinRange(object, 2)) {
 			player.resetPath();
 			player.resetAll();
-			if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
+			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
 				player, "InvUseOnObject", new Object[]{object, item, player}))
 				return;
 		}
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
-			public void execute() {
-				player.resetPath();
-				player.face(object);
-				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-				if (obj == null || player.isBusy() || player.isRanging()
-					|| !player.getInventory().contains(item)
-					|| !player.atObject(object) || obj == null
-					|| player.getStatus() != Action.USING_Item_ON_OBJECT) {
+			public void executeInternal() {
+				getPlayer().resetPath();
+				getPlayer().face(object);
+				GameObject obj = getPlayer().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				if (obj == null || getPlayer().isBusy() || getPlayer().isRanging()
+					|| !getPlayer().getInventory().contains(item)
+					|| !getPlayer().atObject(object) || obj == null
+					|| getPlayer().getStatus() != Action.USING_Item_ON_OBJECT) {
 					return;
 				}
-				player.resetAll();
+				getPlayer().resetAll();
 
-				if (item.getDef(player.getWorld()).isMembersOnly()
-					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.message(player.MEMBER_MESSAGE);
+				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
+					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
 
-				if (player.getWorld().getServer().getPluginHandler()
-					.blockDefaultAction(player, "InvUseOnObject",
-						new Object[]{(GameObject) object, item, player}))
+				if (getPlayer().getWorld().getServer().getPluginHandler()
+					.handlePlugin(getPlayer(), "InvUseOnObject",
+						new Object[]{(GameObject) object, item, getPlayer()}, this))
 					return;
-
-				// Using items on objects
-				switch (object.getID()) {
-					default:
-						// owner.message("Nothing interesting happens");
-						return;
-				}
 			}
 		});
 	}

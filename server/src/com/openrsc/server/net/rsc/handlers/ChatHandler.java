@@ -15,7 +15,7 @@ public final class ChatHandler implements PacketHandler {
 			sender.message(sender.getWorld().getServer().getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
 		}
 
-		if (!sender.isStaff() && sender.getLocation().onTutorialIsland()) {
+		if (!sender.hasElevatedPriveledges() && sender.getLocation().onTutorialIsland()) {
 			sender.message("Once you finish the tutorial, typing here sends messages to nearby players");
 		}
 

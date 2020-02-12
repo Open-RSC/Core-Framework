@@ -263,6 +263,7 @@ public class ServerConfiguration {
 	public boolean CRYSTAL_KEY_GIVES_XP = false;
 	public boolean LOOTED_CHESTS_STUCK = false;
 	public boolean WANT_RUNECRAFTING = false;
+	public boolean WANT_HARVESTING = false;
 	public boolean WANT_DISCORD_AUCTION_UPDATES = false;
 	public String DISCORD_AUCTION_WEBHOOK_URL = "";
 	public boolean WANT_DISCORD_MONITORING_UPDATES = false;
@@ -421,6 +422,7 @@ public class ServerConfiguration {
 		CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(props.getProperty("crystal_key_gives_xp"));
 		LOOTED_CHESTS_STUCK = Boolean.parseBoolean(props.getProperty("looted_chests_stuck"));
 		WANT_RUNECRAFTING = Boolean.parseBoolean(props.getProperty("want_runecrafting"));
+		WANT_HARVESTING = Boolean.parseBoolean(props.getProperty("want_harvesting"));
 		WANT_DISCORD_AUCTION_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_auction_updates"));
 		DISCORD_AUCTION_WEBHOOK_URL = props.getProperty("discord_auction_webhook_url");
 		WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_monitoring_updates"));

@@ -716,4 +716,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	public void stopSoundPlayer() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+
+	public void setTitle(String title) {
+	}
+
+	public void setIconImage(String serverName) {
+
+	}
 }

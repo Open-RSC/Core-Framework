@@ -38,8 +38,8 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         if (osConfig.C_HOLD_AND_CHOOSE)
             return false;
 
-        mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
-        mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
+        mudclient.mouseX = (int) (e.getX() / (getWidth() / (float) mudclient.getGameWidth()));
+        mudclient.mouseY = (int) (e.getY() / (getHeight() / (float) (mudclient.getGameHeight() + 12)));
         return false;
     }
 
@@ -47,8 +47,8 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
     public void onShowPress(MotionEvent e) {
         if (osConfig.C_HOLD_AND_CHOOSE)
             return;
-        mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
-        mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
+        mudclient.mouseX = (int) (e.getX() / (getWidth() / (float) mudclient.getGameWidth()));
+        mudclient.mouseY = (int) (e.getY() / (getHeight() / (float) (mudclient.getGameHeight() + 12)));
         mudclient.currentMouseButtonDown = 2;
         mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown;
         mudclient.lastMouseAction = 0;
@@ -58,8 +58,8 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
     public boolean onSingleTapUp(MotionEvent e) {
         if (osConfig.C_HOLD_AND_CHOOSE)
             return false;
-        mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
-        mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
+        mudclient.mouseX = (int) (e.getX() / (getWidth() / (float) mudclient.getGameWidth()));
+        mudclient.mouseY = (int) (e.getY() / (getHeight() / (float) (mudclient.getGameHeight() + 12)));
         mudclient.currentMouseButtonDown = 1;
         mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown;
         mudclient.lastMouseAction = 0;
@@ -93,7 +93,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                     int newZoom = osConfig.C_LAST_ZOOM + zoomDistance;
                     // Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
                     if (newZoom >= 0 && newZoom <= 255) {
-						osConfig.C_LAST_ZOOM = newZoom;
+                        osConfig.C_LAST_ZOOM = newZoom;
                     }
                 }
             } else if (mudclient.cameraAllowPitchModification) {
@@ -168,7 +168,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                 }
             }
 
-            mudclient.handleKeyPress((byte) 126, (int) key);
+            mudclient.handleKeyPress((byte) 126, key);
             if (hitInputFilter && mudclient.inputTextCurrent.length() < 20) {
                 mudclient.inputTextCurrent = mudclient.inputTextCurrent + (char) key;
             }
@@ -199,8 +199,8 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
     }
 
     public boolean onTouch(View v, MotionEvent e) {
-        mudclient.mouseX = (int) (e.getX() / ((float) getWidth() / (float) mudclient.getGameWidth()));
-        mudclient.mouseY = (int) (e.getY() / ((float) getHeight() / (float) (mudclient.getGameHeight() + 12)));
+        mudclient.mouseX = (int) (e.getX() / (getWidth() / (float) mudclient.getGameWidth()));
+        mudclient.mouseY = (int) (e.getY() / (getHeight() / (float) (mudclient.getGameHeight() + 12)));
         mudclient.lastMouseAction = 0;
 
         if (!gestureDetector.onTouchEvent(e)) {
@@ -231,15 +231,12 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                         if (!isLongPress) {
                             isLongPress = true;
                             Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (System.currentTimeMillis() - lastScrollOrRotate < 100) {
-                                        return;
-                                    }
-                                    if (isLongPress) {
-                                        mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown = 2;
-                                    }
+                            handler.postDelayed(() -> {
+                                if (System.currentTimeMillis() - lastScrollOrRotate < 100) {
+                                    return;
+                                }
+                                if (isLongPress) {
+                                    mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown = 2;
                                 }
                             }, osConfig.C_LONG_PRESS_TIMER * 50);
                         }

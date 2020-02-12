@@ -100,8 +100,8 @@ public class Market implements Runnable {
 					expiredItemsStatement.setString(5, "Expired");
 					expiredItemsStatement.addBatch();
 
-					ItemDefinition def = sellerPlayer.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
 					if (sellerPlayer != null) {
+						ItemDefinition def = sellerPlayer.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
 						sellerPlayer.message("@gre@[Auction House] @whi@Your auction - @lre@" + def.getName() + " x" + amount
 							+ "@whi@ has expired!");
 						sellerPlayer.message("You can collect it back from a banker.");

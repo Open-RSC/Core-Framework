@@ -7,7 +7,6 @@ import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
-import com.openrsc.server.model.action.WalkToActionNpc;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
@@ -17,7 +16,6 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
@@ -120,10 +118,6 @@ public abstract class Mob extends Entity {
 	 * Used to block new requests when we are in the middle of one
 	 */
 	private final AtomicBoolean busy = new AtomicBoolean(false);
-	/**
-	 * The path we are walking
-	 */
-	private WalkToActionNpc walkToActionNpc;
 	/**
 	 * Tiles around us that we can see
 	 */
@@ -508,7 +502,6 @@ public abstract class Mob extends Entity {
 					((Npc) victim).produceUnderAttack();
 				}
 			}
-			Functions.sleep(1);
 
 			resetPath();
 			resetRange();
@@ -527,7 +520,6 @@ public abstract class Mob extends Entity {
 			victim.setSprite(victimSprite);
 			victim.setOpponent(this);
 			victim.setCombatTimer();
-
 
 			if (victim.isPlayer()) {
 				assert victim instanceof Player;
@@ -826,20 +818,12 @@ public abstract class Mob extends Entity {
 		return updateFlags;
 	}
 
-	public ViewArea getViewArea() {
+	public synchronized ViewArea getViewArea() {
 		return viewArea;
 	}
 
 	public WalkingQueue getWalkingQueue() {
 		return walkingQueue;
-	}
-
-	public WalkToActionNpc getWalkToActionNpc() {
-		return walkToActionNpc;
-	}
-
-	public void setWalkToActionNpc(final WalkToActionNpc action) {
-		this.walkToActionNpc = action;
 	}
 
 	public boolean hasMoved() {

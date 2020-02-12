@@ -11,7 +11,7 @@ public abstract class Option {
 	 *
 	 * @param string - The option
 	 */
-	public Option(String string) {
+	public Option(final String string) {
 		option = string;
 	}
 

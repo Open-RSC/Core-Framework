@@ -31,28 +31,28 @@ public class GameObjectWallAction implements PacketHandler {
 		}
 		player.setStatus(Action.USING_DOOR);
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
-			public void execute() {
+			public void executeInternal() {
 				DoorDef def = object.getDoorDef();
-				if (player.isBusy() || player.isRanging() || def == null
-					|| player.getStatus() != Action.USING_DOOR) {
-					player.message("NULL");
+				if (getPlayer().isBusy() || getPlayer().isRanging() || def == null
+					|| getPlayer().getStatus() != Action.USING_DOOR) {
+					getPlayer().message("NULL");
 					return;
 				}
 
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(
-					player,
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
+					getPlayer(),
 					"WallObjectAction",
-					new Object[]{object, click, player})) {
+					new Object[]{object, click, getPlayer()}, this)) {
 					return;
 				}
 
-				player.resetAll();
+				getPlayer().resetAll();
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
-				Point telePoint = player.getWorld().getServer().getEntityHandler().getObjectTelePoint(
+				Point telePoint = getPlayer().getWorld().getServer().getEntityHandler().getObjectTelePoint(
 					object.getLocation(), command);
 				if (telePoint != null) {
-					player.teleport(telePoint.getX(), telePoint.getY(), false);
+					getPlayer().teleport(telePoint.getX(), telePoint.getY(), false);
 				}
 			}
 		});

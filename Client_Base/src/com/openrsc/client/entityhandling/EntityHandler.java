@@ -2128,6 +2128,24 @@ public class EntityHandler {
 			npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		}
 
+		if (Config.S_WANT_HARVESTING) {
+			sprites = new int[]{3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1};
+			npcs.add(new NPCDef("Gardener", "She takes care of the plants around", "", 25, 25, 10, 20, false, sprites, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, i++));
+		}
+
+
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Gramat", "He looks worried", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Dwarven Smithy", "A master of metals", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Dwarven Youth", "He is upset", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 90, 130, 6, 6, 5, i++));
+		sprites = new int[]{164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Balrog", "A massive black demon", "", 999, 250, 80, 200, true, sprites, 0, 0, 0, 0, 450, 480, 11, 11, 30, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Silicius", "A Peaceful monk", "", 12, 13, 15, 12, false, sprites, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, i++));
+
+
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
 			npcs.get(103).sprites = new int[]{3, 4, -1, -1, -1, -1, -1, 247, -1, -1, -1, -1};
@@ -3856,8 +3874,50 @@ public class EntityHandler {
 		//New KBD Drops
 		items.add(new ItemDef("dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, 2354, -1, 2353));
 		items.add(new ItemDef("dragon 2-handed Sword", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2353, 2354));
-		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 50, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
-		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 5000000, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
+		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 2500, 146, "items:kbdscale", false, false, 0, 0, true, false, 2356, -1, 2355));
+		items.add(new ItemDef("King Black Dragon scale", "Swap this note at any bank for the equivalent item.", "", 2500, 438, "items:438", true, false, 0, 0, false, false, -1, 2355, 2356));
+
+		//Harvesting
+		items.add(new ItemDef("red apple", "Seems tasty!", "eat", 1, -1, "items:534", false, false, 0, 0, false, false, -1, -1, 2357));
+		items.add(new ItemDef("red apple", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2357, 2358));
+		items.add(new ItemDef("grapefruit", "It's very fresh", "eat", 2, -1, "items:526", false, false, 0, 0, true, false, -1, -1, 2359));
+		items.add(new ItemDef("grapefruit", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2359, 2360));
+		items.add(new ItemDef("papaya", "Seems very tasty!", "eat", 2, -1, "items:527", false, false, 0, 0, true, false, -1, -1, 2361));
+		items.add(new ItemDef("papaya", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2361, 2362));
+		items.add(new ItemDef("coconut", "It can be cut up with a machette", "", 2, -1, "items:535", false, false, 0, 0, true, false, -1, -1, 2363));
+		items.add(new ItemDef("coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2363, 2364));
+		items.add(new ItemDef("Red Cabbage", "Yuck I don't like cabbage", "Eat", 1, -1, "items:529", false, false, 0, 0, false, false, -1, -1, 2365));
+		items.add(new ItemDef("Red Cabbage", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2365, 2366));
+		items.add(new ItemDef("Corn", "Some fresh picked corn", "eat", 2, -1, "items:528", false, false, 0, 0, false, false, -1, -1, 2367));
+		items.add(new ItemDef("Corn", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2367, 2368));
+		items.add(new ItemDef("White Pumpkin", "Wonder how it tastes", "eat", 2, -1, "items:536", false, false, 0, 0, true, false, -1, -1, 2369));
+		items.add(new ItemDef("White Pumpkin", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2369, 2370));
+		items.add(new ItemDef("Fruit Picker", "Useful for picking trees better", "", 10, -1, "items:530", false, false, 0, 0, false, false, -1, -1, 2371));
+		items.add(new ItemDef("Fruit Picker", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2371, 2372));
+		items.add(new ItemDef("Hand Shovel", "This will help get yield from bushes and allotments", "", 15, -1, "items:532", false, false, 0, 0, false, false, -1, -1, 2373));
+		items.add(new ItemDef("Hand Shovel", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2373, 2374));
+		items.add(new ItemDef("Herb Clippers", "Useful for picking up herbs out there", "", 25, -1, "items:531", false, false, 0, 0, true, false, -1, -1, 2375));
+		items.add(new ItemDef("Herb Clippers", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2375, 2376));
+		items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, -1, -1, 2377));
+		items.add(new ItemDef("Watering Can", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, false, false, -1, 2377, 2378));
+		items.add(new ItemDef("grapefruit slices", "It's very fresh", "eat", 2, 291, "items:291", false, false, 0, 15435583, true, false, -1, -1, 2379));
+		items.add(new ItemDef("grapefruit slices", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, true, false, -1, 2379, 2380));
+		items.add(new ItemDef("Diced grapefruit", "Fresh chunks of grapefruit", "eat", 2, 293, "items:293", false, false, 0, 15435583, true, false, -1, -1, 2381));
+		items.add(new ItemDef("Diced grapefruit", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, true, false, -1, 2381, 2382));
+		items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, -1, -1, 2383));
+		items.add(new ItemDef("Half coconut", "Swap this note at any bank for the equivalent item.", "", 0, 438, "items:438", true, false, 0, 0, true, false, -1, 2383, 2384));
+
+		//Dwarf miniquest & Dragon Scale Mail
+		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:543", false, false, 0, 16777124, false, true, -1, -1, 2385));
+		items.add(new ItemDef("Teddy head", "A fluffy teddy head", "", 1, -1, "items:544", false, false, 0, 16777124, false, true, -1, -1, 2386));
+		items.add(new ItemDef("Teddy", "A fluffy teddy", "", 1, -1, "items:542", false, false, 0, 16777124, false, true, -1, -1, 2387));
+		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 16711748, true, false, 2389, -1, 2388));
+		items.add(new ItemDef("Dragon bar", "Swap this note at any bank for the equivalent item.", "", 100000, 438, "items:438", true, false, 0, 0, true, false, -1, 2388, 2389));
+		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:546", true, false, 0, 0, true, false, -1, -1, 2390));
+		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:547", true, false, 0, 0, true, false, -1, -1, 2391));
+		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, 2393, -1, 2392));
+		items.add(new ItemDef("Dragon Scale Mail", "Swap this note at any bank for the equivalent item.", "", 1500000, 438, "items:438", true, false, 0, 0, true, false, -1, 2392, 2393));
+		items.add(new ItemDef("Dwarf Smithy Note", "Details how to make the Dragon Scale Mail", "read", 1, 234, "items:234", false, false, 0, 0, true, true, -1, -1, 2394));
 	}
 
 	// Bank note items
@@ -5132,6 +5192,9 @@ public class EntityHandler {
 
 			//Dragon 2H
 			animations.add(new AnimationDef("2hander", "equipment", 16711748, 0, true, false, 0)); //403 d2h
+
+			//Dragon Scale Mail
+			animations.add(new AnimationDef("dragonscalemail", "equipment",0, 0, true, false, 0));//404
 		}
 	}
 
@@ -5896,7 +5959,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Chair", "A sturdy looking chair", "WalkTo", "Examine", 1, 1, 1, 0, "chair", i++));
 		objects.add(new GameObjectDef("logs", "A pile of logs", "WalkTo", "Examine", 1, 1, 1, 0, "logpile", i++));
 		objects.add(new GameObjectDef("Longtable", "It has nice candles", "WalkTo", "Examine", 1, 4, 1, 0, "longtable", i++));
-		objects.add(new GameObjectDef("Throne", "It looks fancy and expensive", "WalkTo", "Examine", 1, 1, 1, 0, "throne", i++));
+		objects.add(new GameObjectDef("Throne", "It looks fancy and expensive", "WalkTo", "Examine", 1, 1, 1, 0, "throne", i++));//10
 		objects.add(new GameObjectDef("Range", "A hot well stoked range", "WalkTo", "Examine", 1, 1, 2, 0, "range", i++));
 		objects.add(new GameObjectDef("Gravestone", "R I P", "WalkTo", "Examine", 1, 1, 1, 0, "gravestone1", i++));
 		objects.add(new GameObjectDef("Gravestone", "Its covered in moss", "WalkTo", "Examine", 1, 1, 1, 0, "gravestone2", i++));
@@ -5906,7 +5969,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("Altar", "Its an Altar", "Recharge at", "Examine", 1, 2, 1, 0, "altar", i++));
-		objects.add(new GameObjectDef("Post", "What am I examining posts for", "WalkTo", "Examine", 1, 1, 1, 0, "wallpost", i++));
+		objects.add(new GameObjectDef("Post", "What am I examining posts for", "WalkTo", "Examine", 1, 1, 1, 0, "wallpost", i++));//20
 		objects.add(new GameObjectDef("Support", "A wooden pole", "WalkTo", "Examine", 0, 1, 1, 0, "supportnw", i++));
 		objects.add(new GameObjectDef("barrel", "Its empty", "WalkTo", "Examine", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("Bench", "It doesn't look very comfy", "WalkTo", "Examine", 1, 2, 1, 0, "bench", i++));
@@ -5916,7 +5979,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("landscape", "An oil painting", "WalkTo", "Examine", 0, 1, 1, 0, "landscape", i++));
 		objects.add(new GameObjectDef("Millstones", "You can use these to make flour", "WalkTo", "Examine", 1, 3, 3, 0, "mill", i++));
 		objects.add(new GameObjectDef("Counter", "It's the shop counter", "WalkTo", "Examine", 1, 2, 1, 120, "counter", i++));
-		objects.add(new GameObjectDef("Stall", "A market stall", "WalkTo", "Examine", 1, 2, 2, 112, "market", i++));
+		objects.add(new GameObjectDef("Stall", "A market stall", "WalkTo", "Examine", 1, 2, 2, 112, "market", i++));//30
 		objects.add(new GameObjectDef("Target", "Coming soon archery practice", "Practice", "Examine", 1, 1, 1, 0, "target", i++));
 		objects.add(new GameObjectDef("PalmTree", "A nice palm tree", "WalkTo", "Examine", 1, 1, 1, 0, "palm2", i++));
 		objects.add(new GameObjectDef("PalmTree", "A shady palm tree", "WalkTo", "Examine", 1, 1, 1, 0, "palm", i++));
@@ -5926,7 +5989,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Flower", "Ooh thats pretty", "WalkTo", "Examine", 0, 1, 1, 0, "flower", i++));
 		objects.add(new GameObjectDef("Mushroom", "I think it's a poisonous one", "WalkTo", "Examine", 0, 1, 1, 0, "mushroom", i++));
 		objects.add(new GameObjectDef("Coffin", "This coffin is closed", "Open", "Examine", 1, 2, 2, 0, "coffin", i++));
-		objects.add(new GameObjectDef("Coffin", "This coffin is open", "Search", "Close", 1, 2, 2, 0, "coffin2", i++));
+		objects.add(new GameObjectDef("Coffin", "This coffin is open", "Search", "Close", 1, 2, 2, 0, "coffin2", i++));//40
 		objects.add(new GameObjectDef("stairs", "These lead upstairs", "Go up", "Examine", 1, 2, 3, 0, "woodenstairs", i++));
 		objects.add(new GameObjectDef("stairs", "These lead downstairs", "Go down", "Examine", 1, 2, 3, 0, "woodenstairsdown", i++));
 		objects.add(new GameObjectDef("stairs", "These lead upstairs", "Go up", "Examine", 1, 2, 3, 0, "stonestairs", i++));
@@ -5936,7 +5999,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Bookcase", "A large collection of books", "WalkTo", "Examine", 1, 1, 2, 0, "bookcase", i++));
 		objects.add(new GameObjectDef("Sink", "Its fairly dirty", "WalkTo", "Examine", 1, 1, 2, 0, "sink", i++));
 		objects.add(new GameObjectDef("Dummy", "I can practice my fighting here", "hit", "Examine", 1, 1, 1, 0, "sworddummy", i++));
-		objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", i++));
+		objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", i++));//50
 		objects.add(new GameObjectDef("Torch", "It would be very dark without this", "WalkTo", "Examine", 0, 1, 1, 0, "torcha1", i++));
 		objects.add(new GameObjectDef("hopper", "You put grain in here", "operate", "Examine", 1, 2, 2, 0, "milltop", i++));
 		objects.add(new GameObjectDef("chute", "Flour comes out here", "WalkTo", "Examine", 1, 2, 2, 40, "millbase", i++));
@@ -5946,7 +6009,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Gate", "The gate is closed", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("gate", "The gate is open", "WalkTo", "close", 3, 1, 2, 0, "metalgateopen", i++));
 		objects.add(new GameObjectDef("gate", "The gate is open", "WalkTo", "close", 3, 1, 2, 0, "woodengateopen", i++));
-		objects.add(new GameObjectDef("gate", "The gate is closed", "open", "Examine", 2, 1, 2, 0, "woodengateclosed", i++));
+		objects.add(new GameObjectDef("gate", "The gate is closed", "open", "Examine", 2, 1, 2, 0, "woodengateclosed", i++));//60
 		objects.add(new GameObjectDef("signpost", "To Varrock", "WalkTo", "Examine", 1, 1, 1, 0, "signpost", i++));
 		objects.add(new GameObjectDef("signpost", "To the tower of wizards", "WalkTo", "Examine", 1, 1, 1, 0, "signpost", i++));
 		objects.add(new GameObjectDef("doors", "The doors are open", "WalkTo", "Close", 3, 1, 2, 0, "doubledoorsopen", i++));
@@ -5956,7 +6019,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("bookcase", "It's a bookcase", "WalkTo", "Search", 1, 1, 2, 0, "bookcase", i++));
 		objects.add(new GameObjectDef("henge", "these look impressive", "WalkTo", "Examine", 1, 2, 2, 0, "henge", i++));
 		objects.add(new GameObjectDef("Dolmen", "A sort of ancient altar thingy", "WalkTo", "Examine", 1, 2, 2, 0, "dolmen", i++));
-		objects.add(new GameObjectDef("Tree", "This tree doesn't look too healthy", "WalkTo", "Chop", 1, 1, 1, 0, "deadtree1", i++));
+		objects.add(new GameObjectDef("Tree", "This tree doesn't look too healthy", "WalkTo", "Chop", 1, 1, 1, 0, "deadtree1", i++));//70
 		objects.add(new GameObjectDef("cupboard", "Perhaps I should search it", "Search", "close", 1, 1, 2, 0, "cupboardopen", i++));
 		objects.add(new GameObjectDef("Wheat", "nice ripe looking wheat", "WalkTo", "pick", 0, 1, 1, 0, "wheat", i++));
 		objects.add(new GameObjectDef("sign", "The blue moon inn", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
@@ -5966,7 +6029,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Drain", "This drainpipe runs from the kitchen to the sewers", "WalkTo", "Search", 0, 1, 1, 0, "pipe&drain", i++));
 		objects.add(new GameObjectDef("manhole", "A manhole cover", "open", "Examine", 0, 1, 1, 0, "manholeclosed", i++));
 		objects.add(new GameObjectDef("manhole", "How dangerous - this manhole has been left open", "climb down", "close", 0, 1, 1, 0, "manholeopen", i++));
-		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "WalkTo", "Examine", 1, 1, 1, 0, "wallpipe", i++));
+		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "WalkTo", "Examine", 1, 1, 1, 0, "wallpipe", i++));//80
 		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("barrel", "It seems to be full of newt's eyes", "WalkTo", "Examine", 1, 1, 1, 0, "barrel", i++));
@@ -5976,7 +6039,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("signpost", "To Draynor Manor", "WalkTo", "Examine", 1, 1, 1, 0, "signpost", i++));
 		objects.add(new GameObjectDef("Tree", "This tree doesn't look too healthy", "Approach", "Search", 1, 1, 1, 0, "deadtree1", i++));
 		objects.add(new GameObjectDef("sign", "General Store", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
-		objects.add(new GameObjectDef("sign", "Lowe's Archery store", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
+		objects.add(new GameObjectDef("sign", "Lowe's Archery store", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));//90
 		objects.add(new GameObjectDef("sign", "The Clothes Shop", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
 		objects.add(new GameObjectDef("sign", "Varrock Swords", "WalkTo", "Examine", 0, 1, 1, 0, "shopsign", i++));
 		objects.add(new GameObjectDef("gate", "You can pass through this on the members server", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
@@ -5987,7 +6050,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "rocks1", i++));
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "rocks2", i++));
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "copperrock1", i++));
-		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "copperrock1", i++));
+		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "copperrock1", i++));//100
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "ironrock1", i++));
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "ironrock1", i++));
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "Mine", "Prospect", 1, 1, 1, 0, "tinrock1", i++));
@@ -6790,7 +6853,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "cross", "Examine", 1, 1, 3, 0, "bridge section collapsed", i++));
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "cross", "Examine", 1, 1, 3, 0, "bridge section collapsed", i++));
-		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));
+		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));//900
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "cross", "Examine", 1, 1, 3, 0, "bridge section collapsed", i++));
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "cross", "Examine", 1, 1, 3, 0, "bridge section collapsed", i++));
@@ -6800,7 +6863,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "cross", "Examine", 1, 1, 3, 0, "bridge section collapsed", i++));
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));
 		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "cross", "Examine", 1, 1, 3, 0, "bridge section collapsed", i++));
-		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));
+		objects.add(new GameObjectDef("Stone bridge", "The bridge has partly collapsed", "jump over", "Examine", 1, 1, 3, 0, "bridge section collapsed2", i++));//910
 		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("Pit of the Damned", "The son of zamoracks alter...", "WalkTo", "Examine", 1, 1, 1, 0, "cave temple alter", i++));
@@ -6810,7 +6873,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Chest", "Perhaps there is something inside", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
 		objects.add(new GameObjectDef("Zodiac", "A map of the twelve signs of the zodiac", "WalkTo", "Examine", 0, 3, 3, 0, "zodiac", i++));
 		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
-		objects.add(new GameObjectDef("Ladder", "it's a ladder leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ladder", i++));
+		objects.add(new GameObjectDef("Ladder", "it's a ladder leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ladder", i++));//920
 		objects.add(new GameObjectDef("Stone steps", "They lead into the darkness", "walk down", "Examine", 0, 1, 1, 0, "cave bridge stairs", i++));
 		objects.add(new GameObjectDef("Rock", "Scripture has been carved into the rock", "read", "Examine", 1, 1, 1, 0, "cave carvings", i++));
 		objects.add(new GameObjectDef("Rock", "Scripture has been carved into the rock", "read", "Examine", 1, 1, 1, 0, "cave carvings", i++));
@@ -6820,7 +6883,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("sacks", "These sacks feels lumpy!", "Search", "Examine", 1, 1, 1, 0, "sacks", i++));
 		objects.add(new GameObjectDef("Ladder", "the ladder goes down into a dark area", "Climb-Down", "Examine", 1, 1, 1, 0, "ladderdown", i++));
 		objects.add(new GameObjectDef("Chest", "All these chests look the same!", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
-		objects.add(new GameObjectDef("Chest", "All these chests look the same!", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
+		objects.add(new GameObjectDef("Chest", "All these chests look the same!", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));//930
 		objects.add(new GameObjectDef("Bookcase", "A very roughly constructed bookcase.", "WalkTo", "Search", 1, 1, 2, 0, "bookcase", i++));
 		objects.add(new GameObjectDef("Iron Gate", "A well wrought iron gate - it's locked.", "Open", "Search", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("Ladder", "the ladder down to the cavern", "Climb-Down", "Examine", 1, 1, 1, 0, "ladderdown", i++));
@@ -6830,7 +6893,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Chest", "All these chests look the same!", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("Rockslide", "A pile of rocks blocks your path", "WalkTo", "Examine", 1, 1, 1, 0, "rock3", i++));
 		objects.add(new GameObjectDef("Altar", "An altar to the evil God Zamorak", "Recharge at", "Examine", 1, 2, 1, 0, "chaosaltar", i++));
-		objects.add(new GameObjectDef("column", "Formed over thousands of years", "WalkTo", "Examine", 1, 1, 1, 0, "cave pillar", i++));
+		objects.add(new GameObjectDef("column", "Formed over thousands of years", "WalkTo", "Examine", 1, 1, 1, 0, "cave pillar", i++));//940
 		objects.add(new GameObjectDef("Grave of Scorpius", "Here lies Scorpius: dread follower of zamorak", "Read", "Examine", 1, 1, 3, 0, "gravestone1", i++));
 		objects.add(new GameObjectDef("Bank Chest", "Allows you to access your bank.", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("dwarf multicannon", "fires metal balls", "fire", "pick up", 0, 1, 1, 0, "dwarf multicannon", i++));
@@ -6840,7 +6903,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("dwarf multicannon stand", "bang", "pick up", "Examine", 0, 1, 1, 0, "dwarf multicannon part2", i++));
 		objects.add(new GameObjectDef("dwarf multicannon barrels", "bang", "pick up", "Examine", 0, 1, 1, 0, "dwarf multicannon part3", i++));
 		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));
-		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));
+		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));//950
 		objects.add(new GameObjectDef("fence", "These bridges seem hastily put up", "WalkTo", "Examine", 0, 1, 1, 0, "gnomefence", i++));
 		objects.add(new GameObjectDef("signpost", "a signpost", "read", "Examine", 1, 1, 1, 0, "signpost2", i++));
 		objects.add(new GameObjectDef("Rocks", "I wonder if I can climb up these", "climb", "Examine", 0, 1, 1, 0, "brownclimbingrocks", i++));
@@ -6850,7 +6913,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Chest", "I wouldn't like to think where the owner is now", "Search", "Close", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("Wooden Doors", "Large oak doors constantly watched by guards", "Open", "Watch", 2, 1, 2, 0, "hillsidedoor", i++));
 		objects.add(new GameObjectDef("Pedestal", "something fits on here", "WalkTo", "Examine", 1, 1, 1, 96, "stonestand", i++));
-		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));
+		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));//960
 		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));
 		objects.add(new GameObjectDef("Standard", "A standard with a human skull on it", "WalkTo", "Examine", 1, 1, 1, 0, "ogre standard", i++));
 		objects.add(new GameObjectDef("Mining Cave", "A gaping hole that leads to another section of the mine", "enter", "Examine", 1, 3, 1, 0, "caveentrance2", i++));
@@ -6860,7 +6923,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Mining Barrel", "For loading up mined stone from below ground", "WalkTo", "Search", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("Hole", "I wonder where this leads...", "enter", "Examine", 1, 1, 1, 0, "hole", i++));
 		objects.add(new GameObjectDef("Hole", "I wonder where this leads...", "enter", "Examine", 1, 1, 1, 0, "hole", i++));
-		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));
+		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));//970
 		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));
 		objects.add(new GameObjectDef("Cave", "I wonder what's inside!", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));
 		objects.add(new GameObjectDef("Counter", "An ogre is selling items here", "Steal from", "Examine", 1, 1, 1, 0, "rockcounter", i++));
@@ -6870,7 +6933,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Lift Platform", "A wooden lift that is operated from the surface.", "Use", "Search", 1, 1, 1, 0, "liftbed", i++));
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Close", "Examine", 1, 1, 1, 0, "ChestOpen", i++));
-		objects.add(new GameObjectDef("Watch tower", "Constructed by the dwarven black guard", "WalkTo", "Examine", 0, 2, 2, 0, "watchtower", i++));
+		objects.add(new GameObjectDef("Watch tower", "Constructed by the dwarven black guard", "WalkTo", "Examine", 0, 2, 2, 0, "watchtower", i++));//980
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ladder", i++));
 		objects.add(new GameObjectDef("Cave entrance", "I wonder what is inside...", "enter", "Examine", 1, 2, 2, 0, "caveentrance", i++));
 		objects.add(new GameObjectDef("Pile of mud", "Mud caved in from above", "climb", "Examine", 1, 2, 1, 0, "mudpile", i++));
@@ -6880,7 +6943,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("crate", "A crate", "search", "Examine", 1, 1, 1, 0, "crate", i++));
 		objects.add(new GameObjectDef("Gate", "This gate barrs your way into gu'tanoth", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("Gate", "This gate barrs your way into gu'tanoth", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
-		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));
+		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));//990
 		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));
 		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));
 		objects.add(new GameObjectDef("bush", "A leafy bush", "Search", "Examine", 1, 1, 1, 0, "bush1", i++));
@@ -6890,7 +6953,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading downwards", "Climb-down", "Examine", 0, 1, 1, 0, "ladderdown", i++));
 		objects.add(new GameObjectDef("Cave entrance", "I wonder what is inside...", "enter", "Examine", 1, 1, 1, 0, "small caveentrance2", i++));
 		objects.add(new GameObjectDef("Counter", "An ogre is selling cakes here", "Steal from", "Examine", 1, 1, 1, 0, "rock cake counter", i++));
-		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
+		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));//1000
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
 		objects.add(new GameObjectDef("Chest", "Perhaps I should search it", "Search", "Close", 1, 1, 1, 0, "ChestOpen", i++));
 		objects.add(new GameObjectDef("Chest", "I wonder what is inside...", "Open", "Examine", 1, 1, 1, 0, "ChestClosed", i++));
@@ -6900,7 +6963,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Rocks", "A small pile of stones", "Search", "Examine", 1, 1, 1, 0, "cave rock1", i++));
 		objects.add(new GameObjectDef("Rocks", "A small rocky outcrop", "Search", "Examine", 1, 1, 1, 0, "cave rock1", i++));
 		objects.add(new GameObjectDef("Column", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena colomn", i++));
-		objects.add(new GameObjectDef("Wall", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena wall", i++));
+		objects.add(new GameObjectDef("Wall", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena wall", i++));//1010
 		objects.add(new GameObjectDef("Wall", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena corner", i++));
 		objects.add(new GameObjectDef("Wall", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena tallwall", i++));
 		objects.add(new GameObjectDef("Wall", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena cornerfill", i++));
@@ -6910,7 +6973,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading downwards", "Climb-Down", "Examine", 1, 1, 1, 0, "ladderdown", i++));
 		objects.add(new GameObjectDef("Wall", "Created by ancient mages", "WalkTo", "Examine", 1, 1, 1, 0, "magearena plain wall", i++));
 		objects.add(new GameObjectDef("Gate", "The gate is closed", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
-		objects.add(new GameObjectDef("Gate", "The gate is closed", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
+		objects.add(new GameObjectDef("Gate", "The gate is closed", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));//1020
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ladder", i++));
 		objects.add(new GameObjectDef("shock", "cosmic energy", "WalkTo", "Examine", 1, 1, 1, 0, "spellshock", i++));
 		objects.add(new GameObjectDef("Desk", "A very strong looking table with some locked drawers.", "WalkTo", "Search", 1, 2, 1, 120, "counter", i++));
@@ -6920,7 +6983,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("entrance", "Created by ancient mages", "walk through", "Examine", 1, 1, 1, 0, "magearena door", i++));
 		objects.add(new GameObjectDef("Dried Cactus", "It looks very spikey", "WalkTo", "Examine", 1, 1, 1, 0, "cactuswatered", i++));
 		objects.add(new GameObjectDef("climbing rocks", "I wonder if I can climb up these", "climb", "Examine", 0, 1, 1, 0, "climbing_rocks", i++));
-		objects.add(new GameObjectDef("Rocks", "Strange rocks - who knows why they're wanted?", "Mine", "Prospect", 1, 1, 1, 0, "tinrock1", i++));
+		objects.add(new GameObjectDef("Rocks", "Strange rocks - who knows why they're wanted?", "Mine", "Prospect", 1, 1, 1, 0, "tinrock1", i++));//1030
 		objects.add(new GameObjectDef("lightning", "blimey!", "WalkTo", "Examine", 1, 1, 1, 0, "lightning1", i++));
 		objects.add(new GameObjectDef("Crude Desk", "A very roughly constructed desk", "WalkTo", "Search", 1, 2, 1, 120, "counter", i++));
 		objects.add(new GameObjectDef("Heavy Metal Gate", "This is an immense and very heavy looking gate made out of thick wrought metal", "Look", "Push", 2, 1, 2, 0, "metalgateclosed", i++));
@@ -6930,7 +6993,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Carved Rock", "An ornately carved rock with a pointed recepticle", "WalkTo", "Search", 1, 1, 1, 120, "cave small stagamite", i++));
 		objects.add(new GameObjectDef("USE", "FREE SLOT PLEASE USE", "WalkTo", "Examine", 1, 1, 1, 0, "crate", i++));
 		objects.add(new GameObjectDef("crate", "A crate used for storing materials", "search", "Examine", 1, 1, 1, 0, "crate", i++));
-		objects.add(new GameObjectDef("crate", "A crate used for storing materials", "search", "Examine", 1, 1, 1, 0, "crate", i++));
+		objects.add(new GameObjectDef("crate", "A crate used for storing materials", "search", "Examine", 1, 1, 1, 0, "crate", i++));//1040
 		objects.add(new GameObjectDef("barrel", "Its shut", "search", "Examine", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("Brick", "A stone brick", "WalkTo", "Examine", 1, 1, 1, 0, "1-1light", i++));
 		objects.add(new GameObjectDef("Brick", "A stone brick", "WalkTo", "Examine", 1, 1, 1, 0, "1-1dark", i++));
@@ -6940,7 +7003,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Brick", "A stone brick", "WalkTo", "Examine", 1, 1, 1, 0, "2-2dark", i++));
 		objects.add(new GameObjectDef("Barrier", "this section is roped off", "WalkTo", "Examine", 1, 1, 1, 0, "barrier1", i++));
 		objects.add(new GameObjectDef("buried skeleton", "I hope I don't meet any of these", "search", "Examine", 1, 1, 1, 0, "halfburiedskeleton", i++));
-		objects.add(new GameObjectDef("Brick", "A stone brick", "WalkTo", "Examine", 1, 1, 1, 0, "2-1light", i++));
+		objects.add(new GameObjectDef("Brick", "A stone brick", "WalkTo", "Examine", 1, 1, 1, 0, "2-1light", i++));//1050
 		objects.add(new GameObjectDef("Brick", "A stone brick", "WalkTo", "Examine", 1, 1, 1, 0, "2-1light", i++));
 		objects.add(new GameObjectDef("Specimen tray", "A pile of sifted earth", "WalkTo", "Search", 1, 2, 2, 0, "compost", i++));
 		objects.add(new GameObjectDef("winch", "This winches earth from the dig hole", "Operate", "Examine", 1, 1, 2, 0, "liftwinch", i++));
@@ -6950,7 +7013,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("buried skeleton", "I'm glad this isn't around now", "search", "Examine", 1, 1, 1, 0, "halfburiedskeleton2", i++));
 		objects.add(new GameObjectDef("panning point", "a shallow where I can pan for gold", "look", "Examine", 0, 1, 1, 0, "fishing", i++));
 		objects.add(new GameObjectDef("Rocks", "A small rocky outcrop", "WalkTo", "Examine", 1, 1, 1, 0, "cave rock1", i++));
-		objects.add(new GameObjectDef("signpost", "a signpost", "read", "Examine", 1, 1, 1, 0, "signpost2", i++));
+		objects.add(new GameObjectDef("signpost", "a signpost", "read", "Examine", 1, 1, 1, 0, "signpost2", i++));//1060
 		objects.add(new GameObjectDef("signpost", "a signpost", "read", "Examine", 1, 1, 1, 0, "signpost2", i++));
 		objects.add(new GameObjectDef("signpost", "a signpost", "read", "Examine", 1, 1, 1, 0, "signpost2", i++));
 		objects.add(new GameObjectDef("signpost", "a signpost", "read", "Examine", 1, 1, 1, 0, "signpost2", i++));
@@ -6960,7 +7023,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("soil", "soil", "search", "Examine", 0, 1, 1, 0, "dugupsoil3", i++));
 		objects.add(new GameObjectDef("Gate", "The gate has closed", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
 		objects.add(new GameObjectDef("ship", "The ship is sinking", "WalkTo", "Examine", 2, 1, 2, 0, "sinkingshipfront", i++));
-		objects.add(new GameObjectDef("barrel", "The ship is sinking", "climb on", "Examine", 2, 1, 2, 0, "sinkingbarrel", i++));
+		objects.add(new GameObjectDef("barrel", "The ship is sinking", "climb on", "Examine", 2, 1, 2, 0, "sinkingbarrel", i++));//1070
 		objects.add(new GameObjectDef("Leak", "The ship is sinking", "fill", "Examine", 0, 1, 1, 0, "shipleak", i++));
 		objects.add(new GameObjectDef("bush", "A leafy bush", "search", "Examine", 1, 1, 1, 0, "bush1", i++));
 		objects.add(new GameObjectDef("bush", "A leafy bush", "search", "Examine", 1, 1, 1, 0, "bush1", i++));
@@ -6970,7 +7033,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Leak", "The ship is sinking", "fill", "Examine", 0, 1, 1, 0, "shipleak2", i++));
 		objects.add(new GameObjectDef("cupboard", "The cupboard is shut", "search", "Examine", 1, 1, 2, 0, "cupboardopen", i++));
 		objects.add(new GameObjectDef("Wrought Mithril Gates", "Magnificent wrought mithril gates giving access to the Legends Guild", "open", "Search", 2, 1, 2, 0, "metalgateclosed", i++));
-		objects.add(new GameObjectDef("Legends Hall Doors", "Solid Oak doors leading to the Hall of Legends", "Open", "Search", 2, 1, 2, 0, "doubledoorsclosed", i++));
+		objects.add(new GameObjectDef("Legends Hall Doors", "Solid Oak doors leading to the Hall of Legends", "Open", "Search", 2, 1, 2, 0, "doubledoorsclosed", i++));//1080
 		objects.add(new GameObjectDef("Camp bed", "Not comfortable but useful nonetheless", "WalkTo", "Examine", 1, 1, 2, 0, "poorbed", i++));
 		objects.add(new GameObjectDef("barrel", "It has a lid on it - I need something to lever it off", "WalkTo", "Examine", 1, 1, 1, 0, "barrelredcross", i++));
 		objects.add(new GameObjectDef("barrel", "I wonder what is inside...", "search", "Examine", 1, 1, 1, 0, "barrelredcross", i++));
@@ -6980,7 +7043,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Jungle tree stump", "A chopped down jungle tree", "Walk", "Examine", 1, 1, 1, 0, "treestump", i++));
 		objects.add(new GameObjectDef("signpost", "To the digsite", "WalkTo", "Examine", 1, 1, 1, 0, "signpost", i++));
 		objects.add(new GameObjectDef("gate", "You can pass through this on the members server", "open", "Examine", 2, 1, 2, 0, "metalgateclosed", i++));
-		objects.add(new GameObjectDef("Bookcase", "A large collection of books", "search", "Examine", 1, 1, 2, 0, "bookcase", i++));
+		objects.add(new GameObjectDef("Bookcase", "A large collection of books", "search", "Examine", 1, 1, 2, 0, "bookcase", i++));//1090
 		objects.add(new GameObjectDef("Dense Jungle Tree", "An exotic looking tree", "Chop", "Examine", 1, 1, 1, 0, "jungle tree 2", i++));
 		objects.add(new GameObjectDef("Dense Jungle Tree", "An exotic looking tree", "Chop", "Examine", 1, 1, 1, 0, "jungle tree 1", i++));
 		objects.add(new GameObjectDef("Spray", "There's a strong wind", "WalkTo", "Examine", 1, 1, 1, 0, "shipspray1", i++));
@@ -6990,7 +7053,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Rope", "it's a rope leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ropeforclimbingbot", i++));
 		objects.add(new GameObjectDef("Rope", "it's a rope leading upwards", "Climb-Up", "Examine", 1, 1, 1, 0, "ropeforclimbingbot", i++));
 		objects.add(new GameObjectDef("Dense Jungle Palm", "A hardy palm tree with dense wood", "Chop", "Examine", 1, 1, 1, 0, "palm2", i++));
-		objects.add(new GameObjectDef("Dense Jungle Palm", "A hardy palm tree with dense wood", "Chop", "Examine", 1, 1, 1, 0, "palm", i++));
+		objects.add(new GameObjectDef("Dense Jungle Palm", "A hardy palm tree with dense wood", "Chop", "Examine", 1, 1, 1, 0, "palm", i++));//1100
 		objects.add(new GameObjectDef("Trawler net", "A huge net to catch little fish", "inspect", "Examine", 1, 1, 1, 0, "trawlernet-l", i++));
 		objects.add(new GameObjectDef("Trawler net", "A huge net to catch little fish", "inspect", "Examine", 1, 1, 1, 0, "trawlernet-r", i++));
 		objects.add(new GameObjectDef("Brick", "The bricks are covered in the strange compound", "WalkTo", "Examine", 1, 1, 1, 0, "1-1light", i++));
@@ -7000,7 +7063,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Yommi Tree", "An adolescent rare and mystical looking tree in", "WalkTo", "Examine", 1, 2, 2, 0, "totemtree1", i++));
 		objects.add(new GameObjectDef("Grown Yommi Tree", "A fully grown rare and mystical looking tree", "WalkTo", "Examine", 1, 2, 2, 0, "totemtree2", i++));
 		objects.add(new GameObjectDef("Chopped Yommi Tree", "A mystical looking tree that has recently been felled", "WalkTo", "Examine", 1, 2, 2, 0, "totemtree3", i++));
-		objects.add(new GameObjectDef("Trimmed Yommi Tree", "The trunk of the yommi tree.", "WalkTo", "Examine", 1, 2, 2, 0, "totemtree4", i++));
+		objects.add(new GameObjectDef("Trimmed Yommi Tree", "The trunk of the yommi tree.", "WalkTo", "Examine", 1, 2, 2, 0, "totemtree4", i++));//1110
 		objects.add(new GameObjectDef("Totem Pole", "A nicely crafted wooden totem pole.", "Lift", "Examine", 1, 2, 2, 0, "totemtree5", i++));
 		objects.add(new GameObjectDef("Baby Yommi Tree", "A baby Yommi tree - with a mystical aura", "WalkTo", "Examine", 1, 2, 2, 0, "smallfern", i++));
 		objects.add(new GameObjectDef("Fertile earth", "A very fertile patch of earth", "WalkTo", "Examine", 0, 2, 2, 0, "dugupsoil1", i++));
@@ -7010,7 +7073,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Boulder", "A large boulder blocking the way", "WalkTo", "Smash to pieces", 1, 2, 2, 0, "cave bolder", i++));
 		objects.add(new GameObjectDef("dwarf multicannon", "fires metal balls", "fire", "pick up", 1, 1, 1, 0, "dwarf multicannon", i++));
 		objects.add(new GameObjectDef("dwarf multicannon base", "bang", "pick up", "Examine", 1, 1, 1, 0, "dwarf multicannon part1", i++));
-		objects.add(new GameObjectDef("dwarf multicannon stand", "bang", "pick up", "Examine", 1, 1, 1, 0, "dwarf multicannon part2", i++));
+		objects.add(new GameObjectDef("dwarf multicannon stand", "bang", "pick up", "Examine", 1, 1, 1, 0, "dwarf multicannon part2", i++));//1120
 		objects.add(new GameObjectDef("dwarf multicannon barrels", "bang", "pick up", "Examine", 1, 1, 1, 0, "dwarf multicannon part3", i++));
 		objects.add(new GameObjectDef("rock", "A rocky outcrop", "climb over", "Examine", 1, 1, 1, 0, "rocks1", i++));
 		objects.add(new GameObjectDef("Rock Hewn Stairs", "steps cut out of the living rock", "Climb", "Examine", 1, 2, 3, 0, "rocksteps", i++));
@@ -7020,7 +7083,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("beehive", "An old looking beehive", "WalkTo", "Investigate", 1, 1, 1, 0, "beehive", i++));
 		objects.add(new GameObjectDef("Drain", "This drainpipe runs from the kitchen to the sewers", "WalkTo", "Investigate", 0, 1, 1, 0, "pipe&drain", i++));
 		objects.add(new GameObjectDef("web", "An old thick spider's web", "WalkTo", "Investigate", 0, 1, 1, 0, "floorweb", i++));
-		objects.add(new GameObjectDef("fountain", "There seems to be a lot of insects here", "WalkTo", "Investigate", 1, 2, 2, 0, "fountain", i++));
+		objects.add(new GameObjectDef("fountain", "There seems to be a lot of insects here", "WalkTo", "Investigate", 1, 2, 2, 0, "fountain", i++));//1130
 		objects.add(new GameObjectDef("Sinclair Crest", "The Sinclair family crest", "WalkTo", "Investigate", 0, 1, 1, 0, "wallshield", i++));
 		objects.add(new GameObjectDef("barrel", "Annas stuff - There seems to be something shiny at the bottom", "WalkTo", "Search", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("barrel", "Bobs things - There seems to be something shiny at the bottom", "WalkTo", "Search", 1, 1, 1, 0, "barrel", i++));
@@ -7030,7 +7093,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("barrel", "Franks barrel seems to have something shiny at the bottom", "WalkTo", "Search", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("Flour Barrel", "Its full of flour", "WalkTo", "Take From", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("sacks", "Full of various gardening tools", "WalkTo", "investigate", 1, 1, 1, 0, "sacks", i++));
-		objects.add(new GameObjectDef("gate", "A sturdy and secure wooden gate", "WalkTo", "Investigate", 2, 1, 2, 0, "woodengateclosed", i++));
+		objects.add(new GameObjectDef("gate", "A sturdy and secure wooden gate", "WalkTo", "Investigate", 2, 1, 2, 0, "woodengateclosed", i++));//1140
 		objects.add(new GameObjectDef("Dead Yommi Tree", "A dead Yommi Tree - it looks like a tough axe will be needed to fell this", "WalkTo", "Inspect", 1, 2, 2, 0, "deadtree2", i++));
 		objects.add(new GameObjectDef("clawspell", "forces of guthix", "WalkTo", "Examine", 1, 1, 1, 0, "clawspell1", i++));
 		objects.add(new GameObjectDef("Rocks", "The remains of a large rock", "WalkTo", "Examine", 1, 2, 2, 0, "cave rock1", i++));
@@ -7040,7 +7103,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Spellcharge", "forces of guthix", "WalkTo", "Examine", 1, 1, 1, 0, "spellcharge1", i++));
 		objects.add(new GameObjectDef("Rocks", "A small rocky outcrop", "WalkTo", "Search", 1, 1, 1, 0, "cave rock1", i++));
 		objects.add(new GameObjectDef("cupboard", "The cupboard is shut", "open", "Examine", 1, 1, 2, 0, "cupboard", i++));
-		objects.add(new GameObjectDef("sacks", "Yep they're sacks", "search", "Examine", 1, 1, 1, 0, "sacks", i++));
+		objects.add(new GameObjectDef("sacks", "Yep they're sacks", "search", "Examine", 1, 1, 1, 0, "sacks", i++));//1150
 		objects.add(new GameObjectDef("Rock", "A rocky outcrop", "WalkTo", "Search", 1, 1, 1, 0, "rocks1", i++));
 		objects.add(new GameObjectDef("Saradomin stone", "A faith stone", "chant to", "Examine", 1, 1, 1, 0, "saradominstone", i++));
 		objects.add(new GameObjectDef("Guthix stone", "A faith stone", "chant to", "Examine", 1, 1, 1, 0, "guthixstone", i++));
@@ -7050,7 +7113,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Rope down into darkness", "A scarey downwards trip into possible doom.", "WalkTo", "Use", 0, 1, 1, 0, "ScaffoldsupportRope", i++));
 		objects.add(new GameObjectDef("Cave entrance", "A dark cave entrance leading to the surface.", "Enter", "Examine", 1, 3, 1, 0, "caveentrance2", i++));
 		objects.add(new GameObjectDef("Cave entrance", "A small tunnel that leads to a large room beyond.", "enter", "Examine", 1, 2, 2, 0, "Shamancave", i++));
-		objects.add(new GameObjectDef("Ancient Wooden Doors", "The doors are locked shut", "Open", "Pick Lock", 2, 1, 2, 0, "doubledoorsclosed", i++));
+		objects.add(new GameObjectDef("Ancient Wooden Doors", "The doors are locked shut", "Open", "Pick Lock", 2, 1, 2, 0, "doubledoorsclosed", i++));//1160
 		objects.add(new GameObjectDef("Table", "An old rickety table", "WalkTo", "search", 1, 1, 1, 96, "table", i++));
 		objects.add(new GameObjectDef("Crude bed", "Barely a bed at all", "Rest", "Search", 1, 1, 2, 0, "poorbed", i++));
 		objects.add(new GameObjectDef("Tall Reeds", "A tall plant with a tube for a stem.", "WalkTo", "Search", 0, 1, 1, 0, "bullrushes", i++));
@@ -7060,7 +7123,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Rope Up", "A welcome rope back up and out of this dark place.", "Climb", "Examine", 0, 1, 1, 0, "obstical_ropeswing", i++));
 		objects.add(new GameObjectDef("Half buried remains", "Some poor unfortunate soul", "WalkTo", "Search", 1, 1, 1, 0, "skeletonwithbag", i++));
 		objects.add(new GameObjectDef("Totem Pole", "A carved and decorated totem pole", "Look", "Examine", 1, 1, 1, 0, "totemtreeevil", i++));
-		objects.add(new GameObjectDef("Totem Pole", "A carved and decorated totem pole", "Look", "Examine", 1, 1, 1, 0, "totemtreegood", i++));
+		objects.add(new GameObjectDef("Totem Pole", "A carved and decorated totem pole", "Look", "Examine", 1, 1, 1, 0, "totemtreegood", i++));//1170
 		objects.add(new GameObjectDef("Comfy bed", "Its a bed - wow", "rest", "Examine", 1, 2, 2, 0, "bed", i++));
 		objects.add(new GameObjectDef("Rotten Yommi Tree", "A decomposing fully grown Yommi Tree", "WalkTo", "Inspect", 1, 2, 2, 0, "totemtreerotten2", i++));
 		objects.add(new GameObjectDef("Rotten Yommi Tree", "A decomposing felled Yommi Tree", "WalkTo", "Inspect", 1, 2, 2, 0, "totemtreerotten3", i++));
@@ -7070,7 +7133,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Grand Viziers Desk", "A very elegant desk - you could knock it to get the Grand Viziers attention.", "WalkTo", "Knock on table", 1, 2, 1, 120, "counter", i++));
 		objects.add(new GameObjectDef("Strange Barrel", "It might have something inside of it.", "Smash", "Examine", 1, 1, 1, 0, "barrel", i++));
 		objects.add(new GameObjectDef("ship", "A sturdy sailing ship", "WalkTo", "Examine", 0, 5, 3, 0, "Shipfront", i++));
-		objects.add(new GameObjectDef("ship", "A sturdy sailing ship", "WalkTo", "Examine", 0, 2, 3, 0, "Shipmiddle", i++));
+		objects.add(new GameObjectDef("ship", "A sturdy sailing ship", "WalkTo", "Examine", 0, 2, 3, 0, "Shipmiddle", i++));//1180
 		objects.add(new GameObjectDef("ship", "A sturdy sailing ship", "WalkTo", "Examine", 0, 5, 3, 0, "Shipback", i++));
 		objects.add(new GameObjectDef("digsite bed", "Not comfortable but useful nonetheless", "sleep", "Examine", 1, 1, 2, 0, "poorbed", i++));
 		objects.add(new GameObjectDef("Tea stall", "A stall selling oriental infusions", "WalkTo", "Steal from", 1, 2, 2, 112, "market", i++));
@@ -7131,13 +7194,63 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
 		}
 
-		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i = 1236)); //yanille agility shortcut
+		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i = 1236)); //yanille agility shortcut1336
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", ++i)); //yanille agility shortcut
 
-		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "XMASTREE", ++i));
-		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ORNAMENTTREE", ++i));
-		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "PINETREE", ++i));
+		objects.add(new GameObjectDef("Christmas Tree", "A very festive tree", "Collect", "Examine", 1, 1, 1, 0, "xmastree", ++i)); //1238
+		objects.add(new GameObjectDef("Decorated Tree", "A tree that gathers people around", "WalkTo", "Examine", 1, 1, 1, 0, "ornamenttree", ++i));
+		objects.add(new GameObjectDef("Pine Tree", "A tree waiting to be decorated", "WalkTo", "Examine", 1, 1, 1, 0, "pinetree", ++i));
 		objects.add(new GameObjectDef("Tunnel entrance", "I wonder where this leads...", "enter", "Examine", 1, 3, 1, 0, "small caveentrance2", ++i));
+		objects.add(new GameObjectDef("Rowboat", "This looks usable", "Travel", "Examine", 1, 2, 2, 0, "rowboat", ++i));
+
+		//Harvesting Objects
+		if (Config.S_WANT_HARVESTING) {
+			objects.add(new GameObjectDef("Lemon Tree", "A tree filled with many ripe lemons", "Harvest", "Examine", 1, 1, 1, 0, "lemontree", i = 1243)); //1243
+			objects.add(new GameObjectDef("Lime Tree", "A tree filled with many ripe limes", "Harvest", "Examine", 1, 1, 1, 0, "limetree", ++i));
+			objects.add(new GameObjectDef("Apple Tree", "A tree filled with many ripe apples", "Harvest", "Examine", 1, 1, 1, 0, "appletree", ++i));
+			objects.add(new GameObjectDef("Orange Tree", "A tree filled with many ripe oranges", "Harvest", "Examine", 1, 1, 1, 0, "orangetree", ++i));
+			objects.add(new GameObjectDef("Grapefruit Tree", "A tree filled with many ripe grapefruits", "Harvest", "Examine", 1, 1, 1, 0, "grapefruittree", ++i));
+			objects.add(new GameObjectDef("Banana Palm", "A palm containing many ripe bananas", "Harvest", "Examine", 1, 1, 1, 0, "bananapalm", ++i));
+			objects.add(new GameObjectDef("Coconut Palm", "A palm containing many ripe coconuts", "Harvest", "Examine", 1, 1, 1, 0, "coconutpalm", ++i));
+			objects.add(new GameObjectDef("Papaya Palm", "A palm containing many ripe papayas", "Harvest", "Examine", 1, 1, 1, 0, "papayapalm", ++i));
+			objects.add(new GameObjectDef("Pineapple Plant", "A plant with many nice ripe pineapples", "Harvest", "Examine", 1, 1, 1, 0, "pineappleplant", ++i));
+			objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedtree", ++i));
+			objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm", ++i));
+			objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm2", ++i));
+			objects.add(new GameObjectDef("Exhausted Plant", "A plant that got its produce taken away", "WalkTo", "Examine", 1, 1, 1, 0, "depletedplant", ++i));
+			objects.add(new GameObjectDef("Redberry Bush", "A bush containing some redberries", "Harvest", "Examine", 1, 1, 1, 0, "redberrybush", ++i)); //1256
+			objects.add(new GameObjectDef("Cadavaberry Bush", "A bush containing some cadavaberries", "Harvest", "Examine", 1, 1, 1, 0, "cadavaberrybush", ++i));
+			objects.add(new GameObjectDef("Dwellberry Bush", "A bush filled with mysterious dwellberries", "Harvest", "Examine", 1, 1, 1, 0, "dwellberrybush", ++i));
+			objects.add(new GameObjectDef("Jangerberry Bush", "A bush having the mysterious jangerberries", "Harvest", "Examine", 1, 1, 1, 0, "jangerberrybush", ++i));
+			objects.add(new GameObjectDef("Whiteberry Bush", "A bush containing some whiteberries", "Harvest", "Examine", 1, 1, 1, 0, "whiteberrybush", ++i));
+			objects.add(new GameObjectDef("Depleted Bush", "A bush that once contained berries", "WalkTo", "Examine", 1, 1, 1, 0, "depletedbush", ++i));
+			objects.add(new GameObjectDef("Cabbage", "Oooh some cabbage", "Harvest", "Examine", 0, 1, 1, 0, "greencabbage", ++i)); //1262
+			objects.add(new GameObjectDef("Red Cabbage", "Oooh some red cabbage", "Harvest", "Examine", 0, 1, 1, 0, "redcabbage", ++i));
+			objects.add(new GameObjectDef("White Pumpkin", "A pumpkin ready for harvest", "Harvest", "Examine", 0, 1, 1, 0, "pumpkinwhite", ++i));
+			objects.add(new GameObjectDef("Potato Plant", "Some nice looking potatoes growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "potatoplant", ++i));
+			objects.add(new GameObjectDef("Onion Plant", "Some nice onions growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "onionplant", ++i));
+			objects.add(new GameObjectDef("Garlic Plant", "Some garlic growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "garlicplant", ++i));
+			objects.add(new GameObjectDef("Tomato Plant", "This plant has some good looking tomatoes", "Harvest", "Examine", 0, 1, 1, 0, "tomatoplant", ++i));
+			objects.add(new GameObjectDef("Corn Plant", "This plant contains ripe corn", "Harvest", "Examine", 0, 1, 1, 0, "cornplant", ++i));
+			objects.add(new GameObjectDef("Damaged Ground", "Disturbed ground left after a harvest", "WalkTo", "Examine", 0, 1, 1, 0, "dugupsoil1", ++i));
+			objects.add(new GameObjectDef("Depleted tomato plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedtomato", ++i));
+			objects.add(new GameObjectDef("Depleted corn plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedcorn", ++i));
+			objects.add(new GameObjectDef("Snape Grass", "Some interesting snape grass growing here", "Clip", "Examine", 1, 1, 1, 0, "snapegrass", ++i));
+			objects.add(new GameObjectDef("Herb", "I wonder what herb is around", "Clip", "Examine", 1, 1, 1, 0, "herb", ++i));
+			objects.add(new GameObjectDef("Pumpkin", "A pumpkin of autumn", "Collect", "Examine", 0, 1, 1, 0, "pumpkin", ++i));
+			objects.add(new GameObjectDef("Soil Mound", "A pile of very good soil", "WalkTo", "Examine", 1, 1, 1, 0, "soilmound", ++i));
+			objects.add(new GameObjectDef("Barrel of water", "A barrel filled with filtered water", "WalkTo", "Examine", 1, 1, 1, 0, "barrelwater", ++i));
+			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
+			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
+			objects.add(new GameObjectDef("Sea Weed", "Some tall sea weed growing here", "Clip", "Examine", 1, 1, 1, 0, "seaweed", ++i));//1280
+			objects.add(new GameObjectDef("Limpwurt Root", "Some nice limpwurt root around here", "Clip", "Examine", 1, 1, 1, 0, "limpwurtroot", ++i));
+			objects.add(new GameObjectDef("Sugar Cane", "The plant of interesting sugar cane!", "Harvest", "Examine", 0, 1, 1, 0, "sugarcane", ++i));
+			objects.add(new GameObjectDef("Mysterious Grape Vine", "This vine may have more than just grapes", "Harvest", "Examine", 0, 1, 1, 0, "grapevine", ++i));
+			objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1284
+			objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", ++i));//1285
+		}
+
+		objects.add(new GameObjectDef("Rocks", "It looks dangerous...", "climb", "Examine", 0, 1, 1, 0, "brownclimbingrocks", ++i));//1286
 	}
 
 	public static void load(boolean loadMembers) {

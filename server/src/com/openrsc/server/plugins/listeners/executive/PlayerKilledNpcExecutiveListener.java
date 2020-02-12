@@ -7,5 +7,5 @@ public interface PlayerKilledNpcExecutiveListener {
 	/**
 	 * Return true to prevent the default action on a npcs death (no loot) //yeah. well. i still think it should control whole death.
 	 */
-	public boolean blockPlayerKilledNpc(Player p, Npc n);
+	boolean blockPlayerKilledNpc(Player p, Npc n);
 }

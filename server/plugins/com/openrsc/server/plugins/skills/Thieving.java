@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -65,8 +66,8 @@ public class Thieving extends Functions
 		else
 			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 
-		player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, 2000, "Stall Thieving") {
-			public void run() {
+		player.getWorld().getServer().getGameEventHandler().add(new SingleTickEvent(player.getWorld(), player, 3, "Stall Thieving") {
+			public void action() {
 				String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" : objectName.replaceAll("stall", "").trim();
 				if (!failNoun.endsWith("s")) {
 					failNoun += "s";
@@ -350,9 +351,10 @@ public class Thieving extends Functions
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
-			player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, 3000, "Pickpocket Check") {
+			player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, 2, "Pickpocket Check") {
 				public void run() {
 					getPlayerOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
+					stop();
 				}
 			});
 			return;

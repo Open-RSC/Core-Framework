@@ -56,10 +56,7 @@ public class WalkRequest implements PacketHandler {
 					}
 
 					if (opponent.isNpc()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerNpcRun",
-							new Object[]{player, ((Npc) opponent)})) {
-							return;
-						}
+						player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerNpcRun", new Object[]{player, ((Npc) opponent)});
 					}
 				} else {
 					player.message("You can't retreat during the first 3 rounds of combat");

@@ -24,10 +24,10 @@ class MeleeFormula {
 	 * @param source      The mob doing the damage
 	 * @return The randomized value.
 	 */
-	private static int calculateDamage(Mob source) {
-		Random r = DataConversions.getRandom();
-		double maximum = getMeleeDamage(source);
-		double mean = maximum / 2;
+	private static int calculateDamage(final Mob source) {
+		final Random r = DataConversions.getRandom();
+		final double maximum = getMeleeDamage(source);
+		final double mean = maximum / 2;
 		double value = 0;
 		do {
 			value = Math.floor(mean + r.nextGaussian() * (maximum / 3));
@@ -43,9 +43,9 @@ class MeleeFormula {
 	 * @param defence             The defence term
 	 * @return True if the attack is a hit, false if the attack is a miss
 	 */
-	private static boolean calculateAccuracy(double accuracy, double defence) {
-		int odds = (int)Math.min(212.0D, 255.0D * accuracy / (defence * 6));
-		int roll = DataConversions.random(0, 255);
+	private static boolean calculateAccuracy(final double accuracy, final double defence) {
+		final int odds = (int)Math.min(212.0D, 255.0D * accuracy / (defence * 4));
+		final int roll = DataConversions.random(0, 255);
 
 		//LOGGER.info(source + " has " + odds + "/256 to hit " + victim + ", rolled " + roll);
 
@@ -59,7 +59,7 @@ class MeleeFormula {
 	 * @param victim             The mob being attacked.
 	 * @return True if the attack is a hit, false if the attack is a miss
 	 */
-	private static boolean calculateMeleeAccuracy(Mob source, Mob victim) {
+	private static boolean calculateMeleeAccuracy(final Mob source, final Mob victim) {
 		return calculateAccuracy(getMeleeAccuracy(source), getMeleeDefence(victim));
 	}
 
@@ -70,48 +70,52 @@ class MeleeFormula {
 	 * @param victim             The mob being attacked.
 	 * @return The amount to hit.
 	 */
-	public static int getDamage(Mob source, Mob victim) {
-		//return calculateAccuracy(source, victim) ? calculateDamage(getMeleeDamage(source)) : 0;
-		boolean isHit = calculateMeleeAccuracy(source, victim);
-		int damage = isHit ? calculateDamage(source) : 0;
+	public static int getDamage(final Mob source, final Mob victim) {
+		final boolean isHit = calculateMeleeAccuracy(source, victim);
+		final int damage = isHit ? calculateDamage(source) : 0;
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
 		return damage;
 	}
 
-	private static int getMeleeDamage(Mob source) {
-		int styleBonus = styleBonus(source, 2);
-		double prayerBonus = addPrayers(source, Prayers.BURST_OF_STRENGTH,
+	private static int getMeleeDamage(final Mob source) {
+		final int styleBonus = styleBonus(source, 2);
+		final double prayerBonus = addPrayers(source, Prayers.BURST_OF_STRENGTH,
 			Prayers.SUPERHUMAN_STRENGTH,
 			Prayers.ULTIMATE_STRENGTH);
 
-		int strength = (int)((source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus);
-		double weaponMultiplier = (source.getWeaponPowerPoints() * 0.00175D)+0.1D;
+		final int strength = (int)((source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus);
+		final double weaponMultiplier = (source.getWeaponPowerPoints() * 0.00175D)+0.1D;
 
 		return (int)(strength * weaponMultiplier + 1.05D);
 	}
 
-
-	private static int getMeleeDefence(Mob defender) {
-		int styleBonus = styleBonus(defender, 1);
-		double prayerBonus = addPrayers(defender, Prayers.THICK_SKIN,
+	private static double getMeleeDefence(final Mob defender) {
+		final int styleBonus = styleBonus(defender, 1);
+		final double prayerBonus = addPrayers(defender, Prayers.THICK_SKIN,
 			Prayers.ROCK_SKIN,
 			Prayers.STEEL_SKIN);
 
-		return (int) (defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus + defender.getArmourPoints();
+		final int defense = (int)((defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus);
+		final double armourMultiplier = (defender.getArmourPoints() * 0.00175D)+0.1D;
+
+		return (defense * armourMultiplier) + 1.05D;
 	}
 
-	private static int getMeleeAccuracy(Mob attacker) {
-		int styleBonus = styleBonus(attacker, 0);
-		double prayerBonus = addPrayers(attacker, Prayers.CLARITY_OF_THOUGHT,
+	private static double getMeleeAccuracy(final Mob attacker) {
+		final int styleBonus = styleBonus(attacker, 0);
+		final double prayerBonus = addPrayers(attacker, Prayers.CLARITY_OF_THOUGHT,
 			Prayers.IMPROVED_REFLEXES,
 			Prayers.INCREDIBLE_REFLEXES);
 
-		return (int) (attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus + attacker.getWeaponAimPoints();
+		final int attack = (int)((attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus);
+		final double weaponMultiplier = (attacker.getWeaponAimPoints() * 0.00175D)+0.1D;
+
+		return (attack * weaponMultiplier) + 1.05D;
 	}
 
-	private static int styleBonus(Mob mob, int skill) {
+	private static int styleBonus(final Mob mob, final int skill) {
 		if (mob.isNpc())
 			return 0;
 
@@ -123,9 +127,9 @@ class MeleeFormula {
 			|| (skill == 2 && style == 1) ? 3 : 0;
 	}
 
-	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {
+	private static double addPrayers(final Mob source, final int prayer1, final int prayer2, final int prayer3) {
 		if (source.isPlayer()) {
-			Player sourcePlayer = (Player) source;
+			final Player sourcePlayer = (Player) source;
 			if (sourcePlayer.getPrayers().isPrayerActivated(prayer3)) {
 				return 1.15D;
 			}

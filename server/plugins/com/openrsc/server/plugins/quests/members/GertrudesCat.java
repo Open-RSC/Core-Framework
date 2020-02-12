@@ -462,12 +462,12 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i) {
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return i.getID() == ItemId.KITTENS.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getID() == ItemId.KITTENS.id()) {
 			message(p, "you drop the kittens", "they run back to the crate");
 			removeItem(p, ItemId.KITTENS.id(), 1);

@@ -42,6 +42,7 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+
 		if (affectedMob.isPlayer()) {
 			if (affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
 				player.message("Here kolodion protects all from your attack");
@@ -84,34 +85,26 @@ public class AttackHandler implements PacketHandler {
 			if (affectedMob.isNpc())
 				player.setFollowing(affectedMob, 0);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, affectedMob.isNpc() ? 1 : 2) {
-				public void execute() {
-					player.resetPath();
-					player.resetFollowing();
+				public void executeInternal() {
+					getPlayer().resetPath();
+					getPlayer().resetFollowing();
 
-					if (mob.inCombat() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
-						player.message("I can't get close enough");
+					if (mob.inCombat() && getPlayer().getRangeEquip() < 0 && getPlayer().getThrowingEquip() < 0) {
+						getPlayer().message("I can't get close enough");
 						return;
 					}
-					if (player.isBusy() || mob.isBusy() || !player.canReach(mob)
-						|| !player.checkAttack(mob, false) || player.getStatus() != Action.ATTACKING_MOB) {
+					if (getPlayer().isBusy() || mob.isBusy() || !getPlayer().canReach(mob)
+						|| !getPlayer().checkAttack(mob, false) || getPlayer().getStatus() != Action.ATTACKING_MOB) {
 						return;
 					}
 					if (mob.isNpc()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerAttackNpc",
-							new Object[]{player, (Npc) mob})) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "PlayerAttackNpc", new Object[]{getPlayer(), (Npc) mob}, this)) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
-						if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "PlayerAttack",
-							new Object[]{player, mob})) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "PlayerAttack", new Object[]{getPlayer(), mob}, this)) {
 							return;
-						}
-					}
-					player.startCombat(mob);
-					if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
-						if (player.getParty() != null) {
-							player.getParty().sendParty();
 						}
 					}
 				}

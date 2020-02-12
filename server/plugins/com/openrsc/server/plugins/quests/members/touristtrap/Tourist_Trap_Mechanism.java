@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -16,9 +17,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Tourist_Trap_Mechanism implements UnWieldListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
+public class Tourist_Trap_Mechanism implements UnWieldListener, UnWieldExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
 PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
-	
+
 	private static int MINING_CAVE = 963;
 	private static int MINING_CART = 976;
 	private static int MINING_CAVE_BACK = 964;
@@ -31,8 +32,15 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	private static int DISTURBED_SAND2 = 945;
 
 	@Override
-	public void onUnWield(Player player, Item item) {
+	public boolean blockUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
+		return (item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1;
+	}
+
+	@Override
+	public void onUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
 		if ((item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
+			player.getInventory().unwieldItem(item, true);
+
 			Npc n = getNearestNpc(player, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
 				n.teleport(player.getX(), player.getY());
@@ -48,6 +56,13 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				npcTalk(player, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
 				newNpc.startCombat(player);
+			}
+
+			if(fromBank) {
+				player.getBank().wieldItem(item, sound);
+				ActionSender.showBank(player);
+			} else {
+				player.getInventory().wieldItem(item, sound);
 			}
 		}
 	}
@@ -912,7 +927,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	public boolean blockPickup(Player p, GroundItem item) {
 		return item.getID() == ItemId.ANA_IN_A_BARREL.id();
 	}
-	
+
 	@Override
 	public void onPickup(Player player, GroundItem item) {
 		if (item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
@@ -924,14 +939,14 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			return;
 		}
 	}
-	
+
 	@Override
-	public boolean blockDrop(Player p, Item i) {
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return i.getID() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);

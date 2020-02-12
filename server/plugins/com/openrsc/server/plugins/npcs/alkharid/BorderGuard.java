@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
@@ -50,10 +51,10 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 					npcTalk(p, n, "You may pass");
 					p.message("The gate swings open");
 					if (p.getX() > 91) {
-						p.walkThenTeleport(92, 649, 91, 649, false);
+						Functions.walkThenTeleport(p, 92, 649, 91, 649, false);
 					}
 					else {
-						p.walkThenTeleport(91, 649, 92, 649, false);
+						Functions.walkThenTeleport(p, 91, 649, 92, 649, false);
 					}
 				} else {
 					playerTalk(p, n,

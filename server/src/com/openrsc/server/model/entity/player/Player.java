@@ -35,7 +35,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
-import com.openrsc.server.net.rsc.handlers.ItemDropHandler;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -53,8 +52,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static com.openrsc.server.plugins.Functions.sleep;
 
 /**
  * A single player.
@@ -89,7 +86,8 @@ public final class Player extends Mob {
 	private int expShared = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
-	private WalkToAction walkToAction;
+	private volatile WalkToAction walkToAction;
+	private volatile WalkToAction lastExecutedWalkToAction;
 	private Trade trade;
 	private int databaseID;
 	private Clan clan;
@@ -123,7 +121,7 @@ public final class Player extends Mob {
 	private BatchEvent batchEvent = null;
 	private String currentIP = "0.0.0.0";
 	private int incorrectSleepTries = 0;
-	private int questionOption;
+	private volatile int questionOption;
 
 	/**
 	 * Players cache is used to store various objects into database
@@ -297,7 +295,7 @@ public final class Player extends Mob {
 	/**
 	 * The current status of the player
 	 */
-	private Action status = Action.IDLE;
+	private volatile Action status = Action.IDLE;
 	/**
 	 * If the player has been sending suspicious packets
 	 */
@@ -854,19 +852,15 @@ public final class Player extends Mob {
 
 			if (unWield) {
 				getInventory().unwieldItem(item, false);
+				ActionSender.sendEquipmentStats(this);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getEquipment().get(slot) != null) {
-					ItemDropHandler doit = new ItemDropHandler();
-					if (item.getDef(getWorld()).isStackable())
-						doit.dropStackable(this, item, item.getAmount(), false);
-					else
-						doit.dropUnstackable(this, item, 1, false);
+					getWorld().getServer().getPluginHandler().handlePlugin(this, "Drop", new Object[]{this, item, false});
 				}
 			}
 
 		}
-		ActionSender.sendEquipmentStats(this);
 	}
 
 	public void checkEquipment() {
@@ -944,11 +938,11 @@ public final class Player extends Mob {
 		return bankSize - getBank().size();
 	}
 
-	public Bank getBank() {
+	public synchronized Bank getBank() {
 		return bank;
 	}
 
-	public void setBank(final Bank b) {
+	public synchronized void setBank(final Bank b) {
 		bank = b;
 	}
 
@@ -1072,20 +1066,19 @@ public final class Player extends Mob {
 		this.interactingNpc = interactingNpc;
 	}
 
-	public Inventory getInventory() {
+	public synchronized Inventory getInventory() {
 		return inventory.get();
 	}
 
-	public Equipment getEquipment() {
+	public synchronized Equipment getEquipment() {
 		return equipment.get();
 	}
 
-
-	public void setInventory(final Inventory i) {
+	public synchronized void setInventory(final Inventory i) {
 		inventory.set(i);
 	}
 
-	public void setEquipment(final Equipment e) {
+	public synchronized void setEquipment(final Equipment e) {
 		equipment.set(e);
 	}
 
@@ -1114,9 +1107,11 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			points = getEquipment().getMagic();
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getMagicBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getMagicBonus();
+					}
 				}
 			}
 		}
@@ -1128,6 +1123,7 @@ public final class Player extends Mob {
 	}
 
 	public void setMenu(final Menu menu) {
+		resetMenuHandler();
 		this.menu = menu;
 	}
 
@@ -1136,6 +1132,7 @@ public final class Player extends Mob {
 	}
 
 	public void setMenuHandler(final MenuOptionListener menuHandler) {
+		resetMenuHandler();
 		menuHandler.setOwner(this);
 		this.menuHandler = menuHandler;
 	}
@@ -1157,11 +1154,11 @@ public final class Player extends Mob {
 		getCache().store("global_mute", l);
 	}
 
-	public int getOption() {
+	public synchronized int getOption() {
 		return questionOption;
 	}
 
-	public void setOption(final int option) {
+	public synchronized void setOption(final int option) {
 		this.questionOption = option;
 	}
 
@@ -1178,9 +1175,11 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			points = getEquipment().getPrayer();
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getPrayerBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getPrayerBonus();
+					}
 				}
 			}
 		}
@@ -1234,10 +1233,12 @@ public final class Player extends Mob {
 				}
 			}
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-					return item.getID();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
+						|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
+						return item.getID();
+					}
 				}
 			}
 		}
@@ -1254,9 +1255,11 @@ public final class Player extends Mob {
 				}
 			}
 		} else {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
-					return item.getID();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
+						return item.getID();
+					}
 				}
 			}
 		}
@@ -1373,11 +1376,11 @@ public final class Player extends Mob {
 		return DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D);
 	}
 
-	public Action getStatus() {
+	public synchronized Action getStatus() {
 		return status;
 	}
 
-	public void setStatus(Action a) {
+	public synchronized void setStatus(Action a) {
 		status = a;
 	}
 
@@ -1405,9 +1408,11 @@ public final class Player extends Mob {
 	public int getArmourPoints() {
 		int points = 1;
 		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getArmourBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getArmourBonus();
+					}
 				}
 			}
 		} else {
@@ -1421,9 +1426,11 @@ public final class Player extends Mob {
 	public int getWeaponAimPoints() {
 		int points = 1;
 		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getWeaponAimBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getWeaponAimBonus();
+					}
 				}
 			}
 		} else {
@@ -1438,9 +1445,11 @@ public final class Player extends Mob {
 	public int getWeaponPowerPoints() {
 		int points = 1;
 		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : getInventory().getItems()) {
-				if (item.isWielded()) {
-					points += item.getDef(getWorld()).getWeaponPowerBonus();
+			synchronized(getInventory().getItems()) {
+				for (Item item : getInventory().getItems()) {
+					if (item.isWielded()) {
+						points += item.getDef(getWorld()).getWeaponPowerBonus();
+					}
 				}
 			}
 		} else {
@@ -1641,7 +1650,7 @@ public final class Player extends Mob {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
-				getWorld().getServer().getPluginHandler().blockDefaultAction(this, "CatGrowth", new Object[]{this});
+				getWorld().getServer().getPluginHandler().handlePlugin(this, "CatGrowth", new Object[]{this});
 			}
 		}
 	}
@@ -1689,6 +1698,10 @@ public final class Player extends Mob {
 		return groupID == Group.MOD || isSuperMod();
 	}
 
+	public boolean isPlayerMod() {
+		return groupID == Group.PLAYER_MOD || isSuperMod();
+	}
+
 	public boolean isDev() {
 		return groupID == Group.DEV || isAdmin();
 	}
@@ -1697,8 +1710,19 @@ public final class Player extends Mob {
 		return groupID == Group.EVENT || isMod() || isDev();
 	}
 
-	public boolean isStaff() {
-		return isEvent();
+	public boolean hasElevatedPriveledges() {
+		switch (groupID) {
+			case Group.OWNER:
+			case Group.ADMIN:
+			case Group.SUPER_MOD:
+			case Group.MOD:
+				return true;
+		}
+		return false;
+	}
+
+	public boolean isDefaultUser() {
+		return groupID == Group.DEFAULT_GROUP;
 	}
 
 	public boolean isChangingAppearance() {
@@ -1864,7 +1888,7 @@ public final class Player extends Mob {
 		if (stake) {
 			getDuel().dropOnDeath();
 		} else {
-			if (!isStaff())
+			if (!hasElevatedPriveledges())
 				getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(IronmanMode.Hardcore.id())) {
@@ -1877,9 +1901,11 @@ public final class Player extends Mob {
 		this.setLastOpponent(null);
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
-			setLocation(Point.location(122, 647), true);
+			setLocation(Point.location(120, 648), true);
+			face(120, 643);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
+			face(getCache().getInt("death_location_x"), getCache().getInt("death_location_y") - 5);
 		}
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);
@@ -1911,9 +1937,11 @@ public final class Player extends Mob {
 			if (i != null)
 				return i.getID();
 		} else {
-			for (Item i : getInventory().getItems()) {
-				if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
-					return i.getID();
+			synchronized(getInventory().getItems()) {
+				for (Item i : getInventory().getItems()) {
+					if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
+						return i.getID();
+				}
 			}
 		}
 		return -1;
@@ -1931,14 +1959,6 @@ public final class Player extends Mob {
 
 	public void playerServerMessage(final MessageType type, final String string) {
 		ActionSender.sendPlayerServerMessage(this, type, string);
-	}
-
-	public void walkThenTeleport(final int x1, final int y1, final int x2, final int y2, final boolean bubble) {
-		walk(x1, y1);
-		while (!getWalkingQueue().finished()) {
-			sleep(1);
-		}
-		teleport(x2, y2, bubble);
 	}
 
 	public void teleport(final int x, final int y) {
@@ -2113,6 +2133,7 @@ public final class Player extends Mob {
 	}
 
 	public void resetMenuHandler() {
+		setOption(-1);
 		menu = null;
 		menuHandler = null;
 		ActionSender.hideMenu(this);
@@ -2338,9 +2359,9 @@ public final class Player extends Mob {
 				}
 
 				if (bed) {
-					getOwner().sleepStateFatigue -= 33000;
+					getOwner().sleepStateFatigue -= 42000;
 				} else {
-					getOwner().sleepStateFatigue -= 8250;
+					getOwner().sleepStateFatigue -= 8400;
 				}
 
 				if (getOwner().sleepStateFatigue < 0) {
@@ -2355,7 +2376,7 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(final int x, final int y, final boolean bubble) {
-		if (bubble && getWorld().getServer().getPluginHandler().blockDefaultAction(this, "Teleport", new Object[]{this})) {
+		if (bubble && getWorld().getServer().getPluginHandler().handlePlugin(this, "Teleport", new Object[]{this})) {
 			return;
 		}
 		if (inCombat()) {
@@ -2481,6 +2502,14 @@ public final class Player extends Mob {
 		ActionSender.sendKills2(this);
 	}
 
+	public synchronized WalkToAction getLastExecutedWalkToAction() {
+		return lastExecutedWalkToAction;
+	}
+
+	public synchronized void setLastExecutedWalkToAction(final WalkToAction lastExecutedWalkToAction) {
+		this.lastExecutedWalkToAction = lastExecutedWalkToAction;
+	}
+
 	public void setExpShared(final int i) {
 		this.expShared = i;
 		ActionSender.sendExpShared(this);
@@ -2508,11 +2537,11 @@ public final class Player extends Mob {
 		}
 	}
 
-	public WalkToAction getWalkToAction() {
+	public synchronized WalkToAction getWalkToAction() {
 		return walkToAction;
 	}
 
-	public void setWalkToAction(final WalkToAction action) {
+	public synchronized void setWalkToAction(final WalkToAction action) {
 		this.walkToAction = action;
 	}
 
@@ -2816,6 +2845,9 @@ public final class Player extends Mob {
 
 			if (isEvent())
 				return 0x014D33BD;
+
+			if (isPlayerMod())
+				return 0x03FFFFFF;
 
 			return 0;
 		} else {
@@ -3146,7 +3178,7 @@ public final class Player extends Mob {
 				if (hitter.isPlayer()) {
 					((Player) hitter).resetAll();
 				}
-				this.teleport(122, 647, false);
+				this.teleport(120, 648, false);
 				this.message("Your ring of Life shines brightly");
 				this.getInventory().shatter(ItemId.RING_OF_LIFE.id());
 				return true;

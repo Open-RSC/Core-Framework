@@ -62,7 +62,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 			setThreadRunning(true);
 			setTickCompleted(false);
 		} catch (final InterruptedException ex) {
-			LOGGER.catching(ex);
+			throw new PluginInterruptedException();
 		}
 	}
 
@@ -74,6 +74,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	}
 
 	private synchronized void unregisterPluginThread() {
+		// TODO: Need a way to stop the plugin Thread
 		final String threadName = Thread.currentThread().getName();
 		setThreadRunning(false);
 		setTickCompleted(false);
@@ -103,4 +104,6 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private synchronized void setTickCompleted(boolean tickCompleted) {
 		this.tickCompleted = tickCompleted;
 	}
+
+	public class PluginInterruptedException extends RuntimeException {}
 }

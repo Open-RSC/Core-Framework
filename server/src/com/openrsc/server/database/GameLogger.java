@@ -39,30 +39,21 @@ public final class GameLogger implements Runnable {
 	}
 
 	public void start() {
-		synchronized (running) {
-			running.set(true);
-			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
-		}
+		running.set(true);
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 	}
 
 	public void stop() {
-		synchronized (running) {
-			running.set(false);
-		}
+		running.set(false);
+		scheduledExecutor.shutdown();
 	}
 
 	@Override
 	public void run() {
-		synchronized (running) {
-			while (running.get()) {
-				if (queries.size() > 0 && getServer().getDatabase().isConnected()) {
-					pollNextQuery();
-				}
+		if (running.get()) {
+			while (queries.size() > 0 && getServer().getDatabase().isConnected()) {
+				pollNextQuery();
 			}
-		}
-		LOGGER.info("Shutting down database thread.. executing remaining queries");
-		while (queries.size() > 0 && getServer().getDatabase().isConnected()) {
-			pollNextQuery();
 		}
 	}
 
@@ -89,12 +80,10 @@ public final class GameLogger implements Runnable {
 
 	// Runs a query on the database thread. This is mostly useful for non-critical data like game logs that we don't make further calculations on.
 	public void addQuery(final Query query) {
-		synchronized(running) {
-			if (!running.get()) {
-				return;
-			}
-			queries.add(query);
+		if (!running.get()) {
+			return;
 		}
+		queries.add(query);
 	}
 
 	// Runs a query on whatever program thread initiated the request. This is mostly useful for playing loading/saving to ensure data is returned.

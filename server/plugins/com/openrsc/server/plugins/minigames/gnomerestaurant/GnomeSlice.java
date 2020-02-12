@@ -1,15 +1,12 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.compareItemsIds;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
-import com.openrsc.server.constants.ItemId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
@@ -24,7 +21,9 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LEMON.id()))
 			return true;
-		
+		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.GRAPEFRUIT.id()))
+			return true;
+
 		return false;
 	}
 
@@ -88,6 +87,19 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			} else if (menu == 1) {
 				p.message("you cut the lemon into chunks");
 				p.getInventory().replace(ItemId.LEMON.id(), ItemId.DICED_LEMON.id());
+			}
+		}
+		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.GRAPEFRUIT.id())) {
+			p.message("you can slice or dice the grapefruit");
+			int menu = showMenu(p,
+				"slice grapefruit",
+				"dice grapefruit");
+			if (menu == 0) {
+				p.message("you slice the grapefruit");
+				p.getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.GRAPEFRUIT_SLICES.id());
+			} else if (menu == 1) {
+				p.message("you cut the grapefruit into chunks");
+				p.getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.DICED_GRAPEFRUIT.id());
 			}
 		}
 	}

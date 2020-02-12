@@ -31,7 +31,6 @@ import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -166,15 +165,19 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_DUEL_CONFIRMWINDOW.opcode);
 		s.writeString(with.getUsername());
-		s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
-		for (Item item : with.getDuel().getDuelOffer().getItems()) {
-			s.writeShort(item.getID());
-			s.writeInt(item.getAmount());
+		synchronized(with.getDuel().getDuelOffer().getItems()) {
+			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
+			for (Item item : with.getDuel().getDuelOffer().getItems()) {
+				s.writeShort(item.getID());
+				s.writeInt(item.getAmount());
+			}
 		}
-		s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
-		for (Item item : player.getDuel().getDuelOffer().getItems()) {
-			s.writeShort(item.getID());
-			s.writeInt(item.getAmount());
+		synchronized(player.getDuel().getDuelOffer().getItems()) {
+			s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
+			for (Item item : player.getDuel().getDuelOffer().getItems()) {
+				s.writeShort(item.getID());
+				s.writeInt(item.getAmount());
+			}
 		}
 
 		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0));
@@ -223,15 +226,18 @@ public class ActionSender {
 		if (with == null) {
 			return;
 		}
-		ArrayList<Item> items = with.getDuel().getDuelOffer().getItems();
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_DUEL_OPPONENTS_ITEMS.opcode);
-		s.writeByte((byte) items.size());
-		for (Item item : items) {
-			s.writeShort(item.getID());
-			s.writeInt(item.getAmount());
+		List<Item> items = with.getDuel().getDuelOffer().getItems();
+		synchronized(items) {
+			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+			s.setID(Opcode.SEND_DUEL_OPPONENTS_ITEMS.opcode);
+			s.writeByte((byte) items.size());
+			for (Item item : items) {
+				s.writeShort(item.getID());
+				s.writeInt(item.getAmount());
+			}
+
+			player.write(s.toPacket());
 		}
-		player.write(s.toPacket());
 	}
 
 	/**
@@ -539,6 +545,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().CHARACTER_CREATION_MODE + " 71");
 			LOGGER.info(server.getConfig().SKILLING_EXP_RATE + " 72");
 			LOGGER.info(server.getConfig().WANT_PK_BOTS + " 73");
+			LOGGER.info(server.getConfig().WANT_HARVESTING + " 74");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -634,6 +641,7 @@ public class ActionSender {
 		s.writeByte((byte) server.getConfig().CHARACTER_CREATION_MODE); //71
 		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //72
 		s.writeByte((byte) (server.getConfig().WANT_PK_BOTS ? 1 : 0)); // 73
+		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
 		return s;
 	}
 
@@ -672,11 +680,13 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY.opcode);
 		s.writeByte((byte) player.getInventory().size());
-		for (Item item : player.getInventory().getItems()) {
-			s.writeShort(item.getID());
-			s.writeByte((byte) (item.isWielded() ? 1 : 0));
-			if (item.getDef(player.getWorld()).isStackable())
-				s.writeInt(item.getAmount());
+		synchronized(player.getInventory().getItems()) {
+			for (Item item : player.getInventory().getItems()) {
+				s.writeShort(item.getID());
+				s.writeByte((byte) (item.isWielded() ? 1 : 0));
+				if (item.getDef(player.getWorld()).isStackable())
+					s.writeInt(item.getAmount());
+			}
 		}
 		player.write(s.toPacket());
 	}
@@ -1026,26 +1036,28 @@ public class ActionSender {
 		if (with == null) { // This shouldn't happen
 			return;
 		}
-		ArrayList<Item> items = with.getTrade().getTradeOffer().getItems();
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
+		List<Item> items = with.getTrade().getTradeOffer().getItems();
+		synchronized(items) {
+			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+			s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
 
-		// Other player's items first
-		s.writeByte((byte) items.size());
-		for (Item item : items) {
-			s.writeShort(item.getID());
-			s.writeInt(item.getAmount());
+			// Other player's items first
+			s.writeByte((byte) items.size());
+			for (Item item : items) {
+				s.writeShort(item.getID());
+				s.writeInt(item.getAmount());
+			}
+
+			// Our items second
+			items = player.getTrade().getTradeOffer().getItems();
+			s.writeByte((byte) items.size());
+			for (Item item : items) {
+				s.writeShort(item.getID());
+				s.writeInt(item.getAmount());
+			}
+
+			player.write(s.toPacket());
 		}
-
-		// Our items second
-		items = player.getTrade().getTradeOffer().getItems();
-		s.writeByte((byte) items.size());
-		for (Item item : items) {
-			s.writeShort(item.getID());
-			s.writeInt(item.getAmount());
-		}
-
-		player.write(s.toPacket());
 	}
 
 	public static void sendTradeWindowClose(Player player) {
@@ -1115,9 +1127,11 @@ public class ActionSender {
 		s.setID(Opcode.SEND_BANK_OPEN.opcode);
 		s.writeShort(player.getBank().size());
 		s.writeShort(player.getBankSize());
-		for (Item i : player.getBank().getItems()) {
-			s.writeShort(i.getID());
-			s.writeInt(i.getAmount());
+		synchronized(player.getBank().getItems()) {
+			for (Item i : player.getBank().getItems()) {
+				s.writeShort(i.getID());
+				s.writeInt(i.getAmount());
+			}
 		}
 		player.write(s.toPacket());
 	}
@@ -1243,10 +1257,8 @@ public class ActionSender {
 	static void sendLogin(Player p) {
 		try {
 			if (p.getWorld().registerPlayer(p)) {
-
 				sendWorldInfo(p);
 				p.getWorld().getServer().getGameUpdater().sendUpdatePackets(p);
-
 				long timeTillShutdown = p.getWorld().getServer().timeTillShutdown();
 				if (timeTillShutdown > -1)
 					startShutdown(p, (int)(timeTillShutdown / 1000));
@@ -1333,6 +1345,7 @@ public class ActionSender {
 				sendFriendList(p);
 				sendIgnoreList(p);
 			} else {
+				LOGGER.info("Send Login, Failed: " + p.getUsername());
 				p.getChannel().close();
 			}
 		} catch (Throwable e) {

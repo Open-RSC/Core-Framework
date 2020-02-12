@@ -13,6 +13,7 @@ class Group {
 	private static final int DEV = 8;
 	private static final int EVENT = 9;
 	private static final int USER = 10;
+	private static final int PLAYER_MOD = 11;
 
 	static final int DEFAULT_GROUP = Group.USER;
 
@@ -26,6 +27,7 @@ class Group {
 		GROUP_NAMES.put(DEV, "Developer");
 		GROUP_NAMES.put(EVENT, "Event");
 		GROUP_NAMES.put(USER, "User");
+		GROUP_NAMES.put(PLAYER_MOD, "Player Moderator");
 	}
 
 	private static String getNameColour(int groupID) {
@@ -39,11 +41,13 @@ class Group {
 				return "@gre@";
 			case SUPER_MOD:
 				return "@blu@";
+			case MOD:
+				return "@bl1@";
 			case DEV:
 				return "@red@";
 			case EVENT:
 				return "@eve@";
-			case MOD:
+			case PLAYER_MOD:
 			case USER:
 			default:
 				return "";

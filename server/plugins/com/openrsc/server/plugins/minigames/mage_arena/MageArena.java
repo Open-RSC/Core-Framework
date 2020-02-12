@@ -32,7 +32,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	public static final int SARADOMIN_STONE = 1152;
 	public static final int GUTHIX_STONE = 1153;
 	public static final int ZAMORAK_STONE = 1154;
-	
+
 	@Override
 	public int getMiniGameId() {
 		return Minigames.MAGE_ARENA;
@@ -52,7 +52,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	public void handleReward(Player p) {
 		//mini-quest complete handled already
 	}
-	
+
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
@@ -131,7 +131,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 			}
 		}
 	}
-	
+
 	public void canifight(Player p, Npc n) {
 		npcTalk(p, n, "my arena is open to any high level wizard",
 				"but this is no game traveller, wizards fall in this arena..",
@@ -341,19 +341,21 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	}
 
 	private boolean cantGo(Player p) {
-		for (Item item : p.getInventory().getItems()) {
-			String name = item.getDef(p.getWorld()).getName().toLowerCase();
-			if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
-				|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
-				&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-				|| name.contains("mace") || name.contains("helmet") || name.contains("axe")
-				|| name.contains("arrow") || name.contains("bow") || name.contains("spear")
-				|| name.contains("battlestaff")) {
+		synchronized(p.getInventory().getItems()) {
+			for (Item item : p.getInventory().getItems()) {
+				String name = item.getDef(p.getWorld()).getName().toLowerCase();
+				if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
+					|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
+					&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
+					|| name.contains("mace") || name.contains("helmet") || name.contains("axe")
+					|| name.contains("arrow") || name.contains("bow") || name.contains("spear")
+					|| name.contains("battlestaff")) {
 
-				return true;
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	@Override
@@ -553,23 +555,27 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				firstTimeEnchant = true;
 			}
 		}
-		
+
 		if (firstTimeEnchant) {
 			player.sendMiniGameComplete(this.getMiniGameId(), Optional.empty());
 		}
 	}
 
 	private boolean alreadyHasCape(Player player) {
-		for (Item item : player.getInventory().getItems()) {
-			if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
+		synchronized(player.getInventory().getItems()) {
+			for (Item item : player.getInventory().getItems()) {
+				if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
 					|| item.getID() == ItemId.GUTHIX_CAPE.id()) {
-				return true;
+					return true;
+				}
 			}
 		}
-		for (Item item : player.getBank().getItems()) {
-			if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
+		synchronized(player.getBank().getItems()) {
+			for (Item item : player.getBank().getItems()) {
+				if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
 					|| item.getID() == ItemId.GUTHIX_CAPE.id()) {
-				return true;
+					return true;
+				}
 			}
 		}
 		return false;

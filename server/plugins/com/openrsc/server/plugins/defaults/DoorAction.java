@@ -14,11 +14,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * Does default action to unhandled(non-quest related) doors.
- *
- * @author n0m
- */
+
 public class DoorAction {
 
 	public boolean blockWallObjectAction(final GameObject obj,

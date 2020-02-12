@@ -10,5 +10,5 @@ public interface PlayerNpcRunListener {
 	 * @param p
 	 * @param n
 	 */
-	public void onPlayerNpcRun(Player p, Npc n);
+	void onPlayerNpcRun(Player p, Npc n);
 }

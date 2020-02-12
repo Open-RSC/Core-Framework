@@ -20,7 +20,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthListener, CatGro
 InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	protected static final int BASE_FACTOR = 16;
-	
+
 	@Override
 	public int getMiniGameId() {
 		return Minigames.KITTEN_CARE;
@@ -40,20 +40,20 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	public void handleReward(Player p) {
 		//mini-quest complete handled already
 	}
-	
+
 	@Override
-	public boolean blockDrop(Player p, Item i) {
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return i.getID() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getID() == ItemId.KITTEN.id()) {
 			removeItem(p, ItemId.KITTEN.id(), 1);
 			message(p, 1200, "you drop the kitten");
 			message(p, 0, "it's upset and runs away");
 		}
-		
+
 		KittenState state = new KittenState();
 		state.saveState(p);
 	}
@@ -69,17 +69,17 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			message(p, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
 			message(p, 600, "the kitten appreciates the attention");
-			
+
 			reduceKittensLoneliness(p);
 		}
 	}
-	
+
 	public void entertainCat(Item item, Player p, boolean isGrown) {
 		if (item.getID() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
 				message(p, "your kitten plays around with the ball of wool",
 						"it seems to love pouncing on it");
-				
+
 				reduceKittensLoneliness(p);
 			} else {
 				message(p, "your cat plays around with the wool",
@@ -87,7 +87,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			}
 		}
 	}
-	
+
 	public void feedCat(Item item, Player p, boolean isGrown) {
 		boolean feeded = false;
 		switch (ItemId.getById(item.getID())) {
@@ -126,11 +126,11 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 		default:
 			break;
 		}
-		
+
 		if (feeded && !isGrown)
 			reduceKittensHunger(p);
 	}
-	
+
 	private void reduceKittensLoneliness(Player p) {
 		KittenState state = new KittenState();
 		state.loadState(p);
@@ -140,7 +140,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			state.saveState(p);
 		}
 	}
-	
+
 	private void reduceKittensHunger(Player p) {
 		KittenState state = new KittenState();
 		state.loadState(p);
@@ -165,17 +165,17 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			int kittenHunger = state.getHunger();
 			int kittenLoneliness = state.getLoneliness();
 			int kittenEvents = state.getEvents();
-			
+
 			int changeHunger = DataConversions.random(4, 6);
 			int changeLoneliness = DataConversions.random(4, 6);
-			
+
 			// trigger only if the gauges have passed to the next tenth digit
 			boolean tHunger = ((kittenHunger + changeHunger) / BASE_FACTOR) - (kittenHunger / BASE_FACTOR) > 0;
 			boolean tLoneliness = ((kittenLoneliness + changeLoneliness) / BASE_FACTOR) - (kittenLoneliness / BASE_FACTOR) > 0;
-			
+
 			kittenHunger += changeHunger;
 			kittenLoneliness += changeLoneliness;
-			
+
 			List<String> messages = new ArrayList<String>();
 			// hungry and lonely
 			if (tHunger && tLoneliness) {
@@ -192,11 +192,11 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 				messages = KittenMessageSolver.messagesLoneliness(kittenLoneliness);
 				kittenEvents++;
 			}
-			
+
 			for (String message : messages) {
 				p.message(message);
 			}
-			
+
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
 				p.getInventory().remove(ItemId.KITTEN.id(), 1);
@@ -209,7 +209,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 				message(p, 1200, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");
 			}
-			
+
 			state.setEvents(kittenEvents);
 			state.setHunger(kittenHunger);
 			state.setLoneliness(kittenLoneliness);
@@ -239,12 +239,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			}
 		}
 	}
-	
+
 	private boolean isBallWoolOnCat(Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.KITTEN.id(), ItemId.BALL_OF_WOOL.id())
 				|| compareItemsIds(item1, item2, ItemId.CAT.id(), ItemId.BALL_OF_WOOL.id());
 	}
-	
+
 	private boolean isFoodOnCat(Item item1, Item item2) {
 		return ((item2.getID() == ItemId.KITTEN.id() || item2.getID() == ItemId.CAT.id()) && inArray(item1.getID(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
 				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
@@ -273,7 +273,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 				//possibly non kosher
 				message(p, 1800, "...and quickly gobbles it up",
 						"it returns to your satchel licking it's paws");
-				
+
 				reduceKittensLoneliness(p);
 			}
 		} else if (item.getID() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {

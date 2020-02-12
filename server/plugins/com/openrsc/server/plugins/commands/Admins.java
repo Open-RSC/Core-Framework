@@ -31,6 +31,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -41,7 +42,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-public final class Admins implements CommandListener {
+public final class Admins implements CommandListener, CommandExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
 
 	public static String messagePrefix = null;
@@ -70,26 +71,19 @@ public final class Admins implements CommandListener {
 		return location;
 	}
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isAdmin();
 	}
 
 	@Override
-	public void handleCommand(String cmd, String[] args, final Player player) {
+	public void onCommand(String cmd, String[] args, final Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		int count1 = 0;
 		if (cmd.equalsIgnoreCase("cleannpcs")) {
 			player.getWorld().getServer().getGameEventHandler().submit(() -> {
@@ -807,7 +801,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not set hp of a staff member of equal or greater rank.");
 				return;
 			}
@@ -849,7 +843,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not set prayer of a staff member of equal or greater rank.");
 				return;
 			}
@@ -886,7 +880,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not kill a staff member of equal or greater rank.");
 				return;
 			}
@@ -919,7 +913,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not damage a staff member of equal or greater rank.");
 				return;
 			}
@@ -946,7 +940,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not wipe the inventory of a staff member of equal or greater rank.");
 				return;
 			}
@@ -994,12 +988,14 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not wipe the bank of a staff member of equal or greater rank.");
 				return;
 			}
 
-			p.getBank().getItems().clear();
+			synchronized(p.getBank().getItems()) {
+				p.getBank().getItems().clear();
+			}
 			if (p.getUsernameHash() != player.getUsernameHash()) {
 				p.message(messagePrefix + "Your bank has been wiped by an admin");
 			}
@@ -1244,7 +1240,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not talk as a staff member of equal or greater rank.");
 				return;
 			}
@@ -1474,7 +1470,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not freeze experience of a staff member of equal or greater rank.");
 				return;
 			}
@@ -1791,7 +1787,7 @@ public final class Admins implements CommandListener {
 				return;
 			}
 
-			if (p.isStaff() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not skull a staff member of equal or greater rank.");
 				return;
 			}

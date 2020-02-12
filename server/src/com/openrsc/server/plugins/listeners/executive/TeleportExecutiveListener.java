@@ -9,5 +9,5 @@ public interface TeleportExecutiveListener {
 	 *
 	 * @return
 	 */
-	public boolean blockTeleport(Player p);
+	boolean blockTeleport(Player p);
 }

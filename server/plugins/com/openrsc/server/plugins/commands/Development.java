@@ -8,31 +8,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
+import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class Development implements CommandListener {
+public final class Development implements CommandListener, CommandExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(Development.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public void onCommand(String cmd, String[] args, Player player) {
-		if (isCommandAllowed(player, cmd)) {
-
-			if(messagePrefix == null) {
-				messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
-			}
-			if(badSyntaxPrefix == null) {
-				badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
-			}
-
-			handleCommand(cmd, args, player);
-		}
-	}
-
-	public boolean isCommandAllowed(Player player, String cmd) {
+	public boolean blockCommand(String cmd, String[] args, Player player) {
 		return player.isDev();
 	}
 
@@ -41,7 +28,14 @@ public final class Development implements CommandListener {
 	 * Development usable commands in general
 	 */
 	@Override
-	public void handleCommand(String cmd, String[] args, Player player) {
+	public void onCommand(String cmd, String[] args, Player player) {
+		if(messagePrefix == null) {
+			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+		}
+		if(badSyntaxPrefix == null) {
+			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+		}
+
 		if (cmd.equalsIgnoreCase("radiusnpc") || cmd.equalsIgnoreCase("createnpc") || cmd.equalsIgnoreCase("cnpc")|| cmd.equalsIgnoreCase("cpc")) {
 			if (args.length < 2 || args.length == 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [radius] (x) (y)");

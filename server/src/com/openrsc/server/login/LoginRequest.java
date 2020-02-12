@@ -98,6 +98,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		loginValidated(loginResponse);
 		if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
 			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
+			LOGGER.info("Player Loaded: " + getUsername());
 
 			getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 				@Override

@@ -2,25 +2,43 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.util.rsc.MessageType;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class IronMan implements TalkToNpcExecutiveListener,
-	TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
+	TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener,
+	PickupListener, PickupExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(IronMan.class);
-	private static int IRON_MAN = 799;
-	private static int ULTIMATE_IRON_MAN = 800;
-	private static int HARDCORE_IRON_MAN = 801;
+	private static int IRON_MAN = NpcId.IRONMAN.id();
+	private static int ULTIMATE_IRON_MAN = NpcId.ULTIMATE_IRONMAN.id();
+	private static int HARDCORE_IRON_MAN = NpcId.HARDCORE_IRONMAN.id();
+
+	private int[] ironmanArmourPieces = new int[]{
+		ItemId.IRONMAN_HELM.id(), ItemId.IRONMAN_PLATEBODY.id(), ItemId.IRONMAN_PLATELEGS.id(),
+		ItemId.ULTIMATE_IRONMAN_HELM.id(), ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(),
+		ItemId.HARDCORE_IRONMAN_HELM.id(), ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), ItemId.HARDCORE_IRONMAN_PLATELEGS.id()
+	};
+
+	@Override
+	public void onPickup(Player player, GroundItem item) {
+		if (DataConversions.inArray(ironmanArmourPieces, item.getID())) {
+			player.message("I'd better speak to an Ironman Npc for a replacement");
+		}
+	}
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
@@ -150,28 +168,77 @@ public class IronMan implements TalkToNpcExecutiveListener,
 				npcTalk(p, n, "We'll give you your armour once you're off this island.",
 					"Come and see us in Lumbridge.");
 			} else {
-				if (!p.getCache().hasKey("iron_man_armour")) {
-					npcTalk(p, n, "There you go. Wear it with pride.");
-					p.playerServerMessage(MessageType.QUEST, "Try to hold on to this armour set.");
-					p.playerServerMessage(MessageType.QUEST, "You won't be able to get another set from the Iron Men.");
+				if (!hasItemAtAll(p, expectedArmour(p, ArmourPart.HELM)) ||
+					!hasItemAtAll(p, expectedArmour(p, ArmourPart.BODY)) ||
+					!hasItemAtAll(p, expectedArmour(p, ArmourPart.LEGS))) {
 					if (p.getIronMan() == IronmanMode.Ironman.id()) {
-						addItem(p, ItemId.IRONMAN_HELM.id(), 1);
-						addItem(p, ItemId.IRONMAN_PLATEBODY.id(), 1);
-						addItem(p, ItemId.IRONMAN_PLATELEGS.id(), 1);
+						if (!hasItemAtAll(p, ItemId.IRONMAN_HELM.id()))
+							addItem(p, ItemId.IRONMAN_HELM.id(), 1);
+						if (!hasItemAtAll(p, ItemId.IRONMAN_PLATEBODY.id()))
+							addItem(p, ItemId.IRONMAN_PLATEBODY.id(), 1);
+						if (!hasItemAtAll(p, ItemId.IRONMAN_PLATELEGS.id()))
+							addItem(p, ItemId.IRONMAN_PLATELEGS.id(), 1);
 					} else if (p.getIronMan() == IronmanMode.Ultimate.id()) {
-						addItem(p, ItemId.ULTIMATE_IRONMAN_HELM.id(), 1);
-						addItem(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), 1);
-						addItem(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), 1);
+						if (!hasItemAtAll(p, ItemId.ULTIMATE_IRONMAN_HELM.id()))
+							addItem(p, ItemId.ULTIMATE_IRONMAN_HELM.id(), 1);
+						if (!hasItemAtAll(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()))
+							addItem(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), 1);
+						if (!hasItemAtAll(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()))
+							addItem(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), 1);
 					} else if (p.getIronMan() == IronmanMode.Hardcore.id()) {
-						addItem(p, ItemId.HARDCORE_IRONMAN_HELM.id(), 1);
-						addItem(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), 1);
-						addItem(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), 1);
+						if (!hasItemAtAll(p, ItemId.HARDCORE_IRONMAN_HELM.id()))
+							addItem(p, ItemId.HARDCORE_IRONMAN_HELM.id(), 1);
+						if (!hasItemAtAll(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id()))
+							addItem(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), 1);
+						if (!hasItemAtAll(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id()))
+							addItem(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), 1);
 					}
-					p.getCache().store("iron_man_armour", true);
+					npcTalk(p, n, "There you go. Wear it with pride.");
 				} else {
 					npcTalk(p, n, "I think you've already got the whole set.");
 				}
 			}
 		}
+	}
+
+	int expectedArmour(Player p, ArmourPart part) {
+		if (p.getIronMan() == IronmanMode.Ironman.id()) {
+			switch(part) {
+				case HELM:
+					return ItemId.IRONMAN_HELM.id();
+				case BODY:
+					return ItemId.IRONMAN_PLATEBODY.id();
+				case LEGS:
+					return ItemId.IRONMAN_PLATELEGS.id();
+			}
+		} else if (p.getIronMan() == IronmanMode.Ultimate.id()) {
+			switch(part) {
+				case HELM:
+					return ItemId.ULTIMATE_IRONMAN_HELM.id();
+				case BODY:
+					return ItemId.ULTIMATE_IRONMAN_PLATEBODY.id();
+				case LEGS:
+					return ItemId.ULTIMATE_IRONMAN_PLATELEGS.id();
+			}
+		} else if (p.getIronMan() == IronmanMode.Hardcore.id()) {
+			switch(part) {
+				case HELM:
+					return ItemId.HARDCORE_IRONMAN_HELM.id();
+				case BODY:
+					return ItemId.HARDCORE_IRONMAN_PLATEBODY.id();
+				case LEGS:
+					return ItemId.HARDCORE_IRONMAN_PLATELEGS.id();
+			}
+		}
+		return ItemId.NOTHING.id();
+	}
+
+	enum ArmourPart {
+		HELM, BODY, LEGS,
+	}
+
+	@Override
+	public boolean blockPickup(Player p, GroundItem i) {
+		return DataConversions.inArray(ironmanArmourPieces, i.getID());
 	}
 }

@@ -569,7 +569,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public boolean registerPlayer(Player player) {
-
 		if (!getPlayers().contains(player)) {
 			player.setUUID(UUID.randomUUID().toString());
 
@@ -578,10 +577,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 			getPlayers().add(player);
 			player.updateRegion();
-			if (getServer().getLoginExecutor() != null) {
-				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), player.getCurrentIP(), true));
-				getServer().getGameLogger().addQuery(new LoginLog(player.getWorld(), player.getDatabaseID(), player.getCurrentIP()));
-			}
+			getServer().getGameLogger().run(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), player.getCurrentIP(), true));
+			getServer().getGameLogger().addQuery(new LoginLog(player.getWorld(), player.getDatabaseID(), player.getCurrentIP()));
 			for (Player other : getPlayers()) {
 				other.getSocial().alertOfLogin(player);
 			}
@@ -598,7 +595,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				player.setChargeTimer(player.getCache().getLong("charge_remaining"));
 			}
 
-			LOGGER.info("Registered " + player.getUsername() + " to server");
 			return true;
 		}
 		return false;

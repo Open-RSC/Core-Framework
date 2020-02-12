@@ -8,6 +8,5 @@ public interface PlayerDeathListener {
 	 *
 	 * @param p
 	 */
-	public void onPlayerDeath(Player p);
-
+	void onPlayerDeath(Player p);
 }

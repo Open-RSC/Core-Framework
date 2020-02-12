@@ -162,7 +162,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			player.getDuel().setDuelConfirmAccepted(true);
 
 			if (affectedPlayer.getDuel().isDuelConfirmAccepted()) {
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "Duel",
+				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Duel",
 					new Object[]{player, affectedPlayer})) {
 					return;
 				}
@@ -214,19 +214,23 @@ public class PlayerDuelHandler implements PacketHandler {
 							}
 						}
 					} else {
-						for (Item item : player.getInventory().getItems()) {
-							if (item.isWielded()) {
-								player.getInventory().unwieldItem(item, false);
+						synchronized(player.getInventory().getItems()) {
+							for (Item item : player.getInventory().getItems()) {
+								if (item.isWielded()) {
+									player.getInventory().unwieldItem(item, false);
+								}
 							}
 						}
 						ActionSender.sendSound(player, "click");
 						ActionSender.sendInventory(player);
 						ActionSender.sendEquipmentStats(player);
 
-						for (Item item : affectedPlayer.getInventory().getItems()) {
-							if (item.isWielded()) {
-								item.setWielded(false);
-								affectedPlayer.getInventory().unwieldItem(item, false);
+						synchronized(affectedPlayer.getInventory().getItems()) {
+							for (Item item : affectedPlayer.getInventory().getItems()) {
+								if (item.isWielded()) {
+									item.setWielded(false);
+									affectedPlayer.getInventory().unwieldItem(item, false);
+								}
 							}
 						}
 						ActionSender.sendSound(affectedPlayer, "click");
@@ -242,54 +246,54 @@ public class PlayerDuelHandler implements PacketHandler {
 
 				player.walkToEntity(affectedPlayer.getX(), affectedPlayer.getY());
 				player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, 0) {
-					public void execute() {
+					public void executeInternal() {
 						Player affectedPlayer = (Player) mob;
-						player.resetPath();
-						if (!player.canReach(affectedPlayer)) {
-							player.getDuel().resetAll();
+						getPlayer().resetPath();
+						if (!getPlayer().canReach(affectedPlayer)) {
+							getPlayer().getDuel().resetAll();
 							return;
 						}
 						affectedPlayer.resetPath();
 
-						player.resetAllExceptDueling();
+						getPlayer().resetAllExceptDueling();
 						affectedPlayer.resetAllExceptDueling();
 
-						player.setLocation(affectedPlayer.getLocation(), false);
+						getPlayer().setLocation(affectedPlayer.getLocation(), false);
 
 						// player.teleport(affectedPlayer.getX(),
 						// affectedPlayer.getY());
 
 
-						player.setSprite(9);
-						player.setOpponent(mob);
-						player.setCombatTimer();
+						getPlayer().setSprite(9);
+						getPlayer().setOpponent(mob);
+						getPlayer().setCombatTimer();
 
 						affectedPlayer.setSprite(8);
-						affectedPlayer.setOpponent(player);
+						affectedPlayer.setOpponent(getPlayer());
 						affectedPlayer.setCombatTimer();
 
 						Player attacker, opponent;
-						if (player.getCombatLevel() > affectedPlayer.getCombatLevel()) {
+						if (getPlayer().getCombatLevel() > affectedPlayer.getCombatLevel()) {
 							attacker = affectedPlayer;
-							opponent = player;
-						} else if (affectedPlayer.getCombatLevel() > player.getCombatLevel()) {
-							attacker = player;
+							opponent = getPlayer();
+						} else if (affectedPlayer.getCombatLevel() > getPlayer().getCombatLevel()) {
+							attacker = getPlayer();
 							opponent = affectedPlayer;
 						} else if (DataConversions.random(0, 1) == 1) {
-							attacker = player;
+							attacker = getPlayer();
 							opponent = affectedPlayer;
 						} else {
 							attacker = affectedPlayer;
-							opponent = player;
+							opponent = getPlayer();
 						}
 						//TEST
 						attacker.getDuel().setDuelActive(true);
 						opponent.getDuel().setDuelActive(true);
 
-						CombatEvent combatEvent = new CombatEvent(player.getWorld(), attacker, opponent);
+						CombatEvent combatEvent = new CombatEvent(getPlayer().getWorld(), attacker, opponent);
 						attacker.setCombatEvent(combatEvent);
 						opponent.setCombatEvent(combatEvent);
-						player.getWorld().getServer().getGameEventHandler().add(combatEvent);
+						getPlayer().getWorld().getServer().getGameEventHandler().add(combatEvent);
 					}
 				});
 			}
@@ -383,21 +387,25 @@ public class PlayerDuelHandler implements PacketHandler {
 				player.getDuel().setDuelSetting(i, b);
 				affectedPlayer.getDuel().setDuelSetting(i, b);
 			}
-			for (Item item : player.getDuel().getDuelOffer().getItems()) {
-				if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
-					player.getDuel().setDuelSetting(1, true);
-					affectedPlayer.getDuel().setDuelSetting(1, true);
-					player.message("When runes are staked, magic can't be used during the duel");
-					affectedPlayer.message("When runes are staked, magic can't be used during the duel");
+			synchronized(player.getDuel().getDuelOffer().getItems()) {
+				for (Item item : player.getDuel().getDuelOffer().getItems()) {
+					if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+						player.getDuel().setDuelSetting(1, true);
+						affectedPlayer.getDuel().setDuelSetting(1, true);
+						player.message("When runes are staked, magic can't be used during the duel");
+						affectedPlayer.message("When runes are staked, magic can't be used during the duel");
 
+					}
 				}
 			}
-			for (Item item : affectedPlayer.getDuel().getDuelOffer().getItems()) {
-				if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
-					player.getDuel().setDuelSetting(1, true);
-					affectedPlayer.getDuel().setDuelSetting(1, true);
-					player.message("When runes are staked, magic can't be used during the duel");
-					affectedPlayer.message("When runes are staked, magic can't be used during the duel");
+			synchronized(affectedPlayer.getDuel().getDuelOffer().getItems()) {
+				for (Item item : affectedPlayer.getDuel().getDuelOffer().getItems()) {
+					if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+						player.getDuel().setDuelSetting(1, true);
+						affectedPlayer.getDuel().setDuelSetting(1, true);
+						player.message("When runes are staked, magic can't be used during the duel");
+						affectedPlayer.message("When runes are staked, magic can't be used during the duel");
+					}
 				}
 			}
 			ActionSender.sendDuelSettingUpdate(player);

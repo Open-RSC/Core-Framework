@@ -26,7 +26,7 @@ public class Menu {
 	 * @param option
 	 * @return
 	 */
-	public Menu addOption(Option option) {
+	public Menu addOption(final Option option) {
 		options.add(option);
 		return this;
 	}
@@ -42,7 +42,7 @@ public class Menu {
 	 * @param opts
 	 * @return
 	 */
-	public Menu addOptions(Option... opts) {
+	public Menu addOptions(final Option... opts) {
 		for (Option i : opts) {
 			options.add(i);
 		}
@@ -54,7 +54,7 @@ public class Menu {
 	 *
 	 * @param player
 	 */
-	public void showMenu(Player player) {
+	public void showMenu(final Player player) {
 		String[] option = new String[options.size()];
 		int i = 0;
 		for (Option opt : options) {
@@ -64,25 +64,32 @@ public class Menu {
 		player.setMenu(this);
 		ActionSender.sendMenu(player, option);
 		long start = System.currentTimeMillis();
-		while (System.currentTimeMillis() - start <= 19500
-			&& player.getMenu() != null) {
+		while (System.currentTimeMillis() - start <= 19500 && player.getMenu() != null && player.getOption() == -1) {
 			if (player.getInteractingNpc() != null)
 				player.getInteractingNpc().setBusyTimer(3000);
-			Functions.sleep(100);
-		}
-	}
 
+			Functions.sleep(1);
+		}
+
+		doReply(player);
+	}
 
 	public int size() {
 		return options.size();
 	}
 
-	public void handleReply(Player player, int i) {
-		Option option = options.get(i);
-		if (option != null) {
-			Functions.playerTalk(player, player.getInteractingNpc(), option.getOption());
-			option.action();
+	private void doReply(final Player player) {
+		final int i = player.getOption();
+		if(i >= 0 && i <= options.size()) {
+			Option option = options.get(i);
+			if (option != null) {
+				Functions.playerTalk(player, player.getInteractingNpc(), option.getOption());
+				option.action();
+			}
 		}
-		player.resetMenuHandler();
+	}
+
+	public final void handleReply(final Player player, final int i) {
+		player.setOption(i);
 	}
 }

@@ -2,27 +2,24 @@ package com.openrsc.server.model;
 
 import com.openrsc.server.model.entity.player.Player;
 
-public abstract class MenuOptionListener {
+public class MenuOptionListener {
 	/**
 	 * Array of possible options that can be chosen
 	 */
 	protected String[] options;
-	/**
-	 * The Player this handler is responsible for
-	 */
-	protected Player owner;
+	private Player owner;
 
 	/**
 	 * Creates a new MenuHandler with the given options
 	 */
-	protected MenuOptionListener(String[] options) {
+	public MenuOptionListener(final String[] options) {
 		this.options = options;
 	}
 
 	/**
 	 * Gets the appropriate option string
 	 */
-	public final String getOption(int index) {
+	public final String getOption(final int index) {
 		if (index < 0 || index >= options.length) {
 			return null;
 		}
@@ -36,12 +33,21 @@ public abstract class MenuOptionListener {
 	/**
 	 * Abstract method for handling the reply
 	 */
-	public abstract void handleReply(int option, String reply);
+	public final void handleReply(final int option, final String reply) {
+		getOwner().setOption(option);
+	}
 
 	/**
 	 * Set the Player this MenuHandler is responsible for
 	 */
-	public final void setOwner(Player owner) {
+	public final void setOwner(final Player owner) {
 		this.owner = owner;
+	}
+
+	/**
+	 * The Player this handler is responsible for
+	 */
+	public Player getOwner() {
+		return owner;
 	}
 }

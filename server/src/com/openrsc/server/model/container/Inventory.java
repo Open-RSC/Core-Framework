@@ -23,7 +23,8 @@ public class Inventory {
 	 */
 	public static final int MAX_SIZE = 30;
 
-	private ArrayList<Item> list = new ArrayList<Item>();
+	// TODO: Use an ItemContainer rather than a list here.
+	private List<Item> list = Collections.synchronizedList(new ArrayList<>());
 
 	private Player player;
 
@@ -156,7 +157,8 @@ public class Inventory {
 		return freedSlots;
 	}
 
-	public ArrayList<Item> getItems() {
+	public List<Item> getItems() {
+		// TODO: This should be made private and all calls converted to use API on ItemContainer. This could stay public, IF we copy the list to a new list before returning.
 		synchronized (list) {
 			return list;
 		}
@@ -627,11 +629,12 @@ public class Inventory {
 				}
 			}
 		} else {
-			ArrayList<Item> items = getItems();
-
-			for (Item i : items) {
-				if (item.wieldingAffectsItem(player.getWorld(), i) && i.isWielded()) {
-					unwieldItem(i, false);
+			List<Item> items = getItems();
+			synchronized(items) {
+				for (Item i : items) {
+					if (item.wieldingAffectsItem(player.getWorld(), i) && i.isWielded()) {
+						unwieldItem(i, false);
+					}
 				}
 			}
 		}
@@ -773,5 +776,5 @@ public class Inventory {
 		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
 
-	public ArrayList getList() { return list;}
+	public List getList() { return list;}
 }

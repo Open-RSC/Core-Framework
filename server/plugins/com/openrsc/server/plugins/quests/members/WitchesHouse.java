@@ -275,13 +275,13 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i) {
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return i.getID() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496);
 	}
 
 	// room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	@Override
-	public void onDrop(Player p, Item i) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getID() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496)) {
 			if (p.getQuestStage(this) == -1) {
 				playerTalk(p, null, "I would rather eat it to be honest");

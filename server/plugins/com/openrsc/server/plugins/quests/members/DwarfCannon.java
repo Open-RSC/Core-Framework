@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,14 +12,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.plugins.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -57,7 +52,8 @@ public class DwarfCannon
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
-		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id();
+		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id() ||
+			n.getID() == NpcId.GRAMAT.id() || n.getID() == NpcId.DWARVEN_SMITHY.id() || n.getID() == NpcId.DWARVEN_YOUTH.id();
 	}
 
 	@Override
@@ -429,6 +425,97 @@ public class DwarfCannon
 					playerTalk(p, n, "not bad, yourself?");
 					npcTalk(p, n, "i'm great, the goblins can't get close with this cannon blasting at them");
 					break;
+			}
+		} else if (n.getID() == NpcId.GRAMAT.id()) {
+			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			switch (stage) {
+				case -1:
+					npcTalk(p, n, "what is a dwarf to do", "my son has ignored my warnings", "now he is in danger");
+					if (p.getQuestStage(Quests.DWARF_CANNON) == -1) {
+						npcTalk(p, n, ".." + p.getUsername() + "!",
+							"maybe you could help us again",
+							"my son has wandered into our new construction zone",
+							"could you see to his safe return");
+						playerTalk(p, n, "where should I look for him");
+						npcTalk(p, n, "just inside the mines there is a ladder",
+							"he's somewhere down there");
+						p.getCache().set("miniquest_dwarf_youth_rescue", 0);
+					}
+					break;
+				case 0:
+					npcTalk(p, n, "please hurry", "my son is in danger");
+					break;
+				case 1:
+					npcTalk(p, n, "my son told me how you helped him",
+						"i'm eternally grateful",
+						"he said you have his teddy");
+					if (p.getInventory().hasInInventory(ItemId.TEDDY.id())) {
+						playerTalk(p, n, "i do, and i fixed it");
+						p.message("You hand over the teddy");
+						p.getCache().set("miniquest_dwarf_youth_rescue", 2);
+						p.getInventory().remove(ItemId.TEDDY.id(), 1);
+						npcTalk(p, n, "yet again you've proven a friend to us",
+							"i will talk to our best smithy",
+							"he works at the new lava forge deep underground",
+							"as our ally you will have access to its power",
+							"please take this and read it");
+						p.message("Gramat hands you a note");
+						addItem(p, ItemId.DWARF_SMITHY_NOTE.id(), 1);
+						npcTalk(p, n, "if you follow the steps on the note",
+							"you will be rewarded in combat");
+						p.message("You have completed the dwarf youth rescue miniquest!");
+					} else {
+						playerTalk(p, n, "i do, but it's damaged",
+							"let me repair it first");
+						npcTalk(p, n, "he loves that teddy",
+							"and i love him",
+							"sew it with some needle and thread",
+							"then return to me");
+					}
+					break;
+				case 2:
+					npcTalk(p, n, "thank you for rescuing my son",
+						"you are a hero among us dwarves");
+					break;
+			}
+		} else if (n.getID() == NpcId.DWARVEN_SMITHY.id()) {
+			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			if (stage == 2) {
+				npcTalk(p, n, "oi " + p.getUsername(),
+					"Gramat told me about you",
+					"this forge is yours to use",
+					"it's hot enough to melt the strongest of metals",
+					"dragon long swords smelt to one bar",
+					"dragon axes smelt to two");
+			} else
+				npcTalk(p, n, "this is our reason for digging",
+					"it's the latest in dwarven technology",
+					"this furnace uses the intense heat of lava",
+					"our enemies will suffer from its forgings");
+		} else if (n.getID() == NpcId.DWARVEN_YOUTH.id()) {
+			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			if (stage < 1) {
+				if (p.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& p.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
+					npcTalk(p, n, "have you found teddy?");
+					playerTalk(p, n, "well.. yes?");
+					npcTalk(p, n, "teddy! i'm so happy!",
+						"let me see him!");
+					playerTalk(p, n, "it's too dangerous here",
+						"let's go back first");
+					npcTalk(p, n, "ok. i have extra runes",
+						"please give teddy to my father");
+					p.teleport(271, 3339, true);
+					playerTalk(p, null, "i'd better repair this",
+						"i bet i could sew it",
+						"with a needle and some thread");
+					p.getCache().set("miniquest_dwarf_youth_rescue",1);
+				} else {
+					npcTalk(p, n, "please help me",
+						"i want to return to father",
+						"but I've lost my teddy",
+						"i can't leave him behind");
+				}
 			}
 		}
 	}

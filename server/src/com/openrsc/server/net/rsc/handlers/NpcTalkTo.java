@@ -30,29 +30,29 @@ public final class NpcTalkTo implements PacketHandler {
 		player.setFollowing(n, 0);
 		player.setStatus(Action.TALKING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
-			public void execute() {
-				player.resetFollowing();
-				player.resetPath();
-				if (player.isBusy() || player.isRanging() || !player.canReach(n)
-					|| player.getStatus() != Action.TALKING_MOB) {
+			public void executeInternal() {
+				getPlayer().resetFollowing();
+				getPlayer().resetPath();
+				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(n)
+					|| getPlayer().getStatus() != Action.TALKING_MOB) {
 					return;
 				}
-				player.resetAll();
+				getPlayer().resetAll();
 
 				if (n.isBusy()) {
-					player.message(n.getDef().getName() + " is busy at the moment");
+					getPlayer().message(n.getDef().getName() + " is busy at the moment");
 					return;
 				}
 
 				n.resetPath();
 				n.resetRange();
 
-				if (player.getLocation().equals(n.getLocation())) {
+				if (getPlayer().getLocation().equals(n.getLocation())) {
 					for (int x = -1; x <= 1; ++x) {
 						for (int y = -1; y <= 1; ++y) {
 							if (x == 0 || y == 0)
 								continue;
-							Point destination = canWalk(player.getWorld(), player.getX() - x, player.getY() - y);
+							Point destination = canWalk(getPlayer().getWorld(), getPlayer().getX() - x, getPlayer().getY() - y);
 							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
 								n.teleport(destination.getX(), destination.getY());
 								break;
@@ -61,10 +61,10 @@ public final class NpcTalkTo implements PacketHandler {
 					}
 				}
 
-				if (player.getWorld().getServer().getPluginHandler().blockDefaultAction(player, "TalkToNpc", new Object[]{player, n})) {
-					player.face(n);
-					n.face(player);
-					player.setInteractingNpc(n);
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkToNpc", new Object[]{getPlayer(), n}, this)) {
+					getPlayer().face(n);
+					n.face(getPlayer());
+					getPlayer().setInteractingNpc(n);
 					return;
 				}
 			}

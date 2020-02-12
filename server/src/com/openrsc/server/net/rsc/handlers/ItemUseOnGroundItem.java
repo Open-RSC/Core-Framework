@@ -51,35 +51,25 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		player.setStatus(Action.USING_Item_ON_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player,
 			item.getLocation(), 1) {
-			public void execute() {
-				if (player.isBusy()
-					|| player.isRanging()
-					|| getItem(groundItemId, location, player) == null
-					|| !player.canReach(item)
-					|| player.getStatus() != Action.USING_Item_ON_GITEM) {
+			public void executeInternal() {
+				if (getPlayer().isBusy()
+					|| getPlayer().isRanging()
+					|| getItem(groundItemId, getLocation(), getPlayer()) == null
+					|| !getPlayer().canReach(item)
+					|| getPlayer().getStatus() != Action.USING_Item_ON_GITEM) {
 					return;
 				}
 				if (myItem == null || item == null)
 					return;
 
-				if ((myItem.getDef(player.getWorld()).isMembersOnly() || item.getDef()
+				if ((myItem.getDef(getPlayer().getWorld()).isMembersOnly() || item.getDef()
 					.isMembersOnly())
-					&& !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.message(player.MEMBER_MESSAGE);
+					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
 
-				if (player.getWorld().getServer().getPluginHandler()
-					.blockDefaultAction(player, "InvUseOnGroundItem",
-						new Object[]{myItem, item, player})) {
-					return;
-				}
-
-				switch (item.getID()) {
-					default:
-						player.message("Nothing interesting happens");
-						return;
-				}
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "InvUseOnGroundItem", new Object[]{myItem, item, getPlayer()}, this);
 			}
 		});
 

@@ -5,6 +5,6 @@ import com.openrsc.server.model.entity.player.Player;
 
 public interface UnWieldListener {
 
-	public void onUnWield(Player player, Item item);
+	public void onUnWield(Player player, Item item, Boolean sound, Boolean fromBank);
 
 }

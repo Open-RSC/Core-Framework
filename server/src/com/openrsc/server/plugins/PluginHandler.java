@@ -5,6 +5,7 @@ import com.openrsc.server.event.custom.ShopRestockEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -37,7 +38,6 @@ import static org.apache.logging.log4j.util.Unbox.box;
  * No longer need to add paths to plugins.
  */
 public final class PluginHandler {
-
 	/**
 	 * The asynchronous logger.
 	 */
@@ -56,10 +56,9 @@ public final class PluginHandler {
 	private Map<String, Set<Object>> actionPlugins;
 	private Map<String, Set<Object>> executivePlugins;
 	private List<Class<?>> knownInterfaces;
-	private Map<String, Class<?>> queue;
 	private Map<String, Object> loadedPlugins;
 
-	public PluginHandler (Server server) {
+	public PluginHandler (final Server server) {
 		this.server = server;
 		threadFactory = new NamedThreadFactory(getServer().getName()+" : PluginThread");
 	}
@@ -159,6 +158,7 @@ public final class PluginHandler {
 				if (!interfce.isAssignableFrom(plugin)) {
 					continue;
 				}
+
 				Object instance = plugin.getConstructor().newInstance();
 				if (instance instanceof DefaultHandler && defaultHandler == null) {
 					defaultHandler = instance;
@@ -176,16 +176,7 @@ public final class PluginHandler {
 					instance = loadedPlugins.get(instance.getClass().getName());
 				} else {
 					loadedPlugins.put(instance.getClass().getName(), instance);
-					if (instance instanceof QuestInterface) {
-						final QuestInterface q = (QuestInterface) instance;
-						try {
-							getServer().getWorld().registerQuest(q);
-						} catch (final Exception e) {
-							LOGGER.error("Error registering quest " + q.getQuestName());
-							LOGGER.catching(e);
-							continue;
-						}
-					} else if (instance instanceof MiniGameInterface) {
+					if (instance instanceof MiniGameInterface) {
 						final MiniGameInterface m = (MiniGameInterface) instance;
 						try {
 							getServer().getWorld().registerMiniGame(m);
@@ -222,19 +213,6 @@ public final class PluginHandler {
 					loadedPlugins.put(instance.getClass().getName(), instance);
 
 					if (Arrays.asList(instance.getClass().getInterfaces())
-						.contains(QuestInterface.class)) {
-						final QuestInterface q = (QuestInterface) instance;
-						try {
-							getServer().getWorld().registerQuest(
-								(QuestInterface) instance);
-						} catch (final Exception e) {
-							LOGGER.error(
-								"Error registering quest "
-									+ q.getQuestName());
-							LOGGER.catching(e);
-							continue;
-						}
-					} else if (Arrays.asList(instance.getClass().getInterfaces())
 							.contains(MiniGameInterface.class)) {
 						final MiniGameInterface m = (MiniGameInterface) instance;
 						try {
@@ -261,6 +239,31 @@ public final class PluginHandler {
 				}
 			}
 		}
+
+		//Look for quests specifically
+		Class<?> interfce = QuestInterface.class;
+		for (final Class<?> plugin : loadedClassFiles) {
+			if (!interfce.isAssignableFrom(plugin)) {
+				continue;
+			}
+			Object instance = plugin.getConstructor().newInstance();
+
+			if (Arrays.asList(instance.getClass().getInterfaces())
+			.contains(QuestInterface.class)) {
+				final QuestInterface q = (QuestInterface) instance;
+				try {
+					getServer().getWorld().registerQuest(
+						(QuestInterface) instance);
+				} catch (final Exception e) {
+					LOGGER.error(
+						"Error registering quest "
+							+ q.getQuestName());
+					LOGGER.catching(e);
+					continue;
+				}
+			}
+		}
+
 		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
 		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
 		LOGGER.info("\t Loaded total of {}", box(loadedPlugins.size()) + " plugin handlers.");
@@ -284,7 +287,6 @@ public final class PluginHandler {
 		actionPlugins = new HashMap<String, Set<Object>>();
 		executivePlugins = new HashMap<String, Set<Object>>();
 		knownInterfaces = new ArrayList<Class<?>>();
-		queue = new ConcurrentHashMap<String, Class<?>>();
 		loadedPlugins = new HashMap<String, Object>();
 		defaultHandler = null;
 		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(threadFactory);
@@ -303,7 +305,6 @@ public final class PluginHandler {
 		getServer().getWorld().getMiniGames().clear();
 		getServer().getWorld().getShops().clear();
 
-		queue.clear();
 		actionPlugins.clear();
 		executivePlugins.clear();
 		knownInterfaces.clear();
@@ -313,127 +314,106 @@ public final class PluginHandler {
 		actionPlugins = null;
 		executivePlugins = null;
 		knownInterfaces = null;
-		queue = null;
 		executor = null;
 		loadedClassFiles = null;
 
 		defaultHandler = null;
 	}
 
-	public boolean blockDefaultAction(final Mob owner, final String interfce, final Object[] data) {
-		return blockDefaultAction(owner, interfce, data, true);
+	public boolean handlePlugin(final World world, final String interfce, final Object[] data) {
+		return handlePlugin(null, world, interfce, data, null);
 	}
 
-	/**
-	 * @param interfce
-	 * @param data
-	 * @param callAction
-	 * @return
-	 */
+	public boolean handlePlugin(final Mob owner, final String interfce, final Object[] data) {
+		return handlePlugin(owner, owner.getWorld(), interfce, data, null);
+	}
 
-	public boolean blockDefaultAction(final Mob owner, final String interfce,
-									  final Object[] data, final boolean callAction) {
-		if (reloading) {
-			for (Object o : data) {
-				if (o instanceof Player) {
-					((Player) o).message("Plugins are being updated, please wait.");
+	public boolean handlePlugin(final Mob owner, final String interfce, final Object[] data, final WalkToAction walkToAction) {
+		return handlePlugin(owner, owner.getWorld(), interfce, data, walkToAction);
+	}
+
+	public boolean handlePlugin(final Mob owner, final World world, final String interfce, final Object[] data, final WalkToAction walkToAction) {
+		synchronized(actionPlugins) {
+			if (reloading) {
+				for (Object o : data) {
+					if (o instanceof Player) {
+						((Player) o).message("Plugins are being updated, please wait.");
+					}
+				}
+				return false;
+			}
+			boolean shouldBlockDefault = false;
+			if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
+				for (final Object c : executivePlugins.get(interfce + "ExecutiveListener")) {
+					try {
+						final Class<?>[] dataClasses = new Class<?>[data.length];
+						int i = 0;
+						for (final Object o : data) {
+							dataClasses[i++] = o.getClass();
+						}
+						final Method m = c.getClass().getMethod("block" + interfce, dataClasses);
+						final boolean shouldBlock = (Boolean) m.invoke(c, data);
+						if (shouldBlock) {
+							shouldBlockDefault = true;
+							invokePluginAction(owner, world, interfce, c, data, walkToAction);
+						}
+					} catch (final Exception e) {
+						LOGGER.catching(e);
+					}
 				}
 			}
-			return false;
-		}
-		boolean shouldBlock = false, flagStop = false;
-		queue.clear();
-		if (executivePlugins.containsKey(interfce + "ExecutiveListener")) {
-			for (final Object c : executivePlugins.get(interfce
-				+ "ExecutiveListener")) {
-				try {
-					final Class<?>[] dataClasses = new Class<?>[data.length];
-					int i = 0;
-					for (final Object o : data) {
-						dataClasses[i++] = o.getClass();
-					}
-					final Method m = c.getClass().getMethod("block" + interfce,
-						dataClasses);
-					shouldBlock = (Boolean) m.invoke(c, data);
-					if (shouldBlock) {
-						queue.put(interfce, c.getClass());
-						flagStop = true;
-					} else if (queue.size() > 1) {
 
-					} else if (queue.isEmpty()) {
-						queue.put(interfce, defaultHandler.getClass());
-					}
-				} catch (final Exception e) {
-					LOGGER.catching(e);
+			try {
+				if (!shouldBlockDefault) {
+					invokePluginAction(owner, world, interfce, defaultHandler, data, walkToAction);
 				}
+			} catch (final Exception e) {
+				LOGGER.catching(e);
 			}
+
+			return shouldBlockDefault;
 		}
-
-		if (callAction) {
-			handleAction(owner, interfce, data);
-		}
-		return flagStop; // not sure why it matters if its false or true
 	}
 
-	public void handleAction(final Mob owner, final String interfce, final Object[] data) {
-		handleAction(owner, owner.getWorld(), interfce, data);
-	}
-
-	public void handleAction(final World world, final String interfce, final Object[] data) {
-		handleAction(null, world, interfce, data);
-	}
-
-	public void handleAction(final Mob owner, final World world, final String interfce, final Object[] data) {
+	private void invokePluginAction(final Mob owner, final World world, final String interfce, final Object cls, final Object[] data, final WalkToAction walkToAction) {
 		if (reloading) {
 			return;
 		}
 		if (actionPlugins.containsKey(interfce + "Listener")) {
-			for (final Object c : actionPlugins.get(interfce + "Listener")) {
+			try {
+				final Class<?>[] dataClasses = new Class<?>[data.length];
+				int i = 0;
+				for (final Object o : data) {
+					dataClasses[i++] = o.getClass();
+				}
+
 				try {
-					final Class<?>[] dataClasses = new Class<?>[data.length];
-					int i = 0;
-					for (final Object o : data) {
-						dataClasses[i++] = o.getClass();
-					}
-
-					final Method m = c.getClass().getMethod("on" + interfce,
-						dataClasses);
-					boolean go = false;
-
-					if (queue.containsKey(interfce)) {
-						for (final Class<?> clz : queue.values()) {
-							if (clz.getName().equalsIgnoreCase(
-								c.getClass().getName())) {
-								go = true;
-								break;
+					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
+					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
+					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world) {
+						@Override
+						public int action() {
+							try {
+								LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
+								m.invoke(cls, data);
+								return 1;
+							} catch (final Exception ex) {
+								LOGGER.catching(ex);
+								return 0;
 							}
 						}
-					} else {
-						go = true;
-					}
+					});
 
-					if (go) {
-						final String pluginName = c.getClass().getSimpleName() + "." + m.getName();
-						final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, new PluginTask(world) {
-							@Override
-							public int action() {
-								try {
-									LOGGER.info("Executing Plugin : " + pluginName + " : " + Arrays.deepToString(data));
-									m.invoke(c,data);
-									return 1;
-								} catch (final Exception ex) {
-									LOGGER.catching(ex);
-									return 0;
-								}
-							}
-						});
-
-						getServer().getGameEventHandler().add(e);
-					}
-				} catch (final Exception e) {
-					System.err.println("Exception at plugin handling: ");
-					LOGGER.catching(e);
+					getServer().getGameEventHandler().add(e);
+				} catch (final NoSuchMethodException ex) {
+					LOGGER.info(ex.getMessage());
+					LOGGER.info(cls.getClass().getSimpleName() + ".on" + interfce + " : " + Arrays.deepToString(data));
+					// getClass().getMethod() failed because there is an executive listener, but NOT a corresponding action listener, OR
+					// there is no action listener defined in Default plugin
 				}
+			} catch (final Exception e) {
+				System.err.println("Exception at plugin handling: ");
+				LOGGER.catching(e);
 			}
 		}
 	}

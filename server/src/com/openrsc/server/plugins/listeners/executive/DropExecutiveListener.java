@@ -7,5 +7,5 @@ public interface DropExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from dropping an item
 	 */
-	public boolean blockDrop(Player p, Item i);
+	boolean blockDrop(Player p, Item i, Boolean fromInventory);
 }

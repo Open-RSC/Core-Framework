@@ -55,8 +55,6 @@ public final class TerritorySignupInterface {
 		this.drawCloseButton(x + 214, y + 6, 30, 30, "X", 5, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.packetHandler.getClientStream().newPacket(212);
-				mc.packetHandler.getClientStream().finishPacket();
 				setVisible(false);
 			}
 		});

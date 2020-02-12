@@ -8,13 +8,7 @@ import com.loader.openrsc.util.Utils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
+import java.io.*;
 
 public class ButtonListener implements ActionListener {
 	@Override
@@ -25,194 +19,165 @@ public class ButtonListener implements ActionListener {
 				Utils.openWebpage("https://classic.runescape.wiki");
 				return;
 			}
-			case "bug reports": {
-				Utils.openWebpage("https://gitlab.openrsc.com/open-rsc/Game/issues");
+			case "our wiki": {
+				Utils.openWebpage("https://openrsc.com/wiki");
 				return;
 			}
-			case "bot reports": {
-				Utils.openWebpage("https://gitlab.openrsc.com/open-rsc/Game/issues");
+			case "bug reports": {
+				Utils.openWebpage("https://orsc.dev/open-rsc/Game/issues");
 				return;
 			}
 			case "discord": {
 				Utils.openWebpage("https://discord.gg/94vVKND");
 				return;
 			}
-			case "open rsc": {
+
+			case "openrsc": {
 				String ip = "game.openrsc.com";
 				String port = "43594";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
+				set(ip, port);
+				launch();
 				return;
 			}
-			case "rsc cabbage": {
+			case "cabbage": {
 				String ip = "game.openrsc.com";
 				String port = "43595";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
+				set(ip, port);
+				launch();
 				return;
 			}
-			case "open pk (alpha)": {
-				String ip = "game.openrsc.com";
-				String port = "43597";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				return;
-			}
-			case "rsc preservation (alpha)": {
+
+			case "preservation": {
 				String ip = "game.openrsc.com";
 				String port = "43596";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
+				set(ip, port);
+				launch();
 				return;
 			}
-			case "dev world": {
+
+			case "openpk": {
+				String ip = "game.openrsc.com";
+				String port = "43597";
+				set(ip, port);
+				launch();
+				return;
+			}
+
+			case "wk": {
+				String ip = "game.openrsc.com";
+				String port = "43598";
+				set(ip, port);
+				launch();
+				return;
+			}
+
+			case "dev": {
 				String ip = "game.openrsc.com";
 				String port = "43599";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
+				set(ip, port);
+				launch();
 				return;
 			}
-			case "single player": {
-				String ip = "localhost";
-				String port = "43594";
-				FileOutputStream fileout;
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(ip);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				try {
-					fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-					OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-					outputWriter.write(port);
-					outputWriter.close();
-				} catch (Exception ignored) {
-				}
-				return;
-			}
-			/*case "place holder": {
-				Utils.openWebpage("https://www.google.com");
-				return;
-			}
-			case "place holder2": {
-				Utils.openWebpage("https://www.google2.com");
-				return;
-			}
-			case "place holder3": {
-				Utils.openWebpage("https://www.google3.com");
-				return;
-			}*/
+
 			case "minimize": {
 				AppFrame.get().setState(1);
 				return;
 			}
-			case "launch": {
-				try {
-					// Deletes the client.properties file that may persist unwanted settings between different games
-					File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
-					f.delete();
 
-					//update the sprite pack config file
-					File configFile = new File(Constants.CONF_DIR + File.separator + "config.txt");
-					configFile.delete();
-
-					CheckCombo.store[] entries = AppFrame.get().getComboBoxState();
-
-					//Update the config file
-					if (!(entries.length == 1 && entries[0].text.equalsIgnoreCase("none"))) {
-						try {
-							FileWriter write = new FileWriter(configFile, true);
-							PrintWriter writer = new PrintWriter(write);
-							for (CheckCombo.store entry : entries)
-								writer.println(entry.text + ":" + (entry.state ? 1 : 0));
-							writer.close();
-							write.close();
-						} catch (IOException a) {
-							a.printStackTrace();
-						}
-					}
-
-
-					ClientLauncher.launchClient();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return;
-			}
 			case "close": {
 				System.exit(0);
 				return;
 			}
+
+			case "delete": {
+				// Deletes all cache files except for .txt files and .wav files
+
+				File folder = new File(Constants.CONF_DIR);
+				File[] fList = folder.listFiles();
+				assert fList != null;
+				for (File file : fList) {
+					String extension = String.valueOf(file);
+					if (!extension.endsWith(".txt")) {
+						new File(String.valueOf(file)).delete();
+					}
+				}
+
+				File video = new File(Constants.CONF_DIR + "/video");
+				File[] vList = video.listFiles();
+				assert vList != null;
+				for (File file : vList) {
+					String extension = String.valueOf(file);
+					if (extension.endsWith(".orsc")) {
+						new File(String.valueOf(file)).delete();
+					}
+					if (extension.endsWith(".osar")) {
+						new File(String.valueOf(file)).delete();
+					}
+				}
+
+				File spritepacks = new File(Constants.CONF_DIR + "/video/spritepacks");
+				File[] sList = spritepacks.listFiles();
+				assert sList != null;
+				for (File file : sList) {
+					String extension = String.valueOf(file);
+					if (extension.endsWith(".osar")) {
+						new File(String.valueOf(file)).delete();
+					}
+				}
+
+				System.exit(0);
+			}
+
 			default:
 				break;
 		}
 		System.out.println(action);
+	}
+
+	private void set(String ip, String port) {
+		// Sets the IP and port
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(ip);
+			outputWriter.close();
+		} catch (Exception ignored) {
+		}
+		try {
+			fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(port);
+			outputWriter.close();
+		} catch (Exception ignored) {
+		}
+	}
+
+	private void launch() {
+		// Deletes the client.properties file that may persist unwanted settings between different games
+		File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
+		f.delete();
+
+		//update the sprite pack config file
+		File configFile = new File(Constants.CONF_DIR + File.separator + "config.txt");
+		configFile.delete();
+
+		CheckCombo.store[] entries = AppFrame.get().getComboBoxState();
+
+		//Update the config file
+		if (!(entries.length == 1 && entries[0].text.equalsIgnoreCase("none"))) {
+			try {
+				FileWriter write = new FileWriter(configFile, true);
+				PrintWriter writer = new PrintWriter(write);
+				for (CheckCombo.store entry : entries)
+					writer.println(entry.text + ":" + (entry.state ? 1 : 0));
+				writer.close();
+				write.close();
+			} catch (IOException a) {
+				a.printStackTrace();
+			}
+		}
+
+		ClientLauncher.launchClient();
 	}
 }

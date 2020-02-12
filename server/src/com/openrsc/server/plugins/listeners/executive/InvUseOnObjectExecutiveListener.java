@@ -8,5 +8,5 @@ public interface InvUseOnObjectExecutiveListener {
 	/**
 	 * Return true to prevent a user when he uses an inventory item on an game object
 	 */
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player);
+	boolean blockInvUseOnObject(GameObject obj, Item item, Player player);
 }
