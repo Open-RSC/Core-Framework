@@ -9,10 +9,6 @@ RUN cd /usr && \
 ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin
 
-COPY server/inc/wait /usr/wait
-RUN chmod +x wait
-CMD ./wait
-
 EXPOSE 43594
 EXPOSE 43595
 EXPOSE 43596

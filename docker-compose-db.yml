@@ -1,26 +1,6 @@
 version: '3'
 services:
 
-  openrsc:
-    container_name: openrsc
-    image: openrsc/openrsc_service:latest
-    build:
-      context: .
-      dockerfile: server/inc/Dockerfile
-    command: ant -f server/build.xml runserver
-    depends_on:
-      - mariadb
-    ports:
-      - "43594:43594"
-      - "43595:43595"
-      - "43596:43596"
-      - "43597:43597"
-      - "43598:43598"
-      - "43599:43599"
-    volumes:
-      - ./server:/usr/server
-    network_mode: host
-
   mariadb:
     image: mariadb:latest
     container_name: mariadb
