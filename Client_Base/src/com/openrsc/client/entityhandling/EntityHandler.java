@@ -518,7 +518,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Sir Prysin", "One of the king's knights", "", 30, 60, 50, 20, false, sprites, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Traiborn the wizard", "An old wizard", "", 20, 15, 3, 10, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, 314};
 		npcs.add(new NPCDef("Captain Rovin", "The head of the palace guard", "", 40, 70, 65, 30, false, sprites, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Rat", "Overgrown vermin", "", 10, 10, 5, 10, true, sprites, 0, 0, 0, 0, 346, 136, 7, 7, 45, i++));
@@ -4969,7 +4969,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("cape", "equipment",16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("boots", "equipment",1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",1118481, 0, true, false, 0));
-		animations.add(new AnimationDef("scythe", "equipment",0, 0, true, false, 0));
+		animations.add(new AnimationDef("scythe", "equipment",0, 0, true, false, 0));//229
 		/*
 		  Add custom animation below.
 		 */
