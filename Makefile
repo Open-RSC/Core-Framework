@@ -18,14 +18,16 @@ build-and-push:
 
 # OpenRSC-only server container control section
 start-game:
-	docker-compose -f docker-compose-game.yml up -d
+	docker pull openrsc/openrsc_service:latest
+	docker-compose -f docker-compose-game.yml up -d --no-build
 
 stop-game:
 	docker-compose -f docker-compose-game.yml down -v
 
 restart-game:
+	docker pull openrsc/openrsc_service:latest
 	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-game.yml up -d
+	docker-compose -f docker-compose-game.yml up -d --no-build
 
 logs-game:
 	@docker-compose -f docker-compose-game.yml logs -f
@@ -50,12 +52,13 @@ logs-db:
 
 # Compiles the game server, client, and launcher before restarting the game server
 compile:
+	docker pull openrsc/openrsc_service:latest
 	docker exec -i openrsc ant -f server/build.xml compile_core
 	docker exec -i openrsc ant -f server/build.xml compile_plugins
 	docker exec -i openrsc ant -f Client_Base/build.xml compile
 	docker exec -i openrsc ant -f PC_Launcher/build.xml compile
 	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-game.yml up -d
+	docker-compose -f docker-compose-game.yml up -d --no-build
 
 #---------------------------------------------------------------
 

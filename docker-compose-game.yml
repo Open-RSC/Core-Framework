@@ -2,8 +2,8 @@ version: '3'
 services:
 
   openrsc:
-    container_name: openrsc
     image: openrsc/openrsc_service:latest
+    container_name: openrsc
     build:
       context: .
       dockerfile: server/inc/Dockerfile
