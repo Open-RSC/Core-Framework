@@ -7,6 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ant -f server/build.xml runserver
+    depends_on:
+      - mariadb
     ports:
       - "43594:43594"
       - "43595:43595"
@@ -15,6 +17,37 @@ services:
       - "43598:43598"
       - "43599:43599"
     volumes:
-      - ./server/avatars:/usr/server/avatars
-      - ./console:/usr/server/logs
+      - ./server:/usr/server
+      - ./:/usr/server/logs
     network_mode: host
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    restart: always
+    env_file:
+      - ".env"
+    command: [
+      '--wait_timeout=360000',
+      '--log-bin=bin.log',
+      '--log-bin-index=bin-log.index',
+      '--max_binlog_size=100M',
+      '--binlog-format=MIXED',
+      '--slow-query-log',
+      '--general_log=1',
+      '--expire_logs_days=10',
+      '--sync_binlog=1'
+    ]
+    environment:
+      - MYSQL_DATABASE=mysql
+      - MYSQL_ROOT_USER=${MARIADB_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_USER=${MARIADB_USER}
+      - MYSQL_PASSWORD=${MARIADB_PASS}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./server/inc/databases:/var/lib/mysql
+      - ./server/inc/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro
+      - ./inc/logs:/var/log/mysql
