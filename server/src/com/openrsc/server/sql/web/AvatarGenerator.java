@@ -1,15 +1,18 @@
 package com.openrsc.server.sql.web;
 
-import com.openrsc.server.sql.web.AvatarFormat.*;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.sql.web.AvatarFormat.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;

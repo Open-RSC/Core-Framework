@@ -14,7 +14,7 @@ public abstract class Entity {
 
 	private final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
-	private int id;
+	public int id;
 
 	private int index;
 
