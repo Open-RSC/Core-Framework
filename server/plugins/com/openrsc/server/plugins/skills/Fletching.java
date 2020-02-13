@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemArrowHeadDef;
 import com.openrsc.server.external.ItemBowStringDef;
@@ -172,8 +173,15 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					}
 					if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
 						&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
-						getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
-						getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
+						//Successful make attempt
+						if (getOwner() != null && getOwner() instanceof Player &&
+							SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE)) {
+							getOwner().getInventory().add(new Item(headDef.getArrowID(), 2));
+							getOwner().incExp(Skills.FLETCHING, headDef.getExp() * 2, true);
+						} else {
+							getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
+							getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
+						}
 					} else {
 						interrupt();
 						return;

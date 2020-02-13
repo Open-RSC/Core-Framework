@@ -4,6 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
@@ -202,7 +203,8 @@ public final class Mining implements ObjectActionListener,
 		showBubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 		retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Mining", retrytimes, true) {
+		int delay = player.getWorld().getServer().getConfig().GAME_TICK;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delay, "Mining", retrytimes, true) {
 			@Override
 			public void action() {
 				final Item ore = new Item(def.getOreId());
@@ -227,9 +229,18 @@ public final class Mining implements ObjectActionListener,
 						if (obj == null) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 						} else {
-							getOwner().getInventory().add(ore);
-							getOwner().playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(getWorld()).getName().toLowerCase());
-							getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
+							//Successful mining attempt
+							if (getOwner() != null && getOwner() instanceof Player &&
+								SkillCapes.shouldActivate(getOwner(), ItemId.MINING_CAPE)) {
+								addItem(getOwner(), ore.getID(), 1);
+								getOwner().playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(getWorld()).getName().toLowerCase());
+								getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp() * 2, true);
+								addItem(getOwner(), ore.getID(), 1);
+							} else {
+								getOwner().getInventory().add(ore);
+								getOwner().playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(getWorld()).getName().toLowerCase());
+								getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
+							}
 						}
 						if (object.getID() == 496 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 51)
 							getOwner().getCache().set("tutorial", 52);

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.skills;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -28,6 +29,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.openrsc.server.constants.ItemId.THIEVING_CAPE;
 
 public class Thieving extends Functions
 	implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener, ObjectActionExecutiveListener,
@@ -374,6 +377,11 @@ public class Thieving extends Functions
 					return;
 				}
 				boolean succeededPickpocket = succeedThieving(getOwner(), pickpocket.getRequiredLevel());
+				if (getOwner() != null &&
+				SkillCapes.shouldActivate(getOwner(), THIEVING_CAPE, succeededPickpocket)) {
+					succeededPickpocket = true;
+					showBubble(getOwner(), new Item(THIEVING_CAPE.id()));
+				}
 				if (succeededPickpocket) {
 					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2

@@ -130,11 +130,13 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			}
 			// Some need a RANGE not a FIRE
 			boolean needOven = false;
-			int timeToCook = 1800;
+			int timeToCook = p.getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (isOvenFood(item)) {
 				needOven = true;
-				timeToCook = 3000;
+				timeToCook = p.getWorld().getServer().getConfig().GAME_TICK * 5;
 			}
+			if (p.getInventory().wielding(ItemId.COOKING_CAPE.id()))
+				timeToCook *= 0.7;
 			if ((object.getID() == 97 || object.getID() == 274) && needOven) {
 				p.playerServerMessage(MessageType.QUEST, "You need a proper oven to cook this");
 				return;
