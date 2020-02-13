@@ -3,8 +3,6 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
-import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
-import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -18,6 +16,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.*;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.sql.DatabaseConnection;
+import com.openrsc.server.sql.GameLogger;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import io.netty.bootstrap.ServerBootstrap;
@@ -57,7 +57,7 @@ public class Server implements Runnable {
 	private final CombatScriptLoader combatScriptLoader;
 	private final GameLogger gameLogger;
 	private final EntityHandler entityHandler;
-	private final MySqlGameDatabase database;
+	private final DatabaseConnection databaseConnection;
 	private final AchievementSystem achievementSystem;
 	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
@@ -138,7 +138,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	public Server(final String configFile) throws IOException {
+	public Server(String configFile) throws IOException {
 		config = new ServerConfiguration();
 		getConfig().initConfig(configFile);
 		LOGGER.info("Server configuration loaded: " + configFile);
@@ -150,7 +150,7 @@ public class Server implements Runnable {
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
-		database = new MySqlGameDatabase(this);
+		databaseConnection = new DatabaseConnection(this, "Database Connection");
 
 		discordService = new DiscordService(this);
 		loginExecutor = new LoginExecutor(this);
@@ -175,15 +175,6 @@ public class Server implements Runnable {
 				frame.setSize(600, 600);
 				frame.setVisible(true);
 			}*/
-
-			LOGGER.info("Connecting to Database...");
-			try {
-				getDatabase().open();
-			} catch (final Exception ex) {
-				LOGGER.catching(ex);
-				System.exit(1);
-			}
-			LOGGER.info("\t Database Connection Completed");
 
 			LOGGER.info("Loading Game Definitions...");
 			getEntityHandler().load();
@@ -390,11 +381,7 @@ public class Server implements Runnable {
 		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 10, "Save and Shutdown") {
 			public void action() {
 				kill();
-				try {
-					getDatabase().close();
-				} catch (final Exception ex) {
-					LOGGER.catching(ex);
-				}
+				getDatabaseConnection().close();
 			}
 		};
 		getGameEventHandler().add(up);
@@ -518,8 +505,8 @@ public class Server implements Runnable {
 		return entityHandler;
 	}
 
-	public MySqlGameDatabase getDatabase() {
-		return database;
+	public DatabaseConnection getDatabaseConnection() {
+		return databaseConnection;
 	}
 
 	public AchievementSystem getAchievementSystem() {

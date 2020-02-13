@@ -13,7 +13,7 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.*;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
+import com.openrsc.server.sql.query.logs.PMLog;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;

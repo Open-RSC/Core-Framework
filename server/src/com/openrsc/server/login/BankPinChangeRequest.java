@@ -88,7 +88,7 @@ public class BankPinChangeRequest extends LoginExecutorProcess {
 
 			String hashedBankPin = null;
 			String salt = null;
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 			statement.setString(1, getPlayer().getUsername());
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {

@@ -8,9 +8,7 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -195,7 +193,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 		}
 		p.setBusy(false);
 	}
-	
+
 	boolean succeed(Player player, int req) {
 		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
 	}

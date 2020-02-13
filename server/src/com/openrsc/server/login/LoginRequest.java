@@ -45,7 +45,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return ipAddress;
 	}
 
-	private void setIpAddress(final String ipAddress) {
+	private void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
 
@@ -53,7 +53,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return username;
 	}
 
-	public void setUsername(final String username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
@@ -61,7 +61,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return password;
 	}
 
-	private void setPassword(final String password) {
+	private void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -69,7 +69,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return usernameHash;
 	}
 
-	private void setUsernameHash(final long usernameHash) {
+	private void setUsernameHash(long usernameHash) {
 		this.usernameHash = usernameHash;
 	}
 
@@ -85,7 +85,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return clientVersion;
 	}
 
-	private void setClientVersion(final int clientVersion) {
+	private void setClientVersion(int clientVersion) {
 		this.clientVersion = clientVersion;
 	}
 
@@ -94,11 +94,10 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	public abstract void loadingComplete(Player loadedPlayer);
 
 	protected void processInternal() {
-		final int loginResponse = validateLogin();
+		int loginResponse = validateLogin();
 		loginValidated(loginResponse);
 		if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
-			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
-			LOGGER.info("Player Loaded: " + getUsername());
+			final Player loadedPlayer = getServer().getLoginExecutor().getPlayerDatabase().loadPlayer(this);
 
 			getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 				@Override
@@ -120,8 +119,8 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
-			statement = getServer().getDatabase().getConnection().prepareStatement(
-				getServer().getDatabase().getQueries().playerLoginData
+			statement = getServer().getLoginExecutor().getPlayerDatabase().getDatabaseConnection().prepareStatement(
+				getServer().getLoginExecutor().getPlayerDatabase().getDatabaseConnection().getGameQueries().playerLoginData
 			);
 			statement.setString(1, getUsername());
 			playerSet = statement.executeQuery();
@@ -144,7 +143,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 
-			final long i = getServer().timeTillShutdown();
+			long i = getServer().timeTillShutdown();
 			if (i > 0 && i < 30000 && !isAdmin) {
 				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
 			}
@@ -166,12 +165,12 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.IP_IN_USE;
 			}
 
-			final long banExpires = playerSet.getLong("banned");
+			long banExpires = playerSet.getLong("banned");
 			if (banExpires == -1 && !isAdmin) {
 				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
 			}
 
-			final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
+			double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
 			if (timeBanLeft >= 1 && !isAdmin) {
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}

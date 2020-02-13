@@ -5,7 +5,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.sql.query.logs.GenericLog;
 
 public final class SleepHandler implements PacketHandler {
 

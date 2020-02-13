@@ -3,7 +3,7 @@ package com.openrsc.server.login;
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.database.impl.mysql.queries.logging.SecurityChangeLog;
+import com.openrsc.server.sql.query.logs.SecurityChangeLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -93,7 +93,7 @@ public class RecoveryChangeRequest extends LoginExecutorProcess{
 				LOGGER.info(getPlayer().getCurrentIP() + " - Set recovery questions failed: Could not find player info in database.");
 				return;
 			}
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT 1 FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT 1 FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 			statement.setInt(1, playerID);
 			ResultSet result = statement.executeQuery();
 			String table_suffix;
@@ -101,7 +101,7 @@ public class RecoveryChangeRequest extends LoginExecutorProcess{
 				//player has not set recovery questions
 				table_suffix = "player_recovery";
 			} else {
-				statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT date_set FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE playerID=?");
+				statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT date_set FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE playerID=?");
 				statement.setInt(1, playerID);
 				result = statement.executeQuery();
 				if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_set")) >= 14) {
@@ -119,7 +119,7 @@ public class RecoveryChangeRequest extends LoginExecutorProcess{
 				return;
 			}
 
-			statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE id=?");
+			statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE id=?");
 			statement.setInt(1, playerID);
 			result = statement.executeQuery();
 			result.next();
@@ -129,7 +129,7 @@ public class RecoveryChangeRequest extends LoginExecutorProcess{
 				getAnswers()[i] = DataConversions.hashPassword(getAnswers()[i], salt);
 			}
 
-			statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement(
+			statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement(
 				"INSERT INTO `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + table_suffix + "` (`playerID`, `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			statement.setInt(1, playerID);
 			statement.setString(2, getPlayer().getUsername());

@@ -3,11 +3,11 @@ package com.openrsc.server.net;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
-import com.openrsc.server.database.impl.mysql.MySqlGameDatabaseConnection;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.sql.DatabaseConnection;
 import com.openrsc.server.util.rsc.MessageType;
 import com.vdurmont.emoji.EmojiParser;
 import net.dv8tion.jda.api.AccountType;
@@ -123,7 +123,7 @@ public class DiscordService implements Runnable{
 					{
 						reply = "Usage: !pair TOKEN";
 					} else {
-						MySqlGameDatabaseConnection datConn = this.server.getDatabase().getConnection();
+						DatabaseConnection datConn = this.server.getDatabaseConnection();
 						try {
 							PreparedStatement pinStatement = datConn.prepareStatement("SELECT `playerID` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `value` = ?;");
 							pinStatement.setString(1, args[1]);
@@ -183,7 +183,7 @@ public class DiscordService implements Runnable{
 					int dbID = 0;
 					if ((dbID = discordToDBId(message.getAuthor().getIdLong())) != 0) {
 						try {
-							PreparedStatement pinStatement = this.server.getDatabase().getConnection().prepareStatement("SELECT * FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "experience` WHERE `id` = ?");
+							PreparedStatement pinStatement = this.server.getDatabaseConnection().prepareStatement("SELECT * FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "experience` WHERE `id` = ?");
 							pinStatement.setLong(1, dbID);
 							ResultSet results = pinStatement.executeQuery();
 							if (results.next()) {
@@ -234,7 +234,7 @@ public class DiscordService implements Runnable{
 				} else if (message.getContentRaw().startsWith("!watch")) {
 					if (args.length > 1) {
 						try {
-							PreparedStatement pinStatement = this.server.getDatabase().getConnection().prepareStatement("SELECT `value` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE`key`='watchlist_" + message.getAuthor().getId() + "'");
+							PreparedStatement pinStatement = this.server.getDatabaseConnection().prepareStatement("SELECT `value` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE`key`='watchlist_" + message.getAuthor().getId() + "'");
 							ResultSet results = pinStatement.executeQuery();
 							if (args[1].equalsIgnoreCase("list")) {
 								if (results.next()) {
@@ -267,7 +267,7 @@ public class DiscordService implements Runnable{
 												if (!watchlist.contains(String.valueOf(toAdd))) {
 													if (watchlist.split(",").length < WATCHLIST_MAX_SIZE) {
 														watchlist = String.join(",", watchlist, String.valueOf(toAdd));
-														pinStatement = this.server.getDatabase().getConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
+														pinStatement = this.server.getDatabaseConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
 														pinStatement.setString(1, watchlist);
 														pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
 														pinStatement.executeUpdate();
@@ -277,7 +277,7 @@ public class DiscordService implements Runnable{
 												} else
 													reply = "That item is already on your watchlist.";
 											} else {
-												pinStatement = server.getDatabase().getConnection().prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
+												pinStatement = server.getDatabaseConnection().prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
 												pinStatement.setInt(1, 0);
 												pinStatement.setInt(2, 1);
 												pinStatement.setString(3, "watchlist_" + message.getAuthor().getId());
@@ -311,12 +311,12 @@ public class DiscordService implements Runnable{
 															query.append("," + item);
 													}
 
-													pinStatement = this.server.getDatabase().getConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
+													pinStatement = this.server.getDatabaseConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
 													pinStatement.setString(1, query.toString());
 													pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
 													pinStatement.executeUpdate();
 												} else {
-													pinStatement = this.server.getDatabase().getConnection().prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key`=?");
+													pinStatement = this.server.getDatabaseConnection().prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key`=?");
 													pinStatement.setString(1, "watchlist_" + message.getAuthor().getId());
 													pinStatement.executeUpdate();
 												}
@@ -402,7 +402,7 @@ public class DiscordService implements Runnable{
 
 		//TODO: Add a delay between auction post and watchlist notification.
 		try {
-			PreparedStatement pinStatement = server.getDatabase().getConnection().prepareStatement("SELECT `value`, `key` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key` LIKE 'watchlist_%'");
+			PreparedStatement pinStatement = server.getDatabaseConnection().prepareStatement("SELECT `value`, `key` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key` LIKE 'watchlist_%'");
 			ResultSet results = pinStatement.executeQuery();
 			while (results.next()) {
 				String watchlist = results.getString("value");
@@ -504,7 +504,7 @@ public class DiscordService implements Runnable{
 
 	public int discordToDBId(long discord) {
 		try {
-			MySqlGameDatabaseConnection datConn = this.server.getDatabase().getConnection();
+			DatabaseConnection datConn = this.server.getDatabaseConnection();
 			PreparedStatement pinStatement = datConn.prepareStatement("SELECT `playerID` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `value` = ?");
 			pinStatement.setLong(1, discord);
 			ResultSet results = pinStatement.executeQuery();
@@ -519,7 +519,7 @@ public class DiscordService implements Runnable{
 
 	public String dbIdToUsername(int dbId) {
 		try {
-			MySqlGameDatabaseConnection datConn = this.server.getDatabase().getConnection();
+			DatabaseConnection datConn = this.server.getDatabaseConnection();
 			PreparedStatement pinStatement = datConn.prepareStatement("SELECT `username` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `id` = ?");
 			pinStatement.setInt(1, dbId);
 			ResultSet results = pinStatement.executeQuery();

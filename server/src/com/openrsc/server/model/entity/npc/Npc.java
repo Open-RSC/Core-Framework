@@ -1,7 +1,6 @@
 package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.constants.*;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
@@ -20,8 +19,6 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +26,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Npc extends Mob {
-	/**
-	 * The asynchronous logger.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	private long healTimer = 0;
 	private boolean shouldRespawn = true;
@@ -323,18 +316,14 @@ public class Npc extends Mob {
 				//KDB Specific RDT
 				if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
 					if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-						if (getWorld().kbdTable.rollAccess(this.getID(), Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
+						if (getWorld().kbdTable.rollAccess(this.id, Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
 							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()), owner);
 							if (kbdSpecificLoot != null) {
 								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getID(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
-								try {
-									getWorld().getServer().getDatabase().addDropLog(
-										owner, this, kbdSpecificLoot.getID(), kbdSpecificLoot.getAmount());
-								} catch (final GameDatabaseException ex) {
-									LOGGER.catching(ex);
-								}
+								getWorld().getServer().getLoginExecutor().getPlayerDatabase().addNpcDrop(
+									owner, this, kbdSpecificLoot.getID(), kbdSpecificLoot.getAmount());
 								if (kbdSpecificLoot.getID() == ItemId.DRAGON_2_HANDED_SWORD.id())
 									owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
 							}
@@ -361,12 +350,8 @@ public class Npc extends Mob {
 						groundItem.setAttribute("npcdrop", true);
 						getWorld().registerItem(groundItem);
 					}
-					try {
-						getWorld().getServer().getDatabase().addDropLog(
-							owner, this, rare.getID(), rare.getAmount());
-					} catch (final GameDatabaseException ex) {
-						LOGGER.catching(ex);
-					}
+					getWorld().getServer().getLoginExecutor().getPlayerDatabase().addNpcDrop(
+						owner, this, rare.getID(), rare.getAmount());
 				}
 
 				ItemDropDef[] drops = def.getDrops();
@@ -421,11 +406,9 @@ public class Npc extends Mob {
 								}
 
 								if (!getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
-									try {
-										getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
-									} catch (final GameDatabaseException ex) {
-										LOGGER.catching(ex);
-									}
+
+									getWorld().getServer().getLoginExecutor().getPlayerDatabase().addNpcDrop(
+										owner, this, dropID, amount);
 									GroundItem groundItem;
 
 									// We need to drop multiple counts of "1" item if it's not a stack
@@ -466,12 +449,8 @@ public class Npc extends Mob {
 										}
 									}
 
-									try {
-										getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
-									} catch (final GameDatabaseException ex) {
-										LOGGER.catching(ex);
-									}
-
+									getWorld().getServer().getLoginExecutor().getPlayerDatabase().addNpcDrop(
+										owner, this, dropID, amount);
 									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
 										GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
 										groundItem.setAttribute("npcdrop", true);

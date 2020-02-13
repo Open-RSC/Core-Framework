@@ -77,7 +77,7 @@ public class PartyManager {
 
 	public void updatePartyRankPlayer(PartyPlayer cp) {
 		try {
-			PreparedStatement statement = cp.getPlayerReference().getWorld().getServer().getDatabase().getConnection()
+			PreparedStatement statement = cp.getPlayerReference().getWorld().getServer().getDatabaseConnection()
 				.prepareStatement("UPDATE `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());

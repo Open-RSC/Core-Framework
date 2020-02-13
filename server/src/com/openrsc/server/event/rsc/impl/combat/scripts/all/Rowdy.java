@@ -1,13 +1,13 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import static com.openrsc.server.plugins.Functions.npcYell;
-
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+
+import static com.openrsc.server.plugins.Functions.npcYell;
 
 public class Rowdy implements CombatAggroScript, OnCombatStartScript {
 
@@ -16,7 +16,7 @@ public class Rowdy implements CombatAggroScript, OnCombatStartScript {
 		if (attacker.isNpc()) {
 			Player player = (Player) victim;
 			Npc npc = (Npc) attacker;
-			
+
 			if(npc.getID() == NpcId.ROWDY_GUARD.id()) {
 				player.message("A nearby guard spots you and decides to give you some trouble.");
 				npcYell(player, npc, "Hey you, are you looking for trouble?");

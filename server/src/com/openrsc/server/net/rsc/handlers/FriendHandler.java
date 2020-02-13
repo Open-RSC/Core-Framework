@@ -16,7 +16,7 @@ public final class FriendHandler implements PacketHandler {
 
 	private final int MEMBERS_MAX_FRIENDS = 200;
 
-	public void handlePacket(Packet p, Player player) {
+	public void handlePacket(Packet p, Player player) throws Exception {
 		int pID = p.getID();
 
 		String friendName = p.readString();
@@ -39,14 +39,16 @@ public final class FriendHandler implements PacketHandler {
 				return;
 			}
 
-			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
-			ActionSender.sendFriendUpdate(player, friend);
-			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				if (affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
-					ActionSender.sendFriendUpdate(player, friend);
-				} else if (!affectedPlayer.getSettings().getPrivacySetting(1)) {
-					ActionSender.sendFriendUpdate(player, friend);
+			boolean added = player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
+			if (added) {
+				ActionSender.sendFriendUpdate(player, friend);
+				if (affectedPlayer != null && affectedPlayer.loggedIn()) {
+					if (affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
+						ActionSender.sendFriendUpdate(player, friend);
+					} else if (!affectedPlayer.getSettings().getPrivacySetting(1)) {
+						ActionSender.sendFriendUpdate(player, friend);
+					}
 				}
 			}
 		} else if (pID == packetTwo) { // Remove friend
@@ -63,7 +65,9 @@ public final class FriendHandler implements PacketHandler {
 				player.message("Ignore list full");
 				return;
 			}
-			ActionSender.sendIgnoreList(player);
+			boolean added = player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
+			if (added)
+				ActionSender.sendIgnoreList(player);
 		} else if (pID == packetFour) { // Remove ignore
 			player.getSocial().removeIgnore(friend);
 		} else if (pID == packetFive) { // Send PM
@@ -87,15 +91,16 @@ public final class FriendHandler implements PacketHandler {
 				player.message("Ignore list full");
 				return;
 			}
-			player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
-			ActionSender.sendIgnoreList(player);
-			player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 150000, "Delayed ignore") {
+			boolean added = player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
+			if (added){
+				ActionSender.sendIgnoreList(player);
+				player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 150000, "Delayed ignore") {
 				public void run() {
 					player.getSocial().removeIgnore(friend);
 					ActionSender.sendIgnoreList(player);
 				}
 			});
+			}
 		}
 	}
 }
-

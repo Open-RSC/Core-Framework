@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -18,7 +18,7 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARTENDER_PORTSARIM.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();

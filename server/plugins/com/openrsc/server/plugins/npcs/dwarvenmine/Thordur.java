@@ -1,14 +1,13 @@
 package com.openrsc.server.plugins.npcs.dwarvenmine;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -29,7 +28,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			thordurDialogue(p, n, LIKE_IT_HERE);
 		}
 	}
-	
+
 	private void thordurDialogue(Player p, Npc n, int cID) {
 		switch (cID) {
 		case WANTED_SAY_HI:
@@ -141,7 +140,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.THORDUR.id();
 	}
-	
+
 	static final int WANTED_SAY_HI = 0;
 	static final int WHO_ARE_YOU = 1;
 	static final int LIKE_IT_HERE = 2;

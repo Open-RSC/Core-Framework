@@ -139,7 +139,7 @@ public final class EntityHandler {
 	}
 
 	protected void setupDbDefinitions() {
-		Connection connection = getServer().getDatabase().getConnection().getConnection();
+		Connection connection = getServer().getDatabaseConnection().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {

@@ -1,8 +1,8 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
 
 /**

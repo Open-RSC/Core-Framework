@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
-import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
+import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,11 +16,11 @@ public class SkeletonMage implements CombatAggroScript, OnCombatStartScript {
 		if (attacker.isNpc()) {
 			Player player = (Player) victim;
 			Npc npc = (Npc) attacker;
-			
+
 			npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, "i infect your body with rot", player));
 
 			player.message("You feel slightly weakened");
-			
+
 			int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */

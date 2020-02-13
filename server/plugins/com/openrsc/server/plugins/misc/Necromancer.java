@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
@@ -107,7 +106,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		p.playerServerMessage(MessageType.QUEST, "Invrigar the necromancer is not interested in talking");

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.defaults;
 
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,6 +10,7 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.DefaultHandler;
 import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.sql.query.logs.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
 /**

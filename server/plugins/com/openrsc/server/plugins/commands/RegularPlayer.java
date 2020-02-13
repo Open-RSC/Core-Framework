@@ -3,20 +3,21 @@ package com.openrsc.server.plugins.commands;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
-import com.openrsc.server.database.GameDatabaseException;
-import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
+import com.openrsc.server.sql.query.logs.ChatLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -416,16 +417,20 @@ public final class RegularPlayer implements CommandListener, CommandExecutiveLis
 							builder.append((char)((rand.nextInt(10)) + 48));
 						}
 					}
-
-					player.getCache().store("pair_token", builder.toString());
-
 					try {
-						player.getWorld().getServer().getDatabase().savePlayerCache(player);
-						player.message("Your pair token is: " + builder.toString());
-					} catch (final GameDatabaseException ex) {
-						LOGGER.catching(ex);
-						player.message("Error while saving token. Please try again or report in Discord.");
+						PreparedStatement pinStatement = player.getWorld().getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
+						pinStatement.setInt(1, player.getDatabaseID());
+						pinStatement.setInt(2, 1);
+						pinStatement.setString(3, "pair_token");
+						pinStatement.setString(4, builder.toString());
+						pinStatement.executeUpdate();
+
+						player.getCache().store("pair_token", builder.toString());
+					} catch(SQLException a) {
+						a.printStackTrace();
 					}
+
+					player.message("Your pair token is: " + builder.toString());
 				}
 			}
 		} else if (cmd.equalsIgnoreCase("d")) {

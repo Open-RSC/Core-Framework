@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.login.LoginExecutorProcess;
+import com.openrsc.server.sql.PlayerDatabase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,18 +22,21 @@ public class LoginExecutor implements Runnable {
 
 	private final Queue<LoginExecutorProcess> requests;
 
-	private volatile Boolean running;
+	private final PlayerDatabase playerDatabase;
+
+	private Boolean running;
 
 	private final Server server;
 	public final Server getServer() {
 		return server;
 	}
 
-	public LoginExecutor(final Server server) {
+	public LoginExecutor(Server server) {
 		this.server = server;
+		playerDatabase = new PlayerDatabase(getServer());
 		running = false;
 		loginThreadExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
-		requests = new ConcurrentLinkedQueue<>();
+		requests = new ConcurrentLinkedQueue<LoginExecutorProcess>();
 	}
 
 	public void add(final LoginExecutorProcess request) {
@@ -53,6 +57,10 @@ public class LoginExecutor implements Runnable {
 				LOGGER.catching(e);
 			}
 		}
+	}
+
+	public PlayerDatabase getPlayerDatabase() {
+		return playerDatabase;
 	}
 
 	public void start() {

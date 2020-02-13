@@ -106,7 +106,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 
-			ResultSet set = getServer().getDatabase().getConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + getIpAddress()
+			ResultSet set = getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + getIpAddress()
 				+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 60) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 minute
 
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
@@ -119,7 +119,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				}
 			}
 
-			set = getServer().getDatabase().getConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + getUsername() + "'");
+			set = getServer().getDatabaseConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + getUsername() + "'");
 			if (set.next()) {
 				set.close();
 				LOGGER.info(getIpAddress() + " - Registration failed: Forum Username already in use.");
@@ -129,7 +129,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			/* Create the game character */
-			PreparedStatement statement = getServer().getDatabase().getConnection().prepareStatement(
+			PreparedStatement statement = getServer().getDatabaseConnection().prepareStatement(
 				"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players` (`username`, email, `pass`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?)");
 			statement.setString(1, getUsername());
 			statement.setString(2, email);
@@ -140,7 +140,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			statement = null;
 
 			/* PlayerID of the player account */
-			statement = getServer().getDatabase().getConnection().prepareStatement("SELECT id FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+			statement = getServer().getDatabaseConnection().prepareStatement("SELECT id FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 			statement.setString(1, getUsername());
 
 			set = statement.executeQuery();
@@ -153,17 +153,17 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 			int playerID = set.getInt("id");
 
-			statement = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
+			statement = getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
 			statement.setInt(1, playerID);
 			statement.executeUpdate();
 
-			statement = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
+			statement = getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
 			statement.setInt(1, playerID);
 			statement.executeUpdate();
 
 			//Don't rely on the default values of the database.
 			//Update the stats based on their StatDef-----------------------------------------------
-			statement = getServer().getDatabase().getConnection().prepareStatement(getServer().getDatabase().getQueries().updateExperience);
+			statement = getServer().getDatabaseConnection().prepareStatement(getServer().getDatabaseConnection().getGameQueries().updateExperience);
 			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
 			Skills newGuy = new Skills(getServer().getWorld(), null);
 
@@ -171,7 +171,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				statement.setInt(index + 1, newGuy.getExperience(index));
 			statement.executeUpdate();
 
-			statement = getServer().getDatabase().getConnection().prepareStatement(getServer().getDatabase().getQueries().updateStats);
+			statement = getServer().getDatabaseConnection().prepareStatement(getServer().getDatabaseConnection().getGameQueries().updateStats);
 			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
 			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
 				statement.setInt(index + 1, newGuy.getLevel(index));

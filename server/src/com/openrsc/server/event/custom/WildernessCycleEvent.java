@@ -2,8 +2,8 @@ package com.openrsc.server.event.custom;
 
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.database.impl.mysql.queries.Query;
-import com.openrsc.server.database.impl.mysql.queries.ResultQuery;
+import com.openrsc.server.sql.query.Query;
+import com.openrsc.server.sql.query.ResultQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

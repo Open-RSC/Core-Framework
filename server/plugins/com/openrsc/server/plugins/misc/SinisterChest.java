@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;

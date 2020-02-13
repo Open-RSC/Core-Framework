@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -8,13 +7,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public final class Development implements CommandListener, CommandExecutiveListener {
-	private static final Logger LOGGER = LogManager.getLogger(Development.class);
+public final class Development implements CommandListener {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
@@ -89,17 +84,13 @@ public final class Development implements CommandListener, CommandExecutiveListe
 				return;
 			}
 
-			try {
-				player.getWorld().getServer().getDatabase().addNpcSpawn(n.getLoc());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-				player.message("Database Error! " + ex.getMessage());
-				return;
-			}
-
 			player.getWorld().registerNpc(n);
 			n.setShouldRespawn(true);
 			player.message(messagePrefix + "Added NPC to database: " + n.getDef().getName() + " at " + npcLoc + " with radius " + radius);
+			player.getWorld().getServer().getDatabaseConnection().executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
+				+ "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES('" + n.getLoc().getId()
+				+ "', '" + n.getLoc().startX() + "', '" + n.getLoc().minX() + "', '" + n.getLoc().maxX() + "','"
+				+ n.getLoc().startY() + "','" + n.getLoc().minY() + "','" + n.getLoc().maxY() + "')");
 		}
 		else if (cmd.equalsIgnoreCase("rpc") || cmd.equalsIgnoreCase("rnpc") || cmd.equalsIgnoreCase("removenpc")){
 			if (args.length < 1) {
@@ -123,15 +114,13 @@ public final class Development implements CommandListener, CommandExecutiveListe
 				return;
 			}
 
-			try {
-				player.getWorld().getServer().getDatabase().removeNpcSpawn(npc.getLoc());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-				player.message("Database Error! " + ex.getMessage());
-				return;
-			}
-
 			player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + id);
+			player.getWorld().getServer().getDatabaseConnection()
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ "npclocs` WHERE `id` = '" + npc.getID() + "' AND startX='" + npc.getLoc().startX
+					+ "' AND startY='" + npc.getLoc().startY + "' AND minX='" + npc.getLoc().minX
+					+ "' AND maxX = '" + npc.getLoc().maxX + "' AND minY='" + npc.getLoc().minY
+					+ "' AND maxY = '" + npc.getLoc().maxY + "'");
 			player.getWorld().unregisterNpc(npc);
 		}
 		else if (cmd.equalsIgnoreCase("removeobject") || cmd.equalsIgnoreCase("robject")) {
@@ -179,15 +168,12 @@ public final class Development implements CommandListener, CommandExecutiveListe
 				return;
 			}
 
-			try {
-				player.getWorld().getServer().getDatabase().removeObjectSpawn(object.getLoc());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-				player.message("Database Error! " + ex.getMessage());
-				return;
-			}
-
 			player.message(messagePrefix + "Removed object from database: " + object.getGameObjectDef().getName() + " with instance ID " + object.getID());
+			player.getWorld().getServer().getDatabaseConnection()
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ "objects` WHERE `x` = '" + object.getX() + "' AND `y` =  '" + object.getY()
+					+ "' AND `id` = '" + object.getID() + "' AND `direction` = '" + object.getDirection()
+					+ "' AND `type` = '" + object.getType() + "'");
 			player.getWorld().unregisterGameObject(object);
 		}
 		else if (cmd.equalsIgnoreCase("createobject") || cmd.equalsIgnoreCase("cobject") || cmd.equalsIgnoreCase("addobject") || cmd.equalsIgnoreCase("aobject")) {
@@ -240,18 +226,15 @@ public final class Development implements CommandListener, CommandExecutiveListe
 				return;
 			}
 
-			final GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, 0, 0);
-
-			try {
-				player.getWorld().getServer().getDatabase().addObjectSpawn(newObject.getLoc());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-				player.message("Database Error! " + ex.getMessage());
-				return;
-			}
-
+			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, 0, 0);
 			player.getWorld().registerGameObject(newObject);
 			player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
+			player.getWorld().getServer().getDatabaseConnection()
+				.executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('"
+					+ newObject.getX() + "', '" + newObject.getY() + "', '" + newObject.getID() + "', '"
+					+ newObject.getDirection() + "', '" + newObject.getType() + "')");
+
 		}
 		else if (cmd.equalsIgnoreCase("rotateobject")) {
 			if(args.length == 1) {
@@ -318,25 +301,21 @@ public final class Development implements CommandListener, CommandExecutiveListe
 				direction = 8;
 			}
 
-			try {
-				player.getWorld().getServer().getDatabase().removeObjectSpawn(object.getLoc());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-				player.message("Database Error! " + ex.getMessage());
-				return;
-			}
+			player.getWorld().getServer().getDatabaseConnection()
+				.executeUpdate("DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "objects` WHERE `x` = '"
+					+ object.getX() + "' AND `y` =  '" + object.getY() + "' AND `id` = '" + object.getID()
+					+ "' AND `direction` = '" + object.getDirection() + "' AND `type` = '" + object.getType()
+					+ "'");
 			player.getWorld().unregisterGameObject(object);
 
 			GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), object.getID(), direction, object.getType());
 			player.getWorld().registerGameObject(newObject);
 
-			try {
-				player.getWorld().getServer().getDatabase().addObjectSpawn(newObject.getLoc());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-				player.message("Database Error! " + ex.getMessage());
-				return;
-			}
+			player.getWorld().getServer().getDatabaseConnection()
+				.executeUpdate("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
+					+ "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES ('" + newObject.getX() + "', '"
+					+ newObject.getY() + "', '" + newObject.getID() + "', '" + newObject.getDirection() + "', '"
+					+ newObject.getType() + "')");
 
 			player.message(messagePrefix + "Rotated object in database: " + newObject.getGameObjectDef().getName() + " to rotation " + newObject.getDirection() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 		}

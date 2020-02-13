@@ -1,13 +1,11 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
-import com.openrsc.server.database.struct.PlayerExperience;
-import com.openrsc.server.database.struct.PlayerSkills;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.sql.query.logs.LiveFeedLog;
 import com.openrsc.server.util.rsc.Formulae;
 
 
@@ -255,16 +253,12 @@ public class Skills {
 		return exps;
 	}
 
-	public void loadExp(final PlayerExperience[] xp) {
-		for(int i = 0; i < xp.length; i++) {
-			exps[xp[i].skillId] = xp[i].experience;
-		}
+	public void loadExp(int[] xp) {
+		this.exps = xp;
 	}
 
-	public void loadLevels(final PlayerSkills[] lv) {
-		for(int i = 0; i < lv.length; i++) {
-			levels[lv[i].skillId] = lv[i].skillCurLevel;
-		}
+	public void loadLevels(int[] lv) {
+		this.levels = lv;
 	}
 
 	public World getWorld() {
