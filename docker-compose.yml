@@ -3,9 +3,10 @@ services:
 
   openrsc:
     container_name: openrsc
+    image: openrsc/openrsc_service:latest
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: server/inc/Dockerfile
     command: ant -f server/build.xml runserver
     depends_on:
       - mariadb
@@ -18,7 +19,6 @@ services:
       - "43599:43599"
     volumes:
       - ./server:/usr/server
-      - ./:/usr/server/logs
     network_mode: host
 
   mariadb:
