@@ -150,7 +150,8 @@ public class DemonSlayer implements QuestInterface,
 			if (questStage >= 2)
 				choices.add("Yes I know but this important");
 
-			if (getMaxLevel(p, Skills.ATTACK) >= 99)
+			if (p.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+				&& getMaxLevel(p, Skills.ATTACK) >= 99)
 				choices.add("Attack Skillcape");
 
 			int choice = showMenu(p, n, false, choices.toArray(new String[0])); // Do not send choice to client

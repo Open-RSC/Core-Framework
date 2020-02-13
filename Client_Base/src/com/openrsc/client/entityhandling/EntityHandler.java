@@ -2059,7 +2059,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Dwarf commander", "He guards the mines", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		sprites = new int[]{-1, 1, 2, 122, -1, 77, 76, 81, 155, -1, -1, 64};
 		npcs.add(new NPCDef("Viyeldi", "The spirit of a dead sorcerer", "", 80, 80, 80, 80, true, sprites, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 430};
 		npcs.add(new NPCDef("Nurmof", "He sells pickaxes", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Fatigue expert", "He looks wide awake", "", 10, 10, 13, 8, false, sprites, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
