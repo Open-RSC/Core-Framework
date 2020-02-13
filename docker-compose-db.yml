@@ -30,4 +30,3 @@ services:
     volumes:
       - ./server/inc/databases:/var/lib/mysql
       - ./server/inc/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro
-      - ./inc/logs:/var/log/mysql

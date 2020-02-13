@@ -17,4 +17,9 @@ services:
       - "43599:43599"
     volumes:
       - ./server:/usr/server
+      - ./Client_Base:/usr/Client_Base
+      - ./PC_Client:/usr/PC_Client
+      - ./Android_Client:/usr/Android_Client
+      - ./Databases:/usr/Databases
+      - ./PC_Launcher:/usr/PC_Launcher
     network_mode: host

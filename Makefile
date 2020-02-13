@@ -2,7 +2,7 @@ include .env
 #---------------------------------------------------------------
 
 # Compiles and runs the game client.
-# Note: Docker for Mac has a networking bug that prevents the client from accessing the game server running in a Docker container.
+# Note: Docker for Mac has a networking bug that prevents the client from accessing the game server running in a Docker container. This only works on Linux.
 run-client:
 	ant -f Client_Base/build.xml compile
 	ant -f Client_Base/build.xml runclient
@@ -49,11 +49,14 @@ logs-db:
 #---------------------------------------------------------------
 
 # Compiles the game server, client, and launcher before restarting the game server
+# Note: Mac Terminal has an error and will not complete the copy-files.sh script command, this only works on Linux.
 compile:
 	docker exec -i openrsc ant -f server/build.xml compile_core
 	docker exec -i openrsc ant -f server/build.xml compile_plugins
 	docker exec -i openrsc ant -f Client_Base/build.xml compile
 	docker exec -i openrsc ant -f PC_Launcher/build.xml compile
+	sudo chmod +x Deployment_Scripts/copy-files.sh
+	sudo ./Deployment_Scripts/copy-files.sh
 	docker-compose -f docker-compose-game.yml down -v
 	docker-compose -f docker-compose-game.yml up -d
 
