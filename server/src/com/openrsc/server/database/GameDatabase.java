@@ -555,6 +555,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 					final PlayerEquipped equipment = new PlayerEquipped();
 					equipment.itemId = player.getEquipment().get(i).getID();
 					equipment.amount = player.getEquipment().get(i).getAmount();
+					list.add(equipment);
 				}
 			}
 
