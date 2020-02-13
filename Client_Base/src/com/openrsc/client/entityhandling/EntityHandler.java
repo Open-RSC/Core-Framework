@@ -748,7 +748,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Brian", "An axe seller", "", 0, 0, 3, 0, false, sprites, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1};
 		npcs.add(new NPCDef("squire", "A young squire", "", 0, 0, 3, 0, false, sprites, 14535800, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
+		sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, 310};
 		npcs.add(new NPCDef("Head chef", "He looks after the chef's guild", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thurgo", "A short angry guy", "", 20, 17, 16, 20, false, sprites, 15658734, 8409200, 8409120, 13415270, 121, 176, 6, 6, 5, i++));
@@ -1091,7 +1091,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Merlin", "An old wizard", "", 20, 15, 3, 10, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thrantax", "A freshly summoned demon", "", 90, 90, 90, 90, false, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 429};
 		npcs.add(new NPCDef("Hickton", "The owner of the archery store", "", 0, 0, 3, 0, false, sprites, 8409136, 14483456, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Black Demon", "A big scary jet black demon", "", 155, 157, 157, 158, true, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));

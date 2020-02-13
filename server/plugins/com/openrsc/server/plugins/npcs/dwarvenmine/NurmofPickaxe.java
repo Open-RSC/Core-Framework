@@ -52,7 +52,7 @@ public final class NurmofPickaxe implements ShopInterface,
 		if (p.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
 			&& getMaxLevel(p, Skills.MINING) >= 99)
 			options.add("Mining Skillcape");
-		
+
 		int option = showMenu(p, n, false, //do not send over
 				options.toArray(new String[0]));
 		if (option == 0) {
