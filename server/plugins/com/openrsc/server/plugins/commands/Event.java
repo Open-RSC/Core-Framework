@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.commands;
 
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.database.struct.LinkedPlayer;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -8,14 +11,10 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
-import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -329,56 +328,41 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 
 			String currentIp = null;
 			if (target == null) {
-				player.message(
-					messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
+				player.message(messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 				try {
-					PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection()
-						.prepareStatement("SELECT `login_ip` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `username`=?");
-					statement.setString(1, targetUsername);
-					ResultSet result = statement.executeQuery();
-					if (!result.next()) {
-						player.message(messagePrefix + "Error character not found in MySQL");
+					currentIp = player.getWorld().getServer().getDatabase().playerLoginIp(targetUsername);
+
+					if(currentIp == null) {
+						player.message(messagePrefix + "No dabase character found named '" + targetUsername + "'");
 						return;
 					}
-					currentIp = result.getString("login_ip");
-					result.close();
+
 					player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
-				} catch (SQLException e) {
+				} catch (final GameDatabaseException e) {
 					LOGGER.catching(e);
-					player.message(messagePrefix + "A MySQL error has occurred! " + e.getMessage());
+					player.message(messagePrefix + "A Database error has occurred! " + e.getMessage());
 					return;
 				}
 			} else {
 				currentIp = target.getCurrentIP();
 			}
 
-			if (currentIp == null) {
-				player.message(messagePrefix + "An unknown error has occurred!");
-				return;
-			}
-
 			try {
-				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection()
-					.prepareStatement("SELECT `username`, `group_id` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `login_ip` LIKE ?");
-				statement.setString(1, currentIp);
-				ResultSet result = statement.executeQuery();
+				final LinkedPlayer[] linkedPlayers = player.getWorld().getServer().getDatabase().linkedPlayers(currentIp);
 
 				// Check if any of the found users have a group less than the player who is running this command
 				boolean authorized = true;
-				while (result.next()) {
-					int group	= result.getInt("group_id");
-
-					if(group < player.getGroupID())
+				for (final LinkedPlayer linkedPlayer : linkedPlayers) {
+					if(linkedPlayer.groupId < player.getGroupID())
 					{
 						authorized = false;
 						break;
 					}
 				}
 
-				result.beforeFirst();
 				List<String> names = new ArrayList<>();
-				while (result.next()) {
-					String dbUsername	= result.getString("username");
+				for (final LinkedPlayer linkedPlayer : linkedPlayers) {
+					String dbUsername	= linkedPlayer.username;
 					// Only display usernames if the player running the action has a better rank or if the username is the one being targeted
 					if(authorized || dbUsername.toLowerCase().trim().equals(targetUsername.toLowerCase().trim()))
 						names.add(dbUsername);
@@ -405,9 +389,8 @@ public final class Event implements CommandListener, CommandExecutiveListener {
 
 				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 18, target));
 				ActionSender.sendBox(player, builder.toString(), names.size() > 10);
-				result.close();
-			} catch (SQLException e) {
-				player.message(messagePrefix + "A MySQL error has occured! " + e.getMessage());
+			} catch (final GameDatabaseException ex) {
+				player.message(messagePrefix + "A MySQL error has occured! " + ex.getMessage());
 			}
 		}
 		else if(cmd.equalsIgnoreCase("seers") || cmd.equalsIgnoreCase("toggleseers") || cmd.equalsIgnoreCase("partyhall") || cmd.equalsIgnoreCase("togglepartyhall")) {

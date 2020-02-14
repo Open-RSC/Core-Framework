@@ -1,12 +1,13 @@
 package com.openrsc.server.net;
 
+import org.jboss.netty.channel.ChannelHandler;
+
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.jboss.netty.channel.ChannelHandler;
-
-import java.util.List;
 
 /**
  * @author Imposter

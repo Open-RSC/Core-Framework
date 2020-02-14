@@ -5,8 +5,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.movePlayer;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class MagicalPool implements ObjectActionListener, ObjectActionExecutiveListener {
 
@@ -40,7 +39,7 @@ public class MagicalPool implements ObjectActionListener, ObjectActionExecutiveL
 			int option = showMenu(player, "Edgeville", "Varrock",
 					"Castle (dangerous)", "Graveyard (dangerous)", "Hobgoblins (dangerous)", "Altar (dangerous)",
 					"Dragon Maze (dangerous)", "Mage Arena (dangerous)", "Rune rocks (dangerous)", "Red dragons (dangerous)", "Further underground mage arena");
-
+			
 			if (option == 0) {
 				player.teleport(215, 436);
 			} else if (option == 1) {

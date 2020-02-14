@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.skills.agility;
 
-import com.openrsc.server.constants.Skills;
-import com.openrsc.server.model.entity.player.Player;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.entity.player.Player;
 
 public class AgilityUtils {
 
@@ -29,12 +29,12 @@ public class AgilityUtils {
 			}
 		}
 	}
-
+	
 	public static boolean hasDoneObstacle(Player p, int id, Set<Integer> obstacles) {
 		return p.getAttribute("obstaclesDone") != null
 				&& p.getAttribute("obstaclesDone", new HashSet<Integer>()).contains(id);
 	}
-
+	
 	// old method - where order matters
 	public static void setNextObstacle(Player p, int id, int[] obstacleOrder, int bonus) {
 		if (p.getAttribute("nextObstacle", -1) == -1) {

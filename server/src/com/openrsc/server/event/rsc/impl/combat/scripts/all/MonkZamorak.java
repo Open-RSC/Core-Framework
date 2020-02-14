@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,7 +16,7 @@ public class MonkZamorak implements CombatAggroScript, OnCombatStartScript {
 		if (attacker.isNpc()) {
 			Player player = (Player) victim;
 			Npc npc = (Npc) attacker;
-
+			
 			npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, "A curse be upon you", player));
 
 			player.message("You feel slightly weakened");

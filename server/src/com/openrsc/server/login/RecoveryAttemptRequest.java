@@ -3,7 +3,7 @@ package com.openrsc.server.login;
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.PacketBuilder;
-import com.openrsc.server.sql.query.logs.SecurityChangeLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.SecurityChangeLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -102,7 +102,7 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 
 			int pid = -1;
 
-			PreparedStatement statement = getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+			PreparedStatement statement = getServer().getDatabase().getConnection().prepareStatement("SELECT id, pass, salt FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 			statement.setString(1, getUsername());
 			ResultSet res = statement.executeQuery();
 			ResultSet res2 = null;
@@ -110,7 +110,7 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 
 			if (res.next()) {
 				pid = res.getInt("id");
-				statement = getServer().getDatabaseConnection().prepareStatement("SELECT * FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+				statement = getServer().getDatabase().getConnection().prepareStatement("SELECT * FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 				statement.setInt(1, pid);
 				res2 = statement.executeQuery();
 				if (res2.next()) {
@@ -141,7 +141,7 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 					numCorrect += DataConversions.checkPassword(getAnswers()[j], salt, res2.getString("answer"+(j+1))) ? 1 : 0;
 				}
 
-				PreparedStatement attempt = getServer().getDatabaseConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX
+				PreparedStatement attempt = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "recovery_attempts`(`playerID`, `username`, `time`, `ip`) VALUES(?, ?, ?, ?)", new String[]{"dbid"});
 				attempt.setInt(1, pid);
 				attempt.setString(2, getUsername());
@@ -160,7 +160,7 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 				//enough treshold to allow pass change for recovery
 				if (numCorrect >= 4) {
 
-					innerStatement = getServer().getDatabaseConnection().prepareStatement(
+					innerStatement = getServer().getDatabase().getConnection().prepareStatement(
 						"UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=?, `lastRecoveryTryId`=? WHERE `id`=?");
 					String hashedNewPassword = DataConversions.hashPassword(getNewPassword(), salt);
 					innerStatement.setString(1, hashedNewPassword);
@@ -180,7 +180,7 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 					getChannel().close();
 				} else {
 					LOGGER.info("Recovery attempt for " + getUsername() + " is NOT successful with " + numCorrect + " correct guesses.");
-					innerStatement = getServer().getDatabaseConnection().prepareStatement(
+					innerStatement = getServer().getDatabase().getConnection().prepareStatement(
 						"UPDATE `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `lastRecoveryTryId`=? WHERE `id`=?");
 					innerStatement.setInt(1, tryID);
 					innerStatement.setInt(2, pid);

@@ -1,10 +1,11 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.database.struct.PlayerFriend;
+import com.openrsc.server.database.struct.PlayerIgnore;
 import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -24,28 +25,20 @@ public class Social {
 		this.player = player;
 	}
 
-	public boolean addFriend(long id, int world, String friendName) {
-		boolean added = player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().addFriend(player.getDatabaseID(), id, friendName);
-		if (added)
-			friendList.put(id, world);
-		return added;
+	public void addFriend(long id, int world, String friendName) {
+		friendList.put(id, world);
 	}
 
-	public boolean addIgnore(long id, int i, String friendName) {
-		boolean added = player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().addIgnore(player.getDatabaseID(), id, friendName);
-		if (added)
-			ignoreList.add(id);
-		return added;
+	public void addIgnore(long id, int i, String friendName) {
+		ignoreList.add(id);
 	}
 
 	public void removeFriend(long id) {
 		friendList.remove(id);
-		player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().removeFriend(player.getDatabaseID(), id);
 	}
 
 	public void removeIgnore(long id) {
 		ignoreList.remove(id);
-		player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().removeIgnore(player.getDatabaseID(), id);
 	}
 
 	public boolean isFriendsWith(long usernameHash) {
@@ -84,18 +77,18 @@ public class Social {
 		return ignoreList.size();
 	}
 
-	public void addFriends(List<Long> longListFromResultSet) {
-		for (Long l : longListFromResultSet) {
-			friendList.put(l, 0);
+	public void addFriends(final PlayerFriend friends[]) {
+		for (PlayerFriend l : friends) {
+			friendList.put(l.playerHash, 0);
 		}
 		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
 			friendList.put(Long.MIN_VALUE, 0);
 		}
 	}
 
-	public void addIgnore(List<Long> longListFromResultSet) {
-		for (Long l : longListFromResultSet) {
-			ignoreList.add(l);
+	public void addIgnore(final PlayerIgnore ignores[]) {
+		for (PlayerIgnore l : ignores) {
+			ignoreList.add(l.playerHash);
 		}
 	}
 
