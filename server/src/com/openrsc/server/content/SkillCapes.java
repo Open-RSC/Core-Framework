@@ -34,9 +34,9 @@ public class SkillCapes {
 	}
 
 	private static boolean attackCape(boolean isHit) {
-		double rerollPercent = 15;
+		double rerollPercent = 10;
 		if (!isHit) {
-			if (DataConversions.random(1, 100) <= rerollPercent) {
+			if (rand1to100() <= rerollPercent) {
 				System.out.println("Attack Cape Activated");
 				return true;
 			}
@@ -45,10 +45,9 @@ public class SkillCapes {
 	}
 
 	private static boolean thievingCape(boolean succeededPickpocket) {
-		double rerollPercent = 33;
+		double rerollPercent = 15;
 		if (!succeededPickpocket) {
-			int roll = (int)(DataConversions.getRandom().nextDouble() * 99) + 1;
-			if (roll <= rerollPercent) {
+			if (rand1to100() <= rerollPercent) {
 				System.out.println("Thieving Cape Activated");
 				return true;
 			}
@@ -57,8 +56,8 @@ public class SkillCapes {
 	}
 
 	private static boolean miningCape() {
-		double rerollPercent = 10;
-		if (DataConversions.random(1, 100) <= rerollPercent) {
+		double rerollPercent = 8;
+		if (rand1to100() <= rerollPercent) {
 			System.out.println("Mining Cape Activated");
 			return true;
 		}
@@ -66,11 +65,15 @@ public class SkillCapes {
 	}
 
 	private static boolean fletchingCape() {
-		double rerollPercent = 30;
-		if (DataConversions.random(1, 100) <= rerollPercent) {
+		double rerollPercent = 20;
+		if (rand1to100() <= rerollPercent) {
 			System.out.println("Fletching Cape Activated");
 			return true;
 		}
 		return false;
+	}
+
+	private static int rand1to100() {
+		return (int)(DataConversions.getRandom().nextDouble() * 99) + 1;
 	}
 }
