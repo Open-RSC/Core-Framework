@@ -1,11 +1,24 @@
 include .env
 #---------------------------------------------------------------
 
-# Compiles and runs the game client.
-# Note: Docker for Mac has a networking bug that prevents the client from accessing the game server running in a Docker container. This only works on Linux.
+# Section utilized by various shell scripts within Deployment_Scripts
+start-linux:
+	sudo `pwd`/Start-Linux.sh
+
+run-server:
+	sudo `pwd`/Deployment_Scripts/run.sh
+
 run-client:
-	sudo ant -f Client_Base/build.xml compile
 	sudo ant -f Client_Base/build.xml runclient
+
+combined-install:
+	sudo `pwd`/Deployment_Scripts/combined-install.sh
+
+docker-install:
+	sudo `pwd`/Deployment_Scripts/docker-install.sh
+
+get-updates:
+	sudo `pwd`/Deployment_Scripts/get-updates.sh
 
 #---------------------------------------------------------------
 

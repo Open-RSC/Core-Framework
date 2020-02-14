@@ -30,3 +30,8 @@ services:
     volumes:
       - ./server/inc/databases:/var/lib/mysql
       - ./server/inc/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro
+
+networks:
+  default:
+    external:
+      name: database
