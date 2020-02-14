@@ -2144,7 +2144,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Balrog", "A massive black demon", "", 999, 250, 80, 200, true, sprites, 0, 0, 0, 0, 450, 480, 11, 11, 30, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Silicius", "A Peaceful monk", "", 12, 13, 15, 12, false, sprites, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, i++));
-
+		sprites = new int[]{3, 4, 2, -1, -1, -1, 426, -1, 46, -1, -1, 428};
+		npcs.add(new NPCDef("Robin Banks", "A master thief", "", 34, 32, 37, 33, false, sprites, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -4831,7 +4832,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("skirt", "equipment",10510400, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",4210752, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",16036851, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",15609904, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment",15609904, 0, true, false, 0));//90
 		animations.add(new AnimationDef("skirt", "equipment",8400921, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",7824998, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",7829367, 0, true, false, 0));
@@ -4841,7 +4842,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("squareshield", "equipment",16737817, 0, true, false, 0));
 		animations.add(new AnimationDef("squareshield", "equipment",15654365, 0, true, false, 0));
 		animations.add(new AnimationDef("squareshield", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment",10072780, 0, true, false, 0));//100
 		animations.add(new AnimationDef("squareshield", "equipment",11717785, 0, true, false, 0));
 		animations.add(new AnimationDef("squareshield", "equipment",56797, 0, true, false, 0));
 		animations.add(new AnimationDef("squareshield", "equipment",3158064, 0, true, false, 0));
@@ -4852,7 +4853,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("battleaxe", "equipment",16737817, 0, true, false, 0));
 		animations.add(new AnimationDef("battleaxe", "equipment",15654365, 0, true, false, 0));
 		animations.add(new AnimationDef("battleaxe", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment",10072780, 0, true, false, 0));//110
 		animations.add(new AnimationDef("battleaxe", "equipment",11717785, 0, true, false, 0));
 		animations.add(new AnimationDef("battleaxe", "equipment",65535, 0, true, false, 0));
 		animations.add(new AnimationDef("battleaxe", "equipment",3158064, 0, true, false, 0));
@@ -4862,7 +4863,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("mace", "equipment",10072780, 0, true, false, 0));
 		animations.add(new AnimationDef("mace", "equipment",11717785, 0, true, false, 0));
 		animations.add(new AnimationDef("mace", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment",3158064, 0, true, false, 0));//120
 		animations.add(new AnimationDef("staff", "equipment",0, 0, true, false, 0));
 		animations.add(new AnimationDef("rat", "npc", 4805259, 0, true, false, 0));
 		animations.add(new AnimationDef("demon", "npc", 16384000, 0, true, false, 0));
@@ -4873,7 +4874,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("sheep", "npc", 0, 0, false, false, 0));
 		animations.add(new AnimationDef("unicorn", "npc", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("bear", "npc", 0, 0, true, false, 0));
-		animations.add(new AnimationDef("chicken", "npc", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("chicken", "npc", 0, 0, true, false, 0));//130
 		animations.add(new AnimationDef("skeleton", "npc", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("skelweap", "npc", 0, 0, true, true, 0));
 		animations.add(new AnimationDef("zombie", "npc", 0, 0, true, false, 0));
@@ -4884,7 +4885,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("goblin", "npc", 16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("goblin", "npc", 47872, 0, true, false, 0));
 		animations.add(new AnimationDef("gobweap", "npc", 65535, 0, true, true, 0));
-		animations.add(new AnimationDef("scorpion", "npc", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("scorpion", "npc", 0, 0, true, false, 0));//140
 		animations.add(new AnimationDef("dragon", "npc", 65280, 0, true, false, 0));
 		animations.add(new AnimationDef("dragon", "npc", 16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("dragon", "npc", 21981, 0, true, false, 0));
@@ -4895,7 +4896,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("partyhat", "equipment",255, 0, true, false, 0));
 		animations.add(new AnimationDef("partyhat", "equipment",65280, 0, true, false, 0));
 		animations.add(new AnimationDef("partyhat", "equipment",16711935, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment",16777215, 0, true, false, 0));//150
 		animations.add(new AnimationDef("leathergloves", "equipment",11202303, 0, true, false, 0));
 		animations.add(new AnimationDef("chicken", "npc", 16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("fplatemailtop", "equipment",10083839, 0, true, false, 0));
@@ -4906,7 +4907,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("sword", "equipment",16711748, 0, true, false, 0));
 		animations.add(new AnimationDef("eyepatch", "equipment",0, 0, true, true, 0));
 		animations.add(new AnimationDef("demon", "npc", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("dragon", "npc", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("dragon", "npc", 3158064, 0, true, false, 0));//160
 		animations.add(new AnimationDef("spider", "npc", 14535680, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 2236962, 0, true, false, 0));
 		animations.add(new AnimationDef("unicorn", "npc", 2236962, 0, true, false, 0));
@@ -4917,7 +4918,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("mediumhelm", "equipment",11250603, 0, true, false, 0));
 		animations.add(new AnimationDef("chainmail", "equipment",11250603, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardshat", "equipment",16711680, 0, true, false, 0));
-		animations.add(new AnimationDef("legs1", "player", 9785408, 0, true, false, 0));
+		animations.add(new AnimationDef("legs1", "player", 9785408, 0, true, false, 0));//170
 		animations.add(new AnimationDef("gasmask", "equipment",0, 0, true, false, 0));
 		animations.add(new AnimationDef("mediumhelm", "equipment",16711748, 0, true, false, 0));
 		animations.add(new AnimationDef("spider", "npc", 3852326, 0, true, false, 0));
@@ -4927,7 +4928,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("skirt", "equipment",1052688, 0, true, false, 0));
 		animations.add(new AnimationDef("halloweenmask", "equipment",16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("halloweenmask", "equipment",255, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",16755370, 15, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment",16755370, 15, true, false, 0));//180
 		animations.add(new AnimationDef("skirt", "equipment",11206570, 15, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",11184895, 15, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",16777164, 15, true, false, 0));
@@ -4938,7 +4939,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("wizardshat", "equipment",16777164, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardshat", "equipment",13434879, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",16755370, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",11206570, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment",11206570, 0, true, false, 0));//190
 		animations.add(new AnimationDef("wizardsrobe", "equipment",11184895, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",16777164, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",13434879, 0, true, false, 0));
@@ -4948,7 +4949,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("boots", "equipment",11206570, 0, true, false, 0));
 		animations.add(new AnimationDef("boots", "equipment",11184895, 0, true, false, 0));
 		animations.add(new AnimationDef("boots", "equipment",16777164, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",13434879, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment",13434879, 0, true, false, 0));//200
 		animations.add(new AnimationDef("santahat", "equipment",0, 0, true, false, 0));
 		animations.add(new AnimationDef("ibanstaff", "equipment",0, 0, true, false, 0));
 		animations.add(new AnimationDef("souless", "npc", 0, 0, true, false, 0));
@@ -4959,7 +4960,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("cape", "equipment",16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 13420580, 0, true, false, 0));
 		animations.add(new AnimationDef("bunnyears", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("saradominstaff", "equipment",0, 0, true, false, 0));
+		animations.add(new AnimationDef("saradominstaff", "equipment",0, 0, true, false, 0));//210
 		animations.add(new AnimationDef("spear", "equipment",56797, 0, true, false, 0));
 		animations.add(new AnimationDef("skirt", "equipment",1392384, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",1392384, 0, true, false, 0));

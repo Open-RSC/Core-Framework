@@ -817,7 +817,8 @@ public enum NpcId {
 	DWARVEN_SMITHY(808),
 	DWARVEN_YOUTH(809),
 	BALROG(810),
-	SILICIUS(811);
+	SILICIUS(811),
+	ROBIN_BANKS(812);
 
 	private int npcId;
 
