@@ -354,9 +354,8 @@ public class MySqlGameDatabase extends GameDatabase {
 					readBlob.close();
 					bankPreset.inventory = buffer.toByteArray();
 
-					readBlob = result.getBlob("inventory").getBinaryStream();
+					readBlob = result.getBlob("equipment").getBinaryStream();
 					buffer = new ByteArrayOutputStream();
-					nRead = 0;
 
 					data = new byte[1024];
 					while ((nRead = readBlob.read(data, 0, data.length)) != -1) {
