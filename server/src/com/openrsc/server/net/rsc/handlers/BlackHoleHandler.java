@@ -1,15 +1,15 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 
+import static com.openrsc.server.plugins.Functions.hasItem;
+
 public class BlackHoleHandler implements PacketHandler {
-	
+
 	@Override
 	public void handlePacket(Packet p, Player player) throws Exception {
 		if (player == null) {

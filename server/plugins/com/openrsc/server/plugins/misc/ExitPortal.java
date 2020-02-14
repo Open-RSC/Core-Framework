@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
 
-import com.mysql.jdbc.Util;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,7 +8,6 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import javax.swing.text.Utilities;
 import java.util.ArrayList;
 
 public class ExitPortal implements ObjectActionListener, ObjectActionExecutiveListener {

@@ -355,7 +355,7 @@ public class Bank {
 			getPlayer().playSound("click");
 
 		getPlayer().updateWornItems(item.getDef(getPlayer().getWorld()).getWieldPosition(), item.getDef(getPlayer().getWorld()).getAppearanceId(),
-				item.getDef(getPlayer().getWorld()).getWearableId(), true);
+			item.getDef(getPlayer().getWorld()).getWearableId(), true);
 		getPlayer().getEquipment().equip(item.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(item.getID(), amountToRemove));
 		ActionSender.sendEquipmentStats(getPlayer());
 	}
@@ -534,7 +534,7 @@ public class Bank {
 					continue;
 				itemID[1] = blobData.get();
 				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-				ItemDefinition item = getPlayer().getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+				ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
 				if (item == null)
 					continue;
 
@@ -559,7 +559,7 @@ public class Bank {
 					continue;
 				itemID[1] = blobData.get();
 				int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-				ItemDefinition item = getPlayer().getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+				ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
 				if (item == null)
 					continue;
 

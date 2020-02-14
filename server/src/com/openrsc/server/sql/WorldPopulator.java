@@ -1,6 +1,5 @@
 package com.openrsc.server.sql;
 
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -66,9 +65,9 @@ public final class WorldPopulator {
 			while (result.next()) {
 				/* Configurable NPCs */
 				int npcID = result.getInt("id");
-				if ((npcID == NpcId.AUCTIONEER.id() || npcID == NpcId.AUCTION_CLERK.id())
+				if ((npcID == 794 || npcID == 795)
 					&& !getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
-				else if ((npcID == NpcId.IRONMAN.id() || npcID == NpcId.ULTIMATE_IRONMAN.id() || npcID == NpcId.HARDCORE_IRONMAN.id())
+				else if ((npcID == 799 || npcID == 800 || npcID == 801)
 					&& !getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS)
 					continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
 

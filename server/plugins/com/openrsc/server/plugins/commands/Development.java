@@ -7,10 +7,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class Development implements CommandListener, CommandExecutiveListener {
+public final class Development implements CommandListener {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;

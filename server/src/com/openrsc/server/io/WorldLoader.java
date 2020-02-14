@@ -1,6 +1,5 @@
 package com.openrsc.server.io;
 
-import com.openrsc.server.Server;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.sql.WorldPopulator;

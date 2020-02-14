@@ -1,10 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 

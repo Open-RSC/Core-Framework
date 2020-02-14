@@ -1257,10 +1257,8 @@ public class ActionSender {
 	static void sendLogin(Player p) {
 		try {
 			if (p.getWorld().registerPlayer(p)) {
-
 				sendWorldInfo(p);
 				p.getWorld().getServer().getGameUpdater().sendUpdatePackets(p);
-
 				long timeTillShutdown = p.getWorld().getServer().timeTillShutdown();
 				if (timeTillShutdown > -1)
 					startShutdown(p, (int)(timeTillShutdown / 1000));
@@ -1347,6 +1345,7 @@ public class ActionSender {
 				sendFriendList(p);
 				sendIgnoreList(p);
 			} else {
+				LOGGER.info("Send Login, Failed: " + p.getUsername());
 				p.getChannel().close();
 			}
 		} catch (Throwable e) {

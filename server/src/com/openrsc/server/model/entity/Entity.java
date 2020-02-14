@@ -14,7 +14,7 @@ public abstract class Entity {
 
 	private final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
-	private int id;
+	public int id;
 
 	private int index;
 
@@ -157,7 +157,7 @@ public abstract class Entity {
 	public abstract boolean isOn(final int x, final int y);
 
 	public boolean isInvisibleTo(final Entity observer) {
-		return false;
+		return true;
 	}
 
 	public boolean isPlayer() {

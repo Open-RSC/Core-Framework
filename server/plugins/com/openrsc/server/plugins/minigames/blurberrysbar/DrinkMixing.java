@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.blurberrysbar;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
@@ -8,8 +9,6 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
 
 public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
@@ -35,7 +34,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 				dm = mix;
 			}
 		}
-		if ((hasItem(p, ItemId.FULL_COCKTAIL_GLASS.id()) || hasItem(p, ItemId.ODD_LOOKING_COCKTAIL.id())) 
+		if ((hasItem(p, ItemId.FULL_COCKTAIL_GLASS.id()) || hasItem(p, ItemId.ODD_LOOKING_COCKTAIL.id()))
 				&& dm.itemID == ItemId.COCKTAIL_SHAKER.id()) {
 			p.message("you need to finish, drink or drop your unfished cocktail");
 			p.message("before you can start another - blurberry's rules");

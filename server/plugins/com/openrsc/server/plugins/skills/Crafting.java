@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCraftingDef;
-import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemGemDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;

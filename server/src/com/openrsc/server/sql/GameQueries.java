@@ -1,7 +1,6 @@
 package com.openrsc.server.sql;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.SkillDef;
 
 public class GameQueries {

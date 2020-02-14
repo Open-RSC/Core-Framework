@@ -6,7 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -20,7 +19,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener {
-	
+
 	@Override
 	public int getMiniGameId() {
 		return Minigames.ALFRED_GRIMHANDS_BARCRAWL;
@@ -40,7 +39,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 	public void handleReward(Player p) {
 		//mini-quest complete handled already
 	}
-	
+
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == 311 && obj.getX() == 494;
