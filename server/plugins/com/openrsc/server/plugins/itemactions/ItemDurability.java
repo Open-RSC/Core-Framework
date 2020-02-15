@@ -30,7 +30,7 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 					player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT + " charges remaining.");
 			} else if (item.getID() == ItemId.RING_OF_FORGING.id()) {
 				if (player.getCache().hasKey("ringofforging"))
-					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofforging");
+					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES - player.getCache().getInt("ringofforging");
 				else
 					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES;
 				player.message("Your Ring of Forging has " + charges + "/" +
