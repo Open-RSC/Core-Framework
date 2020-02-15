@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.commands;
 
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.database.struct.NpcDrop;
 import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
@@ -7,17 +10,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
 import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
-import com.openrsc.server.sql.query.logs.StaffLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.StringUtil;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.openrsc.server.plugins.commands.Event.LOGGER;
 
@@ -235,28 +232,28 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 			player.message(messagePrefix + p.getUsername() + " has stage " + p.getQuestStage(quest) + " for quest " + quest);
 		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
 			try {
-				PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-					"SELECT * FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdrops` WHERE npcdef_id = ?");
-				for (int i = 0; i < player.getWorld().getServer().getEntityHandler().npcs.size(); i++) {
-					statement.setInt(1, i);
-					ResultSet dropResult = statement.executeQuery();
+				final NpcDrop drops[] = player.getWorld().getServer().getDatabase().getNpcDrops();
+				final HashMap<Integer, ArrayList<ItemDropDef>> list = new HashMap<>();
 
-					NPCDef def = player.getWorld().getServer().getEntityHandler().getNpcDef(i);
-					def.drops = null;
-					ArrayList<ItemDropDef> drops = new ArrayList<>();
-					while (dropResult.next()) {
-						ItemDropDef drop;
-
-						drop = new ItemDropDef(dropResult.getInt("id"), dropResult.getInt("amount"),
-							dropResult.getInt("weight"));
-
-						drops.add(drop);
+				for(final NpcDrop drop : drops) {
+					if(!list.containsKey(drop.npcId)) {
+						list.put(drop.npcId, new ArrayList<>());
 					}
-					dropResult.close();
-					def.drops = drops.toArray(new ItemDropDef[]{});
+
+					final ItemDropDef dropDef = new ItemDropDef(drop.itemId, drop.amount, drop.weight);
+					list.get(drop.npcId).add(dropDef);
 				}
-			} catch (SQLException e) {
-				LOGGER.catching(e);
+
+				final Set<Map.Entry<Integer, ArrayList<ItemDropDef>>> entrySet = list.entrySet();
+				for (Map.Entry<Integer, ArrayList<ItemDropDef>> entry : entrySet) {
+					final int npcId = entry.getKey();
+					final ArrayList<ItemDropDef> arrayList = entry.getValue();
+					final NPCDef def = player.getWorld().getServer().getEntityHandler().getNpcDef(npcId);
+					def.drops = null;
+					def.drops = arrayList.toArray(new ItemDropDef[]{});
+				}
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
 			}
 			player.message(messagePrefix + "Drop tables reloaded");
 		} else if (cmd.equalsIgnoreCase("reloadworld") || cmd.equalsIgnoreCase("reloadland")) {
@@ -421,9 +418,9 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
-			long userToBan = DataConversions.usernameToHash(args[0]);
-			String usernameToBan = DataConversions.hashToUsername(userToBan);
-			Player p = player.getWorld().getPlayer(userToBan);
+			final long userToBan = DataConversions.usernameToHash(args[0]);
+			final String usernameToBan = DataConversions.hashToUsername(userToBan);
+			final Player p = player.getWorld().getPlayer(userToBan);
 
 			int time;
 			if (args.length >= 2) {
@@ -452,22 +449,17 @@ public final class SuperModerator implements CommandListener, CommandExecutiveLi
 				return;
 			}
 
+			if(p == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
 			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
 				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
 				return;
 			}
 
-			if (p != null) {
-				p.unregister(true, "You have been banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes"));
-			}
-
-			if (time == 0) {
-				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was unbanned by " + player.getUsername()));
-			} else {
-				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
-			}
-
-			player.message(messagePrefix + player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().banPlayer(usernameToBan, time));
+			player.message(messagePrefix + player.getWorld().getServer().getDatabase().banPlayer(usernameToBan, player, time));
 		} else if (cmd.equalsIgnoreCase("viewipbans")) {
 			StringBuilder bans = new StringBuilder("Banned IPs % %");
 			for (Map.Entry<String, Long> entry : player.getWorld().getServer().getPacketFilter().getIpBans().entrySet()) {

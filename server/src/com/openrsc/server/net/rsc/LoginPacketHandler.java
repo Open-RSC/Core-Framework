@@ -116,14 +116,14 @@ public class LoginPacketHandler {
 					user = getString(p.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 
-					PreparedStatement statement = server.getDatabaseConnection().prepareStatement("SELECT id FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					PreparedStatement statement = server.getDatabase().getConnection().prepareStatement("SELECT id FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 					statement.setString(1, user);
 					ResultSet res = statement.executeQuery();
 					ResultSet res2 = null;
 					boolean foundAndHasRecovery = false;
 
 					if (res.next()) {
-						statement = server.getDatabaseConnection().prepareStatement("SELECT * FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+						statement = server.getDatabase().getConnection().prepareStatement("SELECT * FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 						statement.setInt(1, res.getInt("id"));
 						res2 = statement.executeQuery();
 						if (res2.next()) {

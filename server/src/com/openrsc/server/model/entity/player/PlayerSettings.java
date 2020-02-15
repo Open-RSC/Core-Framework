@@ -1,8 +1,8 @@
 package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.model.PlayerAppearance;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.model.entity.npc.Npc;
 
 import java.util.HashMap;
 

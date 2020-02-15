@@ -1,9 +1,9 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -17,7 +17,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	/**
 	 * Note: King Lathas (Quest starer) is located in the Biohazard quest template
 	 **/
-
+	
 	@Override
 	public int getQuestId() {
 		return Quests.UNDERGROUND_PASS;

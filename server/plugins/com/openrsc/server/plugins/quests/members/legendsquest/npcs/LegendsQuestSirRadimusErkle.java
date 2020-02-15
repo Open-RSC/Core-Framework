@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,7 +13,14 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.hasItem;
+import static com.openrsc.server.plugins.Functions.incQuestReward;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.removeItem;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
@@ -44,7 +51,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				"already_cast_holy_spell", "ran_from_2nd_nezi", "legends_choose_reward",
 				"legends_reward_claimed", "ancient_wall_runes", "gave_glowing_dagger",
 				"met_spirit", "cavernous_opening", "viyeldi_companions", "killed_viyeldi",
-				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", "crafted_totem_pole",
+				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", "crafted_totem_pole", 
 			};
 		for (String s : caches) {
 			if (p.getCache().hasKey(s)) {

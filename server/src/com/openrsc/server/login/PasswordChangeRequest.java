@@ -3,7 +3,7 @@ package com.openrsc.server.login;
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.sql.query.logs.SecurityChangeLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.SecurityChangeLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -73,7 +73,7 @@ public class PasswordChangeRequest extends LoginExecutorProcess{
 	protected void processInternal() {
 		try {
 			LOGGER.info("Password change attempt from: " + getPlayer().getCurrentIP());
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT id, pass, salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT id, pass, salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 			statement.setString(1, getPlayer().getUsername());
 			ResultSet result = statement.executeQuery();
 			if (!result.next()) {
@@ -91,13 +91,13 @@ public class PasswordChangeRequest extends LoginExecutorProcess{
 			}
 			newDBPass = DataConversions.hashPassword(getNewPassword(), DBsalt);
 
-			statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement(
+			statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement(
 				"UPDATE `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=? WHERE `id`=?");
 			statement.setString(1, newDBPass);
 			statement.setInt(2, playerID);
 			statement.executeUpdate();
 
-			statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT previous_pass FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+			statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT previous_pass FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 			statement.setInt(1, playerID);
 			result = statement.executeQuery();
 			String lastPw, earlierPw;
@@ -110,7 +110,7 @@ public class PasswordChangeRequest extends LoginExecutorProcess{
 				}
 				lastPw = lastDBPass;
 
-				statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement(
+				statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement(
 					"UPDATE `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `previous_pass`=?, `earlier_pass`=? WHERE `playerID`=?");
 				statement.setString(1, lastPw);
 				statement.setString(2, earlierPw);
