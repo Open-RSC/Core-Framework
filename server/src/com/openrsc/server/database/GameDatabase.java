@@ -705,7 +705,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	protected void querySavePlayerNpcKills(Player player) throws GameDatabaseException {
-		final int killsSize = player.getCache().getCacheMap().size();
+		final int killsSize = player.getKillCache().size();
 		final PlayerNpcKills[] killMap = new PlayerNpcKills[killsSize];
 
 		int i = 0;
