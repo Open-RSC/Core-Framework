@@ -666,6 +666,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			final PlayerQuest quest = new PlayerQuest();
 			quest.questId = id;
 			quest.stage = player.getQuestStage(id);
+			list.add(quest);
 		}
 
 		final PlayerQuest[] quests = list.toArray(new PlayerQuest[list.size()]);
