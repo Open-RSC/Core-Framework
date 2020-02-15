@@ -5107,7 +5107,7 @@ public final class mudclient implements Runnable {
 								if (this.mouseButtonClick != 0) {
 									if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
 										this.mouseButtonClick = 0;
-										this.panelMessageTabs.setText(this.panelMessageEntry, "::clan ");
+										this.panelMessageTabs.setText(this.panelMessageEntry, "::c ");
 									}
 								}
 							}
