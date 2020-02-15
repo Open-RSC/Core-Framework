@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.mage_arena;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -25,7 +26,11 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 		defaultMenu.addOption(new Option("cool, I'd like to access my bank account please") {
 			@Override
 			public void action() {
-				player.setAccessingBank(true);
+				if (player.isIronMan(IronmanMode.Ultimate.id())) {
+					player.message("As an Ultimate Iron Man, you cannot use the bank.");
+					return;
+				}
+
 				if(validateBankPin(player)) {
 					npcTalk(player, n, "no problem");
 					player.setAccessingBank(true);
@@ -97,6 +102,11 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 	}
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
+		if (player.isIronMan(IronmanMode.Ultimate.id())) {
+			player.message("As an Ultimate Iron Man, you cannot use the bank.");
+			return;
+		}
+
 		if(validateBankPin(player)) {
 			if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
