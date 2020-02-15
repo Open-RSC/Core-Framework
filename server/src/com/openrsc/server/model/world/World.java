@@ -28,9 +28,9 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.sql.query.PlayerOnlineFlagQuery;
-import com.openrsc.server.sql.query.logs.LoginLog;
-import com.openrsc.server.sql.web.AvatarGenerator;
+import com.openrsc.server.database.impl.mysql.queries.player.login.PlayerOnlineFlagQuery;
+import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
+import com.openrsc.server.avatargenerator.AvatarGenerator;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.IPTracker;
 import com.openrsc.server.util.SimpleSubscriber;
@@ -577,7 +577,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 			getPlayers().add(player);
 			player.updateRegion();
-			getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), player.getCurrentIP(), true));
+			getServer().getGameLogger().run(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), player.getCurrentIP(), true));
 			getServer().getGameLogger().addQuery(new LoginLog(player.getWorld(), player.getDatabaseID(), player.getCurrentIP()));
 			for (Player other : getPlayers()) {
 				other.getSocial().alertOfLogin(player);

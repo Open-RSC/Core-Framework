@@ -1,7 +1,5 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -10,6 +8,9 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
+
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 
 public class Tramp implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public boolean blockTalkToNpc(final Player player, final Npc npc) {

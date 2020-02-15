@@ -2,7 +2,7 @@ package com.openrsc.server.io;
 
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.sql.WorldPopulator;
+import com.openrsc.server.database.WorldPopulator;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

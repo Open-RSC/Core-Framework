@@ -36,11 +36,11 @@ public class AchievementSystem {
 		loadedAchievements.clear();
 
 		try {
-			PreparedStatement fetchAchievement = getServer().getDatabaseConnection()
+			PreparedStatement fetchAchievement = getServer().getDatabase().getConnection()
 				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
-			PreparedStatement fetchRewards = getServer().getDatabaseConnection()
+			PreparedStatement fetchRewards = getServer().getDatabase().getConnection()
 				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
-			PreparedStatement fetchTasks = getServer().getDatabaseConnection()
+			PreparedStatement fetchTasks = getServer().getDatabase().getConnection()
 				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
 
 			ResultSet result = fetchAchievement.executeQuery();
@@ -143,7 +143,7 @@ public class AchievementSystem {
 					}
 				}
 
-				//Choice rewards 
+				//Choice rewards
 				Menu itemRewards = new Menu();
 				Menu expRewards = new Menu();
 
@@ -171,7 +171,7 @@ public class AchievementSystem {
 								});
 					}
 				}
-				
+
 				boolean hasItemRewards = false;
 				boolean hasExpRewards = false;
 

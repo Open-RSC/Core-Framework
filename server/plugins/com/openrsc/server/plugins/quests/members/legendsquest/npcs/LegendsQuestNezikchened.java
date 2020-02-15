@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -11,9 +8,22 @@ import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
 import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.atQuestStages;
+import static com.openrsc.server.plugins.Functions.createGroundItem;
+import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.transform;
 
 public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, PlayerAttackNpcExecutiveListener {
 
