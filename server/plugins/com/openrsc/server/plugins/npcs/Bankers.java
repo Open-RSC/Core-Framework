@@ -118,6 +118,10 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 			if (auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {
+				if (player.isIronMan(IronmanMode.Ultimate.id())) {
+					player.message("As an Ultimate Iron Man, you cannot use the bank.");
+					return;
+				}
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}
