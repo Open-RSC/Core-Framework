@@ -12,7 +12,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '29.0.3'
     defaultConfig {
         applicationId "com.openrsc.client"
         minSdkVersion 14
@@ -30,6 +30,7 @@ android {
         }
         debug {
             multiDexEnabled = true
+            minifyEnabled = false
         }
     }
     productFlavors {
