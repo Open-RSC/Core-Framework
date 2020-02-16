@@ -619,19 +619,20 @@ public class MySqlGameDatabase extends GameDatabase {
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
 			for (PlayerInventory item : inventory) {
 				statement.setInt(1, item.itemId);
-				statement.setInt(2, item.itemStatus.getAmount());
-				statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
-				statement.setInt(4, item.itemStatus.getDurability());
+				statement.setInt(2, item.itemStatus.getCatalogId());
+				statement.setInt(3, item.itemStatus.getAmount());
+				statement.setInt(4, item.itemStatus.getNoted() ? 1 : 0);
+				statement.setInt(5, item.itemStatus.getDurability());
 				statement.addBatch();
 			}
-			int[] itemIds = statement.executeBatch();
+			statement.executeBatch();
 
 			statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
 			int slot = 0;
-			for (int i=0; i<inventory.length; i++) {
+			for (PlayerInventory item : inventory) {
 				statement.setInt(1, playerId);
-				statement.setInt(2, itemIds[i]);
-				statement.setInt(3, (inventory[i].wielded ? 1 : 0));
+				statement.setInt(2, item.itemId);
+				statement.setInt(3, (item.wielded ? 1 : 0));
 				statement.setInt(4, slot++);
 				statement.addBatch();
 			}
