@@ -648,7 +648,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			updateLongs(getQueries().save_DeleteEquip, playerId);
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
 			for (PlayerEquipped item : equipment) {
-				statement.setInt(1, item.itemId);
+				statement.setInt(1, item.itemStatus.getCatalogId());
 				statement.setInt(2, item.itemStatus.getAmount());
 				statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
 				statement.setInt(4, item.itemStatus.getDurability());
