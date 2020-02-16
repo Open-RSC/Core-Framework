@@ -74,12 +74,12 @@ public class MySqlQueries {
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
 		save_DeleteBank = "DELETE i,i2 FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
-		save_AddInvStatus = "INSERT INTO `" + PREFIX + "itemstatuses`(`itemID`, `catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?, ?)";
+		save_AddInvStatus = "REPLACE INTO `" + PREFIX + "itemstatuses`(`itemID`, `catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?, ?)";
 		save_AddBank = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `itemID`, `slot`) VALUES(?, ?, ?)";
 		save_AddBankPreset = "INSERT INTO `" + PREFIX + "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
-		save_DeleteInv = "DELETE i.*,i2.* FROM `" + PREFIX + "invitems` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
+		save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
 		save_AddInvItem = "INSERT INTO `" + PREFIX + "invitems`(`playerID`, `itemID`, `wielded`, `slot`) VALUES(?, ?, ?, ?)";
-		save_DeleteEquip = "DELETE i.*,i2.* FROM `" + PREFIX + "equipped` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
+		save_DeleteEquip = "DELETE FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
 		save_SaveEquip = "INSERT INTO `" + PREFIX + "equipped`(`playerID`, `itemID`) VALUES(?, ?)";
 		save_UpdateBasicInfo = "UPDATE `" + PREFIX + "players` SET `combat`=?, skill_total=?, " +
 			"`x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `iron_man`=?, `iron_man_restriction`=?, " +
