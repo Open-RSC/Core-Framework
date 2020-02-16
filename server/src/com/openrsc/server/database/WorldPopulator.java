@@ -4,6 +4,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -119,8 +120,22 @@ public final class WorldPopulator {
 				countGI++;
 			}
 			result.close();
-			statement.close();
 			LOGGER.info("\t Loaded {}", box(countGI) + " grounditems.");
+
+			/* LOAD ITEM STATUSES */
+			result = statement.executeQuery("SELECT * FROM `"
+				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "itemstatuses`");
+			while (result.next()) {
+				Item item = new Item(result.getInt("catalogID"));
+				item.setItemId(result.getInt("itemID"));
+				item.getItemStatus().setAmount(result.getInt("amount"));
+				item.getItemStatus().setNoted(result.getInt("noted") == 1);
+				item.getItemStatus().setDurability(result.getInt("durability"));
+				getWorld().getItems().add(item);
+			}
+			result.close();
+			statement.close();
+			LOGGER.info("\t Loaded {}", box(getWorld().getItems().size()) + " item statuses.");
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(1);

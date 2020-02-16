@@ -18,6 +18,7 @@ import com.openrsc.server.io.WorldLoader;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -78,6 +79,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final EntityList<Player> players;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
+	private final List<Item> items;
 	private final List<Shop> shopData;
 	private final List<Shop> shops;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
@@ -108,6 +110,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		this.server = server;
 		npcs = new EntityList<Npc>(4000);
 		players = new EntityList<Player>(2000);
+		items = Collections.synchronizedList(new LinkedList<Item>());
 		quests = Collections.synchronizedList( new LinkedList<QuestInterface>() );
 		minigames = Collections.synchronizedList( new LinkedList<MiniGameInterface>() );
 		shopData = Collections.synchronizedList( new ArrayList<Shop>() );
@@ -321,6 +324,18 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return players;
 	}
 
+	public List<Item> getItems() {
+		return items;
+	}
+
+	/**
+	 * Finds a spot to insert a new item
+	 */
+	public void insertItem(Item item) {
+		synchronized (items) {
+
+		}
+	}
 	/**
 	 * Finds a specific quest by ID
 	 *
