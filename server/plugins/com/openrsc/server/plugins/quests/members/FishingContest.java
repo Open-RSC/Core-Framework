@@ -474,13 +474,13 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnObject(final GameObject obj, final Item item,
 								 final Player player) {
 
-		if (obj.getID() == 355 && item.getID() == ItemId.SPADE.id()) { // teleport coords:
+		if (obj.getID() == 355 && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
 			message(player, "you dig in amoungst the vines",
 				"You find a red vine worm");
 			addItem(player, ItemId.RED_VINE_WORMS.id(), 1);
 		}
-		else if (obj.getID() == 350 && item.getID() == ItemId.GARLIC.id()) {
+		else if (obj.getID() == 350 && item.getCatalogId() == ItemId.GARLIC.id()) {
 			Npc sinister = getNearestNpc(player, NpcId.SINISTER_STRANGER.id(), 10);
 			Npc bonzo = getNearestNpc(player , NpcId.BONZO.id(), 15);
 
@@ -773,12 +773,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item i) {
 		//garlic on sinister stranger
-		return n.getID() == NpcId.SINISTER_STRANGER.id() && i.getID() == ItemId.GARLIC.id();
+		return n.getID() == NpcId.SINISTER_STRANGER.id() && i.getCatalogId() == ItemId.GARLIC.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item i) {
-		if (n.getID() == NpcId.SINISTER_STRANGER.id() && i.getID() == ItemId.GARLIC.id()) {
+		if (n.getID() == NpcId.SINISTER_STRANGER.id() && i.getCatalogId() == ItemId.GARLIC.id()) {
 			npcTalk(p, n, "urrggh get zat horrible ving avay from me",
 				"How do people like to eat that stuff",
 				"I can't stand even to be near it for ten seconds");

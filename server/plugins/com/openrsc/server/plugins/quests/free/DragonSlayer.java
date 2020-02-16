@@ -35,7 +35,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	public static final int PORT_SARIM = 0;
 	public static final int CRANDOR = 1;
-	
+
 	private static final int DWARVEN_CHEST_OPEN = 230;
 	private static final int DWARVEN_CHEST_CLOSED = 231;
 	private static final int MELZAR_CHEST_OPEN = 228;
@@ -60,7 +60,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player p) {
 		p.teleport(410, 3481, false);
@@ -475,14 +475,14 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		return DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getID())
-				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getID());
+		return DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
+				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getID())
-				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getID())) {
+		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
+				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId())) {
 			if (hasItem(p, ItemId.MAP_PIECE_1.id(), 1) && hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && hasItem(p, ItemId.MAP_PIECE_3.id(), 1)) {
 				removeItem(p, ItemId.MAP_PIECE_1.id(), 1);
 				removeItem(p, ItemId.MAP_PIECE_2.id(), 1);
@@ -500,7 +500,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if ((obj.getID() == 226 || obj.getID() == 232) && item.getID() == ItemId.PLANK.id()) {
+		if ((obj.getID() == 226 || obj.getID() == 232) && item.getCatalogId() == ItemId.PLANK.id()) {
 			if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
 				p.message("The ship doesn't seem easily repairable at the moment");
 			} else {

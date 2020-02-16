@@ -63,7 +63,7 @@ public class DemonSlayer implements QuestInterface,
 				case 4:
 				case -1:
 					//even post-quest was the same thing
-					if (item.getID() == ItemId.BUCKET_OF_WATER.id()) {
+					if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 						message(player,
 							"You pour the liquid down the drain");
 						message(player, "Ok I think I've washed the key down into the sewer",

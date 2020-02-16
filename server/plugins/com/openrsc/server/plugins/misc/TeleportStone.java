@@ -16,12 +16,12 @@ public class TeleportStone implements InvActionListener, InvActionExecutiveListe
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == TELEPORT_STONE;
+		return item.getCatalogId() == TELEPORT_STONE;
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == TELEPORT_STONE) {
+		if (item.getCatalogId() == TELEPORT_STONE) {
 			message(p, "the stone starts shaking...");
 			p.message("a magical portal opens up, where would you like to go?");
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};

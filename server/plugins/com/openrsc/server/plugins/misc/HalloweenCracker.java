@@ -110,7 +110,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.HALLOWEEN_CRACKER.id()) {
+		if (item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
 				return;
@@ -180,6 +180,6 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.HALLOWEEN_CRACKER.id();
+		return item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id();
 	}
 }

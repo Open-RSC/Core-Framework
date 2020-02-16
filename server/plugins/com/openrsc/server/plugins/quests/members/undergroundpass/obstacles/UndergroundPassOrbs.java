@@ -35,7 +35,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), NORTH_PASSAGE) || inArray(obj.getID(), WEST_PASSAGE) || obj.getID() == SOUTH_WEST_PASSAGE
 				|| obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE
-				|| obj.getID() == SOUTH_WEST_STALAGMITE; 
+				|| obj.getID() == SOUTH_WEST_STALAGMITE;
 	}
 
 	@Override
@@ -154,15 +154,15 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (item.getID() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2]))
-				|| (item.getID() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE)
-				|| (inArray(item.getID(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
+		return (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2]))
+				|| (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE)
+				|| (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
 						ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE);
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
+		if (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
 			player.message("you carefully place the planks over the pressure triggers");
 			player.message("you walk across the wooden planks");
 			removeItem(player, ItemId.PLANK.id(), 1);
@@ -177,7 +177,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				player.teleport(728, 3441);
 			}
 		}
-		else if (item.getID() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
+		else if (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
 			message(player, "you tie one end of the rope to the stalagmite",
 				"and the other around your waist");
 			removeItem(player, ItemId.ROPE.id(), 1);
@@ -185,26 +185,26 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 				player.getCache().store("stalagmite", true);
 			}
 		}
-		else if (inArray(item.getID(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
+		else if (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
 				ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE) {
 			player.message("you throw the glowing orb into the furnace");
 			message(player, "its light quickly dims and then dies");
 			player.message("you feel a cold shudder run down your spine");
-			removeItem(player, item.getID(), 1);
+			removeItem(player, item.getCatalogId(), 1);
 			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
-				if (item.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
+				if (item.getCatalogId() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
 					if (!player.getCache().hasKey("orb_of_light1")) {
 						player.getCache().store("orb_of_light1", true);
 					}
-				} else if (item.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
+				} else if (item.getCatalogId() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
 					if (!player.getCache().hasKey("orb_of_light2")) {
 						player.getCache().store("orb_of_light2", true);
 					}
-				} else if (item.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
+				} else if (item.getCatalogId() == ItemId.ORB_OF_LIGHT_PINK.id()) {
 					if (!player.getCache().hasKey("orb_of_light3")) {
 						player.getCache().store("orb_of_light3", true);
 					}
-				} else if (item.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
+				} else if (item.getCatalogId() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
 					if (!player.getCache().hasKey("orb_of_light4")) {
 						player.getCache().store("orb_of_light4", true);
 					}

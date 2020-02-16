@@ -191,7 +191,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 				newGate = new GameObject(p.getWorld(), dynGate.getLocation(), 371, 0, 0);
 				p.getWorld().registerGameObject(newGate);
 			}
-			
+
 			if (p.getCache().hasKey("foodtrough") && correctSetup) {
 				message(p, "In their panic the rats bend and twist",
 						"The cage bars with their teeth",
@@ -221,22 +221,22 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return (obj.getID() == 375 && item.getID() == ItemId.RAT_POISON.id()) ||
+		return (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) ||
 				((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
-				&& (item.getID() == ItemId.LARGE_COG_PURPLE.id() || item.getID() == ItemId.LARGE_COG_BLACK.id()
-				|| item.getID() == ItemId.LARGE_COG_BLUE.id() || item.getID() == ItemId.LARGE_COG_RED.id()));
+				&& (item.getCatalogId() == ItemId.LARGE_COG_PURPLE.id() || item.getCatalogId() == ItemId.LARGE_COG_BLACK.id()
+				|| item.getCatalogId() == ItemId.LARGE_COG_BLUE.id() || item.getCatalogId() == ItemId.LARGE_COG_RED.id()));
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 375 && item.getID() == ItemId.RAT_POISON.id()) {
+		if (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) {
 			p.message("You pour the rat poison into the feeding trough");
 			removeItem(p, ItemId.RAT_POISON.id(), 1);
 			p.getCache().store("foodtrough", true);
 		}
 		/** TOP PURPLE POLE OTHERWISE NOT FIT MESSAGE - 1st cog **/
 		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
-			&& item.getID() == ItemId.LARGE_COG_PURPLE.id()) {
+			&& item.getCatalogId() == ItemId.LARGE_COG_PURPLE.id()) {
 			if (obj.getID() == 364 && obj.getX() == 581 && obj.getY() == 2525) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("1st_cog")) {
 					p.message("The cog fits perfectly");
@@ -252,7 +252,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 		}
 		/** GROUND FLOOR BLACK POLE OTHERWISE NOT FIT MESSAGE - 2nd cog **/
 		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
-			&& item.getID() == ItemId.LARGE_COG_BLACK.id()) {
+			&& item.getCatalogId() == ItemId.LARGE_COG_BLACK.id()) {
 			if (obj.getID() == 365 && obj.getX() == 581 && obj.getY() == 639) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("2nd_cog")) {
 					p.message("The cog fits perfectly");
@@ -268,7 +268,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 		}
 		/** BOTTOM FLOOR BLUE POLE OTHERWISE NOT FIT MESSAGE - 3rd cog **/
 		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
-			&& item.getID() == ItemId.LARGE_COG_BLUE.id()) {
+			&& item.getCatalogId() == ItemId.LARGE_COG_BLUE.id()) {
 			if (obj.getID() == 362 && obj.getX() == 580 && obj.getY() == 3470) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("3rd_cog")) {
 					p.message("The cog fits perfectly");
@@ -284,7 +284,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 		}
 		/** SECOND FLOOR RED POLE OTHERWISE NOT FIT MESSAGE - 4th cog **/
 		else if ((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
-			&& item.getID() == ItemId.LARGE_COG_RED.id()) {
+			&& item.getCatalogId() == ItemId.LARGE_COG_RED.id()) {
 			if (obj.getID() == 363 && obj.getX() == 582 && obj.getY() == 1582) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("4th_cog")) {
 					p.message("The cog fits perfectly");
@@ -332,12 +332,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
-		return myItem.getID() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id();
+		return myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id();
 	}
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
-		if (myItem.getID() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
+		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			message(p, "You pour water over the cog",
 				"The cog quickly cools down");
 			if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())

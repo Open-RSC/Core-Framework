@@ -180,13 +180,13 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return (obj.getID() == TENT_CHEST_LOCKED && item.getID() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
+		return (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
 				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TENT_CHEST_LOCKED && item.getID() == ItemId.DIGSITE_CHEST_KEY.id()) {
+		if (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) {
 			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
 			p.message("you use the key in the chest");
 			p.message("you open the chest");
@@ -195,7 +195,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				"Never mind it's open now...");
 		}
 		else if (obj.getID() == X_BARREL) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case BRONZE_PICKAXE:
 					playerTalk(p, null, "I better not - it might break it to pieces!");
 					break;
@@ -221,7 +221,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 			}
 		}
 		else if (obj.getID() == X_BARREL_OPEN) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case PANNING_TRAY:
 					playerTalk(p, null, "Not the best idea i've had...",
 						"It's likely to spill everywhere in that!");
@@ -247,7 +247,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 			}
 		}
 		else if (obj.getID() == BRICK) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case EXPLOSIVE_COMPOUND:
 					p.message("You pour the compound over the bricks");
 					removeItem(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);

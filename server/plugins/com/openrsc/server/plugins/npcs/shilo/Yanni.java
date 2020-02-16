@@ -88,7 +88,7 @@ public class Yanni implements TalkToNpcListener, TalkToNpcExecutiveListener, Inv
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.YANNI.id()) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 			case BONE_KEY:
 				npcTalk(p, npc, "Great item, here's 100 Gold for it.");
 				removeItem(p, ItemId.BONE_KEY.id(), 1);

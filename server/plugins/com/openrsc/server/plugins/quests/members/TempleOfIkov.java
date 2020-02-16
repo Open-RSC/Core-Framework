@@ -566,12 +566,12 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return item.getID() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET;
+		return item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET) {
+		if (item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET) {
 			p.message("You fit the lever into the bracket");
 			removeItem(p, ItemId.LEVER.id(), 1);
 			p.getWorld().replaceGameObject(obj,

@@ -14,7 +14,7 @@ public class DiskOfReturning implements InvActionListener, InvActionExecutiveLis
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if(item.getID() == ItemId.DISK_OF_RETURNING.id()) {
+		if(item.getCatalogId() == ItemId.DISK_OF_RETURNING.id()) {
 			if (player.getLocation().onBlackHole()) {
 				player.message("You spin your disk of returning");
 				player.teleport(311, 3348, true);
@@ -27,6 +27,6 @@ public class DiskOfReturning implements InvActionListener, InvActionExecutiveLis
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.DISK_OF_RETURNING.id();
+		return item.getCatalogId() == ItemId.DISK_OF_RETURNING.id();
 	}
 }

@@ -100,12 +100,12 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (fromInventory) {
-			if (p.getInventory().remove(i.getID(), i.getAmount()) < 0) {
+			if (p.getInventory().remove(i.getCatalogId(), i.getAmount()) < 0) {
 				p.setStatus(Action.IDLE);
 				return;
 			}
 		} else {
-			int slot = p.getEquipment().hasEquipped(i.getID());
+			int slot = p.getEquipment().hasEquipped(i.getCatalogId());
 			if (slot == -1 || p.getEquipment().get(slot).getAmount() != i.getAmount()) {
 				p.setStatus(Action.IDLE);
 				return;
@@ -116,7 +116,7 @@ public class Default implements DefaultHandler,
 				p.updateWornItems(i.getDef(p.getWorld()).getWieldPosition(), p.getSettings().getAppearance().getSprite(i.getDef(p.getWorld()).getWieldPosition()));
 		}
 
-		GroundItem groundItem = new GroundItem(p.getWorld(), i.getID(), p.getX(), p.getY(), i.getAmount(), p);
+		GroundItem groundItem = new GroundItem(p.getWorld(), i.getCatalogId(), p.getX(), p.getY(), i.getAmount(), p);
 		ActionSender.sendSound(p, "dropobject");
 		p.getWorld().registerItem(groundItem, 188000);
 		p.getWorld().getServer().getGameLogger().addQuery(new GenericLog(p.getWorld(), p.getUsername() + " dropped " + i.getDef(p.getWorld()).getName() + " x"

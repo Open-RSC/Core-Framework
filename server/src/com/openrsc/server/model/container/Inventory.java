@@ -76,10 +76,10 @@ public class Inventory {
 					player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
 				}
 				player.getWorld().registerItem(
-					new GroundItem(player.getWorld(), itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
+					new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
 					94000);
 				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
-					+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
+					+ itemToAdd.getCatalogId() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
 				return;
 			}
 			list.add(itemToAdd);
@@ -104,14 +104,14 @@ public class Inventory {
 		//synchronized (list) {
 		//	return list.contains(i);
 		//}
-		return hasItemId(i.getID());
+		return hasItemId(i.getCatalogId());
 	}
 
 	public int countId(long id) {
 		synchronized (list) {
 			int temp = 0;
 			for (Item i : list) {
-				if (i.getID() == id) {
+				if (i.getCatalogId() == id) {
 					temp += i.getAmount();
 				}
 			}
@@ -146,7 +146,7 @@ public class Inventory {
 	}
 
 	public int getFreedSlots(Item item) {
-		return (item.getDef(player.getWorld()).isStackable() && countId(item.getID()) > item.getAmount() ? 0 : 1);
+		return (item.getDef(player.getWorld()).isStackable() && countId(item.getCatalogId()) > item.getAmount() ? 0 : 1);
 	}
 
 	public int getFreedSlots(List<Item> items) {
@@ -167,7 +167,7 @@ public class Inventory {
 	public int getLastIndexById(int id) {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).getID() == id) {
+				if (list.get(index).getCatalogId() == id) {
 					return index;
 				}
 			}
@@ -192,7 +192,7 @@ public class Inventory {
 	public boolean hasInInventory(int id) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (i.getID() == id)
+				if (i.getCatalogId() == id)
 					return true;
 			}
 		}
@@ -201,7 +201,7 @@ public class Inventory {
 	public boolean hasItemId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (i.getID() == id)
+				if (i.getCatalogId() == id)
 					return true;
 			}
 		}
@@ -224,7 +224,7 @@ public class Inventory {
 			if (item == null) {
 				return;
 			}
-			remove(item.getID(), item.getAmount(), true);
+			remove(item.getCatalogId(), item.getAmount(), true);
 		}
 	}
 
@@ -235,7 +235,7 @@ public class Inventory {
 
 			for (int index = size - 1; iterator.hasPrevious(); index--) {
 				Item i = iterator.previous();
-				if (id == i.getID() && i != null) {
+				if (id == i.getCatalogId() && i != null) {
 
 					/* Stack Items */
 					if (i.getDef(player.getWorld()).isStackable() && amount < i.getAmount()) {
@@ -283,11 +283,11 @@ public class Inventory {
 	}
 
 	public int remove(Item item, boolean updatePlayer) {
-		return remove(item.getID(), item.getAmount(), updatePlayer);
+		return remove(item.getCatalogId(), item.getAmount(), updatePlayer);
 	}
 
 	public int remove(Item item) {
-		return remove(item.getID(), item.getAmount(), true);
+		return remove(item.getCatalogId(), item.getAmount(), true);
 	}
 
 	public int size() {
@@ -309,7 +309,7 @@ public class Inventory {
 		} else {
 			synchronized (list) {
 				for (Item i : list) {
-					if (i.getID() == id && i.isWielded()) {
+					if (i.getCatalogId() == id && i.isWielded()) {
 						return true;
 					}
 				}
@@ -416,7 +416,7 @@ public class Inventory {
 		}
 
 		//If inventory doesn't have the item
-		if (!Functions.isWielding(player, affectedItem.getID())) {
+		if (!Functions.isWielding(player, affectedItem.getCatalogId())) {
 			return false;
 		}
 
@@ -435,7 +435,7 @@ public class Inventory {
 			affectedItem.getDef(player.getWorld()).getWearableId(), false);
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
+			if (player.getEquipment().hasEquipped(affectedItem.getCatalogId()) != -1) {
 				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(),null);
 				add(affectedItem, false);
 			}
@@ -458,7 +458,7 @@ public class Inventory {
 		} else {
 			for (int i = 0; i < player.getInventory().size(); i++) {
 				Item item = player.getInventory().get(i);
-				if (item != null && item.getID() == itemID) {
+				if (item != null && item.getCatalogId() == itemID) {
 					player.getInventory().remove(i);
 					shattered = true;
 					break;
@@ -492,7 +492,7 @@ public class Inventory {
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 		//staff of iban (usable)
-		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+		if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
@@ -521,20 +521,20 @@ public class Inventory {
 			player.message("Perhaps I should get someone to adjust it for me");
 			ableToWield = false;
 		}
-		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
+		if ((item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_TOP.id())
 			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
+		} else if (item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
+		} else if (item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;
@@ -542,22 +542,22 @@ public class Inventory {
 		/*
 		 * Hacky but works for god staffs and god capes.
 		 */
-		else if (item.getID() == ItemId.STAFF_OF_GUTHIX.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
+		else if (item.getCatalogId() == ItemId.STAFF_OF_GUTHIX.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
-		} else if (item.getID() == ItemId.STAFF_OF_SARADOMIN.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
+		} else if (item.getCatalogId() == ItemId.STAFF_OF_SARADOMIN.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
-		} else if (item.getID() == ItemId.STAFF_OF_ZAMORAK.id() && (wielding(ItemId.SARADOMIN_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
+		} else if (item.getCatalogId() == ItemId.STAFF_OF_ZAMORAK.id() && (wielding(ItemId.SARADOMIN_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
-		} else if (item.getID() == ItemId.GUTHIX_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
+		} else if (item.getCatalogId() == ItemId.GUTHIX_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
-		} else if (item.getID() == ItemId.SARADOMIN_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
+		} else if (item.getCatalogId() == ItemId.SARADOMIN_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
-		} else if (item.getID() == ItemId.ZAMORAK_CAPE.id() && (wielding(ItemId.STAFF_OF_GUTHIX.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
+		} else if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() && (wielding(ItemId.STAFF_OF_GUTHIX.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
 		}
@@ -575,19 +575,19 @@ public class Inventory {
 			return;
 		}*/
 		/** iron men armours **/
-		else if ((item.getID() == ItemId.IRONMAN_HELM.id() || item.getID() == ItemId.IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
+		else if ((item.getCatalogId() == ItemId.IRONMAN_HELM.id() || item.getCatalogId() == ItemId.IRONMAN_PLATEBODY.id()
+			|| item.getCatalogId() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
 			player.message("You need to be an Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getID() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
+		} else if ((item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
+			|| item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getID() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
+		} else if ((item.getCatalogId() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
+			|| item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return false;
-		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getCatalogId() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
 			return false;
@@ -603,7 +603,7 @@ public class Inventory {
 				i = player.getEquipment().get(p);
 				if (i != null && item.wieldingAffectsItem(player.getWorld(), i)) {
 					if (item.getDef(player.getWorld()).isStackable()) {
-						if (item.getID() == i.getID())
+						if (item.getCatalogId() == i.getCatalogId())
 							continue;
 					}
 					count++;
@@ -619,7 +619,7 @@ public class Inventory {
 				i = player.getEquipment().get(p);
 				if (i != null && item.wieldingAffectsItem(player.getWorld(), i)) {
 					if (item.getDef(player.getWorld()).isStackable()) {
-						if (item.getID() == i.getID()) {
+						if (item.getCatalogId() == i.getCatalogId()) {
 							i.setAmount(i.getAmount() + item.getAmount());
 							ActionSender.updateEquipmentSlot(player, i.getDef(player.getWorld()).getWieldPosition());
 							return true;
@@ -724,10 +724,10 @@ public class Inventory {
 
 			log.addDroppedItem(item);
 			if (item.getDef(player.getWorld()).isUntradable()) {
-				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), player));
+				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player));
 			} else {
 				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				GroundItem groundItem = new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), dropOwner);
+				GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner);
 				if (dropOwner.getIronMan() != IronmanMode.None.id()) {
 					groundItem.setAttribute("playerKill", true);
 				}

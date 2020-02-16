@@ -17,15 +17,15 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Cactus implements InvUseOnObjectListener,
 InvUseOnObjectExecutiveListener {
-	
+
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == 35 && item.getID() == ItemId.KNIFE.id();
+		return obj.getID() == 35 && item.getCatalogId() == ItemId.KNIFE.id();
 	}
-	
+
 	@Override
 	public void onInvUseOnObject(GameObject object, final Item item, Player player) {
-		if (item.getID() != ItemId.KNIFE.id()) {
+		if (item.getCatalogId() != ItemId.KNIFE.id()) {
 			player.message("Nothing interesting happens");
 			return;
 		}

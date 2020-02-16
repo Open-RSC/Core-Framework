@@ -12,8 +12,8 @@ import static com.openrsc.server.plugins.Functions.sleep;
 public class ItemDurability implements InvActionListener, InvActionExecutiveListener {
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return (item.getID() == ItemId.RING_OF_RECOIL.id() || item.getID() == ItemId.RING_OF_FORGING.id()
-			|| item.getID() == ItemId.DWARVEN_RING.id())
+		return (item.getCatalogId() == ItemId.RING_OF_RECOIL.id() || item.getCatalogId() == ItemId.RING_OF_FORGING.id()
+			|| item.getCatalogId() == ItemId.DWARVEN_RING.id())
 			&& (command.equalsIgnoreCase("check") || command.equalsIgnoreCase("break"));
 	}
 
@@ -21,21 +21,21 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 	public void onInvAction(Item item, Player player, String command) {
 		if (command.equalsIgnoreCase("check")) {
 			int charges;
-			if (item.getID() == ItemId.RING_OF_RECOIL.id()) {
+			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {
 				if (player.getCache().hasKey("ringofrecoil"))
 					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofrecoil");
 				else
 					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT;
 				player.message("Your Ring of Recoil has " + charges + "/" +
 					player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT + " charges remaining.");
-			} else if (item.getID() == ItemId.RING_OF_FORGING.id()) {
+			} else if (item.getCatalogId() == ItemId.RING_OF_FORGING.id()) {
 				if (player.getCache().hasKey("ringofforging"))
 					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES - player.getCache().getInt("ringofforging");
 				else
 					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES;
 				player.message("Your Ring of Forging has " + charges + "/" +
 					player.getWorld().getServer().getConfig().RING_OF_FORGING_USES + " charges remaining.");
-			} else if (item.getID() == ItemId.DWARVEN_RING.id()) {
+			} else if (item.getCatalogId() == ItemId.DWARVEN_RING.id()) {
 				if (player.getCache().hasKey("dwarvenring"))
 					charges = player.getWorld().getServer().getConfig().DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
 				else
@@ -49,15 +49,15 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 			int choice = Functions.showMenu(player, "Yes", "No");
 			if (choice != 0)
 				return;
-			if (item.getID() == ItemId.RING_OF_RECOIL.id()) {
+			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {
 				player.getCache().remove("ringofrecoil");
-				player.getInventory().shatter(item.getID());
-			} else if (item.getID() == ItemId.RING_OF_FORGING.id()) {
+				player.getInventory().shatter(item.getCatalogId());
+			} else if (item.getCatalogId() == ItemId.RING_OF_FORGING.id()) {
 				player.getCache().remove("ringofforging");
-				player.getInventory().shatter(item.getID());
-			} else if (item.getID() == ItemId.DWARVEN_RING.id()) {
+				player.getInventory().shatter(item.getCatalogId());
+			} else if (item.getCatalogId() == ItemId.DWARVEN_RING.id()) {
 				player.getCache().remove("dwarvenring");
-				player.getInventory().shatter(item.getID());
+				player.getInventory().shatter(item.getCatalogId());
 			}
 		}
 	}

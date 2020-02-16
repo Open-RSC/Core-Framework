@@ -319,39 +319,39 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
 		return obj.getID() == 236 &&
-				(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
-				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id());
+				(item.getCatalogId() == ItemId.RAW_CHICKEN.id() || item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()
+				|| item.getCatalogId() == ItemId.RAW_BEEF.id() || item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 236 &&
-				(item.getID() == ItemId.RAW_CHICKEN.id() || item.getID() == ItemId.RAW_RAT_MEAT.id()
-				|| item.getID() == ItemId.RAW_BEEF.id() || item.getID() == ItemId.RAW_BEAR_MEAT.id())) {
+				(item.getCatalogId() == ItemId.RAW_CHICKEN.id() || item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()
+				|| item.getCatalogId() == ItemId.RAW_BEEF.id() || item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id())) {
 			if (p.getQuestStage(this) <= 0) {
 				p.playerServerMessage(MessageType.QUEST,"Nothing interesting happens");
 				return;
 			}
 
-			if (item.getID() == ItemId.RAW_CHICKEN.id()) {
+			if (item.getCatalogId() == ItemId.RAW_CHICKEN.id()) {
 				message(p, "You dip the chicken in the cauldron");
 				p.getInventory().remove(ItemId.RAW_CHICKEN.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
 			}
-			else if (item.getID() == ItemId.RAW_BEAR_MEAT.id()) {
+			else if (item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id()) {
 				message(p, "You dip the bear meat in the cauldron");
 				p.getInventory().remove(ItemId.RAW_BEAR_MEAT.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
 			}
-			else if (item.getID() == ItemId.RAW_RAT_MEAT.id()) {
+			else if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
 				message(p, "You dip the rat meat in the cauldron");
 				p.getInventory().remove(ItemId.RAW_RAT_MEAT.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
 			}
-			else if (item.getID() == ItemId.RAW_BEEF.id()) {
+			else if (item.getCatalogId() == ItemId.RAW_BEEF.id()) {
 				message(p, "You dip the beef in the cauldron");
 				p.getInventory().remove(ItemId.RAW_BEEF.id(), 1);
 

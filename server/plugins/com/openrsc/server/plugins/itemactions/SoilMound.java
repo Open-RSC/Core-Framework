@@ -15,14 +15,14 @@ public class SoilMound implements InvUseOnObjectListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == 1276 && item.getID() == ItemId.BUCKET.id();
+		return obj.getID() == 1276 && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
-		final int itemID = item.getID();
+		final int itemID = item.getCatalogId();
 		final int refilledID = ItemId.SOIL.id();
-		if (item.getID() != ItemId.BUCKET.id()) {
+		if (item.getCatalogId() != ItemId.BUCKET.id()) {
 			player.message("Nothing interesting happens");
 			return;
 		}

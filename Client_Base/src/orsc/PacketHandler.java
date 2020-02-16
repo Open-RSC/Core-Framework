@@ -4,6 +4,7 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.CustomBankInterface;
+import org.json.JSONObject;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -21,6 +22,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Base64;
+import java.util.Optional;
 import java.util.Properties;
 public class PacketHandler {
 
@@ -1356,10 +1359,14 @@ public class PacketHandler {
 		}
 		mc.setInventoryItemCount(packetsIncoming.getUnsignedByte());
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
-			int itemID = packetsIncoming.getShort();
+			String b64item = packetsIncoming.readString();
+			JSONObject itemInfo = new JSONObject(new String(Base64.getDecoder().decode(b64item)));
+			int itemID = (int)itemInfo.get("id");
+			Optional<Boolean> isNote = itemInfo.has("note") ? Optional.of((boolean)itemInfo.get("note")) : Optional.empty();
+			//int itemID = packetsIncoming.getShort();
 			mc.setInventoryItemID(i, itemID);
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
-			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID).isStackable()) {
+			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, isNote).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
 			} else {
 				mc.setInventoryItemSize(i, 1);

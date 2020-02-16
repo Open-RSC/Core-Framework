@@ -18,7 +18,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 
 	private boolean canCook(Item item, GameObject object) {
 		for (GnomeCook c : GnomeCook.values()) {
-			if (item.getID() == c.uncookedID && inArray(object.getID(), 119)) {
+			if (item.getCatalogId() == c.uncookedID && inArray(object.getID(), 119)) {
 				return true;
 			}
 		}
@@ -28,7 +28,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	private void handleGnomeCooking(final Item item, Player p, final GameObject object) {
 		GnomeCook gc = null;
 		for (GnomeCook c : GnomeCook.values()) {
-			if (item.getID() == c.uncookedID && inArray(object.getID(), 119)) {
+			if (item.getCatalogId() == c.uncookedID && inArray(object.getID(), 119)) {
 				gc = c;
 			}
 		}
@@ -39,7 +39,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		if (p.getInventory().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
 			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
-				if (inArray(item.getID(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),
+				if (inArray(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),
 						ItemId.GNOMECRUNCHIE_DOUGH.id())) {
 					p.message(gc.messages[1]);
 					p.incExp(Skills.COOKING, gc.experience, true);
@@ -120,8 +120,8 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	private boolean mouldDough(Item item, Player p) {
-		if (hasItem(p, ItemId.GNOMEBATTA_DOUGH.id()) || hasItem(p, ItemId.GNOMEBOWL_DOUGH.id()) 
-				|| hasItem(p, ItemId.GNOMECRUNCHIE_DOUGH.id()) || hasItem(p, ItemId.GNOMEBATTA.id()) 
+		if (hasItem(p, ItemId.GNOMEBATTA_DOUGH.id()) || hasItem(p, ItemId.GNOMEBOWL_DOUGH.id())
+				|| hasItem(p, ItemId.GNOMECRUNCHIE_DOUGH.id()) || hasItem(p, ItemId.GNOMEBATTA.id())
 				|| hasItem(p, ItemId.GNOMEBOWL.id()) || hasItem(p, ItemId.GNOMECRUNCHIE.id())) {
 			message(p, "you need to finish, eat or drop the unfinished dish you hold");
 			p.message("before you can make another - giannes rules");
@@ -144,7 +144,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into a gnomebatta");
 				p.message("You manage to make some gnome batta dough");
-				p.getInventory().replace(item.getID(), ItemId.GNOMEBATTA_DOUGH.id());
+				p.getInventory().replace(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id());
 			} else if (menu == 1) {
 				if (p.getSkills().getLevel(Skills.COOKING) < 30) {
 					p.message("you need a cooking level of 30 to mould dough bowls");
@@ -154,7 +154,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into a gnome bowl");
 				p.message("You manage to make some gnome bowl dough");
-				p.getInventory().replace(item.getID(), ItemId.GNOMEBOWL_DOUGH.id());
+				p.getInventory().replace(item.getCatalogId(), ItemId.GNOMEBOWL_DOUGH.id());
 			} else if (menu == 2) {
 				if (p.getSkills().getLevel(Skills.COOKING) < 15) {
 					p.message("you need a cooking level of 15 to mould crunchies");
@@ -164,7 +164,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into gnome crunchies");
 				p.message("You manage to make some gnome crunchies dough");
-				p.getInventory().replace(item.getID(), ItemId.GNOMECRUNCHIE_DOUGH.id());
+				p.getInventory().replace(item.getCatalogId(), ItemId.GNOMECRUNCHIE_DOUGH.id());
 				if (!p.getCache().hasKey("gnomecrunchie_dough")) {
 					p.getCache().store("gnomecrunchie_dough", true);
 				}
@@ -178,14 +178,14 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.GIANNE_DOUGH.id()) {
+		if (item.getCatalogId() == ItemId.GIANNE_DOUGH.id()) {
 			mouldDough(item, p);
 		}
 	}
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.GIANNE_DOUGH.id();
+		return item.getCatalogId() == ItemId.GIANNE_DOUGH.id();
 	}
 
 	@Override

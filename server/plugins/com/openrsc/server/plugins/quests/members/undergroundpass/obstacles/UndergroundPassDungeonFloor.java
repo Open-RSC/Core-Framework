@@ -68,12 +68,12 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == TOMB_OF_IBAN && (item.getID() == ItemId.DWARF_BREW.id() || item.getID() == ItemId.TINDERBOX.id());
+		return obj.getID() == TOMB_OF_IBAN && (item.getCatalogId() == ItemId.DWARF_BREW.id() || item.getCatalogId() == ItemId.TINDERBOX.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOMB_OF_IBAN && item.getID() == ItemId.DWARF_BREW.id()) {
+		if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.DWARF_BREW.id()) {
 			if (p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.message("you pour the strong alcohol over the tomb");
 				if (!p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
@@ -85,7 +85,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 				p.message("but it seems such a waste");
 			}
 		}
-		else if (obj.getID() == TOMB_OF_IBAN && item.getID() == ItemId.TINDERBOX.id()) {
+		else if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.TINDERBOX.id()) {
 			message(p, "you try to set alight to the tomb");
 			if (p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
 				message(p, "it bursts into flames");

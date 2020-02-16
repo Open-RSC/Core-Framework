@@ -29,12 +29,12 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == TOBAN_CHEST_CLOSED && item.getID() == ItemId.KEY.id();
+		return obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getID() == ItemId.KEY.id()) {
+		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id()) {
 			openChest(obj, 2000, TOBAN_CHEST_OPEN);
 			if (hasItem(p, ItemId.STOLEN_GOLD.id())) {
 				message(p, "You have already got the stolen gold");
@@ -49,15 +49,15 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
-		return ((item1.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getID() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
-				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id())) ||
+		return ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
+				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) ||
 			Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id());
 	}
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if ((item1.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getID() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
-				(item2.getID() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getID() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getID() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
+		if ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
+				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
 			p.message("I think these fit together, but I can't seem to make it fit");
 			p.message("I am going to need someone with more experience to help me with this");
 		} else if (Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id())) {
@@ -67,8 +67,8 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() || (npc.getID() == NpcId.CITY_GUARD.id() && item.getID() == ItemId.DEATH_RUNE.id())
-				|| (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getID() == ItemId.NIGHTSHADE.id());
+		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() || (npc.getID() == NpcId.CITY_GUARD.id() && item.getCatalogId() == ItemId.DEATH_RUNE.id())
+				|| (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getCatalogId() == ItemId.NIGHTSHADE.id());
 	}
 
 	private void lastCrystalChat(Player p, Npc n) {
@@ -91,7 +91,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				p.message("The wizard has no need for more evidence");
 				return;
 			}
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case POWERING_CRYSTAL1:
 					if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 						npcTalk(p, npc, "More crystals ?",
@@ -224,7 +224,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					break;
 			}
 		}
-		else if (npc.getID() == NpcId.CITY_GUARD.id() && item.getID() == ItemId.DEATH_RUNE.id()) {
+		else if (npc.getID() == NpcId.CITY_GUARD.id() && item.getCatalogId() == ItemId.DEATH_RUNE.id()) {
 			if (p.getCache().hasKey("city_guard_riddle") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.message("The guard is not listening to you");
 			} else {
@@ -241,7 +241,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 				p.message("The guard gives you a map");
 			}
 		}
-		else if (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getID() == ItemId.NIGHTSHADE.id()) {
+		else if (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getCatalogId() == ItemId.NIGHTSHADE.id()) {
 			if ((p.getQuestStage(Quests.WATCHTOWER) >= 0 && p.getQuestStage(Quests.WATCHTOWER) < 5) ||
 				(p.getQuestStage(Quests.WATCHTOWER) == -1 &&
 				!p.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE)) {

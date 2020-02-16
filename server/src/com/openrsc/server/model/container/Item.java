@@ -10,15 +10,18 @@ public class Item implements Comparable<Item> {
 
 	protected final Map<String, Object> attributes = new HashMap<String, Object>();
 
-	private int id;
+	//private int catalogId;
 	private int index;
-	private int amount;
+	//private int amount;
+	private ItemStatus itemStatus;
+
+	private int itemId; // join reference to itemStatus
 
 	private boolean wielded = false;
 
 	@Override
 	public Item clone() {
-		Item retVal = new Item(this.id, this.amount);
+		Item retVal = new Item(getCatalogId(), getAmount(), getNoted());
 		retVal.setWielded(this.wielded);
 		retVal.setIndex(this.index);
 		return retVal;
@@ -42,21 +45,48 @@ public class Item implements Comparable<Item> {
 		}
 	}
 
-	public Item(int id) {
-		this(id, 1);
+	public Item(int catalogId) {
+		this(catalogId, 1, false);
 	}
 
-	public Item(int id, int amount) {
-		setID(id);
+	public Item(int catalogId, int amount) {
+		this(catalogId, amount, false);
+	}
+
+	public Item(int catalogId, int amount, boolean noted) {
+		itemStatus = new ItemStatus();
+		setCatalogId(catalogId);
 		setAmount(amount);
+		setNoted(noted);
 	}
 
-	public final int getID() {
-		return id;
+	public Item(int itemId, ItemStatus itemStatus) {
+		setItemId(itemId);
+		setItemStatus(itemStatus);
 	}
 
-	public final void setID(int newid) {
-		id = newid;
+	public final int getItemId() {
+		return itemId;
+	}
+
+	public final void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
+	public final ItemStatus getItemStatus() {
+		return itemStatus;
+	}
+
+	public final void setItemStatus(ItemStatus itemStatus) {
+		this.itemStatus = itemStatus;
+	}
+
+	public final int getCatalogId() {
+		return itemStatus.getCatalogId();
+	}
+
+	public final void setCatalogId(int newid) {
+		itemStatus.setCatalogId(newid);
 	}
 
 	public final int getIndex() {
@@ -78,57 +108,60 @@ public class Item implements Comparable<Item> {
 
 		// TODO: The original bank sorting had to be broken for now because the Item doesn't have a reference to the World.
 		// TODO: Said reference is not trivial to add due to static initializers in plugins. Whenever we have a solution, the getDef() calls should no longer require a world.
-		return item.getID() - getID();
+		return item.getCatalogId() - getCatalogId();
 	}
 
 	public int eatingHeals(World world) {
 		if (!isEdible(world)) {
 			return 0;
 		}
-		return world.getServer().getEntityHandler().getItemEdibleHeals(id);
+		return world.getServer().getEntityHandler().getItemEdibleHeals(getCatalogId());
 	}
 
 	public boolean equals(Object o) {
 		if (o instanceof Item) {
 			Item item = (Item) o;
-			return item.getID() == getID();
+			return item.getCatalogId() == getCatalogId();
 		}
 		return false;
 	}
 
 	public int getAmount() {
-		return amount;
+		return itemStatus.getAmount();
 	}
 
 	public void setAmount(int amount) {
-		if (amount < 0) {
-			amount = 0;
-		}
-		this.amount = amount;
+		this.itemStatus.setAmount(amount);
+	}
+
+	public boolean getNoted() { return itemStatus.getNoted(); }
+
+	public void setNoted(boolean noted) {
+		this.itemStatus.setNoted(noted);
 	}
 
 	public ItemCookingDef getCookingDef(World world) {
-		return world.getServer().getEntityHandler().getItemCookingDef(id);
+		return world.getServer().getEntityHandler().getItemCookingDef(getCatalogId());
 	}
 
 	public ItemPerfectCookingDef getPerfectCookingDef(World world) {
-		return world.getServer().getEntityHandler().getItemPerfectCookingDef(id);
+		return world.getServer().getEntityHandler().getItemPerfectCookingDef(getCatalogId());
 	}
 
 	public ItemDefinition getDef(World world) {
-		return world.getServer().getEntityHandler().getItemDef(id);
+		return world.getServer().getEntityHandler().getItemDef(getCatalogId());
 	}
 
 	public ItemSmeltingDef getSmeltingDef(World world) {
-		return world.getServer().getEntityHandler().getItemSmeltingDef(id);
+		return world.getServer().getEntityHandler().getItemSmeltingDef(getCatalogId());
 	}
 
 	public ItemUnIdentHerbDef getUnIdentHerbDef(World world) {
-		return world.getServer().getEntityHandler().getItemUnIdentHerbDef(id);
+		return world.getServer().getEntityHandler().getItemUnIdentHerbDef(getCatalogId());
 	}
 
 	public boolean isEdible(World world) {
-		return world.getServer().getEntityHandler().getItemEdibleHeals(id) > 0;
+		return world.getServer().getEntityHandler().getItemEdibleHeals(getCatalogId()) > 0;
 	}
 
 	public boolean isWieldable(World world) {
@@ -157,7 +190,7 @@ public class Item implements Comparable<Item> {
 
 	@Override
 	public String toString() {
-		return "Item(" + id + ", " + amount + ")";
+		return "Item(" + getCatalogId() + ", " + getAmount() + ", " + getNoted() + ")";
 	}
 
 	public void removeAttribute(String string) {

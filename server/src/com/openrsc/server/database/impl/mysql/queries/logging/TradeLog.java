@@ -51,7 +51,7 @@ public final class TradeLog extends Query {
 
 		for (Item i : player1Offer) {
 			//System.out.println("Player 1 offered: " + i.getID());
-			sb.append(i.getID()).append(":").append(i.getAmount()).append(",");
+			sb.append(i.getCatalogId()).append(":").append(i.getAmount()).append(",");
 		}
 
 		playerOnesOffer = sb.toString();
@@ -59,7 +59,7 @@ public final class TradeLog extends Query {
 
 		for (Item i : player2Offer) {
 			//System.out.println("Player 2 offered: " + i.getID());
-			sb.append(i.getID()).append(":").append(i.getAmount()).append(",");
+			sb.append(i.getCatalogId()).append(":").append(i.getAmount()).append(",");
 		}
 
 		playerTwosOffer = sb.toString();

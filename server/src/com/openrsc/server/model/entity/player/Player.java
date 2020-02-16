@@ -825,7 +825,7 @@ public final class Player extends Mob {
 				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
 			}
 			//staff of iban (usable)
-			if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+			if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 				optionalLevel = Optional.of(requiredLevel);
 				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
 			}
@@ -889,7 +889,7 @@ public final class Player extends Mob {
 					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 				}
 				//staff of iban (usable)
-				if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+				if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
 					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 				}
@@ -1227,17 +1227,17 @@ public final class Player extends Mob {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = getEquipment().get(i);
-				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-					return item.getID();
+				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+					return item.getCatalogId();
 				}
 			}
 		} else {
 			synchronized(getInventory().getItems()) {
 				for (Item item : getInventory().getItems()) {
-					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-						|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-						return item.getID();
+					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
+						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+						return item.getCatalogId();
 					}
 				}
 			}
@@ -1250,15 +1250,15 @@ public final class Player extends Mob {
 			Item item;
 			for (int i = 0; i < Equipment.slots; i++) {
 				item = getEquipment().get(i);
-				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getID())) {
-					return item.getID();
+				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getCatalogId())) {
+					return item.getCatalogId();
 				}
 			}
 		} else {
 			synchronized(getInventory().getItems()) {
 				for (Item item : getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
-						return item.getID();
+						return item.getCatalogId();
 					}
 				}
 			}
@@ -1935,12 +1935,12 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item i = getEquipment().get(4);
 			if (i != null)
-				return i.getID();
+				return i.getCatalogId();
 		} else {
 			synchronized(getInventory().getItems()) {
 				for (Item i : getInventory().getItems()) {
 					if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
-						return i.getID();
+						return i.getCatalogId();
 				}
 			}
 		}

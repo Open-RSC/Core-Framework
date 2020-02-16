@@ -22,7 +22,7 @@ public class ItemUseOnObject implements PacketHandler {
 				GameObject obj = getPlayer().getViewArea().getWallObjectWithDir(
 					object.getLocation(), object.getDirection());
 				if (getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getInventory().hasItemId(item.getID()) || obj == null
+					|| !getPlayer().getInventory().hasItemId(item.getCatalogId()) || obj == null
 					|| !obj.equals(object)
 					|| getPlayer().getStatus() != Action.USING_Item_ON_DOOR) {
 					return;

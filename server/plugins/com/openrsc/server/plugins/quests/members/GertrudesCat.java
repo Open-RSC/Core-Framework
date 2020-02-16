@@ -363,32 +363,32 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item,
 										   Player player) {
-		return (myItem.getID() == ItemId.MILK.id() || myItem.getID() == ItemId.SEASONED_SARDINE.id()
-				|| myItem.getID() == ItemId.KITTENS.id()) && item.getID() == ItemId.GERTRUDES_CAT.id();
+		return (myItem.getCatalogId() == ItemId.MILK.id() || myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id()
+				|| myItem.getCatalogId() == ItemId.KITTENS.id()) && item.getID() == ItemId.GERTRUDES_CAT.id();
 	}
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
 		if (p.getQuestStage(getQuestId()) != 2) {
-			if (myItem.getID() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+			if (myItem.getCatalogId() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 				p.message("the cat doesn't seem to be thirsty");
 			}
-			else if (myItem.getID() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+			else if (myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 				p.message("the cat doesn't seem to be hungry");
 			}
-			else if (myItem.getID() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+			else if (myItem.getCatalogId() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 				p.message("the cat doesn't seem to be lonely");
 			}
 			return;
 		}
-		if (myItem.getID() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+		if (myItem.getCatalogId() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			message(p, "you give the cat some milk", "she really enjoys it",
 				"but she now seems to be hungry");
 			p.getCache().store("cat_milk", true);
 			p.getInventory().remove(ItemId.MILK.id(), 1);
 
 		}
-		else if (myItem.getID() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+		else if (myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			if (p.getCache().hasKey("cat_milk")) {
 				message(p, "you give the cat the sardine",
 					"the cat gobbles it up",
@@ -398,7 +398,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 
 			}
 		}
-		else if (myItem.getID() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
+		else if (myItem.getCatalogId() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			message(p, "you place the kittens by their mother",
 				"she purrs at you appreciatively",
 				"and then runs off home with her kittens");
@@ -463,12 +463,12 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return i.getID() == ItemId.KITTENS.id();
+		return i.getCatalogId() == ItemId.KITTENS.id();
 	}
 
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.KITTENS.id()) {
+		if (i.getCatalogId() == ItemId.KITTENS.id()) {
 			message(p, "you drop the kittens", "they run back to the crate");
 			removeItem(p, ItemId.KITTENS.id(), 1);
 		}

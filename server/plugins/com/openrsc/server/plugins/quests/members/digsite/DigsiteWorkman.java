@@ -164,12 +164,12 @@ public class DigsiteWorkman implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		return n.getID() == NpcId.WORKMAN.id() && item.getID() == ItemId.DIGSITE_SCROLL.id();
+		return n.getID() == NpcId.WORKMAN.id() && item.getCatalogId() == ItemId.DIGSITE_SCROLL.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == NpcId.WORKMAN.id() && item.getID() == ItemId.DIGSITE_SCROLL.id()) {
+		if (n.getID() == NpcId.WORKMAN.id() && item.getCatalogId() == ItemId.DIGSITE_SCROLL.id()) {
 			playerTalk(p, n, "Here, have a look at this...");
 			npcTalk(p, n, "I give permission...blah de blah etc....",
 				"Okay that's all in order, you may use the mineshafts now",

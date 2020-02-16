@@ -326,16 +326,16 @@ public class Npc extends Mob {
 						if (getWorld().kbdTable.rollAccess(this.getID(), Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
 							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()), owner);
 							if (kbdSpecificLoot != null) {
-								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getID(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
+								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getCatalogId(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
 								try {
 									getWorld().getServer().getDatabase().addDropLog(
-										owner, this, kbdSpecificLoot.getID(), kbdSpecificLoot.getAmount());
+										owner, this, kbdSpecificLoot.getCatalogId(), kbdSpecificLoot.getAmount());
 								} catch (final GameDatabaseException ex) {
 									LOGGER.catching(ex);
 								}
-								if (kbdSpecificLoot.getID() == ItemId.DRAGON_2_HANDED_SWORD.id())
+								if (kbdSpecificLoot.getCatalogId() == ItemId.DRAGON_2_HANDED_SWORD.id())
 									owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
 							}
 						}
@@ -357,13 +357,13 @@ public class Npc extends Mob {
 
 				if (rare != null) {
 					if (!handleRingOfAvarice(owner, rare)) {
-						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
+						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner);
 						groundItem.setAttribute("npcdrop", true);
 						getWorld().registerItem(groundItem);
 					}
 					try {
 						getWorld().getServer().getDatabase().addDropLog(
-							owner, this, rare.getID(), rare.getAmount());
+							owner, this, rare.getCatalogId(), rare.getAmount());
 					} catch (final GameDatabaseException ex) {
 						LOGGER.catching(ex);
 					}
@@ -548,7 +548,7 @@ public class Npc extends Mob {
 				if (rare != null) {
 					if(!owner.isNpc()){
 						if (!handleRingOfAvarice((Player) mob, rare)) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount());
+								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount());
 								groundItem.setAttribute("npcdrop", true);
 								getWorld().registerItem(groundItem);
 						}
@@ -1087,12 +1087,12 @@ public class Npc extends Mob {
 	public static boolean handleRingOfAvarice(final Player p, final Item item) {
 		int slot = -1;
 		if (Functions.isWielding(p, ItemId.RING_OF_AVARICE.id())) {
-			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getID());
+			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
 			if (itemDef != null && itemDef.isStackable()) {
-				if (p.getInventory().hasInInventory(item.getID())) {
+				if (p.getInventory().hasInInventory(item.getCatalogId())) {
 					p.getInventory().add(item);
 					return true;
-				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
+				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getCatalogId())) != -1) {
 					Item equipped = p.getEquipment().get(slot);
 					equipped.setAmount(equipped.getAmount() + item.getAmount());
 					p.getEquipment().equip(slot, equipped);

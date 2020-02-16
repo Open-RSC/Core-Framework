@@ -15,12 +15,12 @@ public class DigsiteMiscs implements DropListener, DropExecutiveListener {
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return DataConversions.inArray(new int[] {ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id(),
-				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, i.getID());
+				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, i.getCatalogId());
 	}
 
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.UNIDENTIFIED_LIQUID.id()) {
+		if (i.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			p.message("bang!");
 			removeItem(p, ItemId.UNIDENTIFIED_LIQUID.id(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.3D + 5));
@@ -28,15 +28,15 @@ public class DigsiteMiscs implements DropListener, DropExecutiveListener {
 			p.message("The liquid exploded!");
 			p.message("You were injured by the burning liquid");
 		}
-		else if (i.getID() == ItemId.MIXED_CHEMICALS_1.id() || i.getID() == ItemId.MIXED_CHEMICALS_2.id()) {
+		else if (i.getCatalogId() == ItemId.MIXED_CHEMICALS_1.id() || i.getCatalogId() == ItemId.MIXED_CHEMICALS_2.id()) {
 			p.message("bang!");
-			removeItem(p, i.getID(), 1);
+			removeItem(p, i.getCatalogId(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 2 + 6));
 			playerTalk(p, null, "Ow!");
 			p.message("The chemicals exploded!");
 			p.message("You were injured by the exploding liquid");
 		}
-		else if (i.getID() == ItemId.NITROGLYCERIN.id()) {
+		else if (i.getCatalogId() == ItemId.NITROGLYCERIN.id()) {
 			p.message("bang!");
 			removeItem(p, ItemId.NITROGLYCERIN.id(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 2 - 3));
@@ -44,7 +44,7 @@ public class DigsiteMiscs implements DropListener, DropExecutiveListener {
 			p.message("The nitroglycerin exploded!");
 			p.message("You were injured by the exploding liquid");
 		}
-		else if (i.getID() == ItemId.EXPLOSIVE_COMPOUND.id()) {
+		else if (i.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
 			message(p, "bang!");
 			removeItem(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
 			p.damage(61);

@@ -22,7 +22,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return inArray(item.getID(),
+		return inArray(item.getCatalogId(),
 			ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id(),
 			ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), ItemId.SHAMANS_TOME.id(), ItemId.BOOKING_OF_BINDING.id(),
 			ItemId.YOMMI_TREE_SEED.id(), ItemId.GERMINATED_YOMMI_TREE_SEED.id(),
@@ -31,11 +31,11 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.GILDED_TOTEM_POLE.id()) {
+		if (item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
 			message(p, 1300, "This totem pole is utterly awe inspiring.",
 				"Perhaps you should show it to Radimus Erkle...");
 		}
-		else if (item.getID() == ItemId.HOLY_FORCE_SPELL.id()) {
+		else if (item.getCatalogId() == ItemId.HOLY_FORCE_SPELL.id()) {
 			Npc n = getNearestNpc(p, NpcId.ECHNED_ZEKIN.id(), 5);
 			if (n != null && p.getQuestStage(Quests.LEGENDS_QUEST) == 7) {
 				message(p, "You thrust the Holy Force spell in front of the spirit.");
@@ -86,18 +86,18 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				message(p, 600, "There is no suitable candidate to cast this spell on.");
 			}
 		}
-		else if (item.getID() == ItemId.A_RED_CRYSTAL.id() && !p.getWorld().getServer().getConfig().WANT_PETS) {
+		else if (item.getCatalogId() == ItemId.A_RED_CRYSTAL.id() && !p.getWorld().getServer().getConfig().WANT_PETS) {
 			message(p, 1300, "As the crystal touches your hands a voice inside of your head says..",
 				"@gre@Voice in head: Bring life to the dragons eye.");
 		}
-		else if (item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
+		else if (item.getCatalogId() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
 			message(p, 1300, "These seeds have been germinated in pure water...");
 			p.message("They can be planted in fertile soil now...");
 		}
-		else if (item.getID() == ItemId.YOMMI_TREE_SEED.id()) {
+		else if (item.getCatalogId() == ItemId.YOMMI_TREE_SEED.id()) {
 			p.message("These seeds need to be germinated in pure water...");
 		}
-		else if (item.getID() == ItemId.BOOKING_OF_BINDING.id()) {
+		else if (item.getCatalogId() == ItemId.BOOKING_OF_BINDING.id()) {
 			p.message("You read the Book of Binding...");
 			int page = showMenu(p,
 				"Arcana..",
@@ -121,7 +121,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 					"Yes, I'll try.",
 					"No, I don't think I'll bother.");
 				//authentic, didn't matter option chosen
-				if (opt == 0 || opt == 1) 
+				if (opt == 0 || opt == 1)
 				{
 					if (getCurrentLevel(p, Skills.PRAYER) < 10) {
 						p.message("You need at least ten prayer points to cast this spell.");
@@ -141,21 +141,21 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 				}
 			}
 		}
-		else if (inArray(item.getID(), ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id())) {
+		else if (inArray(item.getCatalogId(), ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id())) {
 			p.message("You try your best to decode the writing, this is what you make out.");
-			if (item.getID() == ItemId.SCRIBBLED_NOTES.id()) {
+			if (item.getCatalogId() == ItemId.SCRIBBLED_NOTES.id()) {
 				ActionSender.sendBox(p, "Daily notes of Ungadulu...% % Day 1...% % I have prepared the incantations and will invoke the spirits of my ancestors and pay them hommage. Though I feel a strange presence in these caves, it is with the heart of the lion that I fight my fears and mark the magical pentagram. % % Day 2... % % What have I done? My spirit is overthrown by a feeling of fear and evil, I am not myself these days and feel helpless and weak. % % From my teachings...                                                               ", true);
-			} else if (item.getID() == ItemId.SCRAWLED_NOTES.id()) {
+			} else if (item.getCatalogId() == ItemId.SCRAWLED_NOTES.id()) {
 				ActionSender.sendBox(p, "I fear that the spirit of an ancient one resides within me and uses me...I am too weak to cast the curse myself and fight the beast within.% % Day 3....% %...my last hope is that someone will read this and aid me...I am undone and I fear....", true);
-			} else if (item.getID() == ItemId.SCATCHED_NOTES.id()) {
+			} else if (item.getCatalogId() == ItemId.SCATCHED_NOTES.id()) {
 				ActionSender.sendBox(p, "Day 4 ...% % These days come so fleetingly, I have no idea how long I have been here now...% % Day 5... % %A wizened charm will release me, but never magic that would would harm...", true);
 			}
 		}
-		else if (item.getID() == ItemId.ROUGH_SKETCH_OF_A_BOWL.id()) {
+		else if (item.getCatalogId() == ItemId.ROUGH_SKETCH_OF_A_BOWL.id()) {
 			message(p, 1300, "You look at the rough sketch that Gujuo gave you.");
 			p.message("It looks like a picture of a bowl...");
 		}
-		else if (item.getID() == ItemId.SHAMANS_TOME.id()) {
+		else if (item.getCatalogId() == ItemId.SHAMANS_TOME.id()) {
 			message(p, 1300, "You read the ancient shamans tome.");
 			message(p, 3800, "It is written in a strange sort of language but you manage a rough translation.");
 			ActionSender.sendBox(p, "% % ...scattered are my hopes that I will ever be released from this flaming Octagram, it is the only thing which will contain this beast within.% %Although it's grip over me is weakened with magic, it is hopeless to know if a saviour would guess this. % % I am doomed...", true);

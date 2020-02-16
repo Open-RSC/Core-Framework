@@ -29,7 +29,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 
 	private static final int GUARDS_CUPBOARD_OPEN = 382;
 	private static final int GUARDS_CUPBOARD_CLOSED = 381;
-	
+
 	@Override
 	public int getQuestId() {
 		return Quests.FIGHT_ARENA;
@@ -489,12 +489,12 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 371 && obj.getY() == 716 && item.getID() == ItemId.KHAZARD_CELL_KEYS.id();
+		return obj.getID() == 371 && obj.getY() == 716 && item.getCatalogId() == ItemId.KHAZARD_CELL_KEYS.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 371 && obj.getY() == 716 && item.getID() == ItemId.KHAZARD_CELL_KEYS.id()) {
+		if (obj.getID() == 371 && obj.getY() == 716 && item.getCatalogId() == ItemId.KHAZARD_CELL_KEYS.id()) {
 			p.message("To unlock the gate, left click on it");
 		}
 	}

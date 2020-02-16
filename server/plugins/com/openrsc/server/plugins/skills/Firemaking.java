@@ -29,12 +29,12 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 	/**
 	 * LOG IDs
 	 **/
-	private static int[] LOGS = {ItemId.LOGS.id(), ItemId.OAK_LOGS.id(), ItemId.WILLOW_LOGS.id(), 
+	private static int[] LOGS = {ItemId.LOGS.id(), ItemId.OAK_LOGS.id(), ItemId.WILLOW_LOGS.id(),
 			ItemId.MAPLE_LOGS.id(), ItemId.YEW_LOGS.id(), ItemId.MAGIC_LOGS.id()};
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		return myItem.getID() == TINDERBOX && inArray(item.getID(), LOGS);
+		return myItem.getCatalogId() == TINDERBOX && inArray(item.getID(), LOGS);
 	}
 
 	@Override
@@ -212,12 +212,12 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundIte
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING &&
-		(item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)));
+		(item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)));
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == TINDERBOX && inArray(item2.getID(), LOGS) || item2.getID() == TINDERBOX && inArray(item1.getID(), LOGS)) {
+		if (item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)) {
 			player.playerServerMessage(MessageType.QUEST, "I think you should put the logs down before you light them!");
 		}
 	}

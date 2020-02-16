@@ -22,7 +22,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == ItemId.CAKE_TIN.id() || item2.getID() == ItemId.CAKE_TIN.id()) {
+		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id()) {
 			if (player.getInventory().remove(new Item(ItemId.EGG.id())) > -1
 				&& player.getInventory().remove(new Item(ItemId.MILK.id())) > -1
 				&& player.getInventory().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
@@ -41,8 +41,8 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				return;
 			}
 		}
-		if (item1.getID() == ItemId.GRAPES.id() && item2.getID() == ItemId.JUG_OF_WATER.id()
-			|| item1.getID() == ItemId.JUG_OF_WATER.id() && item2.getID() == ItemId.GRAPES.id()) {
+		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()
+			|| item1.getCatalogId() == ItemId.JUG_OF_WATER.id() && item2.getCatalogId() == ItemId.GRAPES.id()) {
 			if (player.getSkills().getLevel(Skills.COOKING) < 35) {
 				player.message("You need level 35 cooking to do this");
 				return;
@@ -72,9 +72,9 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 					}
 				});
 			}
-		} else if (isWaterItem(item1) && item2.getID() == ItemId.POT_OF_FLOUR.id()
-				|| item1.getID() == ItemId.POT_OF_FLOUR.id() && isWaterItem(item2)) {
-			int waterContainer = isWaterItem(item1) ? item1.getID() : item2.getID();
+		} else if (isWaterItem(item1) && item2.getCatalogId() == ItemId.POT_OF_FLOUR.id()
+				|| item1.getCatalogId() == ItemId.POT_OF_FLOUR.id() && isWaterItem(item2)) {
+			int waterContainer = isWaterItem(item1) ? item1.getCatalogId() : item2.getCatalogId();
 
 			player.message("What would you like to make?");
 			int option = showMenu(player, "Bread dough", "Pastry dough", "Pizza dough", "Pitta dough");
@@ -114,14 +114,14 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		CombineCooking combine = null;
 
 		// Pizza order matters!
-		if ((itemOne.getID() == ItemId.PIZZA_BASE.id() || itemTwo.getID() == ItemId.PIZZA_BASE.id())
-			&& (itemOne.getID() == ItemId.CHEESE.id() || itemTwo.getID() == ItemId.CHEESE.id())) {
+		if ((itemOne.getCatalogId() == ItemId.PIZZA_BASE.id() || itemTwo.getCatalogId() == ItemId.PIZZA_BASE.id())
+			&& (itemOne.getCatalogId() == ItemId.CHEESE.id() || itemTwo.getCatalogId() == ItemId.CHEESE.id())) {
 			p.playerServerMessage(MessageType.QUEST, "I should add the tomato first");
 			return;
 		}
 
 		for (CombineCooking c : CombineCooking.values()) {
-			if (c.isValid(itemOne.getID(), itemTwo.getID())) {
+			if (c.isValid(itemOne.getCatalogId(), itemTwo.getCatalogId())) {
 				combine = c;
 			}
 		}
@@ -163,7 +163,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 
 	private boolean isValidCooking(Item itemOne, Item itemTwo) {
 		for (CombineCooking c : CombineCooking.values()) {
-			if (c.isValid(itemOne.getID(), itemTwo.getID())) {
+			if (c.isValid(itemOne.getCatalogId(), itemTwo.getCatalogId())) {
 				return true;
 			}
 		}
@@ -171,17 +171,17 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 	}
 
 	private boolean isWaterItem(Item item) {
-		return item.getID() == ItemId.BUCKET_OF_WATER.id() || item.getID() == ItemId.JUG_OF_WATER.id();
+		return item.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item.getCatalogId() == ItemId.JUG_OF_WATER.id();
 	}
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == ItemId.CAKE_TIN.id() || item2.getID() == ItemId.CAKE_TIN.id())
+		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id())
 			return true;
-		if (item1.getID() == ItemId.GRAPES.id() && item2.getID() == ItemId.JUG_OF_WATER.id()
-			|| item1.getID() == ItemId.JUG_OF_WATER.id() && item2.getID() == ItemId.GRAPES.id())
+		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()
+			|| item1.getCatalogId() == ItemId.JUG_OF_WATER.id() && item2.getCatalogId() == ItemId.GRAPES.id())
 			return true;
-		if (isWaterItem(item1) && item2.getID() == ItemId.POT_OF_FLOUR.id() || item1.getID() == ItemId.POT_OF_FLOUR.id() && isWaterItem(item2))
+		if (isWaterItem(item1) && item2.getCatalogId() == ItemId.POT_OF_FLOUR.id() || item1.getCatalogId() == ItemId.POT_OF_FLOUR.id() && isWaterItem(item2))
 			return true;
 
 		return isValidCooking(item1, item2);

@@ -27,7 +27,7 @@ public final class Shop {
 		this.priceModifier = priceModifier;
 		this.items = items;
 		for (Item item : items) {
-			shopItems.add(new Item(item.getID(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
+			shopItems.add(new Item(item.getCatalogId(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
 		}
 	}
 
@@ -42,7 +42,7 @@ public final class Shop {
 		this.ownerIDs = ids;
 
 		for (Item item : items) {
-			shopItems.add(new Item(item.getID(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
+			shopItems.add(new Item(item.getCatalogId(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
 		}
 	}
 
@@ -103,7 +103,7 @@ public final class Shop {
 		boolean has = false;
 		synchronized (shopItems) {
 			for (Item i : shopItems) {
-				if (i.getID() == item.getID()) {
+				if (i.getCatalogId() == item.getCatalogId()) {
 					i.setAmount(i.getAmount() + item.getAmount());
 					has = true;
 					break;
@@ -123,13 +123,13 @@ public final class Shop {
 			Iterator<Item> shopItem = shopItems.iterator();
 			while (shopItem.hasNext()) {
 				Item i = shopItem.next();
-				if (i.getID() == item.getID()) {
+				if (i.getCatalogId() == item.getCatalogId()) {
 					if (i.getAmount() - item.getAmount() <= 0) {
 						boolean original = false;
 
 						synchronized (items) {
 							for (Item i2 : items) {
-								if (i.getID() == i2.getID()) {
+								if (i.getCatalogId() == i2.getCatalogId()) {
 									original = true;
 									break;
 								}
@@ -181,7 +181,7 @@ public final class Shop {
 			return true;
 		}
 		for (Item item : items) {
-			if (item.getID() == id) {
+			if (item.getCatalogId() == id) {
 				return true;
 			}
 		}
@@ -197,7 +197,7 @@ public final class Shop {
 
 		synchronized (shopItems) {
 			for (Item item : shopItems) {
-				if (item.getID() == id) {
+				if (item.getCatalogId() == id) {
 					count += item.getAmount();
 				}
 			}
@@ -233,7 +233,7 @@ public final class Shop {
 	private int getStockOffset(int itemID, int totalRemoved) {
 		int baseStock = 1;
 		for (Item item : items) {
-			if (item.getID() == itemID) {
+			if (item.getCatalogId() == itemID) {
 				baseStock = item.getAmount() + 1;
 			}
 		}
@@ -248,7 +248,7 @@ public final class Shop {
 	private int getStockBuyOffset(int itemID, int totalRemoved) {
 		int baseStock = 0;
 		for (Item item : items) {
-			if (item.getID() == itemID) {
+			if (item.getCatalogId() == itemID) {
 				baseStock = item.getAmount();
 			}
 		}
@@ -263,7 +263,7 @@ public final class Shop {
 
 	public int getStock(int itemID) {
 		for (Item item : items) {
-			if (item.getID() == itemID) {
+			if (item.getCatalogId() == itemID) {
 				return item.getAmount();
 			}
 		}

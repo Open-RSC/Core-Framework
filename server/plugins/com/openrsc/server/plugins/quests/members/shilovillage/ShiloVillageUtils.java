@@ -118,7 +118,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return inArray(i.getID(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
+		return inArray(i.getCatalogId(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
 				ItemId.BONE_KEY.id(), ItemId.BONE_BEADS.id(), ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(),
 				ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id(), ItemId.BEADS_OF_THE_DEAD.id());
 	}
@@ -126,7 +126,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 	//533
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.RASHILIYA_CORPSE.id()) {
+		if (i.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			message(p, "The remains of Rashiliyia look quite delicate.",
 				"You sense that a spirit needs to be put to rest.");
 			p.message("Are you sure that you want to drop the remains ?");
@@ -158,7 +158,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide to keep hold of Rashiliyias remains.");
 			}
 		}
-		else if (i.getID() == ItemId.BEADS_OF_THE_DEAD.id()) {
+		else if (i.getCatalogId() == ItemId.BEADS_OF_THE_DEAD.id()) {
 			message(p, "Are you sure you want to drop the Beads of the Dead?");
 			p.message("It looks very rare and unique.");
 			int menu = showMenu(p,
@@ -173,12 +173,12 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide not to drop the Beads of the Dead.");
 			}
 		}
-		else if (i.getID() == ItemId.BONE_BEADS.id()) {
+		else if (i.getCatalogId() == ItemId.BONE_BEADS.id()) {
 			message(p, "As the beads hit the floor, they disintegrate into");
 			p.message("puffs of white powder.");
 			removeItem(p, ItemId.BONE_BEADS.id(), 1);
 		}
-		else if (i.getID() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
+		else if (i.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
 			p.message("As you drop the delicate scrolls onto the floor, they");
 			p.message("disintegrate immediately.");
 			if (!p.getCache().hasKey("dropped_writing")) {
@@ -186,7 +186,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			}
 			removeItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 		}
-		else if (i.getID() == ItemId.LOCATING_CRYSTAL.id()) {
+		else if (i.getCatalogId() == ItemId.LOCATING_CRYSTAL.id()) {
 			p.message("Are you sure you want to drop this crystal?");
 			p.message("It looks very delicate and it may break.");
 			int menu = showMenu(p,
@@ -202,24 +202,24 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("tucked into your inventory safe and sound.");
 			}
 		}
-		else if (i.getID() == ItemId.SWORD_POMMEL.id()) {
+		else if (i.getCatalogId() == ItemId.SWORD_POMMEL.id()) {
 			message(p, "You drop the sword pommel on the floor.");
 			p.message("It turns to dust as soon as it hits the ground.");
 			removeItem(p, ItemId.SWORD_POMMEL.id(), 1);
 		}
-		else if (i.getID() == ItemId.BONE_KEY.id()) {
+		else if (i.getCatalogId() == ItemId.BONE_KEY.id()) {
 			p.message("This looks quite valuable.");
 			p.message("As you go to throw the item away");
 			p.message("Zadimus' words come to you again.");
 			p.message("@yel@'I am the key, but only kin may approach her'");
 		}
-		else if (i.getID() == ItemId.BONE_SHARD.id()) {
+		else if (i.getCatalogId() == ItemId.BONE_SHARD.id()) {
 			p.message("You cannot bring yourself to drop this item.");
 			p.message("You remember the words that Zadimus said when he appeared");
 			p.message("in front of you.");
 			p.message("@yel@'I am the key, but only kin may approach her.");
 		}
-		else if (i.getID() == ItemId.CRUMPLED_SCROLL.id()) {
+		else if (i.getCatalogId() == ItemId.CRUMPLED_SCROLL.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
 			int menu = showMenu(p,
 				"Yes, I'm sure.",
@@ -232,7 +232,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide against throwing the item away.");
 			}
 		}
-		else if (i.getID() == ItemId.TATTERED_SCROLL.id()) {
+		else if (i.getCatalogId() == ItemId.TATTERED_SCROLL.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
 			int menu = showMenu(p,
 				"Yes, I'm sure.",
@@ -246,10 +246,10 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide against throwing the item away.");
 			}
 		}
-		else if (i.getID() == ItemId.ZADIMUS_CORPSE.id()) {
+		else if (i.getCatalogId() == ItemId.ZADIMUS_CORPSE.id()) {
 			dropZadimusCorpse(p);
 		}
-		else if (i.getID() == ItemId.STONE_PLAQUE.id()) {
+		else if (i.getCatalogId() == ItemId.STONE_PLAQUE.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
 			int menu = showMenu(p,
 				"Yes, I'm sure.",
@@ -266,19 +266,19 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return inArray(item.getID(), ItemId.ZADIMUS_CORPSE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.STONE_PLAQUE.id(),
+		return inArray(item.getCatalogId(), ItemId.ZADIMUS_CORPSE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.STONE_PLAQUE.id(),
 				ItemId.BONE_SHARD.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BONE_KEY.id(), ItemId.RASHILIYA_CORPSE.id());
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) { // bury corpse
-		if (item.getID() == ItemId.RASHILIYA_CORPSE.id()) {
+		if (item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			p.message("Nothing interesting happens");
 		}
-		else if (item.getID() == ItemId.BONE_KEY.id()) { // bone key
+		else if (item.getCatalogId() == ItemId.BONE_KEY.id()) { // bone key
 			p.message("The key is intricately carved out of bone.");
 		}
-		else if (item.getID() == ItemId.LOCATING_CRYSTAL.id()) { // activate crystal
+		else if (item.getCatalogId() == ItemId.LOCATING_CRYSTAL.id()) { // activate crystal
 			message(p, "You feel the crystal trying to draw upon your spiritual energy.");
 			p.message("Do you want to let it.");
 			int menu = showMenu(p,
@@ -313,7 +313,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide not to allow the crystal to draw spiritual energy from your body.");
 			}
 		}
-		else if (item.getID() == ItemId.BERVIRIUS_TOMB_NOTES.id()) { // read tomb notes
+		else if (item.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) { // read tomb notes
 			p.setBusy(true);
 			p.message("This scroll is a collection of writings..");
 			sleep(1200);
@@ -339,14 +339,14 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 					+ "expended upon it, this can be very draining on the body...", false);
 			}
 		}
-		else if (item.getID() == ItemId.BONE_SHARD.id()) {
+		else if (item.getCatalogId() == ItemId.BONE_SHARD.id()) {
 			p.message("The words of Zadimus come back to you.");
 			p.message("@yel@'I am the key, but only kin may approach her.'");
 		}
-		else if (item.getID() == ItemId.ZADIMUS_CORPSE.id()) {
+		else if (item.getCatalogId() == ItemId.ZADIMUS_CORPSE.id()) {
 			dropZadimusCorpse(p);
 		}
-		else if (item.getID() == ItemId.CRUMPLED_SCROLL.id()) {
+		else if (item.getCatalogId() == ItemId.CRUMPLED_SCROLL.id()) {
 			message(p, "This looks like part of a scroll about Rashiliyia",
 				"Would you like to read it?");
 			int menu = showMenu(p,
@@ -362,7 +362,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide to leave the scroll well alone.");
 			}
 		}
-		else if (item.getID() == ItemId.TATTERED_SCROLL.id()) {
+		else if (item.getCatalogId() == ItemId.TATTERED_SCROLL.id()) {
 			message(p, "This looks like part of a scroll about someone called Berverius..");
 			p.message("Would you like to read it?");
 			int menu = showMenu(p,
@@ -383,7 +383,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				p.message("You decide not to open the scroll but instead put it carefully back into your inventory.");
 			}
 		}
-		else if (item.getID() == ItemId.STONE_PLAQUE.id()) {
+		else if (item.getCatalogId() == ItemId.STONE_PLAQUE.id()) {
 			message(p, "The markings are very intricate. It's a very strange language.",
 					"The meaning of it evades you though.");
 		}

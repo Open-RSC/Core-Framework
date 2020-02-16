@@ -22,7 +22,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class LegendsQuestHolyWater implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
 
 	private static final HashMap<Player, RestartableDelayedEvent> playerEventMap = new HashMap<Player, RestartableDelayedEvent>();
-	
+
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
@@ -37,10 +37,10 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 		if(!player.getCache().hasKey("remaining_blessed_bowl")) {
 			player.getCache().set("remaining_blessed_bowl", DataConversions.random(1, 15));
 		} else {
-			int remain = player.getCache().getInt("remaining_blessed_bowl");	
+			int remain = player.getCache().getInt("remaining_blessed_bowl");
 			if(remain > 1) {
 				player.getCache().put("remaining_blessed_bowl", remain - 1);
-			} 
+			}
 			// empty the bowl
 			else {
 				player.message("The pure water in the golden bowl has run out...");
@@ -52,7 +52,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.HOLY_WATER_VIAL.id();
+		return item.getCatalogId() == ItemId.HOLY_WATER_VIAL.id();
 	}
 
 	@Override
@@ -67,14 +67,14 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 			}
 			else {
 				player.message("You throw the holy watervial at Ungadulu.");
-				removeItem(player, item.getID(), 1);
+				removeItem(player, item.getCatalogId(), 1);
 				player.playSound("projectile");
 				player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, ungadulu, 1) {
 					@Override
 					public void doSpell() {
 					}
 				});
-				
+
 				RestartableDelayedEvent playerEvent = playerEventMap.get(player);
 				//rethrowing holy water resets the timer
 				if (playerEvent == null) {

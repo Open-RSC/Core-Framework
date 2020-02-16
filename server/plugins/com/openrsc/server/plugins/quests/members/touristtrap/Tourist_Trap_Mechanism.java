@@ -33,12 +33,12 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
-		return (item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1;
+		return (item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1;
 	}
 
 	@Override
 	public void onUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
-		if ((item.getID() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getID() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
+		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 			player.getInventory().unwieldItem(item, true);
 
 			Npc n = getNearestNpc(player, NpcId.MERCENARY.id(), 5);
@@ -69,15 +69,15 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		return (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id())
-				|| (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id())
-				|| (item.getID() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id())
-				|| (item.getID() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id());
+		return (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id())
+				|| (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id())
+				|| (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id())
+				|| (item.getCatalogId() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id());
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
+		if (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) > 7
 				|| p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				npcTalk(p, npc, "Sorry, but you can't use the tent without permission.",
@@ -92,10 +92,10 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 					"I'm sure he'll be pleased to see them.");
 			}
 		}
-		else if (item.getID() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id()) {
+		else if (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id()) {
 			npc.initializeIndirectTalkScript(p);
 		}
-		else if (item.getID() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+		else if (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			removeItem(p, ItemId.TENTI_PINEAPPLE.id(), 1);
 			npcTalk(p, npc, "Great! Just what I've been looking for!",
 				"Mmmmmmm, delicious!!",
@@ -106,7 +106,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				p.updateQuestStage(Quests.TOURIST_TRAP, 9);
 			}
 		}
-		else if (item.getID() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id()) {
+		else if (item.getCatalogId() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				p.message("You have already completed this quest.");
 				npcTalk(p, npc, "I think you might have me confused with someone else.");
@@ -866,15 +866,15 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return (obj.getID() == 1006 && item.getID() == ItemId.BRONZE_BAR.id())
-				|| (obj.getID() == MINING_CART && item.getID() == ItemId.ANA_IN_A_BARREL.id())
-				|| (obj.getID() == LIFT_PLATFORM && item.getID() == ItemId.ANA_IN_A_BARREL.id())
-				|| (obj.getID() == MINING_CART_ABOVE && item.getID() == ItemId.ANA_IN_A_BARREL.id());
+		return (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id())
+				|| (obj.getID() == MINING_CART && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id())
+				|| (obj.getID() == LIFT_PLATFORM && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id())
+				|| (obj.getID() == MINING_CART_ABOVE && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 1006 && item.getID() == ItemId.BRONZE_BAR.id()) {
+		if (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
 			if (hasItem(p, ItemId.PROTOTYPE_DART_TIP.id())) {
 				p.message("You have already made the prototype dart tip.");
 				p.message("You don't need to make another one.");
@@ -885,7 +885,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				makeDartTip(p, obj);
 			}
 		}
-		else if (obj.getID() == MINING_CART && item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
+		else if (obj.getID() == MINING_CART && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			message(p, "You carefully place Ana in the barrel into the mine cart.",
 				"Soon the cart moves out of sight and then it returns.");
 			removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
@@ -893,13 +893,13 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				p.getCache().store("ana_cart", true);
 			}
 		}
-		else if (obj.getID() == LIFT_PLATFORM && item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
+		else if (obj.getID() == LIFT_PLATFORM && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			Npc n = getNearestNpc(p, NpcId.MERCENARY_LIFTPLATFORM.id(), 5);
 			if (n != null) {
 				anaToLift(p, n);
 			}
 		}
-		else if (obj.getID() == MINING_CART_ABOVE && item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
+		else if (obj.getID() == MINING_CART_ABOVE && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			message(p, "You place Ana (In the barrel) carefully on the cart.",
 				"This was the last barrel to go on the cart,",
 				"but the cart driver doesn't seem to be in any rush to get going.",
@@ -942,12 +942,12 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return i.getID() == ItemId.ANA_IN_A_BARREL.id();
+		return i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.ANA_IN_A_BARREL.id()) {
+		if (i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
 				return;

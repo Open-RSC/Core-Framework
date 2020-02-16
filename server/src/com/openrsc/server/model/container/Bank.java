@@ -94,7 +94,7 @@ public class Bank {
 	public int countId(int id) {
 		synchronized(list) {
 			for (Item i : list) {
-				if (i.getID() == id) {
+				if (i.getCatalogId() == id) {
 					return i.getAmount();
 				}
 			}
@@ -131,7 +131,7 @@ public class Bank {
 	public int getFirstIndexById(int id) {
 		synchronized(list) {
 			for (int index = 0; index < list.size(); index++) {
-				if (list.get(index).getID() == id) {
+				if (list.get(index).getCatalogId() == id) {
 					return index;
 				}
 			}
@@ -168,7 +168,7 @@ public class Bank {
 	public boolean hasItemId(int id) {
 		synchronized(list) {
 			for (Item i : list) {
-				if (i.getID() == id)
+				if (i.getCatalogId() == id)
 					return true;
 			}
 
@@ -188,7 +188,7 @@ public class Bank {
 			if (item == null) {
 				return;
 			}
-			remove(item.getID(), item.getAmount());
+			remove(item.getCatalogId(), item.getAmount());
 		}
 	}
 
@@ -197,7 +197,7 @@ public class Bank {
 			Iterator<Item> iterator = list.iterator();
 			for (int index = 0; iterator.hasNext(); index++) {
 				Item i = iterator.next();
-				if (id == i.getID() && amount <= i.getAmount()) {
+				if (id == i.getCatalogId() && amount <= i.getAmount()) {
 					if (amount < i.getAmount()) {
 						i.setAmount(i.getAmount() - amount);
 					} else {
@@ -211,7 +211,7 @@ public class Bank {
 	}
 
 	public int remove(Item item) {
-		return remove(item.getID(), item.getAmount());
+		return remove(item.getCatalogId(), item.getAmount());
 	}
 
 	public int size() {
@@ -299,7 +299,7 @@ public class Bank {
 			return;
 
 		if ( !item.getDef(getPlayer().getWorld()).isStackable() && getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()) != null
-			&& item.getID() == getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()).getID())
+			&& item.getCatalogId() == getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()).getCatalogId())
 			return;
 
 		if (!Functions.canWield(getPlayer(), item) || !item.getDef(getPlayer().getWorld()).isWieldable()) {
@@ -315,7 +315,7 @@ public class Bank {
 			i = getPlayer().getEquipment().get(p);
 			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
 				if (item.getDef(getPlayer().getWorld()).isStackable()) {
-					if (item.getID() == i.getID())
+					if (item.getCatalogId() == i.getCatalogId())
 						continue;
 				}
 				count++;
@@ -331,12 +331,12 @@ public class Bank {
 		}
 
 		int amountToRemove = item.getDef(getPlayer().getWorld()).isStackable() ? item.getAmount() : 1;
-		remove(item.getID(), amountToRemove);
+		remove(item.getCatalogId(), amountToRemove);
 		for (int p = 0; p < Equipment.slots; p++) {
 			i = getPlayer().getEquipment().get(p);
 			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
 				if (item.getDef(getPlayer().getWorld()).isStackable()) {
-					if (item.getID() == i.getID()) {
+					if (item.getCatalogId() == i.getCatalogId()) {
 						i.setAmount(i.getAmount() + item.getAmount());
 						ActionSender.updateEquipmentSlot(getPlayer(), i.getDef(getPlayer().getWorld()).getWieldPosition());
 						return;
@@ -351,7 +351,7 @@ public class Bank {
 
 		getPlayer().updateWornItems(item.getDef(getPlayer().getWorld()).getWieldPosition(), item.getDef(getPlayer().getWorld()).getAppearanceId(),
 			item.getDef(getPlayer().getWorld()).getWearableId(), true);
-		getPlayer().getEquipment().equip(item.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(item.getID(), amountToRemove));
+		getPlayer().getEquipment().equip(item.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(item.getCatalogId(), amountToRemove));
 		ActionSender.sendEquipmentStats(getPlayer());
 	}
 
@@ -361,7 +361,7 @@ public class Bank {
 		}
 
 		//check to see if the item is actually wielded
-		if (!Functions.isWielding(getPlayer(), affectedItem.getID())) {
+		if (!Functions.isWielding(getPlayer(), affectedItem.getCatalogId())) {
 			return false;
 		}
 
@@ -419,11 +419,11 @@ public class Bank {
 					item = new Item(itemID, 1);
 					Item notedItem = new Item(item.getDef(getPlayer().getWorld()).getNoteID());
 					if (notedItem.getDef(getPlayer().getWorld()) == null) {
-						LOGGER.error("Mistake with the notes: " + item.getID() + " - " + notedItem.getID());
+						LOGGER.error("Mistake with the notes: " + item.getCatalogId() + " - " + notedItem.getCatalogId());
 						break;
 					}
 
-					if (notedItem.getDef(getPlayer().getWorld()).getOriginalItemID() != item.getID()) {
+					if (notedItem.getDef(getPlayer().getWorld()).getOriginalItemID() != item.getCatalogId()) {
 						getPlayer().message("There is no equivalent note item for that.");
 						break;
 					}
@@ -457,7 +457,7 @@ public class Bank {
 				Item originalItem = null;
 				if (item.getDef(getPlayer().getWorld()).getOriginalItemID() != -1) {
 					originalItem = new Item(item.getDef(getPlayer().getWorld()).getOriginalItemID(), amount);
-					itemID = originalItem.getID();
+					itemID = originalItem.getCatalogId();
 				}
 				if (bank.canHold(item) && inventory.remove(item, false) > -1) {
 					bank.add(originalItem != null ? originalItem : item);
@@ -470,12 +470,12 @@ public class Bank {
 				Item originalItem = null;
 				if (item.getDef(getPlayer().getWorld()).getOriginalItemID() != -1) {
 					originalItem = new Item(item.getDef(getPlayer().getWorld()).getOriginalItemID(), amount);
-					itemID = originalItem.getID();
+					itemID = originalItem.getCatalogId();
 				}
 				Item removedItem = originalItem != null ? originalItem : item;
-				int uncertedID = uncertedID(removedItem.getID());
+				int uncertedID = uncertedID(removedItem.getCatalogId());
 				itemID = uncertedID;
-				Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getID() ? amount : amount * 5);
+				Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getCatalogId() ? amount : amount * 5);
 				if (bank.canHold(uncertedItem) && inventory.remove(removedItem,false) > -1) {
 					bank.add(uncertedItem);
 				} else {
@@ -491,7 +491,7 @@ public class Bank {
 				if (item == null) { // This shouldn't happen
 					break;
 				}
-				if (bank.canHold(item) && inventory.remove(item.getID(), item.getAmount(), false) > -1) {
+				if (bank.canHold(item) && inventory.remove(item.getCatalogId(), item.getAmount(), false) > -1) {
 					bank.add(item);
 				} else {
 					getPlayer().message("You don't have room for that in your bank");
@@ -523,7 +523,7 @@ public class Bank {
 			if (item == null)
 				continue;
 
-			presets[slot].inventory[i].setID(itemIDreal);
+			presets[slot].inventory[i].setCatalogId(itemIDreal);
 			if (item.isStackable())
 				presets[slot].inventory[i].setAmount(blobData.getInt());
 			else
@@ -541,7 +541,7 @@ public class Bank {
 			if (item == null)
 				continue;
 
-			presets[slot].equipment[i].setID(itemIDreal);
+			presets[slot].equipment[i].setCatalogId(itemIDreal);
 			if (item.isStackable())
 				presets[slot].equipment[i].setAmount(blobData.getInt());
 			else
@@ -551,11 +551,11 @@ public class Bank {
 
 	public boolean isEmptyPreset(int slot) {
 		for (Item inv : presets[slot].inventory) {
-			if (inv.getID() != -1)
+			if (inv.getCatalogId() != -1)
 				return false;
 		}
 		for (Item eqp : presets[slot].equipment) {
-			if (eqp.getID() != -1)
+			if (eqp.getCatalogId() != -1)
 				return false;
 		}
 		return true;
@@ -570,12 +570,12 @@ public class Bank {
 			for (int i = 0; i < list.size(); i++) {
 				tempItem = get(i);
 				if (tempItem != null) {
-					if (!itemsOwned.containsKey(tempItem.getID())) {
-						itemsOwned.put(tempItem.getID(), 0);
+					if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
+						itemsOwned.put(tempItem.getCatalogId(), 0);
 					}
-					int hasAmount = itemsOwned.get(tempItem.getID());
+					int hasAmount = itemsOwned.get(tempItem.getCatalogId());
 					hasAmount += tempItem.getAmount();
-					itemsOwned.put(tempItem.getID(), hasAmount);
+					itemsOwned.put(tempItem.getCatalogId(), hasAmount);
 				}
 			}
 
@@ -583,12 +583,12 @@ public class Bank {
 			for (int i = 0; i < getPlayer().getInventory().size(); i++) {
 				tempItem = getPlayer().getInventory().get(i);
 				if (tempItem != null) {
-					if (!itemsOwned.containsKey(tempItem.getID())) {
-						itemsOwned.put(tempItem.getID(), 0);
+					if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
+						itemsOwned.put(tempItem.getCatalogId(), 0);
 					}
-					int hasAmount = itemsOwned.get(tempItem.getID());
+					int hasAmount = itemsOwned.get(tempItem.getCatalogId());
 					hasAmount += tempItem.getAmount();
-					itemsOwned.put(tempItem.getID(), hasAmount);
+					itemsOwned.put(tempItem.getCatalogId(), hasAmount);
 				}
 			}
 
@@ -597,12 +597,12 @@ public class Bank {
 				for (int i = 0; i < Equipment.slots; i++) {
 					tempItem = getPlayer().getEquipment().get(i);
 					if (tempItem != null) {
-						if (!itemsOwned.containsKey(tempItem.getID())) {
-							itemsOwned.put(tempItem.getID(), 0);
+						if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
+							itemsOwned.put(tempItem.getCatalogId(), 0);
 						}
-						int hasAmount = itemsOwned.get(tempItem.getID());
+						int hasAmount = itemsOwned.get(tempItem.getCatalogId());
 						hasAmount += tempItem.getAmount();
-						itemsOwned.put(tempItem.getID(), hasAmount);
+						itemsOwned.put(tempItem.getCatalogId(), hasAmount);
 					}
 				}
 			}
@@ -627,9 +627,9 @@ public class Bank {
 						continue;
 
 					presetEquipment.setWielded(false);
-					if (itemsOwned.containsKey(presetEquipment.getID())) {
+					if (itemsOwned.containsKey(presetEquipment.getCatalogId())) {
 						int presetAmount = presetEquipment.getAmount();
-						int ownedAmount = itemsOwned.get(presetEquipment.getID());
+						int ownedAmount = itemsOwned.get(presetEquipment.getCatalogId());
 						if (presetAmount > ownedAmount) {
 							getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
 							presetAmount = ownedAmount;
@@ -639,15 +639,15 @@ public class Bank {
 								getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
 								continue;
 							}
-							getPlayer().getEquipment().equip(presetEquipment.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(presetEquipment.getID(), presetAmount));
+							getPlayer().getEquipment().equip(presetEquipment.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(presetEquipment.getCatalogId(), presetAmount));
 							wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
 							getPlayer().updateWornItems(i,
 								presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),
 								wearableId, true);
 							if (presetAmount == ownedAmount) {
-								itemsOwned.remove(presetEquipment.getID());
+								itemsOwned.remove(presetEquipment.getCatalogId());
 							} else {
-								itemsOwned.put(presetEquipment.getID(), ownedAmount - presetAmount);
+								itemsOwned.put(presetEquipment.getCatalogId(), ownedAmount - presetAmount);
 							}
 						}
 					} else {
@@ -664,19 +664,19 @@ public class Bank {
 					continue;
 				}
 				presetInventory.setWielded(false);
-				if (itemsOwned.containsKey(presetInventory.getID())) {
+				if (itemsOwned.containsKey(presetInventory.getCatalogId())) {
 					int presetAmount = presetInventory.getAmount();
-					int ownedAmount = itemsOwned.get(presetInventory.getID());
+					int ownedAmount = itemsOwned.get(presetInventory.getCatalogId());
 					if (presetAmount > ownedAmount) {
 						getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
 						presetAmount = ownedAmount;
 					}
 					if (presetAmount > 0) {
-						getPlayer().getInventory().add(new Item(presetInventory.getID(), presetAmount), false);
+						getPlayer().getInventory().add(new Item(presetInventory.getCatalogId(), presetAmount), false);
 						if (presetAmount == ownedAmount) {
-							itemsOwned.remove(presetInventory.getID());
+							itemsOwned.remove(presetInventory.getCatalogId());
 						} else {
-							itemsOwned.put(presetInventory.getID(), ownedAmount - presetAmount);
+							itemsOwned.put(presetInventory.getCatalogId(), ownedAmount - presetAmount);
 						}
 					}
 				} else {

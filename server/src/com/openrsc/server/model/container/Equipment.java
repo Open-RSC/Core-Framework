@@ -81,7 +81,7 @@ public class Equipment {
 			Item item;
 			for (int i = 0; i < slots; i++) {
 				item = list[i];
-				if (item != null && item.getID() == id)
+				if (item != null && item.getCatalogId() == id)
 					return i;
 			}
 			return -1;
@@ -135,7 +135,7 @@ public class Equipment {
 					continue;
 				ItemDefinition curEquipDef = curEquip.getDef(player.getWorld());
 
-				if (curEquip.getID() == id) {
+				if (curEquip.getCatalogId() == id) {
 					int curAmount = curEquip.getAmount();
 					if (!curEquipDef.isStackable() && amount > 1)
 						return -1;

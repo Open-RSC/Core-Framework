@@ -14,12 +14,12 @@ public class Casket implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.CASKET.id();
+		return item.getCatalogId() == ItemId.CASKET.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.CASKET.id()) {
+		if (item.getCatalogId() == ItemId.CASKET.id()) {
 			p.setBusyTimer(1300);
 
 			int randomChanceOpen = DataConversions.random(0, 1081);

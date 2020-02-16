@@ -92,10 +92,10 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == NpcId.CURATOR.id() && (item.getID() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()
-			|| item.getID() == ItemId.LEVEL_1_CERTIFICATE.id()
-			|| item.getID() == ItemId.LEVEL_2_CERTIFICATE.id()
-			|| item.getID() == ItemId.LEVEL_3_CERTIFICATE.id())) {
+		if (n.getID() == NpcId.CURATOR.id() && (item.getCatalogId() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()
+			|| item.getCatalogId() == ItemId.LEVEL_1_CERTIFICATE.id()
+			|| item.getCatalogId() == ItemId.LEVEL_2_CERTIFICATE.id()
+			|| item.getCatalogId() == ItemId.LEVEL_3_CERTIFICATE.id())) {
 			return true;
 		}
 		return false;
@@ -104,7 +104,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.CURATOR.id()) {
-			if (item.getID() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()) {
+			if (item.getCatalogId() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()) {
 				playerTalk(p, n, "I have been given this by the examiner at the digsite",
 					"Can you stamp this for me ?");
 				npcTalk(p, n, "What have we here ?",
@@ -117,21 +117,21 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 				npcTalk(p, n, "Be sure to come back and show me your certificates",
 					"I would like to see how you get on");
 				playerTalk(p, n, "Okay, I will, thanks, see you later");
-			} else if (item.getID() == ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id()) {
+			} else if (item.getCatalogId() == ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id()) {
 				npcTalk(p, n, "No, I don't want it back, thankyou");
-			} else if (item.getID() == ItemId.LEVEL_1_CERTIFICATE.id()) {
+			} else if (item.getCatalogId() == ItemId.LEVEL_1_CERTIFICATE.id()) {
 				playerTalk(p, n, "Look what I have been awarded");
 				removeItem(p, ItemId.LEVEL_1_CERTIFICATE.id(), 1);
 				npcTalk(p, n, "Well that's great, well done",
 					"I'll take that for safekeeping",
 					"Come and tell me when you are the next level");
-			} else if (item.getID() == ItemId.LEVEL_2_CERTIFICATE.id()) {
+			} else if (item.getCatalogId() == ItemId.LEVEL_2_CERTIFICATE.id()) {
 				playerTalk(p, n, "Look, I am level 2 now...");
 				npcTalk(p, n, "Excellent work!");
 				removeItem(p, ItemId.LEVEL_2_CERTIFICATE.id(), 1);
 				npcTalk(p, n, "I'll take that for safekeeping",
 					"Remember to come and see me when you have graduated");
-			} else if (item.getID() == ItemId.LEVEL_3_CERTIFICATE.id()) {
+			} else if (item.getCatalogId() == ItemId.LEVEL_3_CERTIFICATE.id()) {
 				playerTalk(p, n, "Look at this certificate, curator...");
 				npcTalk(p, n, "Well well, a level 3 graduate!",
 					"I'll keep your certificate safe for you",

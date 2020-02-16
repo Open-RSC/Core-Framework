@@ -7,6 +7,7 @@ import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.model.container.ItemStatus;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -264,9 +265,14 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			while (result.next()) {
 				PlayerInventory invItem = new PlayerInventory();
-				invItem.itemId = result.getInt("id");
+				invItem.itemId = result.getInt("itemId");
 				invItem.wielded = result.getInt("wielded") == 1;
-				invItem.amount = result.getInt("amount");
+				ItemStatus itemStatus = new ItemStatus();
+				itemStatus.setCatalogId(result.getInt("catalogId"));
+				itemStatus.setAmount(result.getInt("amount"));
+				itemStatus.setNoted(result.getInt("noted") ==  1);
+				itemStatus.setDurability(result.getInt("durability"));
+				invItem.itemStatus = itemStatus;
 
 				list.add(invItem);
 			}
@@ -290,8 +296,13 @@ public class MySqlGameDatabase extends GameDatabase {
 
 				while (result.next()) {
 					final PlayerEquipped equipped = new PlayerEquipped();
-					equipped.itemId = result.getInt("id");
-					equipped.amount = result.getInt("amount");
+					equipped.itemId = result.getInt("itemId");
+					ItemStatus itemStatus = new ItemStatus();
+					itemStatus.setCatalogId(result.getInt("catalogId"));
+					itemStatus.setAmount(result.getInt("amount"));
+					itemStatus.setNoted(result.getInt("noted") ==  1);
+					itemStatus.setDurability(result.getInt("durability"));
+					equipped.itemStatus = itemStatus;
 
 					list.add(equipped);
 				}
@@ -315,8 +326,13 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			while (result.next()) {
 				final PlayerBank bankItem = new PlayerBank();
-				bankItem.itemId = result.getInt("id");
-				bankItem.amount = result.getInt("amount");
+				bankItem.itemId = result.getInt("itemId");
+				ItemStatus itemStatus = new ItemStatus();
+				itemStatus.setCatalogId(result.getInt("catalogId"));
+				itemStatus.setAmount(result.getInt("amount"));
+				itemStatus.setNoted(result.getInt("noted") ==  1);
+				itemStatus.setDurability(result.getInt("durability"));
+				bankItem.itemStatus = itemStatus;
 
 				list.add(bankItem);
 			}
@@ -600,14 +616,23 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException {
 		try {
 			updateLongs(getQueries().save_DeleteInv, playerId);
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
-			int slot = 0;
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
 			for (PlayerInventory item : inventory) {
+				statement.setInt(1, item.itemId);
+				statement.setInt(2, item.itemStatus.getAmount());
+				statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
+				statement.setInt(4, item.itemStatus.getDurability());
+				statement.addBatch();
+			}
+			int[] itemIds = statement.executeBatch();
+
+			statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
+			int slot = 0;
+			for (int i=0; i<inventory.length; i++) {
 				statement.setInt(1, playerId);
-				statement.setInt(2, item.itemId);
-				statement.setInt(3, item.amount);
-				statement.setInt(4, (item.wielded ? 1 : 0));
-				statement.setInt(5, slot++);
+				statement.setInt(2, itemIds[i]);
+				statement.setInt(3, (inventory[i].wielded ? 1 : 0));
+				statement.setInt(4, slot++);
 				statement.addBatch();
 			}
 			statement.executeBatch();
@@ -621,11 +646,20 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException {
 		try {
 			updateLongs(getQueries().save_DeleteEquip, playerId);
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_SaveEquip);
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
 			for (PlayerEquipped item : equipment) {
+				statement.setInt(1, item.itemId);
+				statement.setInt(2, item.itemStatus.getAmount());
+				statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
+				statement.setInt(4, item.itemStatus.getDurability());
+				statement.addBatch();
+			}
+			int[] itemIds = statement.executeBatch();
+
+			statement = getConnection().prepareStatement(getQueries().save_SaveEquip);
+			for (int i=0; i<equipment.length; i++) {
 				statement.setInt(1, playerId);
-				statement.setInt(2, item.itemId);
-				statement.setInt(3, item.amount);
+				statement.setInt(2, itemIds[i]);
 				statement.addBatch();
 			}
 			statement.executeBatch();
@@ -640,13 +674,22 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			updateLongs(getQueries().save_DeleteBank, playerId);
 			if (bank.length > 0) {
-				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddBank);
+				PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
+				for (PlayerBank item : bank) {
+					statement.setInt(1, item.itemId);
+					statement.setInt(2, item.itemStatus.getAmount());
+					statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
+					statement.setInt(4, item.itemStatus.getDurability());
+					statement.addBatch();
+				}
+				int[] itemIds = statement.executeBatch();
+
+				statement = getConnection().prepareStatement(getQueries().save_AddBank);
 				int slot = 0;
-				for (PlayerBank bankItem : bank) {
+				for (int i=0; i<bank.length; i++) {
 					statement.setInt(1, playerId);
-					statement.setInt(2, bankItem.itemId);
-					statement.setInt(3, bankItem.amount);
-					statement.setInt(4, slot++);
+					statement.setInt(2, itemIds[i]);
+					statement.setInt(3, slot++);
 					statement.addBatch();
 				}
 				statement.executeBatch();

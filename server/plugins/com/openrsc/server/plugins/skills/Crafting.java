@@ -52,18 +52,18 @@ public class Crafting implements InvUseOnItemListener,
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == ItemId.CHISEL.id()) {
+		if (item1.getCatalogId() == ItemId.CHISEL.id()) {
 			doCutGem(player, item1, item2);
 			return;
-		} else if (item2.getID() == ItemId.CHISEL.id()) {
+		} else if (item2.getCatalogId() == ItemId.CHISEL.id()) {
 			doCutGem(player, item2, item1);
 			return;
-		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item1.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item1, item2);
-		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item2.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item2, item1);
-		} else if (item1.getID() == ItemId.NEEDLE.id()) {
-			if (item2.getID() == ItemId.TEDDY_HEAD.id() || item2.getID() == ItemId.TEDDY_BOTTOM.id()) {
+		} else if (item1.getCatalogId() == ItemId.NEEDLE.id()) {
+			if (item2.getCatalogId() == ItemId.TEDDY_HEAD.id() || item2.getCatalogId() == ItemId.TEDDY_BOTTOM.id()) {
 				if (player.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
 					&& player.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& player.getInventory().hasInInventory(ItemId.THREAD.id())) {
@@ -80,8 +80,8 @@ public class Crafting implements InvUseOnItemListener,
 			} else
 				makeLeather(player, item1, item2);
 			return;
-		} else if (item2.getID() == ItemId.NEEDLE.id()) {
-			if (item1.getID() == ItemId.TEDDY_HEAD.id() || item1.getID() == ItemId.TEDDY_BOTTOM.id()) {
+		} else if (item2.getCatalogId() == ItemId.NEEDLE.id()) {
+			if (item1.getCatalogId() == ItemId.TEDDY_HEAD.id() || item1.getCatalogId() == ItemId.TEDDY_BOTTOM.id()) {
 				if (player.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
 					&& player.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& player.getInventory().hasInInventory(ItemId.THREAD.id())) {
@@ -98,15 +98,15 @@ public class Crafting implements InvUseOnItemListener,
 			} else
 				makeLeather(player, item2, item1);
 			return;
-		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item1.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item1, item2);
-		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item2.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item2, item1);
-		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id() || item1.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
+		} else if ((item1.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item1.getCatalogId() == ItemId.JUG_OF_WATER.id() || item1.getCatalogId() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
 			return;
-		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id() || item2.getID() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
+		} else if ((item2.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item2.getCatalogId() == ItemId.JUG_OF_WATER.id() || item2.getCatalogId() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
 			return;
-		} else if (item1.getID() == ItemId.MOLTEN_GLASS.id() && item2.getID() == ItemId.LENS_MOULD.id() || item1.getID() == ItemId.LENS_MOULD.id() && item2.getID() == ItemId.MOLTEN_GLASS.id()) {
+		} else if (item1.getCatalogId() == ItemId.MOLTEN_GLASS.id() && item2.getCatalogId() == ItemId.LENS_MOULD.id() || item1.getCatalogId() == ItemId.LENS_MOULD.id() && item2.getCatalogId() == ItemId.MOLTEN_GLASS.id()) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 10) {
 				player.message("You need a crafting level of 10 to make the lens");
 				return;
@@ -146,7 +146,7 @@ public class Crafting implements InvUseOnItemListener,
 			}
 		}
 
-		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
+		if (item.getCatalogId() == ItemId.SODA_ASH.id() || item.getCatalogId() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
 			if (player.getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
 				player.playerServerMessage(MessageType.QUEST, "You need some soda ash to make glass");
 				return false;
@@ -160,27 +160,27 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private boolean craftingTypeChecks(final GameObject obj, final Item item, final Player player) {
-		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(itemsFurnance, item.getID()))
-				|| (obj.getID() == 178 && DataConversions.inArray(itemsOven, item.getID()))
-				|| (obj.getID() == 179 && item.getID() == ItemId.SOFT_CLAY.id());
+		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(itemsFurnance, item.getCatalogId()))
+				|| (obj.getID() == 178 && DataConversions.inArray(itemsOven, item.getCatalogId()))
+				|| (obj.getID() == 179 && item.getCatalogId() == ItemId.SOFT_CLAY.id());
 	}
 
 	private void beginCrafting(final Item item, final Player player) {
-		if (item.getID() == ItemId.SODA_ASH.id() || item.getID() == ItemId.SAND.id()) {
+		if (item.getCatalogId() == ItemId.SODA_ASH.id() || item.getCatalogId() == ItemId.SAND.id()) {
 			doGlassMaking(item, player);
 			return;
-		} else if (DataConversions.inArray(itemsOven, item.getID())) {
+		} else if (DataConversions.inArray(itemsOven, item.getCatalogId())) {
 			doPotteryFiring(item, player);
 			return;
 		}
 
 		player.message("What would you like to make?");
 
-		if (item.getID() == ItemId.GOLD_BAR.id() || item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
+		if (item.getCatalogId() == ItemId.GOLD_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
 			doGoldJewelry(item, player);
-		} else if (item.getID() == ItemId.SILVER_BAR.id()) {
+		} else if (item.getCatalogId() == ItemId.SILVER_BAR.id()) {
 			doSilverJewelry(item, player);
-		} else if (item.getID() == ItemId.SOFT_CLAY.id()) {
+		} else if (item.getCatalogId() == ItemId.SOFT_CLAY.id()) {
 			doPotteryMolding(item, player);
 		}
 	}
@@ -271,10 +271,10 @@ public class Crafting implements InvUseOnItemListener,
 			return;
 		}
 
-		int retrytimes = player.getInventory().countId(item.getID());
+		int retrytimes = player.getInventory().countId(item.getCatalogId());
 
 		//Perfect gold bars shouldn't be batched
-		if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
+		if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
 			retrytimes = 1;
 		} else {
 			if (gem != 0) {
@@ -312,9 +312,9 @@ public class Crafting implements InvUseOnItemListener,
 				if (getOwner().getInventory().remove(item) > -1 && (gem == 0 || getOwner().getInventory().remove(gems[gem], 1) > -1)) {
 					showBubble(getOwner(), item);
 					Item result;
-					if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
+					if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
 						result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-					} else if (item.getID() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
+					} else if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
 						result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
 					} else {
 						result = new Item(def.getItemID(), 1);
@@ -357,7 +357,7 @@ public class Crafting implements InvUseOnItemListener,
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Silver Jewelry", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Silver Jewelry", player.getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < 16) {
@@ -421,7 +421,7 @@ public class Crafting implements InvUseOnItemListener,
 				return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Clay", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Clay", player.getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
@@ -453,7 +453,7 @@ public class Crafting implements InvUseOnItemListener,
 		int reqLvl, xp;
 		Item result;
 		AtomicReference<String> msg = new AtomicReference<String>();
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 			case UNFIRED_POT:
 				result = new Item(ItemId.POT.id(), 1);
 				reqLvl = 1;
@@ -483,7 +483,7 @@ public class Crafting implements InvUseOnItemListener,
 		showBubble(player, item);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Craft Clay", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Craft Clay", player.getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
@@ -527,8 +527,8 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private void doGlassMaking(final Item item, final Player player) {
-		int otherItem = item.getID() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
-		int repeatTimes = player.getInventory().countId(item.getID());
+		int otherItem = item.getCatalogId() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
+		int repeatTimes = player.getInventory().countId(item.getCatalogId());
 		repeatTimes = player.getInventory().countId(otherItem) < repeatTimes ? player.getInventory().countId(otherItem) : repeatTimes;
 
 		showBubble(player, item);
@@ -536,7 +536,7 @@ public class Crafting implements InvUseOnItemListener,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
 			public void action() {
 				if (getOwner().getInventory().countId(otherItem) < 1 ||
-						getOwner().getInventory().countId(item.getID()) < 1) {
+						getOwner().getInventory().countId(item.getCatalogId()) < 1) {
 					interrupt();
 					return;
 				}
@@ -567,9 +567,9 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private void doCutGem(Player player, final Item chisel, final Item gem) {
-		final ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(gem.getID());
+		final ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(gem.getCatalogId());
 		if (gemDef == null) {
-			if (gem.getID() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
+			if (gem.getCatalogId() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
 				if (getCurrentLevel(player, Skills.CRAFTING) < 90) {
 					player.message("You need 90 crafting to split the scales");
 					return;
@@ -584,7 +584,7 @@ public class Crafting implements InvUseOnItemListener,
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Cut Gem", player.getInventory().countId(gem.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Cut Gem", player.getInventory().countId(gem.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
@@ -603,18 +603,18 @@ public class Crafting implements InvUseOnItemListener,
 						return;
 					}
 				}
-				if (getOwner().getInventory().remove(gem.getID(), 1, false) > -1) {
+				if (getOwner().getInventory().remove(gem.getCatalogId(), 1, false) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail
 
-					if (DataConversions.inArray(gemsThatFail, gem.getID()) &&
-						Formulae.smashGem(gem.getID(), gemDef.getReqLevel(), getOwner().getSkills().getLevel(Skills.CRAFTING))) {
+					if (DataConversions.inArray(gemsThatFail, gem.getCatalogId()) &&
+						Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), getOwner().getSkills().getLevel(Skills.CRAFTING))) {
 						getOwner().message("You miss hit the chisel and smash the " + cutGem.getDef(getWorld()).getName() + " to pieces!");
 						getOwner().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
 
-						if (gem.getID() == ItemId.UNCUT_RED_TOPAZ.id()) {
+						if (gem.getCatalogId() == ItemId.UNCUT_RED_TOPAZ.id()) {
 							getOwner().incExp(Skills.CRAFTING, 25, true);
-						} else if (gem.getID() == ItemId.UNCUT_JADE.id()) {
+						} else if (gem.getCatalogId() == ItemId.UNCUT_JADE.id()) {
 							getOwner().incExp(Skills.CRAFTING, 20, true);
 						} else {
 							getOwner().incExp(Skills.CRAFTING, 15, true);
@@ -634,7 +634,7 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private void doGlassBlowing(Player player, final Item pipe, final Item glass) {
-		if (glass.getID() != ItemId.MOLTEN_GLASS.id()) {
+		if (glass.getCatalogId() != ItemId.MOLTEN_GLASS.id()) {
 			return;
 		}
 		player.message("what would you like to make?");
@@ -677,7 +677,7 @@ public class Crafting implements InvUseOnItemListener,
 			default:
 				return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getInventory().countId(glass.getCatalogId()), false) {
 			@Override
 			public void action() {
 				final Item resultClone = result.clone();
@@ -699,7 +699,7 @@ public class Crafting implements InvUseOnItemListener,
 					String message = "You make a " + resultClone.getDef(getWorld()).getName();
 
 					//Special handling for vials
-					if (result.getID() == ItemId.EMPTY_VIAL.id()) {
+					if (result.getCatalogId() == ItemId.EMPTY_VIAL.id()) {
 						if (getOwner().getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 							int amnt = 0;
 							double breakChance = 91.66667 - getCurrentLevel(getOwner(), Skills.CRAFTING)/1.32;
@@ -712,7 +712,7 @@ public class Crafting implements InvUseOnItemListener,
 							message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
 							resultClone.setAmount(amnt);
 							if (getOwner().getLocation().inBounds(418, 559, 421,563)) {
-								resultClone.setID(getOwner().getWorld().getServer().getEntityHandler().getItemDef(result.getID()).getNoteID());
+								resultClone.setCatalogId(getOwner().getWorld().getServer().getEntityHandler().getItemDef(result.getCatalogId()).getNoteID());
 							}
 						}
 					}
@@ -728,10 +728,10 @@ public class Crafting implements InvUseOnItemListener,
 								--space;
 							} else {
 								getOwner().getWorld().registerItem(
-									new GroundItem(getOwner().getWorld(), resultClone.getID(), getOwner().getX(), getOwner().getY(), 1, getOwner()),
+									new GroundItem(getOwner().getWorld(), resultClone.getCatalogId(), getOwner().getX(), getOwner().getY(), 1, getOwner()),
 									94000);
 								getOwner().getWorld().getServer().getGameLogger().addQuery(new GenericLog(getOwner().getWorld(), getOwner().getUsername() + " dropped(inventory full) "
-									+ resultClone.getID() + " x" + "1" + " at " + getOwner().getLocation().toString()));
+									+ resultClone.getCatalogId() + " x" + "1" + " at " + getOwner().getLocation().toString()));
 							}
 							--owedVials;
 						}
@@ -745,7 +745,7 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private void makeLeather(Player player, final Item needle, final Item leather) {
-		if (leather.getID() != ItemId.LEATHER.id()) {
+		if (leather.getCatalogId() != ItemId.LEATHER.id()) {
 			player.message("Nothing interesting happens");
 			return;
 		}
@@ -789,7 +789,7 @@ public class Crafting implements InvUseOnItemListener,
 				return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Leather", player.getInventory().countId(leather.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Leather", player.getInventory().countId(leather.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
@@ -829,7 +829,7 @@ public class Crafting implements InvUseOnItemListener,
 
 	private void useWool(Player player, final Item woolBall, final Item item) {
 		int newID;
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 			case UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN:
 				newID = ItemId.UNBLESSED_HOLY_SYMBOL.id();
 				break;
@@ -858,14 +858,14 @@ public class Crafting implements InvUseOnItemListener,
 				return;
 		}
 		final int newId = newID;
-		int woolAmount = player.getInventory().countId(woolBall.getID());
-		int amuletAmount = player.getInventory().countId(item.getID());
+		int woolAmount = player.getInventory().countId(woolBall.getCatalogId());
+		int amuletAmount = player.getInventory().countId(item.getCatalogId());
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft String Amulet",
 			woolAmount < amuletAmount ? woolAmount : amuletAmount, false) {
 
 			public void action() {
-				if (getOwner().getInventory().countId(item.getID()) <= 0 || getOwner().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
+				if (getOwner().getInventory().countId(item.getCatalogId()) <= 0 || getOwner().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
 					interrupt();
 					return;
 				}
@@ -881,12 +881,12 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	private boolean useWater(Player player, final Item water, final Item item) {
-		int jugID = Formulae.getEmptyJug(water.getID());
+		int jugID = Formulae.getEmptyJug(water.getCatalogId());
 		if (jugID == -1) { // This shouldn't happen
 			return false;
 		}
 		// Clay and water is not bowl of water
-		if (item.getID() == ItemId.CLAY.id() && water.getID() != ItemId.BOWL_OF_WATER.id()) {
+		if (item.getCatalogId() == ItemId.CLAY.id() && water.getCatalogId() != ItemId.BOWL_OF_WATER.id()) {
 			if (player.getInventory().remove(water) > -1
 				&& player.getInventory().remove(item) > -1) {
 				message(player, 1200, "You mix the clay and water");
@@ -910,34 +910,34 @@ public class Crafting implements InvUseOnItemListener,
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(item1.getID());
-		ItemGemDef gemDef2 = player.getWorld().getServer().getEntityHandler().getItemGemDef(item2.getID());
-		if (item1.getID() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
+		ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(item1.getCatalogId());
+		ItemGemDef gemDef2 = player.getWorld().getServer().getEntityHandler().getItemGemDef(item2.getCatalogId());
+		if (item1.getCatalogId() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
 			return true;
-		} else if (item2.getID() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
+		} else if (item2.getCatalogId() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
 			return true;
-		} else if (item1.getID() == ItemId.CHISEL.id() && item2.getID() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
+		} else if (item1.getCatalogId() == ItemId.CHISEL.id() && item2.getCatalogId() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
 			return true;
-		} else if (item2.getID() == ItemId.CHISEL.id() && item1.getID() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
+		} else if (item2.getCatalogId() == ItemId.CHISEL.id() && item1.getCatalogId() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
 			return true;
-		} else if (item1.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item1.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
 			return true;
-		} else if (item2.getID() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item2.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
 			return true;
-		} else if (item1.getID() == ItemId.NEEDLE.id()) {
+		} else if (item1.getCatalogId() == ItemId.NEEDLE.id()) {
 			return true;
-		} else if (item2.getID() == ItemId.NEEDLE.id()) {
+		} else if (item2.getCatalogId() == ItemId.NEEDLE.id()) {
 			return true;
-		} else if (item1.getID() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item1.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if (item2.getID() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item2.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if ((item1.getID() == ItemId.BUCKET_OF_WATER.id() || item1.getID() == ItemId.JUG_OF_WATER.id()) && item2.getID() == ItemId.CLAY.id()) {
+		} else if ((item1.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item1.getCatalogId() == ItemId.JUG_OF_WATER.id()) && item2.getCatalogId() == ItemId.CLAY.id()) {
 			return true;
-		} else if ((item2.getID() == ItemId.BUCKET_OF_WATER.id() || item2.getID() == ItemId.JUG_OF_WATER.id()) && item1.getID() == ItemId.CLAY.id()) {
+		} else if ((item2.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item2.getCatalogId() == ItemId.JUG_OF_WATER.id()) && item1.getCatalogId() == ItemId.CLAY.id()) {
 			return true;
 		} else
-			return item1.getID() == ItemId.MOLTEN_GLASS.id() && item2.getID() == ItemId.LENS_MOULD.id() || item1.getID() == ItemId.LENS_MOULD.id() && item2.getID() == ItemId.MOLTEN_GLASS.id();
+			return item1.getCatalogId() == ItemId.MOLTEN_GLASS.id() && item2.getCatalogId() == ItemId.LENS_MOULD.id() || item1.getCatalogId() == ItemId.LENS_MOULD.id() && item2.getCatalogId() == ItemId.MOLTEN_GLASS.id();
 	}
 
 	@Override

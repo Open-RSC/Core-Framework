@@ -598,12 +598,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id();
+		return obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id()) {
+		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("you tie the rope to the tree");
 			removeItem(p, ItemId.ROPE.id(), 1);
 			p.getWorld().replaceGameObject(obj,

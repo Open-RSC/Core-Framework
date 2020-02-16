@@ -15,7 +15,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return inArray(item.getID(),
+		return inArray(item.getCatalogId(),
 			ItemId.BARCRAWL_CARD.id(), ItemId.INSTRUCTION_MANUAL.id(), ItemId.DIARY.id(),
 			ItemId.DRY_STICKS.id(), ItemId.SCRUFFY_NOTE.id(), ItemId.MAGIC_SCROLL.id(),
 			ItemId.TOURIST_GUIDE.id(), ItemId.TREE_GNOME_TRANSLATION.id(), ItemId.WAR_SHIP.id(),
@@ -34,7 +34,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		int id = item.getID();
+		int id = item.getCatalogId();
 
 		if (id == ItemId.OYSTER.id()) {
 			handleOyster(player, id);
@@ -142,23 +142,23 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		}
 		else if (id == ItemId.BURNTPIE.id() && command.equalsIgnoreCase("empty dish")) {
 			player.message("you remove the burnt pie from the pie dish");
-			player.getInventory().replace(item.getID(), ItemId.PIE_DISH.id());
+			player.getInventory().replace(item.getCatalogId(), ItemId.PIE_DISH.id());
 		}
 		else if (id == ItemId.BURNT_STEW.id() && command.equalsIgnoreCase("empty")) {
 			player.message("you remove the burnt stew from the bowl");
-			player.getInventory().replace(item.getID(), ItemId.BOWL.id());
+			player.getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
 		}
 		else if (id == ItemId.BURNT_CURRY.id() && command.equalsIgnoreCase("empty")) {
 			player.message("you remove the burnt curry from the bowl");
-			player.getInventory().replace(item.getID(), ItemId.BOWL.id());
+			player.getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
 		}
 		else if (id == ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
 			player.message("You empty the plain water out of the Blessed Golden Bowl.");
-			player.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			player.getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
 		}
 		else if (id == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
 			player.message("You empty the plain water out of the Golden Bowl.");
-			player.getInventory().replace(item.getID(), ItemId.GOLDEN_BOWL.id());
+			player.getInventory().replace(item.getCatalogId(), ItemId.GOLDEN_BOWL.id());
 		}
 		else if (id == ItemId.SPADE.id()) {
 			// nothing - no action/message was triggered with spade's dig option

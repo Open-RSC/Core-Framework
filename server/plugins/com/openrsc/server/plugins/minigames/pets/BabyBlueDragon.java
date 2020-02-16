@@ -16,7 +16,7 @@ public class BabyBlueDragon implements InvUseOnNpcListener, InvUseOnNpcExecutive
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.BABY_BLUE_DRAGON.id() && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id();
+		return npc.getID() == NpcId.BABY_BLUE_DRAGON.id() && item.getCatalogId() == ItemId.A_GLOWING_RED_CRYSTAL.id();
 	}
 
 	@Override

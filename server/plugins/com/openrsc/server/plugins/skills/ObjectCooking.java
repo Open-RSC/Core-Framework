@@ -37,7 +37,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 		// Tutorial Meat
 		if(object.getID() == 491) {
-			if (item.getID() == ItemId.RAW_RAT_MEAT.id()) {
+			if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
 				p.setBusy(true);
 				showBubble(p, item);
 				p.playSound("cooking");
@@ -70,7 +70,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		}
 
 		// Raw Oomlie Meat (Always burn)
-		else if (item.getID() == ItemId.RAW_OOMLIE_MEAT.id()) {
+		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274)
 				message(p, 1200, "You cook the meat on the fire...");
 			else
@@ -82,7 +82,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		}
 
 		// Poison (Hazeel Cult)
-		else if (item.getID() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
+		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if (p.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
 				message(p, "you poor the poison into the hot pot",
 					"the poison desolves into the soup");
@@ -91,12 +91,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			} else {
 				p.message("nothing interesting happens");
 			}
-		} else if (item.getID() == ItemId.UNCOOKED_SWAMP_PASTE.id()) {
+		} else if (item.getCatalogId() == ItemId.UNCOOKED_SWAMP_PASTE.id()) {
 			cookMethod(p, ItemId.UNCOOKED_SWAMP_PASTE.id(), ItemId.SWAMP_PASTE.id(), false, "you warm the paste over the fire", "it thickens into a sticky goo");
-		} else if (item.getID() == ItemId.SEAWEED.id()) { // Seaweed (Glass)
+		} else if (item.getCatalogId() == ItemId.SEAWEED.id()) { // Seaweed (Glass)
 			cookMethod(p, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), true, "You put the seaweed on the "
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
-		} else if (item.getID() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
+		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
 			if (p.getQuestStage(Quests.WITCHS_POTION) != -1) {
 				showBubble(p, item);
 				message(p, 1800, cookingOnMessage(p, item, object, false));
@@ -140,12 +140,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				return;
 			}
 
-			if (item.getID() == ItemId.RAW_OOMLIE_MEAT_PARCEL.id())
+			if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT_PARCEL.id())
 				p.message("You prepare to cook the Oomlie meat parcel.");
 			else
 				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", p.getInventory().countId(item.getID()), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", p.getInventory().countId(item.getCatalogId()), false) {
 				@Override
 				public void action() {
 					if (getOwner().getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
@@ -168,15 +168,15 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					showBubble(getOwner(), item);
 					getOwner().playSound("cooking");
 					if (getOwner().getInventory().remove(item) > -1) {
-						if (!Formulae.burnFood(getOwner(), item.getID(), getOwner().getSkills().getLevel(Skills.COOKING))
-								|| item.getID() == ItemId.RAW_LAVA_EEL.id()
-								|| (item.getID() == ItemId.UNCOOKED_PITTA_BREAD.id() && getOwner().getSkills().getLevel(Skills.COOKING) >= 58)) {
+						if (!Formulae.burnFood(getOwner(), item.getCatalogId(), getOwner().getSkills().getLevel(Skills.COOKING))
+								|| item.getCatalogId() == ItemId.RAW_LAVA_EEL.id()
+								|| (item.getCatalogId() == ItemId.UNCOOKED_PITTA_BREAD.id() && getOwner().getSkills().getLevel(Skills.COOKING) >= 58)) {
 							getOwner().getInventory().add(cookedFood);
 							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
 							getOwner().incExp(Skills.COOKING, cookingDef.getExp(), true);
 						} else {
 							getOwner().getInventory().add(new Item(cookingDef.getBurnedId()));
-							if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
+							if (cookedFood.getCatalogId() == ItemId.COOKEDMEAT.id()) {
 								getOwner().playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 							} else {
 								String food = cookedFood.getDef(p.getWorld()).getName().toLowerCase();
@@ -196,12 +196,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		int[] ids = new int[]{97, 11, 119, 274, 435, 491};
 		Arrays.sort(ids);
-		if ((item.getID() == ItemId.RAW_OOMLIE_MEAT.id() || item.getID() == ItemId.SEAWEED.id()
-				|| item.getID() == ItemId.UNCOOKED_SWAMP_PASTE.id() || item.getID() == ItemId.COOKEDMEAT.id())
+		if ((item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id() || item.getCatalogId() == ItemId.SEAWEED.id()
+				|| item.getCatalogId() == ItemId.UNCOOKED_SWAMP_PASTE.id() || item.getCatalogId() == ItemId.COOKEDMEAT.id())
 				&& Arrays.binarySearch(ids, obj.getID()) >= 0) {
 			return true;
 		}
-		if (item.getID() == ItemId.POISON.id() && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
+		if (item.getCatalogId() == ItemId.POISON.id() && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
 			return true;
 		}
 		final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
@@ -248,7 +248,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 
 	private String cookedMessage(Player p, Item cookedFood, boolean needsOven) {
 		String message = "The " + cookedFood.getDef(p.getWorld()).getName().toLowerCase() + " is now nicely cooked";
-		if (cookedFood.getID() == ItemId.COOKEDMEAT.id()) {
+		if (cookedFood.getCatalogId() == ItemId.COOKEDMEAT.id()) {
 			message = "The meat is now nicely cooked";
 		}
 		if (needsOven) {
@@ -269,11 +269,11 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			ItemId.UNCOOKED_PIZZA.id(), // Pizza
 			ItemId.UNCOOKED_CAKE.id(), // Cake
 			ItemId.UNCOOKED_PITTA_BREAD.id(), // Pitta Bread
-		}, item.getID());
+		}, item.getCatalogId());
 	}
 
 	private boolean isGeneralMeat(Item item) {
 		return DataConversions.inArray(new int[]{ItemId.COOKEDMEAT.id(), ItemId.RAW_CHICKEN.id(),
-				ItemId.RAW_BEAR_MEAT.id(), ItemId.RAW_RAT_MEAT.id(), ItemId.RAW_BEEF.id()}, item.getID());
+				ItemId.RAW_BEAR_MEAT.id(), ItemId.RAW_RAT_MEAT.id(), ItemId.RAW_BEEF.id()}, item.getCatalogId());
 	}
 }

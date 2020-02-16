@@ -294,7 +294,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player);
 
 		for (int i = 0; i < invItems.length; i++) {
-			Item item = new Item(invItems[i].itemId, invItems[i].amount);
+			Item item = new Item(invItems[i].itemId, invItems[i].itemStatus);
 			ItemDefinition itemDef = item.getDef(player.getWorld());
 			item.setWielded(false);
 			if (item.isWieldable(player.getWorld()) && invItems[i].wielded) {
@@ -317,7 +317,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			final PlayerEquipped[] equippedItems = queryLoadPlayerEquipped(player);
 
 			for (final PlayerEquipped equippedItem : equippedItems) {
-				final Item item = new Item(equippedItem.itemId, equippedItem.amount);
+				final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
 				final ItemDefinition itemDef = item.getDef(player.getWorld());
 				if (item.isWieldable(player.getWorld())) {
 					equipment.equip(itemDef.getWieldPosition(), item);
@@ -334,7 +334,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player);
 		final Bank bank = new Bank(player);
 		for (int i = 0; i < bankItems.length; i++) {
-			bank.add(new Item(bankItems[i].itemId, bankItems[i].amount));
+			bank.add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
 		}
 		if (getServer().getConfig().WANT_BANK_PRESETS) {
 			final PlayerBankPreset bankPresets[] = queryLoadPlayerBankPresets(player);
@@ -535,8 +535,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 		for(int i = 0; i < invSize; i++) {
 			inventory[i] = new PlayerInventory();
-			inventory[i].itemId = player.getInventory().get(i).getID();
-			inventory[i].amount = player.getInventory().get(i).getAmount();
+			inventory[i].itemId = player.getInventory().get(i).getItemId();
+			inventory[i].itemStatus = player.getInventory().get(i).getItemStatus();
 			inventory[i].wielded = player.getInventory().get(i).isWielded();
 		}
 
@@ -553,8 +553,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 				final Item item = player.getEquipment().get(i);
 				if(item != null) {
 					final PlayerEquipped equipment = new PlayerEquipped();
-					equipment.itemId = player.getEquipment().get(i).getID();
-					equipment.amount = player.getEquipment().get(i).getAmount();
+					equipment.itemId = player.getEquipment().get(i).getItemId();
+					equipment.itemStatus = player.getEquipment().get(i).getItemStatus();
 					list.add(equipment);
 				}
 			}
@@ -571,8 +571,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 		for(int i = 0; i < bankSize; i++){
 			bank[i] = new PlayerBank();
-			bank[i].itemId = player.getBank().get(i).getID();
-			bank[i].amount = player.getBank().get(i).getAmount();
+			bank[i].itemId = player.getBank().get(i).getItemId();
+			bank[i].itemStatus = player.getBank().get(i).getItemStatus();
 		}
 
 		querySavePlayerBank(player.getDatabaseID(), bank);
@@ -588,10 +588,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
 						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
 						for (final Item inventoryItem : player.getBank().presets[k].inventory) {
-							if (inventoryItem.getID() == -1)
+							if (inventoryItem.getCatalogId() == -1)
 								inventoryWriter.writeByte(-1);
 							else {
-								inventoryWriter.writeShort(inventoryItem.getID());
+								inventoryWriter.writeShort(inventoryItem.getCatalogId());
 								if (inventoryItem.getDef(player.getWorld()) != null && inventoryItem.getDef(player.getWorld()).isStackable())
 									inventoryWriter.writeInt(inventoryItem.getAmount());
 							}
@@ -602,10 +602,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 						final ByteArrayOutputStream equipmentBuffer = new ByteArrayOutputStream();
 						final DataOutputStream equipmentWriter = new DataOutputStream(equipmentBuffer);
 						for (Item equipmentItem : player.getBank().presets[k].equipment) {
-							if (equipmentItem.getID() == -1)
+							if (equipmentItem.getCatalogId() == -1)
 								equipmentWriter.writeByte(-1);
 							else {
-								equipmentWriter.writeShort(equipmentItem.getID());
+								equipmentWriter.writeShort(equipmentItem.getCatalogId());
 								if (equipmentItem.getDef(player.getWorld()) != null && equipmentItem.getDef(player.getWorld()).isStackable())
 									equipmentWriter.writeInt(equipmentItem.getAmount());
 							}

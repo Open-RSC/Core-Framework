@@ -232,11 +232,11 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		for (Integer il : capes) {
-			if (il == item1.getID()) {
+			if (il == item1.getCatalogId()) {
 				for (int i = 0; i < dye.length; i++) {
-					if (dye[i] == item2.getID()) {
-						if (player.getInventory().remove(new Item(item1.getID())) > -1
-								&& player.getInventory().remove(new Item(item2.getID())) > -1) {
+					if (dye[i] == item2.getCatalogId()) {
+						if (player.getInventory().remove(new Item(item1.getCatalogId())) > -1
+								&& player.getInventory().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getInventory().add(new Item(newCapes[i]));
 							player.incExp(Skills.CRAFTING, 10, true);
@@ -246,11 +246,11 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				}
 			}
 
-			else if (il == item2.getID()) {
+			else if (il == item2.getCatalogId()) {
 				for (int i = 0; i < dye.length; i++) {
-					if (dye[i] == item1.getID()) {
-						if (player.getInventory().remove(new Item(item1.getID())) > -1
-								&& player.getInventory().remove(new Item(item2.getID())) > -1) {
+					if (dye[i] == item1.getCatalogId()) {
+						if (player.getInventory().remove(new Item(item1.getCatalogId())) > -1
+								&& player.getInventory().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getInventory().add(new Item(newCapes[i]));
 							player.incExp(Skills.CRAFTING, 10, true);
@@ -263,15 +263,15 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 	}
 
 	private boolean isMapPiece(Item item) {
-		return item.getID() == ItemId.MAP_PIECE_1.id()
-			|| item.getID() == ItemId.MAP_PIECE_2.id()
-			|| item.getID() == ItemId.MAP_PIECE_3.id();
+		return item.getCatalogId() == ItemId.MAP_PIECE_1.id()
+			|| item.getCatalogId() == ItemId.MAP_PIECE_2.id()
+			|| item.getCatalogId() == ItemId.MAP_PIECE_3.id();
 	}
 
 	private boolean isCrestFragment(Item item) {
-		return item.getID() == ItemId.CREST_FRAGMENT_ONE.id()
-			|| item.getID() == ItemId.CREST_FRAGMENT_TWO.id()
-			|| item.getID() == ItemId.CREST_FRAGMENT_THREE.id();
+		return item.getCatalogId() == ItemId.CREST_FRAGMENT_ONE.id()
+			|| item.getCatalogId() == ItemId.CREST_FRAGMENT_TWO.id()
+			|| item.getCatalogId() == ItemId.CREST_FRAGMENT_THREE.id();
 	}
 
 	@Override
@@ -330,7 +330,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			return true;
 
 		for (int il : capes) {
-			if (il == item1.getID()) {
+			if (il == item1.getCatalogId()) {
 				return true;
 			}
 		}

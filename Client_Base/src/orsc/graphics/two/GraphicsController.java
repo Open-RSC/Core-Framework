@@ -309,7 +309,7 @@ public class GraphicsController {
 
 	public Sprite spriteSelect(ItemDef item) {
 		if (!Config.S_WANT_CUSTOM_SPRITES)
-			return sprites[item.authenticSpriteID + mudclient.spriteItem];
+			return sprites[item.spriteID + mudclient.spriteItem];
 
 		String[] location = item.getSpriteLocation().split(":");
 		return spriteTree.get(location[0]).get(location[1]).getFrames()[0].getSprite();

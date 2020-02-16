@@ -943,7 +943,7 @@ public class DoorAction {
 				showsBubble = true;
 				break;
 		}
-		if (player.getInventory().hasItemId(keyItem) && item.getID() == keyItem) {
+		if (player.getInventory().hasItemId(keyItem) && item.getCatalogId() == keyItem) {
 			if (keyItem == ItemId.FRONT_DOOR_KEY.id() && player.getQuestStage(Quests.WITCHS_HOUSE) == 0) {
 				playerTalk(player, null, "It'd be rude to break into this house");
 				return;

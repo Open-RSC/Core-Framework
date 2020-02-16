@@ -259,7 +259,7 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.PRESENT.id()) {
+		if (item.getCatalogId() == ItemId.PRESENT.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
@@ -292,7 +292,7 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 
 			String playerDialogue;
 
-			if(prize.getID() == ItemId.COAL.id()) {
+			if(prize.getCatalogId() == ItemId.COAL.id()) {
 				switch(DataConversions.random(0, 8)) {
 					default:
 					case 0:
@@ -345,11 +345,11 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.PRESENT.id();
+		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.PRESENT.id();
+		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 }

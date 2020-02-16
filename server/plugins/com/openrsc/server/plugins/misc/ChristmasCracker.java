@@ -40,7 +40,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.CHRISTMAS_CRACKER.id()) {
+		if (item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
@@ -89,6 +89,6 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.CHRISTMAS_CRACKER.id();
+		return item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id();
 	}
 }

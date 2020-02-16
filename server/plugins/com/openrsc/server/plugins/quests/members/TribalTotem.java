@@ -411,12 +411,12 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 328 && item.getID() == ItemId.ADDRESS_LABEL.id();
+		return obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 328 && item.getID() == ItemId.ADDRESS_LABEL.id()) {
+		if (obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id()) {
 			if (p.getQuestStage(this) == -1) {
 				p.message("You've already done this!");
 			} else {

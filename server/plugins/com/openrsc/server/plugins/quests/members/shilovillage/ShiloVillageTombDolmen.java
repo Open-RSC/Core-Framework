@@ -142,7 +142,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOMB_DOLMEN) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case PAPYRUS:
 					if (hasItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id())) {
 						p.message("You already have Bervirius Tomb Notes in your inventory.");

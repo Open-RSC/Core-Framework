@@ -874,13 +874,13 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
-		return npc.getID() == NpcId.UNGADULU.id() && (item.getID() == ItemId.BOOKING_OF_BINDING.id()
-				|| item.getID() == ItemId.GLOWING_DARK_DAGGER.id() || item.getID() == ItemId.DARK_DAGGER.id());
+		return npc.getID() == NpcId.UNGADULU.id() && (item.getCatalogId() == ItemId.BOOKING_OF_BINDING.id()
+				|| item.getCatalogId() == ItemId.GLOWING_DARK_DAGGER.id() || item.getCatalogId() == ItemId.DARK_DAGGER.id());
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (npc.getID() == NpcId.UNGADULU.id() && item.getID() == ItemId.DARK_DAGGER.id()) { // NOT KILLED VIEYLDY - dark dagger
+		if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.DARK_DAGGER.id()) { // NOT KILLED VIEYLDY - dark dagger
 			message(p, npc, 1300, "You hand the dagger over to the Shaman.",
 				"The Shaman's face turns pale...");
 			if (p.getCache().hasKey("killed_viyeldi")) {
@@ -920,14 +920,14 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				"to reveal its true self.",
 				"Once activated, you will be able to attack it like",
 				"a normal creature.");
-			removeItem(p, item.getID(), 1);
+			removeItem(p, item.getCatalogId(), 1);
 			addItem(p, ItemId.HOLY_FORCE_SPELL.id(), 1);
 			message(p, npc, 1300, "The Shaman takes the dagger and gives you a folded piece of paper.");
 			npcTalk(p, npc, "Use this spell on the Spirit.",
 				"It will force the spirit to show it's true self.",
 				"And it will also be vulerable to normal attacks.");
 		}
-		else if (npc.getID() == NpcId.UNGADULU.id() && item.getID() == ItemId.GLOWING_DARK_DAGGER.id()) { // KILLED VIYELDI - glowing dark dagger
+		else if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.GLOWING_DARK_DAGGER.id()) { // KILLED VIYELDI - glowing dark dagger
 			message(p, npc, 1300, "You hand the dagger over to the Shaman.",
 				"The Shaman's face turns pale...");
 			npcTalk(p, npc, "Oh dear Bwana.",
@@ -936,14 +936,14 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 				"is planning to use it for some vile purpose.",
 				"I will try to release Viyeldi's spirit from the dagger.",
 				"Here, you take this spell...");
-			removeItem(p, item.getID(), 1);
+			removeItem(p, item.getCatalogId(), 1);
 			addItem(p, ItemId.HOLY_FORCE_SPELL.id(), 1);
 			message(p, npc, 1300, "The Shaman takes the dagger and gives you a folded piece of paper.");
 			npcTalk(p, npc, "Use this spell on the Spirit.",
 				"It will force the spirit to show it's true self.",
 				"And it will also be vulerable to normal attacks.");
 		}
-		else if (npc.getID() == NpcId.UNGADULU.id() && item.getID() == ItemId.BOOKING_OF_BINDING.id()) {
+		else if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.BOOKING_OF_BINDING.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 3) {
 				message(p, npc, 1900, "You open the book of binding in front of Ungadulu.",
 					"A blinding light fills the room...",

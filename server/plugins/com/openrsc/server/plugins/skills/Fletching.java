@@ -30,29 +30,29 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
+		if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
+		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
+		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getID())) {
+		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
 			return true;
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getID())) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
 			return true;
-		} else if (item1.getID() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item2.getID() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item2.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
+		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item2.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item2.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item1.getID() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item1.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item1.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item1.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
+		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
 			return true;
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
 			return true;
 		}
 		return false;
@@ -78,9 +78,9 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 		final int itemID;
 		int experience = 4;
 		ItemDartTipDef tipDef = null;
-		if (item.getID() == ItemId.ARROW_SHAFTS.id()) {
+		if (item.getCatalogId() == ItemId.ARROW_SHAFTS.id()) {
 			itemID = ItemId.HEADLESS_ARROWS.id();
-		} else if ((tipDef = player.getWorld().getServer().getEntityHandler().getItemDartTipDef(item.getID())) != null) {
+		} else if ((tipDef = player.getWorld().getServer().getEntityHandler().getItemDartTipDef(item.getCatalogId())) != null) {
 			itemID = tipDef.getDartID(); // Dart ID
 			experience = tipDef.getExp();
 		} else {
@@ -95,8 +95,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			@Override
 			public void action() {
 				for (int i = 0; i < 10; ++i) {
-					if (getOwner().getInventory().countId(feathers.getID()) < 1
-						|| getOwner().getInventory().countId(item.getID()) < 1) {
+					if (getOwner().getInventory().countId(feathers.getCatalogId()) < 1
+						|| getOwner().getInventory().countId(item.getCatalogId()) < 1) {
 						interrupt();
 						return;
 					}
@@ -110,8 +110,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						}
 
 					}
-					if (getOwner().getInventory().remove(feathers.getID(), 1) > -1
-						&& getOwner().getInventory().remove(item.getID(), 1) > -1) {
+					if (getOwner().getInventory().remove(feathers.getCatalogId(), 1) > -1
+						&& getOwner().getInventory().remove(item.getCatalogId(), 1) > -1) {
 						getOwner().getInventory().add(new Item(itemID, 1));
 						getOwner().incExp(Skills.FLETCHING, exp, true);
 					} else {
@@ -130,7 +130,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			return true;
 		}
 		final ItemArrowHeadDef headDef = player.getWorld().getServer().getEntityHandler()
-			.getItemArrowHeadDef(arrowHeads.getID());
+			.getItemArrowHeadDef(arrowHeads.getCatalogId());
 		if (headDef == null) {
 			return false;
 		}
@@ -155,8 +155,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						interrupt();
 						return;
 					}
-					if (getOwner().getInventory().countId(arrowHeads.getID()) < 1
-						|| getOwner().getInventory().countId(headlessArrows.getID()) < 1) {
+					if (getOwner().getInventory().countId(arrowHeads.getCatalogId()) < 1
+						|| getOwner().getInventory().countId(headlessArrows.getCatalogId()) < 1) {
 						interrupt();
 						return;
 					}
@@ -170,8 +170,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						}
 
 					}
-					if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
-						&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
+					if (getOwner().getInventory().remove(headlessArrows.getCatalogId(), 1) > -1
+						&& getOwner().getInventory().remove(arrowHeads.getCatalogId(), 1) > -1) {
 						getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
 						getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
 					} else {
@@ -191,12 +191,12 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			return true;
 		}
 		final ItemBowStringDef stringDef = player.getWorld().getServer().getEntityHandler()
-			.getItemBowStringDef(bow.getID());
+			.getItemBowStringDef(bow.getCatalogId());
 		if (stringDef == null) {
 			return false;
 		}
-		int bowtimes = player.getInventory().countId(bow.getID());
-		int stringtimes = player.getInventory().countId(bowString.getID());
+		int bowtimes = player.getInventory().countId(bow.getCatalogId());
+		int stringtimes = player.getInventory().countId(bowString.getCatalogId());
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching String Bow",
 			bowtimes < stringtimes ? bowtimes : stringtimes, false) {
@@ -208,8 +208,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					interrupt();
 					return;
 				}
-				if (getOwner().getInventory().countId(bow.getID()) < 1
-						|| getOwner().getInventory().countId(bowString.getID()) < 1) {
+				if (getOwner().getInventory().countId(bow.getCatalogId()) < 1
+						|| getOwner().getInventory().countId(bowString.getCatalogId()) < 1) {
 					interrupt();
 					return;
 				}
@@ -239,13 +239,13 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			player.sendMemberErrorMessage();
 			return;
 		}
-		final ItemLogCutDef cutDef = player.getWorld().getServer().getEntityHandler().getItemLogCutDef(log.getID());
+		final ItemLogCutDef cutDef = player.getWorld().getServer().getEntityHandler().getItemLogCutDef(log.getCatalogId());
 		if (cutDef == null) {
 			return;
 		}
 		player.message("What would you like to make?");
 
-		String[] options = log.getID() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
+		String[] options = log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
 				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
 
 		int type = showMenu(player, options);
@@ -289,7 +289,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 		final String cutMessages = cutMessage;
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Make Bow",
-				player.getInventory().countId(log.getID()), false) {
+				player.getInventory().countId(log.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
@@ -323,9 +323,9 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 		}
 
 		int amount;
-		if (pearl.getID() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id()) {
+		if (pearl.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id()) {
 			amount = 25;
-		} else if (pearl.getID() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) {
+		} else if (pearl.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) {
 			amount = 2;
 		} else {
 			player.message("Nothing interesting happens");
@@ -334,7 +334,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 
 		final int amt = amount;
 		final int exp = 25;
-		final int pearlID = pearl.getID();
+		final int pearlID = pearl.getCatalogId();
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Pearl Cut",
 			player.getInventory().countId(pearlID), false) {
 			@Override
@@ -368,13 +368,13 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 			return true;
 		}
 
-		if (tips.getID() != com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id()) { // not pearl tips
+		if (tips.getCatalogId() != com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id()) { // not pearl tips
 			player.message("Nothing interesting happens");
 			return false;
 		}
 
-		int bolt = bolts.getID();
-		int tip = tips.getID();
+		int bolt = bolts.getCatalogId();
+		int tip = tips.getCatalogId();
 		int amount = 10;
 		if (player.getInventory().countId(bolt) < amount)
 			amount = player.getInventory().countId(bolt);
@@ -418,9 +418,9 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getID())) {
+		if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
 			doLogCut(player, item1, item2);
-		} else if (item2.getID() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getID())) {
+		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
 			doLogCut(player, item2, item1);
 		}
 	}

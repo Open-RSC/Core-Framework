@@ -23,7 +23,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		if (player.cantConsume()) {
 			return;
 		}
-		int id = item.getID();
+		int id = item.getCatalogId();
 		player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // drink speed is same as tick speed setting
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);
@@ -411,7 +411,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.playerServerMessage(MessageType.QUEST, "You drink the " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
-		if (item.getID() == ItemId.WHISKY.id())
+		if (item.getCatalogId() == ItemId.WHISKY.id())
 			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 6);
 		else
 			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
@@ -443,7 +443,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 	private void handleFruitCocktail(Player player, Item item) {
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
 			int newHp = player.getSkills().getLevel(Skills.HITS) + 8
-					+ (item.getID() == ItemId.PINEAPPLE_PUNCH.id() ? 1 : 0);
+					+ (item.getCatalogId() == ItemId.PINEAPPLE_PUNCH.id() ? 1 : 0);
 			if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
 				newHp = player.getSkills().getMaxStat(Skills.HITS);
 			}
@@ -494,7 +494,7 @@ public class Drinkables implements InvActionListener, InvActionExecutiveListener
 		player.getInventory().remove(item);
 		//half-wine set to 1/25k chance
 		int rand = DataConversions.random(0, 25000);
-		if (item.getID() == ItemId.WINE.id()/* && rand == 0*/) {
+		if (item.getCatalogId() == ItemId.WINE.id()/* && rand == 0*/) {
 			player.getInventory().add(new Item(ItemId.HALF_FULL_WINE_JUG.id()));
 		} else {
 			player.getInventory().add(new Item(ItemId.JUG.id()));

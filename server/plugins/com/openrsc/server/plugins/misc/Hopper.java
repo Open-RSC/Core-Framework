@@ -16,7 +16,7 @@ public class Hopper implements InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getID() == ItemId.GRAIN.id();
+		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getCatalogId() == ItemId.GRAIN.id();
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class Hopper implements InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 			return;
 		}
 		showBubble(player, item);
-		obj.setAttribute("contains_item", item.getID());
+		obj.setAttribute("contains_item", item.getCatalogId());
 		removeItem(player, item);
 		player.message("You put the grain in the hopper");
 	}

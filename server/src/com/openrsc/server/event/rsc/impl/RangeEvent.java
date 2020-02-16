@@ -159,7 +159,7 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().resetRange();
 						return;
 					}
-					arrowID = ammo.getID();
+					arrowID = ammo.getCatalogId();
 					boolean canFire = false;
 					int[][] allowed = xbow ? allowedBolts : allowedArrows;
 					for (int[] arrow : allowed) {

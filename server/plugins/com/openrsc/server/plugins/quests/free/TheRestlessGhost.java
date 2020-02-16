@@ -24,7 +24,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener,
 	InvUseOnObjectListener, InvUseOnObjectExecutiveListener,
 	ObjectActionExecutiveListener {
-	
+
 	private static final int GHOST_COFFIN_OPEN = 40;
 	private static final int GHOST_COFFIN_CLOSED = 39;
 
@@ -37,12 +37,12 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	public String getQuestName() {
 		return "The restless ghost";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the restless ghost quest");
@@ -313,7 +313,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
-			&& item.getID() == ItemId.QUEST_SKULL.id()) {
+			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
 			spawnNpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
 			message(player, "You put the skull in the coffin");
 			removeItem(player, ItemId.QUEST_SKULL.id(), 1);
@@ -338,7 +338,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return item.getID() == ItemId.QUEST_SKULL.id() && obj.getID() == GHOST_COFFIN_OPEN;
+		return item.getCatalogId() == ItemId.QUEST_SKULL.id() && obj.getID() == GHOST_COFFIN_OPEN;
 	}
 
 	@Override

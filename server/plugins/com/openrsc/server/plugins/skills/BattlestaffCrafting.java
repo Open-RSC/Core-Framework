@@ -17,7 +17,7 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 
 	private boolean canCraft(Item itemOne, Item itemTwo) {
 		for (Battlestaff c : Battlestaff.values()) {
-			if (c.isValid(itemOne.getID(), itemTwo.getID())) {
+			if (c.isValid(itemOne.getCatalogId(), itemTwo.getCatalogId())) {
 				return true;
 			}
 		}
@@ -28,7 +28,7 @@ public class BattlestaffCrafting implements InvUseOnItemListener,
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		Battlestaff combine = null;
 		for (Battlestaff c : Battlestaff.values()) {
-			if (c.isValid(item1.getID(), item2.getID())) {
+			if (c.isValid(item1.getCatalogId(), item2.getCatalogId())) {
 				combine = c;
 			}
 		}

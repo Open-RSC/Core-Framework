@@ -87,29 +87,29 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 
-		if (item.getID() == ItemId.AIR_TALISMAN.id() && obj.getID() == 1190)
+		if (item.getCatalogId() == ItemId.AIR_TALISMAN.id() && obj.getID() == 1190)
 			return true;
-		else if (item.getID() == ItemId.MIND_TALISMAN.id() && obj.getID() == 1192)
+		else if (item.getCatalogId() == ItemId.MIND_TALISMAN.id() && obj.getID() == 1192)
 			return true;
-		else if (item.getID() == ItemId.WATER_TALISMAN.id() && obj.getID() == 1194)
+		else if (item.getCatalogId() == ItemId.WATER_TALISMAN.id() && obj.getID() == 1194)
 			return true;
-		else if (item.getID() == ItemId.EARTH_TALISMAN.id() && obj.getID() == 1196)
+		else if (item.getCatalogId() == ItemId.EARTH_TALISMAN.id() && obj.getID() == 1196)
 			return true;
-		else if (item.getID() == ItemId.FIRE_TALISMAN.id() && obj.getID() == 1198)
+		else if (item.getCatalogId() == ItemId.FIRE_TALISMAN.id() && obj.getID() == 1198)
 			return true;
-		else if (item.getID() == ItemId.BODY_TALISMAN.id() && obj.getID() == 1200)
+		else if (item.getCatalogId() == ItemId.BODY_TALISMAN.id() && obj.getID() == 1200)
 			return true;
-		else if (item.getID() == ItemId.COSMIC_TALISMAN.id() && obj.getID() == 1202)
+		else if (item.getCatalogId() == ItemId.COSMIC_TALISMAN.id() && obj.getID() == 1202)
 			return true;
-		else if (item.getID() == ItemId.CHAOS_TALISMAN.id() && obj.getID() == 1204)
+		else if (item.getCatalogId() == ItemId.CHAOS_TALISMAN.id() && obj.getID() == 1204)
 			return true;
-		else if (item.getID() == ItemId.NATURE_TALISMAN.id() && obj.getID() == 1206)
+		else if (item.getCatalogId() == ItemId.NATURE_TALISMAN.id() && obj.getID() == 1206)
 			return true;
-		else if (item.getID() == ItemId.LAW_TALISMAN.id() && obj.getID() == 1208)
+		else if (item.getCatalogId() == ItemId.LAW_TALISMAN.id() && obj.getID() == 1208)
 			return true;
-		else if (item.getID() == ItemId.DEATH_TALISMAN.id() && obj.getID() == 1210)
+		else if (item.getCatalogId() == ItemId.DEATH_TALISMAN.id() && obj.getID() == 1210)
 			return true;
-		else if (item.getID() == ItemId.BLOOD_TALISMAN.id() && obj.getID() == 1212)
+		else if (item.getCatalogId() == ItemId.BLOOD_TALISMAN.id() && obj.getID() == 1212)
 			return true;
 		return false;
 	}
@@ -125,7 +125,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 		p.message("You feel a powerful force take hold of you...");
 		sleep(500);
 
-		switch(ItemId.getById(item.getID()))
+		switch(ItemId.getById(item.getCatalogId()))
 		{
 			case AIR_TALISMAN:
 				p.teleport(985,19,false);

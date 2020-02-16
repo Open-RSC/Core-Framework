@@ -527,19 +527,19 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.SPADE.id())
-				|| (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.LIT_CANDLE.id())
-				|| (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.ROPE.id())
-				|| (obj.getID() == HILLSIDE_ENTRANCE && item.getID() == ItemId.BONE_SHARD.id())
-				|| (obj.getID() == HILLSIDE_ENTRANCE && item.getID() == ItemId.BONE_KEY.id())
-				|| (obj.getID() == RASH_EXIT_DOOR && item.getID() == ItemId.BONE_KEY.id())
-				|| (obj.getID() == TOMB_DOORS && item.getID() == ItemId.BONES.id())
-				|| (obj.getID() == SPEC_STONE && item.getID() == ItemId.CHISEL.id());
+		return (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.SPADE.id())
+				|| (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.LIT_CANDLE.id())
+				|| (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.ROPE.id())
+				|| (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_SHARD.id())
+				|| (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_KEY.id())
+				|| (obj.getID() == RASH_EXIT_DOOR && item.getCatalogId() == ItemId.BONE_KEY.id())
+				|| (obj.getID() == TOMB_DOORS && item.getCatalogId() == ItemId.BONES.id())
+				|| (obj.getID() == SPEC_STONE && item.getCatalogId() == ItemId.CHISEL.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOMB_DOORS && item.getID() == ItemId.BONES.id()) {
+		if (obj.getID() == TOMB_DOORS && item.getCatalogId() == ItemId.BONES.id()) {
 			if (!hasItem(p, ItemId.BONES.id(), 3)) {
 				p.message("You do not have enough bones for all the recesses.");
 			} else {
@@ -557,7 +557,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				}
 			}
 		}
-		else if (obj.getID() == RASH_EXIT_DOOR && item.getID() == ItemId.BONE_KEY.id()) {
+		else if (obj.getID() == RASH_EXIT_DOOR && item.getCatalogId() == ItemId.BONE_KEY.id()) {
 			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
 				message(p, "@red@You feel invisible hands starting to choke you...");
 				p.damage(getCurrentLevel(p, Skills.HITS) / 2);
@@ -570,7 +570,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.getCache().remove("tomb_door_shilo");
 			}
 		}
-		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getID() == ItemId.BONE_KEY.id()) {
+		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_KEY.id()) {
 			p.setBusy(true);
 			message(p, "You try the key with the lock.");
 			message(p, "As soon as you push the key into the lock.");
@@ -587,12 +587,12 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.updateQuestStage(Quests.SHILO_VILLAGE, 8);
 			}
 		}
-		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getID() == ItemId.BONE_SHARD.id()) {
+		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_SHARD.id()) {
 			message(p, "You try to use the bone shard on the lock.",
 				"Although it isabout the right size,");
 			p.message("you find that it just doesn't fit the delicate lock mechanism.");
 		}
-		else if (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.ROPE.id()) {
+		else if (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
@@ -615,7 +615,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.message("Nothing interesting happens");
 			}
 		}
-		else if (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.LIT_CANDLE.id()) {
+		else if (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.LIT_CANDLE.id()) {
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
@@ -641,7 +641,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.message("Nothing interesting happens");
 			}
 		}
-		else if (obj.getID() == BUMPY_DIRT && item.getID() == ItemId.SPADE.id()) {
+		else if (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.SPADE.id()) {
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
@@ -664,7 +664,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				p.message("you decide to give up.");
 			}
 		}
-		else if (obj.getID() == SPEC_STONE && item.getID() == ItemId.CHISEL.id()) {
+		else if (obj.getID() == SPEC_STONE && item.getCatalogId() == ItemId.CHISEL.id()) {
 			message(p, "You cleanly cut the plaque of letters away from the rock.",
 					"You place it carefully into your inventory.");
 			addItem(p, ItemId.STONE_PLAQUE.id(), 1);

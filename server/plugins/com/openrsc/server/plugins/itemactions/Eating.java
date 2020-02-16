@@ -17,19 +17,19 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.isEdible(p.getWorld()) || item.getID() == ItemId.ROTTEN_APPLES.id();
+		return item.isEdible(p.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if (item.isEdible(player.getWorld()) || item.getID() == ItemId.ROTTEN_APPLES.id()) {
+		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
 			if (player.cantConsume()) {
 				return;
 			}
 			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
 			ActionSender.sendSound(player, "eat");
 
-			int id = item.getID();
+			int id = item.getCatalogId();
 			boolean isKebabVariant = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id() || id == ItemId.RED_CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {

@@ -169,16 +169,16 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 								ObjectFishDef fishDef = iter.next();
 								Item fish = new Item(fishDef.getId());
 								getOwner().getInventory().add(fish);
-								getOwner().playerServerMessage(MessageType.QUEST, "You catch " + (fish.getID() == ItemId.BOOTS.id() || fish.getID() == ItemId.SEAWEED.id() || fish.getID() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getID() == ItemId.OYSTER.id() ? "an" : "a") + " "
-									+ fish.getDef(getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getID() == ItemId.OYSTER.id() ? " shell" : ""));
+								getOwner().playerServerMessage(MessageType.QUEST, "You catch " + (fish.getCatalogId() == ItemId.BOOTS.id() || fish.getCatalogId() == ItemId.SEAWEED.id() || fish.getCatalogId() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getCatalogId() == ItemId.OYSTER.id() ? "an" : "a") + " "
+									+ fish.getDef(getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getCatalogId() == ItemId.OYSTER.id() ? " shell" : ""));
 								getOwner().incExp(Skills.FISHING, fishDef.getExp(), true);
 							}
 						} else {
 							Item fish = new Item(fishLst.get(0).getId());
 							getOwner().getInventory().add(fish);
 							getOwner().playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
-								+ fish.getDef(getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getID() == ItemId.RAW_SHRIMP.id() ? "s" : "")
-								+ (fish.getID() == ItemId.RAW_SHARK.id() ? "!" : ""));
+								+ fish.getDef(getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
+								+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
 							getOwner().incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
 							if (object.getID() == 493 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 41)
 								getOwner().getCache().set("tutorial", 42);

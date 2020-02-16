@@ -35,7 +35,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 
 		/** Regular Strength Potions **/
 		// 1 dose on 2 dose str = 3 dose
-		if (item1.getID() == ItemId.ONE_STRENGTH_POTION.id() && item2.getID() == ItemId.TWO_STRENGTH_POTION.id() || item1.getID() == ItemId.TWO_STRENGTH_POTION.id() && item2.getID() == ItemId.ONE_STRENGTH_POTION.id()) {
+		if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() || item1.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			if (p.getInventory().remove(new Item(ItemId.ONE_STRENGTH_POTION.id())) > -1 && p.getInventory().remove(new Item(ItemId.TWO_STRENGTH_POTION.id())) > -1) {
 				addItem(p, ItemId.THREE_STRENGTH_POTION.id(), 1);
 				p.message("You combine 2 doses of " + item1.getDef(p.getWorld()).getName().toLowerCase() + " with 1 dose of " + item2.getDef(p.getWorld()).getName().toLowerCase());
@@ -43,7 +43,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 			}
 		}
 		// 1 dose on 3 dose = 4 dose
-		else if (item1.getID() == ItemId.ONE_STRENGTH_POTION.id() && item2.getID() == ItemId.THREE_STRENGTH_POTION.id() || item1.getID() == ItemId.THREE_STRENGTH_POTION.id() && item2.getID() == ItemId.ONE_STRENGTH_POTION.id()) {
+		else if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id() || item1.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			if (p.getInventory().remove(new Item(ItemId.ONE_STRENGTH_POTION.id())) > -1 && p.getInventory().remove(new Item(ItemId.THREE_STRENGTH_POTION.id())) > -1) {
 				addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1);
 				p.message("You combine 3 doses of " + item1.getDef(p.getWorld()).getName().toLowerCase() + " with 1 dose of " + item2.getDef(p.getWorld()).getName().toLowerCase());
@@ -51,7 +51,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 			}
 		}
 		// 2 dose on 2 dose = 4 dose
-		else if (item1.getID() == ItemId.TWO_STRENGTH_POTION.id() && item2.getID() == ItemId.TWO_STRENGTH_POTION.id()) {
+		else if (item1.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id()) {
 			if (p.getInventory().remove(new Item(ItemId.TWO_STRENGTH_POTION.id())) > -1 && p.getInventory().remove(new Item(ItemId.TWO_STRENGTH_POTION.id())) > -1) {
 				addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1);
 				p.message("You combine two 2 doses of " + item1.getDef(p.getWorld()).getName().toLowerCase());
@@ -59,7 +59,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 			}
 		}
 		// 1 dose on 1 dose = 2 dose
-		else if (item1.getID() == ItemId.ONE_STRENGTH_POTION.id() && item2.getID() == ItemId.ONE_STRENGTH_POTION.id()) {
+		else if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			if (p.getInventory().remove(new Item(ItemId.ONE_STRENGTH_POTION.id())) > -1 && p.getInventory().remove(new Item(ItemId.ONE_STRENGTH_POTION.id())) > -1) {
 				addItem(p, ItemId.TWO_STRENGTH_POTION.id(), 1);
 				p.message("You combine 1 dose of " + item1.getDef(p.getWorld()).getName().toLowerCase() + " with 1 dose of " + item2.getDef(p.getWorld()).getName().toLowerCase());
@@ -67,7 +67,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 			}
 		}
 		// 3 dose on 3 dose = 6 dose (one 4 dose full pot, one 2 dose pot)
-		else if (item1.getID() == ItemId.THREE_STRENGTH_POTION.id() && item2.getID() == ItemId.THREE_STRENGTH_POTION.id()) {
+		else if (item1.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id()) {
 			if (p.getInventory().remove(new Item(ItemId.THREE_STRENGTH_POTION.id()	)) > -1 && p.getInventory().remove(new Item(ItemId.THREE_STRENGTH_POTION.id())) > -1) {
 				addItem(p, ItemId.FULL_STRENGTH_POTION.id(), 1); // 4 dose
 				addItem(p, ItemId.TWO_STRENGTH_POTION.id(), 1); // 2 dose
@@ -78,7 +78,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 		else {
 			for (int i = 0; i < combinePotions.length; i++) {
 				/** 1 dose with 2 dose. **/
-				if ((item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][1]) || (item2.getID() == combinePotions[i][0] && item1.getID() == combinePotions[i][1])) {
+				if ((item1.getCatalogId() == combinePotions[i][0] && item2.getCatalogId() == combinePotions[i][1]) || (item2.getCatalogId() == combinePotions[i][0] && item1.getCatalogId() == combinePotions[i][1])) {
 					if (p.getInventory().remove(new Item(combinePotions[i][0])) > -1 && p.getInventory().remove(new Item(combinePotions[i][1])) > -1) {
 						p.message("You combine 2 doses of " + item1.getDef(p.getWorld()).getName().toLowerCase() + " with 1 dose of " + item2.getDef(p.getWorld()).getName().toLowerCase());
 						p.getInventory().add(new Item(combinePotions[i][2])); // 1 full pot
@@ -89,7 +89,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 					}
 				}
 				/** 1 dose with 1 dose. **/
-				else if (item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][0]) {
+				else if (item1.getCatalogId() == combinePotions[i][0] && item2.getCatalogId() == combinePotions[i][0]) {
 					if (p.getInventory().remove(new Item(combinePotions[i][0])) > -1 && p.getInventory().remove(new Item(combinePotions[i][0])) > -1) {
 						p.message("You combine two 1 dose of " + item1.getDef(p.getWorld()).getName().toLowerCase());
 						p.getInventory().add(new Item(combinePotions[i][1])); // 2 dose pot
@@ -100,7 +100,7 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 					}
 				}
 				/** 2 dose with 2 dose. **/
-				else if (item1.getID() == combinePotions[i][1] && item2.getID() == combinePotions[i][1]) {
+				else if (item1.getCatalogId() == combinePotions[i][1] && item2.getCatalogId() == combinePotions[i][1]) {
 					if (p.getInventory().remove(new Item(combinePotions[i][1])) > -1 && p.getInventory().remove(new Item(combinePotions[i][1])) > -1) {
 						p.message("You combine two 2 doses of " + item1.getDef(p.getWorld()).getName().toLowerCase());
 						p.getInventory().add(new Item(combinePotions[i][2])); // 1 full pot
@@ -116,32 +116,32 @@ public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecuti
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
 		// 1 dose on 2 dose str = 3 dose
-		if (item1.getID() == ItemId.ONE_STRENGTH_POTION.id() && item2.getID() == ItemId.TWO_STRENGTH_POTION.id() || item1.getID() == ItemId.TWO_STRENGTH_POTION.id() && item2.getID() == ItemId.ONE_STRENGTH_POTION.id()) {
+		if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() || item1.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			return true;
 		}
 		// 1 dose on 3 dose = 4 dose
-		if (item1.getID() == ItemId.ONE_STRENGTH_POTION.id() && item2.getID() == ItemId.THREE_STRENGTH_POTION.id() || item1.getID() == ItemId.THREE_STRENGTH_POTION.id() && item2.getID() == ItemId.ONE_STRENGTH_POTION.id()) {
+		if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id() || item1.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			return true;
 		}
 		// 2 dose on 2 dose = 4 dose
-		if (item1.getID() == ItemId.TWO_STRENGTH_POTION.id() && item2.getID() == ItemId.TWO_STRENGTH_POTION.id()) {
+		if (item1.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id()) {
 			return true;
 		}
 		// 1 dose on 1 dose = 2 dose
-		if (item1.getID() == ItemId.ONE_STRENGTH_POTION.id() && item2.getID() == ItemId.ONE_STRENGTH_POTION.id()) {
+		if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			return true;
 		}
-		if (item1.getID() == ItemId.THREE_STRENGTH_POTION.id() && item2.getID() == ItemId.THREE_STRENGTH_POTION.id()) {
+		if (item1.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.THREE_STRENGTH_POTION.id()) {
 			return true;
 		}
 		for (int i = 0; i < combinePotions.length; i++) {
-			if ((item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][1]) || (item2.getID() == combinePotions[i][0] && item1.getID() == combinePotions[i][1])) {
+			if ((item1.getCatalogId() == combinePotions[i][0] && item2.getCatalogId() == combinePotions[i][1]) || (item2.getCatalogId() == combinePotions[i][0] && item1.getCatalogId() == combinePotions[i][1])) {
 				return true;
 			}
-			if (item1.getID() == combinePotions[i][1] && item2.getID() == combinePotions[i][1]) {
+			if (item1.getCatalogId() == combinePotions[i][1] && item2.getCatalogId() == combinePotions[i][1]) {
 				return true;
 			}
-			if (item1.getID() == combinePotions[i][0] && item2.getID() == combinePotions[i][0]) {
+			if (item1.getCatalogId() == combinePotions[i][0] && item2.getCatalogId() == combinePotions[i][0]) {
 				return true;
 			}
 		}

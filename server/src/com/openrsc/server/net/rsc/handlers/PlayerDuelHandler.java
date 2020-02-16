@@ -349,8 +349,8 @@ public class PlayerDuelHandler implements PacketHandler {
 					ActionSender.sendDuelSettingUpdate(affectedPlayer);
 					continue;
 				}
-				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
-					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getID()))) {
+				if (tItem.getAmount() > player.getInventory().countId(tItem.getCatalogId())) {
+					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && Functions.isWielding(player, tItem.getCatalogId()))) {
 						player.setSuspiciousPlayer(true, "not want equipment and duel trade item amount 1 and isweilding item");
 						return;
 					}

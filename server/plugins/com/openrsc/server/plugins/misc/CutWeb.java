@@ -27,7 +27,7 @@ public class CutWeb implements InvUseOnWallObjectListener, InvUseOnWallObjectExe
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == WEB) {
-			if (item.getDef(p.getWorld()).getWieldPosition() != 4 && item.getID() != ItemId.KNIFE.id()) {
+			if (item.getDef(p.getWorld()).getWieldPosition() != 4 && item.getCatalogId() != ItemId.KNIFE.id()) {
 				p.message("Nothing interesting happens");
 				return;
 			}

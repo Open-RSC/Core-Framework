@@ -504,7 +504,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 80) {
-			if (item.getID() == ItemId.MISCELLANEOUS_KEY.id()) {
+			if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
 				showBubble(p, item);
 				p.message("You unlock the door");
 				p.message("You go through the door");
@@ -512,7 +512,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		else if (obj.getID() == 81) {
-			if (item.getID() == ItemId.BUNCH_OF_KEYS.id()) {
+			if (item.getCatalogId() == ItemId.BUNCH_OF_KEYS.id()) {
 				p.message("You open the door");
 				p.message("You go through the door");
 				doDoor(obj, p);

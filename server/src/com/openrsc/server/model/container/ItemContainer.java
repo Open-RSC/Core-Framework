@@ -66,7 +66,7 @@ public class ItemContainer {
 	public int countId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (i.getID() == id) {
+				if (i.getCatalogId() == id) {
 					return i.getAmount();
 				}
 			}
@@ -103,7 +103,7 @@ public class ItemContainer {
 	public int getFirstIndexById(int id) {
 		synchronized (list) {
 			for (int index = 0; index < list.size(); index++) {
-				if (list.get(index).getID() == id) {
+				if (list.get(index).getCatalogId() == id) {
 					return index;
 				}
 			}
@@ -140,7 +140,7 @@ public class ItemContainer {
 	public boolean hasItemId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (i.getID() == id)
+				if (i.getCatalogId() == id)
 					return true;
 			}
 
@@ -160,7 +160,7 @@ public class ItemContainer {
 			if (item == null) {
 				return;
 			}
-			remove(item.getID(), item.getAmount());
+			remove(item.getCatalogId(), item.getAmount());
 		}
 	}
 
@@ -169,7 +169,7 @@ public class ItemContainer {
 			Iterator<Item> iterator = list.iterator();
 			for (int index = 0; iterator.hasNext(); index++) {
 				Item i = iterator.next();
-				if (id == i.getID() && amount <= i.getAmount()) {
+				if (id == i.getCatalogId() && amount <= i.getAmount()) {
 					if (amount < i.getAmount()) {
 						i.setAmount(i.getAmount() - amount);
 					} else {
@@ -184,7 +184,7 @@ public class ItemContainer {
 	}
 
 	public int remove(Item item) {
-		return remove(item.getID(), item.getAmount());
+		return remove(item.getCatalogId(), item.getAmount());
 	}
 
 	public int size() {

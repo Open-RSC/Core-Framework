@@ -36,7 +36,7 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (inArray(item.getID(), ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(),
+		if (inArray(item.getCatalogId(), ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(),
 			ItemId.BLACK_PLATE_MAIL_TOP.id(), ItemId.MITHRIL_PLATE_MAIL_TOP.id(), ItemId.ADAMANTITE_PLATE_MAIL_TOP.id(), ItemId.RUNE_PLATE_MAIL_TOP.id(),
 			ItemId.BRONZE_PLATE_MAIL_BODY.id(), ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.STEEL_PLATE_MAIL_BODY.id(),
 			ItemId.BLACK_PLATE_MAIL_BODY.id(), ItemId.MITHRIL_PLATE_MAIL_BODY.id(), ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(), ItemId.RUNE_PLATE_MAIL_BODY.id(),
@@ -49,7 +49,7 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 			String itemLower, changedItemLower;
 			itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
-			if (removeItem(player, item.getID(), 1)) {
+			if (removeItem(player, item.getCatalogId(), 1)) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
 					message(player, npc, 1300, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");
@@ -72,7 +72,7 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 
 	public int getNewID(Item item) {
 		int newID = ItemId.NOTHING.id();
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 			case BRONZE_PLATE_MAIL_TOP:
 				newID = ItemId.BRONZE_PLATE_MAIL_BODY.id();
 				break;

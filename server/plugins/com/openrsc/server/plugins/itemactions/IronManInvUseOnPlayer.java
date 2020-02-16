@@ -12,19 +12,19 @@ public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPl
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.BROKEN_SHIELD_ARRAV_1.id() || item.getID() == ItemId.BROKEN_SHIELD_ARRAV_2.id()) {
+		if (item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_1.id() || item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_2.id()) {
 			return true;
 		}
-		if (item.getID() == ItemId.PHOENIX_GANG_WEAPON_KEY.id()) {
+		if (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id()) {
 			return true;
 		}
-		if (item.getID() == ItemId.CERTIFICATE.id()) {
+		if (item.getCatalogId() == ItemId.CERTIFICATE.id()) {
 			return true;
 		}
-		if (item.getID() == ItemId.CANDLESTICK.id()) {
+		if (item.getCatalogId() == ItemId.CANDLESTICK.id()) {
 			return true;
 		}
-		if (item.getID() == ItemId.MISCELLANEOUS_KEY.id()) {
+		if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
 			return true;
 		}
 		return false;
@@ -32,12 +32,12 @@ public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPl
 
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.MISCELLANEOUS_KEY.id()
-			|| item.getID() == ItemId.CANDLESTICK.id()
-			|| item.getID() == ItemId.CERTIFICATE.id()
-			|| item.getID() == ItemId.BROKEN_SHIELD_ARRAV_1.id()
-			|| item.getID() == ItemId.BROKEN_SHIELD_ARRAV_2.id()
-			|| item.getID() == ItemId.PHOENIX_GANG_WEAPON_KEY.id()) {
+		if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()
+			|| item.getCatalogId() == ItemId.CANDLESTICK.id()
+			|| item.getCatalogId() == ItemId.CERTIFICATE.id()
+			|| item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_1.id()
+			|| item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_2.id()
+			|| item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id()) {
 			if (otherPlayer.isBusy() || player.isBusy()) {
 				return;
 			}
@@ -47,8 +47,8 @@ public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPl
 			}
 			player.resetPath();
 			otherPlayer.resetPath();
-			removeItem(player, item.getID(), 1);
-			addItem(otherPlayer, item.getID(), 1);
+			removeItem(player, item.getCatalogId(), 1);
+			addItem(otherPlayer, item.getCatalogId(), 1);
 			message(player, 0, "You give the " + item.getDef(player.getWorld()).getName() + " to " + otherPlayer.getUsername());
 			message(otherPlayer, 0, player.getUsername() + " has given you a " + item.getDef(player.getWorld()).getName());
 		}

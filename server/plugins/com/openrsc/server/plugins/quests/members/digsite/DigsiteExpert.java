@@ -52,7 +52,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 		player.getCache().remove("winch_rope_1");
 		player.getCache().remove("digsite_winshaft");
 	}
-	
+
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ARCHAEOLOGICAL_EXPERT.id();
@@ -118,7 +118,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item i) {
 		if (n.getID() == NpcId.ARCHAEOLOGICAL_EXPERT.id()) {
-			switch (ItemId.getById(i.getID())) {
+			switch (ItemId.getById(i.getCatalogId())) {
 				case GOLD_NUGGETS:
 					playerTalk(p, n, "I have these gold nuggets");
 					if (hasItem(p, ItemId.GOLD_NUGGETS.id(), 3)) {

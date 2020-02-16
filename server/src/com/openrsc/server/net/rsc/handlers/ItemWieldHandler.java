@@ -37,7 +37,7 @@ public final class ItemWieldHandler implements PacketHandler {
 			Item loop;
 			for (int i = 0; i < Equipment.slots; i++) {
 				loop = player.getEquipment().get(i);
-				if (loop != null && loop.getID() == idx) {
+				if (loop != null && loop.getCatalogId() == idx) {
 					item = loop;
 					item.setWielded(true);
 					break;
@@ -54,7 +54,7 @@ public final class ItemWieldHandler implements PacketHandler {
 		} else if (pID == packetFour) {
 			int wieldPos = player.getWorld().getServer().getEntityHandler().getItemDef(idx).getWieldPosition();
 			item = player.getEquipment().get(wieldPos);
-			if (item != null && item.getID() != idx)
+			if (item != null && item.getCatalogId() != idx)
 				item = null;
 		}
 

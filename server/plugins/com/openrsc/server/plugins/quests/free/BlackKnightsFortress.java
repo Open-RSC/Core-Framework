@@ -49,12 +49,12 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Black knight's fortress";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player p) {
 		p.message("Sir Amik hands you 2500 coins");
@@ -181,7 +181,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
 		switch (obj.getID()) {
 			case HOLE:
-				if (item.getID() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
+				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
 					if (removeItem(player, ItemId.CABBAGE.id(), 1)) {
 						message(player,
 							"You drop a cabbage down the hole.",
@@ -192,7 +192,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 							"Right I think that's successfully sabotaged the secret weapon.");
 						player.updateQuestStage(this, 3);
 					}
-				} else if (item.getID() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
+				} else if (item.getCatalogId() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
 					message(player,
 						"This is the wrong sort of cabbage!",
 						"You are meant to be hindering the witch.",

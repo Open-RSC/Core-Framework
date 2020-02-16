@@ -22,12 +22,12 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
+		return item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
+		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			p.message("You rub the amulet");
 			sleep(600);
 			p.message("Where would you like to teleport to?");
@@ -85,20 +85,20 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == FOUNTAIN_OF_HEROES && item.getID() == ItemId.DRAGONSTONE_AMULET.id();
+		return obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getID() == ItemId.DRAGONSTONE_AMULET.id()) {
+		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getInventory().countId(item.getID()), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getInventory().countId(item.getCatalogId()), false) {
 
 				@Override
 				public void action() {
-					if (!p.getInventory().hasItemId(item.getID())) {
+					if (!p.getInventory().hasItemId(item.getCatalogId())) {
 						stop();
 						return;
 					}

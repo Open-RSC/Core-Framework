@@ -299,12 +299,12 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.MAGIC_WHISTLE.id() || item.getID() == ItemId.BELL.id() || item.getID() == ItemId.MAGIC_GOLDEN_FEATHER.id();
+		return item.getCatalogId() == ItemId.MAGIC_WHISTLE.id() || item.getCatalogId() == ItemId.BELL.id() || item.getCatalogId() == ItemId.MAGIC_GOLDEN_FEATHER.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.MAGIC_WHISTLE.id()) {
+		if (item.getCatalogId() == ItemId.MAGIC_WHISTLE.id()) {
 			if (p.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
 				if (p.getQuestStage(this) == 5 || p.getQuestStage(this) == -1) {
 					p.teleport(492, 18, false);
@@ -331,14 +331,14 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 					"It will not work in this location");
 			}
 		}
-		else if (item.getID() == ItemId.BELL.id()) {
+		else if (item.getCatalogId() == ItemId.BELL.id()) {
 			p.message("Ting a ling a ling");
 			if (p.getLocation().inBounds(411, 27, 425, 40)) {
 				p.message("Somehow you are now inside the castle");
 				p.teleport(420, 35, false);
 			}
 		} //Prod sack = 328, 446
-		else if (item.getID() == ItemId.MAGIC_GOLDEN_FEATHER.id()) {
+		else if (item.getCatalogId() == ItemId.MAGIC_GOLDEN_FEATHER.id()) {
 			int x = p.getLocation().getX();
 			int y = p.getLocation().getY();
 			int sX = 328;
@@ -462,7 +462,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 			}
 		}
 	}
-	
+
 	private void beHisHeir(Player p, Npc percival) {
 		playerTalk(p, percival,
 				"He is dying and wishes you to be his heir");

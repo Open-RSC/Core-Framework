@@ -287,12 +287,12 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		return n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id(); // the complete map.
+		return n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id(); // the complete map.
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) { // the complete map.
+		if (n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) { // the complete map.
 			p.message("You show the completed map of Kharazi Jungle to the Forester.");
 			if (hasItem(p, ItemId.BULL_ROARER.id())) { // if already have the bull roarer
 				npcTalk(p, n, "It's a great map, thanks for letting me take a copy!",

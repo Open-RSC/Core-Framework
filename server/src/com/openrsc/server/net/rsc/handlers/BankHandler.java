@@ -66,7 +66,7 @@ public final class BankHandler implements PacketHandler {
 		} else if (pID == packetFour) { //deposit all from inventory
 			for (int k = player.getInventory().size() - 1; k >= 0; k--) {
 				Item depoItem = player.getInventory().get(k);
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getID(), depoItem.getAmount()});
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getCatalogId(), depoItem.getAmount()});
 			}
 		} else if (pID == packetFive && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //deposit all from equipment
 			for (int k = Equipment.slots - 1; k >= 0; k--) {

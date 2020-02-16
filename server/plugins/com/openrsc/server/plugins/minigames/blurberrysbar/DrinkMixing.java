@@ -15,7 +15,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 
 	private boolean canMix(Item itemOne, Item itemTwo) {
 		for (DrinkMix dm : DrinkMix.values()) {
-			if (dm.isValid(itemOne.getID(), itemTwo.getID())) {
+			if (dm.isValid(itemOne.getCatalogId(), itemTwo.getCatalogId())) {
 				return true;
 			}
 		}
@@ -31,11 +31,11 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		DrinkMix dm = null;
 		for (DrinkMix mix : DrinkMix.values()) {
-			if (mix.isValid(item1.getID(), item2.getID())) {
+			if (mix.isValid(item1.getCatalogId(), item2.getCatalogId())) {
 				dm = mix;
 			}
 		}
-		if ((hasItem(p, ItemId.FULL_COCKTAIL_GLASS.id()) || hasItem(p, ItemId.ODD_LOOKING_COCKTAIL.id())) 
+		if ((hasItem(p, ItemId.FULL_COCKTAIL_GLASS.id()) || hasItem(p, ItemId.ODD_LOOKING_COCKTAIL.id()))
 				&& dm.itemID == ItemId.COCKTAIL_SHAKER.id()) {
 			p.message("you need to finish, drink or drop your unfished cocktail");
 			p.message("before you can start another - blurberry's rules");
@@ -159,12 +159,12 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.COCKTAIL_SHAKER.id();
+		return item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.COCKTAIL_SHAKER.id()) {
+		if (item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id()) {
 			if (hasItem(p, ItemId.COCKTAIL_GLASS.id())) {
 				boolean complete = false;
 				String nextCache = null;

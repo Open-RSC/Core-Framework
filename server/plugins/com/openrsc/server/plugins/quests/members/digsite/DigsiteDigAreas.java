@@ -142,7 +142,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 		Npc workmanCheck = getNearestNpc(p, NpcId.WORKMAN.id(), 15);
 		if (workmanCheck != null) {
 			Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
-			if (item.getID() == ItemId.SPADE.id() && item.getDef(p.getWorld()).getCommand() != null
+			if (item.getCatalogId() == ItemId.SPADE.id() && item.getDef(p.getWorld()).getCommand() != null
 				&& item.getDef(p.getWorld()).getCommand()[0].equalsIgnoreCase("Dig") && obj == null) {
 				if (workman != null) {
 					npcTalk(p, workman, "Oi! what do you think you are doing ?");
@@ -150,7 +150,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					npcTalk(p, workman, "Don't you realize there are fragile specimens around here ?");
 					workman.remove();
 				}
-			} else if (item.getID() == ItemId.SPADE.id() && inArray(obj.getID(), SOIL) && obj != null) {
+			} else if (item.getCatalogId() == ItemId.SPADE.id() && inArray(obj.getID(), SOIL) && obj != null) {
 				if (workman != null) {
 					npcTalk(p, workman, "Oi! dont use that spade!");
 					npcWalkFromPlayer(p, workman);
@@ -162,7 +162,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	private void rockPickOnSite(Player p, Item item, GameObject obj) {
-		if (item.getID() == ItemId.ROCK_PICK.id() && inArray(obj.getID(), SOIL)) {
+		if (item.getCatalogId() == ItemId.ROCK_PICK.id() && inArray(obj.getID(), SOIL)) {
 			if (!getLevel2Digsite(p)) {
 				Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 				if (workman != null) {
@@ -207,7 +207,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 	}
 
 	private void trowelOnSite(Player p, Item item, GameObject obj) {
-		if (item.getID() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
+		if (item.getCatalogId() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
 				showBubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 50, true);
@@ -335,13 +335,13 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return inArray(obj.getID(), SOIL) || (obj.getID() == ROCK && item.getID() == ItemId.ROCK_PICK.id());
+		return inArray(obj.getID(), SOIL) || (obj.getID() == ROCK && item.getCatalogId() == ItemId.ROCK_PICK.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (inArray(obj.getID(), SOIL)) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case TROWEL:
 					trowelOnSite(p, item, obj);
 					break;
@@ -359,7 +359,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					break;
 			}
 		}
-		if (obj.getID() == ROCK && item.getID() == ItemId.ROCK_PICK.id()) {
+		if (obj.getID() == ROCK && item.getCatalogId() == ItemId.ROCK_PICK.id()) {
 			p.message("You chip at the rock with the rockpick");
 			p.message("You take the pieces of cracked rock");
 			addItem(p, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
@@ -382,12 +382,12 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.SPADE.id() && getDigsite(p);
+		return item.getCatalogId() == ItemId.SPADE.id() && getDigsite(p);
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.SPADE.id() && getDigsite(p)) {
+		if (item.getCatalogId() == ItemId.SPADE.id() && getDigsite(p)) {
 			doSpade(p, item, null);
 		}
 	}

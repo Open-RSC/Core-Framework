@@ -38,9 +38,9 @@ public class InterfaceOptionHandler implements PacketHandler {
 				int to = p.readInt();
 
 				if (player.getBank().swap(slot, to)) {
-					ActionSender.updateBankItem(player, slot, player.getBank().get(slot).getID(),
+					ActionSender.updateBankItem(player, slot, player.getBank().get(slot).getCatalogId(),
 						player.getBank().get(slot).getAmount());
-					ActionSender.updateBankItem(player, to, player.getBank().get(to).getID(),
+					ActionSender.updateBankItem(player, to, player.getBank().get(to).getCatalogId(),
 						player.getBank().get(to).getAmount());
 				}
 				break;

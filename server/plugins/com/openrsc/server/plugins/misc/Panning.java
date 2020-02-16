@@ -70,7 +70,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == PANNING_POINT) {
-			if (item.getID() == ItemId.PANNING_TRAY.id()) {
+			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 				Npc guide = getNearestNpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
 				if (guide != null) {
 					// NOT SURE? if(p.getQuestStage(Quests.DIGSITE) < 2) {
@@ -101,9 +101,9 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 						handlePanning(obj, item, p);
 					}
 				}
-			} else if (item.getID() == ItemId.PANNING_TRAY_FULL.id()) {
+			} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 				p.playerServerMessage(MessageType.QUEST, "This panning tray already contains something");
-			} else if (item.getID() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
+			} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 				p.playerServerMessage(MessageType.QUEST, "This panning tray already contains gold");
 			}
 		}
@@ -117,21 +117,21 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.DIGSITE_GUIDE.id()) {
-			if (item.getID() == ItemId.PANNING_TRAY.id()) {
+			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 				p.message("You give the panning tray to the guide");
 				npcTalk(p, npc, "Yes, this is a panning tray...");
 			}
-			if (item.getID() == ItemId.PANNING_TRAY_FULL.id()) {
+			if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 				p.message("You give the full panning tray to the guide");
 				npcTalk(p, npc, "This is no good to me",
 					"I don't deal with finds");
 			}
-			if (item.getID() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
+			if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 				p.message("You give the full panning tray to the guide");
 				npcTalk(p, npc, "I am afraid I don't deal with finds",
 					"That's not my job");
 			}
-			if (item.getID() == ItemId.CUP_OF_TEA.id()) {
+			if (item.getCatalogId() == ItemId.CUP_OF_TEA.id()) {
 				if (p.getCache().hasKey("unlocked_panning")) {
 					npcTalk(p, npc, "No thanks, I've had enough!");
 				} else {
@@ -148,16 +148,16 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.PANNING_TRAY.id() || item.getID() == ItemId.PANNING_TRAY_FULL.id() || item.getID() == ItemId.PANNING_TRAY_GOLD_NUGGET.id();
+		return item.getCatalogId() == ItemId.PANNING_TRAY.id() || item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id() || item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id();
 	}
 
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.PANNING_TRAY.id()) {
+		if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
 			playerTalk(p, null, "Err, why am I searching an empty tray ?");
-		} else if (item.getID() == ItemId.PANNING_TRAY_FULL.id()) {
+		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 			p.setBusy(true);
 			message(p, "You search the contents of the tray...");
 			sleep(1500);
@@ -197,7 +197,7 @@ public class Panning implements ObjectActionListener, ObjectActionExecutiveListe
 				p.playerServerMessage(MessageType.QUEST, "The tray contains only plain mud");
 			}
 			p.setBusy(false);
-		} else if (item.getID() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
+		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 			p.getInventory().replace(ItemId.PANNING_TRAY_GOLD_NUGGET.id(), ItemId.PANNING_TRAY.id());
 			addItem(p, ItemId.GOLD_NUGGETS.id(), 1);
 			p.message("You take the gold form the panning tray");

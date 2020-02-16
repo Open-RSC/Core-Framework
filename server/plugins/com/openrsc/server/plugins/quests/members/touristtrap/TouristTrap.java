@@ -2989,7 +2989,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				item = p.getEquipment().get(i);
 				if (item == null)
 					continue;
-				if (item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getID()))
+				if (item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getCatalogId()))
 					continue;
 				if (wieldPos.contains(item.getDef(p.getWorld()).getWieldPosition())) {
 					if (item.getDef(p.getWorld()).getWieldPosition() == 3) {
@@ -3007,7 +3007,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		} else {
 			synchronized (p.getInventory().getItems()) {
 				for (Item item : p.getInventory().getItems()) {
-					if (item.isWielded() && item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getID())) {
+					if (item.isWielded() && item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getCatalogId())) {
 						continue;
 					}
 					wieldpos = item.getDef(p.getWorld()).getWieldPosition();
@@ -3049,7 +3049,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return item.getID() == ItemId.PROTOTYPE_THROWING_DART.id() && npc.getID() == NpcId.AL_SHABIM.id();
+		return item.getCatalogId() == ItemId.PROTOTYPE_THROWING_DART.id() && npc.getID() == NpcId.AL_SHABIM.id();
 	}
 
 	@Override

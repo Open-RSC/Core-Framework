@@ -45,7 +45,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
+		if (item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			p.message("The map of Kharazi Jungle is complete, Sir Radimus will be pleased.");
 			int menu = showMenu(p, "Read Mission Briefing", "Close");
 			if (menu == 0) {
@@ -54,7 +54,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				p.message("You put the scrolls away.");
 			}
 		}
-		else if (item.getID() == ItemId.RADIMUS_SCROLLS.id()) {
+		else if (item.getCatalogId() == ItemId.RADIMUS_SCROLLS.id()) {
 			boolean canMap = true;
 			p.message("You open and start to read the scrolls that Radimus gave you.");
 			int menu = showMenu(p,
@@ -191,6 +191,6 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.RADIMUS_SCROLLS.id() || item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id();
+		return item.getCatalogId() == ItemId.RADIMUS_SCROLLS.id() || item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id();
 	}
 }

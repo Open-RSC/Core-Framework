@@ -35,7 +35,7 @@ public class ErnestTheChicken implements QuestInterface,
 	public String getQuestName() {
 		return "Ernest the chicken";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
@@ -52,13 +52,13 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return (obj.getID() == QuestObjects.FOUNTAIN && item.getID() == ItemId.POISONED_FISH_FOOD.id())
-				|| (obj.getID() == QuestObjects.COMPOST && item.getID() == ItemId.SPADE.id());
+		return (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id())
+				|| (obj.getID() == QuestObjects.COMPOST && item.getCatalogId() == ItemId.SPADE.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == QuestObjects.FOUNTAIN && item.getID() == ItemId.POISONED_FISH_FOOD.id()) {
+		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
 			message(p, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas drop dead and float to the surface");
@@ -67,7 +67,7 @@ public class ErnestTheChicken implements QuestInterface,
 				p.getCache().store("poisoned_fountain", true);
 			}
 		} else if (obj.getID() == QuestObjects.FOUNTAIN
-			&& item.getID() == ItemId.FISH_FOOD.id()) {
+			&& item.getCatalogId() == ItemId.FISH_FOOD.id()) {
 			message(p, "You pour the fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas seem hungrier than ever");
@@ -78,7 +78,7 @@ public class ErnestTheChicken implements QuestInterface,
 			message(p, "Nothing interesting happens");
 		}
 		if (obj.getID() == QuestObjects.COMPOST
-			&& item.getID() == ItemId.SPADE.id()) {
+			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (!hasItem(p, ItemId.CLOSET_KEY.id()) && p.getQuestStage(this) > 0) {
 				message(p, "You dig through the compost heap",
 					"You find a small key");
@@ -640,12 +640,12 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		return item.getID() == ItemId.CLOSET_KEY.id() && obj.getID() == 35;
+		return item.getCatalogId() == ItemId.CLOSET_KEY.id() && obj.getID() == 35;
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ItemId.CLOSET_KEY.id() && obj.getID() == 35) {
+		if (item.getCatalogId() == ItemId.CLOSET_KEY.id() && obj.getID() == 35) {
 			doDoor(obj, player);
 			player.message("You unlock the door");
 			player.message("You go through the door");

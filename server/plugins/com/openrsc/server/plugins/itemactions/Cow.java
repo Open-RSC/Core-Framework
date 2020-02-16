@@ -14,7 +14,7 @@ public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.COW_DAIRY.id() && item.getID() == ItemId.BUCKET.id() || npc.getID() == NpcId.COW_ATTACKABLE.id() && item.getID() == ItemId.BUCKET.id();
+		return npc.getID() == NpcId.COW_DAIRY.id() && item.getCatalogId() == ItemId.BUCKET.id() || npc.getID() == NpcId.COW_ATTACKABLE.id() && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
 	@Override
@@ -23,8 +23,8 @@ public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 		npc.face(player);
 		npc.setBusy(true);
 		showBubble(player, item);
-		if (player.getInventory().hasInInventory(item.getID())) {
-			player.getInventory().replace(item.getID(), ItemId.MILK.id(),true);
+		if (player.getInventory().hasInInventory(item.getCatalogId())) {
+			player.getInventory().replace(item.getCatalogId(), ItemId.MILK.id(),true);
 		}
 		message(player, 3500, "You milk the cow");
 		npc.setBusy(false);

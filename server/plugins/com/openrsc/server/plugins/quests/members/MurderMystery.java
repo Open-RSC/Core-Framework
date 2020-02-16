@@ -46,7 +46,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.MURDER_MYSTERY), true);
 		p.message("You have completed the Murder Mystery Quest");
 	}
-	
+
 	private static void sinclairSuspectDialogue(Player p, Npc n) {
 		playerTalk(p, n, "I'm here to help the guards with their investigation");
 		if (n.getID() == NpcId.CAROL_SINCLAIR.id()) {
@@ -1535,12 +1535,12 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 				|| Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())
 				|| Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())
 				|| Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| (item1.getID() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
+				|| (item1.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
 				DataConversions.inArray(new int[] {ItemId.ANNAS_FINGERPRINT.id(), ItemId.BOBS_FINGERPRINT.id(), ItemId.CAROLS_FINGERPRINT.id(),
-						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item2.getID()))
-				|| (item2.getID() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
+						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item2.getCatalogId()))
+				|| (item2.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
 				DataConversions.inArray(new int[] {ItemId.ANNAS_FINGERPRINT.id(), ItemId.BOBS_FINGERPRINT.id(), ItemId.CAROLS_FINGERPRINT.id(),
-						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item1.getID()));
+						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item1.getCatalogId()));
 	}
 
 	@Override
@@ -1656,13 +1656,13 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 
 		}
-		else if ((item1.getID() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
+		else if ((item1.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
 				DataConversions.inArray(new int[] {ItemId.ANNAS_FINGERPRINT.id(), ItemId.BOBS_FINGERPRINT.id(), ItemId.CAROLS_FINGERPRINT.id(),
-						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item2.getID()))
-				|| (item2.getID() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
+						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item2.getCatalogId()))
+				|| (item2.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
 				DataConversions.inArray(new int[] {ItemId.ANNAS_FINGERPRINT.id(), ItemId.BOBS_FINGERPRINT.id(), ItemId.CAROLS_FINGERPRINT.id(),
-						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item1.getID()))) {
-			if (item1.getID() == ItemId.DAVIDS_FINGERPRINT.id() || item2.getID() == ItemId.DAVIDS_FINGERPRINT.id()) {
+						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item1.getCatalogId()))) {
+			if (item1.getCatalogId() == ItemId.DAVIDS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.DAVIDS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_david")) {
 					p.message("The fingerprints are an exact match to Davids");
 					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
@@ -1675,7 +1675,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					sleep(800);
 					p.message("You destroy the useless fingerprint");
 				}
-			} else if (item1.getID() == ItemId.BOBS_FINGERPRINT.id() || item2.getID() == ItemId.BOBS_FINGERPRINT.id()) {
+			} else if (item1.getCatalogId() == ItemId.BOBS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.BOBS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_bob")) {
 					p.message("The fingerprints are an exact match to Bobs");
 					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
@@ -1688,7 +1688,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					sleep(800);
 					p.message("You destroy the useless fingerprint");
 				}
-			} else if (item1.getID() == ItemId.ELIZABETHS_FINGERPRINT.id() || item2.getID() == ItemId.ELIZABETHS_FINGERPRINT.id()) {
+			} else if (item1.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_eliz")) {
 					p.message("The fingerprints are an exact match to Elizabeths");
 					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
@@ -1701,7 +1701,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					sleep(800);
 					p.message("You destroy the useless fingerprint");
 				}
-			} else if (item1.getID() == ItemId.ANNAS_FINGERPRINT.id() || item2.getID() == ItemId.ANNAS_FINGERPRINT.id()) {
+			} else if (item1.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_anna")) {
 					p.message("The fingerprints are an exact match to Annas");
 					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
@@ -1714,7 +1714,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					sleep(800);
 					p.message("You destroy the useless fingerprint");
 				}
-			} else if (item1.getID() == ItemId.CAROLS_FINGERPRINT.id() || item2.getID() == ItemId.CAROLS_FINGERPRINT.id()) {
+			} else if (item1.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_carol")) {
 					p.message("The fingerprints are an exact match to Carols");
 					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
@@ -1727,7 +1727,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					sleep(800);
 					p.message("You destroy the useless fingerprint");
 				}
-			} else if (item1.getID() == ItemId.FRANKS_FINGERPRINT.id() || item2.getID() == ItemId.FRANKS_FINGERPRINT.id()) {
+			} else if (item1.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_frank")) {
 					p.message("The fingerprints are an exact match to Franks");
 					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());

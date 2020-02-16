@@ -276,13 +276,13 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return i.getID() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496);
+		return i.getCatalogId() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496);
 	}
 
 	// room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496)) {
+		if (i.getCatalogId() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496)) {
 			if (p.getQuestStage(this) == -1) {
 				playerTalk(p, null, "I would rather eat it to be honest");
 				return;
@@ -294,12 +294,12 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return item.getID() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id();
+		return item.getCatalogId() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
-		if (item.getID() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id()) {
+		if (item.getCatalogId() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id()) {
 			if (p.getQuestStage(this) == -1) {
 				return;
 			}

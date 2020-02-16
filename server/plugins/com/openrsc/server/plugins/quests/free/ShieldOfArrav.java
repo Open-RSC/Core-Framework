@@ -430,12 +430,12 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.BOOK.id();
+		return item.getCatalogId() == ItemId.BOOK.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 			case BOOK:
 				message(player,
 					"The shield of Arrav",
@@ -547,13 +547,13 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		return item.getID() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
+		return item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 				&& obj.getY() == 532;
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
+		if (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 			&& obj.getY() == 532) {
 			showBubble(player, item);
 			if (player.getY() <= 531) {

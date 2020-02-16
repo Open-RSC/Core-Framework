@@ -14,10 +14,10 @@ public class DrinkHeating implements InvUseOnObjectListener, InvUseOnObjectExecu
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
+		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			return true;
 		}
-		if ((item.getID() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getID() == ItemId.ODD_LOOKING_COCKTAIL.id())
+		if ((item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id())
 			&& obj.getID() == 119) {
 			return true;
 		}
@@ -26,7 +26,7 @@ public class DrinkHeating implements InvUseOnObjectListener, InvUseOnObjectExecu
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
+		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			message(p, "you briefly place the drink in the oven");
 			p.message("you remove the warm drink");
 			if (p.getCache().hasKey("drunk_dragon_base") && p.getCache().hasKey("diced_pa_to_drink") && p.getCache().hasKey("cream_into_drink")) {
@@ -41,7 +41,7 @@ public class DrinkHeating implements InvUseOnObjectListener, InvUseOnObjectExecu
 				p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 			}
 		}
-		if ((item.getID() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getID() == ItemId.ODD_LOOKING_COCKTAIL.id())
+		if ((item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id())
 			&& obj.getID() == 119) {
 			message(p, "you briefly place the drink in the oven");
 			p.message("you remove the warm drink");

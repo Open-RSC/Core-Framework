@@ -24,7 +24,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	ObjectActionExecutiveListener {
 
 	private int BUCKETS_USED = 0;
-	
+
 	private static final int ALRENAS_CUPBOARD_OPEN = 452;
 	private static final int ALRENAS_CUPBOARD_CLOSED = 451;
 
@@ -770,13 +770,13 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 447 || obj.getID() == 449 || (obj.getID() == 457 && item.getID() == ItemId.LITTLE_KEY.id());
+		return obj.getID() == 447 || obj.getID() == 449 || (obj.getID() == 457 && item.getCatalogId() == ItemId.LITTLE_KEY.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 447) {
-			if (item.getID() == ItemId.BUCKET_OF_WATER.id()) {
+			if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				if (p.getQuestStage(getQuestId()) == 2) {
 					if (BUCKETS_USED >= 3) {
 						message(p, "you poor the water onto the soil",
@@ -795,7 +795,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					p.message("You see no reason to do that at the moment");
 				}
 			}
-			if (item.getID() == ItemId.SPADE.id()) {
+			if (item.getCatalogId() == ItemId.SPADE.id()) {
 				if (p.getCache().hasKey("soil_soften") || p.getQuestStage(getQuestId()) >= 3
 					|| p.getQuestStage(getQuestId()) == -1) {
 					message(p, "you dig deep into the soft soil",
@@ -815,7 +815,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		else if (obj.getID() == 449) {
-			if (item.getID() == ItemId.ROPE.id()) {
+			if (item.getCatalogId() == ItemId.ROPE.id()) {
 				if (p.getQuestStage(this) >= 4 || p.getQuestStage(getQuestId()) == -1) {
 					p.message("nothing interesting happens");
 					return;
@@ -827,7 +827,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				}
 			}
 		}
-		else if (obj.getID() == 457 && item.getID() == ItemId.LITTLE_KEY.id()) {
+		else if (obj.getID() == 457 && item.getCatalogId() == ItemId.LITTLE_KEY.id()) {
 			p.message("you go through the gate");
 			doGate(p, obj, 181);
 		}

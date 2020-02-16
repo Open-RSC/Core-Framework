@@ -584,22 +584,22 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return (item.getID() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS)
-				|| (item.getID() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER)
-				|| (item.getID() == ItemId.BLESSED_GOLDEN_BOWL.id() && obj.getID() == SHALLOW_WATER)
-				|| obj.getID() == CARVED_ROCK || (obj.getID() == WOODEN_BEAM && item.getID() == ItemId.ROPE.id())
-				|| obj.getID() == ANCIENT_LAVA_FURNACE || (obj.getID() == RED_EYE_ROCK && item.getID() == ItemId.A_RED_CRYSTAL.id())
-				|| (obj.getID() == CAVERNOUS_OPENING && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id())
-				|| (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.YOMMI_TREE_SEED.id())
-				|| (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id())
-				|| (obj.getID() == YOMMI_TREE && item.getID() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())
-				|| (inArray(obj.getID(), DEAD_YOMMI_TREE, ROTTEN_YOMMI_TREE, GROWN_YOMMI_TREE, CHOPPED_YOMMI_TREE, TRIMMED_YOMMI_TREE) && item.getID() == ItemId.RUNE_AXE.id())
-				|| (obj.getID() == TOTEM_POLE && item.getID() == ItemId.TOTEM_POLE.id());
+		return (item.getCatalogId() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS)
+				|| (item.getCatalogId() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER)
+				|| (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id() && obj.getID() == SHALLOW_WATER)
+				|| obj.getID() == CARVED_ROCK || (obj.getID() == WOODEN_BEAM && item.getCatalogId() == ItemId.ROPE.id())
+				|| obj.getID() == ANCIENT_LAVA_FURNACE || (obj.getID() == RED_EYE_ROCK && item.getCatalogId() == ItemId.A_RED_CRYSTAL.id())
+				|| (obj.getID() == CAVERNOUS_OPENING && item.getCatalogId() == ItemId.A_GLOWING_RED_CRYSTAL.id())
+				|| (obj.getID() == FERTILE_EARTH && item.getCatalogId() == ItemId.YOMMI_TREE_SEED.id())
+				|| (obj.getID() == FERTILE_EARTH && item.getCatalogId() == ItemId.GERMINATED_YOMMI_TREE_SEED.id())
+				|| (obj.getID() == YOMMI_TREE && item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())
+				|| (inArray(obj.getID(), DEAD_YOMMI_TREE, ROTTEN_YOMMI_TREE, GROWN_YOMMI_TREE, CHOPPED_YOMMI_TREE, TRIMMED_YOMMI_TREE) && item.getCatalogId() == ItemId.RUNE_AXE.id())
+				|| (obj.getID() == TOTEM_POLE && item.getCatalogId() == ItemId.TOTEM_POLE.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == TOTEM_POLE && item.getID() == ItemId.TOTEM_POLE.id()) {
+		if (obj.getID() == TOTEM_POLE && item.getCatalogId() == ItemId.TOTEM_POLE.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, "You have already replaced the evil totem pole with your own.",
 						"You feel a great sense of accomplishment");
@@ -619,7 +619,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				LegendsQuestNezikchened.demonFight(p);
 			}
 		}
-		else if (obj.getID() == TRIMMED_YOMMI_TREE && item.getID() == ItemId.RUNE_AXE.id()) {
+		else if (obj.getID() == TRIMMED_YOMMI_TREE && item.getCatalogId() == ItemId.RUNE_AXE.id()) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -637,7 +637,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("This is not your Yommi Tree.");
 			}
 		}
-		else if (obj.getID() == CHOPPED_YOMMI_TREE && item.getID() == ItemId.RUNE_AXE.id()) {
+		else if (obj.getID() == CHOPPED_YOMMI_TREE && item.getCatalogId() == ItemId.RUNE_AXE.id()) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -656,7 +656,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("This is not your Yommi Tree.");
 			}
 		}
-		else if (obj.getID() == GROWN_YOMMI_TREE && item.getID() == ItemId.RUNE_AXE.id()) {
+		else if (obj.getID() == GROWN_YOMMI_TREE && item.getCatalogId() == ItemId.RUNE_AXE.id()) {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -676,13 +676,13 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("This is not your Yommi Tree.");
 			}
 		}
-		else if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getID() == ItemId.RUNE_AXE.id()) {
+		else if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getCatalogId() == ItemId.RUNE_AXE.id()) {
 			message(p, 0, "You chop the dead Yommi Tree down.");
 			message(p, 1300, "You gain some logs..");
 			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 			addItem(p, ItemId.LOGS.id(), 1);
 		}
-		else if (obj.getID() == YOMMI_TREE && item.getID() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
+		else if (obj.getID() == YOMMI_TREE && item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
 			int objectX = obj.getX();
 			int objectY = obj.getY();
 			p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
@@ -705,11 +705,11 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "Soon the tree stops growing...",
 				"It looks tall enough now to make a good totem pole.");
 		}
-		else if (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.YOMMI_TREE_SEED.id()) {
+		else if (obj.getID() == FERTILE_EARTH && item.getCatalogId() == ItemId.YOMMI_TREE_SEED.id()) {
 			p.message("These seeds need to be germinated in pure water before they");
 			p.message("can be planted in the fertile soil.");
 		}
-		else if (obj.getID() == FERTILE_EARTH && item.getID() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
+		else if (obj.getID() == FERTILE_EARTH && item.getCatalogId() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) != 8 || !hasItem(p, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 				p.message("You'll need some sacred water to feed ");
 				p.message("the tree when it starts growing.");
@@ -757,23 +757,23 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				p.message("You planted the seed incorrectly, it withers and dies.");
 			}
 		}
-		else if (obj.getID() == CAVERNOUS_OPENING && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id()) {
+		else if (obj.getID() == CAVERNOUS_OPENING && item.getCatalogId() == ItemId.A_GLOWING_RED_CRYSTAL.id()) {
 			message(p, 1300, "You carefully place the glowing heart shaped crystal into ",
 				"the depression, it slots in perfectly and glows even brighter.",
 				"You hear a snapping sound coming from in front of the cave.");
-			removeItem(p, item.getID(), 1);
+			removeItem(p, item.getCatalogId(), 1);
 			if (!p.getCache().hasKey("cavernous_opening")) {
 				p.getCache().store("cavernous_opening", true);
 			}
 		}
-		else if (obj.getID() == RED_EYE_ROCK && item.getID() == ItemId.A_RED_CRYSTAL.id()) {
+		else if (obj.getID() == RED_EYE_ROCK && item.getCatalogId() == ItemId.A_RED_CRYSTAL.id()) {
 			message(p, 1300, "You carefully place the Dragon Crystal on the rock.",
 				"The rocks seem to vibrate and hum and the crystal starts to glow.");
 			p.message("The vibration in the area diminishes, but the crystal continues to glow.");
 			p.getInventory().replace(ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id());
 		}
 		else if (obj.getID() == ANCIENT_LAVA_FURNACE) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case A_CHUNK_OF_CRYSTAL:
 				case A_LUMP_OF_CRYSTAL:
 				case A_HUNK_OF_CRYSTAL:
@@ -784,7 +784,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					}
 					if (!p.getCache().hasKey(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"))) {
 						p.getCache().store(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"), true);
-						removeItem(p, item.getID(), 1);
+						removeItem(p, item.getCatalogId(), 1);
 						message(p, 1300, "You carefully place the piece of crystal into ",
 							"a specially shaped compartment in the furnace.");
 					}
@@ -810,7 +810,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					break;
 			}
 		}
-		else if (obj.getID() == WOODEN_BEAM && item.getID() == ItemId.ROPE.id()) {
+		else if (obj.getID() == WOODEN_BEAM && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("You throw one end of the rope around the beam.");
 			removeItem(p, ItemId.ROPE.id(), 1);
 			replaceObjectDelayed(obj, 5000, WOODEN_BEAM + 1);
@@ -819,7 +819,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 		}
 		else if (obj.getID() == CARVED_ROCK) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case SAPPHIRE:
 				case EMERALD:
 				case RUBY:
@@ -829,19 +829,19 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				case RED_TOPAZ:
 					int attachmentMode = -1;
 					boolean alreadyAttached = false;
-					if (item.getID() == ItemId.OPAL.id() && obj.getX() == 471 && obj.getY() == 3722) { // OPAL ROCK
+					if (item.getCatalogId() == ItemId.OPAL.id() && obj.getX() == 471 && obj.getY() == 3722) { // OPAL ROCK
 						attachmentMode = 1;
-					} else if (item.getID() == ItemId.EMERALD.id() && obj.getX() == 474 && obj.getY() == 3730) { // EMERALD ROCK
+					} else if (item.getCatalogId() == ItemId.EMERALD.id() && obj.getX() == 474 && obj.getY() == 3730) { // EMERALD ROCK
 						attachmentMode = 2;
-					} else if (item.getID() == ItemId.RUBY.id() && obj.getX() == 471 && obj.getY() == 3734) { // RUBY ROCK
+					} else if (item.getCatalogId() == ItemId.RUBY.id() && obj.getX() == 471 && obj.getY() == 3734) { // RUBY ROCK
 						attachmentMode = 3;
-					} else if (item.getID() == ItemId.DIAMOND.id() && obj.getX() == 466 && obj.getY() == 3739) { // DIAMOND ROCK
+					} else if (item.getCatalogId() == ItemId.DIAMOND.id() && obj.getX() == 466 && obj.getY() == 3739) { // DIAMOND ROCK
 						attachmentMode = 4;
-					} else if (item.getID() == ItemId.SAPPHIRE.id() && obj.getX() == 460 && obj.getY() == 3737) { // SAPPHIRE ROCK
+					} else if (item.getCatalogId() == ItemId.SAPPHIRE.id() && obj.getX() == 460 && obj.getY() == 3737) { // SAPPHIRE ROCK
 						attachmentMode = 5;
-					} else if (item.getID() == ItemId.RED_TOPAZ.id() && obj.getX() == 464 && obj.getY() == 3730) { // RED TOPAZ ROCK
+					} else if (item.getCatalogId() == ItemId.RED_TOPAZ.id() && obj.getX() == 464 && obj.getY() == 3730) { // RED TOPAZ ROCK
 						attachmentMode = 6;
-					} else if (item.getID() == ItemId.JADE.id() && obj.getX() == 469 && obj.getY() == 3728) { // JADE ROCK
+					} else if (item.getCatalogId() == ItemId.JADE.id() && obj.getX() == 469 && obj.getY() == 3728) { // JADE ROCK
 						attachmentMode = 7;
 					}
 					if (p.getCache().hasKey("legends_attach_" + attachmentMode)) {
@@ -850,15 +850,15 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					}
 					if (alreadyAttached) {
 						p.message("You have already placed an " + item.getDef(p.getWorld()).getName() + " above this rock.");
-						createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
+						createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, p), 5000);
 						message(p, 1300, "A barely visible " + item.getDef(p.getWorld()).getName() + " becomes clear again, spinning above the rock.");
 						p.message("And then fades again...");
 					} else {
 						if (attachmentMode != -1 && !hasItem(p, ItemId.BOOKING_OF_BINDING.id())) {
-							removeItem(p, item.getID(), 1);
+							removeItem(p, item.getCatalogId(), 1);
 							p.message("You carefully move the gem closer to the rock.");
 							p.message("The " + item.getDef(p.getWorld()).getName() + " glows and starts spinning as it hovers above the rock.");
-							createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getID(), obj.getX(), obj.getY(), 1, p), 5000);
+							createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, p), 5000);
 							if (!p.getCache().hasKey("legends_attach_" + attachmentMode)) {
 								p.getCache().store("legends_attach_" + attachmentMode, true);
 							}
@@ -893,12 +893,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 					break;
 			}
 		}
-		else if (item.getID() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS) {
+		else if (item.getCatalogId() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS) {
 			addItem(p, ItemId.CUT_REED_PLANT.id(), 1);
 			message(p, 1300, "You use your machette to cut down a tall reed.",
 				"You cut it into a length of pipe.");
 		}
-		else if (item.getID() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
+		else if (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
 				p.message("You fill the bowl up with water..");
 				p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
@@ -907,7 +907,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "The water is awkward to get to...",
 				"The gap to the water is too narrow.");
 		}
-		else if (item.getID() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER) {
+		else if (item.getCatalogId() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER) {
 			if (atQuestStages(p, Quests.LEGENDS_QUEST, 5, 6, 7)) {
 				message(p, 1300, "It looks as if this pool has dried up...",
 					"A thick black sludge has replaced the sparkling pure water...",

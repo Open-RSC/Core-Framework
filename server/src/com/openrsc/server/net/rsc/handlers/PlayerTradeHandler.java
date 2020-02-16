@@ -255,7 +255,7 @@ public class PlayerTradeHandler implements PacketHandler {
 					continue;
 				}
 
-				if (tItem.getAmount() > player.getInventory().countId(tItem.getID())) {
+				if (tItem.getAmount() > player.getInventory().countId(tItem.getCatalogId())) {
 					player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
 					player.getTrade().resetAll();
 					return;

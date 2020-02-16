@@ -629,25 +629,25 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return (item.getID() == ItemId.LARGE_KEY.id() && obj.getID() == 480)
-			|| item.getID() == ItemId.AN_OLD_KEY.id() && obj.getID() == 135
+		return (item.getCatalogId() == ItemId.LARGE_KEY.id() && obj.getID() == 480)
+			|| item.getCatalogId() == ItemId.AN_OLD_KEY.id() && obj.getID() == 135
 			|| (obj.getID() == 462 || obj.getID() == 463
 			|| obj.getID() == 462 || obj.getID() == 482)
-			&& item.getID() == ItemId.ROPE.id()
-			|| (obj.getID() == 479 && item.getID() == ItemId.GLARIALS_PEBBLE.id())
+			&& item.getCatalogId() == ItemId.ROPE.id()
+			|| (obj.getID() == 479 && item.getCatalogId() == ItemId.GLARIALS_PEBBLE.id())
 			|| ((obj.getID() >= 473 && obj.getID() <= 478)
-			&& (item.getID() == ItemId.WATER_RUNE.id() || item.getID() == ItemId.AIR_RUNE.id() || item.getID() == ItemId.EARTH_RUNE.id()))
-			|| obj.getID() == 483 && item.getID() == ItemId.GLARIALS_AMULET.id()
-			|| (obj.getID() == 485 && item.getID() == ItemId.GLARIALS_URN.id());
+			&& (item.getCatalogId() == ItemId.WATER_RUNE.id() || item.getCatalogId() == ItemId.AIR_RUNE.id() || item.getCatalogId() == ItemId.EARTH_RUNE.id()))
+			|| obj.getID() == 483 && item.getCatalogId() == ItemId.GLARIALS_AMULET.id()
+			|| (obj.getID() == 485 && item.getCatalogId() == ItemId.GLARIALS_URN.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 480 && item.getID() == ItemId.LARGE_KEY.id()) {
+		if (obj.getID() == 480 && item.getCatalogId() == ItemId.LARGE_KEY.id()) {
 			if (hasItem(p, ItemId.LARGE_KEY.id(), 1)) {
 				doGate(p, obj);
 			}
-		} else if (obj.getID() == 479 && item.getID() == ItemId.GLARIALS_PEBBLE.id()) {
+		} else if (obj.getID() == 479 && item.getCatalogId() == ItemId.GLARIALS_PEBBLE.id()) {
 			message(p, "you place the pebble in the gravestones small indent",
 				"it fits perfectly");
 			if (CANT_GO(p)) {
@@ -665,7 +665,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 462 || obj.getID() == 463
 			|| obj.getID() == 462 || obj.getID() == 482
-			&& item.getID() == ItemId.ROPE.id()) {
+			&& item.getCatalogId() == ItemId.ROPE.id()) {
 			message(p, "you tie one end of the rope around the tree",
 				"you tie the other end into a loop",
 				"and throw it towards the other dead tree");
@@ -684,25 +684,25 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					"under the waterfall there is a secret passage");
 				p.teleport(659, 3305, false);
 			}
-		} else if (obj.getID() == 135 && item.getID() == ItemId.AN_OLD_KEY.id()) {
+		} else if (obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id()) {
 			doDoor(obj, p);
 		} else if ((obj.getID() >= 473 && obj.getID() <= 478)
-			&& (item.getID() == ItemId.WATER_RUNE.id() || item.getID() == ItemId.AIR_RUNE.id() || item.getID() == ItemId.EARTH_RUNE.id())) {
+			&& (item.getCatalogId() == ItemId.WATER_RUNE.id() || item.getCatalogId() == ItemId.AIR_RUNE.id() || item.getCatalogId() == ItemId.EARTH_RUNE.id())) {
 			if (!p.getCache().hasKey(
-				"waterfall_" + obj.getID() + "_" + item.getID())) {
+				"waterfall_" + obj.getID() + "_" + item.getCatalogId())) {
 				p.message("you place the "
 					+ item.getDef(p.getWorld()).getName().toLowerCase()
 					+ " on the stand");
 				p.message("the rune stone crumbles into dust");
 				p.getCache().store(
-					"waterfall_" + obj.getID() + "_" + item.getID(), true);
-				p.getInventory().remove(item.getID(), 1);
+					"waterfall_" + obj.getID() + "_" + item.getCatalogId(), true);
+				p.getInventory().remove(item.getCatalogId(), 1);
 
 			} else {
 				p.message("you have already placed " + article(item.getDef(p.getWorld()).getName()) + item.getDef(p.getWorld()).getName()
 					+ " here");
 			}
-		} else if (obj.getID() == 483 && item.getID() == ItemId.GLARIALS_AMULET.id()) {
+		} else if (obj.getID() == 483 && item.getCatalogId() == ItemId.GLARIALS_AMULET.id()) {
 			boolean flag = false;
 			for (int i = 473; i < 478; i++) {
 				for (int y = 32; i < 34; i++) {
@@ -720,7 +720,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 					"the ground raises up before you");
 				p.teleport(647, 3267, false);
 			}
-		} else if (obj.getID() == 485 && item.getID() == ItemId.GLARIALS_URN.id()) {
+		} else if (obj.getID() == 485 && item.getCatalogId() == ItemId.GLARIALS_URN.id()) {
 			message(p, "you carefully poor the ashes in the chalice",
 				"as you remove the baxtorian treasure",
 				"the chalice remains standing",
@@ -742,12 +742,12 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.BOOK_ON_BAXTORIAN.id() || item.getID() == ItemId.MITHRIL_SEED.id();
+		return item.getCatalogId() == ItemId.BOOK_ON_BAXTORIAN.id() || item.getCatalogId() == ItemId.MITHRIL_SEED.id();
 	}
 
 	@Override
 	public void onInvAction(Item i, Player p, String command) {
-		if (i.getID() == ItemId.MITHRIL_SEED.id()) {
+		if (i.getCatalogId() == ItemId.MITHRIL_SEED.id()) {
 			message(p, "you open the small mithril case");
 			if (p.getViewArea().getGameObject(p.getLocation()) != null) {
 				p.message("you can't plant a tree here");
@@ -760,7 +760,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			p.getWorld().delayedRemoveObject(object, 60000);
 			p.message("a tree magically sprouts around you");
 		}
-		else if (i.getID() == ItemId.BOOK_ON_BAXTORIAN.id()) {
+		else if (i.getCatalogId() == ItemId.BOOK_ON_BAXTORIAN.id()) {
 			message(p, "the book is old with many pages missing",
 				"a few are translated from elven into common tongue");
 			if (p.getQuestStage(this) == 2) {
@@ -839,12 +839,12 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		return obj.getID() == 135 && item.getID() == ItemId.AN_OLD_KEY.id();
+		return obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == 135 && item.getID() == ItemId.AN_OLD_KEY.id()) {
+		if (obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id()) {
 			message(player, "you open the door with the key");
 			doDoor(obj, player);
 			message(player, "You go through the door");
@@ -857,7 +857,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();
 				if (name.contains("dagger") || name.contains("scimitar")
 					|| name.contains("bow") || name.contains("mail")
-					|| name.contains("plated") || item.getID() == ItemId.RUNE_SKIRT.id()
+					|| name.contains("plated") || item.getCatalogId() == ItemId.RUNE_SKIRT.id()
 					|| name.contains("shield") || (name.contains("sword")
 					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
 					|| name.contains("mace") || name.contains("helmet")

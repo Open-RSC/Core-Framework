@@ -34,7 +34,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	public String getQuestName() {
 		return "Prince Ali rescue";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
@@ -54,24 +54,24 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PRINCE_ALI_RESCUE), true);
 		p.message("@gre@You haved gained 3 quest points!");
 	}
-	
+
 	@Override
 	public boolean blockInvUseOnNpc(final Player player, final Npc npc,
 									final Item item) {
-		return npc.getID() == NpcId.LADY_KELI.id() && item.getID() == ItemId.ROPE.id();
+		return npc.getID() == NpcId.LADY_KELI.id() && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
 	public boolean blockInvUseOnWallObject(final GameObject obj,
 									   final Item item, final Player player) {
-		return obj.getID() == 45 && obj.getY() == 640 && item.getID() == ItemId.BRONZE_KEY.id();
+		return obj.getID() == 45 && obj.getY() == 640 && item.getCatalogId() == ItemId.BRONZE_KEY.id();
 	}
 
 	@Override
 	public boolean blockTalkToNpc(final Player p, final Npc n) {
 		// AGGIE -> separate file
 		// NED -> separate file
-		return DataConversions.inArray(new int[] {NpcId.LADY_KELI.id(), NpcId.HASSAN.id(), NpcId.OSMAN.id(), 
+		return DataConversions.inArray(new int[] {NpcId.LADY_KELI.id(), NpcId.HASSAN.id(), NpcId.OSMAN.id(),
 				NpcId.JOE.id(),  NpcId.LEELA.id(), NpcId.PRINCE_ALI.id(), NpcId.JAILGUARD.id()}, n.getID());
 	}
 
@@ -808,7 +808,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						"You need a wig, maybe made from wool",
 						"If you find someone who can work with wool, ask them about it",
 						"Then the old witch may be able to help you dye it");
-				} 
+				}
 				else {
 					npcTalk(p, n, "The wig you have got, well done");
 				}
@@ -907,7 +907,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 	@Override
 	public void onInvUseOnNpc(final Player p, final Npc npc, final Item item) {
-		if (npc.getID() == NpcId.LADY_KELI.id() && item.getID() == ItemId.ROPE.id()) {
+		if (npc.getID() == NpcId.LADY_KELI.id() && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (p.getCache().hasKey("joe_is_drunk") && p.getQuestStage(this) == 2) {
 				npc.remove();
 				p.message("You overpower Keli, tie her up, and put her in a cupboard");
@@ -924,7 +924,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	@Override
 	public void onInvUseOnWallObject(final GameObject obj, final Item item,
 								 final Player player) {
-		if (obj.getID() == 45 && item.getID() == ItemId.BRONZE_KEY.id()) {
+		if (obj.getID() == 45 && item.getCatalogId() == ItemId.BRONZE_KEY.id()) {
 			if (obj.getY() == 640) {
 				final Npc keli = getNearestNpc(player, NpcId.LADY_KELI.id(), 20);
 				if (player.getX() <= 198) {
@@ -1062,7 +1062,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						"You can pick up your payment from the chancellor");
 					break;
 				case -1:
-					npcTalk(p, n, "Well done. A great rescue", 
+					npcTalk(p, n, "Well done. A great rescue",
 							"I will remember you if I have anything dangerous to do");
 					break;
 			}

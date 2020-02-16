@@ -255,7 +255,7 @@ public class Functions {
 	 * and does the check the other way around as well
 	 */
 	public static boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
-		return item1.getID() == idA && item2.getID() == idB || item1.getID() == idB && item2.getID() == idA;
+		return item1.getCatalogId() == idA && item2.getCatalogId() == idB || item1.getCatalogId() == idB && item2.getCatalogId() == idA;
 	}
 
 	/**
@@ -1237,7 +1237,7 @@ public class Functions {
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 		//staff of iban (usable)
-		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+		if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
@@ -1266,20 +1266,20 @@ public class Functions {
 			player.message("Perhaps I should get someone to adjust it for me");
 			ableToWield = false;
 		}
-		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
+		if ((item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_TOP.id())
 			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
+		} else if (item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
+		} else if (item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
-		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;
@@ -1287,22 +1287,22 @@ public class Functions {
 		/*
 		 * Hacky but works for god staffs and god capes.
 		 */
-		else if (item.getID() == ItemId.STAFF_OF_GUTHIX.id() && (player.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) || player.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
+		else if (item.getCatalogId() == ItemId.STAFF_OF_GUTHIX.id() && (player.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) || player.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
-		} else if (item.getID() == ItemId.STAFF_OF_SARADOMIN.id() && (player.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) || player.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
+		} else if (item.getCatalogId() == ItemId.STAFF_OF_SARADOMIN.id() && (player.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) || player.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
-		} else if (item.getID() == ItemId.STAFF_OF_ZAMORAK.id() && (player.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()) || player.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
+		} else if (item.getCatalogId() == ItemId.STAFF_OF_ZAMORAK.id() && (player.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()) || player.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
-		} else if (item.getID() == ItemId.GUTHIX_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) || player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
+		} else if (item.getCatalogId() == ItemId.GUTHIX_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) || player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
-		} else if (item.getID() == ItemId.SARADOMIN_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) || player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
+		} else if (item.getCatalogId() == ItemId.SARADOMIN_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_ZAMORAK.id()) || player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
-		} else if (item.getID() == ItemId.ZAMORAK_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()) || player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
+		} else if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() && (player.getInventory().wielding(ItemId.STAFF_OF_GUTHIX.id()) || player.getInventory().wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
 		}
@@ -1320,19 +1320,19 @@ public class Functions {
 			return;
 		}*/
 		/** iron men armours **/
-		else if ((item.getID() == ItemId.IRONMAN_HELM.id() || item.getID() == ItemId.IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
+		else if ((item.getCatalogId() == ItemId.IRONMAN_HELM.id() || item.getCatalogId() == ItemId.IRONMAN_PLATEBODY.id()
+			|| item.getCatalogId() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
 			player.message("You need to be an Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getID() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
+		} else if ((item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
+			|| item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("You need to be an Ultimate Iron Man to wear this");
 			return false;
-		} else if ((item.getID() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getID() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
+		} else if ((item.getCatalogId() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
+			|| item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
 			player.message("You need to be a Hardcore Iron Man to wear this");
 			return false;
-		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		} else if (item.getCatalogId() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Legends Quest");
 			return false;
@@ -1591,12 +1591,12 @@ public class Functions {
 	 * @param item
 	 */
 	public static void showBubble(final Player player, final Item item) {
-		final Bubble bubble = new Bubble(player, item.getID());
+		final Bubble bubble = new Bubble(player, item.getCatalogId());
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
 
 	public static void showBubble2(final Npc npc, final Item item) {
-		final BubbleNpc bubble = new BubbleNpc(npc, item.getID());
+		final BubbleNpc bubble = new BubbleNpc(npc, item.getCatalogId());
 		npc.getUpdateFlags().setActionBubbleNpc(bubble);
 	}
 

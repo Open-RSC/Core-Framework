@@ -71,7 +71,7 @@ public class SpellHandler implements PacketHandler {
 			boolean skipRune = false;
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				for (Item staff : getStaffs(e.getKey())) {
-					if (player.getEquipment().hasEquipped(staff.getID()) != -1) {
+					if (player.getEquipment().hasEquipped(staff.getCatalogId()) != -1) {
 						skipRune = true;
 					}
 				}
@@ -285,7 +285,7 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerMageItem",
-					new Object[]{player, (Integer)item.getID(), (Integer)idx})) {
+					new Object[]{player, (Integer)item.getCatalogId(), (Integer)idx})) {
 					return;
 				}
 				handleItemCast(player, spell, idx, item);
@@ -462,7 +462,7 @@ public class SpellHandler implements PacketHandler {
 				int boneCount = 0;
 				while (inventory.hasNext()) {
 					Item i = inventory.next();
-					if (i.getID() == com.openrsc.server.constants.ItemId.BONES.id()) {
+					if (i.getCatalogId() == com.openrsc.server.constants.ItemId.BONES.id()) {
 						inventory.remove();
 						boneCount++;
 					}
@@ -516,14 +516,14 @@ public class SpellHandler implements PacketHandler {
 		String jewelryType = "";
 		switch (id) {
 			case 3: // Enchant lvl-1 Sapphire amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.SAPPHIRE_AMULET.id()
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.SAPPHIRE_AMULET.id()
 				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-					&& (affectedItem.getID() == com.openrsc.server.constants.ItemId.SAPPHIRE_RING.id() || affectedItem.getID() == com.openrsc.server.constants.ItemId.OPAL_RING.id()))) {
+					&& (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.SAPPHIRE_RING.id() || affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.OPAL_RING.id()))) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
+					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getCatalogId())) {
 						case SAPPHIRE_AMULET:
 							itemID = com.openrsc.server.constants.ItemId.SAPPHIRE_AMULET_OF_MAGIC.id();
 							jewelryType = AMULET;
@@ -547,7 +547,7 @@ public class SpellHandler implements PacketHandler {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
 				break;
 			case 10: // Low level alchemy
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.COINS.id()) {
 					player.playerServerMessage(MessageType.QUEST, "That's already made of gold!");
 					return;
 				}
@@ -559,11 +559,11 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				// ana in barrel kept but xp allowed
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
+					if (player.getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
 						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
 					}
@@ -572,13 +572,13 @@ public class SpellHandler implements PacketHandler {
 
 				break;
 			case 13: // Enchant lvl-2 emerald amulet
-			if (affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_RING.id())) {
+			if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.EMERALD_AMULET.id()
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.EMERALD_RING.id())) {
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
 				int itemID = 0;
-				switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
+				switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getCatalogId())) {
 					case EMERALD_AMULET:
 						itemID = com.openrsc.server.constants.ItemId.EMERALD_AMULET_OF_PROTECTION.id();
 						jewelryType = AMULET;
@@ -599,18 +599,18 @@ public class SpellHandler implements PacketHandler {
 			break;
 			case 21: // Superheat item
 				ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef(player.getWorld());
-				if (smeltingDef == null || affectedItem.getID() == com.openrsc.server.constants.ItemId.COAL.id()) {
+				if (smeltingDef == null || affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.COAL.id()) {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on ore");
 					return;
 				}
 				for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 					if (player.getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.IRON_ORE.id()) {
+						if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.IRON_ORE.id()) {
 							smeltingDef = player.getWorld().getServer().getEntityHandler().getItemSmeltingDef(9999);
 							break;
 						}
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.TIN_ORE.id() || affectedItem.getID() == com.openrsc.server.constants.ItemId.COPPER_ORE.id()) {
-							player.playerServerMessage(MessageType.QUEST, "You also need some " + (affectedItem.getID() == com.openrsc.server.constants.ItemId.TIN_ORE.id() ? "copper" : "tin")
+						if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.TIN_ORE.id() || affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.COPPER_ORE.id()) {
+							player.playerServerMessage(MessageType.QUEST, "You also need some " + (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.TIN_ORE.id() ? "copper" : "tin")
 								+ " to make bronze");
 							return;
 						}
@@ -643,13 +643,13 @@ public class SpellHandler implements PacketHandler {
 				finalizeSpellNoMessage(player, spell);
 				break;
 			case 24: // Enchant lvl-3 ruby amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_AMULET.id()
-					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_RING.id())) {
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.RUBY_AMULET.id()
+					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.RUBY_RING.id())) {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
+					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getCatalogId())) {
 						case RUBY_AMULET:
 							itemID = com.openrsc.server.constants.ItemId.RUBY_AMULET_OF_STRENGTH.id();
 							jewelryType = AMULET;
@@ -669,7 +669,7 @@ public class SpellHandler implements PacketHandler {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 28: // High level alchemy
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.COINS.id()) {
 					player.playerServerMessage(MessageType.QUEST, "That's already made of gold!");
 					return;
 				}
@@ -681,11 +681,11 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				// ana in barrel kept but xp allowed
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
+					if (player.getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
 						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
 					}
@@ -693,13 +693,13 @@ public class SpellHandler implements PacketHandler {
 				}
 				break;
 			case 30: // Enchant lvl-4 diamond amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_AMULET.id()
-						|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_RING.id())){
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.DIAMOND_AMULET.id()
+						|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.DIAMOND_RING.id())){
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
 					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
+					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getCatalogId())) {
 						case DIAMOND_AMULET:
 							itemID = com.openrsc.server.constants.ItemId.DIAMOND_AMULET_OF_POWER.id();
 							jewelryType = AMULET;
@@ -719,10 +719,10 @@ public class SpellHandler implements PacketHandler {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 				break;
 			case 42: // Enchant lvl-5 dragonstone amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
-					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DRAGONSTONE_RING.id())) {
+				if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
+					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.DRAGONSTONE_RING.id())) {
 					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
+					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getCatalogId())) {
 						case UNENCHANTED_DRAGONSTONE_AMULET:
 							itemID = com.openrsc.server.constants.ItemId.DRAGONSTONE_AMULET.id();
 							jewelryType = AMULET;

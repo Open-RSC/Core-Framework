@@ -155,7 +155,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	private void addCannonStand(Player player, Item item, GameObject object) {
-		if (item.getID() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
+		if (item.getCatalogId() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
 			player.setBusy(true);
 			player.message("you add the stand");
 			player.getInventory().remove(ItemId.DWARF_CANNON_STAND.id(), 1);
@@ -172,7 +172,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	private void addCannonBarrels(Player player, Item item, GameObject object) {
-		if (item.getID() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
+		if (item.getCatalogId() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
 			player.setBusy(true);
 			player.message("you add the barrels");
 			player.getInventory().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
@@ -190,7 +190,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	private void addCannonFurnace(Player player, Item item, GameObject object) {
-		if (item.getID() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
+		if (item.getCatalogId() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
 			player.setBusy(true);
 			player.message("you add the furnace");
 			player.getInventory().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
@@ -257,12 +257,12 @@ public class Cannon implements ObjectActionListener,
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.DWARF_CANNON_BASE.id();
+		return item.getCatalogId() == ItemId.DWARF_CANNON_BASE.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if (item.getID() == ItemId.DWARF_CANNON_BASE.id()) {
+		if (item.getCatalogId() == ItemId.DWARF_CANNON_BASE.id()) {
 			handleBase(player, item, command);
 		}
 	}
@@ -278,7 +278,7 @@ public class Cannon implements ObjectActionListener,
 		if (obj.getID() == 948) {
 			return true;
 		}
-		return obj.getID() == 943 && item.getID() == ItemId.MULTI_CANNON_BALL.id();
+		return obj.getID() == 943 && item.getCatalogId() == ItemId.MULTI_CANNON_BALL.id();
 	}
 
 	@Override
@@ -304,7 +304,7 @@ public class Cannon implements ObjectActionListener,
 			}
 			addCannonFurnace(p, item, obj);
 		}
-		if (obj.getID() == 943 && item.getID() == ItemId.MULTI_CANNON_BALL.id()) {
+		if (obj.getID() == 943 && item.getCatalogId() == ItemId.MULTI_CANNON_BALL.id()) {
 			p.message("the cannon loads automatically");
 		}
 	}

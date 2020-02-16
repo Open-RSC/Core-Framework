@@ -10,6 +10,7 @@ public class MySqlQueries {
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
 	public final String playerExists, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
+	public final String save_AddInvStatus; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_AddBank, save_AddBankPreset;
 	public final String save_DeleteInv, save_AddInvItem, save_DeleteEquip, save_SaveEquip, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
@@ -62,23 +63,24 @@ public class MySqlQueries {
 			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
 			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
 			+ "`pass`, `salt`, `bank_size`, `combat`, `skill_total`, `muted` FROM `" + PREFIX + "players` WHERE `username`=?";
-		playerInvItems = "SELECT `id`,`amount`,`wielded` FROM `" + PREFIX + "invitems` WHERE `playerID`=? ORDER BY `slot` ASC";
-		playerEquipped = "SELECT `id`,`amount` FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
-		playerBankItems = "SELECT `id`, `amount` FROM `" + PREFIX + "bank` WHERE `playerID`=? ORDER BY `slot` ASC";
+		playerInvItems = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "invitems` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=? ORDER BY `slot` ASC";
+		playerEquipped = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "equipped` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
+		playerBankItems = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=? ORDER BY `slot` ASC";
 		playerBankPresets = "SELECT `slot`, `inventory`, `equipment` FROM `" + PREFIX + "bankpresets` WHERE `playerID`=?";
 		playerFriends = "SELECT `friend` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
 		playerIgnored = "SELECT `ignore` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
 		playerQuests = "SELECT `id`, `stage` FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 		playerAchievements = "SELECT `id`, `status` FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
-		save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=?";
+		save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` i,i2 JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
-		save_AddBank = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `id`, `amount`, `slot`) VALUES(?, ?, ?, ?)";
+		save_AddInvStatus = "INSERT INTO `" + PREFIX + "itemstatuses`(`catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?)";
+		save_AddBank = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `itemID`, `slot`) VALUES(?, ?, ?)";
 		save_AddBankPreset = "INSERT INTO `" + PREFIX + "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
-		save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
-		save_AddInvItem = "INSERT INTO `" + PREFIX + "invitems`(`playerID`, `id`, `amount`, `wielded`, `slot`) VALUES(?, ?, ?, ?, ?)";
-		save_DeleteEquip = "DELETE FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
-		save_SaveEquip = "INSERT INTO `" + PREFIX + "equipped`(`playerID`, `id`, `amount`) VALUES(?, ?, ?)";
+		save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` i,i2 JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
+		save_AddInvItem = "INSERT INTO `" + PREFIX + "invitems`(`playerID`, `itemID`, `wielded`, `slot`) VALUES(?, ?, ?, ?)";
+		save_DeleteEquip = "DELETE FROM `" + PREFIX + "equipped` i,i2 JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
+		save_SaveEquip = "INSERT INTO `" + PREFIX + "equipped`(`playerID`, `itemID`) VALUES(?, ?)";
 		save_UpdateBasicInfo = "UPDATE `" + PREFIX + "players` SET `combat`=?, skill_total=?, " +
 			"`x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `kills2`=?, `iron_man`=?, `iron_man_restriction`=?, " +
 			"`hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, " +

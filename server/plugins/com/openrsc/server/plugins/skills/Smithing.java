@@ -38,7 +38,7 @@ public class Smithing implements InvUseOnObjectListener,
 		if (obj.getID() == LAVA_ANVIL) {
 			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")
 			&& player.getCache().getInt("miniquest_dwarf_youth_rescue") == 2) {
-				if (item.getID() == ItemId.DRAGON_BAR.id()) {
+				if (item.getCatalogId() == ItemId.DRAGON_BAR.id()) {
 					if (!player.getInventory().hasInInventory(ItemId.HAMMER.id()))
 					{
 						player.message("You need a hammer to do that");
@@ -87,15 +87,15 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 
 		// Using hammer with anvil.
-		if (item.getID() == ItemId.HAMMER.id()) {
+		if (item.getCatalogId() == ItemId.HAMMER.id()) {
 			player.message("To forge items use the metal you wish to work with the anvil");
 			return false;
 		}
 
-		int minSmithingLevel = minSmithingLevel(item.getID());
+		int minSmithingLevel = minSmithingLevel(item.getCatalogId());
 
 		// Special Dragon Square Shield Case
-		if (minSmithingLevel < 0 && item.getID() != ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id() && item.getID() != ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) {
+		if (minSmithingLevel < 0 && item.getCatalogId() != ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id() && item.getCatalogId() != ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) {
 			player.message("Nothing interesting happens");
 			return false;
 		}
@@ -118,13 +118,13 @@ public class Smithing implements InvUseOnObjectListener,
 	private void beginSmithing(final Item item, final Player player) {
 
 		// Combining Dragon Square Shield Halves
-		if (item.getID() == ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id() || item.getID() == ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) {
+		if (item.getCatalogId() == ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id() || item.getCatalogId() == ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) {
 			attemptDragonSquareCombine(item, player);
 			return;
 		}
 
 		// Failure to make a gold bowl without Legend's Quest.
-		if (item.getID() == ItemId.GOLD_BAR.id() && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
+		if (item.getCatalogId() == ItemId.GOLD_BAR.id() && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
 			player.message("You're not quite sure what to make from the gold..");
 			return;
 		}
@@ -132,7 +132,7 @@ public class Smithing implements InvUseOnObjectListener,
 		player.message("What would you like to make?");
 
 		// Gold
-		if (item.getID() == ItemId.GOLD_BAR.id()) {
+		if (item.getCatalogId() == ItemId.GOLD_BAR.id()) {
 			handleGoldSmithing(player);
 			return;
 		}
@@ -209,7 +209,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 
-		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getID()) * 21) + toMake);
+		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getCatalogId()) * 21) + toMake);
 
 		if (def == null) {
 			// No definition found
@@ -230,7 +230,7 @@ public class Smithing implements InvUseOnObjectListener,
 					interrupt();
 					return;
 				}
-				if (getOwner().getInventory().countId(item.getID()) < def.getRequiredBars()) {
+				if (getOwner().getInventory().countId(item.getCatalogId()) < def.getRequiredBars()) {
 					getOwner().message("You need " + def.getRequiredBars() + " bars of metal to make this item");
 					interrupt();
 					return;
@@ -245,7 +245,7 @@ public class Smithing implements InvUseOnObjectListener,
 				}
 				getOwner().playSound("anvil");
 				for (int x = 0; x < def.getRequiredBars(); x++) {
-					getOwner().getInventory().remove(new Item(item.getID(), 1));
+					getOwner().getInventory().remove(new Item(item.getCatalogId(), 1));
 				}
 
 				showBubble(getOwner(), item);
@@ -261,7 +261,7 @@ public class Smithing implements InvUseOnObjectListener,
 						getOwner().getInventory().add(new Item(def.getItemID(), 1));
 					}
 				}
-				player.incExp(Skills.SMITHING, getSmithingExp(item.getID(), def.getRequiredBars()), true);
+				player.incExp(Skills.SMITHING, getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
 			}
 		});
 	}
@@ -270,7 +270,7 @@ public class Smithing implements InvUseOnObjectListener,
 		int option;
 
 		// Steel Bar
-		if (item.getID() == ItemId.STEEL_BAR.id()) {
+		if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
 			option = showMenu(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Steel Nails", "Cancel");
 
@@ -281,7 +281,7 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 
 		// Bronze Bar
-		if (item.getID() == ItemId.BRONZE_BAR.id()) {
+		if (item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
 			option = showMenu(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Craft Item", "Cancel");
 
@@ -358,12 +358,12 @@ public class Smithing implements InvUseOnObjectListener,
 		if (firstType == 3) {
 
 			// Nails
-			if (item.getID() == ItemId.STEEL_BAR.id()) {
+			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
 				makeNails(item, player);
 			}
 
 			// Bronze Wire
-			else if (item.getID() == ItemId.BRONZE_BAR.id()) {
+			else if (item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
 				makeWire(item, player);
 			}
 		}
@@ -519,7 +519,7 @@ public class Smithing implements InvUseOnObjectListener,
 				return -1;
 			}
 
-			int maximumMakeCount = player.getInventory().countId(item.getID()) / def.getRequiredBars();
+			int maximumMakeCount = player.getInventory().countId(item.getCatalogId()) / def.getRequiredBars();
 
 			return count != 3
 				? Integer.parseInt(options[count].replaceAll("Make ", ""))

@@ -61,7 +61,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 			p.message("you have completed the hazeel cult quest");
 		}
 	}
-	
+
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.CLAUS.id(), NpcId.CERIL.id(), NpcId.BUTLER.id(), NpcId.HENRYETA.id(), NpcId.PHILIPE.id(),
@@ -1303,12 +1303,12 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getID() == ItemId.CARNILLEAN_KEY.id();
+		return obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getCatalogId() == ItemId.CARNILLEAN_KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getID() == ItemId.CARNILLEAN_KEY.id()) {
+		if (obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getCatalogId() == ItemId.CARNILLEAN_KEY.id()) {
 			player.message("you use the key to open");
 			player.message("the chest");
 			replaceObjectDelayed(obj, CARNILLEAN_CHEST_OPEN, 437);

@@ -291,7 +291,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 	}
 
 	private void calculateExchangeMenu(Player p, Npc n, boolean useCertificate, Item i, Item certificate) {
-		int count = p.getInventory().countId(useCertificate ? certificate.getID() : i.getID());
+		int count = p.getInventory().countId(useCertificate ? certificate.getCatalogId() : i.getCatalogId());
 		int mainMenu = -1;
 		if (useCertificate) {
 			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
@@ -346,9 +346,9 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
-				if (p.getInventory().remove(certificate.getID(), mainMenu) > -1) {
+				if (p.getInventory().remove(certificate.getCatalogId(), mainMenu) > -1) {
 					for (int x = 0; x < itemAmount; x++) {
-						p.getInventory().add(new Item(i.getID(), 1));
+						p.getInventory().add(new Item(i.getCatalogId(), 1));
 					}
 				}
 				playerTalk(p, n, "Ok thanks.");
@@ -357,9 +357,9 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
-					p.getInventory().remove(i.getID(), 1);
+					p.getInventory().remove(i.getCatalogId(), 1);
 				}
-				p.getInventory().add(new Item(certificate.getID(), mainMenu));
+				p.getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
 				playerTalk(p, n, "Ok thanks.");
 			}
 		}
@@ -367,7 +367,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == SIDNEY_SMITH && inArray(item.getID(), PRAYER_RESTORE_POT,
+		return npc.getID() == SIDNEY_SMITH && inArray(item.getCatalogId(), PRAYER_RESTORE_POT,
 			SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,
 			LIMPWURT_ROOT, PRAYER_CERT, SUPER_ATTACK_CERT, SUPER_DEFENSE_CERT,
 			SUPER_STRENGTH_CERT, DRAGON_BONES_CERT, LIMPWURT_ROOT_CERT);
@@ -375,11 +375,11 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == SIDNEY_SMITH && inArray(item.getID(), PRAYER_RESTORE_POT,
+		if (npc.getID() == SIDNEY_SMITH && inArray(item.getCatalogId(), PRAYER_RESTORE_POT,
 			SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,
 			LIMPWURT_ROOT, PRAYER_CERT, SUPER_ATTACK_CERT, SUPER_DEFENSE_CERT,
 			SUPER_STRENGTH_CERT, DRAGON_BONES_CERT, LIMPWURT_ROOT_CERT)) {
-			switch (item.getID()) {
+			switch (item.getCatalogId()) {
 				case PRAYER_RESTORE_POT:
 					calculateExchangeMenu(player, npc, false, item, new Item(PRAYER_CERT));
 					break;

@@ -51,8 +51,8 @@ public final class ItemDropHandler implements PacketHandler {
 				amount = item.getAmount();
 			}
 		} else if (idx != -1) {
-			if (amount > player.getInventory().countId(item.getID())) {
-				amount = player.getInventory().countId(item.getID());
+			if (amount > player.getInventory().countId(item.getCatalogId())) {
+				amount = player.getInventory().countId(item.getCatalogId());
 			}
 		}
 
@@ -94,8 +94,8 @@ public final class ItemDropHandler implements PacketHandler {
 							player.setStatus(Action.IDLE);
 							return;
 						}
-						if ((fromInventory && !player.getInventory().hasItemId(item.getID())) ||
-							(!fromInventory && (player.getEquipment().hasEquipped(item.getID())) == -1)) {
+						if ((fromInventory && !player.getInventory().hasItemId(item.getCatalogId())) ||
+							(!fromInventory && (player.getEquipment().hasEquipped(item.getCatalogId())) == -1)) {
 							player.message("You don't have the entered amount to drop");
 							stop();
 							player.setStatus(Action.IDLE);

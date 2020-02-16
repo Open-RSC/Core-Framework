@@ -31,12 +31,12 @@ public class SinisterChest implements ObjectActionListener, ObjectActionExecutiv
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return item.getID() == ItemId.SINISTER_KEY.id() && obj.getID() == SINISTER_CHEST;
+		return item.getCatalogId() == ItemId.SINISTER_KEY.id() && obj.getID() == SINISTER_CHEST;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == ItemId.SINISTER_KEY.id() && obj.getID() == SINISTER_CHEST) {
+		if (item.getCatalogId() == ItemId.SINISTER_KEY.id() && obj.getID() == SINISTER_CHEST) {
 			int respawnTime = 3000;
 			p.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, SINISTER_CHEST_OPEN);

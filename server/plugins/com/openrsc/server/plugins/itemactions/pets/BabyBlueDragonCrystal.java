@@ -21,7 +21,7 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 	public void onInvAction(Item item, Player player, String command) {
 		//if (getConfig().DEBUG)
 		System.out.println("Pet item clicked");
-		int id = item.getID();
+		int id = item.getCatalogId();
 
 		if (id == ItemId.A_RED_CRYSTAL.id())
 			if (player.getWorld().getServer().getConfig().WANT_PETS)

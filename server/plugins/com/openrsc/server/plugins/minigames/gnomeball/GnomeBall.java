@@ -52,7 +52,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 
 	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.GNOME_BALL.id()) {
+		if (item.getCatalogId() == ItemId.GNOME_BALL.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
@@ -225,7 +225,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.GNOME_BALL.id();
+		return item.getCatalogId() == ItemId.GNOME_BALL.id();
 	}
 
 	@Override
@@ -235,7 +235,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.GNOME_BALL.id();
+		return item.getCatalogId() == ItemId.GNOME_BALL.id();
 	}
 
 	@Override

@@ -253,7 +253,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnNpc(Player p, final Npc plagueSheep, Item item) {
 		if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.SECOND_PLAGUE_SHEEP.id()
 			|| plagueSheep.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
-			if (item.getID() == ItemId.CATTLE_PROD.id()) {
+			if (item.getCatalogId() == ItemId.CATTLE_PROD.id()) {
 				if ((p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id()) && p.getInventory()
 					.wielding(ItemId.PROTECTIVE_JACKET.id()))
 					&& p.getQuestStage(getQuestId()) != -1) {
@@ -655,7 +655,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						"you better not touch it");
 				}
 			}
-			else if (item.getID() == ItemId.POISONED_ANIMAL_FEED.id()) {
+			else if (item.getCatalogId() == ItemId.POISONED_ANIMAL_FEED.id()) {
 				if (plagueSheep.getLocation().inBounds(589, 543, 592, 548)) {
 					if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id()) {
 						if (p.getCache().hasKey("plagueremain1st")) {
@@ -707,9 +707,9 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == CATTLE_FURNACE) {
 			if (DataConversions.inArray(new int[]{ItemId.PLAGUED_SHEEP_REMAINS_1.id(), ItemId.PLAGUED_SHEEP_REMAINS_2.id(),
-					ItemId.PLAGUED_SHEEP_REMAINS_3.id(), ItemId.PLAGUED_SHEEP_REMAINS_4.id()}, item.getID())) {
+					ItemId.PLAGUED_SHEEP_REMAINS_3.id(), ItemId.PLAGUED_SHEEP_REMAINS_4.id()}, item.getCatalogId())) {
 				if (p.getQuestStage(this) != -1) {
-					if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_1.id()) {
+					if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_1.id()) {
 						if (!p.getCache().hasKey("plagueremain1st")) {
 							p.getCache().store("plagueremain1st", true);
 							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_1.id(), 1);
@@ -717,7 +717,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							message(p, "You need to kill this sheep yourself");
 							return;
 						}
-					} else if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_2.id()) {
+					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_2.id()) {
 						if (!p.getCache().hasKey("plagueremain2nd")) {
 							p.getCache().store("plagueremain2nd", true);
 							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_2.id(), 1);
@@ -725,7 +725,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							message(p, "You need to kill this sheep yourself");
 							return;
 						}
-					} else if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_3.id()) {
+					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_3.id()) {
 						if (!p.getCache().hasKey("plagueremain3th")) {
 							p.getCache().store("plagueremain3th", true);
 							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_3.id(), 1);
@@ -733,7 +733,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 							message(p, "You need to kill this sheep yourself");
 							return;
 						}
-					} else if (item.getID() == ItemId.PLAGUED_SHEEP_REMAINS_4.id()) {
+					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_4.id()) {
 						if (!p.getCache().hasKey("plagueremain4th")) {
 							p.getCache().store("plagueremain4th", true);
 							removeItem(p, ItemId.PLAGUED_SHEEP_REMAINS_4.id(), 1);

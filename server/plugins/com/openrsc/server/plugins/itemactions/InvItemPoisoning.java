@@ -14,14 +14,14 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
-		return item1.getID() == ItemId.WEAPON_POISON.id() || item2.getID() == ItemId.WEAPON_POISON.id();
+		return item1.getCatalogId() == ItemId.WEAPON_POISON.id() || item2.getCatalogId() == ItemId.WEAPON_POISON.id();
 	}
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
-		if (item1.getID() == ItemId.WEAPON_POISON.id()) {
+		if (item1.getCatalogId() == ItemId.WEAPON_POISON.id()) {
 			applyPoison(player, item2);
-		} else if (item2.getID() == ItemId.WEAPON_POISON.id()) {
+		} else if (item2.getCatalogId() == ItemId.WEAPON_POISON.id()) {
 			applyPoison(player, item1);
 		}
 	}
@@ -35,8 +35,8 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		if (item.getDef(player.getWorld()).isStackable()) {
 			//6 darts or 5 bolts/arrows
 			maxAmount = rawItemName.contains("dart") ? 6 : 5;
-			makeAmount = hasItem(player, item.getID(), maxAmount) ? maxAmount : player.getInventory().countId(item.getID());
-			
+			makeAmount = hasItem(player, item.getCatalogId(), maxAmount) ? maxAmount : player.getInventory().countId(item.getCatalogId());
+
 			procItemName = "some ";
 			if (rawItemName.contains("dart")) {
 				procItemName += "darts";
@@ -54,9 +54,9 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		}
 		Item poisonedItem = getPoisonedItem(player.getWorld(), item.getDef(player.getWorld()).getName());
 		if (poisonedItem != null) {
-			if (removeItem(player, ItemId.WEAPON_POISON.id(), 1) && removeItem(player, item.getID(), makeAmount)) {
+			if (removeItem(player, ItemId.WEAPON_POISON.id(), 1) && removeItem(player, item.getCatalogId(), makeAmount)) {
 				player.message("You poison " + procItemName);
-				addItem(player, poisonedItem.getID(), makeAmount);
+				addItem(player, poisonedItem.getCatalogId(), makeAmount);
 			}
 		} else {
 			player.message("Nothing interesting happens");

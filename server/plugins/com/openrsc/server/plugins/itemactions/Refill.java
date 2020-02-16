@@ -25,14 +25,14 @@ public class Refill implements InvUseOnObjectListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
 		return (inArray(obj.getID(), VALID_OBJECTS_OTHER)
-			&& inArray(item.getID(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getID() == ItemId.BUCKET.id());
+			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id());
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
 		for (int i = 0; i < REFILLABLE.length; i++) {
-			if (REFILLABLE[i] == item.getID()) {
-				final int itemID = item.getID();
+			if (REFILLABLE[i] == item.getCatalogId()) {
+				final int itemID = item.getCatalogId();
 				final int refilledID = REFILLED[i];
 				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Refill Water Jug", player.getInventory().countId(itemID), false) {
 					@Override

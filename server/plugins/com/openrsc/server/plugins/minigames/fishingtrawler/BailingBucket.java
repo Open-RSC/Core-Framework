@@ -35,7 +35,7 @@ public class BailingBucket implements InvActionExecutiveListener, InvActionListe
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.BAILING_BUCKET.id();
+		return item.getCatalogId() == ItemId.BAILING_BUCKET.id();
 	}
 
 }

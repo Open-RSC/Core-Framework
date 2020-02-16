@@ -22,7 +22,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	WallObjectActionExecutiveListener, InvUseOnNpcListener,
 	InvUseOnNpcExecutiveListener, PlayerKilledNpcListener,
 	PlayerKilledNpcExecutiveListener {
-	
+
 	@Override
 	public int getQuestId() {
 		return Quests.FAMILY_CREST;
@@ -44,7 +44,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 		player.message("@gre@You haved gained 1 quest point!");
 		player.message("Well done you have completed the family crest quest");
 	}
-	
+
 	/**
 	 * NPCS: #309 - Dimintheis - quest starter #310 - Chef - 1st son in catherby
 	 * #307 - man in alkharid #314 - wizard 3rd son.
@@ -387,7 +387,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 			}
 		}
 	}
-	
+
 	public static int getGauntletEnchantment(Player p) {
 		try {
 			return p.getCache().getInt("famcrest_gauntlets");
@@ -557,12 +557,12 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.JOHNATHON.id() && item.getID() == ItemId.FULL_CURE_POISON_POTION.id();
+		return npc.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == NpcId.JOHNATHON.id() && item.getID() == ItemId.FULL_CURE_POISON_POTION.id()) {
+		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (p.getQuestStage(this) == 7) {
 				message(p, "You feed your potion to Johnathon");
 				removeItem(p, ItemId.FULL_CURE_POISON_POTION.id(), 1);

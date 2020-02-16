@@ -28,7 +28,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	InvUseOnNpcExecutiveListener, InvUseOnWallObjectListener,
 	InvUseOnWallObjectExecutiveListener, WallObjectActionListener,
 	WallObjectActionExecutiveListener {
-	
+
 	// items 679 (scorpion1 taverly), 686 (scorpion2 barbarian), 687 (scorpion3 monastery)
 
 	@Override
@@ -387,7 +387,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc n, Item i) {
-		int cageId = i.getID();
+		int cageId = i.getCatalogId();
 		if (player.getInventory().countId(cageId) <= 0) return false;
 
 		if (n.getID() == NpcId.KHARID_SCORPION_TAVERLEY.id() && // First Scorpion (Taverly)
@@ -419,7 +419,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 				ItemId.SCORPION_CAGE_ONE_TWO.id(), ItemId.SCORPION_CAGE_ONE_THREE.id(), ItemId.SCORPION_CAGE_TWO_THREE.id()
 			));
 
-			int itemId = i.getID();
+			int itemId = i.getCatalogId();
 
 			if (!cages.contains(itemId)) {
 				p.message("Nothing interesting happens");
@@ -513,9 +513,9 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
 										   Player player) {
-		return (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == ItemId.JAIL_KEYS.id())
-				|| (obj.getID() == 83 && obj.getY() == 3425 && item.getID() == ItemId.JAIL_KEYS.id())
-				|| (obj.getID() == 84 && obj.getY() == 3353 && item.getID() == ItemId.DUSTY_KEY.id());
+		return (obj.getID() == 83 && obj.getY() == 3428 && item.getCatalogId() == ItemId.JAIL_KEYS.id())
+				|| (obj.getID() == 83 && obj.getY() == 3425 && item.getCatalogId() == ItemId.JAIL_KEYS.id())
+				|| (obj.getID() == 84 && obj.getY() == 3353 && item.getCatalogId() == ItemId.DUSTY_KEY.id());
 	}
 
 	@Override
@@ -523,7 +523,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		/*
 		 * Velrak cell door
 		 */
-		if (obj.getID() == 83 && obj.getY() == 3428 && item.getID() == ItemId.JAIL_KEYS.id()) {
+		if (obj.getID() == 83 && obj.getY() == 3428 && item.getCatalogId() == ItemId.JAIL_KEYS.id()) {
 			showBubble(player, item);
 			doDoor(obj, player);
 		}
@@ -531,14 +531,14 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 		 * Below door infront of Velrak cell has nothing todo with quest or
 		 * anything important at all - replicated it anyway.
 		 */
-		if (obj.getID() == 83 && obj.getY() == 3425 && item.getID() == ItemId.JAIL_KEYS.id()) {
+		if (obj.getID() == 83 && obj.getY() == 3425 && item.getCatalogId() == ItemId.JAIL_KEYS.id()) {
 			showBubble(player, item);
 			doDoor(obj, player);
 		}
 		/*
 		 * Dusty key door into blue dragons lair in Taverly dungeon
 		 */
-		if (obj.getID() == 84 && obj.getY() == 3353 && item.getID() == ItemId.DUSTY_KEY.id()) {
+		if (obj.getID() == 84 && obj.getY() == 3353 && item.getCatalogId() == ItemId.DUSTY_KEY.id()) {
 			showBubble(player, item);
 			doDoor(obj, player);
 		}

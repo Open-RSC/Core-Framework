@@ -18,7 +18,7 @@ public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObje
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == PIT_OF_THE_DAMNED && item.getID() == ItemId.A_DOLL_OF_IBAN.id();
+		return obj.getID() == PIT_OF_THE_DAMNED && item.getCatalogId() == ItemId.A_DOLL_OF_IBAN.id();
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class AceArcher implements InvUseOnNpcListener, InvUseOnNpcExecutiveListe
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.GUARD_UNRELEASED.id() && item.getID() == ItemId.A_GLOWING_RED_CRYSTAL.id();
+		return npc.getID() == NpcId.GUARD_UNRELEASED.id() && item.getCatalogId() == ItemId.A_GLOWING_RED_CRYSTAL.id();
 	}
 
 	@Override

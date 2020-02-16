@@ -564,16 +564,16 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	private boolean alreadyHasCape(Player player) {
 		synchronized(player.getInventory().getItems()) {
 			for (Item item : player.getInventory().getItems()) {
-				if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
-					|| item.getID() == ItemId.GUTHIX_CAPE.id()) {
+				if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
+					|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
 					return true;
 				}
 			}
 		}
 		synchronized(player.getBank().getItems()) {
 			for (Item item : player.getBank().getItems()) {
-				if (item.getID() == ItemId.ZAMORAK_CAPE.id() || item.getID() == ItemId.SARADOMIN_CAPE.id()
-					|| item.getID() == ItemId.GUTHIX_CAPE.id()) {
+				if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
+					|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
 					return true;
 				}
 			}

@@ -51,7 +51,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				"already_cast_holy_spell", "ran_from_2nd_nezi", "legends_choose_reward",
 				"legends_reward_claimed", "ancient_wall_runes", "gave_glowing_dagger",
 				"met_spirit", "cavernous_opening", "viyeldi_companions", "killed_viyeldi",
-				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", "crafted_totem_pole", 
+				"legends_wooden_beam", "rewarded_totem", "holy_water_neiz", "crafted_totem_pole",
 			};
 		for (String s : caches) {
 			if (p.getCache().hasKey(s)) {
@@ -453,13 +453,13 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
-		return n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && (item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()
-				|| item.getID() == ItemId.GILDED_TOTEM_POLE.id() || item.getID() == ItemId.TOTEM_POLE.id());
+		return n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && (item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()
+				|| item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id() || item.getCatalogId() == ItemId.TOTEM_POLE.id());
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.GILDED_TOTEM_POLE.id()) {
+		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 11) {
 				npcTalk(p, n, "Go through to the main Legends Guild and I will join you.");
 				return;
@@ -472,7 +472,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				} else {
 					message(p, n, 1300, "Radimus Erkle orders some guards to take the totem pole,",
 						"into the main Legends Hall.");
-					removeItem(p, item.getID(), 1);
+					removeItem(p, item.getCatalogId(), 1);
 					npcTalk(p, n, "That will take pride of place in the Legends Guild ",
 						"As a reminder of your quest to gain entry.",
 						"And so that many other great adventurers can admire your bravery.",
@@ -487,7 +487,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 				p.message("You have not completed this quest - submitting bug abuse.");
 			}
 		}
-		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.TOTEM_POLE.id()) {
+		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getCatalogId() == ItemId.TOTEM_POLE.id()) {
 			npcTalk(p, n, "Hmmm, well, it is very impressive.",
 					"Especially since it looks very heavy...",
 					"However, it lacks a certain authenticity,",
@@ -497,7 +497,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					"to put on display in the Legends Guild main hall.",
 					"Do you think you could get something more authentic ?");
 		}
-		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getID() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
+		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			npcTalk(p, n, "Well done " + (p.isMale() ? "Sir" : "Madam") + ", very well done...",
 				"However, you'll probably need it while you search",
 				"for natives of the Kharazi tribe in the Kharazi jungle.",

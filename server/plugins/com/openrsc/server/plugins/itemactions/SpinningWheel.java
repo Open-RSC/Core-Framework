@@ -28,7 +28,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 		int experience = -1;
 		String verb, consumedItem, producedItem;
 
-		if (item.getID() == ItemId.WOOL.id()) {
+		if (item.getCatalogId() == ItemId.WOOL.id()) {
 			produceID = ItemId.BALL_OF_WOOL.id();
 			requiredLevel = 1;
 			experience = 10;
@@ -37,7 +37,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 			producedItem = "nice ball of wool";
 		}
 
-		else if (item.getID() == ItemId.FLAX.id()) {
+		else if (item.getCatalogId() == ItemId.FLAX.id()) {
 			produceID = ItemId.BOW_STRING.id();
 			requiredLevel = 10;
 			experience = 60;
@@ -77,7 +77,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 						return;
 					}
 				}
-				if (getOwner().getInventory().remove(item.getID(), 1) > -1) {
+				if (getOwner().getInventory().remove(item.getCatalogId(), 1) > -1) {
 					showBubble(getOwner(), item);
 					getOwner().playSound("mechanical");
 					getOwner().message("You " + verb + " the "

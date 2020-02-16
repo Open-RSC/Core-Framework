@@ -1112,14 +1112,14 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return (item.getID() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER)
-				|| (item.getID() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT)
-				|| (item.getID() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE);
+		return (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER)
+				|| (item.getCatalogId() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT)
+				|| (item.getCatalogId() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE);
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (item.getID() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER) {
+		if (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER) {
 			if (p.getQuestStage(this) == 2) {
 				message(p, "you throw a hand full of seeds onto the watch tower",
 					"the mourners do not seem to notice");
@@ -1131,7 +1131,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				p.message("nothing interesting happens");
 			}
 		}
-		else if (item.getID() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT) {
+		else if (item.getCatalogId() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT) {
 			if (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5) {
 				message(p, "you place the rotten apples in the pot",
 					"they quickly dissolve into the stew",
@@ -1146,7 +1146,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				"that wasn't very nice");
 			removeItem(p, ItemId.ROTTEN_APPLES.id(), 1);
 		}
-		else if (item.getID() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE) {
+		else if (item.getCatalogId() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE) {
 			message(p, "the key fits the gate");
 			p.message("you open it and pass through");
 			doGate(p, obj);

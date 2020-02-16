@@ -38,12 +38,12 @@ public class CoalTrucks implements ObjectActionExecutiveListener, ObjectActionLi
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == COAL_TRUCK && item.getID() == ItemId.COAL.id();
+		return obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == COAL_TRUCK && item.getID() == ItemId.COAL.id()) {
+		if (obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id()) {
 			p.setBusy(true);
 			int coalAmount = p.getInventory().countId(ItemId.COAL.id());
 			for (int i = 0; i < coalAmount; i++) {

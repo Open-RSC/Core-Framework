@@ -319,7 +319,7 @@ public class AchievementSystem {
 
 			for (AchievementTask task : quest.getTasks()) {
 				if (task.getTask() == TaskType.GATHER_ITEM) {
-					if (task.getId() == item.getID() && getTaskProgress(p, task) < task.getAmount()) {
+					if (task.getId() == item.getCatalogId() && getTaskProgress(p, task) < task.getAmount()) {
 						int newAmount = getTaskProgress(p, task) + item.getAmount();
 						p.getCache().set("simpletask[" + task.getId() + "]_task_" + task.getTask().toString(),
 							newAmount);

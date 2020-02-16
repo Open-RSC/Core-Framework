@@ -18,15 +18,15 @@ public class SwampToads implements PickupListener, PickupExecutiveListener, InvA
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.SWAMP_TOAD.id();
+		return item.getCatalogId() == ItemId.SWAMP_TOAD.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.SWAMP_TOAD.id()) {
+		if (item.getCatalogId() == ItemId.SWAMP_TOAD.id()) {
 			message(p, 1900, "you pull the legs off the toad");
 			p.message("poor toad..at least they'll grow back");
-			p.getInventory().replace(item.getID(), ItemId.TOAD_LEGS.id());
+			p.getInventory().replace(item.getCatalogId(), ItemId.TOAD_LEGS.id());
 		}
 	}
 

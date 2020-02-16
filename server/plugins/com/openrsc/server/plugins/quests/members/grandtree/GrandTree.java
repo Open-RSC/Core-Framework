@@ -1496,14 +1496,14 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (obj.getID() == GLOUGH_CHEST_CLOSED && item.getID() == ItemId.GLOUGHS_KEY.id())
-				|| (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getID() == ItemId.PEBBLE_3.id()
-				|| item.getID() == ItemId.PEBBLE_2.id() || item.getID() == ItemId.PEBBLE_4.id() || item.getID() == ItemId.PEBBLE_1.id()));
+		return (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id())
+				|| (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getCatalogId() == ItemId.PEBBLE_3.id()
+				|| item.getCatalogId() == ItemId.PEBBLE_2.id() || item.getCatalogId() == ItemId.PEBBLE_4.id() || item.getCatalogId() == ItemId.PEBBLE_1.id()));
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (obj.getID() == GLOUGH_CHEST_CLOSED && item.getID() == ItemId.GLOUGHS_KEY.id()) {
+		if (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id()) {
 			message(player, "the key fits the chest");
 			player.message("you open the chest");
 			player.message("and search it...");
@@ -1517,40 +1517,40 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			}
 			message(player, "you close the chest");
 		}
-		else if (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getID() == ItemId.PEBBLE_3.id()
-				|| item.getID() == ItemId.PEBBLE_2.id() || item.getID() == ItemId.PEBBLE_4.id() || item.getID() == ItemId.PEBBLE_1.id())) {
+		else if (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getCatalogId() == ItemId.PEBBLE_3.id()
+				|| item.getCatalogId() == ItemId.PEBBLE_2.id() || item.getCatalogId() == ItemId.PEBBLE_4.id() || item.getCatalogId() == ItemId.PEBBLE_1.id())) {
 			message(player, "on top are four pebble size indents",
 				"they span from left to right",
 				"you place the pebble...");
 			int menu = showMenu(player, "To the far left", "Centre left", "Centre right", "To the far right");
 			if (menu == 0) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
-				removeItem(player, item.getID(), 1);
-				if (item.getID() == ItemId.PEBBLE_1.id()) { // HO
+				removeItem(player, item.getCatalogId(), 1);
+				if (item.getCatalogId() == ItemId.PEBBLE_1.id()) { // HO
 					if (!player.getCache().hasKey("pebble_1")) {
 						player.getCache().store("pebble_1", true);
 					}
 				}
 			} else if (menu == 1) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
-				removeItem(player, item.getID(), 1);
-				if (item.getID() == ItemId.PEBBLE_2.id()) { // NI
+				removeItem(player, item.getCatalogId(), 1);
+				if (item.getCatalogId() == ItemId.PEBBLE_2.id()) { // NI
 					if (!player.getCache().hasKey("pebble_2")) {
 						player.getCache().store("pebble_2", true);
 					}
 				}
 			} else if (menu == 2) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
-				removeItem(player, item.getID(), 1);
-				if (item.getID() == ItemId.PEBBLE_3.id()) { // :::
+				removeItem(player, item.getCatalogId(), 1);
+				if (item.getCatalogId() == ItemId.PEBBLE_3.id()) { // :::
 					if (!player.getCache().hasKey("pebble_3")) {
 						player.getCache().store("pebble_3", true);
 					}
 				}
 			} else if (menu == 3) {
 				message(player, "you place the pebble in the indent", "it crumbles into dust");
-				removeItem(player, item.getID(), 1);
-				if (item.getID() == ItemId.PEBBLE_4.id()) { // HA
+				removeItem(player, item.getCatalogId(), 1);
+				if (item.getCatalogId() == ItemId.PEBBLE_4.id()) { // HA
 					if (!player.getCache().hasKey("pebble_4")) {
 						player.getCache().store("pebble_4", true);
 					}

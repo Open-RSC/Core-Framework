@@ -10,12 +10,12 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiv
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 
 public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, PickupListener, PickupExecutiveListener {
-	
+
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		return item.getID() == ItemId.FLOUR.id() && myItem.getID() == ItemId.POT.id();
+		return item.getID() == ItemId.FLOUR.id() && myItem.getCatalogId() == ItemId.POT.id();
 	}
-	
+
 	@Override
 	public boolean blockPickup(Player p, GroundItem item) {
 		return item.getID() == ItemId.FLOUR.id();
@@ -23,7 +23,7 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
-		if (myItem.getID() == ItemId.POT.id()) {
+		if (myItem.getCatalogId() == ItemId.POT.id()) {
 			if (player.getInventory().remove(myItem) < 0)
 				return;
 			player.message("You put the flour in the pot");
@@ -47,6 +47,6 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 			return;
 		}
 	}
-	
-	
+
+
 }

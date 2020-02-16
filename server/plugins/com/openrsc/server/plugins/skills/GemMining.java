@@ -124,7 +124,7 @@ public class GemMining implements ObjectActionListener,
 					if (object == null) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 					} else {
-						getOwner().message(minedString(gem.getID()));
+						getOwner().message(minedString(gem.getCatalogId()));
 						getOwner().incExp(com.openrsc.server.constants.Skills.MINING, 200, true); // always 50XP
 						getOwner().getInventory().add(gem);
 					}

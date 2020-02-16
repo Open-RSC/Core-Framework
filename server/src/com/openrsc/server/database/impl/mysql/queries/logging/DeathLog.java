@@ -42,7 +42,7 @@ public class DeathLog extends Query {
 	public Query build() {
 		StringBuilder droppedString = new StringBuilder();
 		for (Item item : droppedLoot) {
-			droppedString.append("([id:").append(item.getID()).append("] ").append(item.getDef(world).getName()).append(" x ").append(DataConversions.numberFormat(item.getAmount())).append("),");
+			droppedString.append("([id:").append(item.getCatalogId()).append("] ").append(item.getDef(world).getName()).append(" x ").append(DataConversions.numberFormat(item.getAmount())).append("),");
 		}
 		if (droppedString.length() > 0)
 			droppedString.substring(0, droppedString.length() - 1);

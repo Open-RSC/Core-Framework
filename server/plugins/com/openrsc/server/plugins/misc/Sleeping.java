@@ -30,7 +30,7 @@ public class Sleeping implements ObjectActionExecutiveListener, ObjectActionList
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if (item.getID() == ItemId.SLEEPING_BAG.id() && !player.isSleeping()) {
+		if (item.getCatalogId() == ItemId.SLEEPING_BAG.id() && !player.isSleeping()) {
 			ActionSender.sendEnterSleep(player);
 			player.startSleepEvent(false);
 			// player.resetPath(); - real rsc.
@@ -39,6 +39,6 @@ public class Sleeping implements ObjectActionExecutiveListener, ObjectActionList
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.SLEEPING_BAG.id() && !player.isSleeping();
+		return item.getCatalogId() == ItemId.SLEEPING_BAG.id() && !player.isSleeping();
 	}
 }

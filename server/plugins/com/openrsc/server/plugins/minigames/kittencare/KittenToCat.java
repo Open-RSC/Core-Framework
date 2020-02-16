@@ -43,12 +43,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return i.getID() == ItemId.KITTEN.id();
+		return i.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.KITTEN.id()) {
+		if (i.getCatalogId() == ItemId.KITTEN.id()) {
 			removeItem(p, ItemId.KITTEN.id(), 1);
 			message(p, 1200, "you drop the kitten");
 			message(p, 0, "it's upset and runs away");
@@ -60,12 +60,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.KITTEN.id();
+		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.KITTEN.id()) {
+		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			message(p, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
 			message(p, 600, "the kitten appreciates the attention");
@@ -75,7 +75,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	}
 
 	public void entertainCat(Item item, Player p, boolean isGrown) {
-		if (item.getID() == ItemId.BALL_OF_WOOL.id()) {
+		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
 				message(p, "your kitten plays around with the ball of wool",
 						"it seems to love pouncing on it");
@@ -90,9 +90,9 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 	public void feedCat(Item item, Player p, boolean isGrown) {
 		boolean feeded = false;
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 		case MILK:
-			p.getInventory().replace(item.getID(), ItemId.BUCKET.id());
+			p.getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
 			if(!isGrown) {
 				message(p, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
@@ -113,7 +113,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 		case RAW_SALMON:
 		case RAW_TUNA:
 		case TUNA:
-			removeItem(p, item.getID(), 1);
+			removeItem(p, item.getCatalogId(), 1);
 			if(!isGrown) {
 				message(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
@@ -225,12 +225,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2)) {
-			boolean isGrownCat = item1.getID() != ItemId.KITTEN.id() && item2.getID() != ItemId.KITTEN.id();
+			boolean isGrownCat = item1.getCatalogId() != ItemId.KITTEN.id() && item2.getCatalogId() != ItemId.KITTEN.id();
 			Item item;
 			if (isGrownCat) {
-				item = item1.getID() == ItemId.CAT.id() ? item2 : item1;
+				item = item1.getCatalogId() == ItemId.CAT.id() ? item2 : item1;
 			} else {
-				item = item1.getID() == ItemId.KITTEN.id() ? item2 : item1;
+				item = item1.getCatalogId() == ItemId.KITTEN.id() ? item2 : item1;
 			}
 			if (isBallWoolOnCat(item1, item2)) {
 				entertainCat(item, p, isGrownCat);
@@ -246,10 +246,10 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	}
 
 	private boolean isFoodOnCat(Item item1, Item item2) {
-		return ((item2.getID() == ItemId.KITTEN.id() || item2.getID() == ItemId.CAT.id()) && inArray(item1.getID(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
+		return ((item2.getCatalogId() == ItemId.KITTEN.id() || item2.getCatalogId() == ItemId.CAT.id()) && inArray(item1.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
 				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
 				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id())) ||
-				((item1.getID() == ItemId.KITTEN.id() || item1.getID() == ItemId.CAT.id()) && inArray(item2.getID(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
+				((item1.getCatalogId() == ItemId.KITTEN.id() || item1.getCatalogId() == ItemId.CAT.id()) && inArray(item2.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
 				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
 				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id()));
 	}
@@ -257,12 +257,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
 		//only small rats
-		return (item.getID() == ItemId.KITTEN.id() || item.getID() == ItemId.CAT.id()) && n.getID() == NpcId.RAT_WITCHES_POTION.id();
+		return (item.getCatalogId() == ItemId.KITTEN.id() || item.getCatalogId() == ItemId.CAT.id()) && n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (item.getID() == ItemId.KITTEN.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
+		if (item.getCatalogId() == ItemId.KITTEN.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			p.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
 				n.face(p);
@@ -276,7 +276,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 				reduceKittensLoneliness(p);
 			}
-		} else if (item.getID() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
+		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			p.message("the cat pounces on the rat...");
 			n.face(p);
 			sleep(600);

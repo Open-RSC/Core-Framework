@@ -213,7 +213,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FLAME_WALL) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case BLESSED_GOLDEN_BOWL_WITH_PURE_WATER:
 					p.message("You splash some pure water on the flames");
 					if (!p.getCache().hasKey("douse_flames")) {
@@ -224,7 +224,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						if (pourCount >= 4) {
 							p.getCache().remove("douse_flames");
 							p.message("The pure water in the golden bowl has run out...");
-							p.getInventory().replace(item.getID(), ItemId.BLESSED_GOLDEN_BOWL.id());
+							p.getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
 						}
 					}
 					p.message("You quickly walk over the doused flames.");
@@ -244,7 +244,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 			}
 		}
 		else if (obj.getID() == ANCIENT_WALL) {
-			switch (ItemId.getById(item.getID())) {
+			switch (ItemId.getById(item.getCatalogId())) {
 				case AIR_RUNE:
 				case FIRE_RUNE:
 				case BLOOD_RUNE:
@@ -355,7 +355,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 	private void runesFail(Player p, Item item) {
 		p.message("The rune stone burns red hot in your hand, you drop it to the floor.");
 		p.damage(DataConversions.random(1, 5));
-		removeItem(p, item.getID(), 1);
-		createGroundItem(item.getID(), 1, p.getX(), p.getY(), p);
+		removeItem(p, item.getCatalogId(), 1);
+		createGroundItem(item.getCatalogId(), 1, p.getX(), p.getY(), p);
 	}
 }

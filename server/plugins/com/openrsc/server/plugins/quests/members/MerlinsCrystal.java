@@ -186,19 +186,19 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 294 || obj.getID() == 287 && item.getID() == ItemId.EXCALIBUR.id();
+		return obj.getID() == 294 || obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 294) {
-			if (item.getID() == ItemId.INSECT_REPELLANT.id()) {
+			if (item.getCatalogId() == ItemId.INSECT_REPELLANT.id()) {
 				message(p, "you squirt insect repellant on the beehive",
 					"You see bees leaving the hive");
 				if (!p.getCache().hasKey("squirt")) {
 					p.getCache().store("squirt", true);
 				}
-			} else if (item.getID() == ItemId.BUCKET.id()) {
+			} else if (item.getCatalogId() == ItemId.BUCKET.id()) {
 				message(p, "You try to get some wax from the beehive");
 				if (p.getCache().hasKey("squirt")) {
 					message(p, "You get some wax from the hive",
@@ -211,7 +211,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					p.damage(2);
 				}
 			}
-		} else if (obj.getID() == 287 && item.getID() == ItemId.EXCALIBUR.id()) {
+		} else if (obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id()) {
 			if (p.getQuestStage(this) == 4) {
 				message(p, "The crystal shatters");
 				p.getWorld().unregisterGameObject(obj);
@@ -293,7 +293,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return p.getX() == 448 && p.getY() == 435 && i.getID() == ItemId.BAT_BONES.id()
+		return p.getX() == 448 && p.getY() == 435 && i.getCatalogId() == ItemId.BAT_BONES.id()
 			&& p.getCache().hasKey("magic_words") && hasItem(p, ItemId.LIT_BLACK_CANDLE.id());
 	}
 

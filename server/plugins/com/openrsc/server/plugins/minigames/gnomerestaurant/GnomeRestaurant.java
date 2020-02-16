@@ -514,12 +514,12 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.GIANNE_COOK_BOOK.id();
+		return item.getCatalogId() == ItemId.GIANNE_COOK_BOOK.id();
 	}
 
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.GIANNE_COOK_BOOK.id()) {
+		if (item.getCatalogId() == ItemId.GIANNE_COOK_BOOK.id()) {
 			p.message("you open aluft's cook book");
 			p.message("inside are various gnome dishes");
 			int menu = showMenu(p,
@@ -580,7 +580,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.GNOMECRUNCHIE.id() || i.getID() == ItemId.GNOMEBOWL.id() || i.getID() == ItemId.GNOMEBATTA.id()) {
+		if (i.getCatalogId() == ItemId.GNOMECRUNCHIE.id() || i.getCatalogId() == ItemId.GNOMEBOWL.id() || i.getCatalogId() == ItemId.GNOMEBATTA.id()) {
 			resetGnomeCooking(p);
 			return false;
 		}

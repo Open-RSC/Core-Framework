@@ -52,7 +52,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Identify Herb", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Identify Herb", player.getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.HERBLAW) < herb.getLevelRequired()) {
@@ -76,7 +76,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
 				Item newItem = new Item(herb.getNewId());
-				if (getOwner().getInventory().remove(item.getID(),1,false) > -1) {
+				if (getOwner().getInventory().remove(item.getCatalogId(),1,false) > -1) {
 					getOwner().getInventory().add(newItem,true);
 					getOwner().playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(getWorld()).getName());
 					getOwner().incExp(Skills.HERBLAW, herb.getExp(), true);
@@ -90,30 +90,30 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	@Override
 	public void onInvUseOnItem(Player player, Item item, Item usedWith) {
 		ItemHerbSecond secondDef = null;
-		if ((secondDef = player.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getID(), usedWith
-			.getID())) != null) {
+		if ((secondDef = player.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getCatalogId(), usedWith
+			.getCatalogId())) != null) {
 			doHerbSecond(player, item, usedWith, secondDef, false);
 		} else if ((secondDef = player.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWith
-			.getID(), item.getID())) != null) {
+			.getCatalogId(), item.getCatalogId())) != null) {
 			doHerbSecond(player, usedWith, item, secondDef, true);
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
 			doGrind(player, item, usedWith);
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
 			doGrind(player, usedWith, item);
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.VIAL.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id()) {
 			doHerblaw(player, item, usedWith);
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.VIAL.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id()) {
 			doHerblaw(player, usedWith, item);
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id() && usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id() && usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()) {
 			makeLiquid(player, usedWith, item, true);
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() && usedWith.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() && usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id()) {
 			makeLiquid(player, item, usedWith, false);
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || usedWith.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
 			makeLiquid(player, item, usedWith, false);
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (item.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || item.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (item.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || item.getCatalogId() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
 			makeLiquid(player, usedWith, item, true);
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id() && item.getID() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id() && item.getID() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
 				player.playerServerMessage(MessageType.QUEST, "You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
@@ -128,8 +128,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			showBubble(player, new Item(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()));
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.NITROGLYCERIN.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id());
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id() && item.getID() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
 				player.playerServerMessage(MessageType.QUEST, "You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
@@ -144,8 +144,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			showBubble(player, new Item(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()));
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id());
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id() && item.getID() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
 				player.playerServerMessage(MessageType.QUEST, "You need to have a herblaw level of 10 or over to mix this liquid");
 				return;
@@ -161,8 +161,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id(), com.openrsc.server.constants.ItemId.EXPLOSIVE_COMPOUND.id());
 			playerTalk(player, null, "Excellent this looks just right");
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id() && item.getID() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id() && item.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 25) {
 				player.playerServerMessage(MessageType.QUEST, "You need a herblaw level of 25 to make this potion");
 				return;
@@ -175,8 +175,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.message("You mix the slime into your potion");
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id(), com.openrsc.server.constants.ItemId.BLAMISH_OIL.id());
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id() && item.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL.id() && item.getID() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
 				player.playerServerMessage(MessageType.QUEST, "You need to have a herblaw level of 45 or over to mix this potion");
 				return;
@@ -195,8 +195,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
 			player.getInventory().remove(com.openrsc.server.constants.ItemId.ARDRIGAL.id(), 1);
 			player.getInventory().replace(com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id(), com.openrsc.server.constants.ItemId.GUJUO_POTION.id());
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id() && item.getID() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id() && item.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
 				player.playerServerMessage(MessageType.QUEST, "You need to have a herblaw level of 45 or over to mix this potion");
 				return;
@@ -219,37 +219,37 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 	}
 
 	public boolean blockInvUseOnItem(Player p, Item item, Item usedWith) {
-		if ((p.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getID(), usedWith.getID())) != null
-			|| (p.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWith.getID(), item
-			.getID())) != null) {
+		if ((p.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getCatalogId(), usedWith.getCatalogId())) != null
+			|| (p.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWith.getCatalogId(), item
+			.getCatalogId())) != null) {
 			return true;
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id() || usedWith.getID() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id() || usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.PESTLE_AND_MORTAR.id()) {
 			return true;
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.VIAL.id() || usedWith.getID() == com.openrsc.server.constants.ItemId.VIAL.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id() || usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id()) {
 			return true;
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id() && usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()
-			|| item.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() && usedWith.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id()) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id() && usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()
+			|| item.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() && usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id()) {
 			return true;
-		} else if (item.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || usedWith.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())
-			|| usedWith.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (item.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || item.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
+		} else if (item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())
+			|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (item.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || item.getCatalogId() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
 			return true;
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id() && item.getID() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id() && item.getID() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.NITROGLYCERIN.id()) {
 			return true;
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id() && item.getID() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()) {
 			return true;
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id() && item.getID() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()) {
 			return true;
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id() && item.getID() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id() && item.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id()) {
 			return true;
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id() && item.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL.id() && item.getID() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id()) {
 			return true;
-		} else if (usedWith.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id() && item.getID() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id()
-				|| usedWith.getID() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id() && item.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id()) {
+		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id()
+				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id()) {
 			return true;
 		}
 		return false;
@@ -261,45 +261,45 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.sendMemberErrorMessage();
 			return false;
 		}
-		if (vial.getID() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()) {
+		if (vial.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()) {
 			player.message("You mix the ground bones into the water");
 			player.message("Fizz!!!");
 			playerTalk(player, null, "Oh dear, the mixture has evaporated!",
 				"It's useless...");
-			player.getInventory().remove(vial.getID(), 1);
-			player.getInventory().remove(herb.getID(), 1);
+			player.getInventory().remove(vial.getCatalogId(), 1);
+			player.getInventory().remove(herb.getCatalogId(), 1);
 			player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.EMPTY_VIAL.id(), 1));
 			return false;
 		}
-		if (vial.getID() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getID() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id()) {
+		if (vial.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getCatalogId() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id()) {
 			player.message("You mix the berries into the water");
-			player.getInventory().remove(vial.getID(), 1);
-			player.getInventory().remove(herb.getID(), 1);
+			player.getInventory().remove(vial.getCatalogId(), 1);
+			player.getInventory().remove(herb.getCatalogId(), 1);
 			player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id(), 1));
 			return false;
 		}
-		if (vial.getID() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getID() == com.openrsc.server.constants.ItemId.ARDRIGAL.id()) {
+		if (vial.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getCatalogId() == com.openrsc.server.constants.ItemId.ARDRIGAL.id()) {
 			player.message("You put the ardrigal herb into the watervial.");
 			player.message("You make a solution of Ardrigal.");
-			player.getInventory().remove(vial.getID(), 1);
-			player.getInventory().remove(herb.getID(), 1);
+			player.getInventory().remove(vial.getCatalogId(), 1);
+			player.getInventory().remove(herb.getCatalogId(), 1);
 			player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.ARDRIGAL_SOLUTION.id(), 1));
 			return false;
 		}
-		if (vial.getID() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getID() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id()) {
+		if (vial.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getCatalogId() == com.openrsc.server.constants.ItemId.SNAKE_WEED.id()) {
 			player.message("You put the Snake Weed herb into the watervial.");
 			player.message("You make a solution of Snake Weed.");
-			player.getInventory().remove(vial.getID(), 1);
-			player.getInventory().remove(herb.getID(), 1);
+			player.getInventory().remove(vial.getCatalogId(), 1);
+			player.getInventory().remove(herb.getCatalogId(), 1);
 			player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.SNAKES_WEED_SOLUTION.id(), 1));
 			return false;
 		}
-		final ItemHerbDef herbDef = player.getWorld().getServer().getEntityHandler().getItemHerbDef(herb.getID());
+		final ItemHerbDef herbDef = player.getWorld().getServer().getEntityHandler().getItemHerbDef(herb.getCatalogId());
 		if (herbDef == null) {
 			return false;
 		}
 		int repeatTimes = player.getInventory().countId(com.openrsc.server.constants.ItemId.VIAL.id());
-		repeatTimes = player.getInventory().countId(herb.getID()) < repeatTimes ? player.getInventory().countId(herb.getID()): repeatTimes;
+		repeatTimes = player.getInventory().countId(herb.getCatalogId()) < repeatTimes ? player.getInventory().countId(herb.getCatalogId()): repeatTimes;
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", repeatTimes, false) {
 			@Override
 			public void action() {
@@ -314,10 +314,10 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 					interrupt();
 					return;
 				}
-				if (getOwner().getInventory().hasItemId(vial.getID())
-					&& getOwner().getInventory().hasItemId(herb.getID())) {
-					getOwner().getInventory().remove(vial.getID(), 1);
-					getOwner().getInventory().remove(herb.getID(), 1);
+				if (getOwner().getInventory().hasItemId(vial.getCatalogId())
+					&& getOwner().getInventory().hasItemId(herb.getCatalogId())) {
+					getOwner().getInventory().remove(vial.getCatalogId(), 1);
+					getOwner().getInventory().remove(herb.getCatalogId(), 1);
 					getOwner().playSound("mix");
 					getOwner().playerServerMessage(MessageType.QUEST, "You put the " + herb.getDef(getWorld()).getName()
 						+ " into the vial of water");
@@ -337,27 +337,27 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			player.sendMemberErrorMessage();
 			return false;
 		}
-		if (unfinished.getID() != def.getUnfinishedID()) {
+		if (unfinished.getCatalogId() != def.getUnfinishedID()) {
 			return false;
 		}
 		final AtomicReference<Item> bubbleItem = new AtomicReference<Item>();
 		bubbleItem.set(null);
 		//constraint shaman potion
-		if (second.getID() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id() && unfinished.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_GUAM_POTION.id() &&
+		if (second.getCatalogId() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id() && unfinished.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_GUAM_POTION.id() &&
 			(player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 6)) {
 			playerTalk(player, null, "Hmmm...perhaps I shouldn't try and mix these items together",
 				"It might have unpredictable results...");
 			return false;
-		} else if (second.getID() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id() && unfinished.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_GUAM_POTION.id()) {
+		} else if (second.getCatalogId() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id() && unfinished.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_GUAM_POTION.id()) {
 			if (!isSwapped) {
 				bubbleItem.set(unfinished);
 			} else {
 				bubbleItem.set(second);
 			}
 		}
-		int repeatTimes = player.getInventory().countId(unfinished.getID());
-		repeatTimes = player.getInventory().countId(second.getID()) < repeatTimes ? player.getInventory().countId(second.getID()) : repeatTimes;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", player.getInventory().countId(unfinished.getID()), false) {
+		int repeatTimes = player.getInventory().countId(unfinished.getCatalogId());
+		repeatTimes = player.getInventory().countId(second.getCatalogId()) < repeatTimes ? player.getInventory().countId(second.getCatalogId()) : repeatTimes;
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Herblaw Make Potion", player.getInventory().countId(unfinished.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
@@ -379,16 +379,16 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 						return;
 					}
 				}
-				if (getOwner().getInventory().hasItemId(second.getID())
-					&& getOwner().getInventory().hasItemId(unfinished.getID())) {
+				if (getOwner().getInventory().hasItemId(second.getCatalogId())
+					&& getOwner().getInventory().hasItemId(unfinished.getCatalogId())) {
 					if (bubbleItem.get() != null) {
 						showBubble(getOwner(), bubbleItem.get());
 					}
 					getOwner().playSound("mix");
 					getOwner().playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(getWorld()).getName()
 						+ " into your potion");
-					getOwner().getInventory().remove(second.getID(), 1);
-					getOwner().getInventory().remove(unfinished.getID(), 1);
+					getOwner().getInventory().remove(second.getCatalogId(), 1);
+					getOwner().getInventory().remove(unfinished.getCatalogId(), 1);
 					getOwner().getInventory().add(new Item(def.getPotionID(), 1));
 					getOwner().incExp(Skills.HERBLAW, def.getExp(), true);
 				} else
@@ -404,21 +404,21 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			p.sendMemberErrorMessage();
 			return false;
 		}
-		if (unfinishedPot.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (ingredient.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || ingredient.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())
-			|| ingredient.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (unfinishedPot.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || unfinishedPot.getID() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
+		if (unfinishedPot.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (ingredient.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || ingredient.getCatalogId() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())
+			|| ingredient.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_POTION.id() && (unfinishedPot.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() || unfinishedPot.getCatalogId() == com.openrsc.server.constants.ItemId.GUAM_LEAF.id())) {
 			p.playerServerMessage(MessageType.QUEST, "You mix the liquid with the " + ingredient.getDef(p.getWorld()).getName().toLowerCase());
 			p.message("Bang!!!");
 			displayTeleportBubble(p, p.getX(), p.getY(), true);
 			p.damage(8);
 			playerTalk(p, null, "Ow!");
 			p.playerServerMessage(MessageType.QUEST, "You mixed this ingredients incorrectly and the mixture exploded!");
-			p.getInventory().remove(unfinishedPot.getID(), 1);
-			p.getInventory().remove(ingredient.getID(), 1);
+			p.getInventory().remove(unfinishedPot.getCatalogId(), 1);
+			p.getInventory().remove(ingredient.getCatalogId(), 1);
 			p.getInventory().add(new Item(com.openrsc.server.constants.ItemId.EMPTY_VIAL.id(), 1));
 			return false;
 		}
-		if (unfinishedPot.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id() && ingredient.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()
-			|| unfinishedPot.getID() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() && ingredient.getID() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id()) {
+		if (unfinishedPot.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id() && ingredient.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()
+			|| unfinishedPot.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id() && ingredient.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_OGRE_POTION.id()) {
 			if (p.getSkills().getLevel(Skills.HERBLAW) < 14) {
 				p.playerServerMessage(MessageType.QUEST, "You need to have a herblaw level of 14 or over to mix this liquid");
 				return false;
@@ -431,8 +431,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				playerTalk(p, null, "Hmmm...perhaps I shouldn't try and mix these items together",
 					"It might have unpredictable results...");
 				return false;
-			} else if (p.getInventory().hasItemId(ingredient.getID())
-				&& p.getInventory().hasItemId(unfinishedPot.getID())) {
+			} else if (p.getInventory().hasItemId(ingredient.getCatalogId())
+				&& p.getInventory().hasItemId(unfinishedPot.getCatalogId())) {
 				if (!isSwapped) {
 					showBubble(p, unfinishedPot);
 				} else {
@@ -440,8 +440,8 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				}
 				p.playerServerMessage(MessageType.QUEST, "You mix the " + ingredient.getDef(p.getWorld()).getName().toLowerCase() + " into the liquid");
 				p.playerServerMessage(MessageType.QUEST, "You produce a strong potion");
-				p.getInventory().remove(ingredient.getID(), 1);
-				p.getInventory().remove(unfinishedPot.getID(), 1);
+				p.getInventory().remove(ingredient.getCatalogId(), 1);
+				p.getInventory().remove(unfinishedPot.getCatalogId(), 1);
 				p.getInventory().add(new Item(com.openrsc.server.constants.ItemId.OGRE_POTION.id(), 1));
 				//the other half has been done already
 				p.incExp(Skills.HERBLAW, 100, true);
@@ -457,7 +457,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			return false;
 		}
 		int newID;
-		switch (com.openrsc.server.constants.ItemId.getById(item.getID())) {
+		switch (com.openrsc.server.constants.ItemId.getById(item.getCatalogId())) {
 			case UNICORN_HORN:
 				newID = com.openrsc.server.constants.ItemId.GROUND_UNICORN_HORN.id();
 				break;
@@ -483,11 +483,11 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 			default:
 				return false;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Grind", player.getInventory().countId(item.getID()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Herblaw Grind", player.getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
 				if (getOwner().getInventory().remove(item) > -1) {
-					if (item.getID() != com.openrsc.server.constants.ItemId.A_LUMP_OF_CHARCOAL.id()) {
+					if (item.getCatalogId() != com.openrsc.server.constants.ItemId.A_LUMP_OF_CHARCOAL.id()) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You grind the " + item.getDef(getWorld()).getName()
 							+ " to dust");
 					}

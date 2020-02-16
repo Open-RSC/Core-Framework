@@ -708,12 +708,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item,
 									   Player player) {
-		return obj.getID() == 926 && item.getID() == ItemId.KEEP_KEY.id();
+		return obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == 926 && item.getID() == ItemId.KEEP_KEY.id()) {
+		if (obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id()) {
 			Npc guard = getNearestNpc(p, NpcId.GOBLIN_GUARD.id(), 5);
 			if (guard != null) {
 				p.message("The gate unlocks");

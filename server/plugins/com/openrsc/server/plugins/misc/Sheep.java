@@ -17,7 +17,7 @@ public class Sheep implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener 
 
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.SHEEP.id() && item.getID() == ItemId.SHEARS.id();
+		return npc.getID() == NpcId.SHEEP.id() && item.getCatalogId() == ItemId.SHEARS.id();
 	}
 
 	@Override

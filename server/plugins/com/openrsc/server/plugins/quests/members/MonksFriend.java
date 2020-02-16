@@ -237,7 +237,7 @@ public class MonksFriend implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.BROTHER_CEDRIC.id()) {
-			if (player.getQuestStage(getQuestId()) == 4 && item.getID() == ItemId.BUCKET_OF_WATER.id()) {
+			if (player.getQuestStage(getQuestId()) == 4 && item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				showBubble(player, item);
 				playerTalk(player, npc, "Cedric, here, drink some water");
 				npcTalk(player, npc, "oh yes, my head's starting to spin",

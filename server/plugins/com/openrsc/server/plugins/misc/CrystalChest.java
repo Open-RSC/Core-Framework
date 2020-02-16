@@ -34,12 +34,12 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
+		return item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
+		if (item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
 			int respawnTime = 1000;
 			player.message("you unlock the chest with your key");
 			replaceObjectDelayed(obj, respawnTime, CRYSTAL_CHEST_OPEN);
@@ -90,7 +90,7 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 			for (Item i : loot) {
 				if (i.getAmount() > 1 && !i.getDef(player.getWorld()).isStackable()) {
 					for (int x = 0; x < i.getAmount(); x++) {
-						player.getInventory().add(new Item(i.getID(), 1));
+						player.getInventory().add(new Item(i.getCatalogId(), 1));
 					}
 				} else {
 					player.getInventory().add(i);

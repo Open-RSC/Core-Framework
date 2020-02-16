@@ -28,7 +28,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		}
 
 		int radius = 1;
-		if (item.getID() == ItemId.GNOME_BALL.id())
+		if (item.getCatalogId() == ItemId.GNOME_BALL.id())
 			radius = 10;
 
 		player.setFollowing(affectedPlayer);

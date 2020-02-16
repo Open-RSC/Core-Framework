@@ -94,12 +94,12 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return inArray(obj.getID(), WINCH) && item.getID() == ItemId.ROPE.id();
+		return inArray(obj.getID(), WINCH) && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (inArray(obj.getID(), WINCH) && item.getID() == ItemId.ROPE.id()) {
+		if (inArray(obj.getID(), WINCH) && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (obj.getID() == WINCH[0]) {
 				if (p.getCache().hasKey("digsite_winshaft")) {
 					if (!p.getCache().hasKey("winch_rope_1")) {

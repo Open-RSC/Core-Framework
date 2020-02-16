@@ -90,12 +90,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 
 	@Override
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == WITCH_DOOR && item.getID() == ItemId.KARDIA_CAT.id();
+		return obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id();
 	}
 
 	@Override
 	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == WITCH_DOOR && item.getID() == ItemId.KARDIA_CAT.id()) {
+		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
 			if (!p.getCache().hasKey("kardia_cat")) {
 				message(p, "you place the cat by the door");
 				removeItem(p, ItemId.KARDIA_CAT.id(), 1);

@@ -27,8 +27,8 @@ public class Smelting implements InvUseOnObjectListener,
 
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getID())) {
-			if (item.getID() == ItemId.STEEL_BAR.id()) {
+		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId())) {
+			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
 				if (p.getInventory().hasItemId(ItemId.CANNON_AMMO_MOULD.id())) {
 					if (getCurrentLevel(p, Skills.SMITHING) < 30) {
 						p.message("You need at least level 30 smithing to make cannon balls");
@@ -45,7 +45,7 @@ public class Smelting implements InvUseOnObjectListener,
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
 
-					p.setBatchEvent(new BatchEvent(p.getWorld(), p, delay, "Smelting", p.getInventory().countId(item.getID()), false) {
+					p.setBatchEvent(new BatchEvent(p.getWorld(), p, delay, "Smelting", p.getInventory().countId(item.getCatalogId()), false) {
 						@Override
 						public void action() {
 							getOwner().incExp(Skills.SMITHING, 100, true);
@@ -110,9 +110,9 @@ public class Smelting implements InvUseOnObjectListener,
 				return;
 			}
 			int amount = 0;
-			if (item.getID() == ItemId.DRAGON_SWORD.id())
+			if (item.getCatalogId() == ItemId.DRAGON_SWORD.id())
 				amount = 1;
-			else if (item.getID() == ItemId.DRAGON_AXE.id())
+			else if (item.getCatalogId() == ItemId.DRAGON_AXE.id())
 				amount = 2;
 			else {
 				p.message("Nothing interesting happens");
@@ -122,7 +122,7 @@ public class Smelting implements InvUseOnObjectListener,
 				p.message("90 smithing is required to use this forge");
 				return;
 			}
-			if (p.getInventory().remove(item.getID(), 1) > -1) {
+			if (p.getInventory().remove(item.getCatalogId(), 1) > -1) {
 				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
 				sleep(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
@@ -132,13 +132,13 @@ public class Smelting implements InvUseOnObjectListener,
 	}
 
 	private void handleRegularSmelting(final Item item, Player p, final GameObject obj) {
-		if (!inArray(item.getID(), Smelt.ADAMANTITE_ORE.getID(), Smelt.COAL.getID(), Smelt.COPPER_ORE.getID(), Smelt.IRON_ORE.getID(), Smelt.GOLD.getID(), Smelt.MITHRIL_ORE.getID(), Smelt.RUNITE_ORE.getID(), Smelt.SILVER.getID(), Smelt.TIN_ORE.getID(), ItemId.GOLD_FAMILYCREST.id())) {
+		if (!inArray(item.getCatalogId(), Smelt.ADAMANTITE_ORE.getID(), Smelt.COAL.getID(), Smelt.COPPER_ORE.getID(), Smelt.IRON_ORE.getID(), Smelt.GOLD.getID(), Smelt.MITHRIL_ORE.getID(), Smelt.RUNITE_ORE.getID(), Smelt.SILVER.getID(), Smelt.TIN_ORE.getID(), ItemId.GOLD_FAMILYCREST.id())) {
 			p.message("Nothing interesting happens");
 			return;
 		}
 		String formattedName = item.getDef(p.getWorld()).getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
-		if (item.getID() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
+		if (item.getCatalogId() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
 			String coalChange = p.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
@@ -176,8 +176,8 @@ public class Smelting implements InvUseOnObjectListener,
 			return;
 		}
 		if (p.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
-			if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getID() == Smelt.COPPER_ORE.getID()) {
-				p.playerServerMessage(MessageType.QUEST, "You also need some " + (item.getID() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
+			if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getCatalogId() == Smelt.COPPER_ORE.getID()) {
+				p.playerServerMessage(MessageType.QUEST, "You also need some " + (item.getCatalogId() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
 				return;
 			}
 			if (smelt.getID() == Smelt.COAL.getID() && (p.getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || p.getInventory().countId(Smelt.COAL.getID()) <= 1)) {
@@ -216,8 +216,8 @@ public class Smelting implements InvUseOnObjectListener,
 						interrupt();
 						return;
 					}
-					if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getID() == Smelt.COPPER_ORE.getID()) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You also need some " + (item.getID() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
+					if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getCatalogId() == Smelt.COPPER_ORE.getID()) {
+						getOwner().playerServerMessage(MessageType.QUEST, "You also need some " + (item.getCatalogId() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
 						interrupt();
 						return;
 					} else {
@@ -229,8 +229,8 @@ public class Smelting implements InvUseOnObjectListener,
 					}
 				}
 				showBubble(getOwner(), item);
-				if (getOwner().getInventory().countId(item.getID()) > 0) {
-					if (item.getID() == ItemId.GOLD_FAMILYCREST.id())
+				if (getOwner().getInventory().countId(item.getCatalogId()) > 0) {
+					if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
 						removeItem(getOwner(), ItemId.GOLD_FAMILYCREST.id(), 1);
 					else
 						getOwner().getInventory().remove(smelt.getID(), smelt.getOreAmount());
@@ -258,7 +258,7 @@ public class Smelting implements InvUseOnObjectListener,
 							getOwner().message("The ore is too impure and you fail to refine it");
 						}
 					} else {
-						if (item.getID() == ItemId.GOLD_FAMILYCREST.id())
+						if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
 							addItem(getOwner(), ItemId.GOLD_BAR_FAMILYCREST.id(), 1);
 						else
 							addItem(getOwner(), smelt.getSmeltBarId(), 1);
@@ -266,7 +266,7 @@ public class Smelting implements InvUseOnObjectListener,
 						getOwner().playerServerMessage(MessageType.QUEST, "You retrieve a bar of " + new Item(smelt.getSmeltBarId()).getDef(getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
-						if (getOwner().getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getID() == ItemId.GOLD_BAR.id()) {
+						if (getOwner().getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
 							getOwner().incExp(Skills.SMITHING, smelt.getXp() + 45, true);
 						} else {
 							getOwner().incExp(Skills.SMITHING, smelt.getXp(), true);
@@ -297,7 +297,7 @@ public class Smelting implements InvUseOnObjectListener,
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getID()))
+		return (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId()))
 			|| obj.getID() == LAVA_FURNACE;
 	}
 

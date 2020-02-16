@@ -13,8 +13,8 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 	private void buryBonesHelper(Player owner, Item item) {
 		owner.message("You bury the "
 			+ item.getDef(owner.getWorld()).getName().toLowerCase());
-		owner.getInventory().remove(item.getID(), 1);
-		switch (ItemId.getById(item.getID())) {
+		owner.getInventory().remove(item.getCatalogId(), 1);
+		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
 				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
 				break;
@@ -36,7 +36,7 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
 		if(command.equalsIgnoreCase("bury")) {
-			if (item.getID() == 1308 || item.getID() == 1648 || item.getID() == 1793 || item.getID() == 1871 || item.getID() == 2257) {
+			if (item.getCatalogId() == 1308 || item.getCatalogId() == 1648 || item.getCatalogId() == 1793 || item.getCatalogId() == 1871 || item.getCatalogId() == 2257) {
 				player.message("You can't bury noted bones");
 				return;
 			}
