@@ -97,6 +97,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void querySavePlayerSkills(int playerId, PlayerSkills[] currSkillLevels) throws GameDatabaseException;
 	protected abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
 
+	protected abstract void querySavePlayerInventoryAdd(int playerId, PlayerInventory item) throws GameDatabaseException;
+	protected abstract void querySavePlayerInventoryUpdateAmount(int playerId, int itemId, int amount) throws GameDatabaseException;
+	protected abstract void querySavePlayerInventoryRemove(int playerId, PlayerInventory item) throws GameDatabaseException;
+
 	public void open() {
 		synchronized(open) {
 			try {
@@ -158,8 +162,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			}
 
 			savePlayerBank(player);
-			savePlayerInventory(player);
-			savePlayerEquipment(player);
+			//savePlayerInventory(player);
+			//savePlayerEquipment(player);
 			//savePlayerAchievements(player);
 			savePlayerQuests(player);
 			savePlayerCastTime(player);
@@ -290,23 +294,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	private void loadPlayerInventory(final Player player) throws GameDatabaseException {
-		final Inventory inv = new Inventory(player);
 		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player);
-
-		for (int i = 0; i < invItems.length; i++) {
-			Item item = new Item(invItems[i].itemId, invItems[i].itemStatus);
-			ItemDefinition itemDef = item.getDef(player.getWorld());
-			item.setWielded(false);
-			if (item.isWieldable(player.getWorld()) && invItems[i].wielded) {
-				if (itemDef != null) {
-					if (!getServer().getConfig().WANT_EQUIPMENT_TAB)
-						item.setWielded(true);
-						inv.add(item, false);
-					}
-					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-			} else
-				inv.add(item, false);
-		}
+		final Inventory inv = new Inventory(player, invItems);
 
 		player.setInventory(inv);
 	}
@@ -536,8 +525,9 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		for(int i = 0; i < invSize; i++) {
 			inventory[i] = new PlayerInventory();
 			inventory[i].itemId = player.getInventory().get(i).getItemId();
-			inventory[i].itemStatus = player.getInventory().get(i).getItemStatus();
+			inventory[i].item = player.getInventory().get(i);
 			inventory[i].wielded = player.getInventory().get(i).isWielded();
+			inventory[i].slot = i;
 		}
 
 		querySavePlayerInventory(player.getDatabaseID(), inventory);
@@ -745,6 +735,18 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		}
 
 		querySavePlayerExperience(player.getDatabaseID(), skills);
+	}
+
+	public void querySavePlayerInventoryAdd(int playerId, Item item) throws GameDatabaseException{
+		PlayerInventory invItem = new PlayerInventory();
+		invItem.item = item;
+		invItem.wielded = item.isWielded();
+		invItem.slot = 15;
+		querySavePlayerInventoryAdd(playerId, invItem);
+	}
+
+	public void querySavePlayerInventoryUpdateAmount(int playerId, Item item) throws GameDatabaseException {
+		querySavePlayerInventoryUpdateAmount(playerId, item.getItemId(), item.getItemStatus().getAmount());
 	}
 }
 

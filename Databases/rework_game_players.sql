@@ -311,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_invitems`
 DROP TABLE IF EXISTS `openrsc_itemstatuses`;
 CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses`
 (
-    `itemID` int(10) UNSIGNED    NOT NULL,
+    `itemID` int(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
     `catalogID`       int(10) UNSIGNED    NOT NULL,
 	`amount`   int(10) UNSIGNED NOT NULL DEFAULT 1,
     `noted`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0,

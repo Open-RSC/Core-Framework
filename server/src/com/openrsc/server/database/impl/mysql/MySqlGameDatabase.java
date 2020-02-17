@@ -7,6 +7,7 @@ import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemStatus;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -267,13 +268,11 @@ public class MySqlGameDatabase extends GameDatabase {
 				PlayerInventory invItem = new PlayerInventory();
 				invItem.itemId = result.getInt("itemId");
 				invItem.wielded = result.getInt("wielded") == 1;
-				ItemStatus itemStatus = new ItemStatus();
-				itemStatus.setCatalogId(result.getInt("catalogId"));
-				itemStatus.setAmount(result.getInt("amount"));
-				itemStatus.setNoted(result.getInt("noted") ==  1);
-				itemStatus.setDurability(result.getInt("durability"));
-				invItem.itemStatus = itemStatus;
-
+				invItem.slot = result.getInt("slot");
+				invItem.item = new Item(result.getInt("catalogId"));
+				invItem.item.getItemStatus().setAmount(result.getInt("amount"));
+				invItem.item.getItemStatus().setNoted(result.getInt("noted") ==  1);
+				invItem.item.getItemStatus().setDurability(result.getInt("durability"));
 				list.add(invItem);
 			}
 
@@ -617,23 +616,21 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			updateLongs(getQueries().save_DeleteInv, playerId);
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
-			for (PlayerInventory item : inventory) {
-				statement.setInt(1, item.itemId);
-				statement.setInt(2, item.itemStatus.getCatalogId());
-				statement.setInt(3, item.itemStatus.getAmount());
-				statement.setInt(4, item.itemStatus.getNoted() ? 1 : 0);
-				statement.setInt(5, item.itemStatus.getDurability());
+			for (PlayerInventory invItem : inventory) {
+				statement.setInt(1, invItem.item.getItemStatus().getCatalogId());
+				statement.setInt(2, invItem.item.getItemStatus().getAmount());
+				statement.setInt(3, invItem.item.getItemStatus().getNoted() ? 1 : 0);
+				statement.setInt(4, invItem.item.getItemStatus().getDurability());
 				statement.addBatch();
 			}
 			statement.executeBatch();
 
 			statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
-			int slot = 0;
 			for (PlayerInventory item : inventory) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
 				statement.setInt(3, (item.wielded ? 1 : 0));
-				statement.setInt(4, slot++);
+				statement.setInt(4, item.slot);
 				statement.addBatch();
 			}
 			statement.executeBatch();
@@ -649,11 +646,10 @@ public class MySqlGameDatabase extends GameDatabase {
 			updateLongs(getQueries().save_DeleteEquip, playerId);
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"`itemID`"});
 			for (PlayerEquipped item : equipment) {
-				statement.setInt(1, item.itemId);
-				statement.setInt(2, item.itemStatus.getCatalogId());
-				statement.setInt(3, item.itemStatus.getAmount());
-				statement.setInt(4, item.itemStatus.getNoted() ? 1 : 0);
-				statement.setInt(5, item.itemStatus.getDurability());
+				statement.setInt(1, item.itemStatus.getCatalogId());
+				statement.setInt(2, item.itemStatus.getAmount());
+				statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
+				statement.setInt(4, item.itemStatus.getDurability());
 				statement.addBatch();
 			}
 			statement.executeBatch();
@@ -872,6 +868,56 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 	}
 
+	@Override
+	protected void querySavePlayerInventoryAdd(int playerId, PlayerInventory invItem) throws GameDatabaseException{
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"itemID"});
+			statement.setInt(1, invItem.item.getCatalogId());
+			statement.setInt(2, invItem.item.getAmount());
+			statement.setInt(3, invItem.item.getItemStatus().getNoted() ? 1 : 0);
+			statement.setInt(4, invItem.item.getItemStatus().getDurability());
+
+			statement.executeUpdate();
+			ResultSet rs = statement.getGeneratedKeys();
+			int itemID = -1;
+			if (rs != null && rs.next()) {
+				itemID = rs.getInt(1);
+				statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
+				statement.setInt(1, playerId);
+				statement.setInt(2, itemID);
+				statement.setInt(3, invItem.wielded ? 1 : 0);
+				statement.setInt(4, invItem.slot);
+				statement.executeUpdate();
+			}
+
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySavePlayerInventoryUpdateAmount(int playerId, int itemId, int amount) throws GameDatabaseException{
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_UpdateInvStatusAmount);
+			statement.setInt(1, amount);
+			statement.setInt(2, itemId);
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySavePlayerInventoryRemove(int playerId, PlayerInventory item) throws  GameDatabaseException{
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
 	@Override
 	protected PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException {
 		try {

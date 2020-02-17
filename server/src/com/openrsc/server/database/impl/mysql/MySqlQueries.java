@@ -10,7 +10,7 @@ public class MySqlQueries {
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
 	public final String playerExists, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
-	public final String save_AddInvStatus; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
+	public final String save_AddInvStatus, save_UpdateInvStatusAmount; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_AddBank, save_AddBankPreset;
 	public final String save_DeleteInv, save_AddInvItem, save_DeleteEquip, save_SaveEquip, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
@@ -74,7 +74,8 @@ public class MySqlQueries {
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
 		save_DeleteBank = "DELETE i,i2 FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
-		save_AddInvStatus = "REPLACE INTO `" + PREFIX + "itemstatuses`(`itemID`, `catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?, ?)";
+		save_AddInvStatus = "INSERT INTO `" + PREFIX + "itemstatuses`(`catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?)";
+		save_UpdateInvStatusAmount = "UPDATE `" + PREFIX + "itemstatuses` SET `amount`=? WHERE `itemID`=?";
 		save_AddBank = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `itemID`, `slot`) VALUES(?, ?, ?)";
 		save_AddBankPreset = "INSERT INTO `" + PREFIX + "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
 		save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";

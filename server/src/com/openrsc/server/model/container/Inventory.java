@@ -3,6 +3,8 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.GroundItem;
@@ -13,11 +15,16 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class Inventory {
-
+	/**
+	 * The asynchronous logger
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 	/**
 	 * The maximum size of an inventory
 	 */
@@ -30,6 +37,26 @@ public class Inventory {
 
 	public Inventory(Player player) {
 		this.player = player;
+	}
+
+	public Inventory(Player player, PlayerInventory[] inventory) {
+		try {
+			this.player = player;
+			for (int i = 0; i < inventory.length; i++) {
+				Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
+				ItemDefinition itemDef = item.getDef(player.getWorld());
+				item.setWielded(false);
+				if (item.isWieldable(player.getWorld()) && inventory[i].wielded) {
+					if (itemDef != null) {
+						if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+							item.setWielded(true);
+						list.add(item);
+					}
+					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+				} else
+					list.add(item);
+			}
+		} catch (Exception ex) { ex.printStackTrace(); }
 	}
 
 	public Inventory() {
@@ -64,6 +91,12 @@ public class Inventory {
 						existingStack.setAmount(existingStack.getAmount() + itemToAdd.getAmount());
 						if (sendInventory)
 							ActionSender.sendInventoryUpdateItem(player, index);
+						//Update the DB
+						try {
+							player.getWorld().getServer().getDatabase().querySavePlayerInventoryUpdateAmount(player.getDatabaseID(), existingStack);
+						} catch (GameDatabaseException ex) {
+							LOGGER.error(ex.getMessage());
+						}
 						return;
 					}
 				}
@@ -83,8 +116,15 @@ public class Inventory {
 				return;
 			}
 			list.add(itemToAdd);
-			if (sendInventory)
+			if (sendInventory) {
 				ActionSender.sendInventory(player);
+			}
+			//Update the database
+			try {
+				player.getWorld().getServer().getDatabase().querySavePlayerInventoryAdd(player.getDatabaseID(), itemToAdd);
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+			}
 		}
 	}
 
@@ -198,6 +238,7 @@ public class Inventory {
 		}
 		return false;
 	}
+
 	public boolean hasItemId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
@@ -318,30 +359,33 @@ public class Inventory {
 		return false;
 	}
 
-	public void replace(int i, int j) { this.replace(i, j, true); }
+	public void replace(int i, int j) {
+		this.replace(i, j, true);
+	}
+
 	public void replace(int i, int j, boolean sendInventory) {
-        Item old = new Item(i);
-        Item newitem = new Item(j);
-        if (old.getDef(player.getWorld()) != null && newitem.getDef(player.getWorld()) != null
-            && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-            && old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
-        && Functions.isWielding(player, i)) {
-            newitem.setWielded(false);
-            player.getEquipment().equip(old.getDef(player.getWorld()).getWieldPosition(), null);
-            player.getEquipment().equip(newitem.getDef(player.getWorld()).getWieldPosition(), newitem);
-            player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
-                player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
-                old.getDef(player.getWorld()).getWearableId(), false);
-            player.updateWornItems(newitem.getDef(player.getWorld()).getWieldPosition(),
-                newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
-            ActionSender.sendEquipmentStats(player);
-        } else {
-            remove(i, 1, false);
-            add(new Item(j), false);
-            if (sendInventory)
+		Item old = new Item(i);
+		Item newitem = new Item(j);
+		if (old.getDef(player.getWorld()) != null && newitem.getDef(player.getWorld()) != null
+			&& player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
+			&& Functions.isWielding(player, i)) {
+			newitem.setWielded(false);
+			player.getEquipment().equip(old.getDef(player.getWorld()).getWieldPosition(), null);
+			player.getEquipment().equip(newitem.getDef(player.getWorld()).getWieldPosition(), newitem);
+			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
+				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
+				old.getDef(player.getWorld()).getWearableId(), false);
+			player.updateWornItems(newitem.getDef(player.getWorld()).getWieldPosition(),
+				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
+			ActionSender.sendEquipmentStats(player);
+		} else {
+			remove(i, 1, false);
+			add(new Item(j), false);
+			if (sendInventory)
 				ActionSender.sendInventory(player);
-        }
-    }
+		}
+	}
 
 
 	public int getFreeSlots() {
@@ -436,7 +480,7 @@ public class Inventory {
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(affectedItem.getCatalogId()) != -1) {
-				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(),null);
+				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(), null);
 				add(affectedItem, false);
 			}
 		}
@@ -452,7 +496,7 @@ public class Inventory {
 		boolean shattered = false;
 		int index = -1;
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-		&& (index = player.getEquipment().hasEquipped(itemID)) != -1) {
+			&& (index = player.getEquipment().hasEquipped(itemID)) != -1) {
 			player.getEquipment().equip(index, null);
 			shattered = true;
 		} else {
@@ -630,7 +674,7 @@ public class Inventory {
 			}
 		} else {
 			List<Item> items = getItems();
-			synchronized(items) {
+			synchronized (items) {
 				for (Item i : items) {
 					if (item.wieldingAffectsItem(player.getWorld(), i) && i.isWielded()) {
 						unwieldItem(i, false);
@@ -644,11 +688,11 @@ public class Inventory {
 
 		item.setWielded(true);
 		player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), item.getDef(player.getWorld()).getAppearanceId(),
-				item.getDef(player.getWorld()).getWearableId(), true);
+			item.getDef(player.getWorld()).getWearableId(), true);
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
-			player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(),item);
+			player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(), item);
 		}
 
 		ActionSender.sendInventory(player);
@@ -679,7 +723,7 @@ public class Inventory {
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getEquipment().equip(i,null);
+					player.getEquipment().equip(i, null);
 				}
 			}
 		}
@@ -766,7 +810,7 @@ public class Inventory {
 			}
 		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
-		&& !player.getInventory().hasItemId(fam_gloves)) {
+			&& !player.getInventory().hasItemId(fam_gloves)) {
 			add(new Item(fam_gloves, 1));
 		}
 		ActionSender.sendInventory(player);
@@ -776,5 +820,7 @@ public class Inventory {
 		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
 
-	public List getList() { return list;}
+	public List getList() {
+		return list;
+	}
 }

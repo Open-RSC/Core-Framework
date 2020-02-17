@@ -120,22 +120,9 @@ public final class WorldPopulator {
 				countGI++;
 			}
 			result.close();
+			statement.close();
 			LOGGER.info("\t Loaded {}", box(countGI) + " grounditems.");
 
-			/* LOAD ITEM STATUSES */
-			result = statement.executeQuery("SELECT * FROM `"
-				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "itemstatuses`");
-			while (result.next()) {
-				Item item = new Item(result.getInt("catalogID"));
-				item.setItemId(result.getInt("itemID"));
-				item.getItemStatus().setAmount(result.getInt("amount"));
-				item.getItemStatus().setNoted(result.getInt("noted") == 1);
-				item.getItemStatus().setDurability(result.getInt("durability"));
-				getWorld().getItemIDs().add(item.getItemId());
-			}
-			result.close();
-			statement.close();
-			LOGGER.info("\t Loaded {}", box(getWorld().getItemIDs().size()) + " item statuses.");
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(1);

@@ -79,7 +79,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final EntityList<Player> players;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
-	private final Set<Integer> itemIDs;
 	private final List<Shop> shopData;
 	private final List<Shop> shops;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
@@ -110,7 +109,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		this.server = server;
 		npcs = new EntityList<Npc>(4000);
 		players = new EntityList<Player>(2000);
-		itemIDs = Collections.synchronizedSortedSet(new TreeSet<Integer>());
 		quests = Collections.synchronizedList( new LinkedList<QuestInterface>() );
 		minigames = Collections.synchronizedList( new LinkedList<MiniGameInterface>() );
 		shopData = Collections.synchronizedList( new ArrayList<Shop>() );
@@ -324,32 +322,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return players;
 	}
 
-	public Set<Integer> getItemIDs() {
-		return itemIDs;
-	}
-
-	/**
-	 * Finds a spot to insert a new item
-	 */
-	public int assignItemID(Item item) {
-		synchronized (itemIDs) {
-			if (itemIDs.isEmpty()) {
-				item.setItemId(0);
-				itemIDs.add(0);
-				return 0;
-			} else {
-				int lowest = 0;
-				for (Integer itemID : itemIDs) {
-					if (itemID != lowest)
-						break;
-					++lowest;
-				}
-				item.setItemId(lowest);
-				itemIDs.add(lowest);
-				return lowest;
-			}
-		}
-	}
 	/**
 	 * Finds a specific quest by ID
 	 *
