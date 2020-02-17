@@ -131,11 +131,11 @@ public final class WorldPopulator {
 				item.getItemStatus().setAmount(result.getInt("amount"));
 				item.getItemStatus().setNoted(result.getInt("noted") == 1);
 				item.getItemStatus().setDurability(result.getInt("durability"));
-				getWorld().getItems().add(item);
+				getWorld().getItemIDs().add(item.getItemId());
 			}
 			result.close();
 			statement.close();
-			LOGGER.info("\t Loaded {}", box(getWorld().getItems().size()) + " item statuses.");
+			LOGGER.info("\t Loaded {}", box(getWorld().getItemIDs().size()) + " item statuses.");
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(1);

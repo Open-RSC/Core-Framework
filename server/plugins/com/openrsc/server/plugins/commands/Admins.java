@@ -683,7 +683,9 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 							return;
 						}
 					}
-					p.getInventory().add(new Item(id, 1));
+					Item toAdd = new Item(id, 1);
+					p.getWorld().assignID(toAdd);
+					p.getInventory().add(toAdd);
 				}
 			}
 
