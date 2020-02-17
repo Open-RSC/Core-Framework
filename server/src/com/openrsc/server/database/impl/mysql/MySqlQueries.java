@@ -12,7 +12,7 @@ public class MySqlQueries {
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
 	public final String save_AddInvStatus, save_UpdateInvStatusAmount; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_AddBank, save_AddBankPreset;
-	public final String save_DeleteInv, save_AddInvItem, save_DeleteEquip, save_SaveEquip, save_UpdateBasicInfo;
+	public final String save_DeleteInv, save_AddInvItem, save_DelInvItem, save_DeleteEquip, save_SaveEquip, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
 	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, userToId, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate;
@@ -80,6 +80,7 @@ public class MySqlQueries {
 		save_AddBankPreset = "INSERT INTO `" + PREFIX + "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
 		save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
 		save_AddInvItem = "INSERT INTO `" + PREFIX + "invitems`(`playerID`, `itemID`, `wielded`, `slot`) VALUES(?, ?, ?, ?)";
+		save_DelInvItem = "DELETE FROM `" + PREFIX + "invitems` WHERE `itemID`=? AND `playerID`=?";
 		save_DeleteEquip = "DELETE FROM `" + PREFIX + "equipped` WHERE `playerID`=?";
 		save_SaveEquip = "INSERT INTO `" + PREFIX + "equipped`(`playerID`, `itemID`) VALUES(?, ?)";
 		save_UpdateBasicInfo = "UPDATE `" + PREFIX + "players` SET `combat`=?, skill_total=?, " +

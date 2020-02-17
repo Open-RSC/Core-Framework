@@ -3,6 +3,7 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.external.Gauntlets;
@@ -275,6 +276,10 @@ public class Inventory {
 			ListIterator<Item> iterator = list.listIterator(size);
 
 			for (int index = size - 1; iterator.hasPrevious(); index--) {
+				int action_taken = -1;
+				//-1: no action
+				// 0: update amount (more in inv than required)
+				// 1: remove item
 				Item i = iterator.previous();
 				if (id == i.getCatalogId() && i != null) {
 
@@ -283,6 +288,7 @@ public class Inventory {
 						// More than we need to remove, keep item in inventory.
 						i.setAmount(i.getAmount() - amount);
 						ActionSender.sendInventoryUpdateItem(player, index);
+						action_taken = 0;
 					} else if (i.getDef(player.getWorld()).isStackable() && amount > i.getAmount()) {
 						// Not enough, do not remove.
 						return -1;
@@ -292,6 +298,7 @@ public class Inventory {
 							unwieldItem(i, false);
 						}
 						iterator.remove();
+						action_taken = 1;
 						//ActionSender.sendRemoveItem(player, index);
 					}
 
@@ -302,6 +309,7 @@ public class Inventory {
 							unwieldItem(i, false);
 						}
 						iterator.remove();
+						action_taken = 1;
 						//ActionSender.sendRemoveItem(player, index);
 
 						amount -= 1;
@@ -309,6 +317,16 @@ public class Inventory {
 							return remove(id, amount, sendInventory);
 					}
 					if (sendInventory) ActionSender.sendInventory(player);
+					//Update the Database
+					try {
+						if (action_taken == 0) {
+							player.getWorld().getServer().getDatabase().querySavePlayerInventoryUpdateAmount(player.getDatabaseID(), i);
+						} else if (action_taken == 1) {
+							player.getWorld().getServer().getDatabase().querySavePlayerInventoryDelete(player.getDatabaseID(), i);
+						}
+					} catch (GameDatabaseException ex) {
+						LOGGER.error(ex.getMessage());
+					}
 					return index;
 				}
 			}

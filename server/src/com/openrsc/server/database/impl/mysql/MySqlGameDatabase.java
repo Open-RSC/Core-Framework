@@ -910,9 +910,12 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void querySavePlayerInventoryRemove(int playerId, PlayerInventory item) throws  GameDatabaseException{
+	protected void querySavePlayerInventoryDelete(int playerId, int itemId) throws  GameDatabaseException{
 		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_DelInvItem);
+			statement.setInt(1,itemId);
+			statement.setInt(2, playerId);
+			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
