@@ -331,7 +331,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Finds a spot to insert a new item
 	 */
-	public int assignID(Item item) {
+	public int assignItemID(Item item) {
 		synchronized (itemIDs) {
 			if (itemIDs.isEmpty()) {
 				item.setItemId(0);
