@@ -500,6 +500,12 @@ public class Inventory {
 			if (player.getEquipment().hasEquipped(affectedItem.getCatalogId()) != -1) {
 				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(), null);
 				add(affectedItem, false);
+				//Update the DB
+				try{
+					player.getWorld().getServer().getDatabase().querySavePlayerEquipmentRemove();
+				} catch (GameDatabaseException ex) {
+					LOGGER.error(ex.getMessage());
+				}
 			}
 		}
 		ActionSender.sendInventory(player);
@@ -711,6 +717,12 @@ public class Inventory {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
 			player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(), item);
+			//Update the DB
+			try {
+				player.getWorld().getServer().getDatabase().querySavePlayerEquipmentAdd(player.getDatabaseID(), item);
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+			}
 		}
 
 		ActionSender.sendInventory(player);

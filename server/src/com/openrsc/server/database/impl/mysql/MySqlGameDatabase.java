@@ -654,7 +654,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 			statement.executeBatch();
 
-			statement = getConnection().prepareStatement(getQueries().save_SaveEquip);
+			statement = getConnection().prepareStatement(getQueries().save_AddEquipItem);
 			for (PlayerEquipped item : equipment) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
@@ -910,7 +910,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void querySavePlayerInventoryDelete(int playerId, int itemId) throws  GameDatabaseException{
+	protected void querySavePlayerInventoryDelete(int playerId, int itemId) throws GameDatabaseException{
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_DelInvItem);
 			statement.setInt(1,itemId);
@@ -921,6 +921,20 @@ public class MySqlGameDatabase extends GameDatabase {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}
+
+	@Override
+	protected void querySavePlayerEquipmentAdd(int playerId, PlayerInventory invItem) throws GameDatabaseException{
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddEquipItem);
+			statement.setInt(1, playerId);
+			statement.setInt(2, invItem.item.getItemId());
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
 	@Override
 	protected PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException {
 		try {

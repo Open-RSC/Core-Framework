@@ -99,7 +99,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	protected abstract void querySavePlayerInventoryAdd(int playerId, PlayerInventory item) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventoryUpdateAmount(int playerId, int itemId, int amount) throws GameDatabaseException;
-	protected abstract void querySavePlayerInventoryDelete(int playerId, int ItemId) throws GameDatabaseException;
+	protected abstract void querySavePlayerInventoryDelete(int playerId, int itemId) throws GameDatabaseException;
+	protected abstract void querySavePlayerEquipmentAdd(int playerId, PlayerInventory item) throws GameDatabaseException;
 
 	public void open() {
 		synchronized(open) {
@@ -751,6 +752,18 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	public void querySavePlayerInventoryDelete(int playerId, Item item) throws GameDatabaseException {
 		querySavePlayerInventoryDelete(playerId, item.getItemId());
+	}
+
+	public void querySavePlayerEquipmentAdd(int playerId, Item item) throws GameDatabaseException{
+		PlayerInventory invItem = new PlayerInventory();
+		invItem.item = item;
+		invItem.wielded = true;
+		invItem.slot = 15;
+		querySavePlayerEquipmentAdd(playerId, invItem);
+	}
+
+	public void querySavePlayerEquipmentRemove() throws GameDatabaseException{
+
 	}
 }
 
