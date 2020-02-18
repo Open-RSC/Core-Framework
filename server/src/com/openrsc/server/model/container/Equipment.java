@@ -1,11 +1,18 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Equipment {
 
+	/**
+	 * The asynchronous logger
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 	//Number of equipment slots the player has
 	public static final int slots = 14;
 	private final Item[] list = new Item[slots];
@@ -18,6 +25,10 @@ public class Equipment {
 			for (int i = 0; i < slots; i ++)
 				list[i] = null;
 		}
+	}
+
+	public Item[] getList() {
+		return this.list;
 	}
 
 	public int getWeaponAim() {
@@ -116,11 +127,22 @@ public class Equipment {
 	public void equip(int slot, Item item) {
 		synchronized (list) {
 			list[slot] = item;
+			//Update the DB
+			try {
+				player.getWorld().getServer().getDatabase().querySavePlayerEquipmentAdd(player, item);
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+			}
 		}
 	}
 
 	public void remove(int slot) {
 		synchronized (list) {
+			try {
+				player.getWorld().getServer().getDatabase().querySavePlayerEquipmentDelete(player, list[slot]);
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+			}
 			list[slot] = null;
 			ActionSender.sendEquipmentStats(player, slot);
 			player.updateWornItems(slot,
@@ -130,6 +152,10 @@ public class Equipment {
 	public int remove(int id, int amount) {
 		synchronized (list) {
 			for (int i = 0; i < slots; i++) {
+				int actionTaken = -1;
+				//-1: no action
+				// 0: update quantity
+				// 1: remove item
 				Item curEquip = list[i];
 				if (curEquip == null || curEquip.getDef(player.getWorld()) == null)
 					continue;
@@ -142,14 +168,25 @@ public class Equipment {
 
 					if (curAmount > amount) {
 						list[i].setAmount(curAmount - amount);
+						actionTaken = 0;
 					} else if(curAmount < amount) {
 						return -1;
 					} else {
+						actionTaken = 1;
 						list[i] = null;
 						player.updateWornItems(curEquipDef.getWieldPosition(),
 							player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
 					}
-
+					//Update the DB
+					try {
+						if (actionTaken == 0) {
+							player.getWorld().getServer().getDatabase().querySavePlayerItemUpdateAmount(player, list[i]);
+						} else if (actionTaken == 1) {
+							player.getWorld().getServer().getDatabase().querySavePlayerEquipmentDelete(player, curEquip);
+						}
+					} catch (GameDatabaseException ex) {
+						LOGGER.error(ex.getMessage());
+					}
 					ActionSender.sendEquipmentStats(player);
 					return i;
 				}

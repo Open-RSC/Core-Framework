@@ -821,10 +821,10 @@ public final class PartyInterface {
 
 	private void sendCreateParty(String name, String tag) {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(0);
-		getClient().packetHandler.getClientStream().writeBuffer1.putString(name);
-		getClient().packetHandler.getClientStream().writeBuffer1.putString(tag);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(0);
+		getClient().packetHandler.getClientStream().bufferBits.putString(name);
+		getClient().packetHandler.getClientStream().bufferBits.putString(tag);
 		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAfterCreation();
@@ -832,8 +832,8 @@ public final class PartyInterface {
 
 	public void sendPartyLeave() {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(1);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(1);
 		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
@@ -841,8 +841,8 @@ public final class PartyInterface {
 
 	private void sendPartyAccept() {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(3);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(3);
 		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
@@ -850,8 +850,8 @@ public final class PartyInterface {
 
 	private void sendPartyDecline() {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(4);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(4);
 		getClient().packetHandler.getClientStream().finishPacket();
 
 		resetAll();
@@ -859,26 +859,26 @@ public final class PartyInterface {
 
 	private void sendPartyRank(String playerName, int rank) {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
-		getClient().packetHandler.getClientStream().writeBuffer1.putString(playerName);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(rank);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(6);
+		getClient().packetHandler.getClientStream().bufferBits.putString(playerName);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(rank);
 		getClient().packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendPartySettings(int settingMode, int state) {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(7);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(settingMode);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(state);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(7);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(settingMode);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(state);
 		getClient().packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendPartySearch() {
 		getClient().packetHandler.getClientStream().newPacket(199);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(12);
-		getClient().packetHandler.getClientStream().writeBuffer1.putByte(8);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(12);
+		getClient().packetHandler.getClientStream().bufferBits.putByte(8);
 		getClient().packetHandler.getClientStream().finishPacket();
 	}
 

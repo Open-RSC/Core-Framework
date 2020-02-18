@@ -69,10 +69,11 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.NPC_COMMAND1.getOpcode(), NpcCommand.class);
 		bind(OpcodeIn.NPC_COMMAND2.getOpcode(), NpcCommand.class);
 
-		bind(OpcodeIn.ITEM_EQUIP.getOpcode(), ItemWieldHandler.class);
-		bind(OpcodeIn.ITEM_REMOVE_EQUIPPED.getOpcode(), ItemWieldHandler.class);
-		bind(OpcodeIn.ITEM_EQUIP_FROM_BANK.getOpcode(), ItemWieldHandler.class);
-		bind(OpcodeIn.ITEM_REMOVE_TO_BANK.getOpcode(), ItemWieldHandler.class);
+		bind(OpcodeIn.ITEM_EQUIP_FROM_INVENTORY.getOpcode(), ItemEquip.class);
+		bind(OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY.getOpcode(), ItemUnequip.class);
+		bind(OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode(), ItemUnequip.class);
+		bind(OpcodeIn.ITEM_EQUIP_FROM_BANK.getOpcode(), ItemEquip.class);
+		bind(OpcodeIn.ITEM_REMOVE_TO_BANK.getOpcode(), ItemUnequip.class);
 
 		bind(OpcodeIn.GAME_SETTINGS_CHANGED.getOpcode(), GameSettingHandler.class);
 		bind(OpcodeIn.PRIVACY_SETTINGS_CHANGED.getOpcode(), PrivacySettingHandler.class);
@@ -108,7 +109,7 @@ public class PacketHandlerLookup {
 
 		bind(OpcodeIn.INTERFACE_OPTIONS.getOpcode(), InterfaceOptionHandler.class);
 		bind(OpcodeIn.BLINK.getOpcode(), BlinkHandler.class);
-		
+
 		bind(OpcodeIn.CHANGE_PASS.getOpcode(), SecuritySettingsHandler.class);
 		bind(OpcodeIn.CANCEL_RECOVERY_REQUEST.getOpcode(), SecuritySettingsHandler.class);
 		bind(OpcodeIn.CHANGE_RECOVERY.getOpcode(), SecuritySettingsHandler.class);

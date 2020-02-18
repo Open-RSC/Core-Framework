@@ -94,7 +94,7 @@ public class Inventory {
 							ActionSender.sendInventoryUpdateItem(player, index);
 						//Update the DB
 						try {
-							player.getWorld().getServer().getDatabase().querySavePlayerInventoryUpdateAmount(player.getDatabaseID(), existingStack);
+							player.getWorld().getServer().getDatabase().querySavePlayerItemUpdateAmount(player, existingStack);
 						} catch (GameDatabaseException ex) {
 							LOGGER.error(ex.getMessage());
 						}
@@ -276,10 +276,6 @@ public class Inventory {
 			ListIterator<Item> iterator = list.listIterator(size);
 
 			for (int index = size - 1; iterator.hasPrevious(); index--) {
-				int action_taken = -1;
-				//-1: no action
-				// 0: update amount (more in inv than required)
-				// 1: remove item
 				Item i = iterator.previous();
 				if (id == i.getCatalogId() && i != null) {
 
@@ -288,7 +284,11 @@ public class Inventory {
 						// More than we need to remove, keep item in inventory.
 						i.setAmount(i.getAmount() - amount);
 						ActionSender.sendInventoryUpdateItem(player, index);
-						action_taken = 0;
+						try {
+							player.getWorld().getServer().getDatabase().querySavePlayerItemUpdateAmount(player, i);
+						} catch (GameDatabaseException ex) {
+							LOGGER.error(ex.getMessage());
+						}
 					} else if (i.getDef(player.getWorld()).isStackable() && amount > i.getAmount()) {
 						// Not enough, do not remove.
 						return -1;
@@ -298,7 +298,11 @@ public class Inventory {
 							unwieldItem(i, false);
 						}
 						iterator.remove();
-						action_taken = 1;
+						try {
+							player.getWorld().getServer().getDatabase().querySavePlayerInventoryDelete(player, i);
+						} catch (GameDatabaseException ex) {
+							LOGGER.error(ex.getMessage());
+						}
 						//ActionSender.sendRemoveItem(player, index);
 					}
 
@@ -309,7 +313,11 @@ public class Inventory {
 							unwieldItem(i, false);
 						}
 						iterator.remove();
-						action_taken = 1;
+						try {
+							player.getWorld().getServer().getDatabase().querySavePlayerInventoryDelete(player, i);
+						} catch (GameDatabaseException ex) {
+							LOGGER.error(ex.getMessage());
+						}
 						//ActionSender.sendRemoveItem(player, index);
 
 						amount -= 1;
@@ -317,16 +325,6 @@ public class Inventory {
 							return remove(id, amount, sendInventory);
 					}
 					if (sendInventory) ActionSender.sendInventory(player);
-					//Update the Database
-					try {
-						if (action_taken == 0) {
-							player.getWorld().getServer().getDatabase().querySavePlayerInventoryUpdateAmount(player.getDatabaseID(), i);
-						} else if (action_taken == 1) {
-							player.getWorld().getServer().getDatabase().querySavePlayerInventoryDelete(player.getDatabaseID(), i);
-						}
-					} catch (GameDatabaseException ex) {
-						LOGGER.error(ex.getMessage());
-					}
 					return index;
 				}
 			}
@@ -498,14 +496,8 @@ public class Inventory {
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			if (player.getEquipment().hasEquipped(affectedItem.getCatalogId()) != -1) {
-				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(), null);
+				player.getEquipment().remove(affectedItem.getDef(player.getWorld()).getWieldPosition());
 				add(affectedItem, false);
-				//Update the DB
-				try{
-					player.getWorld().getServer().getDatabase().querySavePlayerEquipmentRemove();
-				} catch (GameDatabaseException ex) {
-					LOGGER.error(ex.getMessage());
-				}
 			}
 		}
 		ActionSender.sendInventory(player);
@@ -690,6 +682,12 @@ public class Inventory {
 						if (item.getCatalogId() == i.getCatalogId()) {
 							i.setAmount(i.getAmount() + item.getAmount());
 							ActionSender.updateEquipmentSlot(player, i.getDef(player.getWorld()).getWieldPosition());
+							//Update the DB
+							try{
+								player.getWorld().getServer().getDatabase().querySavePlayerItemUpdateAmount(player, i);
+							} catch (GameDatabaseException ex) {
+								LOGGER.error(ex.getMessage());
+							}
 							return true;
 						}
 					}
@@ -717,14 +715,7 @@ public class Inventory {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			item.setWielded(false);
 			player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(), item);
-			//Update the DB
-			try {
-				player.getWorld().getServer().getDatabase().querySavePlayerEquipmentAdd(player.getDatabaseID(), item);
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
-			}
 		}
-
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player, item.getDef(player.getWorld()).getWieldPosition());
 		return true;

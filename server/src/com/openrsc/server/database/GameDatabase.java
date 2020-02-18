@@ -98,9 +98,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerInventoryAdd(int playerId, PlayerInventory item) throws GameDatabaseException;
-	protected abstract void querySavePlayerInventoryUpdateAmount(int playerId, int itemId, int amount) throws GameDatabaseException;
+	protected abstract void querySavePlayerItemUpdateAmount(int playerId, int itemId, int amount) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventoryDelete(int playerId, int itemId) throws GameDatabaseException;
 	protected abstract void querySavePlayerEquipmentAdd(int playerId, PlayerInventory item) throws GameDatabaseException;
+	protected abstract void querySavePlayerEquipmentDelete(int playerId, int itemId) throws GameDatabaseException;
 
 	public void open() {
 		synchronized(open) {
@@ -304,19 +305,21 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	private void loadPlayerEquipment(final Player player) throws GameDatabaseException {
 		if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			final Equipment equipment = new Equipment(player);
-			final PlayerEquipped[] equippedItems = queryLoadPlayerEquipped(player);
+			synchronized (equipment.getList()) {
+				final PlayerEquipped[] equippedItems = queryLoadPlayerEquipped(player);
 
-			for (final PlayerEquipped equippedItem : equippedItems) {
-				final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
-				final ItemDefinition itemDef = item.getDef(player.getWorld());
-				if (item.isWieldable(player.getWorld())) {
-					equipment.equip(itemDef.getWieldPosition(), item);
-					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
-						itemDef.getWearableId(), true);
+				for (final PlayerEquipped equippedItem : equippedItems) {
+					final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
+					final ItemDefinition itemDef = item.getDef(player.getWorld());
+					if (item.isWieldable(player.getWorld())) {
+						equipment.getList()[itemDef.getWieldPosition()] = item;
+						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
+							itemDef.getWearableId(), true);
+					}
 				}
-			}
 
-			player.setEquipment(equipment);
+				player.setEquipment(equipment);
+			}
 		}
 	}
 
@@ -746,24 +749,24 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		querySavePlayerInventoryAdd(playerId, invItem);
 	}
 
-	public void querySavePlayerInventoryUpdateAmount(int playerId, Item item) throws GameDatabaseException {
-		querySavePlayerInventoryUpdateAmount(playerId, item.getItemId(), item.getItemStatus().getAmount());
+	public void querySavePlayerItemUpdateAmount(Player player, Item item) throws GameDatabaseException {
+		querySavePlayerItemUpdateAmount(player.getDatabaseID(), item.getItemId(), item.getItemStatus().getAmount());
 	}
 
-	public void querySavePlayerInventoryDelete(int playerId, Item item) throws GameDatabaseException {
-		querySavePlayerInventoryDelete(playerId, item.getItemId());
+	public void querySavePlayerInventoryDelete(Player player, Item item) throws GameDatabaseException {
+		querySavePlayerInventoryDelete(player.getDatabaseID(), item.getItemId());
 	}
 
-	public void querySavePlayerEquipmentAdd(int playerId, Item item) throws GameDatabaseException{
+	public void querySavePlayerEquipmentAdd(Player player, Item item) throws GameDatabaseException{
 		PlayerInventory invItem = new PlayerInventory();
 		invItem.item = item;
 		invItem.wielded = true;
 		invItem.slot = 15;
-		querySavePlayerEquipmentAdd(playerId, invItem);
+		querySavePlayerEquipmentAdd(player.getDatabaseID(), invItem);
 	}
 
-	public void querySavePlayerEquipmentRemove() throws GameDatabaseException{
-
+	public void querySavePlayerEquipmentDelete(Player player, Item item) throws GameDatabaseException{
+		querySavePlayerEquipmentDelete(player.getDatabaseID(), item.getItemId());
 	}
 }
 

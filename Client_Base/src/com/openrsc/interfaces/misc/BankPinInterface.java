@@ -146,9 +146,9 @@ public class BankPinInterface extends NComponent {
 
 				private void sendBankPin() {
 					getClient().packetHandler.getClientStream().newPacket(199);
-					getClient().packetHandler.getClientStream().writeBuffer1.putByte(8);
-					getClient().packetHandler.getClientStream().writeBuffer1.putByte(0);
-					getClient().packetHandler.getClientStream().writeBuffer1.putString(bankPin);
+					getClient().packetHandler.getClientStream().bufferBits.putByte(8);
+					getClient().packetHandler.getClientStream().bufferBits.putByte(0);
+					getClient().packetHandler.getClientStream().bufferBits.putString(bankPin);
 					getClient().packetHandler.getClientStream().finishPacket();
 				}
 

@@ -30,6 +30,7 @@ import orsc.graphics.two.SpriteArchive.Unpacker;
 import orsc.graphics.two.SpriteArchive.Workspace;
 import orsc.multiclient.ClientPort;
 import orsc.net.Network_Socket;
+import orsc.net.Opcodes;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
@@ -1001,7 +1002,7 @@ public final class mudclient implements Runnable {
 
 					if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
 						this.packetHandler.getClientStream().newPacket(195);
-						this.packetHandler.getClientStream().writeBuffer1.putString(player);
+						this.packetHandler.getClientStream().bufferBits.putString(player);
 						this.packetHandler.getClientStream().finishPacket();
 					} else {
 						this.showMessage(false, null, "You can\'t add yourself to your own friend list.",
@@ -1022,9 +1023,9 @@ public final class mudclient implements Runnable {
 
 				if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(9);
-					this.packetHandler.getClientStream().writeBuffer1.putString(player);
+					this.packetHandler.getClientStream().bufferBits.putByte(12);
+					this.packetHandler.getClientStream().bufferBits.putByte(9);
+					this.packetHandler.getClientStream().bufferBits.putString(player);
 					this.packetHandler.getClientStream().finishPacket();
 				} else {
 					this.showMessage(false, null, "You can\'t invite yourself to a party.",
@@ -1080,7 +1081,7 @@ public final class mudclient implements Runnable {
 
 					if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
 						this.packetHandler.getClientStream().newPacket(132);
-						this.packetHandler.getClientStream().writeBuffer1.putString(player);
+						this.packetHandler.getClientStream().bufferBits.putString(player);
 						this.packetHandler.getClientStream().finishPacket();
 					} else {
 						this.showMessage(false, null, "You can\'t add yourself to your ignore list",
@@ -1122,7 +1123,7 @@ public final class mudclient implements Runnable {
 
 					if (!var3.equals(StringUtil.displayNameToKey(this.localPlayer.accountName))) {
 						this.packetHandler.getClientStream().newPacket(194);
-						this.packetHandler.getClientStream().writeBuffer1.putString(player);
+						this.packetHandler.getClientStream().bufferBits.putString(player);
 						this.packetHandler.getClientStream().finishPacket();
 					} else {
 						this.showMessage(false, null, "You can\'t add yourself to your ignore list",
@@ -1620,10 +1621,10 @@ public final class mudclient implements Runnable {
 								answer = answer.substring(0, 100);
 							}
 
-							this.packetHandler.getClientStream().writeBuffer1.putByte(question.length());
-							this.packetHandler.getClientStream().writeBuffer1.putString(question);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(answer.length());
-							this.packetHandler.getClientStream().writeBuffer1.putString(answer);
+							this.packetHandler.getClientStream().bufferBits.putByte(question.length());
+							this.packetHandler.getClientStream().bufferBits.putString(question);
+							this.packetHandler.getClientStream().bufferBits.putByte(answer.length());
+							this.packetHandler.getClientStream().bufferBits.putString(answer);
 							//todo put encrypted??
 							//conn.enc_cred_put(DataUtil.method_13(this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var10])),
 							//		super.sess_id, this.rsa_exponent, this.rsa_modulus);
@@ -1819,14 +1820,14 @@ public final class mudclient implements Runnable {
 			}
 
 			this.packetHandler.getClientStream().newPacket(253);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(name.length());
-			this.packetHandler.getClientStream().writeBuffer1.putString(name);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(zipCode.length());
-			this.packetHandler.getClientStream().writeBuffer1.putString(zipCode);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(country.length());
-			this.packetHandler.getClientStream().writeBuffer1.putString(country);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(email.length());
-			this.packetHandler.getClientStream().writeBuffer1.putString(email);
+			this.packetHandler.getClientStream().bufferBits.putByte(name.length());
+			this.packetHandler.getClientStream().bufferBits.putString(name);
+			this.packetHandler.getClientStream().bufferBits.putByte(zipCode.length());
+			this.packetHandler.getClientStream().bufferBits.putString(zipCode);
+			this.packetHandler.getClientStream().bufferBits.putByte(country.length());
+			this.packetHandler.getClientStream().bufferBits.putString(country);
+			this.packetHandler.getClientStream().bufferBits.putByte(email.length());
+			this.packetHandler.getClientStream().bufferBits.putString(email);
 			this.packetHandler.getClientStream().finishPacket();
 
 			this.panelContact.setFocus(this.controlContactName);
@@ -2170,10 +2171,10 @@ public final class mudclient implements Runnable {
 		try {
 			this.packetHandler.getClientStream().newPacket(64);
 
-			this.packetHandler.getClientStream().writeBuffer1.putByte(v1);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(v2);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(v3);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(v4);
+			this.packetHandler.getClientStream().bufferBits.putByte(v1);
+			this.packetHandler.getClientStream().bufferBits.putByte(v2);
+			this.packetHandler.getClientStream().bufferBits.putByte(v3);
+			this.packetHandler.getClientStream().bufferBits.putByte(v4);
 			this.packetHandler.getClientStream().finishPacket();
 		} catch (RuntimeException var7) {
 			throw GenUtil.makeThrowable(var7, "client.L(" + v3 + ',' + v2 + ',' + v1 + ',' + "dummy" + ',' + v4 + ')');
@@ -2354,8 +2355,8 @@ public final class mudclient implements Runnable {
 						|| this.optionMouseButtonOne && this.mouseButtonClick == 1 && var3 == 1) {
 						if (this.controlPressed && this.shiftPressed && this.menuVisible) {
 							this.packetHandler.getClientStream().newPacket(59);
-							this.packetHandler.getClientStream().writeBuffer1.putShort(this.m_rf);
-							this.packetHandler.getClientStream().writeBuffer1.putShort(this.m_Cg);
+							this.packetHandler.getClientStream().bufferBits.putShort(this.m_rf);
+							this.packetHandler.getClientStream().bufferBits.putShort(this.m_Cg);
 							this.packetHandler.getClientStream().finishPacket();
 						} else {
 							this.handleMenuItemClicked(false, 0);
@@ -2710,7 +2711,7 @@ public final class mudclient implements Runnable {
 						this.mouseButtonClick = 0;
 						this.combatStyle = row - 1;
 						this.packetHandler.getClientStream().newPacket(29);
-						this.packetHandler.getClientStream().writeBuffer1.putByte(this.combatStyle);
+						this.packetHandler.getClientStream().bufferBits.putByte(this.combatStyle);
 						this.packetHandler.getClientStream().finishPacket();
 						break;
 					}
@@ -2867,10 +2868,10 @@ public final class mudclient implements Runnable {
 
 						if (settingsChanged) {
 							this.packetHandler.getClientStream().newPacket(8);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsRetreat ? 0 : 1);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelSettingsMagic ? 1 : 0);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsPrayer ? 0 : 1);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(!this.duelSettingsWeapons ? 0 : 1);
+							this.packetHandler.getClientStream().bufferBits.putByte(!this.duelSettingsRetreat ? 0 : 1);
+							this.packetHandler.getClientStream().bufferBits.putByte(this.duelSettingsMagic ? 1 : 0);
+							this.packetHandler.getClientStream().bufferBits.putByte(!this.duelSettingsPrayer ? 0 : 1);
+							this.packetHandler.getClientStream().bufferBits.putByte(!this.duelSettingsWeapons ? 0 : 1);
 							this.packetHandler.getClientStream().finishPacket();
 							this.duelOffsetOpponentAccepted = false;
 							this.duelOfferAccepted = false;
@@ -3381,7 +3382,7 @@ public final class mudclient implements Runnable {
 						if (mouseX > startX && mouseX < startX + highest && mouseY > startY + i * spread - 15
 							&& mouseY < startY + i * spread) {
 							this.packetHandler.getClientStream().newPacket(116);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(i);
+							this.packetHandler.getClientStream().bufferBits.putByte(i);
 							this.packetHandler.getClientStream().finishPacket();
 							nullOption = false;
 							break;
@@ -3389,7 +3390,7 @@ public final class mudclient implements Runnable {
 					}
 					if (nullOption) {
 						this.packetHandler.getClientStream().newPacket(116);
-						this.packetHandler.getClientStream().writeBuffer1.putByte(-1);
+						this.packetHandler.getClientStream().bufferBits.putByte(-1);
 						this.packetHandler.getClientStream().finishPacket();
 					}
 					mouseButtonClick = 0;
@@ -3434,7 +3435,7 @@ public final class mudclient implements Runnable {
 						if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9 > this.mouseX
 							&& startY + 2 + var2 * 12 < this.mouseY && startY + 2 + 12 + var2 * 12 > this.mouseY) {
 							this.packetHandler.getClientStream().newPacket(116);
-							this.packetHandler.getClientStream().writeBuffer1.putByte(var2);
+							this.packetHandler.getClientStream().bufferBits.putByte(var2);
 							this.packetHandler.getClientStream().finishPacket();
 							nullOption = false;
 							break;
@@ -3443,7 +3444,7 @@ public final class mudclient implements Runnable {
 
 					if (nullOption) {
 						this.packetHandler.getClientStream().newPacket(116);
-						this.packetHandler.getClientStream().writeBuffer1.putByte(-1);
+						this.packetHandler.getClientStream().bufferBits.putByte(-1);
 						this.packetHandler.getClientStream().finishPacket();
 					}
 					this.optionsMenuShow = false;
@@ -3559,10 +3560,10 @@ public final class mudclient implements Runnable {
 
 							if (btnCount > 0) {
 								this.packetHandler.getClientStream().newPacket(236);
-								this.packetHandler.getClientStream().writeBuffer1
+								this.packetHandler.getClientStream().bufferBits
 									.putShort(this.shopItemID[this.shopSelectedItemIndex]);
-								this.packetHandler.getClientStream().writeBuffer1.putShort(count);
-								this.packetHandler.getClientStream().writeBuffer1.putShort(btnCount);
+								this.packetHandler.getClientStream().bufferBits.putShort(count);
+								this.packetHandler.getClientStream().bufferBits.putShort(btnCount);
 								this.packetHandler.getClientStream().finishPacket();
 							}
 						}
@@ -3592,10 +3593,10 @@ public final class mudclient implements Runnable {
 
 							if (btnCount > 0) {
 								this.packetHandler.getClientStream().newPacket(221);
-								this.packetHandler.getClientStream().writeBuffer1
+								this.packetHandler.getClientStream().bufferBits
 									.putShort(this.shopItemID[this.shopSelectedItemIndex]);
-								this.packetHandler.getClientStream().writeBuffer1.putShort(count);
-								this.packetHandler.getClientStream().writeBuffer1.putShort(btnCount);
+								this.packetHandler.getClientStream().bufferBits.putShort(count);
+								this.packetHandler.getClientStream().bufferBits.putShort(btnCount);
 								this.packetHandler.getClientStream().finishPacket();
 							}
 						}
@@ -4497,8 +4498,8 @@ public final class mudclient implements Runnable {
 		this.packetHandler.getClientStream().newPacket(25);
 		oldPass = DataOperations.addCharacters(oldPass, 20);
 		newPass = DataOperations.addCharacters(newPass, 20);
-		this.packetHandler.getClientStream().writeBuffer1.putString(oldPass);
-		this.packetHandler.getClientStream().writeBuffer1.putString(newPass);
+		this.packetHandler.getClientStream().bufferBits.putString(oldPass);
+		this.packetHandler.getClientStream().bufferBits.putString(newPass);
 		this.packetHandler.getClientStream().finishPacket();
 	}
 
@@ -5374,10 +5375,10 @@ public final class mudclient implements Runnable {
 								var4 = Integer.parseInt(str);
 							}
 							this.packetHandler.getClientStream().newPacket(236);
-							this.packetHandler.getClientStream().writeBuffer1.putShort(id);
-							this.packetHandler.getClientStream().writeBuffer1
+							this.packetHandler.getClientStream().bufferBits.putShort(id);
+							this.packetHandler.getClientStream().bufferBits
 								.putShort(this.shopItemCount[this.shopSelectedItemIndex]);
-							this.packetHandler.getClientStream().writeBuffer1.putShort(var4);
+							this.packetHandler.getClientStream().bufferBits.putShort(var4);
 							this.packetHandler.getClientStream().finishPacket();
 						}
 					} catch (NumberFormatException var10) {
@@ -5396,10 +5397,10 @@ public final class mudclient implements Runnable {
 								var4 = Integer.parseInt(str);
 							}
 							this.packetHandler.getClientStream().newPacket(221);
-							this.packetHandler.getClientStream().writeBuffer1.putShort(this.shopItemID[this.shopSelectedItemIndex]);
-							this.packetHandler.getClientStream().writeBuffer1
+							this.packetHandler.getClientStream().bufferBits.putShort(this.shopItemID[this.shopSelectedItemIndex]);
+							this.packetHandler.getClientStream().bufferBits
 								.putShort(this.shopItemCount[this.shopSelectedItemIndex]);
-							this.packetHandler.getClientStream().writeBuffer1.putShort(var4);
+							this.packetHandler.getClientStream().bufferBits.putShort(var4);
 							this.packetHandler.getClientStream().finishPacket();
 						}
 					} catch (NumberFormatException var13) {
@@ -5450,8 +5451,8 @@ public final class mudclient implements Runnable {
 							var4 = Integer.parseInt(str);
 						}
 						this.packetHandler.getClientStream().newPacket(246);
-						this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
-						this.packetHandler.getClientStream().writeBuffer1.putInt(var4);
+						this.packetHandler.getClientStream().bufferBits.putShort(dropInventorySlot);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 						dropInventorySlot = -1;
 					} catch (NumberFormatException var13) {
@@ -5459,43 +5460,43 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.INVITE_CLAN_PLAYER) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(11);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(2);
-					this.packetHandler.getClientStream().writeBuffer1.putString(str);
+					this.packetHandler.getClientStream().bufferBits.putByte(11);
+					this.packetHandler.getClientStream().bufferBits.putByte(2);
+					this.packetHandler.getClientStream().bufferBits.putString(str);
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.KICK_CLAN_PLAYER) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(11);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(5);
-					this.packetHandler.getClientStream().writeBuffer1.putString(clanKickPlayer);
+					this.packetHandler.getClientStream().bufferBits.putByte(11);
+					this.packetHandler.getClientStream().bufferBits.putByte(5);
+					this.packetHandler.getClientStream().bufferBits.putString(clanKickPlayer);
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.CLAN_DELEGATE_LEADERSHIP) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(11);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(6);
-					this.packetHandler.getClientStream().writeBuffer1.putString(clanKickPlayer);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+					this.packetHandler.getClientStream().bufferBits.putByte(11);
+					this.packetHandler.getClientStream().bufferBits.putByte(6);
+					this.packetHandler.getClientStream().bufferBits.putString(clanKickPlayer);
+					this.packetHandler.getClientStream().bufferBits.putByte(1);
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.CLAN_LEAVE) {
 					clan.getClanInterface().sendClanLeave();
 				} else if (this.inputX_Action == InputXAction.INVITE_PARTY_PLAYER) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(9);
-					this.packetHandler.getClientStream().writeBuffer1.putString(str);
+					this.packetHandler.getClientStream().bufferBits.putByte(12);
+					this.packetHandler.getClientStream().bufferBits.putByte(9);
+					this.packetHandler.getClientStream().bufferBits.putString(str);
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.KICK_PARTY_PLAYER) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(5);
-					this.packetHandler.getClientStream().writeBuffer1.putString(partyKickPlayer);
+					this.packetHandler.getClientStream().bufferBits.putByte(12);
+					this.packetHandler.getClientStream().bufferBits.putByte(5);
+					this.packetHandler.getClientStream().bufferBits.putString(partyKickPlayer);
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.PARTY_DELEGATE_LEADERSHIP) {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(6);
-					this.packetHandler.getClientStream().writeBuffer1.putString(partyKickPlayer);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+					this.packetHandler.getClientStream().bufferBits.putByte(12);
+					this.packetHandler.getClientStream().bufferBits.putByte(6);
+					this.packetHandler.getClientStream().bufferBits.putString(partyKickPlayer);
+					this.packetHandler.getClientStream().bufferBits.putByte(1);
 					this.packetHandler.getClientStream().finishPacket();
 				} else if (this.inputX_Action == InputXAction.PARTY_LEAVE) {
 					party.getPartyInterface().sendPartyLeave();
@@ -7373,7 +7374,7 @@ public final class mudclient implements Runnable {
 								}
 							} else if (this.selectedItemInventoryIndex < 0) {
 								if (this.inventoryItemEquipped[var5] == 1 && !S_WANT_EQUIPMENT_TAB) {
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_REMOVE_EQUIPPED, "Remove",
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_UNEQUIP_FROM_INVENTORY, "Remove",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
 									String equipCommand;
@@ -7383,7 +7384,7 @@ public final class mudclient implements Runnable {
 										equipCommand = "Wield";
 									}
 
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP, equipCommand,
+									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP_FROM_INVENTORY, equipCommand,
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								}
 
@@ -7476,9 +7477,9 @@ public final class mudclient implements Runnable {
 							if (this.mouseY >= yOffset + equipIconYLocations[j] && this.mouseY < yOffset + equipIconYLocations[j] + 32) {
 								//Send a packet to the server to unequip the item.
 								if (equippedItems[j] != null) {
-									if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {
-										this.packetHandler.getClientStream().newPacket(170);
-										this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[j].id);
+									if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {//unequip from equip menu
+										this.packetHandler.getClientStream().newPacket(Opcodes.Out.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode());
+										this.packetHandler.getClientStream().bufferBits.putShort(equippedItems[j].id);
 										this.packetHandler.getClientStream().finishPacket();
 										break;
 									} else {
@@ -8174,13 +8175,13 @@ public final class mudclient implements Runnable {
 										MessageType.GAME, 0, null);
 								} else if (!this.prayerOn[var9]) {
 									this.packetHandler.getClientStream().newPacket(60);
-									this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
+									this.packetHandler.getClientStream().bufferBits.putByte(var9);
 									this.packetHandler.getClientStream().finishPacket();
 									this.prayerOn[var9] = true;
 									soundPlayer.playSoundFile("prayeron");
 								} else {
 									this.packetHandler.getClientStream().newPacket(254);
-									this.packetHandler.getClientStream().writeBuffer1.putByte(var9);
+									this.packetHandler.getClientStream().bufferBits.putByte(var9);
 									this.packetHandler.getClientStream().finishPacket();
 									this.prayerOn[var9] = false;
 									soundPlayer.playSoundFile("prayeroff");
@@ -9027,8 +9028,8 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 0 && this.mouseButtonClick == 1) {
 			this.optionCameraModeAuto = !this.optionCameraModeAuto;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(0);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(0);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.optionCameraModeAuto ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9036,8 +9037,8 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 1 && this.mouseButtonClick == 1) {
 			this.optionMouseButtonOne = !this.optionMouseButtonOne;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(1);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(1);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.optionMouseButtonOne ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9045,8 +9046,8 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 2 && this.mouseButtonClick == 1) {
 			this.optionSoundDisabled = !this.optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(2);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(2);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.optionSoundDisabled ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9059,9 +9060,9 @@ public final class mudclient implements Runnable {
 				if (!C_CUSTOM_UI)
 					repositionAuthenticUI();
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(39);
+				this.packetHandler.getClientStream().bufferBits.putByte(39);
 				boolean setting = C_CUSTOM_UI;
-				this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 		}
@@ -9070,9 +9071,9 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 26 && this.mouseButtonClick == 1 && S_SHOW_ROOF_TOGGLE) {
 			C_HIDE_ROOFS = !C_HIDE_ROOFS;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(26);
+			this.packetHandler.getClientStream().bufferBits.putByte(26);
 			boolean optionHideRoofs = C_HIDE_ROOFS;
-			this.packetHandler.getClientStream().writeBuffer1.putByte(optionHideRoofs ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(optionHideRoofs ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9080,9 +9081,9 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 27 && this.mouseButtonClick == 1 && S_FOG_TOGGLE) {
 			C_HIDE_FOG = !C_HIDE_FOG;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(27);
+			this.packetHandler.getClientStream().bufferBits.putByte(27);
 			boolean setting = C_HIDE_FOG;
-			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9092,8 +9093,8 @@ public final class mudclient implements Runnable {
 			if (C_SHOW_GROUND_ITEMS == 4)
 				C_SHOW_GROUND_ITEMS = 0;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(28);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_SHOW_GROUND_ITEMS);
+			this.packetHandler.getClientStream().bufferBits.putByte(28);
+			this.packetHandler.getClientStream().bufferBits.putByte(C_SHOW_GROUND_ITEMS);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9101,9 +9102,9 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 9 && this.mouseButtonClick == 1 && S_AUTO_MESSAGE_SWITCH_TOGGLE) {
 			C_MESSAGE_TAB_SWITCH = !C_MESSAGE_TAB_SWITCH;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(29);
+			this.packetHandler.getClientStream().bufferBits.putByte(29);
 			boolean setting = C_MESSAGE_TAB_SWITCH;
-			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9111,9 +9112,9 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 10 && this.mouseButtonClick == 1 && S_SIDE_MENU_TOGGLE) {
 			C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(30);
+			this.packetHandler.getClientStream().bufferBits.putByte(30);
 			boolean setting = C_SIDE_MENU_OVERLAY;
-			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9121,9 +9122,9 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 11 && this.mouseButtonClick == 1 && S_WANT_KILL_FEED) {
 			C_KILL_FEED = !C_KILL_FEED;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(31);
+			this.packetHandler.getClientStream().bufferBits.putByte(31);
 			boolean setting = C_KILL_FEED;
-			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9133,7 +9134,7 @@ public final class mudclient implements Runnable {
 			if (this.combatStyle == 4)
 				this.combatStyle = 0;
 			this.packetHandler.getClientStream().newPacket(29);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.combatStyle);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.combatStyle);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9143,8 +9144,8 @@ public final class mudclient implements Runnable {
 			if (C_FIGHT_MENU == 3)
 				C_FIGHT_MENU = 0;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(32);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_FIGHT_MENU);
+			this.packetHandler.getClientStream().bufferBits.putByte(32);
+			this.packetHandler.getClientStream().bufferBits.putByte(C_FIGHT_MENU);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9154,8 +9155,8 @@ public final class mudclient implements Runnable {
 			if (C_EXPERIENCE_COUNTER == 3)
 				C_EXPERIENCE_COUNTER = 0;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(33);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(C_EXPERIENCE_COUNTER);
+			this.packetHandler.getClientStream().bufferBits.putByte(33);
+			this.packetHandler.getClientStream().bufferBits.putByte(C_EXPERIENCE_COUNTER);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9163,9 +9164,9 @@ public final class mudclient implements Runnable {
 		if (settingIndex == 15 && this.mouseButtonClick == 1 && S_INVENTORY_COUNT_TOGGLE) {
 			C_INV_COUNT = !C_INV_COUNT;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(34);
+			this.packetHandler.getClientStream().bufferBits.putByte(34);
 			boolean setting = C_INV_COUNT;
-			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9176,9 +9177,9 @@ public final class mudclient implements Runnable {
 				if (settingIndex == 16 && this.mouseButtonClick == 1) {
 					C_NAME_CLAN_TAG_OVERLAY = !C_NAME_CLAN_TAG_OVERLAY;
 					this.packetHandler.getClientStream().newPacket(111);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(35);
+					this.packetHandler.getClientStream().bufferBits.putByte(35);
 					boolean setting = C_NAME_CLAN_TAG_OVERLAY;
-					this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+					this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 					this.packetHandler.getClientStream().finishPacket();
 				}
 			}
@@ -9187,8 +9188,8 @@ public final class mudclient implements Runnable {
 			if (settingIndex == 17 && this.mouseButtonClick == 1) {
 				this.clanInviteBlockSetting = !this.clanInviteBlockSetting;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(11);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.clanInviteBlockSetting ? 0 : 1);
+				this.packetHandler.getClientStream().bufferBits.putByte(11);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.clanInviteBlockSetting ? 0 : 1);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 
@@ -9204,8 +9205,8 @@ public final class mudclient implements Runnable {
 				this.partyInviteBlockSetting = !this.partyInviteBlockSetting;
 				C_PARTY_INV = !C_PARTY_INV;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(36);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.partyInviteBlockSetting ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putByte(36);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.partyInviteBlockSetting ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 
@@ -9214,9 +9215,9 @@ public final class mudclient implements Runnable {
 				if (settingIndex == 24 && this.mouseButtonClick == 1) {
 					C_BATCH_PROGRESS_BAR = !C_BATCH_PROGRESS_BAR;
 					this.packetHandler.getClientStream().newPacket(111);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(24);
+					this.packetHandler.getClientStream().bufferBits.putByte(24);
 					boolean optionBatchProgressBar = C_BATCH_PROGRESS_BAR;
-					this.packetHandler.getClientStream().writeBuffer1.putByte(optionBatchProgressBar ? 1 : 0);
+					this.packetHandler.getClientStream().bufferBits.putByte(optionBatchProgressBar ? 1 : 0);
 					this.packetHandler.getClientStream().finishPacket();
 				}
 			}
@@ -9225,9 +9226,9 @@ public final class mudclient implements Runnable {
 			if (settingIndex == 25 && this.mouseButtonClick == 1 && S_EXPERIENCE_DROPS_TOGGLE) {
 				C_EXPERIENCE_DROPS = !C_EXPERIENCE_DROPS;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(25);
+				this.packetHandler.getClientStream().bufferBits.putByte(25);
 				boolean optionExperienceDrops = C_EXPERIENCE_DROPS;
-				this.packetHandler.getClientStream().writeBuffer1.putByte(optionExperienceDrops ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putByte(optionExperienceDrops ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 
@@ -9235,8 +9236,8 @@ public final class mudclient implements Runnable {
 			if (settingIndex == 38 && this.mouseButtonClick == 1 && S_NPC_KILL_MESSAGES) {
 				C_NPC_KC = !C_NPC_KC;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(38);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(C_NPC_KC ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putByte(38);
+				this.packetHandler.getClientStream().bufferBits.putByte(C_NPC_KC ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 		}
@@ -9317,8 +9318,8 @@ public final class mudclient implements Runnable {
 				}
 				this.settingsBlockGlobal = this.settingsBlockGlobal + 1;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(9);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
+				this.packetHandler.getClientStream().bufferBits.putByte(9);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.settingsBlockGlobal);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 			yFromTopDistance += 15;
@@ -9406,8 +9407,8 @@ public final class mudclient implements Runnable {
 			if (osConfig.C_LONG_PRESS_TIMER == 13)
 				osConfig.C_LONG_PRESS_TIMER = 1;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(19);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_LONG_PRESS_TIMER);
+			this.packetHandler.getClientStream().bufferBits.putByte(19);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_LONG_PRESS_TIMER);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9420,8 +9421,8 @@ public final class mudclient implements Runnable {
 				this.menuCommon.font = osConfig.C_MENU_SIZE;
 			}
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(20);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_MENU_SIZE);
+			this.packetHandler.getClientStream().bufferBits.putByte(20);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_MENU_SIZE);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9429,8 +9430,8 @@ public final class mudclient implements Runnable {
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
 			osConfig.C_HOLD_AND_CHOOSE = !osConfig.C_HOLD_AND_CHOOSE;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(21);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_HOLD_AND_CHOOSE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(21);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_HOLD_AND_CHOOSE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9438,8 +9439,8 @@ public final class mudclient implements Runnable {
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
 			osConfig.C_SWIPE_TO_SCROLL = !osConfig.C_SWIPE_TO_SCROLL;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(18);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_SWIPE_TO_SCROLL ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(18);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_SCROLL ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9447,8 +9448,8 @@ public final class mudclient implements Runnable {
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
 			osConfig.C_SWIPE_TO_ZOOM = !osConfig.C_SWIPE_TO_ZOOM;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(22);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_SWIPE_TO_ZOOM ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(22);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_ZOOM ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9456,8 +9457,8 @@ public final class mudclient implements Runnable {
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
 			osConfig.C_SWIPE_TO_ROTATE = !osConfig.C_SWIPE_TO_ROTATE;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(17);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_SWIPE_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(17);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_ROTATE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9465,8 +9466,8 @@ public final class mudclient implements Runnable {
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
 			osConfig.C_VOLUME_TO_ROTATE = !osConfig.C_VOLUME_TO_ROTATE;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(16);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_VOLUME_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(16);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_VOLUME_TO_ROTATE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9474,8 +9475,8 @@ public final class mudclient implements Runnable {
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 7 && this.mouseButtonClick == 1) {
 			osConfig.C_ANDROID_INV_TOGGLE = !osConfig.C_ANDROID_INV_TOGGLE;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(37);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_ANDROID_INV_TOGGLE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(37);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_ANDROID_INV_TOGGLE ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9636,8 +9637,8 @@ public final class mudclient implements Runnable {
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionCameraModeAuto = !this.optionCameraModeAuto;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(0);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionCameraModeAuto ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(0);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.optionCameraModeAuto ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9647,8 +9648,8 @@ public final class mudclient implements Runnable {
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionMouseButtonOne = !this.optionMouseButtonOne;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(1);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionMouseButtonOne ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(1);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.optionMouseButtonOne ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 
 		}
@@ -9659,8 +9660,8 @@ public final class mudclient implements Runnable {
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.optionSoundDisabled = !this.optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(2);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.optionSoundDisabled ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(2);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.optionSoundDisabled ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -10061,11 +10062,11 @@ public final class mudclient implements Runnable {
 			}
 
 			this.packetHandler.getClientStream().newPacket(33);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.duelOfferItemCount);
 
 			for (int i = 0; this.duelOfferItemCount > i; ++i) {
-				this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-				this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+				this.packetHandler.getClientStream().bufferBits.putShort(this.duelOfferItemID[i]);
+				this.packetHandler.getClientStream().bufferBits.putInt(this.duelOfferItemSize[i]);
 			}
 
 			this.packetHandler.getClientStream().finishPacket();
@@ -10176,11 +10177,11 @@ public final class mudclient implements Runnable {
 
 			if (andStakeSuccess) {
 				this.packetHandler.getClientStream().newPacket(33);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.duelOfferItemCount);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.duelOfferItemCount);
 
 				for (int i = 0; this.duelOfferItemCount > i; ++i) {
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.duelOfferItemID[i]);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(this.duelOfferItemSize[i]);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.duelOfferItemID[i]);
+					this.packetHandler.getClientStream().bufferBits.putInt(this.duelOfferItemSize[i]);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -10420,16 +10421,16 @@ public final class mudclient implements Runnable {
 
 			if (this.panelAppearance.isClicked(this.controlButtonAppearanceAccept)) {
 				this.packetHandler.getClientStream().newPacket(235);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHeadGender);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHeadType);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceBodyGender);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.character2Colour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceHairColour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.characterTopColour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.characterBottomColour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.appearanceSkinColour);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.panelAppearance.getControlClickedListIndex(this.playerMode1));
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.panelAppearance.getControlClickedListIndex(this.playerMode2));
+				this.packetHandler.getClientStream().bufferBits.putByte(this.appearanceHeadGender);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.appearanceHeadType);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.appearanceBodyGender);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.character2Colour);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.appearanceHairColour);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.characterTopColour);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.characterBottomColour);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.appearanceSkinColour);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.panelAppearance.getControlClickedListIndex(this.playerMode1));
+				this.packetHandler.getClientStream().bufferBits.putByte(this.panelAppearance.getControlClickedListIndex(this.playerMode2));
 				this.packetHandler.getClientStream().finishPacket();
 				this.getSurface().blackScreen(true);
 				this.showAppearanceChange = false;
@@ -11071,13 +11072,13 @@ public final class mudclient implements Runnable {
 					if (this.inputTextFinal.length() > 0) {
 						this.packetHandler.getClientStream().newPacket(45);
 						if (this.sleepWordDelay) {
-							this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+							this.packetHandler.getClientStream().bufferBits.putByte(1);
 						} else {
-							this.packetHandler.getClientStream().writeBuffer1.putByte(0);
+							this.packetHandler.getClientStream().bufferBits.putByte(0);
 							this.sleepWordDelay = true;
 						}
 
-						this.packetHandler.getClientStream().writeBuffer1.putNullThenString(this.inputTextFinal, 116);
+						this.packetHandler.getClientStream().bufferBits.putNullThenString(this.inputTextFinal, 116);
 						this.packetHandler.getClientStream().finishPacket();
 						this.inputTextCurrent = "";
 						this.sleepingStatusText = "Please wait...";
@@ -11088,13 +11089,13 @@ public final class mudclient implements Runnable {
 						&& this.mouseX < 456) {
 						this.packetHandler.getClientStream().newPacket(45);
 						if (!this.sleepWordDelay) {
-							this.packetHandler.getClientStream().writeBuffer1.putByte(0);
+							this.packetHandler.getClientStream().bufferBits.putByte(0);
 							this.sleepWordDelay = true;
 						} else {
-							this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+							this.packetHandler.getClientStream().bufferBits.putByte(1);
 						}
 
-						this.packetHandler.getClientStream().writeBuffer1.putNullThenString("-null-", -74);
+						this.packetHandler.getClientStream().bufferBits.putNullThenString("-null-", -74);
 						this.packetHandler.getClientStream().finishPacket();
 						this.sleepingStatusText = "Please wait...";
 						this.inputTextFinal = "";
@@ -11114,8 +11115,8 @@ public final class mudclient implements Runnable {
 		if (lastSavedCameraZoom != osConfig.C_LAST_ZOOM) {
 			// Saves last zoom distance
 			this.packetHandler.getClientStream().newPacket(111);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(23);
-			this.packetHandler.getClientStream().writeBuffer1.putByte(osConfig.C_LAST_ZOOM);
+			this.packetHandler.getClientStream().bufferBits.putByte(23);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_LAST_ZOOM);
 			this.packetHandler.getClientStream().finishPacket();
 			lastSavedCameraZoom = osConfig.C_LAST_ZOOM;
 		}
@@ -11195,7 +11196,7 @@ public final class mudclient implements Runnable {
 							int option = Integer.parseInt("" + (char) key) - 1;
 							if (option >= 0 && option < optionsMenuCount) {
 								this.packetHandler.getClientStream().newPacket(116);
-								this.packetHandler.getClientStream().writeBuffer1.putByte(option);
+								this.packetHandler.getClientStream().bufferBits.putByte(option);
 								this.packetHandler.getClientStream().finishPacket();
 								mouseButtonClick = 0;
 								optionsMenuShow = false;
@@ -11351,7 +11352,7 @@ public final class mudclient implements Runnable {
 							}
 
 							this.packetHandler.getClientStream().newPacket(5);
-							this.packetHandler.getClientStream().writeBuffer1.putString(getUsername());
+							this.packetHandler.getClientStream().bufferBits.putString(getUsername());
 							this.packetHandler.getClientStream().finishPacketAndFlush();
 							int var11 = this.packetHandler.getClientStream().read();
 
@@ -11446,17 +11447,17 @@ public final class mudclient implements Runnable {
 							String pPass = DataOperations.addCharacters(this.panelRecovery.getControlText(this.controlPreviousPassword), 20);
 							String nPass = DataOperations.addCharacters(this.panelRecovery.getControlText(this.controlNewPassword), 20);
 							this.packetHandler.getClientStream().newPacket(7);
-							this.packetHandler.getClientStream().writeBuffer1.putString(getUsername());
-							this.packetHandler.getClientStream().writeBuffer1.putString(pPass);
-							this.packetHandler.getClientStream().writeBuffer1.putString(nPass);
-							this.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
+							this.packetHandler.getClientStream().bufferBits.putString(getUsername());
+							this.packetHandler.getClientStream().bufferBits.putString(pPass);
+							this.packetHandler.getClientStream().bufferBits.putString(nPass);
+							this.packetHandler.getClientStream().bufferBits.putLong(getUID());
 							String answer;
 							for (int i = 0; i < 5; ++i) {
 								answer = this.panelRecovery.getControlText(this.controlPassAnswer[i]);
 								if (answer.length() > 100) {
 									answer = answer.substring(0, 100);
 								}
-								this.packetHandler.getClientStream().writeBuffer1.putString(answer);
+								this.packetHandler.getClientStream().bufferBits.putString(answer);
 							}
 
 							//conn.int_put(this.seed());
@@ -11570,10 +11571,10 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			}
 			this.packetHandler.getClientStream().newPacket(78);
-			this.packetHandler.getClientStream().writeBuffer1.putString(user);
-			this.packetHandler.getClientStream().writeBuffer1.putString(pass);
+			this.packetHandler.getClientStream().bufferBits.putString(user);
+			this.packetHandler.getClientStream().bufferBits.putString(pass);
 			if (wantEmail()) {
-				this.packetHandler.getClientStream().writeBuffer1.putString(email);
+				this.packetHandler.getClientStream().bufferBits.putString(email);
 			}
 			this.packetHandler.getClientStream().finishPacketAndFlush();
 
@@ -11642,10 +11643,10 @@ public final class mudclient implements Runnable {
 				case GROUND_ITEM_CAST_SPELL: {
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
 					this.packetHandler.getClientStream().newPacket(249);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(tileID); // spell
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(tileID); // spell
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ + this.midRegionBaseZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
@@ -11659,10 +11660,10 @@ public final class mudclient implements Runnable {
 					}
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
 					this.packetHandler.getClientStream().newPacket(53);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(tileID); // inventory slot
-					this.packetHandler.getClientStream().writeBuffer1.putShort(dir);// ground item
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(tileID); // inventory slot
+					this.packetHandler.getClientStream().bufferBits.putShort(dir);// ground item
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
@@ -11671,9 +11672,9 @@ public final class mudclient implements Runnable {
 				case GROUND_ITEM_TAKE: {
 					this.walkToGroundItem(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
 					this.packetHandler.getClientStream().newPacket(247);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11697,10 +11698,10 @@ public final class mudclient implements Runnable {
 				case WALL_CAST_SPELL: {
 					this.walkToWall(indexOrX, idOrZ, dir);
 					this.packetHandler.getClientStream().newPacket(180);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(tileID);
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
@@ -11709,14 +11710,14 @@ public final class mudclient implements Runnable {
 				case WALL_USE_ITEM: {
 					this.walkToWall(indexOrX, idOrZ, dir);
 					this.packetHandler.getClientStream().newPacket(161);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ + this.midRegionBaseZ);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
 					if (tileID > S_PLAYER_INVENTORY_SLOTS) {
-						this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
-						this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[tileID - S_PLAYER_INVENTORY_SLOTS].id);
+						this.packetHandler.getClientStream().bufferBits.putShort(0xFFFF);
+						this.packetHandler.getClientStream().bufferBits.putShort(equippedItems[tileID - S_PLAYER_INVENTORY_SLOTS].id);
 					} else
-						this.packetHandler.getClientStream().writeBuffer1.putShort(tileID);
+						this.packetHandler.getClientStream().bufferBits.putShort(tileID);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -11724,18 +11725,18 @@ public final class mudclient implements Runnable {
 				case WALL_COMMAND1: {
 					this.walkToWall(indexOrX, idOrZ, dir);
 					this.packetHandler.getClientStream().newPacket(14);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ + this.midRegionBaseZ);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case WALL_COMMAND2: {
 					this.walkToWall(indexOrX, idOrZ, dir);
 					this.packetHandler.getClientStream().newPacket(127);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ + this.midRegionBaseZ);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11747,9 +11748,9 @@ public final class mudclient implements Runnable {
 				case OBJECT_CAST_SPELL: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
 					this.packetHandler.getClientStream().newPacket(99);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(var8);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(var8);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + idOrZ);
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
@@ -11758,9 +11759,9 @@ public final class mudclient implements Runnable {
 				case OBJECT_USE_ITEM: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
 					this.packetHandler.getClientStream().newPacket(115);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(var8);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ + this.midRegionBaseZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(var8);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -11768,16 +11769,16 @@ public final class mudclient implements Runnable {
 				case OBJECT_COMMAND1: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
 					this.packetHandler.getClientStream().newPacket(136);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ + this.midRegionBaseZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ + this.midRegionBaseZ);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case OBJECT_COMMAND2: {
 					this.walkToObject(indexOrX, idOrZ, dir, 5126, tileID);
 					this.packetHandler.getClientStream().newPacket(79);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + idOrZ);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11788,8 +11789,8 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_CAST_SPELL: {
 					this.packetHandler.getClientStream().newPacket(4);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					if (selectedSpell != 16) {
 						showUiTab = Config.MAGIC_AND_PRAYER_TAB;
@@ -11805,50 +11806,50 @@ public final class mudclient implements Runnable {
 						return;
 					}
 					this.packetHandler.getClientStream().newPacket(91);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ);
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
 				}
-				case ITEM_REMOVE_EQUIPPED: {
-					this.packetHandler.getClientStream().newPacket(170);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+				case ITEM_UNEQUIP_FROM_INVENTORY: {
+					this.packetHandler.getClientStream().newPacket(Opcodes.Out.ITEM_UNEQUIP_FROM_INVENTORY.getOpcode());
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
-				case ITEM_EQUIP: {
-					this.packetHandler.getClientStream().newPacket(169);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+				case ITEM_EQUIP_FROM_INVENTORY: {
+					this.packetHandler.getClientStream().newPacket(Opcodes.Out.ITEM_EQUIP_FROM_INVENTORY.getOpcode());
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_COMMAND: {
 					int commandQuantity = 1;
 					this.packetHandler.getClientStream().newPacket(90);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putInt(commandQuantity);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_COMMAND_ALL: {
 					int commandQuantity = getInventoryCount(inventoryItemID[indexOrX]);
 					this.packetHandler.getClientStream().newPacket(90);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putInt(commandQuantity);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_COMMAND_EQUIPTAB: {
 					int commandQuantity = 1;
 					this.packetHandler.getClientStream().newPacket(90);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(commandQuantity);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(equippedItems[indexOrX].id);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(0xFFFF);
+					this.packetHandler.getClientStream().bufferBits.putInt(commandQuantity);
+					this.packetHandler.getClientStream().bufferBits.putShort(equippedItems[indexOrX].id);
+					this.packetHandler.getClientStream().bufferBits.putByte(dir);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11871,9 +11872,9 @@ public final class mudclient implements Runnable {
 					break;
 				case ITEM_DROP: {
 					this.packetHandler.getClientStream().newPacket(246);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					int amount = this.inventoryItemSize[indexOrX];
-					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
+					this.packetHandler.getClientStream().bufferBits.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
 					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
 						if (!C_CUSTOM_UI)
@@ -11894,8 +11895,8 @@ public final class mudclient implements Runnable {
 					dropInventorySlot = indexOrX;
 					int dropQuantity = getInventoryCount(inventoryItemID[dropInventorySlot]);
 					this.packetHandler.getClientStream().newPacket(246);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(dropInventorySlot);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(dropQuantity);
+					this.packetHandler.getClientStream().bufferBits.putShort(dropInventorySlot);
+					this.packetHandler.getClientStream().bufferBits.putInt(dropQuantity);
 					this.packetHandler.getClientStream().finishPacket();
 					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
 						if (!C_CUSTOM_UI)
@@ -11910,15 +11911,15 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_DROP_EQUIPTAB: {
 					this.packetHandler.getClientStream().newPacket(246);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(0xFFFF);
+					this.packetHandler.getClientStream().bufferBits.putShort(0xFFFF);
 					int slot;
 					for (slot = 0; slot < S_PLAYER_SLOT_COUNT; slot++) {
 						if (equippedItems[slot] != null && equippedItems[slot].id == indexOrX)
 							break;
 					}
 					int amount = this.equippedItemAmount[slot];
-					this.packetHandler.getClientStream().writeBuffer1.putInt(amount);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putInt(amount);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					this.showMessage(false, null,
 						"Dropping " + this.equippedItems[slot].getName(),
@@ -11934,8 +11935,8 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(50);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
@@ -11956,8 +11957,8 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(135);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -11971,7 +11972,7 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(153);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11984,7 +11985,7 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(202);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -11997,7 +11998,7 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(203);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -12011,7 +12012,7 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(190);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -12029,8 +12030,8 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(229);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
@@ -12051,8 +12052,8 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(113);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(idOrZ);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -12067,33 +12068,33 @@ public final class mudclient implements Runnable {
 					cTileZ = (character.currentZ - 64) / this.tileSize;
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, cTileX, cTileZ, true);
 					this.packetHandler.getClientStream().newPacket(171);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_DUEL: {
 					this.packetHandler.getClientStream().newPacket(103);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_TRADE: {
 					this.packetHandler.getClientStream().newPacket(142);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_PARTY_INVITE: {
 					this.packetHandler.getClientStream().newPacket(199);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(12);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(2);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putByte(12);
+					this.packetHandler.getClientStream().bufferBits.putByte(2);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case PLAYER_FOLLOW: {
 					this.packetHandler.getClientStream().newPacket(165);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
@@ -12123,9 +12124,9 @@ public final class mudclient implements Runnable {
 				case LANDSCAPE_CAST_SPELL: {
 					this.walkToActionSource(this.playerLocalX, this.playerLocalZ, indexOrX, idOrZ, true);
 					this.packetHandler.getClientStream().newPacket(158);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(dir);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX + this.midRegionBaseX);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + idOrZ);
+					this.packetHandler.getClientStream().bufferBits.putShort(dir);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX + this.midRegionBaseX);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + idOrZ);
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
@@ -12141,7 +12142,7 @@ public final class mudclient implements Runnable {
 				}
 				case SELF_CAST_SPELL: {
 					this.packetHandler.getClientStream().newPacket(137);
-					this.packetHandler.getClientStream().writeBuffer1.putShort(indexOrX);
+					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedSpell = -1;
 					break;
@@ -12308,9 +12309,9 @@ public final class mudclient implements Runnable {
 
 			if (this.mouseButtonClick != 0 && this.reportAbuse_AbuseType != 0) {
 				this.packetHandler.getClientStream().newPacket(206);
-				this.packetHandler.getClientStream().writeBuffer1.putString(this.reportAbuse_Name);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.reportAbuse_AbuseType);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.reportAbuse_isMute ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putString(this.reportAbuse_Name);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.reportAbuse_AbuseType);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.reportAbuse_isMute ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 				this.reportAbuse_State = 0;
 				this.inputTextFinal = "";
@@ -13449,16 +13450,16 @@ public final class mudclient implements Runnable {
 
 						this.packetHandler.getClientStream().newPacket(0);
 						if (reconnecting) {
-							this.packetHandler.getClientStream().writeBuffer1.putByte(1);
+							this.packetHandler.getClientStream().bufferBits.putByte(1);
 						} else {
-							this.packetHandler.getClientStream().writeBuffer1.putByte(0);
+							this.packetHandler.getClientStream().bufferBits.putByte(0);
 						}
-						this.packetHandler.getClientStream().writeBuffer1.putInt(CLIENT_VERSION);
-						this.packetHandler.getClientStream().writeBuffer1.putString(getUsername());
+						this.packetHandler.getClientStream().bufferBits.putInt(CLIENT_VERSION);
+						this.packetHandler.getClientStream().bufferBits.putString(getUsername());
 						// TODO: This strips special chars to underscore. We may want to in the future allow special chars.
-						this.packetHandler.getClientStream().writeBuffer1.putString(DataOperations.addCharacters(password, 20));
+						this.packetHandler.getClientStream().bufferBits.putString(DataOperations.addCharacters(password, 20));
 
-						this.packetHandler.getClientStream().writeBuffer1.putLong(getUID());
+						this.packetHandler.getClientStream().bufferBits.putLong(getUID());
 						//this.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
 						/*
 						 * RSBuffer rsaBuffer = new RSBuffer(500);
@@ -13646,8 +13647,8 @@ public final class mudclient implements Runnable {
 	private void putStringPair(String str1, String str2) {
 		try {
 			this.packetHandler.getClientStream().newPacket(218);
-			this.packetHandler.getClientStream().writeBuffer1.putString(str1);
-			RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().writeBuffer1, str2);
+			this.packetHandler.getClientStream().bufferBits.putString(str1);
+			RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().bufferBits, str2);
 			this.packetHandler.getClientStream().finishPacket();
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "client.KB(" + "dummy" + ',' + (str1 != null ? "{...}" : "null") + ','
@@ -13671,7 +13672,7 @@ public final class mudclient implements Runnable {
 						}
 
 						this.packetHandler.getClientStream().newPacket(167);
-						this.packetHandler.getClientStream().writeBuffer1.putNullThenString(var1, 110);
+						this.packetHandler.getClientStream().bufferBits.putNullThenString(var1, 110);
 						this.packetHandler.getClientStream().finishPacket();
 						break;
 					}
@@ -13700,7 +13701,7 @@ public final class mudclient implements Runnable {
 						}
 
 						this.packetHandler.getClientStream().newPacket(241);
-						this.packetHandler.getClientStream().writeBuffer1.putNullThenString(name, -78);
+						this.packetHandler.getClientStream().bufferBits.putNullThenString(name, -78);
 						this.packetHandler.getClientStream().finishPacket();
 						break;
 					}
@@ -13959,7 +13960,7 @@ public final class mudclient implements Runnable {
 	private void sendChatMessage(String var1) {
 		try {
 			this.packetHandler.getClientStream().newPacket(216);
-			RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().writeBuffer1, var1);
+			RSBufferUtils.putEncryptedString(this.packetHandler.getClientStream().bufferBits, var1);
 			this.packetHandler.getClientStream().finishPacket();
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.AA(" + (var1 != null ? "{...}" : "null") + ')');
@@ -13969,7 +13970,7 @@ public final class mudclient implements Runnable {
 	public final void sendCommandString(String var1) {
 		try {
 			this.packetHandler.getClientStream().newPacket(38);
-			this.packetHandler.getClientStream().writeBuffer1.putString(var1);
+			this.packetHandler.getClientStream().bufferBits.putString(var1);
 			this.packetHandler.getClientStream().finishPacket();
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "client.UC(" + (var1 != null ? "{...}" : "null") + ',' + "dummy" + ')');
@@ -14018,15 +14019,15 @@ public final class mudclient implements Runnable {
 				}
 
 				--var10;
-				this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
-				this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
+				this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + startX);
+				this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + startZ);
 				if (var9 && var10 == -1 && (this.midRegionBaseX + startX) % 5 == 0) {
 					var10 = 0;
 				}
 
 				for (int var11 = var10; var11 >= 0 && var10 - 25 < var11; --var11) {
-					this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[var11] - startX);
-					this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[var11] - startZ);
+					this.packetHandler.getClientStream().bufferBits.putByte(this.pathX[var11] - startX);
+					this.packetHandler.getClientStream().bufferBits.putByte(this.pathZ[var11] - startZ);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -15678,11 +15679,11 @@ public final class mudclient implements Runnable {
 
 			if (offerSuccess) {
 				this.packetHandler.getClientStream().newPacket(46);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.tradeItemCount);
 
 				for (int i = 0; this.tradeItemCount > i; ++i) {
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.tradeItemID[i]);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(this.tradeItemSize[i]);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.tradeItemID[i]);
+					this.packetHandler.getClientStream().bufferBits.putInt(this.tradeItemSize[i]);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -15730,11 +15731,11 @@ public final class mudclient implements Runnable {
 
 			this.packetHandler.getClientStream().newPacket(46);
 			if (var2 > 120) {
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.tradeItemCount);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.tradeItemCount);
 
 				for (var6 = 0; var6 < this.tradeItemCount; ++var6) {
-					this.packetHandler.getClientStream().writeBuffer1.putShort(this.tradeItemID[var6]);
-					this.packetHandler.getClientStream().writeBuffer1.putInt(this.tradeItemSize[var6]);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.tradeItemID[var6]);
+					this.packetHandler.getClientStream().bufferBits.putInt(this.tradeItemSize[var6]);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -15893,8 +15894,8 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().newPacket(16);
 			}
 
-			this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseX + startX);
-			this.packetHandler.getClientStream().writeBuffer1.putShort(this.midRegionBaseZ + startZ);
+			this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseX + startX);
+			this.packetHandler.getClientStream().bufferBits.putShort(this.midRegionBaseZ + startZ);
 
 			//System.out.println("walkToArea, startX: " + (this.midRegionBaseX + startX) + " (" + this.midRegionBaseX + " + " + startX + ")");
 			//System.out.println("walkToArea, startZ: " + (this.midRegionBaseZ + startZ) + " (" + this.midRegionBaseZ + " + " + startZ + ")");
@@ -15904,8 +15905,8 @@ public final class mudclient implements Runnable {
 			}
 
 			for (int i = count; i >= 0 && i > count - 25; --i) {
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathX[i] - startX);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(this.pathZ[i] - startZ);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.pathX[i] - startX);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.pathZ[i] - startZ);
 
 				//System.out.println("walkToArea, count: " + count + ", pathX[" + i + "]: " + (this.pathX[i] - startX) + " (" + this.pathX[i] + " - " + startX + ")");
 				//System.out.println("walkToArea, count: " + count + ", pathZ[" + i + "]: " + (this.pathZ[i] - startZ) + " (" + this.pathZ[i] + " - " + startZ + ")");

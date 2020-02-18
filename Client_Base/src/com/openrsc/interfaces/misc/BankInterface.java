@@ -489,11 +489,11 @@ public class BankInterface {
 	public void sendDeposit(int i) {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		mc.packetHandler.getClientStream().newPacket(23);
-		mc.packetHandler.getClientStream().writeBuffer1.putShort(itemID);
+		mc.packetHandler.getClientStream().bufferBits.putShort(itemID);
 		if (i > mc.getInventoryCount(itemID)) {
 			i = mc.getInventoryCount(itemID);
 		}
-		mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+		mc.packetHandler.getClientStream().bufferBits.putInt(i);
 		mc.packetHandler.getClientStream().finishPacket();
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
@@ -511,11 +511,11 @@ public class BankInterface {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		int amt = currentBankCounts.get(this.selectedBankSlot);
 		mc.packetHandler.getClientStream().newPacket(22);
-		mc.packetHandler.getClientStream().writeBuffer1.putShort(itemID);
+		mc.packetHandler.getClientStream().bufferBits.putShort(itemID);
 		if (i > amt) {
 			i = amt;
 		}
-		mc.packetHandler.getClientStream().writeBuffer1.putInt(i);
+		mc.packetHandler.getClientStream().bufferBits.putInt(i);
 		mc.packetHandler.getClientStream().finishPacket();
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
@@ -556,15 +556,15 @@ public class BankInterface {
 
 	private void sendNoteMode() {
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(swapNoteMode ? 1 : 0);
+		mc.packetHandler.getClientStream().bufferBits.putByte(1);
+		mc.packetHandler.getClientStream().bufferBits.putByte(swapNoteMode ? 1 : 0);
 		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendCertMode() {
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(swapCertMode ? 1 : 0);
+		mc.packetHandler.getClientStream().bufferBits.putByte(0);
+		mc.packetHandler.getClientStream().bufferBits.putByte(swapCertMode ? 1 : 0);
 		mc.packetHandler.getClientStream().finishPacket();
 	}
 

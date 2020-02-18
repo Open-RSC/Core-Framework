@@ -7378,27 +7378,6 @@ public class EntityHandler {
 
 	}
 
-	/*private static void dumpItems() throws IOException {
-		FileWriter fWriter =  new FileWriter(new File("dump.txt"));
-		BufferedWriter buffer = new BufferedWriter(fWriter);
-		for(int i = 0; i < items.size();i++) {
-			buffer.write("{");
-			buffer.newLine();
-			ItemDef def = items.get(i);
-			buffer.write(" \"id\": " + i + ",");
-			buffer.newLine();
-			buffer.write(" \"name\": \""+ def.getName() + (def.getNotedFormOf() >= 0 ? "(Noted)" : "") +"\",");
-			buffer.newLine();
-			buffer.write(" \"stackable\": " + (def.isStackable() ? "true" : "false"));
-			buffer.newLine();
-			buffer.write("},");
-			buffer.newLine();
-		}
-		buffer.close();
-		fWriter.close();
-	}*/
-
-
 	public static int storeModel(String name) {
 		if (name.equalsIgnoreCase("na")) {
 			return 0;

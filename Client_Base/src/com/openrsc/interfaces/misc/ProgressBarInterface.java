@@ -44,7 +44,7 @@ public class ProgressBarInterface {
 
 				graphics().drawBoxAlpha(getX(), getY(), (int) percentToWidth - 2, 10, 0x0000ff, 200);
 				graphics().drawColoredString((int) (getX() + (progressBarWidth / 2)), getY() + 9, (batchTotalCount - batchCompletedCount) + "/" + batchTotalCount, 0, 0xffffff, 0);
-//				
+//
 //				graphics().drawText((batchTotalCount - batchCompletedCount) + "/" + batchTotalCount,
 //						(int) (getX() + (progressBarWidth / 2)), getY() + 9, 0, 0xffffff);
 			}
@@ -127,7 +127,7 @@ public class ProgressBarInterface {
 
 	protected void sendCancelBatch() {
 		getComponent().getClient().packetHandler.getClientStream().newPacket(199);
-		getComponent().getClient().packetHandler.getClientStream().writeBuffer1.putByte(6);
+		getComponent().getClient().packetHandler.getClientStream().bufferBits.putByte(6);
 		getComponent().getClient().packetHandler.getClientStream().finishPacket();
 
 	}
