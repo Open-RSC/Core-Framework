@@ -149,10 +149,6 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	private int wornItemIndex;
 
-	private int originalItemID;
-
-	private int noteID;
-
 
 	/**
 	 * Creates a new default instance of this <code>ItemDefinition</code>.
@@ -180,7 +176,7 @@ public final class ItemDefinition extends EntityDef {
 	public ItemDefinition(String name, String description, String[] command, boolean isFemaleOnly, boolean isMembersOnly,
 						  boolean isStackable, boolean isUntradable, boolean isWearable, int appearanceID, int wearableID,
 						  int wearSlot, int requiredLevel, int requiredSkillID, int armourBonus, int weaponAimBonus,
-						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice, int noted, int original) {
+						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice) {
 		this.name = name;
 		this.description = description;
 		this.command = command;
@@ -200,8 +196,6 @@ public final class ItemDefinition extends EntityDef {
 		this.magicBonus = magicBonus;
 		this.prayerBonus = prayerBonus;
 		this.defaultPrice = basePrice;
-		this.noteID = noted;
-		this.originalItemID = original;
 	}
 
 
@@ -416,12 +410,14 @@ public final class ItemDefinition extends EntityDef {
 	}
 
 
+	@Deprecated
 	public int getOriginalItemID() {
-		return originalItemID;
+		return 0;
 	}
 
+	@Deprecated
 	public int getNoteID() {
-		return noteID;
+		return 0;
 	}
 
 	public void nullCommand() { this.command = null; }

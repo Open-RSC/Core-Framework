@@ -217,8 +217,8 @@ public final class EntityHandler {
 			/* LOAD ITEM DEFS */
 			result = statement.executeQuery("SELECT `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
 				+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
-				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `bankNoteID`, "
-				+ "originalItemID FROM `"
+				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`"
+				+ "FROM `"
 				+ getServer().getConfig().MYSQL_TABLE_PREFIX
 				+ "itemdef` order by id asc");
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
@@ -242,7 +242,7 @@ public final class EntityHandler {
 					.getInt("weaponPowerBonus"), result
 					.getInt("magicBonus"), result
 					.getInt("prayerBonus"), result
-					.getInt("basePrice"), result.getInt("bankNoteID"), result.getInt("originalItemID"));
+					.getInt("basePrice"));
 
 				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
 					toAdd.nullCommand();
