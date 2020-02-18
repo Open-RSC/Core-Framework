@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -16,6 +15,78 @@ public final class ItemEquip implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		player.message("Handeling with ItemEquip");
+		OpcodeIn opcode = OpcodeIn.get(packet.getID());
+
+		//Make sure they're allowed to equip something atm
+		if (!passCheck(player, opcode))
+			return;
+
+		//Determine which item they're trying to equip
+		Item requestedItem = null;
+		if (opcode == ITEM_EQUIP_FROM_INVENTORY) {
+			player.resetAllExceptDueling();
+			int inventorySlot = packet.readShort();
+
+			if (inventorySlot < 0 || inventorySlot >= 30) {
+				player.setSuspiciousPlayer(true, "inventorySlot < 0 or inventorySlot >= 30");
+				return;
+			}
+
+			requestedItem = player.getInventory().get(inventorySlot);
+
+		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
+			player.resetAllExceptBank();
+			int bankSlot = packet.readShort();
+
+			if (bankSlot < 0 || bankSlot >= player.getBankSize()) {
+				player.setSuspiciousPlayer(true, "bankSlot < 0 or bankSlot >= bank size");
+				return;
+			}
+
+			requestedItem = player.getBank().get(bankSlot);
+		}
+
+		//Check to make sure the item is wieldable
+		if (requestedItem == null || !requestedItem.getDef(player.getWorld()).isWieldable()) {
+			player.setSuspiciousPlayer(true, "tried to equip item null or not wieldable");
+			return;
+		}
+		//Check the weapon can be wielded on their world
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD && requestedItem.getDef(player.getWorld()).isMembersOnly()) {
+			player.message("You need to be a member to use this object");
+			return;
+		}
+		//wield item
+		if (opcode == ITEM_EQUIP_FROM_INVENTORY) {
+			//Make sure the item isn't already wielded
+			if (requestedItem.isWielded()) {
+				player.setSuspiciousPlayer(true, "tried to equip an item that was already wielded");
+				return;
+			}
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Wield", new Object[]{player, requestedItem, true, false});
+		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
+			if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				player.setSuspiciousPlayer(true, "tried to equip an item from the bank on a world without equipment tab");
+				return;
+			}
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Wield", new Object[]{player, requestedItem, true, true});
+		}
+	}
+
+
+	public static boolean passCheck(Player player, OpcodeIn opcode) {
+		if (opcode == null)
+			return false;
+		if (player.isBusy() && !player.inCombat())
+			return false;
+		if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(3)) {
+			player.message("No extra items may be worn during this duel!");
+			return false;
+		}
+		return true;
+	}
+}
+
 //		int pID = packet.getID();
 //
 //		if (player.isBusy() && !player.inCombat()) {
@@ -86,5 +157,5 @@ public final class ItemEquip implements PacketHandler {
 //		} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && pID == ITEM_REMOVE_TO_BANK.getOpcode()) {
 //			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, item, true, true});
 //		}
-	}
-}
+//	}
+//}

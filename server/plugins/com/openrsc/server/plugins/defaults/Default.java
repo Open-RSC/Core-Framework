@@ -26,7 +26,7 @@ public class Default implements DefaultHandler,
 	PlayerLogoutListener, PlayerMageItemListener, PlayerMageListener, PlayerMageNpcListener,
 	PlayerMageObjectListener, PlayerNpcRunListener, PlayerKilledPlayerListener, PlayerRangePlayerListener,
 	PlayerRangeNpcListener, StartupListener, TalkToNpcListener, TeleportListener,
-	UnWieldListener, WallObjectActionListener, WieldListener, WithdrawListener {
+	WallObjectActionListener, EquipListener, UnequipListener, WithdrawListener {
 
 	public static final DoorAction doors = new DoorAction();
 	private static final Ladders ladders = new Ladders();
@@ -252,7 +252,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
+	public void onUnequip(Player player, Item item, Boolean sound, Boolean fromBank) {
 		if(fromBank) {
 			player.getBank().unwieldItem(item, sound);
 			ActionSender.showBank(player);
@@ -262,7 +262,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onWield(Player player, Item item, Boolean sound, Boolean fromBank) {
+	public void onEquip(Player player, Item item, Boolean sound, Boolean fromBank) {
 		if(fromBank) {
 			player.getBank().wieldItem(item, sound);
 			ActionSender.showBank(player);

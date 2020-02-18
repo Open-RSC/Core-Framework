@@ -3,8 +3,8 @@ package com.openrsc.server.plugins.listeners.action;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 
-public interface UnWieldListener {
+public interface UnequipListener {
 
-	public void onUnWield(Player player, Item item, Boolean sound, Boolean fromBank);
+	public void onUnequip(Player player, Item item, Boolean sound, Boolean fromBank);
 
 }

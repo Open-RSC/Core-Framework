@@ -119,4 +119,12 @@ public enum OpcodeIn {
 	public void setOpcode(int opcode) {
 		this.opcode = opcode;
 	}
+
+	public static OpcodeIn get(int opcode) {
+		for (OpcodeIn opcodeIn : OpcodeIn.values()) {
+			if (opcodeIn.getOpcode() == opcode)
+				return opcodeIn;
+		}
+		return null;
+	}
 }
