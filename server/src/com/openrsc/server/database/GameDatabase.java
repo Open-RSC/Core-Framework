@@ -148,6 +148,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		} catch (final Exception ex) {
 			try {
 				rollbackTransaction();
+				LOGGER.error(ex.getMessage());
 			} catch (final Exception e) { }
 			LOGGER.catching(ex);
 			return null;

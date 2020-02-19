@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.*;
@@ -32,12 +33,14 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	private static int DISTURBED_SAND2 = 945;
 
 	@Override
-	public boolean blockUnequip(Player player, Item item, Boolean sound, Boolean fromBank) {
-		return (item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1;
+	public boolean blockUnequip(UnequipRequest request) {
+		return (request.item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || request.item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (request.player.getLocation().inTouristTrapCave()) && request.player.getQuestStage(Quests.TOURIST_TRAP) != -1;
 	}
 
 	@Override
-	public void onUnequip(Player player, Item item, Boolean sound, Boolean fromBank) {
+	public void onUnequip(UnequipRequest request) {
+		Item item = request.item;
+		Player player = request.player;
 		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 			player.getInventory().unwieldItem(item, true);
 
@@ -56,13 +59,6 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				npcTalk(player, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
 				newNpc.startCombat(player);
-			}
-
-			if(fromBank) {
-				player.getBank().wieldItem(item, sound);
-				ActionSender.showBank(player);
-			} else {
-				player.getInventory().wieldItem(item, sound);
 			}
 		}
 	}

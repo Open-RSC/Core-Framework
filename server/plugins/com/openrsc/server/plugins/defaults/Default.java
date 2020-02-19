@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.DefaultHandler;
 import com.openrsc.server.plugins.listeners.action.*;
@@ -252,12 +253,11 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onUnequip(Player player, Item item, Boolean sound, Boolean fromBank) {
-		if(fromBank) {
-			player.getBank().unwieldItem(item, sound);
-			ActionSender.showBank(player);
-		} else {
-			player.getInventory().unwieldItem(item, sound);
+	public void onUnequip(UnequipRequest request) {
+		switch (request.requestType) {
+			case FROM_INVENTORY:
+				request.player.getInventory().unwieldItem(request.item, request.sound);
+				break;
 		}
 	}
 

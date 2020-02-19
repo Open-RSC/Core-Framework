@@ -1,9 +1,8 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.database.struct.PlayerInventory;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.struct.UnequipFromInventoryRequest;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -22,7 +21,8 @@ public class ItemUnequip implements PacketHandler {
 		if (!passCheck(player, opcode))
 			return;
 
-		Item requestedItem = null;
+		UnequipRequest request = new UnequipRequest();
+		request.player = player;
 		if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY) {
 			player.resetAllExceptDueling();
 			int inventorySlot = packet.readShort();
@@ -32,7 +32,9 @@ public class ItemUnequip implements PacketHandler {
 				return;
 			}
 
-			requestedItem = player.getInventory().get(inventorySlot);
+			request.item = player.getInventory().get(inventorySlot);
+			request.inventorySlot = inventorySlot;
+			request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
 		} else if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT) {
 			player.resetAllExceptDueling();
 		} else if (opcode == OpcodeIn.ITEM_REMOVE_TO_BANK) {
@@ -40,16 +42,14 @@ public class ItemUnequip implements PacketHandler {
 		}
 
 		//Check to make sure the item is wieldable
-		if (requestedItem == null || !requestedItem.getDef(player.getWorld()).isWieldable()) {
+		if (request.item == null || !request.item.getDef(player.getWorld()).isWieldable()) {
 			player.setSuspiciousPlayer(true, "tried to unequip item null or not wieldable");
 			return;
 		}
 
 		if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY) {
-			UnequipFromInventoryRequest request = new UnequipFromInventoryRequest();
-			request.item = requestedItem;
-			request.player = player;
-			request.inventorySlot =
+			request.sound = true;
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Unequip", new Object[]{request});
 		} else if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT) {
 
 		} else if (opcode == OpcodeIn.ITEM_REMOVE_TO_BANK) {

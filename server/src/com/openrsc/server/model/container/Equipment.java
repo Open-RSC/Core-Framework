@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Equipment {
 
-	public enum Slot {
+	public enum EquipmentSlot {
 		SLOT_LARGE_HELMET(0),
 		SLOT_PLATE_BODY(1),
 		SLOT_PLATE_LEGS(2),
@@ -26,7 +26,7 @@ public class Equipment {
 		SLOT_RING(2);
 		int index;
 
-		Slot(int index) { this.index = index; }
+		EquipmentSlot(int index) { this.index = index; }
 		public int getIndex() { return this.index; }
 	}
 

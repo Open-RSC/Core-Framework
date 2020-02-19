@@ -1,11 +1,10 @@
 package com.openrsc.server.plugins.listeners.executive;
 
-import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.struct.UnequipRequest;
 
 public interface UnequipExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from unwielding an item
 	 */
-	boolean blockUnequip(Player player, Item item, Boolean sound, Boolean fromBank);
+	boolean blockUnequip(UnequipRequest request);
 }
