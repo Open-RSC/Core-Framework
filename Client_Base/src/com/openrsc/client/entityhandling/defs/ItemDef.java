@@ -49,6 +49,22 @@ public class ItemDef extends EntityDef {
 
 	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
+				   boolean quest, int id) {
+		this(name, description, command, basePrice, spriteID, spriteLocation,
+			stackable, wieldable, wearableID, pictureMask, 0, membersItem,
+			quest, -1, -1, id);
+	}
+
+	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
+				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
+				   boolean quest, int id) {
+		this(name, description, command, basePrice, spriteID, spriteLocation,
+			stackable, wieldable, wearableID, pictureMask, blueMask, membersItem,
+			quest, -1, -1, id);
+	}
+
+	ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
+				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
 				   boolean quest, int notedForm, int notedFormOf, int id) {
 		this(name, description, command, basePrice, spriteID, spriteLocation,
 		stackable, wieldable, wearableID, pictureMask, 0, membersItem,
@@ -73,7 +89,7 @@ public class ItemDef extends EntityDef {
 			this.command = null;*/
 	}
 
-	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
+	ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
 				   boolean quest, int notedForm, int notedFormOf, int id) {
 		super(name, description, id);
