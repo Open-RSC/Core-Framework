@@ -149,7 +149,8 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					removeItem(p, ItemId.COINS.id(), 5000);
 					message(p, "Apothecary: starts brewing and fixes to a elixir");
 					p.message("Apothecary gives you a mysterious experience elixir.");
-					addItem(p, ItemId.EXPERIENCE_ELIXIR.id(), 1);
+					//TODO: Determine if elixir will be added and indexed ID if so
+					//addItem(p, ItemId.EXPERIENCE_ELIXIR.id(), 1);
 					p.getCache().store("buy_elixir", System.currentTimeMillis());
 				} else {
 					playerTalk(p, n, "Oops, I don't have enough coins");
