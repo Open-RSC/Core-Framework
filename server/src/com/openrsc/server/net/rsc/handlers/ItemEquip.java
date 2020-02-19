@@ -35,6 +35,10 @@ public final class ItemEquip implements PacketHandler {
 			requestedItem = player.getInventory().get(inventorySlot);
 
 		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
+			if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				player.setSuspiciousPlayer(true, "tried to equip from bank on a classic world");
+				return;
+			}
 			player.resetAllExceptBank();
 			int bankSlot = packet.readShort();
 
@@ -63,13 +67,9 @@ public final class ItemEquip implements PacketHandler {
 				player.setSuspiciousPlayer(true, "tried to equip an item that was already wielded");
 				return;
 			}
-			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Wield", new Object[]{player, requestedItem, true, false});
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Equip", new Object[]{player, requestedItem, true, false});
 		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
-			if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-				player.setSuspiciousPlayer(true, "tried to equip an item from the bank on a world without equipment tab");
-				return;
-			}
-			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Wield", new Object[]{player, requestedItem, true, true});
+			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Equip", new Object[]{player, requestedItem, true, true});
 		}
 	}
 

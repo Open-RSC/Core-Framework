@@ -9,6 +9,28 @@ import org.apache.logging.log4j.Logger;
 
 public class Equipment {
 
+	public enum Slot {
+		SLOT_LARGE_HELMET(0),
+		SLOT_PLATE_BODY(1),
+		SLOT_PLATE_LEGS(2),
+		SLOT_OFFHAND(2),
+		SLOT_MAINHAND(2),
+		SLOT_MEDIUM_HELMET(2),
+		SLOT_CHAIN_BODY(2),
+		SLOT_SKIRT(2),
+		SLOT_NECK(2),
+		SLOT_BOOTS(2),
+		SLOT_GLOVES(2),
+		SLOT_CAPE(2),
+		SLOT_AMMO(2),
+		SLOT_RING(2);
+		int index;
+
+		Slot(int index) { this.index = index; }
+		public int getIndex() { return this.index; }
+	}
+
+
 	/**
 	 * The asynchronous logger
 	 */
@@ -22,7 +44,7 @@ public class Equipment {
 	public Equipment(Player p) {
 		synchronized (list) {
 			this.player = p;
-			for (int i = 0; i < slots; i ++)
+			for (int i = 0; i < slots; i++)
 				list[i] = null;
 		}
 	}
@@ -122,7 +144,9 @@ public class Equipment {
 		}
 	}
 
-	public void equip(int slot, int itemID, int amount) { this.equip(slot, new Item(itemID, amount)); }
+	public void equip(int slot, int itemID, int amount) {
+		this.equip(slot, new Item(itemID, amount));
+	}
 
 	public void equip(int slot, Item item) {
 		synchronized (list) {
@@ -149,6 +173,7 @@ public class Equipment {
 				player.getSettings().getAppearance().getSprite(slot));
 		}
 	}
+
 	public int remove(int id, int amount) {
 		synchronized (list) {
 			for (int i = 0; i < slots; i++) {
@@ -169,7 +194,7 @@ public class Equipment {
 					if (curAmount > amount) {
 						list[i].setAmount(curAmount - amount);
 						actionTaken = 0;
-					} else if(curAmount < amount) {
+					} else if (curAmount < amount) {
 						return -1;
 					} else {
 						actionTaken = 1;
@@ -194,7 +219,6 @@ public class Equipment {
 			return -1;
 		}
 	}
-
 
 
 }

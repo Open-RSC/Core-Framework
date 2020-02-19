@@ -17,7 +17,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Tourist_Trap_Mechanism implements UnequipListener, UnWieldExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
+public class Tourist_Trap_Mechanism implements UnequipListener, UnequipExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
 PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	private static int MINING_CAVE = 963;
@@ -32,12 +32,12 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	private static int DISTURBED_SAND2 = 945;
 
 	@Override
-	public boolean blockUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
+	public boolean blockUnequip(Player player, Item item, Boolean sound, Boolean fromBank) {
 		return (item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1;
 	}
 
 	@Override
-	public void onUnWield(Player player, Item item, Boolean sound, Boolean fromBank) {
+	public void onUnequip(Player player, Item item, Boolean sound, Boolean fromBank) {
 		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 			player.getInventory().unwieldItem(item, true);
 

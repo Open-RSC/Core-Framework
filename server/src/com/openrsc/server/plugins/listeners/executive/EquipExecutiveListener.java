@@ -3,9 +3,9 @@ package com.openrsc.server.plugins.listeners.executive;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 
-public interface WieldExecutiveListener {
+public interface EquipExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from wielding an item
 	 */
-	void blockWield(Player player, Item item);
+	void blockEquip(Player player, Item item);
 }
