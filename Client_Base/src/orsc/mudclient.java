@@ -7479,7 +7479,7 @@ public final class mudclient implements Runnable {
 								if (equippedItems[j] != null) {
 									if (this.mouseButtonClick == 1 && !this.topMouseMenuVisible) {//unequip from equip menu
 										this.packetHandler.getClientStream().newPacket(Opcodes.Out.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode());
-										this.packetHandler.getClientStream().bufferBits.putShort(equippedItems[j].id);
+										this.packetHandler.getClientStream().bufferBits.putByte(j);
 										this.packetHandler.getClientStream().finishPacket();
 										break;
 									} else {

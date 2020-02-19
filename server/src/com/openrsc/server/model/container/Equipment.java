@@ -13,21 +13,28 @@ public class Equipment {
 		SLOT_LARGE_HELMET(0),
 		SLOT_PLATE_BODY(1),
 		SLOT_PLATE_LEGS(2),
-		SLOT_OFFHAND(2),
-		SLOT_MAINHAND(2),
-		SLOT_MEDIUM_HELMET(2),
-		SLOT_CHAIN_BODY(2),
-		SLOT_SKIRT(2),
-		SLOT_NECK(2),
-		SLOT_BOOTS(2),
-		SLOT_GLOVES(2),
-		SLOT_CAPE(2),
-		SLOT_AMMO(2),
-		SLOT_RING(2);
+		SLOT_OFFHAND(3),
+		SLOT_MAINHAND(4),
+		SLOT_MEDIUM_HELMET(5),
+		SLOT_CHAIN_BODY(6),
+		SLOT_SKIRT(7),
+		SLOT_NECK(8),
+		SLOT_BOOTS(9),
+		SLOT_GLOVES(10),
+		SLOT_CAPE(11),
+		SLOT_AMMO(12),
+		SLOT_RING(13);
 		int index;
 
 		EquipmentSlot(int index) { this.index = index; }
 		public int getIndex() { return this.index; }
+		public static EquipmentSlot get(int index) {
+			for (EquipmentSlot slot : EquipmentSlot.values()) {
+				if (slot.getIndex() == index)
+					return slot;
+			}
+			return null;
+		}
 	}
 
 

@@ -258,6 +258,9 @@ public class Default implements DefaultHandler,
 			case FROM_INVENTORY:
 				request.player.getInventory().unwieldItem(request.item, request.sound);
 				break;
+			case FROM_EQUIPMENT:
+				request.player.getInventory().unwieldItem(request.item, request.sound);
+				break;
 		}
 	}
 
