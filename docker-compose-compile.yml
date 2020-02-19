@@ -9,10 +9,16 @@ services:
     build:
       context: .
       dockerfile: server/inc/Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '0.90'
+          memory: 8192M
+        reservations:
+          cpus: '0.25'
+          memory: 1024M
     command: bash -c "
       ant -f server/build.xml compile_core
-      && ant -f server/build.xml compile_plugins
-      && ant -f server/build.xml compile_core
       && ant -f server/build.xml compile_plugins
       && ant -f Client_Base/build.xml compile
       && ant -f PC_Launcher/build.xml compile

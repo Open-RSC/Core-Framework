@@ -18,7 +18,10 @@ echo ""
 echo "Compiling all code now."
 echo ""
 echo ""
-sudo make compile
+ant -f server/build.xml compile_core
+ant -f server/build.xml compile_plugins
+ant -f Client_Base/build.xml compile
+ant -f PC_Launcher/build.xml compile
 
 # Launcher
 echo ""
