@@ -12,11 +12,13 @@ import org.apache.logging.log4j.Logger;
  */
 
 // Send monitoring info as a game event so that it can be profiled.
-public class MonitoringEvent extends GameTickEvent {
+public class MonitoringEvent {
+
 	private static final Logger LOGGER	= LogManager.getLogger();
+	private World world;
 
 	public MonitoringEvent(World world) {
-		super(world, null, 0, "Server Monitoring");
+		this.world = world;
 	}
 
 	public void run() {
@@ -49,4 +51,6 @@ public class MonitoringEvent extends GameTickEvent {
 			getWorld().getServer().getDiscordService().monitoringSendServerBehind(message);
 		}
 	}
+
+	public World getWorld() { return this.world; }
 }

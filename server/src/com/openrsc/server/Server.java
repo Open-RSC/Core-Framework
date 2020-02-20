@@ -49,7 +49,7 @@ public class Server implements Runnable {
 	private final GameStateUpdater gameUpdater;
 	private final GameEventHandler gameEventHandler;
 	private final DiscordService discordService;
-	private final GameTickEvent monitoring;
+	private final MonitoringEvent monitoring;
 	private final LoginExecutor loginExecutor;
 	private final ServerConfiguration config;
 	private final ScheduledExecutorService scheduledExecutor;
@@ -205,9 +205,6 @@ public class Server implements Runnable {
 			getAchievementSystem().load();
 			LOGGER.info("\t Achievements Completed");*/
 
-			LOGGER.info("Loading profiling monitoring...");
-			// Send monitoring info as a game event so that it can be profiled.
-			getGameEventHandler().add(monitoring);
 			LOGGER.info("Profiling Completed");
 
 			//Never run ResourceLeakDetector PARANOID in production.
@@ -329,6 +326,7 @@ public class Server implements Runnable {
 						getGameUpdater().executeWalkToActions();
 					}
 				}
+				monitoring.run();
 			} catch (Throwable t) {
 				LOGGER.catching(t);
 			}
