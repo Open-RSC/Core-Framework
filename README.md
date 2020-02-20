@@ -62,9 +62,9 @@ This project has been made possible thanks to the time and efforts of countless 
 - Kenix, Marwolf, Luis, Aenge, Logg, Ipkpjersi, Rick IBM, Lucki, Extendo28, Kristof, Ryan, Morge, Mige, RSC2001, Red Bracket, Retrogamer02, Zoso, Fah Qu, KO9, Leclerc, Peeter, Mark Gore, N0m, Daave, xEnt, Christofosho, Frogdoubler, Kepler, Rodgerwilco, Orbrun, Seatta, Hikilaka, IanWONeill, Jamosaur, Bl0dzy, Yong Min, Lothy, and many more!       
 
 Several organizations and companies have helped us out along the way and we are forever grateful to them:
-- CloudFlare
-- DigitalOcean
-- Vultr
+- <a href="https://www.cloudflare.com/">CloudFlare</a>
+- <a href="https://www.digitalocean.com/">DigitalOcean</a>
+- <a href="https://www.vultr.com/">Vultr</a>
 - <a href="https://www.jetbrains.com/">JetBrains IntelliJ-based IDEs</a>
 - <a href="https://www.yourkit.com/java/profiler">YourKit Java Profiler</a>
 - <a href="https://www.docker.com/">Docker</a>
