@@ -763,7 +763,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		invItem.item = item;
 		invItem.wielded = true;
 		invItem.slot = 15;
-		querySavePlayerEquipmentAdd(player.getDatabaseID(), invItem);
+		//querySavePlayerEquipmentAdd(player.getDatabaseID(), invItem);
 	}
 
 	public void querySavePlayerEquipmentDelete(Player player, Item item) throws GameDatabaseException{

@@ -262,16 +262,22 @@ public class Default implements DefaultHandler,
 			case FROM_EQUIPMENT:
 				request.player.getInventory().unwieldItem(request.item, request.sound);
 				break;
+			case FROM_BANK:
+				request.player.getBank().unwieldItem(request.item, request.sound);
+				break;
 		}
 	}
 
 	@Override
 	public void onEquip(EquipRequest request) {
-		if (request.requestType == EquipRequest.RequestType.FROM_BANK) {
-			request.player.getBank().wieldItem(request.item, request.sound);
-			ActionSender.showBank(request.player);
-		} else {
-			request.player.getInventory().wieldItem(request.item, request.sound);
+		switch (request.requestType) {
+			case FROM_BANK:
+				request.player.getBank().wieldItem(request.item, request.sound);
+				ActionSender.showBank(request.player);
+				break;
+			case FROM_INVENTORY:
+				request.player.getInventory().wieldItem(request.item, request.sound);
+				break;
 		}
 	}
 

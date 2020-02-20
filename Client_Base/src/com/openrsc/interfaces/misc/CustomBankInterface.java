@@ -7,12 +7,14 @@ import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
+import orsc.net.Opcodes;
 import orsc.util.BankUtil;
 import orsc.util.GenUtil;
 
 import java.util.ArrayList;
 
 import static orsc.Config.*;
+import static orsc.net.Opcodes.Out.ITEM_REMOVE_TO_BANK;
 import static orsc.osConfig.C_MENU_SIZE;
 
 public final class CustomBankInterface extends BankInterface {
@@ -548,8 +550,8 @@ public final class CustomBankInterface extends BankInterface {
 								rightClickMenuY = mc.getMouseY();
 								rightClickMenu = true;
 							} else if (mc.getMouseClick() == 1) {
-								mc.packetHandler.getClientStream().newPacket(173);
-								mc.packetHandler.getClientStream().bufferBits.putShort(mc.equippedItems[selectedEquipmentSlot].id);
+								mc.packetHandler.getClientStream().newPacket(ITEM_REMOVE_TO_BANK.getOpcode());
+								mc.packetHandler.getClientStream().bufferBits.putByte(selectedEquipmentSlot & 0xFF);
 								mc.packetHandler.getClientStream().finishPacket();
 								selectedEquipmentSlot = -1;
 								rightClickMenu = false;
@@ -984,8 +986,8 @@ public final class CustomBankInterface extends BankInterface {
 						&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight + 20) {
 						if (mc.getMouseClick() == 1) {
 							if (mc.equippedItems[selectedEquipmentSlot] != null) {
-								mc.packetHandler.getClientStream().newPacket(173);
-								mc.packetHandler.getClientStream().bufferBits.putShort(mc.equippedItems[selectedEquipmentSlot].id);
+								mc.packetHandler.getClientStream().newPacket(ITEM_REMOVE_TO_BANK.getOpcode());
+								mc.packetHandler.getClientStream().bufferBits.putByte(selectedEquipmentSlot & 0xFF);
 								mc.packetHandler.getClientStream().finishPacket();
 							}
 							selectedEquipmentSlot = -1;

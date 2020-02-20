@@ -52,6 +52,8 @@ public final class ItemEquip implements PacketHandler {
 			}
 
 			request.item = player.getBank().get(bankSlot);
+			request.requestType = EquipRequest.RequestType.FROM_BANK;
+			request.bankSlot = bankSlot;
 		}
 
 		//Check to make sure the item is wieldable
