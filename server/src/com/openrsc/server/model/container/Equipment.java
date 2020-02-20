@@ -3,6 +3,8 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.struct.EquipRequest;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -227,5 +229,11 @@ public class Equipment {
 		}
 	}
 
+	public boolean equipItem(EquipRequest request) {
 
+	}
+
+	public boolean unequipItem(UnequipRequest request) {
+
+	}
 }

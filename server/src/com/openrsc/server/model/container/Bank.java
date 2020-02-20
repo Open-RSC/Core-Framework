@@ -294,97 +294,97 @@ public class Bank {
 
 	}
 
-	public void wieldItem(Item item, boolean sound) {
-		if (item.getDef(getPlayer().getWorld()) == null)
-			return;
-
-		if ( !item.getDef(getPlayer().getWorld()).isStackable() && getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()) != null
-			&& item.getCatalogId() == getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()).getCatalogId())
-			return;
-
-		if (!Functions.canWield(getPlayer(), item) || !item.getDef(getPlayer().getWorld()).isWieldable()) {
-			return;
-		}
-
-		ArrayList<Item> itemsToStore = new ArrayList<>();
-
-		//Do an inventory count check
-		int count = 0;
-		Item i;
-		for (int p = 0; p < Equipment.slots; p++) {
-			i = getPlayer().getEquipment().get(p);
-			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
-				if (item.getDef(getPlayer().getWorld()).isStackable()) {
-					if (item.getCatalogId() == i.getCatalogId())
-						continue;
-				}
-				count++;
-				itemsToStore.add(i);
-			}
-		}
-
-		int requiredSpaces = getRequiredSlots(itemsToStore);
-
-		if (getPlayer().getFreeBankSlots() < requiredSpaces) {
-			getPlayer().message("You need more bank space to equip that.");
-			return;
-		}
-
-		int amountToRemove = item.getDef(getPlayer().getWorld()).isStackable() ? item.getAmount() : 1;
-		remove(item.getCatalogId(), amountToRemove);
-		for (int p = 0; p < Equipment.slots; p++) {
-			i = getPlayer().getEquipment().get(p);
-			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
-				if (item.getDef(getPlayer().getWorld()).isStackable()) {
-					if (item.getCatalogId() == i.getCatalogId()) {
-						i.setAmount(i.getAmount() + item.getAmount());
-						ActionSender.updateEquipmentSlot(getPlayer(), i.getDef(getPlayer().getWorld()).getWieldPosition());
-						return;
-					}
-				}
-				unwieldItem(i, false);
-			}
-		}
-
-		if (sound)
-			getPlayer().playSound("click");
-
-		getPlayer().updateWornItems(item.getDef(getPlayer().getWorld()).getWieldPosition(), item.getDef(getPlayer().getWorld()).getAppearanceId(),
-			item.getDef(getPlayer().getWorld()).getWearableId(), true);
-		getPlayer().getEquipment().equip(item.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(item.getCatalogId(), amountToRemove));
-		ActionSender.sendEquipmentStats(getPlayer());
-	}
-
-	public boolean unwieldItem(Item affectedItem, boolean sound) {
-		if (affectedItem == null || !affectedItem.isWieldable(getPlayer().getWorld())) {
-			return false;
-		}
-
-		//check to see if the item is actually wielded
-		if (!Functions.isWielding(getPlayer(), affectedItem.getCatalogId())) {
-			return false;
-		}
-
-		//Can't unequip something if inventory is full
-		int requiredSlots = getRequiredSlots(affectedItem);
-		if (getPlayer().getFreeBankSlots() - requiredSlots < 0) {
-			getPlayer().message("You need more bank space to unequip that.");
-			return false;
-		}
-
-		affectedItem.setWielded(false);
-		add(affectedItem);
-		if (sound) {
-			getPlayer().playSound("click");
-		}
-
-		getPlayer().updateWornItems(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition(),
-			getPlayer().getSettings().getAppearance().getSprite(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition()),
-			affectedItem.getDef(getPlayer().getWorld()).getWearableId(), false);
-		getPlayer().getEquipment().equip(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition(), null);
-		ActionSender.sendEquipmentStats(getPlayer());
-		return true;
-	}
+//	public void wieldItem(Item item, boolean sound) {
+//		if (item.getDef(getPlayer().getWorld()) == null)
+//			return;
+//
+//		if ( !item.getDef(getPlayer().getWorld()).isStackable() && getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()) != null
+//			&& item.getCatalogId() == getPlayer().getEquipment().get(item.getDef(getPlayer().getWorld()).getWieldPosition()).getCatalogId())
+//			return;
+//
+//		if (!Functions.canWield(getPlayer(), item) || !item.getDef(getPlayer().getWorld()).isWieldable()) {
+//			return;
+//		}
+//
+//		ArrayList<Item> itemsToStore = new ArrayList<>();
+//
+//		//Do an inventory count check
+//		int count = 0;
+//		Item i;
+//		for (int p = 0; p < Equipment.slots; p++) {
+//			i = getPlayer().getEquipment().get(p);
+//			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
+//				if (item.getDef(getPlayer().getWorld()).isStackable()) {
+//					if (item.getCatalogId() == i.getCatalogId())
+//						continue;
+//				}
+//				count++;
+//				itemsToStore.add(i);
+//			}
+//		}
+//
+//		int requiredSpaces = getRequiredSlots(itemsToStore);
+//
+//		if (getPlayer().getFreeBankSlots() < requiredSpaces) {
+//			getPlayer().message("You need more bank space to equip that.");
+//			return;
+//		}
+//
+//		int amountToRemove = item.getDef(getPlayer().getWorld()).isStackable() ? item.getAmount() : 1;
+//		remove(item.getCatalogId(), amountToRemove);
+//		for (int p = 0; p < Equipment.slots; p++) {
+//			i = getPlayer().getEquipment().get(p);
+//			if (i != null && item.wieldingAffectsItem(getPlayer().getWorld(), i)) {
+//				if (item.getDef(getPlayer().getWorld()).isStackable()) {
+//					if (item.getCatalogId() == i.getCatalogId()) {
+//						i.setAmount(i.getAmount() + item.getAmount());
+//						ActionSender.updateEquipmentSlot(getPlayer(), i.getDef(getPlayer().getWorld()).getWieldPosition());
+//						return;
+//					}
+//				}
+//				unwieldItem(i, false);
+//			}
+//		}
+//
+//		if (sound)
+//			getPlayer().playSound("click");
+//
+//		getPlayer().updateWornItems(item.getDef(getPlayer().getWorld()).getWieldPosition(), item.getDef(getPlayer().getWorld()).getAppearanceId(),
+//			item.getDef(getPlayer().getWorld()).getWearableId(), true);
+//		getPlayer().getEquipment().equip(item.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(item.getCatalogId(), amountToRemove));
+//		ActionSender.sendEquipmentStats(getPlayer());
+//	}
+//
+//	public boolean unwieldItem(Item affectedItem, boolean sound) {
+//		if (affectedItem == null || !affectedItem.isWieldable(getPlayer().getWorld())) {
+//			return false;
+//		}
+//
+//		//check to see if the item is actually wielded
+//		if (!Functions.isWielding(getPlayer(), affectedItem.getCatalogId())) {
+//			return false;
+//		}
+//
+//		//Can't unequip something if inventory is full
+//		int requiredSlots = getRequiredSlots(affectedItem);
+//		if (getPlayer().getFreeBankSlots() - requiredSlots < 0) {
+//			getPlayer().message("You need more bank space to unequip that.");
+//			return false;
+//		}
+//
+//		affectedItem.setWielded(false);
+//		add(affectedItem);
+//		if (sound) {
+//			getPlayer().playSound("click");
+//		}
+//
+//		getPlayer().updateWornItems(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition(),
+//			getPlayer().getSettings().getAppearance().getSprite(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition()),
+//			affectedItem.getDef(getPlayer().getWorld()).getWearableId(), false);
+//		getPlayer().getEquipment().equip(affectedItem.getDef(getPlayer().getWorld()).getWieldPosition(), null);
+//		ActionSender.sendEquipmentStats(getPlayer());
+//		return true;
+//	}
 
 	public boolean withdrawItem(int itemID, final int amount) {
 		Item item;
