@@ -429,12 +429,15 @@ public final class RegularPlayer implements CommandListener, CommandExecutiveLis
 				}
 			}
 		} else if (cmd.equalsIgnoreCase("d")) {
-			String message = String.join(" ", args);
-			player.getWorld().getServer().getDiscordService().sendMessage("[InGame] " + player.getUsername() + ": " + message);
+			if (player.getWorld().getServer().getConfig().WANT_DISCORD_BOT) {
+				String message = String.join(" ", args);
+				player.getWorld().getServer().getDiscordService().sendMessage("[InGame] " + player.getUsername() + ": " + message);
 
-			for (Player p : player.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0);
-			}
+				for (Player p : player.getWorld().getPlayers()) {
+					ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0);
+				}
+			} else
+				player.message("Discord bot disabled");
 		} else if (cmd.equalsIgnoreCase("commands")) {
 			ActionSender.sendBox(player, ""
 				+ "@yel@Commands available: %"

@@ -19,6 +19,10 @@ public class ClientLauncher {
 		startProcess();
 	}
 
+	public static void launchClient_openpk() throws IllegalArgumentException, SecurityException {
+		startProcess_openpk();
+	}
+
 	private static void exit() {
 		System.exit(0);
 	}
@@ -26,6 +30,18 @@ public class ClientLauncher {
 	private static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
+			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
+			pb.start();
+		} catch (Exception e) {
+			Launcher.getPopup().setMessage("Client failed to launch. Please try again or notify staff.");
+			Launcher.getPopup().showFrame();
+			e.printStackTrace();
+		}
+	}
+
+	private static void startProcess_openpk() {
+		try {
+			File f = new File(Constants.CONF_DIR + File.separator + Constants.OPENPK_FILENAME);
 			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
 			pb.start();
 		} catch (Exception e) {

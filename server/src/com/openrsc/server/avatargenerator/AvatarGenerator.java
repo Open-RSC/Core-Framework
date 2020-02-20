@@ -498,6 +498,56 @@ public final class AvatarGenerator {
 		//Dragon 2H
 		animations.add(new AnimationDef("2hander", "equipment", 16711748, 0, true, false, 0)); //403 d2h
 
+		//Dragon Scale Mail
+		animations.add(new AnimationDef("dragonscalemail", "equipment",0, 0, true, false, 0));//404
+
+		//Updated Necklaces and Amulets
+		//Sapphire
+		animations.add(new AnimationDef("necklace2", "equipment", 16763980, 19711, 0, true, false, 0)); //405
+		animations.add(new AnimationDef("amulet", "equipment", 16763980, 19711, 0, true, false, 0)); //406
+		//Emerald
+		animations.add(new AnimationDef("necklace2", "equipment", 16763980, 3394611, 0, true, false, 0)); //407
+		animations.add(new AnimationDef("amulet", "equipment", 16763980, 3394611, 0, true, false, 0)); //408
+		//Ruby
+		animations.add(new AnimationDef("necklace2", "equipment", 16763980, 16724736, 0, true, false, 0)); //409
+		animations.add(new AnimationDef("amulet", "equipment", 16763980, 16724736, 0, true, false, 0)); //410
+		//Diamond
+		animations.add(new AnimationDef("necklace2", "equipment", 16763980, 16184564, 0, true, false, 0)); //411
+		animations.add(new AnimationDef("amulet", "equipment", 16763980, 16184564, 0, true, false, 0)); //412
+		//Dragonstone
+		animations.add(new AnimationDef("necklace2", "equipment", 16763980, 12255487, 0, true, false, 0)); //413
+		animations.add(new AnimationDef("amulet", "equipment", 16763980, 12255487, 0, true, false, 0)); //414
+		//Annas, Accuracy, Ghostspeak
+		animations.add(new AnimationDef("amulet2", "equipment", 0, 0, 0, true, false, 0)); //415
+		//Beads of the dead
+		animations.add(new AnimationDef("amulet2", "equipment", 16737817, 0, 0, true, false, 0)); //416
+		//Lucien / Armadyl
+		animations.add(new AnimationDef("lucians", "equipment", 3158064, 12750123, 0, true, false, 0)); //417
+		animations.add(new AnimationDef("lucians", "equipment", 0, 12750123, 0, true, false, 0)); //418
+		//Glarial
+		animations.add(new AnimationDef("necklace2", "equipment", 0, 3394611, 0, true, false, 0)); //419
+		//Symbols
+		animations.add(new AnimationDef("sarasymbol", "equipment", 0, 0, 0, true, false, 0)); //420
+		animations.add(new AnimationDef("zammysymbol", "equipment", 0, 0, 0, true, false, 0)); //421
+
+		//Elemental Staves
+		//air
+		animations.add(new AnimationDef("elementalstaff", "equipment", 0x0AE5E4, 0, 0, true, false, 0)); //422
+		//water
+		animations.add(new AnimationDef("elementalstaff", "equipment", 0x0401DC, 0, 0, true, false, 0)); //423
+		//earth
+		animations.add(new AnimationDef("elementalstaff", "equipment", 0x642E01, 0, 0, true, false, 0)); //424
+		//fire
+		animations.add(new AnimationDef("elementalstaff", "equipment", 0xD40203, 0, 0, true, false, 0)); //425
+
+		//New Leather Items
+		//Chaps
+		animations.add(new AnimationDef("leatherchaps", "equipment", 0, 0, 0, true, false, 0)); //426
+		//Female Top
+		animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
+		//Female Skirt
+		animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
+
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");
 		if (workspaceFile.exists()) {

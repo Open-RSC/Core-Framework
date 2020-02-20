@@ -114,6 +114,11 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 	}
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
+		if (player.isIronMan(IronmanMode.Ultimate.id())) {
+			player.message("As an Ultimate Iron Man, you cannot use the bank.");
+			return;
+		}
+
 		if(validateBankPin(player)) {
 			if (auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);

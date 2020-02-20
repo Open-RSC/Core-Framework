@@ -59,7 +59,7 @@ public class ButtonListener implements ActionListener {
 				String ip = "game.openrsc.com";
 				String port = "43597";
 				set(ip, port);
-				launch();
+				launch_openpk();
 				return;
 			}
 
@@ -179,5 +179,33 @@ public class ButtonListener implements ActionListener {
 		}
 
 		ClientLauncher.launchClient();
+	}
+
+	private void launch_openpk() {
+		// Deletes the client.properties file that may persist unwanted settings between different games
+		File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
+		f.delete();
+
+		//update the sprite pack config file
+		File configFile = new File(Constants.CONF_DIR + File.separator + "config.txt");
+		configFile.delete();
+
+		CheckCombo.store[] entries = AppFrame.get().getComboBoxState();
+
+		//Update the config file
+		if (!(entries.length == 1 && entries[0].text.equalsIgnoreCase("none"))) {
+			try {
+				FileWriter write = new FileWriter(configFile, true);
+				PrintWriter writer = new PrintWriter(write);
+				for (CheckCombo.store entry : entries)
+					writer.println(entry.text + ":" + (entry.state ? 1 : 0));
+				writer.close();
+				write.close();
+			} catch (IOException a) {
+				a.printStackTrace();
+			}
+		}
+
+		ClientLauncher.launchClient_openpk();
 	}
 }

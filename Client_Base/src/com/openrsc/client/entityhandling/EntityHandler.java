@@ -3918,6 +3918,15 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, 2393, -1, 2392));
 		items.add(new ItemDef("Dragon Scale Mail", "Swap this note at any bank for the equivalent item.", "", 1500000, 438, "items:438", true, false, 0, 0, true, false, -1, 2392, 2393));
 		items.add(new ItemDef("Dwarf Smithy Note", "Details how to make the Dragon Scale Mail", "read", 1, 234, "items:234", false, false, 0, 0, true, true, -1, -1, 2394));
+
+		//New leather items
+		items.add(new ItemDef("Leather chaps", "They seem like decent protection", "", 14, -1, "items:512", false, true, 644, 0, false, false, 2396, -1, 2395));
+		items.add(new ItemDef("Leather chaps", "Swap this note at any bank for the equivalent item.", "", 14, 438, "items:438", true, false, 0, 0, true, false, -1, 2395, 2396));
+		items.add(new ItemDef("Leather top", "Stylish leather top", "", 21, -1, "items:511", false, true, 322, 0, false, false, 2398, -1, 2397));
+		items.add(new ItemDef("Leather top", "Swap this note at any bank for the equivalent item.", "", 21, 438, "items:438", true, false, 0, 0, true, false, -1, 2397, 2398));
+		items.add(new ItemDef("Leather skirt", "A ladies skirt made of leather", "", 14, -1, "items:513", false, true, 128, 0, false, false, 2400, -1, 2399));
+		items.add(new ItemDef("Leather skirt", "Swap this note at any bank for the equivalent item.", "", 14, 438, "items:438", true, false, 0, 0, true, false, -1, 2399, 2400));
+
 	}
 
 	// Bank note items
@@ -4737,7 +4746,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("head4", "player",1, 13, true, false, 0));
 		animations.add(new AnimationDef("chefshat", "equipment", 16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("apron", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("apron", "equipment",9789488, 0, true, false, 0));
+		animations.add(new AnimationDef("apron", "equipment",9789488, 0, true, false, 0));//10
 		animations.add(new AnimationDef("boots", "equipment",5592405, 0, true, false, 0));
 		animations.add(new AnimationDef("fullhelm", "equipment",16737817, 0, true, false, 0));
 		animations.add(new AnimationDef("fullhelm", "equipment",15654365, 0, true, false, 0));
@@ -4747,7 +4756,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("fullhelm", "equipment",65535, 0, true, false, 0));
 		animations.add(new AnimationDef("fullhelm", "equipment",3158064, 0, true, false, 0));
 		animations.add(new AnimationDef("fullhelm", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment",16737817, 0, true, false, 0));//20
 		animations.add(new AnimationDef("chainmail", "equipment",15654365, 0, true, false, 0));
 		animations.add(new AnimationDef("chainmail", "equipment",15658734, 0, true, false, 0));
 		animations.add(new AnimationDef("chainmail", "equipment",10072780, 0, true, false, 0));
@@ -4757,7 +4766,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("platemailtop", "equipment",16737817, 0, true, false, 0));
 		animations.add(new AnimationDef("platemailtop", "equipment",15654365, 0, true, false, 0));
 		animations.add(new AnimationDef("platemailtop", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment",10072780, 0, true, false, 0));//30
 		animations.add(new AnimationDef("platemailtop", "equipment",11717785, 0, true, false, 0));
 		animations.add(new AnimationDef("platemailtop", "equipment",3158064, 0, true, false, 0));
 		animations.add(new AnimationDef("platemailtop", "equipment",65535, 0, true, false, 0));
@@ -4767,7 +4776,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("platemaillegs", "equipment",15654365, 0, true, false, 0));
 		animations.add(new AnimationDef("platemaillegs", "equipment",15658734, 0, true, false, 0));
 		animations.add(new AnimationDef("platemaillegs", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment",11717785, 0, true, false, 0));//40
 		animations.add(new AnimationDef("platemaillegs", "equipment",65535, 0, true, false, 0));
 		animations.add(new AnimationDef("platemaillegs", "equipment",4210752, 0, true, false, 0));
 		animations.add(new AnimationDef("platemaillegs", "equipment",16777215, 0, true, false, 0));
@@ -4777,7 +4786,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("sword", "equipment",16737817, 0, true, false, 0));
 		animations.add(new AnimationDef("sword", "equipment",15654365, 0, true, false, 0));
 		animations.add(new AnimationDef("sword", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment",10072780, 0, true, false, 0));//50
 		animations.add(new AnimationDef("sword", "equipment",11717785, 0, true, false, 0));
 		animations.add(new AnimationDef("sword", "equipment",65535, 0, true, false, 0));
 		animations.add(new AnimationDef("sword", "equipment",3158064, 0, true, false, 0));
@@ -4787,7 +4796,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("fplatemailtop", "equipment",10072780, 0, true, false, 0));
 		animations.add(new AnimationDef("fplatemailtop", "equipment",11717785, 0, true, false, 0));
 		animations.add(new AnimationDef("fplatemailtop", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment",3158064, 0, true, false, 0));//60
 		animations.add(new AnimationDef("apron", "equipment",16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("cape", "equipment",16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("cape", "equipment",2434341, 0, true, false, 0));
@@ -4797,7 +4806,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("cape", "equipment",15636736, 0, true, false, 0));
 		animations.add(new AnimationDef("cape", "equipment",11141341, 0, true, false, 0));
 		animations.add(new AnimationDef("mediumhelm", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment",15654365, 0, true, false, 0));//70
 		animations.add(new AnimationDef("mediumhelm", "equipment",15658734, 0, true, false, 0));
 		animations.add(new AnimationDef("mediumhelm", "equipment",10072780, 0, true, false, 0));
 		animations.add(new AnimationDef("mediumhelm", "equipment",11717785, 0, true, false, 0));
@@ -4807,7 +4816,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("wizardshat", "equipment",255, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardshat", "equipment",4210752, 0, true, false, 0));
 		animations.add(new AnimationDef("necklace", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("necklace", "equipment",16763980, 0, true, false, 0));
+		animations.add(new AnimationDef("necklace", "equipment",16763980, 0, true, false, 0));//80
 		animations.add(new AnimationDef("skirt", "equipment",255, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",4210752, 0, true, false, 0));
 		animations.add(new AnimationDef("wizardsrobe", "equipment",10510400, 0, true, false, 0));
@@ -5195,6 +5204,53 @@ public class EntityHandler {
 
 			//Dragon Scale Mail
 			animations.add(new AnimationDef("dragonscalemail", "equipment",0, 0, true, false, 0));//404
+
+			//Updated Necklaces and Amulets
+			//Sapphire
+			animations.add(new AnimationDef("necklace2", "equipment", 16763980, 19711, 0, true, false, 0)); //405
+			animations.add(new AnimationDef("amulet", "equipment", 16763980, 19711, 0, true, false, 0)); //406
+			//Emerald
+			animations.add(new AnimationDef("necklace2", "equipment", 16763980, 3394611, 0, true, false, 0)); //407
+			animations.add(new AnimationDef("amulet", "equipment", 16763980, 3394611, 0, true, false, 0)); //408
+			//Ruby
+			animations.add(new AnimationDef("necklace2", "equipment", 16763980, 16724736, 0, true, false, 0)); //409
+			animations.add(new AnimationDef("amulet", "equipment", 16763980, 16724736, 0, true, false, 0)); //410
+			//Diamond
+			animations.add(new AnimationDef("necklace2", "equipment", 16763980, 16184564, 0, true, false, 0)); //411
+			animations.add(new AnimationDef("amulet", "equipment", 16763980, 16184564, 0, true, false, 0)); //412
+			//Dragonstone
+			animations.add(new AnimationDef("necklace2", "equipment", 16763980, 12255487, 0, true, false, 0)); //413
+			animations.add(new AnimationDef("amulet", "equipment", 16763980, 12255487, 0, true, false, 0)); //414
+			//Annas, Accuracy, Ghostspeak
+			animations.add(new AnimationDef("amulet2", "equipment", 0, 0, 0, true, false, 0)); //415
+			//Beads of the dead
+			animations.add(new AnimationDef("amulet2", "equipment", 16737817, 0, 0, true, false, 0)); //416
+			//Lucien / Armadyl
+			animations.add(new AnimationDef("lucians", "equipment", 3158064, 12750123, 0, true, false, 0)); //417
+			animations.add(new AnimationDef("lucians", "equipment", 0, 12750123, 0, true, false, 0)); //418
+			//Glarial
+			animations.add(new AnimationDef("necklace2", "equipment", 0, 3394611, 0, true, false, 0)); //419
+			//Symbols
+			animations.add(new AnimationDef("sarasymbol", "equipment", 0, 0, 0, true, false, 0)); //420
+			animations.add(new AnimationDef("zammysymbol", "equipment", 0, 0, 0, true, false, 0)); //421
+
+			//Elemental Staves
+			//air
+			animations.add(new AnimationDef("elementalstaff", "equipment", 0x0AE5E4, 0, 0, true, false, 0)); //422
+			//water
+			animations.add(new AnimationDef("elementalstaff", "equipment", 0x0401DC, 0, 0, true, false, 0)); //423
+			//earth
+			animations.add(new AnimationDef("elementalstaff", "equipment", 0x642E01, 0, 0, true, false, 0)); //424
+			//fire
+			animations.add(new AnimationDef("elementalstaff", "equipment", 0xD40203, 0, 0, true, false, 0)); //425
+
+			//New Leather Items
+			//Chaps
+			animations.add(new AnimationDef("leatherchaps", "equipment", 0, 0, 0, true, false, 0)); //426
+			//Female Top
+			animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
+			//Female Skirt
+			animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
 		}
 	}
 

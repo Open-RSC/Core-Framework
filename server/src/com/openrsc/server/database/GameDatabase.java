@@ -555,6 +555,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 					final PlayerEquipped equipment = new PlayerEquipped();
 					equipment.itemId = player.getEquipment().get(i).getID();
 					equipment.amount = player.getEquipment().get(i).getAmount();
+					list.add(equipment);
 				}
 			}
 
@@ -665,6 +666,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			final PlayerQuest quest = new PlayerQuest();
 			quest.questId = id;
 			quest.stage = player.getQuestStage(id);
+			list.add(quest);
 		}
 
 		final PlayerQuest[] quests = list.toArray(new PlayerQuest[list.size()]);
@@ -704,7 +706,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	protected void querySavePlayerNpcKills(Player player) throws GameDatabaseException {
-		final int killsSize = player.getCache().getCacheMap().size();
+		final int killsSize = player.getKillCache().size();
 		final PlayerNpcKills[] killMap = new PlayerNpcKills[killsSize];
 
 		int i = 0;
