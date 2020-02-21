@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.MessageType;
@@ -17,7 +16,7 @@ public class MonitoringEvent {
 	private static final Logger LOGGER	= LogManager.getLogger();
 	private World world;
 
-	public MonitoringEvent(World world) {
+	public MonitoringEvent(final World world) {
 		this.world = world;
 	}
 
