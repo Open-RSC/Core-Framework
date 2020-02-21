@@ -1076,8 +1076,6 @@ public class MySqlGameDatabase extends GameDatabase {
 
 		result = prepared.executeQuery();
 
-		prepared.close();
-
 		return result;
 	}
 
@@ -1113,8 +1111,6 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 
 		result = prepared.executeQuery();
-
-		prepared.close();
 
 		return result;
 	}
