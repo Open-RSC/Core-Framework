@@ -295,9 +295,10 @@ public class Server implements Runnable {
 	public void run() {
 		synchronized (running) {
 			try {
-				timeLate = System.currentTimeMillis() - lastClientUpdate - getConfig().GAME_TICK;
-				if (getTimeLate() >= 0) {
-					lastClientUpdate += getConfig().GAME_TICK;
+				this.timeLate = System.currentTimeMillis() - lastClientUpdate;
+				if (getTimeLate() >= getConfig().GAME_TICK) {
+					this.lastClientUpdate += getConfig().GAME_TICK;
+					this.timeLate -= getConfig().GAME_TICK;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					final long tickStart = System.currentTimeMillis();
@@ -313,6 +314,8 @@ public class Server implements Runnable {
 					this.lastGameStateDuration = lastGameStateDuration;
 					this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
 					this.lastTickDuration = lastTickDuration;
+
+					monitoring.run();
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (Player p : getWorld().getPlayers()) {
@@ -326,7 +329,6 @@ public class Server implements Runnable {
 						getGameUpdater().executeWalkToActions();
 					}
 				}
-				monitoring.run();
 			} catch (Throwable t) {
 				LOGGER.catching(t);
 			}
