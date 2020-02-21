@@ -391,8 +391,10 @@ public class Server implements Runnable {
 
 		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 10, "Save and Shutdown") {
 			public void action() {
-				kill();
+				LOGGER.info("Killing server process...");
+				System.exit(0);
 				try {
+					LOGGER.info("Closing the database connection...");
 					getDatabase().close();
 				} catch (final Exception ex) {
 					LOGGER.catching(ex);
