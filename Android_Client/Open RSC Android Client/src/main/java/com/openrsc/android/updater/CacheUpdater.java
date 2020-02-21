@@ -160,7 +160,8 @@ public class CacheUpdater extends Activity {
             builder.setTitle("Game Selection");
 
             // add a list
-            String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha)", "Open PK (beta)", "Dev Testing", "Local Instance"};
+            //String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha)", "Open PK (beta)", "Dev Testing", "Local Instance"};
+            String[] games = {"RSC Cabbage", "Open RSC", "Local Instance"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
                     case 0: // RSC Cabbage
@@ -221,7 +222,7 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_openrsc);
                         finish();
                         return;
-                    case 2: // RSC Preservation
+                    /*case 2: // RSC Preservation
                         String ip_preservation = "androidcheck.openrsc.com";
                         String port_preservation = "43596";
                         FileOutputStream fileout_preservation;
@@ -295,8 +296,8 @@ public class CacheUpdater extends Activity {
                         mainIntent_dev.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(mainIntent_dev);
                         finish();
-                        return;
-                    case 5: // Manual
+                        return;*/
+                    case 2: // Manual
                         LinearLayout layout = new LinearLayout(CacheUpdater.this);
 
                         // TextView to enter ip
