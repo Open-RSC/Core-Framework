@@ -70,7 +70,7 @@ Feel free to submit bug reports in the repository issues section! If you would l
 
 ## Thank You<a name="thankyou"></a>
 This project has been made possible thanks to the time and efforts of countless individuals. Here is a short list:
-- Kenix, Marwolf, Luis, Aenge, Logg, Ipkpjersi, Rick IBM, Lucki, Extendo28, Kristof, Ryan, Morge, Mige, RSC2001, Red Bracket, Retrogamer02, Zoso, Fah Qu, KO9, Leclerc, Peeter, Mark Gore, N0m, Daave, xEnt, Christofosho, Frogdoubler, Kepler, Rodgerwilco, Orbrun, Seatta, Hikilaka, IanWONeill, Jamosaur, Bl0dzy, Yong Min, Lothy, and many more!       
+- Kenix, Marwolf, Luis, Aenge, Logg, Ipkpjersi, Rick IBM, Lucki, Extendo28, Kristof, Ryan, Morge, Mige, RSC2001, Red Bracket, Retrogamer02, Zoso, Fah Qu, KO9, Leclerc, Peeter, xEnt, Christofosho, Frogdoubler, Kepler, Rodgerwilco, Orbrun, Seatta, Hikilaka, IanWONeill, Jamosaur, Bl0dzy, Yong Min, Lothy, and many more!       
 
 Several organizations and companies have helped us out along the way and we are forever grateful to them:
 - <a href="https://www.cloudflare.com/">CloudFlare</a>
