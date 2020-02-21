@@ -120,40 +120,46 @@ public class ClanManager {
 
 	private void loadClans() throws SQLException {
 		PreparedStatement statement = getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `clan_points` FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan`");
+		PreparedStatement fetchPlayers = getWorld().getServer().getDatabase().getConnection()
+			.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 		ResultSet result = statement.executeQuery();
-		while (result.next()) {
-			Clan clan = new Clan(getWorld());
-			clan.setClanID(result.getInt("id"));
-			clan.setClanName(result.getString("name"));
-			clan.setClanTag(result.getString("tag"));
-			clan.setKickSetting(result.getInt("kick_setting"));
-			clan.setInviteSetting(result.getInt("invite_setting"));
-			clan.setAllowSearchJoin(result.getInt("allow_search_join"));
-			clan.setClanPoints(result.getInt("clan_points"));
+		try {
+			while (result.next()) {
+				Clan clan = new Clan(getWorld());
+				clan.setClanID(result.getInt("id"));
+				clan.setClanName(result.getString("name"));
+				clan.setClanTag(result.getString("tag"));
+				clan.setKickSetting(result.getInt("kick_setting"));
+				clan.setInviteSetting(result.getInt("invite_setting"));
+				clan.setAllowSearchJoin(result.getInt("allow_search_join"));
+				clan.setClanPoints(result.getInt("clan_points"));
 
-			PreparedStatement fetchPlayers = getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `username`, `rank`, `kills`, `deaths` FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
-			fetchPlayers.setInt(1, clan.getClanID());
-			ResultSet playersResult = fetchPlayers.executeQuery();
+				fetchPlayers.setInt(1, clan.getClanID());
+				ResultSet playersResult = fetchPlayers.executeQuery();
 
-			ArrayList<ClanPlayer> clanMembers = new ArrayList<ClanPlayer>();
+				ArrayList<ClanPlayer> clanMembers = new ArrayList<ClanPlayer>();
 
-			while (playersResult.next()) {
-				ClanPlayer member = new ClanPlayer(playersResult.getString("username"));
-				int rankID = playersResult.getInt("rank");
-				member.setRank(ClanRank.getRankFor(rankID));
-				member.setKills(playersResult.getInt("kills"));
-				member.setDeaths(playersResult.getInt("deaths"));
-				clanMembers.add(member);
-				if (ClanRank.getRankFor(rankID) == ClanRank.LEADER) {
-					clan.setLeader(member);
+				while (playersResult.next()) {
+					ClanPlayer member = new ClanPlayer(playersResult.getString("username"));
+					int rankID = playersResult.getInt("rank");
+					member.setRank(ClanRank.getRankFor(rankID));
+					member.setKills(playersResult.getInt("kills"));
+					member.setDeaths(playersResult.getInt("deaths"));
+					clanMembers.add(member);
+					if (ClanRank.getRankFor(rankID) == ClanRank.LEADER) {
+						clan.setLeader(member);
+					}
 				}
+				playersResult.close();
+
+				clan.setPlayers(clanMembers);
+
+				clans.add(clan);
 			}
-			playersResult.close();
-
-			clan.setPlayers(clanMembers);
-
-			clans.add(clan);
+		} finally {
+			statement.close();
+			fetchPlayers.close();
+			result.close();
 		}
 	}
 
@@ -166,21 +172,25 @@ public class ClanManager {
 		statement.executeUpdate();
 
 		ResultSet rs = statement.getGeneratedKeys();
-		rs.next();
-		clan.setClanID(rs.getInt(1));
-		rs.close();
+		try {
+			if (rs.next())
+				clan.setClanID(rs.getInt(1));
 
-		statement.close();
+			statement.close();
 
-		statement = getWorld().getServer().getDatabase().getConnection()
-			.prepareStatement("INSERT INTO `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`) VALUES (?,?,?)");
-		for (ClanPlayer member : clan.getPlayers()) {
-			statement.setInt(1, clan.getClanID());
-			statement.setString(2, member.getUsername());
-			statement.setInt(3, member.getRank().getRankIndex());
-			statement.addBatch();
+			statement = getWorld().getServer().getDatabase().getConnection()
+				.prepareStatement("INSERT INTO `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players`(`clan_id`, `username`, `rank`) VALUES (?,?,?)");
+			for (ClanPlayer member : clan.getPlayers()) {
+				statement.setInt(1, clan.getClanID());
+				statement.setString(2, member.getUsername());
+				statement.setInt(3, member.getRank().getRankIndex());
+				statement.addBatch();
+			}
+			statement.executeBatch();
+		} finally {
+			rs.close();
+			statement.close();
 		}
-		statement.executeBatch();
 	}
 
 	private void databaseDeleteClan(Clan clan) throws SQLException {
@@ -189,9 +199,14 @@ public class ClanManager {
 			.prepareStatement("DELETE FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 
 		deleteClan.setInt(1, clan.getClanID());
-		deleteClan.executeUpdate();
-		deleteClanPlayers.setInt(1, clan.getClanID());
-		deleteClanPlayers.executeUpdate();
+		try {
+			deleteClan.executeUpdate();
+			deleteClanPlayers.setInt(1, clan.getClanID());
+			deleteClanPlayers.executeUpdate();
+		} finally {
+			deleteClan.close();
+			deleteClanPlayers.close();
+		}
 	}
 
 	private void saveClanPlayer(Clan clan) {
@@ -206,7 +221,8 @@ public class ClanManager {
 				statement.setInt(5, member.getDeaths());
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try{statement.executeBatch();}
+			finally{statement.close();}
 		} catch (SQLException e) {
 			LOGGER.error("Unable to save clan players for clan: " + clan.getClanName());
 			LOGGER.catching(e);
@@ -218,7 +234,8 @@ public class ClanManager {
 			PreparedStatement statement = getWorld().getServer().getDatabase().getConnection()
 				.prepareStatement("DELETE FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` WHERE `clan_id`=?");
 			statement.setInt(1, clan.getClanID());
-			statement.executeUpdate();
+			try {statement.executeUpdate();}
+			finally { statement.close(); }
 		} catch (SQLException e) {
 			LOGGER.error("Unable to delete player from clan: " + clan.getClanName());
 			LOGGER.catching(e);
@@ -239,7 +256,8 @@ public class ClanManager {
 			statement.setInt(8, clan.getClanID());
 			//statement.setInt(6, team.getBattlesWon());
 			//statement.setInt(7, team.getBattlesLost());
-			statement.executeUpdate();
+			try {statement.executeUpdate();}
+			finally {statement.close();}
 		} catch (SQLException e) {
 			LOGGER.error("Unable to update clan: " + clan.getClanName());
 			LOGGER.catching(e);
@@ -252,7 +270,8 @@ public class ClanManager {
 				.prepareStatement("UPDATE `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "clan_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());
-			statement.executeUpdate();
+			try {statement.executeUpdate();}
+			finally {statement.close();}
 		} catch (SQLException e) {
 			LOGGER.error("Unable to update rank for clan player: " + cp.getUsername());
 			LOGGER.catching(e);

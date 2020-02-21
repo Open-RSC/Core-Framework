@@ -49,19 +49,24 @@ public final class ReportHandler implements PacketHandler {
 
 		ResultSet result = player.getWorld().getServer().getDatabase().getConnection().executeQuery("SELECT `username` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
 
-		if (!result.next()) {
-			player.message("Invalid player name.");
+		try {
+			if (!result.next()) {
+				player.message("Invalid player name.");
+				result.close();
+				return;
+			}
+
+			player.message("Thank-you, your abuse report has been received.");
+			player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
+			player.setLastReport();
+
+			if (suggestsOrMutes != 0 && player.isMod()) {
+				muteCommand(player, "mute " + hash + " -1");
+			}
+		} finally {
 			result.close();
-			return;
 		}
 
-		player.message("Thank-you, your abuse report has been received.");
-		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
-		player.setLastReport();
-
-		if (suggestsOrMutes != 0 && player.isMod()) {
-			muteCommand(player, "mute " + hash + " -1");
-		}
 	}
 
 	private void muteCommand(Player player, String s) {

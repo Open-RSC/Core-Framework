@@ -48,7 +48,8 @@ public class SecuritySettingsHandler implements PacketHandler {
 			statement = player.getWorld().getServer().getDatabase().getConnection().prepareStatement(
 					"DELETE FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery` WHERE `playerID`=?");
 			statement.setInt(1, playerID);
-			statement.executeUpdate();
+			try {statement.executeUpdate();}
+			finally{statement.close();}
 			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.RECOVERY_QUESTIONS_CHANGE, "Player canceled pending request"));
 			ActionSender.sendMessage(player, "You no longer have pending recovery question changes.");
 			LOGGER.info(player.getCurrentIP() + " - Cancel recovery request successful");
@@ -58,11 +59,16 @@ public class SecuritySettingsHandler implements PacketHandler {
 			statement =player.getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT playerID, date_set FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE username=?");
 			statement.setString(1, player.getUsername());
 			result = statement.executeQuery();
-			if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_set")) >= 14) {
-				//no pending recovery questions change or wait time past, allow
-				ActionSender.sendRecoveryScreen(player);
-			} else {
-				ActionSender.sendMessage(player, "You have pending recovery questions to get applied");
+			try {
+				if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_set")) >= 14) {
+					//no pending recovery questions change or wait time past, allow
+					ActionSender.sendRecoveryScreen(player);
+				} else {
+					ActionSender.sendMessage(player, "You have pending recovery questions to get applied");
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
 
 			break;
@@ -70,11 +76,16 @@ public class SecuritySettingsHandler implements PacketHandler {
 			statement = player.getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT playerID, date_modified FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details WHERE username=?");
 			statement.setString(1, player.getUsername());
 			result = statement.executeQuery();
-			if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_modified")) >= 1) {
-				//details not set or wait time past, allow
-				ActionSender.sendDetailsScreen(player);
-			} else {
-				ActionSender.sendMessage(player, "You have modified your details within 24 hours");
+			try {
+				if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_modified")) >= 1) {
+					//details not set or wait time past, allow
+					ActionSender.sendDetailsScreen(player);
+				} else {
+					ActionSender.sendMessage(player, "You have modified your details within 24 hours");
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
 
 			break;
@@ -116,41 +127,51 @@ public class SecuritySettingsHandler implements PacketHandler {
 			result = statement.executeQuery();
 			boolean isFirstSet = !result.next();
 
-			PreparedStatement innerStatement;
-			if (isFirstSet) {
-				innerStatement = player.getWorld().getServer().getDatabase().getConnection().prepareStatement(
+			PreparedStatement innerStatement = null;
+			try {
+				if (isFirstSet) {
+					innerStatement = player.getWorld().getServer().getDatabase().getConnection().prepareStatement(
 						"INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details` (`playerID`, `username`, `fullname`, `zipCode`, `country`, `email`, `date_modified`, `ip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-				innerStatement.setInt(1, playerID);
-				innerStatement.setString(2, player.getUsername());
-				innerStatement.setString(3, DataConversions.maxLenString(fullName, 100, true));
-				innerStatement.setString(4, DataConversions.maxLenString(zipCode, 10, true));
-				innerStatement.setString(5, DataConversions.maxLenString(country, 100, true));
-				innerStatement.setString(6, email.trim());
-				innerStatement.setLong(7, System.currentTimeMillis() / 1000);
-				innerStatement.setString(8, player.getCurrentIP());
-				innerStatement.executeUpdate();
-				ActionSender.sendMessage(player, "Your contact details were successfully set!");
-			} else {
-				fullName = DataConversions.updateIfEmpty(fullName, result.getString("fullname"));
-				zipCode = DataConversions.updateIfEmpty(zipCode, result.getString("zipCode"));
-				country = DataConversions.updateIfEmpty(country, result.getString("country"));
-				email = DataConversions.updateIfEmpty(email, result.getString("email"));
+					innerStatement.setInt(1, playerID);
+					innerStatement.setString(2, player.getUsername());
+					innerStatement.setString(3, DataConversions.maxLenString(fullName, 100, true));
+					innerStatement.setString(4, DataConversions.maxLenString(zipCode, 10, true));
+					innerStatement.setString(5, DataConversions.maxLenString(country, 100, true));
+					innerStatement.setString(6, email.trim());
+					innerStatement.setLong(7, System.currentTimeMillis() / 1000);
+					innerStatement.setString(8, player.getCurrentIP());
+					try{innerStatement.executeUpdate();}
+					finally{statement.close();}
+					ActionSender.sendMessage(player, "Your contact details were successfully set!");
+				} else {
+					fullName = DataConversions.updateIfEmpty(fullName, result.getString("fullname"));
+					zipCode = DataConversions.updateIfEmpty(zipCode, result.getString("zipCode"));
+					country = DataConversions.updateIfEmpty(country, result.getString("country"));
+					email = DataConversions.updateIfEmpty(email, result.getString("email"));
 
-				innerStatement = player.getWorld().getServer().getDatabase().getConnection().prepareStatement(
+					innerStatement = player.getWorld().getServer().getDatabase().getConnection().prepareStatement(
 						"UPDATE `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_contact_details`" +
-						"SET `fullname`=?, `zipCode`=?, `country`=?, `email`=?, `date_modified`=?, `ip`=? WHERE `playerID`=?");
-				innerStatement.setString(1, DataConversions.maxLenString(fullName, 100, true));
-				innerStatement.setString(2, DataConversions.maxLenString(zipCode, 10, true));
-				innerStatement.setString(3, DataConversions.maxLenString(country, 100, true));
-				innerStatement.setString(4, email.trim());
-				innerStatement.setLong(5, System.currentTimeMillis() / 1000);
-				innerStatement.setString(6, player.getCurrentIP());
-				innerStatement.setInt(7, playerID);
-				innerStatement.executeUpdate();
-				ActionSender.sendMessage(player, "Your contact details were successfully updated!");
+							"SET `fullname`=?, `zipCode`=?, `country`=?, `email`=?, `date_modified`=?, `ip`=? WHERE `playerID`=?");
+					innerStatement.setString(1, DataConversions.maxLenString(fullName, 100, true));
+					innerStatement.setString(2, DataConversions.maxLenString(zipCode, 10, true));
+					innerStatement.setString(3, DataConversions.maxLenString(country, 100, true));
+					innerStatement.setString(4, email.trim());
+					innerStatement.setLong(5, System.currentTimeMillis() / 1000);
+					innerStatement.setString(6, player.getCurrentIP());
+					innerStatement.setInt(7, playerID);
+					try{innerStatement.executeUpdate();}
+					finally{statement.close();}
+					ActionSender.sendMessage(player, "Your contact details were successfully updated!");
+				}
+				player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.CONTACT_DETAILS_CHANGE));
+				LOGGER.info(player.getCurrentIP() + " - Contact details change successful");
+			} finally {
+				statement.close();
+				result.close();
+				if (innerStatement != null)
+					innerStatement.close();
 			}
-			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.CONTACT_DETAILS_CHANGE));
-			LOGGER.info(player.getCurrentIP() + " - Contact details change successful");
+
 			break;
 		}
 	}
