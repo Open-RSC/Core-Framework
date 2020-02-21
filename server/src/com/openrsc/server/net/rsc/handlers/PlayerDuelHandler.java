@@ -78,7 +78,7 @@ public class PlayerDuelHandler implements PacketHandler {
 
 			if (affectedPlayer.isIronMan(IronmanMode.Ironman.id()) || affectedPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| affectedPlayer.isIronMan(IronmanMode.Hardcore.id()) || affectedPlayer.isIronMan(IronmanMode.Transfer.id())) {
-				player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
+				player.message(affectedPlayer.getUsername() + " is an Iron Man. " + (affectedPlayer.isMale() ? "He" : "She") + " stands alone.");
 				unsetOptions(player);
 				unsetOptions(affectedPlayer);
 				return;
