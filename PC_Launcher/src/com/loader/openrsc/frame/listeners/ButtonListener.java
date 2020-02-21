@@ -56,9 +56,9 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "openpk": {
-				String ip = "game.openrsc.com";
+				String ip = "openpk.openrsc.com";
 				String port = "43597";
-				set(ip, port);
+				setOpenPK(ip, port);
 				launch_openpk();
 				return;
 			}
@@ -146,6 +146,25 @@ public class ButtonListener implements ActionListener {
 		}
 		try {
 			fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(port);
+			outputWriter.close();
+		} catch (Exception ignored) {
+		}
+	}
+
+	private void setOpenPK(String ip, String port) {
+		// Sets the IP and port
+		FileOutputStream fileout;
+		try {
+			fileout = new FileOutputStream("PK_Cache" + File.separator + "ip.txt");
+			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
+			outputWriter.write(ip);
+			outputWriter.close();
+		} catch (Exception ignored) {
+		}
+		try {
+			fileout = new FileOutputStream("PK_Cache" + File.separator + "port.txt");
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 			outputWriter.write(port);
 			outputWriter.close();
