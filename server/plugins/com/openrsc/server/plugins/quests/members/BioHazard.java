@@ -875,7 +875,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(this) == 7) {
-				if (p.getInventory().wielding(ItemId.PRIEST_ROBE.id()) && p.getInventory().wielding(ItemId.PRIEST_GOWN.id())) {
+				if (p.getEquipment().hasEquipped(ItemId.PRIEST_ROBE.id()) && p.getEquipment().hasEquipped(ItemId.PRIEST_GOWN.id())) {
 					npcTalk(p, n, "Father, thank heavens you're here. My husband is very ill",
 						"Perhaps you could go and perform his final ceremony");
 					playerTalk(p, n, "I'll see what I can do");

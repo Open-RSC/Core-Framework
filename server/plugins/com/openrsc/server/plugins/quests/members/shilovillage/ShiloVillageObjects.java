@@ -85,7 +85,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				}
 			}
 			p.setBusy(true);
-			if(!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+			if(!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				//going down
 				if(obj.getY() > p.getY()) {
 					p.message("@red@You simply cannot concentrate enough to climb down the rocks.");
@@ -135,7 +135,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					"Yes, I am completely fearless!",
 					"Err, I'm having second thoughts now!");
 				if (menu == 0) {
-					if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+					if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 						replaceObjectDelayed(obj, 1800, 181);
 						p.teleport(348, 3616);
 						p.damage(getCurrentLevel(p, Skills.HITS) / 2 + 1);
@@ -168,7 +168,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == RASH_EXIT_DOOR) {
-			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+			if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				message(p, "@red@You feel invisible hands starting to choke you...");
 				p.damage(18); // todo?
 			}
@@ -558,7 +558,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == RASH_EXIT_DOOR && item.getCatalogId() == ItemId.BONE_KEY.id()) {
-			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+			if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				message(p, "@red@You feel invisible hands starting to choke you...");
 				p.damage(getCurrentLevel(p, Skills.HITS) / 2);
 			}

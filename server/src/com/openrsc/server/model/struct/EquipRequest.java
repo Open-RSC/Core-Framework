@@ -14,6 +14,13 @@ public class EquipRequest {
 
 	public EquipRequest() {}
 
+	public EquipRequest(Player player, Item item, RequestType type, Boolean sound) {
+		this.player = player;
+		this.item = item;
+		this.requestType = type;
+		this.sound = sound;
+	}
+
 	public enum RequestType {
 		FROM_INVENTORY,
 		FROM_BANK

@@ -221,13 +221,13 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				}
 			}
 			if (getLevel1Digsite(p)) {
-				if (!p.getInventory().wielding(ItemId.LEATHER_GLOVES.id())
-					&& !p.getInventory().wielding(ItemId.ICE_GLOVES.id())
-					&& !p.getInventory().wielding(ItemId.KLANKS_GAUNTLETS.id())
-					&& !p.getInventory().wielding(ItemId.STEEL_GAUNTLETS.id())
-					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_CHAOS.id())
-					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id())
-					&& !p.getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id())) {
+				if (!p.getEquipment().hasEquipped(ItemId.LEATHER_GLOVES.id())
+					&& !p.getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())
+					&& !p.getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())
+					&& !p.getEquipment().hasEquipped(ItemId.STEEL_GAUNTLETS.id())
+					&& !p.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id())
+					&& !p.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id())
+					&& !p.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id())) {
 					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Hey, where are your gloves ?");
@@ -238,7 +238,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if (!p.getInventory().wielding(ItemId.BOOTS.id())) {
+				if (!p.getEquipment().hasEquipped(ItemId.BOOTS.id())) {
 					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Oi, no boots!");

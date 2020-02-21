@@ -44,8 +44,8 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 			p.message("When you have done this speak to the combat instructor again");
 			p.getCache().set("tutorial", 16);
 		} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 16) {
-			if ((!p.getInventory().hasItemId(ItemId.WOODEN_SHIELD.id()) || p.getInventory().wielding(ItemId.WOODEN_SHIELD.id())) && 
-				(!p.getInventory().hasItemId(ItemId.BRONZE_LONG_SWORD.id()) || p.getInventory().wielding(ItemId.BRONZE_LONG_SWORD.id()))) {
+			if ((!p.getInventory().hasItemId(ItemId.WOODEN_SHIELD.id()) || p.getEquipment().hasEquipped(ItemId.WOODEN_SHIELD.id())) &&
+				(!p.getInventory().hasItemId(ItemId.BRONZE_LONG_SWORD.id()) || p.getEquipment().hasEquipped(ItemId.BRONZE_LONG_SWORD.id()))) {
 				npcTalk(p, n, "Today we're going to be killing giant rats");
 				Npc rat = getNearestNpc(p, NpcId.RAT_TUTORIAL.id(), 10);
 				if (rat != null) {
@@ -87,7 +87,7 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {
 		return n.getID() == NpcId.RAT_TUTORIAL.id();
 	}
-	
+
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone())
@@ -98,15 +98,15 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 			if (p.getCache().getInt("tutorial") == 16)
 				return false;
 		}
-		
+
 		if (p.getCache().getInt("tutorial") < 16)
 			message(p, "Speak to the combat instructor before killing rats");
 		else
 			message(p, "That's enough rat killing for now");
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
 		return blockPlayerAttackNpc(p, n);

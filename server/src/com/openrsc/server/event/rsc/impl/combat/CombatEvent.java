@@ -106,7 +106,7 @@ public class CombatEvent extends GameTickEvent {
 			int damage = MeleeFormula.getDamage(hitter, target);
 			inflictDamage(hitter, target, damage);
 			if (target.isPlayer()) {
-				if (Functions.isWielding((Player) target, ItemId.RING_OF_RECOIL.id())) {
+				if (((Player)target).getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					int reflectedDamage = damage/10 + ((damage > 0) ? 1 : 0);
 					if (reflectedDamage == 0)
 						return;

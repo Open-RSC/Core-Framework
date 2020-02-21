@@ -25,6 +25,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.states.Action;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -71,7 +72,7 @@ public class SpellHandler implements PacketHandler {
 			boolean skipRune = false;
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				for (Item staff : getStaffs(e.getKey())) {
-					if (player.getEquipment().hasEquipped(staff.getCatalogId()) != -1) {
+					if (player.getEquipment().searchEquipmentForItem(staff.getCatalogId()) != -1) {
 						skipRune = true;
 					}
 				}
@@ -244,7 +245,7 @@ public class SpellHandler implements PacketHandler {
 					player.message("You have already completed this quest");
 					return;
 				}
-				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.LUCIEN_EDGE.id() && !player.getInventory().wielding(com.openrsc.server.constants.ItemId.PENDANT_OF_ARMADYL.id())) {
+				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.LUCIEN_EDGE.id() && !player.getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.PENDANT_OF_ARMADYL.id())) {
 					npcTalk(player, affectedNpc, "I'm sure you don't want to attack me really",
 						"I am your friend");
 					message(player, "You decide you don't want to attack Lucien really",
@@ -743,7 +744,7 @@ public class SpellHandler implements PacketHandler {
 
 		}
 		if (affectedItem.isWielded()) {
-			player.getInventory().unwieldItem(affectedItem, false);
+			player.getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 		}
 
 	}
@@ -925,7 +926,7 @@ public class SpellHandler implements PacketHandler {
 						getPlayer().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
 						int fireDamage;
-						if (getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+						if (getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							if (n.getID() == com.openrsc.server.constants.NpcId.DRAGON.id()) {
 								percentage = 10;
 							} else if (n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
@@ -1035,7 +1036,7 @@ public class SpellHandler implements PacketHandler {
 							getPlayer().message("you need to complete underground pass quest to cast this spell");
 							return;
 						}
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
+						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
 							getPlayer().message("you need the staff of iban to cast this spell");
 							return;
 						}
@@ -1058,15 +1059,15 @@ public class SpellHandler implements PacketHandler {
 					case 33: // Guthix cast
 					case 34: // Saradomin cast
 					case 35: // Zamorak cast
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
+						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
 							getPlayer().message("you must weild the staff of guthix to cast this spell");
 							return;
 						}
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
+						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
 							getPlayer().message("you must weild the staff of saradomin to cast this spell");
 							return;
 						}
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
+						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
 							getPlayer().message("you must weild the staff of zamorak to cast this spell");
 							return;
 						}
@@ -1180,7 +1181,7 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (getPlayer().getMagicPoints() > 30
-							|| (getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
+							|| (getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
 						int damage = Formulae.calcSpellHit(max, getPlayer().getMagicPoints());

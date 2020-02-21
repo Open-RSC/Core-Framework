@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
@@ -42,7 +41,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		Item item = request.item;
 		Player player = request.player;
 		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
-			player.getInventory().unwieldItem(item, true);
+			player.getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true));
 
 			Npc n = getNearestNpc(player, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
@@ -277,7 +276,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		}
 		else if (obj.getID() == MINING_CAVE) {
 			Npc n = getNearestNpc(p, NpcId.MERCENARY_ESCAPEGATES.id(), 10);
-			if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Quests.TOURIST_TRAP) != -1) {
+			if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 				p.message("This guard looks as if he's been down here a while.");
 				npcTalk(p, n, "Hey, you're no slave!");
 				npcTalk(p, n, "What are you doing down here?");

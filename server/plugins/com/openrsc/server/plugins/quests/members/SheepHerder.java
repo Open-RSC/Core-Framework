@@ -214,8 +214,8 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	}
 
 	public boolean wearingProtectiveClothing(Player p) {
-		return p.getInventory().wielding(ItemId.PROTECTIVE_JACKET.id())
-				&& p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id());
+		return p.getEquipment().hasEquipped(ItemId.PROTECTIVE_JACKET.id())
+				&& p.getEquipment().hasEquipped(ItemId.PROTECTIVE_TROUSERS.id());
 	}
 
 	public void handleGateSounds(Player player) {
@@ -254,8 +254,8 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 		if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.SECOND_PLAGUE_SHEEP.id()
 			|| plagueSheep.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
 			if (item.getCatalogId() == ItemId.CATTLE_PROD.id()) {
-				if ((p.getInventory().wielding(ItemId.PROTECTIVE_TROUSERS.id()) && p.getInventory()
-					.wielding(ItemId.PROTECTIVE_JACKET.id()))
+				if ((p.getEquipment().hasEquipped(ItemId.PROTECTIVE_TROUSERS.id()) && p.getEquipment()
+					.hasEquipped(ItemId.PROTECTIVE_JACKET.id()))
 					&& p.getQuestStage(getQuestId()) != -1) {
 					if (plagueSheep.getLocation().inBounds(589, 543, 592, 548)) {
 						p.message("The sheep is already in the pen");

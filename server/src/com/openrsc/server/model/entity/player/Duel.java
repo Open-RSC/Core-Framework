@@ -163,7 +163,7 @@ public class Duel implements ContainerListener {
 			for (Item item : getDuelOffer().getItems()) {
 				Item affectedItem = player.getInventory().get(item);
 				if (affectedItem == null) {
-					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getCatalogId())) {
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && player.getEquipment().ableToEquip(item.getCatalogId())) {
 						player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 							player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 							item.getDef(player.getWorld()).getWearableId(), false);

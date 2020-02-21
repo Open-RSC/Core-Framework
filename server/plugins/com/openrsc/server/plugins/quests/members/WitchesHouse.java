@@ -405,7 +405,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	private boolean wearingInsulatingGloves(Player p) {
-		return p.getInventory().wielding(ItemId.LEATHER_GLOVES.id()) || p.getInventory().wielding(ItemId.ICE_GLOVES.id());
+		return p.getEquipment().hasEquipped(ItemId.LEATHER_GLOVES.id()) || p.getEquipment().hasEquipped(ItemId.ICE_GLOVES.id());
 	}
 
 	//considerations: sq/kite shields, med/large helms, plate-bodies/plate-tops/chains, legs/skirts
@@ -437,7 +437,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		boolean isWearingMetal = false;
 
 		for (int itemId : METAL_ARMOURS) {
-			isWearingMetal |= p.getInventory().wielding(itemId);
+			isWearingMetal |= p.getEquipment().hasEquipped(itemId);
 			if (isWearingMetal) break;
 		}
 

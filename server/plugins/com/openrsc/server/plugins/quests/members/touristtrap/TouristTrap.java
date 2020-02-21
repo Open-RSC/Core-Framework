@@ -1031,7 +1031,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case -1:
 						if (p.getLocation().inTouristTrapCave()) {
 							npcTalk(p, n, "Can't you see I'm busy?");
-							if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
+							if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
 								p.message("A guard notices you and starts running after you.");
 								Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 								if (npcN == null) {
@@ -1269,7 +1269,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			if (cID == -1) {
 				if (p.getLocation().inTouristTrapCave()) {
-					if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id())) {
+					if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
 						p.message("This guard looks as if he's been down here a while.");
 						npcTalk(p, n, "Hey, you're no slave!",
 							"What are you doing down here?");
@@ -2084,7 +2084,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.message("This slave does not appear interested in talking to you.");
 				return;
 			}
-			if (!p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
+			if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
 				p.message("A guard notices you and starts running after you.");
 				Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 				if (npcN == null) {
@@ -2493,7 +2493,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			if (command.equals("open")) {
 				message(p, "You push the door.");
 				playerTalk(p, null, "Ugh!");
-				if (p.getInventory().wielding(ItemId.SLAVES_ROBE_BOTTOM.id()) && p.getInventory().wielding(ItemId.SLAVES_ROBE_TOP.id())) {
+				if (p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
 					message(p, "The door opens with some effort ");
 					if (obj.getX() == 81 && obj.getY() == 3633) {
 						p.teleport(82, 802);

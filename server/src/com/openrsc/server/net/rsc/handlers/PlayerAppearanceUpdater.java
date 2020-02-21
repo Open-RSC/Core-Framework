@@ -4,6 +4,7 @@ import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -47,7 +48,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item top = player.getEquipment().get(1);
 				if (top != null && top.getDef(player.getWorld()).isFemaleOnly()) {
-					player.getInventory().unwieldItem(top, false);
+					player.getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
 					ActionSender.sendEquipmentStats(player, 1);
 				}
 			} else {
@@ -56,7 +57,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 					Item i = inv.get(slot);
 					if (i.isWieldable(player.getWorld()) && i.getDef(player.getWorld()).getWieldPosition() == 1
 						&& i.isWielded() && i.getDef(player.getWorld()).isFemaleOnly()) {
-						player.getInventory().unwieldItem(i, false);
+						player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
 						ActionSender.sendInventoryUpdateItem(player, slot);
 						break;
 					}

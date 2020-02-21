@@ -27,7 +27,7 @@ public class ItemActionHandler implements PacketHandler {
 		if (idx == -1)
 		{
 			idx = (int) p.readShort();
-			if (player.getEquipment().hasEquipped(idx) != -1)
+			if (player.getEquipment().searchEquipmentForItem(idx) != -1)
 				tempitem = new Item(idx);
 			commandIndex = p.readByte();
 

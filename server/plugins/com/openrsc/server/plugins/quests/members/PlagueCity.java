@@ -869,7 +869,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
-				if (p.getInventory().wielding(ItemId.GASMASK.id())) {
+				if (p.getEquipment().hasEquipped(ItemId.GASMASK.id())) {
 					p.message("you climb through the sewer pipe");
 					p.teleport(632, 589, false);
 				} else {

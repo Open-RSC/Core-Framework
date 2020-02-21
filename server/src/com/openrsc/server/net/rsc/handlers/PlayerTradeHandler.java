@@ -5,6 +5,7 @@ import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -171,7 +172,7 @@ public class PlayerTradeHandler implements PacketHandler {
 								return;
 							}
 							if (affectedItem.isWielded()) {
-								player.getInventory().unwieldItem(affectedItem, false);
+								player.getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
 							player.getInventory().remove(item);
 						}
@@ -183,7 +184,7 @@ public class PlayerTradeHandler implements PacketHandler {
 								return;
 							}
 							if (affectedItem.isWielded()) {
-								affectedPlayer.getInventory().unwieldItem(affectedItem, false);
+								affectedPlayer.getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
 							affectedPlayer.getInventory().remove(item);
 						}

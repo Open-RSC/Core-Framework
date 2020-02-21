@@ -370,7 +370,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
-			if (p.getInventory().hasItemId(ItemId.ICE_GLOVES.id()) && p.getInventory().wielding(ItemId.ICE_GLOVES.id())) {
+			if (p.getInventory().hasItemId(ItemId.ICE_GLOVES.id()) && p.getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				message(p, "The ice gloves cool down the cog",
 					"You can carry it now");
 				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())

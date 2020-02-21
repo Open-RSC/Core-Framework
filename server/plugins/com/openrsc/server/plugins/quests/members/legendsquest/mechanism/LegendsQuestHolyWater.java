@@ -57,7 +57,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if (!player.getInventory().wielding(ItemId.HOLY_WATER_VIAL.id())) {
+		if (!player.getEquipment().hasEquipped(ItemId.HOLY_WATER_VIAL.id())) {
 			player.message("You need to equip this item to throw it.");
 		}
 		else {

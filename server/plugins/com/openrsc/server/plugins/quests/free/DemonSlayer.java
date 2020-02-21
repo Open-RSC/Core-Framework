@@ -1086,7 +1086,7 @@ public class DemonSlayer implements QuestInterface,
 					playerTalk(p, null, "I'd rather not. He looks scary");
 					return true;
 				case 4:
-					if (!p.getInventory().wielding(ItemId.SILVERLIGHT.id())) {
+					if (!p.getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())) {
 						playerTalk(p, null, "Maybe I'd better wield silverlight first");
 						return true;
 					} else {

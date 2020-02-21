@@ -34,7 +34,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			if (p.getCache().hasKey("dolmen_zombie")
 				&& p.getCache().hasKey("dolmen_skeleton")
 				&& p.getCache().hasKey("dolmen_ghost")) {
-				if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+				if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 					choke(p);
 				}
 				if (hasItem(p, ItemId.RASHILIYA_CORPSE.id())) {
@@ -54,7 +54,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 				return;
 			}
 			p.setBusy(true);
-			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+			if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
 			p.message("You touch the Dolmen, and the ground starts to shake.");
@@ -64,7 +64,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 			p.message("you step away from the Dolmen in anticipation...");
 			sleep(1000);
 			p.teleport(380, 3625);
-			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+			if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
 			if (!p.getCache().hasKey("dolmen_zombie")) {
@@ -211,7 +211,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
-			if (!p.getInventory().wielding(ItemId.BEADS_OF_THE_DEAD.id())) {
+			if (!p.getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
 			}
 			n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));

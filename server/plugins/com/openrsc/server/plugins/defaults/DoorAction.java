@@ -308,7 +308,7 @@ public class DoorAction {
 				break;
 
 			case 104: // Temple of Ikov: First door (533, 3342)
-				if (p.getInventory().wielding(ItemId.PENDANT_OF_LUCIEN.id()) || p.getY() >= 3335 && p.getY() <= 3341) {
+				if (p.getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id()) || p.getY() >= 3335 && p.getY() <= 3341) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -319,7 +319,7 @@ public class DoorAction {
 				break;
 
 			case 105: // Temple of Ikov: Bridge door (546, 3328)
-				if (p.getInventory().wielding(ItemId.BOOTS_OF_LIGHTFOOTEDNESS.id()) || p.getX() >= 546) {
+				if (p.getEquipment().hasEquipped(ItemId.BOOTS_OF_LIGHTFOOTEDNESS.id()) || p.getX() >= 546) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -349,8 +349,8 @@ public class DoorAction {
 			case 113: // Fight Arena (621, 699), (603, 717)
 				boolean stop = false;
 				Npc guard = null;
-				if (p.getInventory().wielding(ItemId.KHAZARD_HELMET.id())
-					&& p.getInventory().wielding(ItemId.KHAZARD_CHAINMAIL.id())) {
+				if (p.getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& p.getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 					doDoor(obj, p);
 				} else if (obj.getX() == 603 && p.getX() < obj.getX()) {
 					guard = getNearestNpc(p, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 8);
@@ -583,7 +583,7 @@ public class DoorAction {
 					sleep(600);
 					p.setBusy(false);
 					p.message("You need a crafting level of 40 to enter the guild");
-				} else if (!p.getInventory().wielding(ItemId.BROWN_APRON.id())) {
+				} else if (!p.getEquipment().hasEquipped(ItemId.BROWN_APRON.id())) {
 					Npc master = p.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcTalk(p, master, "Where's your brown apron?",
@@ -605,7 +605,7 @@ public class DoorAction {
 					}
 					sleep(600);
 					p.message("You need a cooking level of 32 to enter");
-				} else if (!p.getInventory().wielding(ItemId.CHEFS_HAT.id())) {
+				} else if (!p.getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
 					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Where's your chef's hat",
@@ -642,8 +642,8 @@ public class DoorAction {
 					return;
 				}
 				if (p.getX() <= 270) {
-					if (!p.getInventory().wielding(ItemId.IRON_CHAIN_MAIL_BODY.id())
-						|| !p.getInventory().wielding(ItemId.MEDIUM_BRONZE_HELMET.id())) {
+					if (!p.getEquipment().hasEquipped(ItemId.IRON_CHAIN_MAIL_BODY.id())
+						|| !p.getEquipment().hasEquipped(ItemId.MEDIUM_BRONZE_HELMET.id())) {
 						p.message(
 							"Only guards are allowed in there!");
 						return;
@@ -761,7 +761,7 @@ public class DoorAction {
 					}
 					Npc DOOR_MOURNER = getNearestNpc(p, NpcId.MOURNER_DOOR.id(), 10);
 					if (DOOR_MOURNER != null) {
-						if (p.getInventory().wielding(ItemId.DOCTORS_GOWN.id())) {
+						if (p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 							npcTalk(p, DOOR_MOURNER, "in you go doc");
 							doDoor(obj, p);
 							p.playerServerMessage(MessageType.QUEST, "You go through the door");
@@ -773,7 +773,7 @@ public class DoorAction {
 						}
 					}
 				} else if ((p.getQuestStage(Quests.BIOHAZARD) > 5 || p.getQuestStage(Quests.BIOHAZARD) == -1) &&
-					p.getInventory().wielding(802)) {
+					p.getEquipment().hasEquipped(802)) {
 					doDoor(obj, p);
 				} else {
 					p.message("the door is locked");
@@ -786,7 +786,7 @@ public class DoorAction {
 					p.playerServerMessage(MessageType.QUEST, "You go through the door");
 					return;
 				}
-				if (p.getInventory().wielding(ItemId.DOCTORS_GOWN.id())) {
+				if (p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 					doDoor(obj, p);
 					p.playerServerMessage(MessageType.QUEST, "You go through the door");
 				} else {
@@ -801,7 +801,7 @@ public class DoorAction {
 						doDoor(obj, p);
 						return;
 					}
-					if (p.getInventory().wielding(ItemId.PRIEST_ROBE.id()) && p.getInventory().wielding(ItemId.PRIEST_GOWN.id())) {
+					if (p.getEquipment().hasEquipped(ItemId.PRIEST_ROBE.id()) && p.getEquipment().hasEquipped(ItemId.PRIEST_GOWN.id())) {
 						p.message("guidors wife allows you to go in");
 						p.playerServerMessage(MessageType.QUEST, "You go through the door");
 						doDoor(obj, p);

@@ -30,6 +30,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -851,7 +852,13 @@ public final class Player extends Mob {
 			}
 
 			if (unWield) {
-				getInventory().unwieldItem(item, false);
+				UnequipRequest request = new UnequipRequest();
+				request.item = item;
+				request.sound = false;
+				request.player = this;
+				request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
+				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
+				getEquipment().unequipItem(request);
 				ActionSender.sendEquipmentStats(this);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
@@ -3166,7 +3173,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean checkRingOfLife(final Mob hitter) {
-		if (this.isPlayer() && Functions.isWielding(this, ItemId.RING_OF_LIFE.id())
+		if (this.isPlayer() && this.getEquipment().ableToEquip(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
 			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {

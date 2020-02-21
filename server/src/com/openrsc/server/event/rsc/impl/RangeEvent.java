@@ -264,7 +264,7 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
 						int fireDamage;
-						if (getPlayerOwner().getInventory().wielding(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+						if (getPlayerOwner().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							if (npc.getID() == NpcId.DRAGON.id()) {
 								percentage = 10;
 							} else if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {

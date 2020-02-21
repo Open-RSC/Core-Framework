@@ -82,7 +82,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 					return;
 				}
 				if (p.getQuestStage(this) == 0
-					|| !p.getInventory().wielding(ItemId.AMULET_OF_GHOSTSPEAK.id())) {
+					|| !p.getEquipment().hasEquipped(ItemId.AMULET_OF_GHOSTSPEAK.id())) {
 					playerTalk(p, n, "Hello ghost, how are you?");
 					npcTalk(p, n, "Wooo wooo wooooo");
 					int choice = showMenu(p, n,

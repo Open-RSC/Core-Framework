@@ -402,7 +402,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 		} else if (obj.getID() == 471) {
 			message(p, "the doors begin to open");
 
-			if (p.getInventory().wielding(ItemId.GLARIALS_AMULET.id())) {
+			if (p.getEquipment().hasEquipped(ItemId.GLARIALS_AMULET.id())) {
 				doGate(p, obj, 63);
 				message(p, "You go through the door");
 			} else {

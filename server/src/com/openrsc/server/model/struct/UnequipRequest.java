@@ -15,9 +15,24 @@ public class UnequipRequest {
 
 	public UnequipRequest(){}
 
+	public UnequipRequest(Player player, Item item, RequestType type, Boolean sound) {
+		this.player = player;
+		this.item = item;
+		this.requestType = type;
+		this.sound = sound;
+
+		if (this.requestType == RequestType.CHECK_IF_EQUIPMENT_TAB) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+				this.requestType = RequestType.FROM_EQUIPMENT;
+			else
+				this.requestType = RequestType.FROM_INVENTORY;
+		}
+	}
+
 	public enum RequestType {
 		FROM_INVENTORY,
 		FROM_EQUIPMENT,
-		FROM_BANK
+		FROM_BANK,
+		CHECK_IF_EQUIPMENT_TAB
 	}
 }

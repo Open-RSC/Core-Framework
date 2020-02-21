@@ -107,7 +107,7 @@ public class Default implements DefaultHandler,
 				return;
 			}
 		} else {
-			int slot = p.getEquipment().hasEquipped(i.getCatalogId());
+			int slot = p.getEquipment().searchEquipmentForItem(i.getCatalogId());
 			if (slot == -1 || p.getEquipment().get(slot).getAmount() != i.getAmount()) {
 				p.setStatus(Action.IDLE);
 				return;
@@ -257,13 +257,11 @@ public class Default implements DefaultHandler,
 	public void onUnequip(UnequipRequest request) {
 		switch (request.requestType) {
 			case FROM_INVENTORY:
-				request.player.getInventory().unwieldItem(request.item, request.sound);
-				break;
 			case FROM_EQUIPMENT:
-				request.player.getInventory().unwieldItem(request.item, request.sound);
+				request.player.getEquipment().unequipItem(request);
 				break;
 			case FROM_BANK:
-				request.player.getBank().unwieldItem(request.item, request.sound);
+				//request.player.getBank().unwieldItem(request.item, request.sound);
 				break;
 		}
 	}
@@ -272,11 +270,11 @@ public class Default implements DefaultHandler,
 	public void onEquip(EquipRequest request) {
 		switch (request.requestType) {
 			case FROM_BANK:
-				request.player.getBank().wieldItem(request.item, request.sound);
+				//request.player.getBank().wieldItem(request.item, request.sound);
 				ActionSender.showBank(request.player);
 				break;
 			case FROM_INVENTORY:
-				request.player.getInventory().wieldItem(request.item, request.sound);
+				request.player.getEquipment().equipItem(request);
 				break;
 		}
 	}

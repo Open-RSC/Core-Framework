@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
@@ -219,7 +218,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 1:
-						if (p.getInventory().wielding(ItemId.PENDANT_OF_LUCIEN.id()) && !hasItem(p, ItemId.STAFF_OF_ARMADYL.id())) {
+						if (p.getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id()) && !hasItem(p, ItemId.STAFF_OF_ARMADYL.id())) {
 							npcTalk(p, n, "Ahh tis a foul agent of Lucien",
 								"Get ye from our master's house");
 							if (n != null) {
@@ -636,7 +635,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already completed this quest");
 			} else {
-				if (p.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id())) {
+				if (p.getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 					p.startCombat(n);
 				} else {
 					npcTalk(p, n, "I'm sure you don't want to attack me really",
@@ -650,7 +649,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.LUCIEN_EDGE.id() && (p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2 || !p.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id()))) {
+		if (n.getID() == NpcId.LUCIEN_EDGE.id() && (p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2 || !p.getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id()))) {
 			return true;
 		}
 		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id() && (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1 || p.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2)) {
@@ -673,7 +672,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 		boolean hasGoodBow = false;
 
 		for (int bow : allowedBowsIce) {
-			hasGoodBow |= (p.getInventory().hasItemId(bow) && p.getInventory().wielding(bow));
+			hasGoodBow |= (p.getInventory().hasItemId(bow) && p.getEquipment().hasEquipped(bow));
 		}
 
 		return hasGoodBow;
@@ -686,7 +685,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 				p.message("You have already completed this quest");
 				return;
 			}
-			if (!p.getInventory().wielding(ItemId.PENDANT_OF_ARMADYL.id())) {
+			if (!p.getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 				npcTalk(p, n, "I'm sure you don't want to attack me really",
 					"I am your friend");
 				message(p, "You decide you don't want to attack Lucien really",

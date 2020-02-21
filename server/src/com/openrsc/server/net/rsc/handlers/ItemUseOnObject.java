@@ -106,7 +106,7 @@ public class ItemUseOnObject implements PacketHandler {
 			{
 				//they used the item from their equipment slot
 				int itemID = p.readShort();
-				int realSlot = player.getEquipment().hasEquipped(itemID);
+				int realSlot = player.getEquipment().searchEquipmentForItem(itemID);
 				if (realSlot == -1)
 					return;
 				item = player.getEquipment().get(realSlot);

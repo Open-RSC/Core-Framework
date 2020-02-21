@@ -127,7 +127,7 @@ public class ThrowingEvent extends GameTickEvent {
 				Item rangeType;
 				int slot;
 				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-					slot = getPlayerOwner().getEquipment().hasEquipped(throwingID);
+					slot = getPlayerOwner().getEquipment().searchEquipmentForItem(throwingID);
 					if (slot < 0)
 						return;
 					rangeType = getPlayerOwner().getEquipment().get(slot);
@@ -181,7 +181,7 @@ public class ThrowingEvent extends GameTickEvent {
 					if (npc.getID() == 196) {
 						getPlayerOwner().message("The dragon breathes fire at you");
 						int maxHit = 65;
-						if (getPlayerOwner().getInventory().wielding(420)) {
+						if (getPlayerOwner().getEquipment().hasEquipped(420)) {
 							maxHit = 10;
 							getPlayerOwner().message("Your shield prevents some of the damage from the flames");
 						}

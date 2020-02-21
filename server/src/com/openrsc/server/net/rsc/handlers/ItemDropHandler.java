@@ -30,7 +30,7 @@ public final class ItemDropHandler implements PacketHandler {
 		//User wants to drop the item from equipment tab
 		if (idx == -1) {
 			int realid = (int) p.readShort();
-			int slot = player.getEquipment().hasEquipped(realid);
+			int slot = player.getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1)
 				tempitem = player.getEquipment().get(slot);
 		} else {
@@ -95,7 +95,7 @@ public final class ItemDropHandler implements PacketHandler {
 							return;
 						}
 						if ((fromInventory && !player.getInventory().hasItemId(item.getCatalogId())) ||
-							(!fromInventory && (player.getEquipment().hasEquipped(item.getCatalogId())) == -1)) {
+							(!fromInventory && (player.getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
 							player.message("You don't have the entered amount to drop");
 							stop();
 							player.setStatus(Action.IDLE);

@@ -19,7 +19,7 @@ public class SilverlightEffect implements OnCombatStartScript {
 			Player attackerPlayer = (Player) attacker;
 			Npc npcVictim = (Npc) victim;
 			if ( (npcVictim.getDef().getName().toLowerCase().contains("demon")
-					|| DataConversions.inArray(otherDemonIDs, npcVictim.getID())) && attackerPlayer.getInventory().wielding(52) ) {
+					|| DataConversions.inArray(otherDemonIDs, npcVictim.getID())) && attackerPlayer.getEquipment().hasEquipped(52) ) {
 				return true;
 			}
 		}
@@ -27,7 +27,7 @@ public class SilverlightEffect implements OnCombatStartScript {
 			Npc attackerNpc = (Npc) attacker;
 			Player playerVictim = (Player) victim;
 			return (attackerNpc.getDef().getName().toLowerCase().contains("demon")
-				|| DataConversions.inArray(otherDemonIDs, attackerNpc.getID())) && playerVictim.getInventory().wielding(52);
+				|| DataConversions.inArray(otherDemonIDs, attackerNpc.getID())) && playerVictim.getEquipment().hasEquipped(52);
 		}
 		return false;
 	}

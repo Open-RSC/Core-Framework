@@ -50,7 +50,7 @@ public class Smelting implements InvUseOnObjectListener,
 						public void action() {
 							getOwner().incExp(Skills.SMITHING, 100, true);
 							getOwner().getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
-							if (Functions.isWielding(getOwner(), ItemId.DWARVEN_RING.id())) {
+							if (getOwner().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
 								getOwner().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
 								int charges;
 								if (getOwner().getCache().hasKey("dwarvenring")) {
@@ -239,7 +239,7 @@ public class Smelting implements InvUseOnObjectListener,
 						getOwner().getInventory().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
 
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
-						if (Functions.isWielding(getOwner(), ItemId.RING_OF_FORGING.id())) {
+						if (getOwner().getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {
 							getOwner().message("Your ring of forging shines brightly");
 							addItem(getOwner(), smelt.getSmeltBarId(), 1);
 							if (getOwner().getCache().hasKey("ringofforging")) {
@@ -266,7 +266,7 @@ public class Smelting implements InvUseOnObjectListener,
 						getOwner().playerServerMessage(MessageType.QUEST, "You retrieve a bar of " + new Item(smelt.getSmeltBarId()).getDef(getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
-						if (getOwner().getInventory().wielding(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
+						if (getOwner().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
 							getOwner().incExp(Skills.SMITHING, smelt.getXp() + 45, true);
 						} else {
 							getOwner().incExp(Skills.SMITHING, smelt.getXp(), true);

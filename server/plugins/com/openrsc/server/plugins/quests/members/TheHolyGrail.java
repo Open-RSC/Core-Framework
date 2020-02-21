@@ -369,7 +369,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
-			if (p.getInventory().wielding(ItemId.EXCALIBUR.id())) {
+			if (p.getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
 				n.killedBy(p);
 				n.resetCombatEvent();
 				p.message("Well done you have defeated the black knight titan");

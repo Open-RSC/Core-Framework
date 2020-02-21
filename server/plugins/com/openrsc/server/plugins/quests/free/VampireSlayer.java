@@ -23,12 +23,12 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener, PlayerKilledNpcExecutiveListener,
 	PlayerKilledNpcListener, PlayerAttackNpcExecutiveListener {
-	
+
 	private static final int COUNT_DRAYNOR_COFFIN_OPEN = 136;
 	private static final int COUNT_DRAYNOR_COFFIN_CLOSED = 135;
 	private static final int GARLIC_CUPBOARD_OPEN = 141;
 	private static final int GARLIC_CUPBOARD_CLOSED = 140;
-	
+
 	@Override
 	public int getQuestId() {
 		return Quests.VAMPIRE_SLAYER;
@@ -38,12 +38,12 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Vampire slayer";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the vampire slayer quest");
@@ -257,7 +257,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
-			if (p.getInventory().wielding(ItemId.STAKE.id()) && p.getInventory().hasItemId(ItemId.HAMMER.id())) {
+			if (p.getEquipment().hasEquipped(ItemId.STAKE.id()) && p.getInventory().hasItemId(ItemId.HAMMER.id())) {
 				p.getInventory().remove(p.getInventory().getLastIndexById(ItemId.STAKE.id()));
 				p.message("You hammer the stake in to the vampires chest!");
 				n.killedBy(p);

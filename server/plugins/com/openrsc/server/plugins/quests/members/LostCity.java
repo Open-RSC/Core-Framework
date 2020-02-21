@@ -31,7 +31,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	InvUseOnItemListener, InvUseOnItemExecutiveListener,
 	WallObjectActionListener, WallObjectActionExecutiveListener {
 	private static final Logger LOGGER = LogManager.getLogger(LostCity.class);
-	
+
 	/* Objects */
 	final int LEPROCHAUN_TREE = 237, ENTRANA_LADDER = 244, DRAMEN_TREE = 245,
 		MAGIC_DOOR = 65, ZANARIS_DOOR = 66;
@@ -101,7 +101,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 						} catch (Exception e) {
 							LOGGER.catching(e);
 						}
-						
+
 					}
 				} else {
 					p.message("There is nothing in this tree");
@@ -437,7 +437,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 			sleep(500);
 			p.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
-			if (isWielding(p, ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {
+			if (p.getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {
 				p.setBusy(true);
 				message(p, "The world starts to shimmer",
 					"You find yourself in different surroundings");
