@@ -174,7 +174,7 @@ public class AppFrame extends JFrame {
 		(this.openpk_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
 		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
 		this.openpk_online.setBounds(openpk_x + 10, launch_button_y + 95, 327, 15);
-		this.bg.add(this.openpk_online);
+		//this.bg.add(this.openpk_online);
 
 		/*
 		 * Dev World
@@ -183,7 +183,7 @@ public class AppFrame extends JFrame {
 		(this.dev_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
 		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
 		this.dev_online.setBounds(dev_x + 10, launch_button_y + 95, 95, 15);
-		this.bg.add(this.dev_online);
+		//this.bg.add(this.dev_online);
 
 		comboBox = new CheckCombo();
 		//comboBox.combo.setBounds(585, 132, 150, 30);
