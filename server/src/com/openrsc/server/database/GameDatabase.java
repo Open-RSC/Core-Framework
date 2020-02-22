@@ -540,7 +540,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	protected void querySavePlayerEquipped(Player player) throws GameDatabaseException {
 		if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			final int equipSize = Equipment.slots;
+			final int equipSize = Equipment.SLOT_COUNT;
 
 			final ArrayList<PlayerEquipped> list = new ArrayList<>();
 

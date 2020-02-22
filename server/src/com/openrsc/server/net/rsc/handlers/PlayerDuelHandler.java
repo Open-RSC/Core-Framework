@@ -14,7 +14,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -183,7 +182,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				if (player.getDuel().getDuelSetting(3)) {
 					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 						Item item;
-						for (int i = 0; i < Equipment.slots; i++) {
+						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 							item = player.getEquipment().get(i);
 							if (item != null) {
 								if (!player.getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
@@ -199,7 +198,7 @@ public class PlayerDuelHandler implements PacketHandler {
 							}
 						}
 
-						for (int i = 0; i < Equipment.slots; i++) {
+						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 							item = affectedPlayer.getEquipment().get(i);
 							if (item != null) {
 								if (!affectedPlayer.getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {

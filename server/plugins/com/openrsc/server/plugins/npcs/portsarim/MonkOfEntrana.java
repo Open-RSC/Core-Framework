@@ -36,7 +36,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 
 		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
-			for (int i = 0; i < Equipment.slots; i++) {
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = p.getEquipment().get(i);
 				if (item == null)
 					continue;

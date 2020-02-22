@@ -36,7 +36,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
@@ -805,7 +804,7 @@ public final class Player extends Mob {
 	}
 
 	public void checkEquipment2() {
-		for (int slot = 0; slot < Equipment.slots; slot++) {
+		for (int slot = 0; slot < Equipment.SLOT_COUNT; slot++) {
 			Item item = getEquipment().get(slot);
 			if (item == null)
 				continue;
@@ -1232,7 +1231,7 @@ public final class Player extends Mob {
 	public int getRangeEquip() {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
-			for (int i = 0; i < Equipment.slots; i++) {
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = getEquipment().get(i);
 				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
 					|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
@@ -1255,7 +1254,7 @@ public final class Player extends Mob {
 	public int getThrowingEquip() {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
-			for (int i = 0; i < Equipment.slots; i++) {
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = getEquipment().get(i);
 				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getCatalogId())) {
 					return item.getCatalogId();

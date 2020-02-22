@@ -33,7 +33,7 @@ public class PlayerPoisonScript implements CombatScript {
 			}
 			if (attacker.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item i;
-				for (int q = 0; q < Equipment.slots; q++) {
+				for (int q = 0; q < Equipment.SLOT_COUNT; q++) {
 					i = p.getEquipment().get(q);
 					if (i == null)
 						continue;

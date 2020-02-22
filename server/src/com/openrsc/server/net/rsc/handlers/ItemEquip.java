@@ -15,7 +15,6 @@ public final class ItemEquip implements PacketHandler {
 //	bind(OpcodeIn.ITEM_EQUIP_FROM_BANK.getOpcode(), ItemEquip.class);
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-		player.message("Handeling with ItemEquip");
 		OpcodeIn opcode = OpcodeIn.get(packet.getID());
 
 		//Make sure they're allowed to equip something atm

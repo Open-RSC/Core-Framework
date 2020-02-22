@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +31,7 @@ public class Bank {
 
 		public Preset(Player player) {
 			inventory = new Item[Inventory.MAX_SIZE];
-			equipment = new Item[Equipment.slots];
+			equipment = new Item[Equipment.SLOT_COUNT];
 		}
 	}
 
@@ -531,7 +530,7 @@ public class Bank {
 		}
 
 		blobData = ByteBuffer.wrap(equipmentItems);
-		for (int i = 0; i < Equipment.slots; i++) {
+		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 			itemID[0] = blobData.get();
 			if (itemID[0] == -1)
 				continue;
@@ -594,7 +593,7 @@ public class Bank {
 
 			if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				//Loop through their equipment and add it to the hashmap
-				for (int i = 0; i < Equipment.slots; i++) {
+				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 					tempItem = getPlayer().getEquipment().get(i);
 					if (tempItem != null) {
 						if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
@@ -613,7 +612,7 @@ public class Bank {
 				return;
 			}
 
-			for (int i = 0; i < Equipment.slots; i++) {
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				if (getPlayer().getEquipment().get(i) != null)
 					getPlayer().getEquipment().remove(i);
 			}

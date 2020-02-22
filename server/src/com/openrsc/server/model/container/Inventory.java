@@ -3,7 +3,6 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.external.Gauntlets;
@@ -15,7 +14,6 @@ import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import org.apache.logging.log4j.LogManager;
@@ -492,7 +490,7 @@ public class Inventory {
 		ItemDefinition def;
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (int i = 0; i < Equipment.slots; i++) {
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = player.getEquipment().get(i);
 				if (equipped != null) {
 					def = equipped.getDef(player.getWorld());

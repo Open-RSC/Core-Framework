@@ -729,7 +729,7 @@ public class ActionSender {
 		s.setID(Opcode.SEND_EQUIPMENT.opcode);
 		s.writeByte(player.getEquipment().equipCount());
 		Item item;
-		for (int i = 0; i < Equipment.slots; i++) {
+		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 			item = player.getEquipment().get(i);
 			if (item != null) {
 				s.writeByte(item.getDef(player.getWorld()).getWieldPosition());

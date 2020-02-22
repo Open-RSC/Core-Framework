@@ -69,7 +69,7 @@ public final class BankHandler implements PacketHandler {
 				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getCatalogId(), depoItem.getAmount()});
 			}
 		} else if (pID == packetFive && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //deposit all from equipment
-			for (int k = Equipment.slots - 1; k >= 0; k--) {
+			for (int k = Equipment.SLOT_COUNT - 1; k >= 0; k--) {
 				Item depoItem = player.getEquipment().get(k);
 				if (depoItem == null)
 					continue;
@@ -89,7 +89,7 @@ public final class BankHandler implements PacketHandler {
 				else
 					player.getBank().presets[presetSlot].inventory[k] = new Item(ItemId.NOTHING.id(),0);
 			}
-			for (int k = 0; k < Equipment.slots; k++) {
+			for (int k = 0; k < Equipment.SLOT_COUNT; k++) {
 				Item equipmentItem = player.getEquipment().get(k);
 				if (equipmentItem != null)
 					player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
