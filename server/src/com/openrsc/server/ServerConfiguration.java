@@ -1,11 +1,11 @@
 package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
+import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -322,183 +322,190 @@ public class ServerConfiguration {
 	 * Config file for server configurations.
 	 */
 	private static Properties props = new Properties();
+	private static YMLReader serverProps = new YMLReader();
+	private static YMLReader generalProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
 		try { // Always try to load local.conf first
-			props.loadFromXML(new FileInputStream("local.conf"));
+//			props.loadFromXML(new FileInputStream("local.conf"));
+			// This file should ALWAYS be here!
+			generalProps.loadFromYML("connections.conf");
+			serverProps.loadFromYML("local.conf");
+
 		} catch (Exception e) { // Otherwise default to default.conf
-			props.loadFromXML(new FileInputStream(defaultFile));
+//			props.loadFromXML(new FileInputStream(defaultFile));
+			serverProps.loadFromYML(defaultFile);
 			LOGGER.info("Properties file local.conf not found, loading properties from default.conf");
 		}
 
 		// Initialization confs
-		GAME_TICK = Integer.parseInt(props.getProperty("game_tick"));
-		WALKING_TICK = Integer.parseInt(props.getProperty("walking_tick"));
-		WANT_CUSTOM_WALK_SPEED = Boolean.parseBoolean(props.getProperty("want_custom_walking_speed"));
-		IDLE_TIMER = Integer.parseInt(props.getProperty("idle_timer"));
-		AUTO_SAVE = Integer.parseInt(props.getProperty("auto_save"));
-		CLIENT_VERSION = Integer.parseInt(props.getProperty("client_version"));
-		SERVER_PORT = Integer.parseInt(props.getProperty("server_port"));
-		SERVER_NAME = props.getProperty("server_name");
-		SERVER_NAME_WELCOME = props.getProperty("server_name_welcome");
-		WELCOME_TEXT = props.getProperty("welcome_text");
-		SERVER_LOCATION = props.getProperty("server_location");
-		MAX_PLAYERS = Integer.parseInt(props.getProperty("max_players"));
-		MAX_PLAYERS_PER_IP = Integer.parseInt(props.getProperty("max_players_per_ip"));
-		MYSQL_USER = props.getProperty("mysql_user");
-		MYSQL_PASS = props.getProperty("mysql_pass");
-		MYSQL_DB = props.getProperty("mysql_db");
-		MYSQL_TABLE_PREFIX = props.getProperty("mysql_table_prefix");
-		MYSQL_HOST = props.getProperty("mysql_host");
-		HMAC_PRIVATE_KEY = props.getProperty("HMAC_PRIVATE_KEY");
-		VIEW_DISTANCE = Integer.parseInt(props.getProperty("view_distance"));
-		AVATAR_GENERATOR = Boolean.parseBoolean(props.getProperty("avatar_generator"));
-		DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(props.getProperty("display_logo_sprite"));
-		LOGO_SPRITE_ID = props.getProperty("logo_sprite_id");
-		FPS = Integer.parseInt(props.getProperty("client_fps"));
+		GAME_TICK = Integer.parseInt(serverProps.getAttribute("game_tick"));
+		WALKING_TICK = Integer.parseInt(serverProps.getAttribute("walking_tick"));
+		WANT_CUSTOM_WALK_SPEED = Boolean.parseBoolean(serverProps.getAttribute("want_custom_walking_speed"));
+		IDLE_TIMER = Integer.parseInt(serverProps.getAttribute("idle_timer"));
+		AUTO_SAVE = Integer.parseInt(serverProps.getAttribute("auto_save"));
+		CLIENT_VERSION = Integer.parseInt(serverProps.getAttribute("client_version"));
+		SERVER_PORT = Integer.parseInt(serverProps.getAttribute("server_port"));
+		SERVER_NAME = serverProps.getAttribute("server_name");
+		SERVER_NAME_WELCOME = serverProps.getAttribute("server_name_welcome");
+		WELCOME_TEXT = serverProps.getAttribute("welcome_text");
+		SERVER_LOCATION = serverProps.getAttribute("server_location");
+		MAX_PLAYERS = Integer.parseInt(serverProps.getAttribute("max_players"));
+		MAX_PLAYERS_PER_IP = Integer.parseInt(serverProps.getAttribute("max_players_per_ip"));
+		MYSQL_USER = generalProps.getAttribute("mysql_user");
+		MYSQL_PASS = generalProps.getAttribute("mysql_pass");
+		MYSQL_DB = serverProps.getAttribute("mysql_db");
+		MYSQL_TABLE_PREFIX = generalProps.getAttribute("mysql_table_prefix");
+		MYSQL_HOST = generalProps.getAttribute("mysql_host");
+		HMAC_PRIVATE_KEY = serverProps.getAttribute("HMAC_PRIVATE_KEY");
+		VIEW_DISTANCE = Integer.parseInt(serverProps.getAttribute("view_distance"));
+		AVATAR_GENERATOR = Boolean.parseBoolean(serverProps.getAttribute("avatar_generator"));
+		DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(serverProps.getAttribute("display_logo_sprite"));
+		LOGO_SPRITE_ID = serverProps.getAttribute("logo_sprite_id");
+		FPS = Integer.parseInt(serverProps.getAttribute("client_fps"));
 
 		// Game confs
-		WORLD_NUMBER = Integer.parseInt(props.getProperty("world_number"));
-		MEMBER_WORLD = Boolean.parseBoolean(props.getProperty("member_world"));
-		PLAYER_LEVEL_LIMIT = Integer.parseInt(props.getProperty("player_level_limit"));
-		COMBAT_EXP_RATE = Double.parseDouble(props.getProperty("combat_exp_rate"));
-		SKILLING_EXP_RATE = Double.parseDouble(props.getProperty("skilling_exp_rate"));
-		WILDERNESS_BOOST = Double.parseDouble(props.getProperty("wilderness_boost"));
-		SKULL_BOOST = Double.parseDouble(props.getProperty("skull_boost"));
-		IS_DOUBLE_EXP = Boolean.parseBoolean(props.getProperty("double_exp"));
-		PLAYER_COMMANDS = Boolean.parseBoolean(props.getProperty("player_commands"));
+		WORLD_NUMBER = Integer.parseInt(serverProps.getAttribute("world_number"));
+		MEMBER_WORLD = Boolean.parseBoolean(serverProps.getAttribute("member_world"));
+		PLAYER_LEVEL_LIMIT = Integer.parseInt(serverProps.getAttribute("player_level_limit"));
+		COMBAT_EXP_RATE = Double.parseDouble(serverProps.getAttribute("combat_exp_rate"));
+		SKILLING_EXP_RATE = Double.parseDouble(serverProps.getAttribute("skilling_exp_rate"));
+		WILDERNESS_BOOST = Double.parseDouble(serverProps.getAttribute("wilderness_boost"));
+		SKULL_BOOST = Double.parseDouble(serverProps.getAttribute("skull_boost"));
+		IS_DOUBLE_EXP = Boolean.parseBoolean(serverProps.getAttribute("double_exp"));
+		PLAYER_COMMANDS = Boolean.parseBoolean(serverProps.getAttribute("player_commands"));
 
-		SPAWN_AUCTION_NPCS = Boolean.parseBoolean(props.getProperty("spawn_auction_npcs"));
-		SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(props.getProperty("spawn_iron_man_npcs"));
-		WANT_PK_BOTS = Boolean.parseBoolean(props.getProperty("want_pk_bots"));
-		SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(props.getProperty("show_floating_nametags"));
-		WANT_CLANS = Boolean.parseBoolean(props.getProperty("want_clans"));
-		WANT_KILL_FEED = Boolean.parseBoolean(props.getProperty("want_kill_feed"));
-		FOG_TOGGLE = Boolean.parseBoolean(props.getProperty("fog_toggle"));
-		GROUND_ITEM_TOGGLE = Boolean.parseBoolean(props.getProperty("ground_item_toggle"));
-		AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(props.getProperty("auto_message_switch_toggle"));
-		BATCH_PROGRESSION = Boolean.parseBoolean(props.getProperty("batch_progression"));
-		SIDE_MENU_TOGGLE = Boolean.parseBoolean(props.getProperty("side_menu_toggle"));
-		INVENTORY_COUNT_TOGGLE = Boolean.parseBoolean(props.getProperty("inventory_count_toggle"));
-		ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(props.getProperty("zoom_view_toggle"));
-		MENU_COMBAT_STYLE_TOGGLE = Boolean.parseBoolean(props.getProperty("menu_combat_style_toggle"));
-		FIGHTMODE_SELECTOR_TOGGLE = Boolean.parseBoolean(props.getProperty("fightmode_selector_toggle"));
-		EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_counter_toggle"));
-		EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(props.getProperty("experience_drops_toggle"));
-		ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(props.getProperty("items_on_death_menu"));
-		SHOW_ROOF_TOGGLE = Boolean.parseBoolean(props.getProperty("show_roof_toggle"));
-		WANT_HIDE_IP = Boolean.parseBoolean(props.getProperty("want_hide_ip"));
-		WANT_REMEMBER = Boolean.parseBoolean(props.getProperty("want_remember"));
-		WANT_GLOBAL_CHAT = Boolean.parseBoolean(props.getProperty("want_global_chat"));
-		WANT_GLOBAL_FRIEND = Boolean.parseBoolean(props.getProperty("want_global_friend"));
-		WANT_SKILL_MENUS = Boolean.parseBoolean(props.getProperty("want_skill_menus"));
-		WANT_QUEST_MENUS = Boolean.parseBoolean(props.getProperty("want_quest_menus"));
-		WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(props.getProperty("want_experience_elixirs"));
-		WANT_KEYBOARD_SHORTCUTS = Integer.parseInt(props.getProperty("want_keyboard_shortcuts"));
-		RIGHT_CLICK_BANK = Boolean.parseBoolean(props.getProperty("right_click_bank"));
-		WANT_CUSTOM_BANKS = Boolean.parseBoolean(props.getProperty("want_custom_banks"));
-		WANT_BANK_PINS = Boolean.parseBoolean(props.getProperty("want_bank_pins"));
-		WANT_BANK_NOTES = Boolean.parseBoolean(props.getProperty("want_bank_notes"));
-		WANT_CERT_DEPOSIT = Boolean.parseBoolean(props.getProperty("want_cert_deposit"));
-		CUSTOM_FIREMAKING = Boolean.parseBoolean(props.getProperty("custom_firemaking"));
-		WANT_DROP_X = Boolean.parseBoolean(props.getProperty("want_drop_x"));
-		WANT_EXP_INFO = Boolean.parseBoolean(props.getProperty("want_exp_info"));
-		WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(props.getProperty("want_woodcutting_guild"));
-		WANT_MISSING_GUILD_GREETINGS = Boolean.parseBoolean(props.getProperty("want_missing_guild_greetings"));
-		WANT_DECANTING = Boolean.parseBoolean(props.getProperty("want_decanting"));
-		WANT_CERTER_BANK_EXCHANGE = Boolean.parseBoolean(props.getProperty("want_certer_bank_exchange"));
-		WANT_CUSTOM_RANK_DISPLAY = Boolean.parseBoolean(props.getProperty("want_custom_rank_display"));
-		FIX_OVERHEAD_CHAT = Boolean.parseBoolean(props.getProperty("want_fixed_overhead_chat"));
-		MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(props.getProperty("message_full_inventory"));
-		WANT_FATIGUE = Boolean.parseBoolean(props.getProperty("want_fatigue"));
-		STOP_SKILLING_FATIGUED = Integer.parseInt(props.getProperty("stop_skilling_fatigued"));
-		WANT_CUSTOM_SPRITES = Boolean.parseBoolean(props.getProperty("custom_sprites"));
-		WANT_CUSTOM_LANDSCAPE = Boolean.parseBoolean(props.getProperty("custom_landscape"));
-		WANT_PETS = Boolean.parseBoolean(props.getProperty("want_pets"));
-		SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(props.getProperty("show_unidentified_herb_names"));
-		WANT_QUEST_STARTED_INDICATOR = Boolean.parseBoolean(props.getProperty("want_quest_started_indicator"));
-		FISHING_SPOTS_DEPLETABLE = Boolean.parseBoolean(props.getProperty("fishing_spots_depletable"));
-		IMPROVED_ITEM_OBJECT_NAMES = Boolean.parseBoolean(props.getProperty("improved_item_object_names"));
-		CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(props.getProperty("crystal_key_gives_xp"));
-		LOOTED_CHESTS_STUCK = Boolean.parseBoolean(props.getProperty("looted_chests_stuck"));
-		WANT_RUNECRAFTING = Boolean.parseBoolean(props.getProperty("want_runecrafting"));
-		WANT_HARVESTING = Boolean.parseBoolean(props.getProperty("want_harvesting"));
-		WANT_DISCORD_AUCTION_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_auction_updates"));
-		DISCORD_AUCTION_WEBHOOK_URL = props.getProperty("discord_auction_webhook_url");
-		WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(props.getProperty("want_discord_monitoring_updates"));
-		DISCORD_MONITORING_WEBHOOK_URL = props.getProperty("discord_monitoring_webhook_url");
-		WANT_DISCORD_BOT = Boolean.parseBoolean(props.getProperty("want_discord_bot"));
-		CROSS_CHAT_CHANNEL = Long.parseLong(props.getProperty("cross_chat_channel"));
-		WANT_EQUIPMENT_TAB = Boolean.parseBoolean(props.getProperty("want_equipment_tab"));
-		WANT_BANK_PRESETS = Boolean.parseBoolean(props.getProperty("want_bank_presets"));
-		WANT_PARTIES = Boolean.parseBoolean(props.getProperty("want_parties"));
-		MINING_ROCKS_EXTENDED = Boolean.parseBoolean(props.getProperty("mining_rocks_extended"));
-		WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(props.getProperty("want_new_rare_drop_tables"));
-		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(props.getProperty("want_leftclick_webs"));
-		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(props.getProperty("want_custom_quests"));
-		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(props.getProperty("want_improved_pathfinding"));
-		CHARACTER_CREATION_MODE = Integer.parseInt(props.getProperty("character_creation_mode"));
+		SPAWN_AUCTION_NPCS = Boolean.parseBoolean(serverProps.getAttribute("spawn_auction_npcs"));
+		SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(serverProps.getAttribute("spawn_iron_man_npcs"));
+		WANT_PK_BOTS = Boolean.parseBoolean(serverProps.getAttribute("want_pk_bots"));
+		SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(serverProps.getAttribute("show_floating_nametags"));
+		WANT_CLANS = Boolean.parseBoolean(serverProps.getAttribute("want_clans"));
+		WANT_KILL_FEED = Boolean.parseBoolean(serverProps.getAttribute("want_kill_feed"));
+		FOG_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("fog_toggle"));
+		GROUND_ITEM_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("ground_item_toggle"));
+		AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("auto_message_switch_toggle"));
+		BATCH_PROGRESSION = Boolean.parseBoolean(serverProps.getAttribute("batch_progression"));
+		SIDE_MENU_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("side_menu_toggle"));
+		INVENTORY_COUNT_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("inventory_count_toggle"));
+		ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("zoom_view_toggle"));
+		MENU_COMBAT_STYLE_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("menu_combat_style_toggle"));
+		FIGHTMODE_SELECTOR_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("fightmode_selector_toggle"));
+		EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("experience_counter_toggle"));
+		EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("experience_drops_toggle"));
+		ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(serverProps.getAttribute("items_on_death_menu"));
+		SHOW_ROOF_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("show_roof_toggle"));
+		WANT_HIDE_IP = Boolean.parseBoolean(serverProps.getAttribute("want_hide_ip"));
+		WANT_REMEMBER = Boolean.parseBoolean(serverProps.getAttribute("want_remember"));
+		WANT_GLOBAL_CHAT = Boolean.parseBoolean(serverProps.getAttribute("want_global_chat"));
+		WANT_GLOBAL_FRIEND = Boolean.parseBoolean(serverProps.getAttribute("want_global_friend"));
+		WANT_SKILL_MENUS = Boolean.parseBoolean(serverProps.getAttribute("want_skill_menus"));
+		WANT_QUEST_MENUS = Boolean.parseBoolean(serverProps.getAttribute("want_quest_menus"));
+		WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(serverProps.getAttribute("want_experience_elixirs"));
+		WANT_KEYBOARD_SHORTCUTS = Integer.parseInt(serverProps.getAttribute("want_keyboard_shortcuts"));
+		RIGHT_CLICK_BANK = Boolean.parseBoolean(serverProps.getAttribute("right_click_bank"));
+		WANT_CUSTOM_BANKS = Boolean.parseBoolean(serverProps.getAttribute("want_custom_banks"));
+		WANT_BANK_PINS = Boolean.parseBoolean(serverProps.getAttribute("want_bank_pins"));
+		WANT_BANK_NOTES = Boolean.parseBoolean(serverProps.getAttribute("want_bank_notes"));
+		WANT_CERT_DEPOSIT = Boolean.parseBoolean(serverProps.getAttribute("want_cert_deposit"));
+		CUSTOM_FIREMAKING = Boolean.parseBoolean(serverProps.getAttribute("custom_firemaking"));
+		WANT_DROP_X = Boolean.parseBoolean(serverProps.getAttribute("want_drop_x"));
+		WANT_EXP_INFO = Boolean.parseBoolean(serverProps.getAttribute("want_exp_info"));
+		WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(serverProps.getAttribute("want_woodcutting_guild"));
+		WANT_MISSING_GUILD_GREETINGS = Boolean.parseBoolean(serverProps.getAttribute("want_missing_guild_greetings"));
+		WANT_DECANTING = Boolean.parseBoolean(serverProps.getAttribute("want_decanting"));
+		WANT_CERTER_BANK_EXCHANGE = Boolean.parseBoolean(serverProps.getAttribute("want_certer_bank_exchange"));
+		WANT_CUSTOM_RANK_DISPLAY = Boolean.parseBoolean(serverProps.getAttribute("want_custom_rank_display"));
+		FIX_OVERHEAD_CHAT = Boolean.parseBoolean(serverProps.getAttribute("want_fixed_overhead_chat"));
+		MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(serverProps.getAttribute("message_full_inventory"));
+		WANT_FATIGUE = Boolean.parseBoolean(serverProps.getAttribute("want_fatigue"));
+		STOP_SKILLING_FATIGUED = Integer.parseInt(serverProps.getAttribute("stop_skilling_fatigued"));
+		WANT_CUSTOM_SPRITES = Boolean.parseBoolean(serverProps.getAttribute("custom_sprites"));
+		WANT_CUSTOM_LANDSCAPE = Boolean.parseBoolean(serverProps.getAttribute("custom_landscape"));
+		WANT_PETS = Boolean.parseBoolean(serverProps.getAttribute("want_pets"));
+		SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(serverProps.getAttribute("show_unidentified_herb_names"));
+		WANT_QUEST_STARTED_INDICATOR = Boolean.parseBoolean(serverProps.getAttribute("want_quest_started_indicator"));
+		FISHING_SPOTS_DEPLETABLE = Boolean.parseBoolean(serverProps.getAttribute("fishing_spots_depletable"));
+		IMPROVED_ITEM_OBJECT_NAMES = Boolean.parseBoolean(serverProps.getAttribute("improved_item_object_names"));
+		CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(serverProps.getAttribute("crystal_key_gives_xp"));
+		LOOTED_CHESTS_STUCK = Boolean.parseBoolean(serverProps.getAttribute("looted_chests_stuck"));
+		WANT_RUNECRAFTING = Boolean.parseBoolean(serverProps.getAttribute("want_runecrafting"));
+		WANT_HARVESTING = Boolean.parseBoolean(serverProps.getAttribute("want_harvesting"));
+		WANT_DISCORD_AUCTION_UPDATES = Boolean.parseBoolean(serverProps.getAttribute("want_discord_auction_updates"));
+		DISCORD_AUCTION_WEBHOOK_URL = generalProps.getAttribute("discord_auction_webhook_url");
+		WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(serverProps.getAttribute("want_discord_monitoring_updates"));
+		DISCORD_MONITORING_WEBHOOK_URL = generalProps.getAttribute("discord_monitoring_webhook_url");
+		WANT_DISCORD_BOT = Boolean.parseBoolean(serverProps.getAttribute("want_discord_bot"));
+		CROSS_CHAT_CHANNEL = Long.parseLong(serverProps.getAttribute("cross_chat_channel"));
+		WANT_EQUIPMENT_TAB = Boolean.parseBoolean(serverProps.getAttribute("want_equipment_tab"));
+		WANT_BANK_PRESETS = Boolean.parseBoolean(serverProps.getAttribute("want_bank_presets"));
+		WANT_PARTIES = Boolean.parseBoolean(serverProps.getAttribute("want_parties"));
+		MINING_ROCKS_EXTENDED = Boolean.parseBoolean(serverProps.getAttribute("mining_rocks_extended"));
+		WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(serverProps.getAttribute("want_new_rare_drop_tables"));
+		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(serverProps.getAttribute("want_leftclick_webs"));
+		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(serverProps.getAttribute("want_custom_quests"));
+		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(serverProps.getAttribute("want_improved_pathfinding"));
+		CHARACTER_CREATION_MODE = Integer.parseInt(serverProps.getAttribute("character_creation_mode"));
 
-		NPC_KILL_LIST = Boolean.parseBoolean(props.getProperty("npc_kill_list"));
-		NPC_KILL_MESSAGES = Boolean.parseBoolean(props.getProperty("npc_kill_messages"));
-		NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(props.getProperty("npc_kill_messages_filter"));
-		NPC_KILL_MESSAGES_NPCs = props.getProperty("npc_kill_messages_npcs");
-		NPC_KILL_LOGGING = Boolean.parseBoolean(props.getProperty("npc_kill_logging"));
-		VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(props.getProperty("valuable_drop_messages"));
-		VALUABLE_DROP_RATIO = Double.parseDouble(props.getProperty("valuable_drop_ratio"));
-		VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(props.getProperty("valuable_drop_extras"));
-		VALUABLE_DROP_ITEMS = props.getProperty("valuable_drop_items");
+		NPC_KILL_LIST = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_list"));
+		NPC_KILL_MESSAGES = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_messages"));
+		NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_messages_filter"));
+		NPC_KILL_MESSAGES_NPCs = serverProps.getAttribute("npc_kill_messages_npcs");
+		NPC_KILL_LOGGING = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_logging"));
+		VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(serverProps.getAttribute("valuable_drop_messages"));
+		VALUABLE_DROP_RATIO = Double.parseDouble(serverProps.getAttribute("valuable_drop_ratio"));
+		VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(serverProps.getAttribute("valuable_drop_extras"));
+		VALUABLE_DROP_ITEMS = serverProps.getAttribute("valuable_drop_items");
 		START_TIME = System.currentTimeMillis();
-		NPC_DONT_RETREAT = Boolean.parseBoolean(props.getProperty("npc_dont_retreat"));
-		NPC_BLOCKING = Integer.parseInt(props.getProperty("npc_blocking"));
-		AUTO_SERVER_RESTART = Boolean.parseBoolean(props.getProperty("auto_server_restart"));
-		RESTART_HOUR = Integer.parseInt(props.getProperty("restart_hour"));
-		RESTART_MINUTE = Integer.parseInt(props.getProperty("restart_minute"));
-		RESTART_DELAY = Integer.parseInt(props.getProperty("restart_delay"));
-		AUTO_SERVER_RESTART_2 = Boolean.parseBoolean(props.getProperty("auto_server_restart_2"));
-		RESTART_HOUR_2 = Integer.parseInt(props.getProperty("restart_hour_2"));
-		RESTART_MINUTE_2 = Integer.parseInt(props.getProperty("restart_minute_2"));
-		RESTART_DELAY_2 = Integer.parseInt(props.getProperty("restart_delay_2"));
-		AGGRO_RANGE = Integer.parseInt(props.getProperty("aggro_range"));
+		NPC_DONT_RETREAT = Boolean.parseBoolean(serverProps.getAttribute("npc_dont_retreat"));
+		NPC_BLOCKING = Integer.parseInt(serverProps.getAttribute("npc_blocking"));
+		AUTO_SERVER_RESTART = Boolean.parseBoolean(serverProps.getAttribute("auto_server_restart"));
+		RESTART_HOUR = Integer.parseInt(serverProps.getAttribute("restart_hour"));
+		RESTART_MINUTE = Integer.parseInt(serverProps.getAttribute("restart_minute"));
+		RESTART_DELAY = Integer.parseInt(serverProps.getAttribute("restart_delay"));
+		AUTO_SERVER_RESTART_2 = Boolean.parseBoolean(serverProps.getAttribute("auto_server_restart_2"));
+		RESTART_HOUR_2 = Integer.parseInt(serverProps.getAttribute("restart_hour_2"));
+		RESTART_MINUTE_2 = Integer.parseInt(serverProps.getAttribute("restart_minute_2"));
+		RESTART_DELAY_2 = Integer.parseInt(serverProps.getAttribute("restart_delay_2"));
+		AGGRO_RANGE = Integer.parseInt(serverProps.getAttribute("aggro_range"));
 
-		STRICT_CHECK_ALL = Boolean.parseBoolean(props.getProperty("strict_check_all"));
-		STRICT_PDART_CHECK = Boolean.parseBoolean(props.getProperty("strict_pdart_check"));
-		STRICT_PKNIFE_CHECK = Boolean.parseBoolean(props.getProperty("strict_pknife_check"));
-		STRICT_PSPEAR_CHECK = Boolean.parseBoolean(props.getProperty("strict_pspear_check"));
+		STRICT_CHECK_ALL = Boolean.parseBoolean(serverProps.getAttribute("strict_check_all"));
+		STRICT_PDART_CHECK = Boolean.parseBoolean(serverProps.getAttribute("strict_pdart_check"));
+		STRICT_PKNIFE_CHECK = Boolean.parseBoolean(serverProps.getAttribute("strict_pknife_check"));
+		STRICT_PSPEAR_CHECK = Boolean.parseBoolean(serverProps.getAttribute("strict_pspear_check"));
 
-		LOOSE_SHALLOW_WATER_CHECK = Boolean.parseBoolean(props.getProperty("loose_shallow_water_check"));
+		LOOSE_SHALLOW_WATER_CHECK = Boolean.parseBoolean(serverProps.getAttribute("loose_shallow_water_check"));
 
-		WANT_EMAIL = Boolean.parseBoolean(props.getProperty("want_email"));
-		WANT_REGISTRATION_LIMIT = Boolean.parseBoolean(props.getProperty("want_registration_limit"));
-		ALLOW_RESIZE = Boolean.parseBoolean(props.getProperty("allow_resize"));
-		LENIENT_CONTACT_DETAILS = Boolean.parseBoolean(props.getProperty("lenient_contact_details"));
+		WANT_EMAIL = Boolean.parseBoolean(serverProps.getAttribute("want_email"));
+		WANT_REGISTRATION_LIMIT = Boolean.parseBoolean(serverProps.getAttribute("want_registration_limit"));
+		ALLOW_RESIZE = Boolean.parseBoolean(serverProps.getAttribute("allow_resize"));
+		LENIENT_CONTACT_DETAILS = Boolean.parseBoolean(serverProps.getAttribute("lenient_contact_details"));
 
-		PACKET_LIMIT = Integer.parseInt(props.getProperty("packet_limit"));
-		CONNECTION_LIMIT = Integer.parseInt(props.getProperty("connection_limit"));
-		CONNECTION_TIMEOUT = Integer.parseInt(props.getProperty("connection_timeout"));
+		PACKET_LIMIT = Integer.parseInt(serverProps.getAttribute("packet_limit"));
+		CONNECTION_LIMIT = Integer.parseInt(serverProps.getAttribute("connection_limit"));
+		CONNECTION_TIMEOUT = Integer.parseInt(serverProps.getAttribute("connection_timeout"));
 
-		WANT_GIANNE_BADGE = Boolean.parseBoolean(props.getProperty("want_gianne_badge"));
-		WANT_BLURBERRY_BADGE = Boolean.parseBoolean(props.getProperty("want_blurberry_badge"));
-		WANT_SHOW_KITTENS_CIVILLIAN = Boolean.parseBoolean(props.getProperty("want_show_kittens_civillian"));
-		WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(props.getProperty("want_barter_wormbrains"));
-		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = Boolean.parseBoolean(props.getProperty("locked_post_quest_regions_accessible"));
-		CAN_RETRIEVE_POST_QUEST_ITEMS = Boolean.parseBoolean(props.getProperty("can_retrieve_post_quest_items"));
-		CAN_USE_CRACKER_ON_SELF = Boolean.parseBoolean(props.getProperty("can_use_cracker_on_self"));
+		WANT_GIANNE_BADGE = Boolean.parseBoolean(serverProps.getAttribute("want_gianne_badge"));
+		WANT_BLURBERRY_BADGE = Boolean.parseBoolean(serverProps.getAttribute("want_blurberry_badge"));
+		WANT_SHOW_KITTENS_CIVILLIAN = Boolean.parseBoolean(serverProps.getAttribute("want_show_kittens_civillian"));
+		WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(serverProps.getAttribute("want_barter_wormbrains"));
+		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = Boolean.parseBoolean(serverProps.getAttribute("locked_post_quest_regions_accessible"));
+		CAN_RETRIEVE_POST_QUEST_ITEMS = Boolean.parseBoolean(serverProps.getAttribute("can_retrieve_post_quest_items"));
+		CAN_USE_CRACKER_ON_SELF = Boolean.parseBoolean(serverProps.getAttribute("can_use_cracker_on_self"));
 
 		// Walking/running related
-		MAX_WALKING_SPEED = Integer.parseInt(props.getProperty("max_walking_speed"));
-		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = Integer.parseInt(props.getProperty("max_ticks_until_full_walking_speed"));
+		MAX_WALKING_SPEED = Integer.parseInt(serverProps.getAttribute("max_walking_speed"));
+		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = Integer.parseInt(serverProps.getAttribute("max_ticks_until_full_walking_speed"));
 
-		MAX_CONNECTIONS_PER_IP = Integer.parseInt(props.getProperty("max_connections_per_ip"));
-		MAX_CONNECTIONS_PER_SECOND = Integer.parseInt(props.getProperty("max_connections_per_second"));
-		MAX_PACKETS_PER_SECOND = Integer.parseInt(props.getProperty("max_packets_per_second"));
-		MAX_LOGINS_PER_SECOND = Integer.parseInt(props.getProperty("max_logins_per_second"));
-		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = Integer.parseInt(props.getProperty("max_password_guesses_per_five_minutes"));
-		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("network_flood_ip_ban_minutes"));
-		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = Integer.parseInt(props.getProperty("suspicious_player_ip_ban_minutes"));
+		MAX_CONNECTIONS_PER_IP = Integer.parseInt(serverProps.getAttribute("max_connections_per_ip"));
+		MAX_CONNECTIONS_PER_SECOND = Integer.parseInt(serverProps.getAttribute("max_connections_per_second"));
+		MAX_PACKETS_PER_SECOND = Integer.parseInt(serverProps.getAttribute("max_packets_per_second"));
+		MAX_LOGINS_PER_SECOND = Integer.parseInt(serverProps.getAttribute("max_logins_per_second"));
+		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = Integer.parseInt(serverProps.getAttribute("max_password_guesses_per_five_minutes"));
+		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(serverProps.getAttribute("network_flood_ip_ban_minutes"));
+		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = Integer.parseInt(serverProps.getAttribute("suspicious_player_ip_ban_minutes"));
 
-		String wantPasswordMassage = props.getProperty("want_password_massage");
-		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(props.getProperty("want_password_massage")) : WANT_PASSWORD_MASSAGE;
+		String wantPasswordMassage = serverProps.getAttribute("want_password_massage");
+		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(serverProps.getAttribute("want_password_massage")) : WANT_PASSWORD_MASSAGE;
 
 		// Make sure config doesn't exceed max values
 		if (VIEW_DISTANCE > 4)
@@ -506,6 +513,6 @@ public class ServerConfiguration {
 
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 
-		WANT_CUSTOM_UI = Boolean.parseBoolean(props.getProperty("want_custom_ui"));
+		WANT_CUSTOM_UI = Boolean.parseBoolean(serverProps.getAttribute("want_custom_ui"));
 	}
 }
