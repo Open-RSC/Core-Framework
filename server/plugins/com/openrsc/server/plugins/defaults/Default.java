@@ -255,28 +255,12 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onUnequip(UnequipRequest request) {
-		switch (request.requestType) {
-			case FROM_INVENTORY:
-			case FROM_EQUIPMENT:
-				request.player.getEquipment().unequipItem(request);
-				break;
-			case FROM_BANK:
-				//request.player.getBank().unwieldItem(request.item, request.sound);
-				break;
-		}
+		request.player.getEquipment().unequipItem(request);
 	}
 
 	@Override
 	public void onEquip(EquipRequest request) {
-		switch (request.requestType) {
-			case FROM_BANK:
-				//request.player.getBank().wieldItem(request.item, request.sound);
-				ActionSender.showBank(request.player);
-				break;
-			case FROM_INVENTORY:
-				request.player.getEquipment().equipItem(request);
-				break;
-		}
+		request.player.getEquipment().equipItem(request);
 	}
 
 	@Override
