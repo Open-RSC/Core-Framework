@@ -265,7 +265,7 @@ public class Equipment {
 			//Attempt to remove the item from their inventory
 			if (player.getInventory().remove(request.item) == -1)
 				return false;
-			
+
 			//TODO: This shouldn't be needed
 			request.item.setWielded(false);
 
@@ -281,7 +281,6 @@ public class Equipment {
 
 		} else { //On a world without equipment tab
 			request.item.setWielded(true);
-
 		}
 
 		if (request.sound)

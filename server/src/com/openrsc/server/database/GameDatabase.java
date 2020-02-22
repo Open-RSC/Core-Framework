@@ -321,7 +321,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 				player.setEquipment(equipment);
 			}
-		}
+		} else
+			player.setEquipment(new Equipment(player));
 	}
 
 	private void loadPlayerBank(final Player player) throws GameDatabaseException {
