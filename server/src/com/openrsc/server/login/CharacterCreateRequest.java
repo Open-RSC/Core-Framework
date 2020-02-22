@@ -136,8 +136,9 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			statement.setString(3, DataConversions.hashPassword(getPassword(), null));
 			statement.setLong(4, System.currentTimeMillis() / 1000);
 			statement.setString(5, getIpAddress());
-			statement.executeUpdate();
-			statement = null;
+			try{statement.executeUpdate();}
+			finally{statement.close();}
+
 
 			/* PlayerID of the player account */
 			statement = getServer().getDatabase().getConnection().prepareStatement("SELECT id FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
@@ -155,11 +156,13 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 			statement = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
 			statement.setInt(1, playerID);
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 
 			statement = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
 			statement.setInt(1, playerID);
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 
 			//Don't rely on the default values of the database.
 			//Update the stats based on their StatDef-----------------------------------------------
@@ -169,15 +172,19 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
 				statement.setInt(index + 1, newGuy.getExperience(index));
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 
 			statement = getServer().getDatabase().getConnection().prepareStatement(getServer().getDatabase().getQueries().updateStats);
 			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
 			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
 				statement.setInt(index + 1, newGuy.getLevel(index));
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 			//---------------------------------------------------------------------------------------
 
+			statement.close();
+			set.close();
 			LOGGER.info(getIpAddress() + " - Registration successful");
 			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 		} catch (Exception e) {

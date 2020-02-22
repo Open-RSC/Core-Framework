@@ -50,7 +50,8 @@ public class PlayerCollectItemsTask extends MarketTask {
 				setCollected.setInt(1, i.claim_id);
 				setCollected.addBatch();
 			}
-			setCollected.executeBatch();
+			try{setCollected.executeBatch();}
+			finally{setCollected.close();}
 		} catch (SQLException e) {
 			LOGGER.catching(e);
 		}

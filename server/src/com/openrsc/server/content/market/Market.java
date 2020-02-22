@@ -107,7 +107,8 @@ public class Market implements Runnable {
 						sellerPlayer.message("You can collect it back from a banker.");
 					}
 				}
-				expiredItemsStatement.executeBatch();
+				try{expiredItemsStatement.executeBatch();}
+				finally{expiredItemsStatement.close();}
 			}
 			lastCleanUp = System.currentTimeMillis();
 		} catch (Throwable e) {

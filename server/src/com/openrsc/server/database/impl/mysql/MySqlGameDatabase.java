@@ -126,7 +126,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				replyMessage = userNameToBan + " has been banned for " + bannedForMinutes + " minutes";
 			}
 
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 
 			return replyMessage;
 		} catch (final SQLException ex) {
@@ -142,18 +143,20 @@ public class MySqlGameDatabase extends GameDatabase {
 			final ResultSet dropResult = statement.executeQuery();
 			final ArrayList<NpcDrop> list = new ArrayList<>();
 
-			while (dropResult.next()) {
-				NpcDrop drop = new NpcDrop();
-				drop.itemId = dropResult.getInt("id");
-				drop.npcId = dropResult.getInt("npcdef_id");
-				drop.weight = dropResult.getInt("weight");
-				drop.amount = dropResult.getInt("amount");
+			try {
+				while (dropResult.next()) {
+					NpcDrop drop = new NpcDrop();
+					drop.itemId = dropResult.getInt("id");
+					drop.npcId = dropResult.getInt("npcdef_id");
+					drop.weight = dropResult.getInt("weight");
+					drop.amount = dropResult.getInt("amount");
 
-				list.add(drop);
+					list.add(drop);
+				}
+			} finally {
+				statement.close();
+				dropResult.close();
 			}
-
-			dropResult.close();
-
 			return list.toArray(new NpcDrop[list.size()]);
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -169,7 +172,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statementInsert.setInt(2, drop.playerId);
 			statementInsert.setInt(3, drop.amount);
 			statementInsert.setInt(4, drop.npcId);
-			statementInsert.executeUpdate();
+			try{statementInsert.executeUpdate();}
+			finally{statementInsert.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -184,12 +188,16 @@ public class MySqlGameDatabase extends GameDatabase {
 			final ResultSet playerSet = statement.executeQuery();
 
 			final PlayerLoginData loginData = new PlayerLoginData();
-			loginData.groupId = playerSet.getInt("group_id");
-			loginData.password = playerSet.getString("pass");
-			loginData.salt = playerSet.getString("salt");
-			loginData.banned = playerSet.getLong("banned");
 
-			playerSet.close();
+			try {
+				loginData.groupId = playerSet.getInt("group_id");
+				loginData.password = playerSet.getString("pass");
+				loginData.salt = playerSet.getString("salt");
+				loginData.banned = playerSet.getLong("banned");
+			} finally {
+				statement.close();
+				playerSet.close();
+			}
 
 			return loginData;
 		} catch (final SQLException ex) {
@@ -604,7 +612,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(29, playerData.oneMouse ? 1 : 0);
 			statement.setInt(30, playerData.soundOff ? 1 : 0);
 			statement.setInt(31, playerId);
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -633,7 +642,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setInt(4, item.slot);
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try {statement.executeBatch();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -660,7 +670,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setInt(2, item.itemId);
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try{statement.executeBatch();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -691,7 +702,8 @@ public class MySqlGameDatabase extends GameDatabase {
 					statement.setInt(3, slot++);
 					statement.addBatch();
 				}
-				statement.executeBatch();
+				try{statement.executeBatch();}
+				finally{statement.close();}
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -712,8 +724,8 @@ public class MySqlGameDatabase extends GameDatabase {
 					statement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(bankPreset[i].equipment));
 					statement.addBatch();
 				}
-
-				statement.executeBatch();
+				try{statement.executeBatch();}
+				finally{statement.close();}
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -732,7 +744,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setString(3, DataConversions.hashToUsername(friend.playerHash));
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try{statement.executeBatch();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -749,7 +762,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setLong(2, ignored.playerHash);
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try{statement.executeBatch();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -767,7 +781,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setInt(3, quest.stage);
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try{statement.executeBatch();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -791,7 +806,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setString(4, cacheKey.value);
 				statement.addBatch();
 			}
-			statement.executeBatch();
+			try{statement.executeBatch();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -828,10 +844,14 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 
-			statement.executeBatch();
-			statementInsert.executeBatch();
-
-			result.close();
+			try {
+				statement.executeBatch();
+				statementInsert.executeBatch();
+			} finally{
+				statement.close();
+				statementInsert.close();
+				result.close();
+			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -846,7 +866,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			for (PlayerSkills skill : currSkillLevels) {
 				statement.setInt(skill.skillId + 1, skill.skillCurLevel);
 			}
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -861,7 +882,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			for (PlayerExperience exp : experience) {
 				statement.setInt(exp.skillId + 1, exp.experience);
 			}
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -984,13 +1006,14 @@ public class MySqlGameDatabase extends GameDatabase {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().fetchLoginIp);
 			statement.setString(1, username);
 			final ResultSet result = statement.executeQuery();
-			if (!result.next()) {
+			String ip = null;
+			try {
+				if (result.next())
+					ip = result.getString("login_ip");
+			} finally {
+				statement.close();
 				result.close();
-				return null;
 			}
-			final String ip = result.getString("login_ip");
-			result.close();
-
 			return ip;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -1006,18 +1029,21 @@ public class MySqlGameDatabase extends GameDatabase {
 			final ResultSet result = statement.executeQuery();
 
 			final ArrayList<LinkedPlayer> list = new ArrayList<>();
-			while (result.next()) {
-				final int group	= result.getInt("group_id");
-				final String user = result.getString("username");
+			try {
+				while (result.next()) {
+					final int group	= result.getInt("group_id");
+					final String user = result.getString("username");
 
-				final LinkedPlayer linkedPlayer = new LinkedPlayer();
-				linkedPlayer.groupId = group;
-				linkedPlayer.username = user;
+					final LinkedPlayer linkedPlayer = new LinkedPlayer();
+					linkedPlayer.groupId = group;
+					linkedPlayer.username = user;
 
-				list.add(linkedPlayer);
+					list.add(linkedPlayer);
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
-
-			result.close();
 
 			return list.toArray(new LinkedPlayer[list.size()]);
 		} catch (final SQLException ex) {
@@ -1037,7 +1063,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(5, loc.startY);
 			statement.setInt(6, loc.minY);
 			statement.setInt(7, loc.maxY);
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1055,7 +1082,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(5, loc.startY);
 			statement.setInt(6, loc.minY);
 			statement.setInt(7, loc.maxY);
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1071,7 +1099,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(3, loc.getId());
 			statement.setInt(4, loc.getDirection());
 			statement.setInt(5, loc.getType());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1087,7 +1116,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(3, loc.getId());
 			statement.setInt(4, loc.getDirection());
 			statement.setInt(5, loc.getType());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1101,7 +1131,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(1, loc.getId());
 			statement.setInt(2, loc.getX());
 			statement.setInt(3, loc.getY());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1117,7 +1148,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(3, loc.getY());
 			statement.setInt(4, loc.getAmount());
 			statement.setInt(5, loc.getRespawnTime());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1141,11 +1173,17 @@ public class MySqlGameDatabase extends GameDatabase {
 		final PreparedStatement statement = getConnection().prepareStatement(getQueries().playerExp);
 		statement.setInt(1, playerID);
 		final ResultSet result = statement.executeQuery();
-		result.next();
-		for (int i = 0; i < data.length; i++) {
-			data[i] = result.getInt("exp_" + getServer().getConstants().getSkills().getSkillName(i));
+		try {
+			if (result.next()) {
+				for (int i = 0; i < data.length; i++) {
+					data[i] = result.getInt("exp_" + getServer().getConstants().getSkills().getSkillName(i));
+				}
+			}
+		} finally {
+			statement.close();
+			result.close();
 		}
-		result.close();
+
 		return data;
 	}
 
@@ -1171,7 +1209,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			prepared.setInt(i, intA[i - 1]);
 		}
 
-		prepared.executeUpdate();
+		try{prepared.executeUpdate();}
+		finally{prepared.close();}
 	}
 
 	private List<Long> longListFromResultSet(ResultSet result, String param) throws SQLException {
@@ -1209,11 +1248,16 @@ public class MySqlGameDatabase extends GameDatabase {
 
 		result = prepared.executeQuery();
 
+		Boolean retVal = false;
 		try {
-			return Objects.requireNonNull(result).next();
+			retVal = Objects.requireNonNull(result).next();
 		} catch (final Exception e) {
 			return false;
+		} finally {
+			prepared.close();
+			result.close();
 		}
+		return retVal;
 	}
 
 	public boolean isConnected() {

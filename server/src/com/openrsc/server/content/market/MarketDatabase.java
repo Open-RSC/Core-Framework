@@ -34,7 +34,8 @@ public class MarketDatabase {
 			statement.setString(6, item.getSellerName());
 			statement.setString(7, item.getBuyers());
 			statement.setLong(8, item.getTime());
-			statement.executeUpdate();
+			try {statement.executeUpdate();}
+			finally {statement.close();}
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -55,7 +56,8 @@ public class MarketDatabase {
 			statement.setLong(3, System.currentTimeMillis() / 1000);
 			statement.setInt(4, playerID);
 			statement.setString(5, finalExplanation);
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -69,7 +71,8 @@ public class MarketDatabase {
 				.prepareStatement("UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` SET  `sold-out`='1', `was_cancel`='1' WHERE `auctionID`=?");
 			statement.setInt(1, item.getAuctionID());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -83,9 +86,14 @@ public class MarketDatabase {
 				.prepareStatement("SELECT count(*) as auction_count FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				int auctionCount = result.getInt("auction_count");
-				return auctionCount;
+			try {
+				if (result.next()) {
+					int auctionCount = result.getInt("auction_count");
+					return auctionCount;
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -99,9 +107,14 @@ public class MarketDatabase {
 				.prepareStatement("SELECT count(*) as my_slots FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `seller`='" + ownerID + "' AND `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				int auctionCount = result.getInt("my_slots");
-				return auctionCount;
+			try {
+				if (result.next()) {
+					int auctionCount = result.getInt("my_slots");
+					return auctionCount;
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -117,11 +130,19 @@ public class MarketDatabase {
 			statement.setInt(1, auctionID);
 
 			ResultSet result = statement.executeQuery();
-			if (!result.next()) return null;
+			MarketItem retVal = null;
+			try {
+				if (result.next()) {
+					retVal = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
+						result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
+						result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
+				}
+			} finally {
+				statement.close();
+				result.close();
+			}
 
-			return new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
-				result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
-				result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
+			return retVal;
 		} catch (SQLException e) {
 			LOGGER.catching(e);
 		}
@@ -135,11 +156,16 @@ public class MarketDatabase {
 				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions` WHERE `sold-out`='0'");
 			ResultSet result = statement.executeQuery();
-			while (result.next()) {
-				MarketItem auctionItem = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
-					result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
-					result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
-				auctionItems.add(auctionItem);
+			try {
+				while (result.next()) {
+					MarketItem auctionItem = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
+						result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
+						result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
+					auctionItems.add(auctionItem);
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -173,7 +199,8 @@ public class MarketDatabase {
 			statement.setInt(2, item.getPrice());
 			statement.setString(3, item.getBuyers());
 			statement.setInt(4, item.getAuctionID());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 			return true;
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -188,14 +215,19 @@ public class MarketDatabase {
 				+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'");
 			statement.setInt(1, player);
 			ResultSet result = statement.executeQuery();
-			while (result.next()) {
-				CollectableItem item = new CollectableItem();
-				item.claim_id = result.getInt("claim_id");
-				item.item_id = result.getInt("item_id");
-				item.item_amount = result.getInt("item_amount");
-				item.playerID = result.getInt("playerID");
-				item.explanation = result.getString("explanation");
-				list.add(item);
+			try {
+				while (result.next()) {
+					CollectableItem item = new CollectableItem();
+					item.claim_id = result.getInt("claim_id");
+					item.item_id = result.getInt("item_id");
+					item.item_amount = result.getInt("item_amount");
+					item.playerID = result.getInt("playerID");
+					item.explanation = result.getString("explanation");
+					list.add(item);
+				}
+			} finally {
+				statement.close();
+				result.close();
 			}
 		} catch (SQLException e) {
 			LOGGER.catching(e);

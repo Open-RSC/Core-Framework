@@ -16,18 +16,6 @@ public class ClientLauncher {
 	}
 
 	public static void launchClient() throws IllegalArgumentException, SecurityException {
-		startProcess();
-	}
-
-	public static void launchClient_openpk() throws IllegalArgumentException, SecurityException {
-		startProcess_openpk();
-	}
-
-	private static void exit() {
-		System.exit(0);
-	}
-
-	private static void startProcess() {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
 			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
@@ -39,7 +27,7 @@ public class ClientLauncher {
 		}
 	}
 
-	private static void startProcess_openpk() {
+	public static void launchClient_openpk() throws IllegalArgumentException, SecurityException {
 		try {
 			File f = new File(Constants.CONF_DIR + File.separator + Constants.OPENPK_FILENAME);
 			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
@@ -49,5 +37,9 @@ public class ClientLauncher {
 			Launcher.getPopup().showFrame();
 			e.printStackTrace();
 		}
+	}
+
+	private static void exit() {
+		System.exit(0);
 	}
 }

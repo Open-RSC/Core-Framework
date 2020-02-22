@@ -18,7 +18,9 @@ public class Downloader {
 	public Downloader() {
 		excludedFiles.add(Constants.MD5_TABLENAME);
 		excludedFiles.add("android_version.txt");
+		excludedFiles.add("android_version_pk.txt");
 		excludedFiles.add("openrsc.apk");
+		excludedFiles.add("openpk.apk");
 		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
 	}
@@ -142,15 +144,13 @@ public class Downloader {
 			}
 
 			if (offset != size) {
-				success = false;
 			} else {
 				File file = new File("./" + Constants.JAR_FILENAME);
 				FileOutputStream output = new FileOutputStream(file);
 				output.write(data);
 				output.close();
 			}
-		} catch (Exception e) {
-			success = false;
+		} catch (Exception ignored) {
 		}
 
 	}
