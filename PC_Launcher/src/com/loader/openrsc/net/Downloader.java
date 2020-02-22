@@ -142,15 +142,13 @@ public class Downloader {
 			}
 
 			if (offset != size) {
-				success = false;
 			} else {
 				File file = new File("./" + Constants.JAR_FILENAME);
 				FileOutputStream output = new FileOutputStream(file);
 				output.write(data);
 				output.close();
 			}
-		} catch (Exception e) {
-			success = false;
+		} catch (Exception ignored) {
 		}
 
 	}
