@@ -164,6 +164,31 @@ public class Equipment {
 		}
 	}
 
+	/**
+	 * Adds an item to the equipment container. Updates the database instantly.
+	 */
+	public int add(Item item) {
+		synchronized (list) {
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (itemDef == null || !itemDef.isWieldable())
+				return -1;
+
+			int slot = itemDef.getWieldPosition();
+			if (list[slot] == null) {
+				list[slot] = item;
+			} else {
+				if (itemDef.isStackable()
+				&& list[slot].getCatalogId() == item.getCatalogId()) {
+					list[slot].changeAmount(item.getAmount());
+				}
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Removes an item from the equipment container. Updates the database instantly.
+	 */
 	public int remove(int id, int amount) {
 		synchronized (list) {
 			for (int i = 0; i < SLOT_COUNT; i++) {
@@ -182,7 +207,7 @@ public class Equipment {
 						return -1;
 
 					if (curAmount > amount) {
-						list[i].setAmount(curAmount - amount);
+						list[i].changeAmount(-amount);
 						actionTaken = 0;
 					} else if (curAmount < amount) {
 						return -1;
@@ -207,12 +232,6 @@ public class Equipment {
 				}
 			}
 			return -1;
-		}
-	}
-
-	public void forceEquip(int slot, Item item) {
-		synchronized (list) {
-			list[slot] = item;
 		}
 	}
 
@@ -333,29 +352,24 @@ public class Equipment {
 
 	private boolean equipItemFromInventory(EquipRequest request) {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
-			ItemDefinition itemDef = request.item.getDef(player.getWorld());
-			if (itemDef == null)
-				return false;
+			synchronized (list) {
+				ItemDefinition itemDef = request.item.getDef(player.getWorld());
+				if (itemDef == null)
+					return false;
 
-			//Attempt to remove the item from their inventory
-			if (player.getInventory().remove(request.item) == -1)
-				return false;
+				//Attempt to remove the item from their inventory
+				if (player.getInventory().remove(request.item) == -1)
+					return false;
 
-			//TODO: This shouldn't be needed
-			request.item.setWielded(false);
+				//TODO: This shouldn't be needed
+				request.item.setWielded(false);
 
-			//See if the item is stackable and they already have it equipped
-			if (itemDef.isStackable() && searchEquipmentForItem(request.item.getCatalogId()) == itemDef.getWieldPosition()) {
-				//If so, just add to the amount
-				int equippedAmount = list[itemDef.getWieldPosition()].getAmount();
-				list[itemDef.getWieldPosition()].setAmount(equippedAmount + request.item.getAmount());
-			} else {
-				//If not, just set the slot to the item
-				list[itemDef.getWieldPosition()] = request.item;
+				add(request.item);
 			}
-
 		} else { //On a world without equipment tab
-			request.item.setWielded(true);
+			synchronized (player.getInventory().getItems()) {
+				request.item.setWielded(true);
+			}
 		}
 
 		//Update the inventory
@@ -369,10 +383,12 @@ public class Equipment {
 			return false;
 		}
 
+		synchronized (list) {
+
 		ItemDefinition itemDef = request.item.getDef(player.getWorld());
 		if (itemDef == null)
 			return false;
-		synchronized (list) {
+
 			synchronized (player.getBank().getItems()) {
 				//Attempt to remove the item from their bank
 				Item itemCopy = request.item.clone();
@@ -384,15 +400,7 @@ public class Equipment {
 				//TODO: This shouldn't be needed
 				request.item.setWielded(false);
 
-				//See if the item is stackable and they already have it equipped
-				if (itemDef.isStackable() && searchEquipmentForItem(request.item.getCatalogId()) == itemDef.getWieldPosition()) {
-					//If so, just add to the amount
-					int equippedAmount = list[itemDef.getWieldPosition()].getAmount();
-					list[itemDef.getWieldPosition()].setAmount(equippedAmount + request.item.getAmount());
-				} else {
-					//If not, just set the slot to the item
-					list[itemDef.getWieldPosition()] = itemCopy;
-				}
+				add(request.item);
 			}
 		}
 
@@ -432,8 +440,8 @@ public class Equipment {
 					}
 				} else { //Conflicting items should goto the bank
 					synchronized (player.getBank().getItems()) {
-						if (player.getFreeBankSlots() + player.getInventory().getFreeSlots() < count) {
-							player.message("You need more inventory space to equip that.");
+						if (player.getFreeBankSlots() < count) {
+							player.message("You need more bank space to equip that.");
 							return false;
 						}
 						for (int p = 0; p < Equipment.SLOT_COUNT; p++) {

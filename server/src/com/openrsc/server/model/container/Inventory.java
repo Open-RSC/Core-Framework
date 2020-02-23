@@ -371,8 +371,8 @@ public class Inventory {
 			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
 			&& player.getEquipment().hasEquipped(i)) {
 			newitem.setWielded(false);
-			player.getEquipment().remove(old.getCatalogId(), old.getAmount());
-			player.getEquipment().forceEquip(newitem.getDef(player.getWorld()).getWieldPosition(), newitem);
+			if (player.getEquipment().remove(old.getCatalogId(), old.getAmount()) != -1)
+				player.getEquipment().add(newitem);
 			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
 				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
 				old.getDef(player.getWorld()).getWearableId(), false);
@@ -380,8 +380,8 @@ public class Inventory {
 				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
 			ActionSender.sendEquipmentStats(player);
 		} else {
-			remove(i, 1, false);
-			add(new Item(j), false);
+			if (remove(i, 1, false) != -1);
+				add(new Item(j), false);
 			if (sendInventory)
 				ActionSender.sendInventory(player);
 		}

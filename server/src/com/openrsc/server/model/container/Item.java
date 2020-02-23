@@ -134,6 +134,10 @@ public class Item implements Comparable<Item> {
 		this.itemStatus.setAmount(amount);
 	}
 
+	public void changeAmount(int delta) {
+		this.itemStatus.setAmount(this.itemStatus.getAmount() + delta);
+	}
+
 	public boolean getNoted() { return itemStatus.getNoted(); }
 
 	public void setNoted(boolean noted) {
