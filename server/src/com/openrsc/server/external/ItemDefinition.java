@@ -173,10 +173,11 @@ public final class ItemDefinition extends EntityDef {
 	 * @param name
 	 * @param command
 	 */
-	public ItemDefinition(String name, String description, String[] command, boolean isFemaleOnly, boolean isMembersOnly,
+	public ItemDefinition(int id, String name, String description, String[] command, boolean isFemaleOnly, boolean isMembersOnly,
 						  boolean isStackable, boolean isUntradable, boolean isWearable, int appearanceID, int wearableID,
 						  int wearSlot, int requiredLevel, int requiredSkillID, int armourBonus, int weaponAimBonus,
 						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.command = command;
@@ -412,12 +413,12 @@ public final class ItemDefinition extends EntityDef {
 
 	@Deprecated
 	public int getOriginalItemID() {
-		return 0;
+		return id;
 	}
 
 	@Deprecated
 	public int getNoteID() {
-		return 0;
+		return id;
 	}
 
 	public void nullCommand() { this.command = null; }
