@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.ardougne.west;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -165,7 +166,7 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				npcTalk(p, n, "oh dear oh dear",
 					"i feel terrible, i think it was the stew");
 				playerTalk(p, n, "you should be more careful with your ingredients");
-				if (!p.getEquipment().hasEquipped(802)) {
+				if (!p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 					npcTalk(p, n, "i need a doctor",
 						"the nurses' hut is to the south west",
 						"go now and bring us a doctor, that's an order");
@@ -179,7 +180,7 @@ public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			}
 		}
 		if (n.getID() == ATTACK_MOURNER) {
-			if (!p.getEquipment().hasEquipped(802)) {
+			if (!p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 				npcTalk(p, n, "how did you get in here?",
 					"this is a restricted area");
 				n.setChasing(p);

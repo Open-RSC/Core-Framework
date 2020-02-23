@@ -1739,7 +1739,7 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id]");
 				return;
 			}
-			j.setCombatStyle(1);
+			j.setCombatStyle(Skills.AGGRESSIVE_MODE);
 			player.message(j.getCombatStyle() + " ");
 		} else if (cmd.equalsIgnoreCase("combatstyle")) {
 			if (args.length > 1) {

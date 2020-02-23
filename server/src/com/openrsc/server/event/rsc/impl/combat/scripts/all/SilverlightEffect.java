@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
@@ -19,7 +20,7 @@ public class SilverlightEffect implements OnCombatStartScript {
 			Player attackerPlayer = (Player) attacker;
 			Npc npcVictim = (Npc) victim;
 			if ( (npcVictim.getDef().getName().toLowerCase().contains("demon")
-					|| DataConversions.inArray(otherDemonIDs, npcVictim.getID())) && attackerPlayer.getEquipment().hasEquipped(52) ) {
+					|| DataConversions.inArray(otherDemonIDs, npcVictim.getID())) && attackerPlayer.getEquipment().hasEquipped(ItemId.SILVERLIGHT.id()) ) {
 				return true;
 			}
 		}
@@ -27,7 +28,7 @@ public class SilverlightEffect implements OnCombatStartScript {
 			Npc attackerNpc = (Npc) attacker;
 			Player playerVictim = (Player) victim;
 			return (attackerNpc.getDef().getName().toLowerCase().contains("demon")
-				|| DataConversions.inArray(otherDemonIDs, attackerNpc.getID())) && playerVictim.getEquipment().hasEquipped(52);
+				|| DataConversions.inArray(otherDemonIDs, attackerNpc.getID())) && playerVictim.getEquipment().hasEquipped(ItemId.SILVERLIGHT.id());
 		}
 		return false;
 	}

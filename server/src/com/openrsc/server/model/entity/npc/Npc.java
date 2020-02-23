@@ -16,7 +16,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -704,18 +703,18 @@ public class Npc extends Mob {
 			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 
 			switch (p.getCombatStyle()) {
-				case 0: //CONTROLLED
+				case Skills.CONTROLLED_MODE: //CONTROLLED
 					for (int x = 0; x < 3; x++) {
 						p.incExp(x, totalXP, true);
 					}
 					break;
-				case 1: //AGGRESSIVE
+				case Skills.AGGRESSIVE_MODE: //AGGRESSIVE
 					p.incExp(Skills.STRENGTH, totalXP * 3, true);
 					break;
-				case 2: //ACCURATE
+				case Skills.ACCURATE_MODE: //ACCURATE
 					p.incExp(Skills.ATTACK, totalXP * 3, true);
 					break;
-				case 3: //DEFENSIVE
+				case Skills.DEFENSIVE_MODE: //DEFENSIVE
 					p.incExp(Skills.DEFENSE, totalXP * 3, true);
 					break;
 			}
@@ -821,18 +820,18 @@ public class Npc extends Mob {
 			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 
 			switch (p.getCombatStyle()) {
-				case 0: //CONTROLLED
+				case Skills.CONTROLLED_MODE: //CONTROLLED
 					for (int x = 0; x < 3; x++) {
 						//p.incExp(x, totalXP, true);
 					}
 					break;
-				case 1: //AGGRESSIVE
+				case Skills.AGGRESSIVE_MODE: //AGGRESSIVE
 					//p.incExp(Skills.STRENGTH, totalXP * 3, true);
 					break;
-				case 2: //ACCURATE
+				case Skills.ACCURATE_MODE: //ACCURATE
 					//p.incExp(Skills.ATTACK, totalXP * 3, true);
 					break;
-				case 3: //DEFENSIVE
+				case Skills.DEFENSIVE_MODE: //DEFENSIVE
 					//p.incExp(Skills.DEFENSE, totalXP * 3, true);
 					break;
 			}

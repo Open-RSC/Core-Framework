@@ -215,7 +215,7 @@ public final class EntityHandler {
 			}*/
 
 			/* LOAD ITEM DEFS */
-			result = statement.executeQuery("SELECT `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
+			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
 				+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
 				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`"
 				+ "FROM `"
@@ -224,7 +224,8 @@ public final class EntityHandler {
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
 			while (result.next()) {
 				ItemDefinition toAdd = new ItemDefinition(
-					result.getString("name"), result
+					result.getInt("id"), result
+					.getString("name"), result
 					.getString("description"), result
 					.getString("command").split(","), result
 					.getInt("isFemaleOnly") == 1, result

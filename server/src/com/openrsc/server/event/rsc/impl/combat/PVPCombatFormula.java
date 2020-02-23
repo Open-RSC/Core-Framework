@@ -25,7 +25,7 @@ public class PVPCombatFormula {
 					)
 					+
 					(
-						attacker.getCombatStyle() == 1 && DataConversions.random(0, 2) == 0 ? 4 : 0
+						attacker.getCombatStyle() == Skills.AGGRESSIVE_MODE && DataConversions.random(0, 2) == 0 ? 4 : 0
 					)
 					+
 					(
@@ -93,11 +93,11 @@ public class PVPCombatFormula {
 
 	private static double styleBonus(Mob mob, int skill) {
 		int style = mob.getCombatStyle();
-		if (style == 0) {
+		if (style == Skills.CONTROLLED_MODE) {
 			return 1;
 		}
-		return (skill == 0 && style == 2) || (skill == 1 && style == 3)
-			|| (skill == 2 && style == 1) ? 3.0D : 0.0D;
+		return (skill == Skills.ATTACK && style == Skills.ACCURATE_MODE) || (skill == Skills.DEFENSE && style == Skills.DEFENSIVE_MODE)
+			|| (skill == Skills.STRENGTH && style == Skills.AGGRESSIVE_MODE) ? 3.0D : 0.0D;
 	}
 
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {

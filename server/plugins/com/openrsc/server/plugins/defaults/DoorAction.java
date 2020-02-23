@@ -773,7 +773,7 @@ public class DoorAction {
 						}
 					}
 				} else if ((p.getQuestStage(Quests.BIOHAZARD) > 5 || p.getQuestStage(Quests.BIOHAZARD) == -1) &&
-					p.getEquipment().hasEquipped(802)) {
+					p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 					doDoor(obj, p);
 				} else {
 					p.message("the door is locked");

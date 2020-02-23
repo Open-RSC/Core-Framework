@@ -1,5 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
@@ -45,18 +47,18 @@ public class ThrowingEvent extends GameTickEvent {
 
 	private boolean canReach(Mob mob) {
 		int radius = 3;
-		if (getPlayerOwner().getThrowingEquip() == 1013
-			|| getPlayerOwner().getThrowingEquip() == 1015
-			|| getPlayerOwner().getThrowingEquip() == 1024
-			|| getPlayerOwner().getThrowingEquip() == 1068
-			|| getPlayerOwner().getThrowingEquip() == 1069
-			|| getPlayerOwner().getThrowingEquip() == 1070
-			|| getPlayerOwner().getThrowingEquip() == 1122
-			|| getPlayerOwner().getThrowingEquip() == 1123
-			|| getPlayerOwner().getThrowingEquip() == 1124
-			|| getPlayerOwner().getThrowingEquip() == 1125
-			|| getPlayerOwner().getThrowingEquip() == 1126
-			|| getPlayerOwner().getThrowingEquip() == 1127) { // throwing darts.
+		if (getPlayerOwner().getThrowingEquip() == ItemId.BRONZE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.IRON_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.STEEL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.MITHRIL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.ADAMANTITE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.RUNE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_BRONZE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_IRON_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_STEEL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_MITHRIL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_ADAMANTITE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_RUNE_THROWING_DART.id()) { // throwing darts.
 			radius = 4;
 		}
 		return getPlayerOwner().withinRange(mob, radius);
@@ -176,12 +178,12 @@ public class ThrowingEvent extends GameTickEvent {
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
-					if (damage > 1 && npc.getID() == 477)
+					if (damage > 1 && npc.getID() == NpcId.KING_BLACK_DRAGON.id())
 						damage = damage / 2;
-					if (npc.getID() == 196) {
+					if (npc.getID() == NpcId.DRAGON.id()) {
 						getPlayerOwner().message("The dragon breathes fire at you");
 						int maxHit = 65;
-						if (getPlayerOwner().getEquipment().hasEquipped(420)) {
+						if (getPlayerOwner().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							maxHit = 10;
 							getPlayerOwner().message("Your shield prevents some of the damage from the flames");
 						}

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -27,7 +28,7 @@ public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, N
 
 	@Override
 	public void onTalkToNpc(Player player, final Npc npc) {
-		npcTalk(player, npc, "Good day" + (npc.getID() == 617 ? " Bwana" : "") + ", how may I help you?");
+		npcTalk(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
 
 		int menu;
 

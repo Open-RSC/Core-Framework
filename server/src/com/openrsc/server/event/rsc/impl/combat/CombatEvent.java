@@ -13,7 +13,6 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -59,18 +58,18 @@ public class CombatEvent extends GameTickEvent {
 
 			int exp = Formulae.combatExperience(playerKilled, 0);
 			switch (playerKiller.getCombatStyle()) {
-				case 0:
+				case Skills.CONTROLLED_MODE:
 					for (int x = 0; x < 3; x++) {
 						playerKiller.incExp(x, exp, true);
 					}
 					break;
-				case 1:
+				case Skills.AGGRESSIVE_MODE:
 					playerKiller.incExp(Skills.STRENGTH, exp * 3, true);
 					break;
-				case 2:
+				case Skills.ACCURATE_MODE:
 					playerKiller.incExp(Skills.ATTACK, exp * 3, true);
 					break;
-				case 3:
+				case Skills.DEFENSIVE_MODE:
 					playerKiller.incExp(Skills.DEFENSE, exp * 3, true);
 					break;
 			}
