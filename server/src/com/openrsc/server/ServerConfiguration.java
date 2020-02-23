@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 public class ServerConfiguration {
 
@@ -321,21 +320,26 @@ public class ServerConfiguration {
 	 * @throws IOException
 	 * Config file for server configurations.
 	 */
-	private static Properties props = new Properties();
-	private static YMLReader serverProps = new YMLReader();
-	private static YMLReader generalProps = new YMLReader();
+	private YMLReader serverProps = new YMLReader();
+	private YMLReader generalProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
-		try { // Always try to load local.conf first
-//			props.loadFromXML(new FileInputStream("local.conf"));
-			// This file should ALWAYS be here!
+		try {
+			// connections.conf file should ALWAYS be here!
 			generalProps.loadFromYML("connections.conf");
+			LOGGER.info("Loaded connections.conf");
+		}
+
+		catch (Exception e) {
+			LOGGER.catching(e);
+			System.exit(1);
+		}
+		try { // Always try to load local.conf first
 			serverProps.loadFromYML("local.conf");
 
 		} catch (Exception e) { // Otherwise default to default.conf
-//			props.loadFromXML(new FileInputStream(defaultFile));
 			serverProps.loadFromYML(defaultFile);
-			LOGGER.info("Properties file local.conf not found, loading properties from default.conf");
+			LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
 		}
 
 		// Initialization confs

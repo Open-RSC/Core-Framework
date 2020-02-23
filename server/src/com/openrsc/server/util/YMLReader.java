@@ -30,8 +30,11 @@ public class YMLReader {
 		}
 	}
 
-	private List<Setting> settings = new ArrayList<Setting>();
-	private String fileName;
+	private List<Setting> settings;
+
+	public YMLReader() {
+		settings = new ArrayList<Setting>();
+	}
 
 	public void loadFromYML(String fileName) throws IOException {
 		List<String> lines = Collections.emptyList();
@@ -88,7 +91,6 @@ public class YMLReader {
 
 		catch (NoSuchElementException e)
 		{
-			System.out.println(key + " not found!");
 			return "null";
 		}
 	}
