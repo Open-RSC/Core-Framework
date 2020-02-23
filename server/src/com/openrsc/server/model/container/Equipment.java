@@ -164,36 +164,6 @@ public class Equipment {
 		}
 	}
 
-	public void equip(int slot, int itemID, int amount) {
-		this.equip(slot, new Item(itemID, amount));
-	}
-
-	public void equip(int slot, Item item) {
-		synchronized (list) {
-			list[slot] = item;
-			//Update the DB
-			try {
-				player.getWorld().getServer().getDatabase().querySavePlayerEquipmentAdd(player, item);
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
-			}
-		}
-	}
-
-	public void remove(int slot) {
-		synchronized (list) {
-			try {
-				player.getWorld().getServer().getDatabase().querySavePlayerEquipmentDelete(player, list[slot]);
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
-			}
-			list[slot] = null;
-			ActionSender.sendEquipmentStats(player, slot);
-			player.updateWornItems(slot,
-				player.getSettings().getAppearance().getSprite(slot));
-		}
-	}
-
 	public int remove(int id, int amount) {
 		synchronized (list) {
 			for (int i = 0; i < SLOT_COUNT; i++) {
@@ -237,6 +207,12 @@ public class Equipment {
 				}
 			}
 			return -1;
+		}
+	}
+
+	public void forceEquip(int slot, Item item) {
+		synchronized (list) {
+			list[slot] = item;
 		}
 	}
 

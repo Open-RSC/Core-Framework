@@ -371,8 +371,8 @@ public class Inventory {
 			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
 			&& player.getEquipment().hasEquipped(i)) {
 			newitem.setWielded(false);
-			player.getEquipment().equip(old.getDef(player.getWorld()).getWieldPosition(), null);
-			player.getEquipment().equip(newitem.getDef(player.getWorld()).getWieldPosition(), newitem);
+			player.getEquipment().remove(old.getCatalogId(), old.getAmount());
+			player.getEquipment().forceEquip(newitem.getDef(player.getWorld()).getWieldPosition(), newitem);
 			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
 				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
 				old.getDef(player.getWorld()).getWearableId(), false);
@@ -458,10 +458,9 @@ public class Inventory {
 			return;
 		}
 		boolean shattered = false;
-		int index = -1;
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-			&& (index = player.getEquipment().searchEquipmentForItem(itemID)) != -1) {
-			player.getEquipment().equip(index, null);
+			&& (player.getEquipment().searchEquipmentForItem(itemID)) != -1) {
+			player.getEquipment().remove(itemID, 1);
 			shattered = true;
 		} else {
 			for (int i = 0; i < player.getInventory().size(); i++) {
@@ -503,7 +502,7 @@ public class Inventory {
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getEquipment().equip(i, null);
+					player.getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
 				}
 			}
 		}

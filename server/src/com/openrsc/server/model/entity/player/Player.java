@@ -3172,7 +3172,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean checkRingOfLife(final Mob hitter) {
-		if (this.isPlayer() && this.getEquipment().ableToEquip(ItemId.RING_OF_LIFE.id())
+		if (this.isPlayer() && this.getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
 			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {

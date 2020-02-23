@@ -521,8 +521,11 @@ public class Bank {
 			}
 
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				if (getPlayer().getEquipment().get(i) != null)
-					getPlayer().getEquipment().remove(i);
+				if (getPlayer().getEquipment().get(i) != null) {
+					Item toRemove = getPlayer().getEquipment().get(i);
+					getPlayer().getEquipment().remove(toRemove.getCatalogId(), toRemove.getAmount());
+				}
+
 			}
 
 			if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
@@ -546,7 +549,7 @@ public class Bank {
 								getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
 								continue;
 							}
-							getPlayer().getEquipment().equip(presetEquipment.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(presetEquipment.getCatalogId(), presetAmount));
+							getPlayer().getEquipment().forceEquip(presetEquipment.getDef(getPlayer().getWorld()).getWieldPosition(), new Item(presetEquipment.getCatalogId(), presetAmount));
 							wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
 							getPlayer().updateWornItems(i,
 								presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),

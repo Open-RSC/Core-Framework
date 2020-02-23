@@ -323,8 +323,8 @@ public class Npc extends Mob {
 				//KDB Specific RDT
 				if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
 					if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-						if (getWorld().kbdTable.rollAccess(this.getID(), owner.getEquipment().ableToEquip(ItemId.RING_OF_WEALTH.id()))) {
-							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(owner.getEquipment().ableToEquip(ItemId.RING_OF_WEALTH.id()), owner);
+						if (getWorld().kbdTable.rollAccess(this.getID(), owner.getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id()))) {
+							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(owner.getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id()), owner);
 							if (kbdSpecificLoot != null) {
 								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getCatalogId(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
 								groundItem.setAttribute("npcdrop", true);
@@ -346,12 +346,12 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.getID(), ((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					if (getWorld().standardTable.rollAccess(this.getID(), ((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = getWorld().standardTable.rollItem(((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.getID(), ((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+						rare = getWorld().standardTable.rollItem(((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (getWorld().gemTable.rollAccess(this.getID(), ((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = getWorld().gemTable.rollItem(((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+						rare = getWorld().gemTable.rollItem(((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
@@ -460,7 +460,7 @@ public class Npc extends Mob {
 										amount = Formulae.calculateGoldDrop(
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
-										if (((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
+										if (((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
 											amount += Formulae.getSplendorBoost(amount);
 											((Player) mob).message("Your ring of splendor shines brightly!");
 										}
@@ -536,12 +536,12 @@ public class Npc extends Mob {
 				boolean rdtHit = false;
 				Item rare = null;
 				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer() && owner.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.getID(), ((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+					if (getWorld().standardTable.rollAccess(this.getID(), ((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = getWorld().standardTable.rollItem(((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.getID(), ((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
+						rare = getWorld().standardTable.rollItem(((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+					} else if (getWorld().gemTable.rollAccess(this.getID(), ((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
 						rdtHit = true;
-						rare = getWorld().gemTable.rollItem(((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
+						rare = getWorld().gemTable.rollItem(((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
 					}
 				}
 
@@ -637,7 +637,7 @@ public class Npc extends Mob {
 											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 										);
 										if(!owner.isNpc()){
-											if (((Player)mob).getEquipment().ableToEquip(com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
+											if (((Player)mob).getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
 												amount += Formulae.getSplendorBoost(amount);
 												((Player) mob).message("Your ring of splendor shines brightly!");
 											}
@@ -1086,7 +1086,7 @@ public class Npc extends Mob {
 
 	public static boolean handleRingOfAvarice(final Player p, final Item item) {
 		int slot = -1;
-		if (p.getEquipment().ableToEquip(ItemId.RING_OF_AVARICE.id())) {
+		if (p.getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
 			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
 			if (itemDef != null && itemDef.isStackable()) {
 				if (p.getInventory().hasInInventory(item.getCatalogId())) {
@@ -1095,7 +1095,6 @@ public class Npc extends Mob {
 				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
 					Item equipped = p.getEquipment().get(slot);
 					equipped.setAmount(equipped.getAmount() + item.getAmount());
-					p.getEquipment().equip(slot, equipped);
 					return true;
 				} else {
 					if (p.getInventory().getFreeSlots() > 0) {

@@ -133,12 +133,12 @@ public class ThrowingEvent extends GameTickEvent {
 					rangeType = getPlayerOwner().getEquipment().get(slot);
 					if (rangeType == null)
 						return;
-					rangeType.setAmount(rangeType.getAmount()-1);
-					if (rangeType.getAmount() <= 0) {
+					int newAmount = rangeType.getAmount() - 1;
+					if (newAmount <= 0) {
 						getPlayerOwner().updateWornItems(rangeType.getDef(getWorld()).getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef(getWorld()).getWieldPosition()));
-						rangeType = null;
-					}
-					getPlayerOwner().getEquipment().equip(slot, rangeType);
+						getPlayerOwner().getEquipment().remove(rangeType.getCatalogId(), rangeType.getAmount());
+					} else
+						rangeType.setAmount(newAmount);
 
 					ActionSender.sendEquipmentStats(getPlayerOwner());
 

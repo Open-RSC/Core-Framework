@@ -112,7 +112,7 @@ public class Default implements DefaultHandler,
 				p.setStatus(Action.IDLE);
 				return;
 			}
-			p.getEquipment().equip(slot, null);
+			p.getEquipment().remove(i.getCatalogId(), i.getAmount());
 			ActionSender.sendEquipmentStats(p);
 			if (i.getDef(p.getWorld()).getWieldPosition() < 12)
 				p.updateWornItems(i.getDef(p.getWorld()).getWieldPosition(), p.getSettings().getAppearance().getSprite(i.getDef(p.getWorld()).getWieldPosition()));
