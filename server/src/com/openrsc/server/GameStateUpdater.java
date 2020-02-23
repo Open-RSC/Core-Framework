@@ -1,5 +1,6 @@
 package com.openrsc.server;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
@@ -134,7 +135,7 @@ public final class GameStateUpdater {
 		}
 		for (Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved()
-				|| newNPC.getID() == 194 && !playerToUpdate.getCache().hasKey("ned_hired")
+				|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
 				|| !playerToUpdate.withinRange(newNPC, (getServer().getConfig().VIEW_DISTANCE * 8) - 1) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
 				continue;
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {

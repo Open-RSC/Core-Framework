@@ -146,13 +146,13 @@ public class PkBotBehavior extends NpcBehavior {
 					}
 				} else
 					for (Player p3 : npc.getViewArea().getPlayersInView()) {
-						if (npc.inCombat() && npc.getID() == 804) {
+						if (npc.inCombat() && npc.getID() == NpcId.PKBOT1.id()) {
 							target = npc.getOpponent();
 							if (npc.getHeals() > 0 && npc.getLocation().inWilderness() && target.getLocation().inWilderness()) {
 								npc.walkToEntityAStar(target.getX(), target.getY(), 200);
 							}
 						}
-						if (npc.getLocation().inWilderness() && npc.getID() == 804 && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.82) {
+						if (npc.getLocation().inWilderness() && npc.getID() == NpcId.PKBOT1.id() && npc.getSkills().getLevel(Skills.HITPOINTS) < npc.getSkills().getMaxStat(Skills.HITPOINTS) * 0.82) {
 							if (npc.getHeals() > 0) {
 								npc.getWorld().getServer().getGameEventHandler().add(new HealEventNpc(npc.getWorld(), npc));
 							}

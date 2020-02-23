@@ -314,9 +314,9 @@ public class RangeEvent extends GameTickEvent {
 
 	private boolean canReach(Mob mob) {
 		int radius = 5;
-		if (getPlayerOwner().getRangeEquip() == 59 || getPlayerOwner().getRangeEquip() == 60)
+		if (getPlayerOwner().getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getPlayerOwner().getRangeEquip() == ItemId.CROSSBOW.id())
 			radius = 4;
-		if (getPlayerOwner().getRangeEquip() == 189)
+		if (getPlayerOwner().getRangeEquip() == ItemId.SHORTBOW.id())
 			radius = 4;
 		return getPlayerOwner().withinRange(mob, radius);
 	}

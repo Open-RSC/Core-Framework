@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -715,14 +716,14 @@ public final class Player extends Mob {
 	}
 
 	public int combatStyleToIndex() {
-		if (getCombatStyle() == 1) {
-			return 2;
+		if (getCombatStyle() == Skills.AGGRESSIVE_MODE) {
+			return Skills.STRENGTH;
 		}
-		if (getCombatStyle() == 2) {
-			return 0;
+		if (getCombatStyle() == Skills.ACCURATE_MODE) {
+			return Skills.ATTACK;
 		}
-		if (getCombatStyle() == 3) {
-			return 1;
+		if (getCombatStyle() == Skills.DEFENSIVE_MODE) {
+			return Skills.DEFENSE;
 		}
 		return -1;
 	}

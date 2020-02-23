@@ -120,11 +120,11 @@ class MeleeFormula {
 			return 0;
 
 		int style = mob.getCombatStyle();
-		if (style == 0)
+		if (style == Skills.CONTROLLED_MODE)
 			return 1;
 
-		return (skill == 0 && style == 2) || (skill == 1 && style == 3)
-			|| (skill == 2 && style == 1) ? 3 : 0;
+		return (skill == Skills.ATTACK && style == Skills.ACCURATE_MODE) || (skill == Skills.DEFENSE && style == Skills.DEFENSIVE_MODE)
+			|| (skill == Skills.STRENGTH && style == Skills.AGGRESSIVE_MODE) ? 3 : 0;
 	}
 
 	private static double addPrayers(final Mob source, final int prayer1, final int prayer2, final int prayer3) {
