@@ -13,6 +13,11 @@ public class Retreats {
 		npcData = new HashMap<Integer, Integer>() {{
 			put(NpcId.THRANTAX.id(), 18); //best known value of retreat, and no retreat is 21
 			put(NpcId.SOULESS_UNDEAD.id(), 15);
+			put(NpcId.DRAFT_MERCENARY_GUARD.id(), 15);
+			put(NpcId.MERCENARY_JAILDOOR.id(), 15);
+			put(NpcId.MERCENARY_LIFTPLATFORM.id(), 15);
+			put(NpcId.MERCENARY_ESCAPEGATES.id(), 15);
+			put(NpcId.MERCENARY.id(), 15);
 			put(NpcId.ROWDY_GUARD.id(), 15);
 			put(NpcId.SHANTAY_PASS_GUARD_MOVING.id(), 15); //observed 13 but thought to be 15
 			put(NpcId.UGTHANKI.id(), 15);
@@ -41,6 +46,7 @@ public class Retreats {
 			put(NpcId.POISON_SCORPION.id(), 2);
 			put(NpcId.KING_SCORPION.id(), 2);
 			put(NpcId.JUNGLE_SPIDER.id(), 2); //might be a typo on authentic retreat, kept as is
+			put(NpcId.OTHERWORLDLY_BEING.id(), 1);
 			put(NpcId.HOBGOBLIN_LVL32.id(), 1);
 			put(NpcId.ROWDY_SLAVE.id(), 1);
 			put(NpcId.HIGHWAYMAN.id(), 1);
