@@ -1,5 +1,6 @@
 package com.openrsc.server.content.market.task;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
@@ -21,7 +22,7 @@ public class NewMarketItemTask extends MarketTask {
 		ItemDefinition def = owner.getWorld().getServer().getEntityHandler().getItemDef(newItem.getItemID());
 		boolean updateDiscord = false;
 
-		if (newItem.getItemID() == 10 || def.isUntradable()) {
+		if (newItem.getItemID() == ItemId.COINS.id() || def.isUntradable()) {
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ You cannot sell that item on auction house!", false);
 			return;
 		}
@@ -39,7 +40,7 @@ public class NewMarketItemTask extends MarketTask {
 		/*int feeCost = (int) (newItem.getPrice() * 0.025);
 		if(feeCost < 5)
 			feeCost = 5;
-		
+
 		if(feeCost >= 5) {
 			if((!owner.getInventory().contains(new Item(10)) && (!owner.getBank().contains(new Item(10))))) {
 				ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ You have no coins in your inventory or bank to cover the auction fee.", false);

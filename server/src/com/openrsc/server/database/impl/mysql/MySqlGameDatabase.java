@@ -903,6 +903,8 @@ public class MySqlGameDatabase extends GameDatabase {
 			int itemID = -1;
 			if (rs != null && rs.next()) {
 				itemID = rs.getInt(1);
+				// update obj item id for use
+				invItem.item.setItemId(itemID);
 				statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
 				statement.setInt(1, playerId);
 				statement.setInt(2, itemID);

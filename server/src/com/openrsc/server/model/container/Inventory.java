@@ -85,7 +85,7 @@ public class Inventory {
 				player.getWorld().getServer().getAchievementSystem().checkAndIncGatherItemTasks(player, itemToAdd);
 			}
 
-			if (itemToAdd.getDef(player.getWorld()).isStackable()) {
+			if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus().getNoted()) {
 				for (int index = 0; index < list.size(); index++) {
 					Item existingStack = list.get(index);
 					if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
@@ -101,7 +101,7 @@ public class Inventory {
 						return;
 					}
 				}
-			} else if (itemToAdd.getAmount() > 1 && !itemToAdd.getDef(player.getWorld()).isStackable()) {
+			} else if (itemToAdd.getAmount() > 1 && !(itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getNoted())) {
 				itemToAdd.setAmount(1);
 			}
 
@@ -138,6 +138,18 @@ public class Inventory {
 	public boolean canHold(Item item, int addition) {
 		synchronized (list) {
 			return (MAX_SIZE - list.size() + addition) >= getRequiredSlots(item);
+		}
+	}
+
+	public int searchInventoryForItem(int id, boolean noted) {
+		synchronized (list) {
+			Item item;
+			for (int i = 0; i < size(); i++) {
+				item = list.get(i);
+				if (item != null && item.getCatalogId() == id && item.getItemStatus().getNoted() == noted)
+					return i;
+			}
+			return -1;
 		}
 	}
 
@@ -218,7 +230,7 @@ public class Inventory {
 
 	public int getRequiredSlots(Item item) {
 		synchronized (list) {
-			return (item.getDef(player.getWorld()).isStackable() && list.contains(item) ? 0 : 1);
+			return ((item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) && list.contains(item) ? 0 : 1);
 		}
 	}
 

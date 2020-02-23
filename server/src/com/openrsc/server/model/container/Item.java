@@ -27,6 +27,12 @@ public class Item implements Comparable<Item> {
 		return retVal;
 	}
 
+	public Item asNote() {
+		Item clone = this.clone();
+		clone.setNoted(true);
+		return clone;
+	}
+
 	public enum WearableID {
 		NOTHING(0),
 		CROSSBOW(16),
@@ -121,7 +127,8 @@ public class Item implements Comparable<Item> {
 	public boolean equals(Object o) {
 		if (o instanceof Item) {
 			Item item = (Item) o;
-			return item.getCatalogId() == getCatalogId();
+			return item.getCatalogId() == getCatalogId()
+				&& item.getNoted() == getNoted();
 		}
 		return false;
 	}
@@ -166,6 +173,10 @@ public class Item implements Comparable<Item> {
 
 	public boolean isEdible(World world) {
 		return world.getServer().getEntityHandler().getItemEdibleHeals(getCatalogId()) > 0;
+	}
+
+	public boolean isNoteable(World world) {
+		return getDef(world).isNoteable();
 	}
 
 	public boolean isWieldable(World world) {
