@@ -81,7 +81,8 @@ public class PartyManager {
 				.prepareStatement("UPDATE `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
 			statement.setInt(1, cp.getRank().getRankIndex());
 			statement.setString(2, cp.getUsername());
-			statement.executeUpdate();
+			try{statement.executeUpdate();}
+			finally{statement.close();}
 		} catch (SQLException e) {
 			LOGGER.error("Unable to update rank for party player: " + cp.getUsername());
 			LOGGER.catching(e);

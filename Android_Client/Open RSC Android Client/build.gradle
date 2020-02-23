@@ -9,8 +9,6 @@ allprojects {
 }
 
 android {
-    signingConfigs {
-    }
     compileSdkVersion 29
     buildToolsVersion '29.0.3'
     defaultConfig {
@@ -20,13 +18,13 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
             multiDexEnabled = true
             renderscriptOptimLevel = 3
+            minifyEnabled = false
         }
         debug {
             multiDexEnabled = true

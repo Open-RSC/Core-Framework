@@ -128,35 +128,40 @@ public class DiscordService implements Runnable{
 							PreparedStatement pinStatement = datConn.prepareStatement("SELECT `playerID` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `value` = ?;");
 							pinStatement.setString(1, args[1]);
 							ResultSet results = pinStatement.executeQuery();
-							if (results.next()) {
-								int dbID = results.getInt("playerID");
-								pinStatement = datConn.prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
-								pinStatement.setInt(1, dbID);
-								pinStatement.setInt(2, 3);
-								pinStatement.setString(3, "discordID");
-								pinStatement.setLong(4, message.getAuthor().getIdLong());
-								pinStatement.executeUpdate();
+							try {
+								if (results.next()) {
+									int dbID = results.getInt("playerID");
+									pinStatement = datConn.prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
+									pinStatement.setInt(1, dbID);
+									pinStatement.setInt(2, 3);
+									pinStatement.setString(3, "discordID");
+									pinStatement.setLong(4, message.getAuthor().getIdLong());
+									pinStatement.executeUpdate();
+									pinStatement.close();
 
-								pinStatement = datConn.prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=? AND `key`='pair_token'");
-								pinStatement.setInt(1, dbID);
-								pinStatement.executeUpdate();
-								String username = dbIdToUsername(dbID);
-								if (!username.isEmpty()) {
-									reply = "You have successfully paired " + username + " to this discord account.";
-									Player mrMan = this.server.getWorld().getPlayerID(dbID);
-									if (mrMan != null)
-									{
-										mrMan.getCache().remove("pair_token");
-										mrMan.getCache().store("discordID", message.getAuthor().getIdLong());
+									pinStatement = datConn.prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=? AND `key`='pair_token'");
+									pinStatement.setInt(1, dbID);
+									pinStatement.executeUpdate();
+									String username = dbIdToUsername(dbID);
+									if (!username.isEmpty()) {
+										reply = "You have successfully paired " + username + " to this discord account.";
+										Player mrMan = this.server.getWorld().getPlayerID(dbID);
+										if (mrMan != null)
+										{
+											mrMan.getCache().remove("pair_token");
+											mrMan.getCache().store("discordID", message.getAuthor().getIdLong());
+										}
+									} else {
+										reply = "[Error 1580] Please contact an administrator.";
 									}
+
 								} else {
-									reply = "[Error 1580] Please contact an administrator.";
+									reply = "Invalid pair token.";
 								}
-
-							} else {
-								reply = "Invalid pair token.";
+							} finally {
+								pinStatement.close();
+								results.close();
 							}
-
 						} catch (SQLException a) {
 							a.printStackTrace();
 						}
@@ -186,23 +191,28 @@ public class DiscordService implements Runnable{
 							PreparedStatement pinStatement = this.server.getDatabase().getConnection().prepareStatement("SELECT * FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "experience` WHERE `id` = ?");
 							pinStatement.setLong(1, dbID);
 							ResultSet results = pinStatement.executeQuery();
-							if (results.next()) {
-								String username = dbIdToUsername(dbID);
-								if (!username.isEmpty()) {
-									StringBuilder rep = new StringBuilder();
-									rep.append("Stats for " + username + "`\n");
-									for (SkillDef skill: getServer().getConstants().getSkills().skills) {
-										int experience = results.getInt("exp_" + skill.getShortName());
-										int level = getServer().getConstants().getSkills().getLevelForExperience(experience, server.getConfig().PLAYER_LEVEL_LIMIT);
-										int tnl = 0;
-										if (level < getServer().getConstants().getSkills().GLOBAL_LEVEL_LIMIT)
-											tnl = getServer().getConstants().getSkills().experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level] - experience;
-										rep.append(StringUtils.rightPad(skill.getLongName(),12," ") + ": " + String.format("%02d", level) + " (@ " + tnl + ")\n");
-									}
-									rep.append("`");
-									reply = rep.toString();
-								} else
-									reply = "Error 2250";
+							try {
+								if (results.next()) {
+									String username = dbIdToUsername(dbID);
+									if (!username.isEmpty()) {
+										StringBuilder rep = new StringBuilder();
+										rep.append("Stats for " + username + "`\n");
+										for (SkillDef skill: getServer().getConstants().getSkills().skills) {
+											int experience = results.getInt("exp_" + skill.getShortName());
+											int level = getServer().getConstants().getSkills().getLevelForExperience(experience, server.getConfig().PLAYER_LEVEL_LIMIT);
+											int tnl = 0;
+											if (level < getServer().getConstants().getSkills().GLOBAL_LEVEL_LIMIT)
+												tnl = getServer().getConstants().getSkills().experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level] - experience;
+											rep.append(StringUtils.rightPad(skill.getLongName(),12," ") + ": " + String.format("%02d", level) + " (@ " + tnl + ")\n");
+										}
+										rep.append("`");
+										reply = rep.toString();
+									} else
+										reply = "Error 2250";
+								}
+							} finally {
+								pinStatement.close();
+								results.close();
 							}
 						} catch (SQLException a) {
 							a.printStackTrace();
@@ -236,110 +246,116 @@ public class DiscordService implements Runnable{
 						try {
 							PreparedStatement pinStatement = this.server.getDatabase().getConnection().prepareStatement("SELECT `value` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE`key`='watchlist_" + message.getAuthor().getId() + "'");
 							ResultSet results = pinStatement.executeQuery();
-							if (args[1].equalsIgnoreCase("list")) {
-								if (results.next()) {
-									String[] watchlist = results.getString("value").split(",");
-									reply = "`";
-									for (String item : watchlist) {
-										try {
-											int itemID = Integer.parseInt(item);
-											ItemDefinition itemDef = server.getEntityHandler().getItemDef(itemID);
-											if (itemDef != null) {
-												reply = reply + itemDef.getName() + " (" + itemID + ")\n";
-											} else
-												reply = reply + "ERROR (ID " + itemID + ")\n";
-										} catch (NumberFormatException a) {
-											a.printStackTrace();
+							try {
+								if (args[1].equalsIgnoreCase("list")) {
+									if (results.next()) {
+										String[] watchlist = results.getString("value").split(",");
+										reply = "`";
+										for (String item : watchlist) {
+											try {
+												int itemID = Integer.parseInt(item);
+												ItemDefinition itemDef = server.getEntityHandler().getItemDef(itemID);
+												if (itemDef != null) {
+													reply = reply + itemDef.getName() + " (" + itemID + ")\n";
+												} else
+													reply = reply + "ERROR (ID " + itemID + ")\n";
+											} catch (NumberFormatException a) {
+												a.printStackTrace();
+											}
 										}
-									}
-									reply = reply + "`";
-								} else
-									reply = "You have nothing on your watchlist.";
-							} else if (args[1].equalsIgnoreCase("add")) {
-								if (args.length > 2) {
-									int toAdd = 0;
-									try {
-										toAdd = Integer.parseInt(args[2]);
-										ItemDefinition itemDef = server.getEntityHandler().getItemDef(toAdd);
-										if (itemDef != null) {
+										reply = reply + "`";
+									} else
+										reply = "You have nothing on your watchlist.";
+								} else if (args[1].equalsIgnoreCase("add")) {
+									if (args.length > 2) {
+										int toAdd = 0;
+										try {
+											toAdd = Integer.parseInt(args[2]);
+											ItemDefinition itemDef = server.getEntityHandler().getItemDef(toAdd);
+											if (itemDef != null) {
+												if (results.next()) {
+													String watchlist = results.getString("value");
+													if (!watchlist.contains(String.valueOf(toAdd))) {
+														if (watchlist.split(",").length < WATCHLIST_MAX_SIZE) {
+															watchlist = String.join(",", watchlist, String.valueOf(toAdd));
+															pinStatement = this.server.getDatabase().getConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
+															pinStatement.setString(1, watchlist);
+															pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
+															pinStatement.executeUpdate();
+															reply = "Added " + itemDef.getName() + " to your watchlist.";
+														} else
+															reply = "Your watchlist is full. (10/10)";
+													} else
+														reply = "That item is already on your watchlist.";
+												} else {
+													pinStatement = server.getDatabase().getConnection().prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
+													pinStatement.setInt(1, 0);
+													pinStatement.setInt(2, 1);
+													pinStatement.setString(3, "watchlist_" + message.getAuthor().getId());
+													pinStatement.setString(4, String.valueOf(toAdd));
+													pinStatement.executeUpdate();
+													reply = "Added " + itemDef.getName() + " to your watchlist.";
+												}
+											} else
+												reply = "That item ID does not exist.";
+										} catch (NumberFormatException a) {
+											reply = "You must enter a valid number as the item ID.";
+										}
+									} else
+										reply = "Usage: !watch add ITEMID";
+								} else if (args[1].equalsIgnoreCase("del")
+									|| args[1].equalsIgnoreCase("rem")) {
+									if (args.length > 2) {
+										int itemID = 0;
+										try {
+											itemID = Integer.parseInt(args[2]);
 											if (results.next()) {
-												String watchlist = results.getString("value");
-												if (!watchlist.contains(String.valueOf(toAdd))) {
-													if (watchlist.split(",").length < WATCHLIST_MAX_SIZE) {
-														watchlist = String.join(",", watchlist, String.valueOf(toAdd));
+												List<String> watchlist = new ArrayList<String>(Arrays.asList(results.getString("value").split(",")));
+												if (watchlist.contains(args[2])) {
+													watchlist.remove(args[2]);
+													if (watchlist.size() > 0) {
+														StringBuilder query = new StringBuilder();
+														for (String item : watchlist) {
+															if (query.length() == 0) {
+																query.append(item);
+															} else
+																query.append("," + item);
+														}
+
 														pinStatement = this.server.getDatabase().getConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
-														pinStatement.setString(1, watchlist);
+														pinStatement.setString(1, query.toString());
 														pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
 														pinStatement.executeUpdate();
-														reply = "Added " + itemDef.getName() + " to your watchlist.";
-													} else
-														reply = "Your watchlist is full. (10/10)";
-												} else
-													reply = "That item is already on your watchlist.";
-											} else {
-												pinStatement = server.getDatabase().getConnection().prepareStatement("INSERT INTO `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)");
-												pinStatement.setInt(1, 0);
-												pinStatement.setInt(2, 1);
-												pinStatement.setString(3, "watchlist_" + message.getAuthor().getId());
-												pinStatement.setString(4, String.valueOf(toAdd));
-												pinStatement.executeUpdate();
-												reply = "Added " + itemDef.getName() + " to your watchlist.";
-											}
-										} else
-											reply = "That item ID does not exist.";
-									} catch (NumberFormatException a) {
-										reply = "You must enter a valid number as the item ID.";
-									}
-								} else
-									reply = "Usage: !watch add ITEMID";
-							} else if (args[1].equalsIgnoreCase("del")
-										|| args[1].equalsIgnoreCase("rem")) {
-								if (args.length > 2) {
-									int itemID = 0;
-									try {
-										itemID = Integer.parseInt(args[2]);
-										if (results.next()) {
-											List<String> watchlist = new ArrayList<String>(Arrays.asList(results.getString("value").split(",")));
-											if (watchlist.contains(args[2])) {
-												watchlist.remove(args[2]);
-												if (watchlist.size() > 0) {
-													StringBuilder query = new StringBuilder();
-													for (String item : watchlist) {
-														if (query.length() == 0) {
-															query.append(item);
-														} else
-															query.append("," + item);
+													} else {
+														pinStatement = this.server.getDatabase().getConnection().prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key`=?");
+														pinStatement.setString(1, "watchlist_" + message.getAuthor().getId());
+														pinStatement.executeUpdate();
 													}
-
-													pinStatement = this.server.getDatabase().getConnection().prepareStatement("UPDATE `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=? WHERE `key`=?");
-													pinStatement.setString(1, query.toString());
-													pinStatement.setString(2, "watchlist_" + message.getAuthor().getId());
-													pinStatement.executeUpdate();
-												} else {
-													pinStatement = this.server.getDatabase().getConnection().prepareStatement("DELETE FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key`=?");
-													pinStatement.setString(1, "watchlist_" + message.getAuthor().getId());
-													pinStatement.executeUpdate();
-												}
-												ItemDefinition itemDef = server.getEntityHandler().getItemDef(Integer.parseInt(args[2]));
-												if (itemDef != null)
-													reply = "You have removed " + itemDef.getName() + " from your watchlist.";
-												else
-													reply = "You have removed " + args[2] + " from your watchlist.";
+													ItemDefinition itemDef = server.getEntityHandler().getItemDef(Integer.parseInt(args[2]));
+													if (itemDef != null)
+														reply = "You have removed " + itemDef.getName() + " from your watchlist.";
+													else
+														reply = "You have removed " + args[2] + " from your watchlist.";
+												} else
+													reply = "You do not have that item on your watchlist.";
 											} else
-												reply = "You do not have that item on your watchlist.";
-										} else
-											reply = "Your watchlist is already empty.";
-									} catch (NumberFormatException a) {
-										reply = "You must enter a valid number as the item ID.";
-									}
+												reply = "Your watchlist is already empty.";
+										} catch (NumberFormatException a) {
+											reply = "You must enter a valid number as the item ID.";
+										}
 
-								} else
-									reply = "Usage: !watch del ITEMID";
-							} else if (args[1].equalsIgnoreCase("help")) {
-								reply = "The auction watchlist feature will notify you when an item of your interest is placed on the auction house. To use it, use !watch [list add del] [item id]. To get an items ID, use https://openrsc.com/items. The number in () after the items name is its ID. You may have up to 10 items on your watchlist.";
+									} else
+										reply = "Usage: !watch del ITEMID";
+								} else if (args[1].equalsIgnoreCase("help")) {
+									reply = "The auction watchlist feature will notify you when an item of your interest is placed on the auction house. To use it, use !watch [list add del] [item id]. To get an items ID, use https://openrsc.com/items. The number in () after the items name is its ID. You may have up to 10 items on your watchlist.";
+								}
+								else
+									reply = "Usage: !watch [list add del help]";
+							} finally {
+								pinStatement.close();
+								results.close();
 							}
-							else
-								reply = "Usage: !watch [list add del help]";
+
 						} catch (SQLException a) {
 							a.printStackTrace();
 						}
@@ -404,21 +420,26 @@ public class DiscordService implements Runnable{
 		try {
 			PreparedStatement pinStatement = server.getDatabase().getConnection().prepareStatement("SELECT `value`, `key` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `key` LIKE 'watchlist_%'");
 			ResultSet results = pinStatement.executeQuery();
-			while (results.next()) {
-				String watchlist = results.getString("value");
-				if (watchlist.contains(String.valueOf(addItem.getItemID()))) {
-					String key = results.getString("key").substring(10);
-					try {
-						long discordID = Long.parseLong(key);
-						ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getItemID());
-						if (itemDef != null) {
-							String message = "[" + server.getConfig().SERVER_NAME + " watchlist] " + itemDef.getName() + " ( " + addItem.getAmountLeft() + " @ " + addItem.getPrice() + "gp)";
-							sendPM(discordID, message);
+			try {
+				while (results.next()) {
+					String watchlist = results.getString("value");
+					if (watchlist.contains(String.valueOf(addItem.getItemID()))) {
+						String key = results.getString("key").substring(10);
+						try {
+							long discordID = Long.parseLong(key);
+							ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getItemID());
+							if (itemDef != null) {
+								String message = "[" + server.getConfig().SERVER_NAME + " watchlist] " + itemDef.getName() + " ( " + addItem.getAmountLeft() + " @ " + addItem.getPrice() + "gp)";
+								sendPM(discordID, message);
+							}
+						} catch (NumberFormatException a) {
+							a.printStackTrace();
 						}
-					} catch (NumberFormatException a) {
-						a.printStackTrace();
 					}
 				}
+			} finally {
+				pinStatement.close();
+				results.close();
 			}
 		} catch (SQLException a) {
 			a.printStackTrace();
@@ -508,8 +529,13 @@ public class DiscordService implements Runnable{
 			PreparedStatement pinStatement = datConn.prepareStatement("SELECT `playerID` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `value` = ?");
 			pinStatement.setLong(1, discord);
 			ResultSet results = pinStatement.executeQuery();
-			if (results.next()) {
-				return results.getInt("playerID");
+			try {
+				if (results.next()) {
+					return results.getInt("playerID");
+				}
+			} finally {
+				pinStatement.close();
+				results.close();
 			}
 		} catch (SQLException a) {
 			a.printStackTrace();
@@ -523,8 +549,13 @@ public class DiscordService implements Runnable{
 			PreparedStatement pinStatement = datConn.prepareStatement("SELECT `username` FROM `" + this.server.getConfig().MYSQL_TABLE_PREFIX + "players` WHERE `id` = ?");
 			pinStatement.setInt(1, dbId);
 			ResultSet results = pinStatement.executeQuery();
-			if (results.next()) {
-				return results.getString("username");
+			try {
+				if (results.next()) {
+					return results.getString("username");
+				}
+			} finally {
+				pinStatement.close();
+				results.close();
 			}
 		} catch (SQLException a) {
 			a.printStackTrace();
