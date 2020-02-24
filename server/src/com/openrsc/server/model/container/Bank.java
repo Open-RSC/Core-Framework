@@ -323,17 +323,18 @@ public class Bank {
 					if (getFirstIndexById(itemID) < 0) {
 						break;
 					}
-					item = new Item(itemID, 1);
-					Item notedItem = new Item(item.getDef(getPlayer().getWorld()).getNoteID());
-					if (notedItem.getDef(getPlayer().getWorld()) == null) {
-						LOGGER.error("Mistake with the notes: " + item.getCatalogId() + " - " + notedItem.getCatalogId());
-						break;
-					}
-
-					if (notedItem.getDef(getPlayer().getWorld()).getOriginalItemID() != item.getCatalogId()) {
+					if (!getPlayer().getWorld().getServer().getEntityHandler().getItemDef(itemID).isNoteable()) {
 						getPlayer().message("There is no equivalent note item for that.");
 						break;
 					}
+
+					item = new Item(itemID, 1);
+					Item notedItem = new Item(item.getDef(getPlayer().getWorld()).getId()).asNote();
+					/*if (notedItem.getDef(getPlayer().getWorld()) == null) {
+						LOGGER.error("Mistake with the notes: " + item.getCatalogId() + " - " + notedItem.getCatalogId());
+						break;
+					}*/
+
 					if (inventory.canHold(notedItem) && remove(item) > -1) {
 						inventory.add(notedItem, false);
 					} else {
@@ -362,8 +363,8 @@ public class Bank {
 			if (!getPlayer().getAttribute("swap_cert", false) || !isCert(itemID)) {
 				item = new Item(itemID, amount);
 				Item originalItem = null;
-				if (item.getDef(getPlayer().getWorld()).getOriginalItemID() != -1) {
-					originalItem = new Item(item.getDef(getPlayer().getWorld()).getOriginalItemID(), amount);
+				if (item.getDef(getPlayer().getWorld()).getId() != -1) {
+					originalItem = new Item(item.getDef(getPlayer().getWorld()).getId(), amount);
 					itemID = originalItem.getCatalogId();
 				}
 				if (bank.canHold(item) && inventory.remove(item, false) > -1) {
@@ -375,8 +376,8 @@ public class Bank {
 			} else {
 				item = new Item(itemID, amount);
 				Item originalItem = null;
-				if (item.getDef(getPlayer().getWorld()).getOriginalItemID() != -1) {
-					originalItem = new Item(item.getDef(getPlayer().getWorld()).getOriginalItemID(), amount);
+				if (item.getDef(getPlayer().getWorld()).getId() != -1) {
+					originalItem = new Item(item.getDef(getPlayer().getWorld()).getId(), amount);
 					itemID = originalItem.getCatalogId();
 				}
 				Item removedItem = originalItem != null ? originalItem : item;

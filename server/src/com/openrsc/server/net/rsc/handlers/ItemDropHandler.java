@@ -46,7 +46,7 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef(player.getWorld()).isStackable()) {
+		if (item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) {
 			if (amount > item.getAmount()) {
 				amount = item.getAmount();
 			}
@@ -61,9 +61,9 @@ public final class ItemDropHandler implements PacketHandler {
 		if (player.finishedPath()) {
 			player.setStatus(Action.DROPPING_GITEM);
 
-			if (item.getDef(player.getWorld()).isStackable() || finalAmount == 1) {
+			if (item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted() || finalAmount == 1) {
 				int dropAmount = finalAmount;
-				if(!item.getDef(player.getWorld()).isStackable()) {
+				if(!(item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted())) {
 					dropAmount = 1;
 				}
 				item.setAmount(dropAmount);

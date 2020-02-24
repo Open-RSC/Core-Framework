@@ -410,6 +410,15 @@ public final class ItemDefinition extends EntityDef {
 		return wornItemIndex;
 	}
 
+	/**
+	 * Computed function if the item is
+	 * candidate of being note
+	 *
+	 * @return Returns the noteability
+	 * status.
+	 */
+	public final boolean isNoteable() { return !isStackable && !isUntradable; }
+
 
 	@Deprecated
 	public int getOriginalItemID() {

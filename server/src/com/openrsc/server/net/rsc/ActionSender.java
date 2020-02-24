@@ -683,10 +683,11 @@ public class ActionSender {
 		s.writeByte((byte) player.getInventory().size());
 		synchronized(player.getInventory().getItems()) {
 			for (Item item : player.getInventory().getItems()) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "}").getBytes()));
+				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+					"'noted': " + item.getNoted() + "}").getBytes()));
 				//s.writeShort(item.getID());
 				s.writeByte((byte) (item.isWielded() ? 1 : 0));
-				if (item.getDef(player.getWorld()).isStackable())
+				if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
 					s.writeInt(item.getAmount());
 			}
 		}

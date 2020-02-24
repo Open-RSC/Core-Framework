@@ -1360,11 +1360,17 @@ public class PacketHandler {
 		mc.setInventoryItemCount(packetsIncoming.getUnsignedByte());
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
 			String b64item = packetsIncoming.readString();
-			JSONObject itemInfo = new JSONObject(new String(Base64.getDecoder().decode(b64item)));
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			System.out.println(jsonString);
+			JSONObject itemInfo = new JSONObject(jsonString);
 			int itemID = (int)itemInfo.get("id");
-			Optional<Boolean> isNote = itemInfo.has("note") ? Optional.of((boolean)itemInfo.get("note")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
 			//int itemID = packetsIncoming.getShort();
-			mc.setInventoryItemID(i, itemID);
+			if (isNote.orElse(false)) {
+				mc.setInventoryItemID(i, (itemID + 1) * -1);
+			} else {
+				mc.setInventoryItemID(i, itemID);
+			}
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
 			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, isNote).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
