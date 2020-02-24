@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class Item implements Comparable<Item> {
 
+	public final static int ITEM_ID_UNASSIGNED = -1;
+
 	protected final Map<String, Object> attributes = new HashMap<String, Object>();
 
 	//private int catalogId;
@@ -55,9 +57,11 @@ public class Item implements Comparable<Item> {
 
 	public Item(int catalogId, int amount, boolean noted) {
 		itemStatus = new ItemStatus();
-		setCatalogId(catalogId);
-		setAmount(amount);
-		setNoted(noted);
+		itemStatus.setCatalogId(catalogId);
+		itemStatus.setAmount(amount);
+		itemStatus.setNoted(noted);
+		itemStatus.setDurability(100);
+		this.setItemId(-1);
 	}
 
 	public Item(int itemId, ItemStatus itemStatus) {

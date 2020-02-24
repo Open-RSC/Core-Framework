@@ -169,19 +169,29 @@ public class Equipment {
 	 */
 	public int add(Item item) {
 		synchronized (list) {
-			ItemDefinition itemDef = item.getDef(player.getWorld());
-			if (itemDef == null || !itemDef.isWieldable())
-				return -1;
+			try {
+				ItemDefinition itemDef = item.getDef(player.getWorld());
+				if (itemDef == null || !itemDef.isWieldable())
+					return -1;
 
-			int slot = itemDef.getWieldPosition();
-			if (list[slot] == null) {
-				list[slot] = item;
-			} else {
-				if (itemDef.isStackable()
-				&& list[slot].getCatalogId() == item.getCatalogId()) {
-					list[slot].changeAmount(item.getAmount());
+				int slot = itemDef.getWieldPosition();
+
+				if (slot < 0 || slot >= Equipment.SLOT_COUNT)
+					return -1;
+
+				if (list[slot] == null) {
+					list[slot] = item;
+					player.getWorld().getServer().getDatabase().equipmentAddToPlayer(player, item);
+					return slot;
+				} else {
+					if (itemDef.isStackable()
+						&& list[slot].getCatalogId() == item.getCatalogId()) {
+						list[slot].changeAmount(item.getAmount());
+						player.getWorld().getServer().getDatabase().itemUpdate(item);
+						return slot;
+					}
 				}
-			}
+			} catch(GameDatabaseException ex) {LOGGER.error(ex.getMessage());}
 		}
 		return -1;
 	}
@@ -220,9 +230,9 @@ public class Equipment {
 					//Update the DB
 					try {
 						if (actionTaken == 0) {
-							player.getWorld().getServer().getDatabase().querySavePlayerItemUpdateAmount(player, list[i]);
+							player.getWorld().getServer().getDatabase().itemUpdate(list[i]);
 						} else if (actionTaken == 1) {
-							player.getWorld().getServer().getDatabase().querySavePlayerEquipmentDelete(player, curEquip);
+							player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 						}
 					} catch (GameDatabaseException ex) {
 						LOGGER.error(ex.getMessage());
