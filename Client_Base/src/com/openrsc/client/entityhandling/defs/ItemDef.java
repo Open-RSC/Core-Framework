@@ -118,7 +118,7 @@ public class ItemDef extends EntityDef {
 	public static ItemDef asNote(ItemDef item) {
 		if (item.hasNoteType) {
 			return new ItemDef(item.name, "Swap this note at any bank for the equivalent item.", "", item.basePrice, 438, "items:438", /*item.spriteID, item.spriteLocation,*/
-				true, false, item.wearableID, item.pictureMask, item.blueMask, item.membersItem,
+				true, false, 0, 0, 0, item.membersItem,
 				item.quest, -1, item.id, item.id);
 		} else {
 			return item;

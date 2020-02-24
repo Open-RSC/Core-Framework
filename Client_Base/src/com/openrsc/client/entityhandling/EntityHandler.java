@@ -63,16 +63,31 @@ public class EntityHandler {
 
 	public static ItemDef getItemDef(int id) {
 
-		if (id < 0) {
+		/*if (id < 0) {
 			return null;
+		}*/
+
+		int newId = id;
+		boolean noted = false;
+		if (id < 0) {
+			newId = (newId + 1) * -1;
+			noted = true;
 		}
 
-		return findItem(id, Optional.empty());
+		return findItem(newId, Optional.of(noted));
 
 		/*if (id < 0 || id >= items.size()) {
 			return null;
 		}
 		return items.get(id);*/
+	}
+
+	public static ItemDef getItemDef(int id, int noted) {
+		if (id < 0) {
+			return null;
+		}
+
+		return findItem(id, Optional.of(noted == 1));
 	}
 
 	public static ItemDef getItemDef(int id, Optional<Boolean> isNote) {
