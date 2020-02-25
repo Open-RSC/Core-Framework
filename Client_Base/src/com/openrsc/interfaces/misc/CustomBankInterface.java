@@ -1065,7 +1065,7 @@ public final class CustomBankInterface extends BankInterface {
 		tryChangeCertMode(uncertMode);
 		if (Config.S_WANT_CUSTOM_BANKS) {
 			mc.packetHandler.getClientStream().newPacket(23);
-			mc.packetHandler.getClientStream().bufferBits.putShort(mc.getInventoryItems()[selectedInventorySlot]);
+			mc.packetHandler.getClientStream().bufferBits.putShort(selectedInventorySlot);
 			if (i > mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot])) {
 				i = mc.getInventoryCount(mc.getInventoryItems()[selectedInventorySlot]);
 			}
@@ -1105,7 +1105,7 @@ public final class CustomBankInterface extends BankInterface {
 	public void sendWithdraw(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
 			mc.packetHandler.getClientStream().newPacket(22);
-			mc.packetHandler.getClientStream().bufferBits.putShort(bankItems.get(selectedBankSlot).itemID);
+			mc.packetHandler.getClientStream().bufferBits.putShort(selectedBankSlot);
 			if (i > bankItems.get(selectedBankSlot).amount) {
 				i = bankItems.get(selectedBankSlot).amount;
 			}

@@ -1,6 +1,7 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -175,6 +176,16 @@ public class Bank {
 		}
 	}
 
+	public int searchBankSlots(int catalogID) {
+		synchronized (list) {
+			for (int i = 0; i < list.size(); ++i) {
+				if (list.get(i).getCatalogId() == catalogID)
+					return i;
+			}
+			return -1;
+		}
+	}
+
 	public ListIterator<Item> iterator() {
 		synchronized(list) {
 			return list.listIterator();
@@ -293,12 +304,12 @@ public class Bank {
 
 	}
 
-	public boolean withdrawItem(int itemID, final int amount) {
+	public boolean withdrawItem(int bankSlot, final int amount) {
 		Item item;
 		Inventory inventory = getPlayer().getInventory();
-		final int slot = getFirstIndexById(itemID);
-		if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(itemID).isStackable()) {
-			item = new Item(itemID, amount);
+		final int slot = getFirstIndexById(bankSlot);
+		if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isStackable()) {
+			item = new Item(bankSlot, amount);
 			if (inventory.canHold(item) && remove(item) > -1) {
 				inventory.add(item, false);
 			} else {
@@ -307,10 +318,10 @@ public class Bank {
 		} else {
 			if (!getPlayer().getAttribute("swap_note", false)) {
 				for (int i = 0; i < amount; i++) {
-					if (getFirstIndexById(itemID) < 0) {
+					if (getFirstIndexById(bankSlot) < 0) {
 						break;
 					}
-					item = new Item(itemID, 1);
+					item = new Item(bankSlot, 1);
 					if (inventory.canHold(item) && remove(item) > -1) {
 						inventory.add(item, false);
 					} else {
@@ -320,15 +331,15 @@ public class Bank {
 				}
 			} else {
 				for (int i = 0; i < amount; i++) {
-					if (getFirstIndexById(itemID) < 0) {
+					if (getFirstIndexById(bankSlot) < 0) {
 						break;
 					}
-					if (!getPlayer().getWorld().getServer().getEntityHandler().getItemDef(itemID).isNoteable()) {
+					if (!getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isNoteable()) {
 						getPlayer().message("There is no equivalent note item for that.");
 						break;
 					}
 
-					item = new Item(itemID, 1);
+					item = new Item(bankSlot, 1);
 					Item notedItem = new Item(item.getDef(getPlayer().getWorld()).getId()).asNote();
 					/*if (notedItem.getDef(getPlayer().getWorld()) == null) {
 						LOGGER.error("Mistake with the notes: " + item.getCatalogId() + " - " + notedItem.getCatalogId());
@@ -347,7 +358,7 @@ public class Bank {
 
 		if (slot > -1) {
 			ActionSender.sendInventory(getPlayer());
-			ActionSender.updateBankItem(getPlayer(), slot, itemID, countId(itemID));
+			ActionSender.updateBankItem(getPlayer(), slot, bankSlot, countId(bankSlot));
 
 			return true;
 		}
@@ -355,67 +366,103 @@ public class Bank {
 		return false;
 	}
 
-	public boolean depositItem(int itemID, final int amount) {
-		Item item;
-		Bank bank = getPlayer().getBank();
-		Inventory inventory = getPlayer().getInventory();
-		if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(itemID).isStackable()) {
-			if (!getPlayer().getAttribute("swap_cert", false) || !isCert(itemID)) {
-				item = new Item(itemID, amount);
-				Item originalItem = null;
-				if (item.getDef(getPlayer().getWorld()).getId() != -1) {
-					originalItem = new Item(item.getDef(getPlayer().getWorld()).getId(), amount);
-					itemID = originalItem.getCatalogId();
-				}
-				if (bank.canHold(item) && inventory.remove(item, false) > -1) {
-					bank.add(originalItem != null ? originalItem : item);
-				} else {
-					getPlayer().message("You don't have room for that in your bank");
+	public boolean depositItem(final int inventorySlot, final int amount) {
+		synchronized (list) {
+			try {
+				//Make sure there's an item in the slot
+				Item depositItem = getPlayer().getInventory().get(inventorySlot);
+				if (depositItem == null)
+					return false;
+
+				//Make sure they have enough of that item
+				if (amount < 1 || player.getInventory().countId(depositItem.getCatalogId()) < amount) {
+					player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
 					return false;
 				}
-			} else {
-				item = new Item(itemID, amount);
-				Item originalItem = null;
-				if (item.getDef(getPlayer().getWorld()).getId() != -1) {
-					originalItem = new Item(item.getDef(getPlayer().getWorld()).getId(), amount);
-					itemID = originalItem.getCatalogId();
-				}
-				Item removedItem = originalItem != null ? originalItem : item;
-				int uncertedID = uncertedID(removedItem.getCatalogId());
-				itemID = uncertedID;
-				Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getCatalogId() ? amount : amount * 5);
-				if (bank.canHold(uncertedItem) && inventory.remove(removedItem,false) > -1) {
-					bank.add(uncertedItem);
-				} else {
-					getPlayer().message("You don't have room for that in your bank");
+
+				//Check the item definition
+				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
+				if (depositDef == null)
 					return false;
+
+				//Attempt to remove the item from the inventory
+				if (player.getInventory().remove(depositItem.getCatalogId(), amount, true) == -1)
+					return false;
+
+				//Check if their bank already contains the item
+				int bankSlot = searchBankSlots(depositItem.getCatalogId());
+				if (bankSlot > -1) { //Their bank already contains the item
+					Item existingItem = list.get(bankSlot);
+						existingItem.changeAmount(amount);
+						player.getWorld().getServer().getDatabase().itemUpdate(existingItem);
+						ActionSender.updateBankItem(player, bankSlot, depositItem.getCatalogId(), existingItem.getAmount());
+				} else { //Their bank doesn't contain this item yet
+					//Make sure they have room to deposit the item
+					if (player.getFreeBankSlots() > 0) {
+						add(depositItem);
+						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, depositItem);
+						ActionSender.updateBankItem(player, list.size()-1, depositItem.getCatalogId(), amount);
+					} else {
+						player.message("Your bank is full.");
+						return false;
+					}
 				}
+//				if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(inventorySlot).isStackable()) {
+//					if (!getPlayer().getAttribute("swap_cert", false) || !isCert(inventorySlot)) {
+//						item = new Item(inventorySlot, amount);
+//						Item originalItem = null;
+//						if (item.getDef(getPlayer().getWorld()).getId() != -1) {
+//							originalItem = new Item(item.getDef(getPlayer().getWorld()).getId(), amount);
+//							inventorySlot = originalItem.getCatalogId();
+//						}
+//						if (bank.canHold(item) && inventory.remove(item, false) > -1) {
+//							bank.add(originalItem != null ? originalItem : item);
+//						} else {
+//							getPlayer().message("You don't have room for that in your bank");
+//							return false;
+//						}
+//					} else {
+//						item = new Item(inventorySlot, amount);
+//						Item originalItem = null;
+//						if (item.getDef(getPlayer().getWorld()).getId() != -1) {
+//							originalItem = new Item(item.getDef(getPlayer().getWorld()).getId(), amount);
+//							inventorySlot = originalItem.getCatalogId();
+//						}
+//						Item removedItem = originalItem != null ? originalItem : item;
+//						int uncertedID = uncertedID(removedItem.getCatalogId());
+//						inventorySlot = uncertedID;
+//						Item uncertedItem = new Item(uncertedID, uncertedID == removedItem.getCatalogId() ? amount : amount * 5);
+//						if (bank.canHold(uncertedItem) && inventory.remove(removedItem,false) > -1) {
+//							bank.add(uncertedItem);
+//						} else {
+//							getPlayer().message("You don't have room for that in your bank");
+//							return false;
+//						}
+//					}
+//
+//				} else {
+//					for (int i = 0; i < amount; i++) {
+//						int idx = inventory.getLastIndexById(inventorySlot);
+//						item = inventory.get(idx);
+//						if (item == null) { // This shouldn't happen
+//							break;
+//						}
+//						if (bank.canHold(item) && inventory.remove(item.getCatalogId(), item.getAmount(), false) > -1) {
+//							bank.add(item);
+//						} else {
+//							getPlayer().message("You don't have room for that in your bank");
+//							break;
+//						}
+//					}
+//				}
+
+
+
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
 			}
-
-		} else {
-			for (int i = 0; i < amount; i++) {
-				int idx = inventory.getLastIndexById(itemID);
-				item = inventory.get(idx);
-				if (item == null) { // This shouldn't happen
-					break;
-				}
-				if (bank.canHold(item) && inventory.remove(item.getCatalogId(), item.getAmount(), false) > -1) {
-					bank.add(item);
-				} else {
-					getPlayer().message("You don't have room for that in your bank");
-					break;
-				}
-			}
+			return true;
 		}
-
-		int slot = bank.getFirstIndexById(itemID);
-		if (slot > -1) {
-			ActionSender.sendInventory(getPlayer());
-			ActionSender.updateBankItem(getPlayer(), slot, itemID,
-				bank.countId(itemID));
-		}
-
-		return true;
 	}
 
 	public void loadPreset(int slot, byte[] inventoryItems, byte[] equipmentItems) {
@@ -471,148 +518,152 @@ public class Bank {
 
 	public void attemptPresetLoadout(int slot) {
 		synchronized(list) {
-			Map<Integer, Integer> itemsOwned = new LinkedHashMap<>();
-			Item tempItem;
+			synchronized (player.getInventory().getItems()) {
+				synchronized (player.getEquipment().getList()) {
+					Map<Integer, Integer> itemsOwned = new LinkedHashMap<>();
+					Item tempItem;
 
-			//Loop through their bank and add it to the hashmap
-			for (int i = 0; i < list.size(); i++) {
-				tempItem = get(i);
-				if (tempItem != null) {
-					if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
-						itemsOwned.put(tempItem.getCatalogId(), 0);
-					}
-					int hasAmount = itemsOwned.get(tempItem.getCatalogId());
-					hasAmount += tempItem.getAmount();
-					itemsOwned.put(tempItem.getCatalogId(), hasAmount);
-				}
-			}
-
-			//Loop through their inventory and add it to the hashmap
-			for (int i = 0; i < getPlayer().getInventory().size(); i++) {
-				tempItem = getPlayer().getInventory().get(i);
-				if (tempItem != null) {
-					if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
-						itemsOwned.put(tempItem.getCatalogId(), 0);
-					}
-					int hasAmount = itemsOwned.get(tempItem.getCatalogId());
-					hasAmount += tempItem.getAmount();
-					itemsOwned.put(tempItem.getCatalogId(), hasAmount);
-				}
-			}
-
-			if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-				//Loop through their equipment and add it to the hashmap
-				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-					tempItem = getPlayer().getEquipment().get(i);
-					if (tempItem != null) {
-						if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
-							itemsOwned.put(tempItem.getCatalogId(), 0);
+					//Loop through their bank and add it to the hashmap
+					for (int i = 0; i < list.size(); i++) {
+						tempItem = get(i);
+						if (tempItem != null) {
+							if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
+								itemsOwned.put(tempItem.getCatalogId(), 0);
+							}
+							int hasAmount = itemsOwned.get(tempItem.getCatalogId());
+							hasAmount += tempItem.getAmount();
+							itemsOwned.put(tempItem.getCatalogId(), hasAmount);
 						}
-						int hasAmount = itemsOwned.get(tempItem.getCatalogId());
-						hasAmount += tempItem.getAmount();
-						itemsOwned.put(tempItem.getCatalogId(), hasAmount);
 					}
-				}
-			}
 
-			//Make sure they have enough space - disregard edge cases
-			if (itemsOwned.size() > getPlayer().getBankSize() + Inventory.MAX_SIZE) {
-				getPlayer().message("Your bank and inventory are critically full. Clean up before using presets.");
-				return;
-			}
-
-			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				if (getPlayer().getEquipment().get(i) != null) {
-					Item toRemove = getPlayer().getEquipment().get(i);
-					getPlayer().getEquipment().remove(toRemove.getCatalogId(), toRemove.getAmount());
-				}
-
-			}
-
-			if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-				//Attempt to equip the preset equipment
-				int wearableId;
-				for (int i = 0; i < presets[slot].equipment.length; i++) {
-					Item presetEquipment = presets[slot].equipment[i];
-					if (presetEquipment.getDef(getPlayer().getWorld()) == null)
-						continue;
-
-					presetEquipment.setWielded(false);
-					if (itemsOwned.containsKey(presetEquipment.getCatalogId())) {
-						int presetAmount = presetEquipment.getAmount();
-						int ownedAmount = itemsOwned.get(presetEquipment.getCatalogId());
-						if (presetAmount > ownedAmount) {
-							getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
-							presetAmount = ownedAmount;
+					//Loop through their inventory and add it to the hashmap
+					for (int i = 0; i < getPlayer().getInventory().size(); i++) {
+						tempItem = getPlayer().getInventory().get(i);
+						if (tempItem != null) {
+							if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
+								itemsOwned.put(tempItem.getCatalogId(), 0);
+							}
+							int hasAmount = itemsOwned.get(tempItem.getCatalogId());
+							hasAmount += tempItem.getAmount();
+							itemsOwned.put(tempItem.getCatalogId(), hasAmount);
 						}
-						if (presetAmount > 0) {
-							if (getPlayer().getSkills().getMaxStat(presetEquipment.getDef(getPlayer().getWorld()).getRequiredSkillIndex()) < presetEquipment.getDef(getPlayer().getWorld()).getRequiredLevel()) {
-								getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
+					}
+
+					if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						//Loop through their equipment and add it to the hashmap
+						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+							tempItem = getPlayer().getEquipment().get(i);
+							if (tempItem != null) {
+								if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
+									itemsOwned.put(tempItem.getCatalogId(), 0);
+								}
+								int hasAmount = itemsOwned.get(tempItem.getCatalogId());
+								hasAmount += tempItem.getAmount();
+								itemsOwned.put(tempItem.getCatalogId(), hasAmount);
+							}
+						}
+					}
+
+					//Make sure they have enough space - disregard edge cases
+					if (itemsOwned.size() > getPlayer().getBankSize() + Inventory.MAX_SIZE) {
+						getPlayer().message("Your bank and inventory are critically full. Clean up before using presets.");
+						return;
+					}
+
+					for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+						if (getPlayer().getEquipment().get(i) != null) {
+							Item toRemove = getPlayer().getEquipment().get(i);
+							getPlayer().getEquipment().remove(toRemove.getCatalogId(), toRemove.getAmount());
+						}
+
+					}
+
+					if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						//Attempt to equip the preset equipment
+						int wearableId;
+						for (int i = 0; i < presets[slot].equipment.length; i++) {
+							Item presetEquipment = presets[slot].equipment[i];
+							if (presetEquipment.getDef(getPlayer().getWorld()) == null)
 								continue;
-							}
-							getPlayer().getEquipment().add(new Item(presetEquipment.getCatalogId(), presetAmount));
-							wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
-							getPlayer().updateWornItems(i,
-								presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),
-								wearableId, true);
-							if (presetAmount == ownedAmount) {
-								itemsOwned.remove(presetEquipment.getCatalogId());
+
+							presetEquipment.setWielded(false);
+							if (itemsOwned.containsKey(presetEquipment.getCatalogId())) {
+								int presetAmount = presetEquipment.getAmount();
+								int ownedAmount = itemsOwned.get(presetEquipment.getCatalogId());
+								if (presetAmount > ownedAmount) {
+									getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
+									presetAmount = ownedAmount;
+								}
+								if (presetAmount > 0) {
+									if (getPlayer().getSkills().getMaxStat(presetEquipment.getDef(getPlayer().getWorld()).getRequiredSkillIndex()) < presetEquipment.getDef(getPlayer().getWorld()).getRequiredLevel()) {
+										getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
+										continue;
+									}
+									getPlayer().getEquipment().add(presetEquipment);
+									wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
+									getPlayer().updateWornItems(i,
+										presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),
+										wearableId, true);
+									if (presetAmount == ownedAmount) {
+										itemsOwned.remove(presetEquipment.getCatalogId());
+									} else {
+										itemsOwned.put(presetEquipment.getCatalogId(), ownedAmount - presetAmount);
+									}
+								}
 							} else {
-								itemsOwned.put(presetEquipment.getCatalogId(), ownedAmount - presetAmount);
+								getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
 							}
 						}
-					} else {
-						getPlayer().message("Preset error: Requested item missing " + presetEquipment.getDef(getPlayer().getWorld()).getName());
 					}
-				}
-			}
 
-			getPlayer().getInventory().getList().clear();
-			//Attempt to load the preset inventory
-			for (int i = 0; i < presets[slot].inventory.length; i++) {
-				Item presetInventory = presets[slot].inventory[i];
-				if (presetInventory.getDef(getPlayer().getWorld()) == null) {
-					continue;
-				}
-				presetInventory.setWielded(false);
-				if (itemsOwned.containsKey(presetInventory.getCatalogId())) {
-					int presetAmount = presetInventory.getAmount();
-					int ownedAmount = itemsOwned.get(presetInventory.getCatalogId());
-					if (presetAmount > ownedAmount) {
-						getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
-						presetAmount = ownedAmount;
-					}
-					if (presetAmount > 0) {
-						getPlayer().getInventory().add(new Item(presetInventory.getCatalogId(), presetAmount), false);
-						if (presetAmount == ownedAmount) {
-							itemsOwned.remove(presetInventory.getCatalogId());
+					getPlayer().getInventory().getList().clear();
+					//Attempt to load the preset inventory
+					for (int i = 0; i < presets[slot].inventory.length; i++) {
+						Item presetInventory = presets[slot].inventory[i];
+						if (presetInventory.getDef(getPlayer().getWorld()) == null) {
+							continue;
+						}
+						presetInventory.setWielded(false);
+						if (itemsOwned.containsKey(presetInventory.getCatalogId())) {
+							int presetAmount = presetInventory.getAmount();
+							int ownedAmount = itemsOwned.get(presetInventory.getCatalogId());
+							if (presetAmount > ownedAmount) {
+								getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
+								presetAmount = ownedAmount;
+							}
+							if (presetAmount > 0) {
+								getPlayer().getInventory().add(presetInventory, false);
+								if (presetAmount == ownedAmount) {
+									itemsOwned.remove(presetInventory.getCatalogId());
+								} else {
+									itemsOwned.put(presetInventory.getCatalogId(), ownedAmount - presetAmount);
+								}
+							}
 						} else {
-							itemsOwned.put(presetInventory.getCatalogId(), ownedAmount - presetAmount);
+							getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
 						}
 					}
-				} else {
-					getPlayer().message("Preset error: Requested item missing " + presetInventory.getDef(getPlayer().getWorld()).getName());
+
+					Iterator<Map.Entry<Integer, Integer>> itr = itemsOwned.entrySet().iterator();
+
+					int slotCounter = 0;
+					list.clear();
+					while (itr.hasNext()) {
+						Map.Entry<Integer, Integer> entry = itr.next();
+
+						if (slotCounter < getPlayer().getBankSize()) {
+							//Their bank isn't full, stick it in the bank
+							add(new Item(entry.getKey(), entry.getValue()));
+						} else {
+							//Their bank is full, stick it in their inventory
+							getPlayer().getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
+							getPlayer().message("Your bank was too full and an item was placed into your inventory.");
+						}
+						slotCounter++;
+					}
+					getPlayer().resetBank();
 				}
 			}
-
-			Iterator<Map.Entry<Integer, Integer>> itr = itemsOwned.entrySet().iterator();
-
-			int slotCounter = 0;
-			list.clear();
-			while (itr.hasNext()) {
-				Map.Entry<Integer, Integer> entry = itr.next();
-
-				if (slotCounter < getPlayer().getBankSize()) {
-					//Their bank isn't full, stick it in the bank
-					add(new Item(entry.getKey(), entry.getValue()));
-				} else {
-					//Their bank is full, stick it in their inventory
-					getPlayer().getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
-					getPlayer().message("Your bank was too full and an item was placed into your inventory.");
-				}
-				slotCounter++;
-			}
-			getPlayer().resetBank();
 		}
 	}
 

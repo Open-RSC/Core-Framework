@@ -14,98 +14,116 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class BankHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) {
+
+		//Restrict access to Ultimate Ironmen
 		if (player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("As an Ultimate Iron Man, you cannot use the bank.");
 			player.resetBank();
 			return;
 		}
+
+		//Make sure they can't access the bank while busy
 		if (player.isBusy() || player.isRanging() || player.getTrade().isTradeActive()
 			|| player.getDuel().isDuelActive()) {
 			player.resetBank();
 			return;
 		}
+
+		//Make sure they are at a banker
 		if (!player.accessingBank()) {
 			player.setSuspiciousPlayer(true, "bank handler packet player not accessing bank");
 			player.resetBank();
 			return;
 		}
-		Bank bank = player.getBank();
-		Inventory inventory = player.getInventory();
-		int itemID, amount;
-		int packetOne = OpcodeIn.BANK_CLOSE.getOpcode();
-		int packetTwo = OpcodeIn.BANK_WITHDRAW.getOpcode();
-		int packetThree = OpcodeIn.BANK_DEPOSIT.getOpcode();
-		int packetFour = OpcodeIn.BANK_DEPOSIT_ALL_FROM_INVENTORY.getOpcode();
-		int packetFive = OpcodeIn.BANK_DEPOSIT_ALL_FROM_EQUIPMENT.getOpcode();
-		int packetSix = OpcodeIn.BANK_SAVE_PRESET.getOpcode();
-		int packetSeven = OpcodeIn.BANK_LOAD_PRESET.getOpcode();
 
-		if (pID == packetOne) { // Close bank
-			player.resetBank();
-		} else if (pID == packetTwo) { // Withdraw item
-			itemID = p.readShort();
-			amount = p.readInt();
-			if (amount < 1 || bank.countId(itemID) < amount) {
-				player.setSuspiciousPlayer(true, "in banking item amount < 0 or bank item count < amount");
-				return;
-			}
+		//Make sure the opcode is valid
+		final OpcodeIn opcode = OpcodeIn.get(packet.getID());
+		if (opcode == null)
+			return;
 
-			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, itemID, amount});
-		} else if (pID == packetThree) { // Deposit item
-			itemID = p.readShort();
-			amount = p.readInt();
-
-			if (amount < 1 || inventory.countId(itemID) < amount) {
-				player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
-				return;
-			}
-
-			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, itemID, amount});
-		} else if (pID == packetFour) { //deposit all from inventory
-			for (int k = player.getInventory().size() - 1; k >= 0; k--) {
-				Item depoItem = player.getInventory().get(k);
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getCatalogId(), depoItem.getAmount()});
-			}
-		} else if (pID == packetFive && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //deposit all from equipment
-			for (int k = Equipment.SLOT_COUNT - 1; k >= 0; k--) {
-				Item depoItem = player.getEquipment().get(k);
-				if (depoItem == null)
-					continue;
-				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, depoItem, false, true})) {
-					continue;
+		int inventorySlot, bankSlot, amount, presetSlot;
+		switch (opcode) {
+			case BANK_CLOSE:
+				player.resetBank();
+				break;
+			case BANK_WITHDRAW:
+				bankSlot = packet.readShort();
+				amount = packet.readInt();
+				if (amount < 1 || player.getBank().countId(bankSlot) < amount) {
+					player.setSuspiciousPlayer(true, "in banking item amount < 0 or bank item count < amount");
+					return;
 				}
-			}
-		} else if (pID == packetSix && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) { // Set bank preset
-			int presetSlot = p.readShort();
-			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
-				player.setSuspiciousPlayer(true, "packet six bank preset slot < 0 or preset slot >= preset count");
+
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, bankSlot, amount});
+				break;
+			case BANK_DEPOSIT:
+				inventorySlot = packet.readShort();
+				amount = packet.readInt();
+
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, inventorySlot, amount});
+				break;
+			case BANK_DEPOSIT_ALL_FROM_INVENTORY:
+				for (int k = player.getInventory().size() - 1; k >= 0; k--) {
+					Item depoItem = player.getInventory().get(k);
+					player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getCatalogId(), depoItem.getAmount()});
+				}
+				break;
+			case BANK_DEPOSIT_ALL_FROM_EQUIPMENT:
+				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					player.setSuspiciousPlayer(true, "bank deposit from equipment on authentic world");
+					return;
+				}
+				for (int k = Equipment.SLOT_COUNT - 1; k >= 0; k--) {
+					Item depoItem = player.getEquipment().get(k);
+					if (depoItem == null)
+						continue;
+					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, depoItem, false, true})) {
+						continue;
+					}
+				}
+				break;
+			case BANK_LOAD_PRESET:
+				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					player.setSuspiciousPlayer(true, "bank load preset on authentic world");
+					return;
+				}
+				presetSlot = packet.readShort();
+				if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
+					player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
+					return;
+				}
+				player.getBank().attemptPresetLoadout(presetSlot);
+				ActionSender.sendEquipmentStats(player);
+				ActionSender.sendInventory(player);
+				break;
+			case BANK_SAVE_PRESET:
+				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					player.setSuspiciousPlayer(true, "bank save preset on authentic world");
+					return;
+				}
+				presetSlot = packet.readShort();
+				if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
+					player.setSuspiciousPlayer(true, "packet six bank preset slot < 0 or preset slot >= preset count");
+					return;
+				}
+				for (int k = 0; k < Inventory.MAX_SIZE; k++) {
+					if (k < player.getInventory().size())
+						player.getBank().presets[presetSlot].inventory[k] = player.getInventory().get(k);
+					else
+						player.getBank().presets[presetSlot].inventory[k] = new Item(ItemId.NOTHING.id(),0);
+				}
+				for (int k = 0; k < Equipment.SLOT_COUNT; k++) {
+					Item equipmentItem = player.getEquipment().get(k);
+					if (equipmentItem != null)
+						player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
+					else
+						player.getBank().presets[presetSlot].equipment[k] = new Item(ItemId.NOTHING.id(),0);
+				}
+				player.getBank().presets[presetSlot].changed = true;
+				break;
+			default:
 				return;
-			}
-			for (int k = 0; k < Inventory.MAX_SIZE; k++) {
-				if (k < inventory.size())
-					player.getBank().presets[presetSlot].inventory[k] = inventory.get(k);
-				else
-					player.getBank().presets[presetSlot].inventory[k] = new Item(ItemId.NOTHING.id(),0);
-			}
-			for (int k = 0; k < Equipment.SLOT_COUNT; k++) {
-				Item equipmentItem = player.getEquipment().get(k);
-				if (equipmentItem != null)
-					player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
-				else
-					player.getBank().presets[presetSlot].equipment[k] = new Item(ItemId.NOTHING.id(),0);
-			}
-			player.getBank().presets[presetSlot].changed = true;
-		} else if (pID == packetSeven && player.getWorld().getServer().getConfig().WANT_BANK_PRESETS) { // load bank preset
-			int presetSlot = p.readShort();
-			if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
-				player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
-				return;
-			}
-			player.getBank().attemptPresetLoadout(presetSlot);
-			ActionSender.sendEquipmentStats(player);
-			ActionSender.sendInventory(player);
 		}
 	}
 }

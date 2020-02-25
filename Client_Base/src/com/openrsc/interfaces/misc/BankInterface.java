@@ -489,7 +489,7 @@ public class BankInterface {
 	public void sendDeposit(int i) {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		mc.packetHandler.getClientStream().newPacket(23);
-		mc.packetHandler.getClientStream().bufferBits.putShort(itemID);
+		mc.packetHandler.getClientStream().bufferBits.putShort(this.selectedBankSlot);
 		if (i > mc.getInventoryCount(itemID)) {
 			i = mc.getInventoryCount(itemID);
 		}
@@ -511,7 +511,7 @@ public class BankInterface {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		int amt = currentBankCounts.get(this.selectedBankSlot);
 		mc.packetHandler.getClientStream().newPacket(22);
-		mc.packetHandler.getClientStream().bufferBits.putShort(itemID);
+		mc.packetHandler.getClientStream().bufferBits.putShort(this.selectedBankSlot);
 		if (i > amt) {
 			i = amt;
 		}

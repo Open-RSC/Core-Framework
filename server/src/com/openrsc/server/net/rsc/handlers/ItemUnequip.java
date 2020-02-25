@@ -19,6 +19,10 @@ public class ItemUnequip implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		OpcodeIn opcode = OpcodeIn.get(packet.getID());
 
+		//Make sure the opcode is valid
+		if (opcode == null)
+			return;
+
 		//Make sure they're allowed to unequip something atm
 		if (!passCheck(player, opcode))
 			return;
@@ -65,7 +69,8 @@ public class ItemUnequip implements PacketHandler {
 
 			//Client index and server index don't match. Find correct index.
 			correctIndex(request);
-		}
+		} else
+			return;
 
 		//Check to make sure the item is wieldable
 		if (request.item == null || !request.item.getDef(player.getWorld()).isWieldable()) {

@@ -710,7 +710,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 				statement.executeBatch();
 
-				statement = getConnection().prepareStatement(getQueries().save_AddBank);
+				statement = getConnection().prepareStatement(getQueries().save_BankAdd);
 				int slot = 0;
 				for (PlayerBank item : bank) {
 					statement.setInt(1, playerId);
@@ -1041,11 +1041,30 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryBankAdd() throws GameDatabaseException {
+	protected void queryBankAdd(final int playerId, final Item item) throws GameDatabaseException {
+		synchronized (itemIDList) {
+			try {
+				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+					assignItemID(item);
+					queryItemCreate(item);
+				}
+				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankAdd);
+				statement.setInt(1, playerId);
+				statement.setInt(2, item.getItemId());
+				statement.setInt(3, 0);
+				try {
+					statement.executeUpdate();
+				} finally {
 
+				}
+			} catch (SQLException ex) {
+				// Convert SQLException to a general usage exception
+				throw new GameDatabaseException(this, ex.getMessage());
+			}
+		}
 	}
 	@Override
-	protected void queryBankRemove() throws GameDatabaseException {
+	protected void queryBankRemove(final int playerId, final Item item) throws GameDatabaseException {
 
 	}
 //	@Override
