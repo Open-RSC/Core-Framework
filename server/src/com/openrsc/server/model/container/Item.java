@@ -8,51 +8,52 @@ import java.util.Map;
 
 public class Item implements Comparable<Item> {
 
-	public final static int ITEM_ID_UNASSIGNED = -1;
-
+	//Class members------------------------------------------------------
+	/**
+	 * A place to put a special attribute if needed
+	 */
 	protected final Map<String, Object> attributes = new HashMap<String, Object>();
-
-	//private int catalogId;
-	private int index;
-	//private int amount;
+	/**
+	 * Value given to a newly generated item
+	 */
+	public final static int ITEM_ID_UNASSIGNED = -1;
+	/**
+	 * Values associated with this specific item - amount, noted flag etc
+	 */
 	private ItemStatus itemStatus;
-
-	private int itemId; // join reference to itemStatus
-
-	private boolean wielded = false;
-
+	/**
+	 * Flag for if the item is currently wielded
+	 */
+	private boolean wielded;
+	/**
+	 * The unique number given to each item instance
+	 */
+	private int itemId;
+	//-------------------------------------------------------------------
+	//Class overrided methods--------------------------------------------
 	@Override
 	public Item clone() {
 		Item retVal = new Item(getCatalogId(), getAmount(), getNoted());
 		retVal.setWielded(this.wielded);
-		retVal.setIndex(this.index);
 		return retVal;
 	}
 
-	public Item asNote() {
-		Item clone = this.clone();
-		clone.setNoted(true);
-		return clone;
-	}
-
-	public enum WearableID {
-		NOTHING(0),
-		CROSSBOW(16),
-		BOW(24),
-		ARROW(1000),
-		CROSSBOWBOLT(1001);
-		int value;
-		WearableID(int value) {this.value = value;}
-		public int value() { return this.value; }
-		public static WearableID getByID(int id) {
-			for (WearableID item : WearableID.values()) {
-				if (item.value == id)
-					return item;
-			}
-			return NOTHING;
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Item) {
+			Item item = (Item) o;
+			return item.getCatalogId() == getCatalogId()
+				&& item.getNoted() == getNoted();
 		}
+		return false;
 	}
 
+	@Override
+	public String toString() {
+		return "Item(" + getCatalogId() + ", " + getAmount() + ", " + getNoted() + ")";
+	}
+	//-----------------------------------------------------------------
+	//Contructors------------------------------------------------------
 	public Item(int catalogId) {
 		this(catalogId, 1, false);
 	}
@@ -67,46 +68,67 @@ public class Item implements Comparable<Item> {
 		itemStatus.setAmount(amount);
 		itemStatus.setNoted(noted);
 		itemStatus.setDurability(100);
-		this.setItemId(-1);
+		this.setItemId(ITEM_ID_UNASSIGNED);
 	}
 
 	public Item(int itemId, ItemStatus itemStatus) {
 		setItemId(itemId);
 		setItemStatus(itemStatus);
 	}
-
-	public final int getItemId() {
-		return itemId;
-	}
-
+	//--------------------------------------------------------------
+	//Item Member Changers------------------------------------------
 	public final void setItemId(int itemId) {
 		this.itemId = itemId;
-	}
-
-	public final ItemStatus getItemStatus() {
-		return itemStatus;
-	}
-
-	public final void setItemStatus(ItemStatus itemStatus) {
-		this.itemStatus = itemStatus;
-	}
-
-	public final int getCatalogId() {
-		return itemStatus.getCatalogId();
 	}
 
 	public final void setCatalogId(int newid) {
 		itemStatus.setCatalogId(newid);
 	}
 
-	public final int getIndex() {
-		return index;
+	public final void setItemStatus(ItemStatus itemStatus) {
+		this.itemStatus = itemStatus;
 	}
 
-	public final void setIndex(int newIndex) {
-		index = newIndex;
+	public void setAmount(int amount) {
+		this.itemStatus.setAmount(amount);
 	}
 
+	public void changeAmount(int delta) {
+		this.itemStatus.setAmount(this.itemStatus.getAmount() + delta);
+	}
+
+	public void setNoted(boolean noted) {
+		this.itemStatus.setNoted(noted);
+	}
+
+	public void setWielded(boolean wielded) {
+		this.wielded = wielded;
+	}
+	//---------------------------------------------------------------
+	//Item Member Retrievals ----------------------------------------
+	public final int getItemId() {
+		return itemId;
+	}
+
+	public final ItemStatus getItemStatus() {
+		return itemStatus;
+	}
+
+	public final int getCatalogId() {
+		return itemStatus.getCatalogId();
+	}
+
+	public int getAmount() {
+		return itemStatus.getAmount();
+	}
+
+	public boolean getNoted() { return itemStatus.getNoted(); }
+
+	public boolean isWielded() {
+		return wielded;
+	}
+	//---------------------------------------------------------------
+    //Various methods------------------------------------------------
 	public int compareTo(Item item) {
 		/*if (item.getDef().isStackable()) {
 			return -1;
@@ -126,33 +148,6 @@ public class Item implements Comparable<Item> {
 			return 0;
 		}
 		return world.getServer().getEntityHandler().getItemEdibleHeals(getCatalogId());
-	}
-
-	public boolean equals(Object o) {
-		if (o instanceof Item) {
-			Item item = (Item) o;
-			return item.getCatalogId() == getCatalogId()
-				&& item.getNoted() == getNoted();
-		}
-		return false;
-	}
-
-	public int getAmount() {
-		return itemStatus.getAmount();
-	}
-
-	public void setAmount(int amount) {
-		this.itemStatus.setAmount(amount);
-	}
-
-	public void changeAmount(int delta) {
-		this.itemStatus.setAmount(this.itemStatus.getAmount() + delta);
-	}
-
-	public boolean getNoted() { return itemStatus.getNoted(); }
-
-	public void setNoted(boolean noted) {
-		this.itemStatus.setNoted(noted);
 	}
 
 	public ItemCookingDef getCookingDef(World world) {
@@ -187,14 +182,6 @@ public class Item implements Comparable<Item> {
 		return getDef(world).isWieldable();
 	}
 
-	public boolean isWielded() {
-		return wielded;
-	}
-
-	public void setWielded(boolean wielded) {
-		this.wielded = wielded;
-	}
-
 	public boolean wieldingAffectsItem(World world, Item i) {
 		if (!i.isWieldable(world) || !isWieldable(world)) {
 			return false;
@@ -207,11 +194,6 @@ public class Item implements Comparable<Item> {
 		return false;
 	}
 
-	@Override
-	public String toString() {
-		return "Item(" + getCatalogId() + ", " + getAmount() + ", " + getNoted() + ")";
-	}
-
 	public void removeAttribute(String string) {
 		attributes.remove(string);
 	}
@@ -219,7 +201,6 @@ public class Item implements Comparable<Item> {
 	public void setAttribute(String string, Object object) {
 		attributes.put(string, object);
 	}
-
 	@SuppressWarnings("unchecked")
 	public <T> T getAttribute(String string) {
 		return (T) attributes.get(string);
@@ -232,5 +213,11 @@ public class Item implements Comparable<Item> {
 			return object;
 		}
 		return fail;
+	}
+
+	public Item asNote() {
+		Item clone = this.clone();
+		clone.setNoted(true);
+		return clone;
 	}
 }

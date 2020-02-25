@@ -122,19 +122,13 @@ public final class WorldPopulator {
 				}
 				LOGGER.info("\t Loaded {}", box(countGI) + " grounditems.");
 
-				/**
-				 * Load itemIDs from the database
-				 */
-				result = statement.executeQuery("SELECT * FROM `"
+				//Load the in-use ItemID's from the database
+				result = statement.executeQuery("SELECT `itemID` FROM `"
 				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "itemstatuses");
-				while (result.next()) {
-					Item item = new Item(result.getInt("catalogID"));
-					item.setItemId(result.getInt("itemID"));
-					item.getItemStatus().setAmount(result.getInt("amount"));
-					item.getItemStatus().setNoted(result.getInt("noted") == 1);
-					item.getItemStatus().setDurability(result.getInt("durability"));
-					getWorld().getServer().getDatabase().getItemIDList().add(item.getItemId());
-				}
+				while (result.next())
+					getWorld().getServer().getDatabase().getItemIDList().add(result.getInt("itemID"));
+
+				LOGGER.info("\t Loaded {}", box(getWorld().getServer().getDatabase().getItemIDList().size()) + " itemIDs.");
 			} finally {
 				result.close();
 				statement.close();
