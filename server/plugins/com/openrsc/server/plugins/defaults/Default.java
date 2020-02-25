@@ -96,7 +96,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onDeposit(Player player, Integer inventorySlot, Integer amount) {
-		player.getBank().depositItem(inventorySlot, amount);
+		player.getBank().depositItemFromInventory(inventorySlot, amount);
 	}
 
 	@Override

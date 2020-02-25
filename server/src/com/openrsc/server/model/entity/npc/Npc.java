@@ -1093,7 +1093,7 @@ public class Npc extends Mob {
 					return true;
 				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
 					Item equipped = p.getEquipment().get(slot);
-					equipped.setAmount(equipped.getAmount() + item.getAmount());
+					equipped.changeAmount(item.getAmount());
 					return true;
 				} else {
 					if (p.getInventory().getFreeSlots() > 0) {

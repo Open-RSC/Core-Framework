@@ -401,10 +401,10 @@ public class Equipment {
 
 			synchronized (player.getBank().getItems()) {
 				//Attempt to remove the item from their bank
-				Item itemCopy = request.item.clone();
+				int amount = request.item.getAmount();
 				if (!itemDef.isStackable())
-					itemCopy.setAmount(1);
-				if (player.getBank().remove(itemCopy) == -1)
+					amount = 1;
+				if (player.getBank().remove(request.item.getCatalogId(), amount) == -1)
 					return false;
 
 				//TODO: This shouldn't be needed

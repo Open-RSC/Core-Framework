@@ -366,9 +366,9 @@ public class Bank {
 		return false;
 	}
 
-	public boolean depositItem(final int inventorySlot, final int amount) {
+	public boolean depositItemFromInventory(final int inventorySlot, final int amount) {
 		synchronized (list) {
-			try {
+			synchronized (player.getInventory().getItems()) {
 				//Make sure there's an item in the slot
 				Item depositItem = getPlayer().getInventory().get(inventorySlot);
 				if (depositItem == null)
@@ -389,24 +389,25 @@ public class Bank {
 				if (player.getInventory().remove(depositItem.getCatalogId(), amount, true) == -1)
 					return false;
 
-				//Check if their bank already contains the item
-				int bankSlot = searchBankSlots(depositItem.getCatalogId());
-				if (bankSlot > -1) { //Their bank already contains the item
-					Item existingItem = list.get(bankSlot);
-						existingItem.changeAmount(amount);
-						player.getWorld().getServer().getDatabase().itemUpdate(existingItem);
-						ActionSender.updateBankItem(player, bankSlot, depositItem.getCatalogId(), existingItem.getAmount());
-				} else { //Their bank doesn't contain this item yet
-					//Make sure they have room to deposit the item
-					if (player.getFreeBankSlots() > 0) {
-						add(depositItem);
-						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, depositItem);
-						ActionSender.updateBankItem(player, list.size()-1, depositItem.getCatalogId(), amount);
-					} else {
-						player.message("Your bank is full.");
-						return false;
-					}
-				}
+				add(depositItem);
+//					//Check if their bank already contains the item
+//					int bankSlot = searchBankSlots(depositItem.getCatalogId());
+//					if (bankSlot > -1) { //Their bank already contains the item
+//						Item existingItem = list.get(bankSlot);
+//						existingItem.changeAmount(amount);
+//						player.getWorld().getServer().getDatabase().itemUpdate(existingItem);
+//						ActionSender.updateBankItem(player, bankSlot, depositItem.getCatalogId(), existingItem.getAmount());
+//					} else { //Their bank doesn't contain this item yet
+//						//Make sure they have room to deposit the item
+//						if (player.getFreeBankSlots() > 0) {
+//							add(depositItem);
+//							player.getWorld().getServer().getDatabase().bankAddToPlayer(player, depositItem);
+//							ActionSender.updateBankItem(player, list.size()-1, depositItem.getCatalogId(), amount);
+//						} else {
+//							player.message("Your bank is full.");
+//							return false;
+//						}
+//					}
 //				if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(inventorySlot).isStackable()) {
 //					if (!getPlayer().getAttribute("swap_cert", false) || !isCert(inventorySlot)) {
 //						item = new Item(inventorySlot, amount);
@@ -456,12 +457,8 @@ public class Bank {
 //					}
 //				}
 
-
-
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
+				return true;
 			}
-			return true;
 		}
 	}
 
