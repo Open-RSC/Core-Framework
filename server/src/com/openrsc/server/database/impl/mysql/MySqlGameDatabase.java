@@ -976,18 +976,23 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 	@Override
 	protected void queryInventoryRemove(final int playerId, final Item item) throws GameDatabaseException {
-		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryRemove);
-			statement.setInt(1, playerId);
-			statement.setInt(2, item.getItemId());
+		synchronized (itemIDList) {
 			try {
-				statement.executeUpdate();
-			} finally {
-				statement.close();
+				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED)
+					return;
+
+				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryRemove);
+				statement.setInt(1, playerId);
+				statement.setInt(2, item.getItemId());
+				try {
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+				}
+			} catch (SQLException ex) {
+				// Convert SQLException to a general usage exception
+				throw new GameDatabaseException(this, ex.getMessage());
 			}
-		} catch (SQLException ex) {
-			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}
 	@Override
@@ -1012,10 +1017,29 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		}
 	}
-	@Override
-	protected void queryEquipmentRemove() throws GameDatabaseException {
 
+	@Override
+	protected void queryEquipmentRemove(final int playerId, final Item item) throws GameDatabaseException {
+		synchronized (itemIDList) {
+			try {
+				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED)
+					return;
+
+				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentRemove);
+				statement.setInt(1, playerId);
+				statement.setInt(2, item.getItemId());
+				try {
+					statement.executeUpdate();
+				} finally {
+					statement.close();
+				}
+			} catch (SQLException ex) {
+				// Convert SQLException to a general usage exception
+				throw new GameDatabaseException(this, ex.getMessage());
+			}
+		}
 	}
+
 	@Override
 	protected void queryBankAdd() throws GameDatabaseException {
 

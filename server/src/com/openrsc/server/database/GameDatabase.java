@@ -104,7 +104,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void queryInventoryAdd(int playerId, Item item) throws GameDatabaseException;
 	protected abstract void queryInventoryRemove(int playerId, Item item) throws GameDatabaseException;
 	protected abstract void queryEquipmentAdd(int playerId, Item item) throws GameDatabaseException;
-	protected abstract void queryEquipmentRemove() throws GameDatabaseException;
+	protected abstract void queryEquipmentRemove(int playerId, Item item) throws GameDatabaseException;
 	protected abstract void queryBankAdd() throws GameDatabaseException;
 	protected abstract void queryBankRemove() throws GameDatabaseException;
 
@@ -265,7 +265,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public void inventoryRemoveFromPlayer(final Player player, final Item item) throws GameDatabaseException {
-		queryInventoryRemove(player.getDatabaseID(), item);
+		queryInventoryRemove(player, item);
 	}
 
 	public void equipmentAddToPlayer(final Player player, final Item item) throws GameDatabaseException {
@@ -273,7 +273,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public void equipmentRemoveFromPlayer(final Player player, final Item item) throws GameDatabaseException {
-
+		queryEquipmentRemove(player, item);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {
@@ -768,12 +768,20 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		querySavePlayerExperience(player.getDatabaseID(), skills);
 	}
 
+	protected void queryInventoryAdd(final Player player, final Item item) throws GameDatabaseException{
+		queryInventoryAdd(player.getDatabaseID(), item);
+	}
+
+	protected void queryInventoryRemove(final Player player, final Item item) throws GameDatabaseException{
+		queryInventoryRemove(player.getDatabaseID(), item);
+	}
+
 	protected void queryEquipmentAdd(final Player player, final Item item) throws GameDatabaseException{
 		queryEquipmentAdd(player.getDatabaseID(), item);
 	}
 
-	protected void queryInventoryAdd(final Player player, final Item item) throws GameDatabaseException{
-		queryInventoryAdd(player.getDatabaseID(), item);
+	protected void queryEquipmentRemove(final Player player, final Item item) throws GameDatabaseException{
+		queryEquipmentRemove(player.getDatabaseID(), item);
 	}
 }
 

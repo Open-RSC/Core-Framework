@@ -86,7 +86,7 @@ public class Inventory {
 					player.getWorld().getServer().getAchievementSystem().checkAndIncGatherItemTasks(player, itemToAdd);
 				}
 
-				if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus.getNoted()) {
+				if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus().getNoted()) {
 					for (int index = 0; index < list.size(); index++) {
 						Item existingStack = list.get(index);
 						if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
