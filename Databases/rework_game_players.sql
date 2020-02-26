@@ -303,8 +303,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_invitems`
     `itemID`       int(10) UNSIGNED    NOT NULL,
     `wielded`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `slot`     int(5) UNSIGNED     NOT NULL,
-	`dbid`   int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`dbid`)
+    PRIMARY KEY (`itemID`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
   
@@ -325,8 +324,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_equipped`
 (
     `playerID` int(10) UNSIGNED NOT NULL,
     `itemID`       int(10) UNSIGNED NOT NULL,
-    `dbid`   int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (`dbid`)
+    PRIMARY KEY (`itemID`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
