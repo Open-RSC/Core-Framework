@@ -1,5 +1,8 @@
 package com.openrsc.server.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,6 +14,8 @@ import java.util.NoSuchElementException;
 // Author: Ryan
 
 public class YMLReader {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	// Holds the key and attribute for each setting.
 	private class Setting {
 		private String key, attribute;
@@ -67,13 +72,34 @@ public class YMLReader {
 			}
 
 			String[] elems = line.split(":");
-			// Handle normal lines
-			if (elems.length == 2)
-				settings.add(new Setting(elems[0].trim(), elems[1].trim()));
-
-				// Handle the line with the server port (it contains an extra colon)
-			else if (elems.length == 3)
-				settings.add(new Setting(elems[0].trim(), (elems[1].trim() + ":" + elems[2].trim())));
+			switch (elems.length) {
+				case 1:
+					// Handles keys that have no attribute
+					LOGGER.info(fileName + ": Key " + elems[0] +
+						" has no attribute, using default.");
+					break;
+				case 2:
+					// Handle keys that have null for their attribute
+					if (elems[2] == "null") {
+						LOGGER.info(fileName + ": Key \"" + elems[0] +
+							"\" has null value, using default.");
+					}
+					// Handle normal lines
+					else {
+						// Check if the key exists in the settings list
+						if (!(keyExists(elems[1]))) {
+							settings.add(new Setting(elems[0].trim(), elems[1].trim()));
+						}
+						else {
+							LOGGER.info(fileName + ": Duplicate key: " + elems[0]);
+						}
+					}
+					break;
+				case 3:
+					// Handles the line with the server port (it contains an extra colon)
+					settings.add(new Setting(elems[0].trim(), (elems[1].trim() + ":" + elems[2].trim())));
+					break;
+			}
 		}
 	}
 
@@ -91,8 +117,15 @@ public class YMLReader {
 
 		catch (NoSuchElementException e)
 		{
-			return "null";
+			return "NOT_HERE";
 		}
+	}
+
+	// Returns true if there is already a setting with the
+	// key provided.
+	public boolean keyExists(String key) {
+		return settings.stream().
+			anyMatch(setting -> setting.getKey().equalsIgnoreCase(key));
 	}
 }
 

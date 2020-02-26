@@ -54,7 +54,7 @@ public class ServerConfiguration {
 	/**
 	 * the client version needed for login
 	 */
-	public int CLIENT_VERSION = 0;
+	public int CLIENT_VERSION = 6;
 	/**
 	 * the maximum allowed players to connect
 	 */
@@ -87,23 +87,23 @@ public class ServerConfiguration {
 	/**
 	 * AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
 	 */
-	public int RESTART_HOUR;
-	public int RESTART_HOUR_2;
-	public int RESTART_MINUTE;
-	public int RESTART_MINUTE_2;
+	public int RESTART_HOUR = 23;
+	public int RESTART_HOUR_2 = 11;
+	public int RESTART_MINUTE = 55;
+	public int RESTART_MINUTE_2 = 55;
 	/**
 	 * AutoRestart Delay in seconds, alert players
 	 */
-	public int RESTART_DELAY;
-	public int RESTART_DELAY_2;
+	public int RESTART_DELAY = 300;
+	public int RESTART_DELAY_2 = 300;
 	/**
 	 * Default tile range an aggressive NPC will attack a victim
 	 */
-	public int AGGRO_RANGE;
+	public int AGGRO_RANGE = 1;
 	/**
 	 * the mysql database host
 	 */
-	public String MYSQL_HOST = "localhost";
+	public String MYSQL_HOST = "localhost:3360";
 	/**
 	 * the mysql database name
 	 */
@@ -160,15 +160,15 @@ public class ServerConfiguration {
 	/**
 	 * The maximum amount of connections allowed at any one time per IP
 	 */
-	public static int MAX_CONNECTIONS_PER_IP = 6;
+	public static int MAX_CONNECTIONS_PER_IP = 10;
 	/**
 	 * The maximum amount of connection attempts per second for each IP address
 	 */
-	public static int MAX_CONNECTIONS_PER_SECOND = 5;
+	public static int MAX_CONNECTIONS_PER_SECOND = 10;
 	/**
 	 * The maximum amount of packets per second for each IP address
 	 */
-	public static int MAX_PACKETS_PER_SECOND = 20;
+	public static int MAX_PACKETS_PER_SECOND = 1000;
 	/**
 	 * The maximum amount of login attempts allowed per IP per second
 	 */
@@ -180,11 +180,11 @@ public class ServerConfiguration {
 	/**
 	 * The amount of time in minutes that users who network flood the server will be IP banned for
 	 */
-	public static int NETWORK_FLOOD_IP_BAN_MINUTES = 15;
+	public static int NETWORK_FLOOD_IP_BAN_MINUTES = 20;
 	/**
 	 * The amount of time in minutes that users who are suspicious will be IP banned for
 	 */
-	private static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = 15;
+	private static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = 20;
 	/**
 	 * where the server will look for other configuration files
 	 */
@@ -192,7 +192,7 @@ public class ServerConfiguration {
 	private long START_TIME = 0L;
 	public boolean AVATAR_GENERATOR = false; // Not sent to client
 	public boolean IS_DOUBLE_EXP = false;
-	public boolean DISPLAY_LOGO_SPRITE = false;
+	public boolean DISPLAY_LOGO_SPRITE = true;
 	public boolean SPAWN_AUCTION_NPCS = false;
 	public boolean SPAWN_IRON_MAN_NPCS = false;
 	public boolean WANT_PK_BOTS = false;
@@ -232,18 +232,19 @@ public class ServerConfiguration {
 	public boolean WANT_DECANTING = false;
 	public boolean WANT_CERTER_BANK_EXCHANGE = false;
 	public boolean MESSAGE_FULL_INVENTORY = false;
-	public boolean NPC_DONT_RETREAT;
+	public boolean NPC_DONT_RETREAT = false;
 	public boolean NPC_KILL_LIST = false;
 	public boolean NPC_KILL_MESSAGES = false;
 	public boolean NPC_KILL_MESSAGES_FILTER = false;
-	public String NPC_KILL_MESSAGES_NPCs = "";
-	public boolean NPC_KILL_LOGGING = false;
+	public String NPC_KILL_MESSAGES_NPCs = "King Black Dragon,Black Dragon";
+	public boolean NPC_KILL_LOGGING = true;
 	public boolean VALUABLE_DROP_MESSAGES = false;
 	public double VALUABLE_DROP_RATIO = 0;
 	public boolean VALUABLE_DROP_EXTRAS = false;
-	private String VALUABLE_DROP_ITEMS = "";
+	private String VALUABLE_DROP_ITEMS = "Half of a key,Half Dragon Square Shield";
 	public boolean WANT_CUSTOM_RANK_DISPLAY = false;
 	public boolean RIGHT_CLICK_BANK = false;
+	// **** May be deprecated
 	public boolean FIX_OVERHEAD_CHAT = false;
 	public boolean WANT_FATIGUE = true;
 	public int STOP_SKILLING_FATIGUED = 1; //0 - No skills, 1 - Gathering, 2 - All non combat skills
@@ -276,14 +277,13 @@ public class ServerConfiguration {
 	public boolean WANT_NEW_RARE_DROP_TABLES = false;
 	public boolean WANT_LEFTCLICK_WEBS = false;
 	public boolean WANT_CUSTOM_WALK_SPEED = false;
-	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 5;
+	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 0;
 	public boolean WANT_IMPROVED_PATHFINDING = false;
-	public boolean WANT_PASSWORD_MASSAGE = true;
 	//strict check on level requirements for "glitched" validations on rsc
-	public boolean STRICT_CHECK_ALL = false;
-	public boolean STRICT_PDART_CHECK = false;
-	public boolean STRICT_PKNIFE_CHECK = false;
-	public boolean STRICT_PSPEAR_CHECK = false;
+	public boolean STRICT_CHECK_ALL = true;
+	public boolean STRICT_PDART_CHECK = true;
+	public boolean STRICT_PKNIFE_CHECK = true;
+	public boolean STRICT_PSPEAR_CHECK = true;
 	public int FPS = 50;
 	public boolean WANT_EMAIL = false;
 	public boolean WANT_REGISTRATION_LIMIT = false;
@@ -291,7 +291,7 @@ public class ServerConfiguration {
 	public boolean LENIENT_CONTACT_DETAILS = false;
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK = false;
-	public int PACKET_LIMIT = 30;
+	public int PACKET_LIMIT = 100;
 	private int CONNECTION_LIMIT = 10;
 	private int CONNECTION_TIMEOUT = 15;
 	//quest-minigame related
@@ -321,12 +321,11 @@ public class ServerConfiguration {
 	 * Config file for server configurations.
 	 */
 	private YMLReader serverProps = new YMLReader();
-	private YMLReader generalProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
 		try {
 			// connections.conf file should ALWAYS be here!
-			generalProps.loadFromYML("connections.conf");
+			serverProps.loadFromYML("connections.conf");
 			LOGGER.info("Loaded connections.conf");
 		}
 
@@ -334,6 +333,7 @@ public class ServerConfiguration {
 			LOGGER.catching(e);
 			System.exit(1);
 		}
+
 		try { // Always try to load local.conf first
 			serverProps.loadFromYML("local.conf");
 
@@ -356,11 +356,11 @@ public class ServerConfiguration {
 		SERVER_LOCATION = serverProps.getAttribute("server_location");
 		MAX_PLAYERS = Integer.parseInt(serverProps.getAttribute("max_players"));
 		MAX_PLAYERS_PER_IP = Integer.parseInt(serverProps.getAttribute("max_players_per_ip"));
-		MYSQL_USER = generalProps.getAttribute("mysql_user");
-		MYSQL_PASS = generalProps.getAttribute("mysql_pass");
+		MYSQL_USER = serverProps.getAttribute("mysql_user");
+		MYSQL_PASS = serverProps.getAttribute("mysql_pass");
 		MYSQL_DB = serverProps.getAttribute("mysql_db");
-		MYSQL_TABLE_PREFIX = generalProps.getAttribute("mysql_table_prefix");
-		MYSQL_HOST = generalProps.getAttribute("mysql_host");
+		MYSQL_TABLE_PREFIX = serverProps.getAttribute("mysql_table_prefix");
+		MYSQL_HOST = serverProps.getAttribute("mysql_host");
 		HMAC_PRIVATE_KEY = serverProps.getAttribute("HMAC_PRIVATE_KEY");
 		VIEW_DISTANCE = Integer.parseInt(serverProps.getAttribute("view_distance"));
 		AVATAR_GENERATOR = Boolean.parseBoolean(serverProps.getAttribute("avatar_generator"));
@@ -435,9 +435,9 @@ public class ServerConfiguration {
 		WANT_RUNECRAFTING = Boolean.parseBoolean(serverProps.getAttribute("want_runecrafting"));
 		WANT_HARVESTING = Boolean.parseBoolean(serverProps.getAttribute("want_harvesting"));
 		WANT_DISCORD_AUCTION_UPDATES = Boolean.parseBoolean(serverProps.getAttribute("want_discord_auction_updates"));
-		DISCORD_AUCTION_WEBHOOK_URL = generalProps.getAttribute("discord_auction_webhook_url");
+		DISCORD_AUCTION_WEBHOOK_URL = serverProps.getAttribute("discord_auction_webhook_url");
 		WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(serverProps.getAttribute("want_discord_monitoring_updates"));
-		DISCORD_MONITORING_WEBHOOK_URL = generalProps.getAttribute("discord_monitoring_webhook_url");
+		DISCORD_MONITORING_WEBHOOK_URL = serverProps.getAttribute("discord_monitoring_webhook_url");
 		WANT_DISCORD_BOT = Boolean.parseBoolean(serverProps.getAttribute("want_discord_bot"));
 		CROSS_CHAT_CHANNEL = Long.parseLong(serverProps.getAttribute("cross_chat_channel"));
 		WANT_EQUIPMENT_TAB = Boolean.parseBoolean(serverProps.getAttribute("want_equipment_tab"));
@@ -507,9 +507,7 @@ public class ServerConfiguration {
 		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = Integer.parseInt(serverProps.getAttribute("max_password_guesses_per_five_minutes"));
 		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(serverProps.getAttribute("network_flood_ip_ban_minutes"));
 		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = Integer.parseInt(serverProps.getAttribute("suspicious_player_ip_ban_minutes"));
-
 		String wantPasswordMassage = serverProps.getAttribute("want_password_massage");
-		WANT_PASSWORD_MASSAGE = wantPasswordMassage != null ? Boolean.parseBoolean(serverProps.getAttribute("want_password_massage")) : WANT_PASSWORD_MASSAGE;
 
 		// Make sure config doesn't exceed max values
 		if (VIEW_DISTANCE > 4)
