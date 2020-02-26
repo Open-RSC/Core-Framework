@@ -100,7 +100,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	//Item and Container operations
 	protected abstract void queryItemCreate(Item item) throws GameDatabaseException;
 	protected abstract void queryItemDestroy() throws GameDatabaseException;
-	protected abstract void queryItemUpdate() throws GameDatabaseException;
+	protected abstract void queryItemUpdate(Item item) throws GameDatabaseException;
 	protected abstract void queryInventoryAdd(int playerId, Item item) throws GameDatabaseException;
 	protected abstract void queryInventoryRemove(int playerId, Item item) throws GameDatabaseException;
 	protected abstract void queryEquipmentAdd(int playerId, Item item) throws GameDatabaseException;
@@ -256,8 +256,12 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		return queryNpcDrops();
 	}
 
-	public void itemUpdate(final Item item) throws GameDatabaseException {
+	public void itemCreate(final Item item) throws GameDatabaseException {
+		queryItemCreate(item);
+	}
 
+	public void itemUpdate(final Item item) throws GameDatabaseException {
+		queryItemUpdate(item);
 	}
 
 	public void inventoryAddToPlayer(final Player player, final Item item) throws GameDatabaseException {

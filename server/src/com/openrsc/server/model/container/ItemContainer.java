@@ -31,13 +31,13 @@ public class ItemContainer {
 				for (int index = 0; index < list.size(); index++) {
 					Item existingStack = list.get(index);
 					if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-						existingStack.setAmount(existingStack.getAmount() + item.getAmount());
+						existingStack.getItemStatus().setAmount(existingStack.getAmount() + item.getAmount());
 						fireItemChanged(index);
 						return;
 					}
 				}
 			} else if (item.getAmount() > 1 && !item.getDef(player.getWorld()).isStackable()) {
-				item.setAmount(1);
+				item.getItemStatus().setAmount(1);
 			}
 
 			list.add(item);
@@ -171,7 +171,7 @@ public class ItemContainer {
 				Item i = iterator.next();
 				if (id == i.getCatalogId() && amount <= i.getAmount()) {
 					if (amount < i.getAmount()) {
-						i.setAmount(i.getAmount() - amount);
+						i.getItemStatus().setAmount(i.getAmount() - amount);
 					} else {
 						iterator.remove();
 					}

@@ -1084,27 +1084,31 @@ public class Npc extends Mob {
 	}
 
 	public static boolean handleRingOfAvarice(final Player p, final Item item) {
-		int slot = -1;
-		if (p.getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
-			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
-			if (itemDef != null && itemDef.isStackable()) {
-				if (p.getInventory().hasInInventory(item.getCatalogId())) {
-					p.getInventory().add(item);
-					return true;
-				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
-					Item equipped = p.getEquipment().get(slot);
-					equipped.changeAmount(item.getAmount());
-					return true;
-				} else {
-					if (p.getInventory().getFreeSlots() > 0) {
+		try {
+			int slot = -1;
+			if (p.getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
+				ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
+				if (itemDef != null && itemDef.isStackable()) {
+					if (p.getInventory().hasInInventory(item.getCatalogId())) {
 						p.getInventory().add(item);
 						return true;
+					} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+						Item equipped = p.getEquipment().get(slot);
+						equipped.changeAmount(p.getWorld().getServer().getDatabase(), item.getAmount());
+						return true;
 					} else {
-						p.message("Your ring of Avarice tried to activate, but your inventory was full.");
-						return false;
+						if (p.getInventory().getFreeSlots() > 0) {
+							p.getInventory().add(item);
+							return true;
+						} else {
+							p.message("Your ring of Avarice tried to activate, but your inventory was full.");
+							return false;
+						}
 					}
 				}
 			}
+		} catch (GameDatabaseException ex) {
+			LOGGER.error(ex.getMessage());
 		}
 		return false;
 	}

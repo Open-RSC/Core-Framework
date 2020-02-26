@@ -1109,22 +1109,6 @@ public final class Player extends Mob {
 		return lastPing;
 	}
 
-	public int getMagicPoints() {
-		int points = 1;
-		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			points = getEquipment().getMagic();
-		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getMagicBonus();
-					}
-				}
-			}
-		}
-		return Math.max(points, 1);
-	}
-
 	public Menu getMenu() {
 		return menu;
 	}
@@ -1175,23 +1159,6 @@ public final class Player extends Mob {
 
 	public String getPassword() {
 		return password;
-	}
-
-	public int getPrayerPoints() {
-		int points = 1;
-		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			points = getEquipment().getPrayer();
-		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getPrayerBonus();
-					}
-				}
-			}
-		}
-
-		return Math.max(points, 1);
 	}
 
 	public int getQuestPoints() {
@@ -1413,56 +1380,30 @@ public final class Player extends Mob {
 
 	@Override
 	public int getArmourPoints() {
-		int points = 1;
-		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getArmourBonus();
-					}
-				}
-			}
-		} else {
-			points = getEquipment().getArmour();
-		}
-
-		return Math.max(points, 1);
+		//Currently the only thing that affects armour is the equipment
+		return Math.max(getEquipment().getArmour(), 1);
 	}
 
 	@Override
 	public int getWeaponAimPoints() {
-		int points = 1;
-		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getWeaponAimBonus();
-					}
-				}
-			}
-		} else {
-			points = this.getEquipment().getWeaponAim();
-		}
-
-
-		return Math.max(points, 1);
+		//Currently the only thing that affects weapon aim is the equipment
+		return Math.max(getEquipment().getWeaponAim(), 1);
 	}
 
 	@Override
 	public int getWeaponPowerPoints() {
-		int points = 1;
-		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getWeaponPowerBonus();
-					}
-				}
-			}
-		} else {
-			points = this.getEquipment().getWeaponPower();
-		}
-		return Math.max(points, 1);
+		//Currently the only thing that affects weapon power is the equipment
+		return Math.max(getEquipment().getWeaponPower(), 1);
+	}
+
+	public int getPrayerPoints() {
+		//Currently the only thing that affects prayer is the equipment
+		return Math.max(getEquipment().getPrayer(), 1);
+	}
+
+	public int getMagicPoints() {
+		//Currently the only thing that affects prayer is the equipment
+		return Math.max(getEquipment().getMagic(), 1);
 	}
 
 	public int[] getWornItems() {

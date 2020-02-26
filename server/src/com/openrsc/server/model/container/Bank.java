@@ -1,6 +1,7 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
@@ -51,22 +52,27 @@ public class Bank {
 
 	public int add(Item item) {
 		synchronized(list) {
-			if (item.getAmount() <= 0) {
-				return -1;
-			}
-			for (int index = 0; index < list.size(); index++) {
-				Item existingStack = list.get(index);
-				if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-					long newAmount = Long.sum(existingStack.getAmount(), item.getAmount());
-					if (newAmount - Integer.MAX_VALUE >= 0) {
-						existingStack.setAmount(Integer.MAX_VALUE);
-						long newStackAmount = newAmount - Integer.MAX_VALUE;
-						item.setAmount((int) newStackAmount);
-					} else {
-						existingStack.setAmount((int) newAmount);
-						return index;
+			try {
+				if (item.getAmount() <= 0) {
+					return -1;
+				}
+				for (int index = 0; index < list.size(); index++) {
+					Item existingStack = list.get(index);
+					if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
+						long newAmount = Long.sum(existingStack.getAmount(), item.getAmount());
+						if (newAmount - Integer.MAX_VALUE >= 0) {
+							existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
+							long newStackAmount = newAmount - Integer.MAX_VALUE;
+							item.setAmount(player.getWorld().getServer().getDatabase(),(int) newStackAmount);
+						} else {
+							existingStack.setAmount(player.getWorld().getServer().getDatabase(),(int) newAmount);
+							return index;
+						}
 					}
 				}
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+				return -1;
 			}
 			list.add(item);
 			return list.size() - 2;
@@ -204,17 +210,22 @@ public class Bank {
 
 	public int remove(int id, int amount) {
 		synchronized(list) {
-			Iterator<Item> iterator = list.iterator();
-			for (int index = 0; iterator.hasNext(); index++) {
-				Item i = iterator.next();
-				if (id == i.getCatalogId() && amount <= i.getAmount()) {
-					if (amount < i.getAmount()) {
-						i.setAmount(i.getAmount() - amount);
-					} else {
-						iterator.remove();
+			try {
+				Iterator<Item> iterator = list.iterator();
+				for (int index = 0; iterator.hasNext(); index++) {
+					Item i = iterator.next();
+					if (id == i.getCatalogId() && amount <= i.getAmount()) {
+						if (amount < i.getAmount()) {
+							i.setAmount(player.getWorld().getServer().getDatabase(),i.getAmount() - amount);
+						} else {
+							//need a bank remove query here
+							iterator.remove();
+						}
+						return index;
 					}
-					return index;
 				}
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
 			}
 			return -1;
 		}
@@ -463,42 +474,42 @@ public class Bank {
 	}
 
 	public void loadPreset(int slot, byte[] inventoryItems, byte[] equipmentItems) {
-		ByteBuffer blobData = ByteBuffer.wrap(inventoryItems);
-		byte[] itemID = new byte[2];
-		for (int i = 0; i < Inventory.MAX_SIZE; i++) {
-			itemID[0] = blobData.get();
-			if (itemID[0] == -1)
-				continue;
-			itemID[1] = blobData.get();
-			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
-			if (item == null)
-				continue;
-
-			presets[slot].inventory[i].setCatalogId(itemIDreal);
-			if (item.isStackable())
-				presets[slot].inventory[i].setAmount(blobData.getInt());
-			else
-				presets[slot].inventory[i].setAmount(1);
-		}
-
-		blobData = ByteBuffer.wrap(equipmentItems);
-		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-			itemID[0] = blobData.get();
-			if (itemID[0] == -1)
-				continue;
-			itemID[1] = blobData.get();
-			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
-			if (item == null)
-				continue;
-
-			presets[slot].equipment[i].setCatalogId(itemIDreal);
-			if (item.isStackable())
-				presets[slot].equipment[i].setAmount(blobData.getInt());
-			else
-				presets[slot].equipment[i].setAmount(1);
-		}
+//		ByteBuffer blobData = ByteBuffer.wrap(inventoryItems);
+//		byte[] itemID = new byte[2];
+//		for (int i = 0; i < Inventory.MAX_SIZE; i++) {
+//			itemID[0] = blobData.get();
+//			if (itemID[0] == -1)
+//				continue;
+//			itemID[1] = blobData.get();
+//			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+//			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+//			if (item == null)
+//				continue;
+//
+//			presets[slot].inventory[i].setCatalogId(itemIDreal);
+//			if (item.isStackable())
+//				presets[slot].inventory[i].setAmount(blobData.getInt());
+//			else
+//				presets[slot].inventory[i].setAmount(1);
+//		}
+//
+//		blobData = ByteBuffer.wrap(equipmentItems);
+//		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+//			itemID[0] = blobData.get();
+//			if (itemID[0] == -1)
+//				continue;
+//			itemID[1] = blobData.get();
+//			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+//			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+//			if (item == null)
+//				continue;
+//
+//			presets[slot].equipment[i].setCatalogId(itemIDreal);
+//			if (item.isStackable())
+//				presets[slot].equipment[i].setAmount(blobData.getInt());
+//			else
+//				presets[slot].equipment[i].setAmount(1);
+//		}
 	}
 
 	public boolean isEmptyPreset(int slot) {
@@ -613,7 +624,7 @@ public class Bank {
 						}
 					}
 
-					getPlayer().getInventory().getList().clear();
+					getPlayer().getInventory().getItems().clear();
 					//Attempt to load the preset inventory
 					for (int i = 0; i < presets[slot].inventory.length; i++) {
 						Item presetInventory = presets[slot].inventory[i];

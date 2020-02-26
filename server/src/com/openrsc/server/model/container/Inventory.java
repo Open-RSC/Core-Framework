@@ -22,24 +22,28 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 
 public class Inventory {
+	//Class members--------------------------------------------------
 	/**
 	 * The asynchronous logger
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	/**
-	 * The maximum size of an inventory
+	 * The number of inventory slots per player
 	 */
 	public static final int MAX_SIZE = 30;
 
 	// TODO: Use an ItemContainer rather than a list here.
+	/**
+	 * Holds all items in the logged-in users inventory
+	 */
 	private List<Item> list = Collections.synchronizedList(new ArrayList<>());
 
+	/**
+	 * Reference back to the player who owns this inventory
+	 */
 	private Player player;
-
-	public Inventory(Player player) {
-		this.player = player;
-	}
-
+	//----------------------------------------------------------------
+	//Constructors----------------------------------------------------
 	public Inventory(Player player, PlayerInventory[] inventory) {
 		try {
 			this.player = player;
@@ -59,10 +63,25 @@ public class Inventory {
 			}
 		} catch (Exception ex) { ex.printStackTrace(); }
 	}
+	//----------------------------------------------------------------
+	//Class member modifiers------------------------------------------
 
-	public Inventory() {
+	//----------------------------------------------------------------
+	//Class member retrievers-----------------------------------------
+	public List<Item> getItems() {
+		// TODO: This should be made private and all calls converted to use API on ItemContainer. This could stay public, IF we copy the list to a new list before returning.
+		synchronized (list) {
+			return list;
+		}
 	}
 
+	public ListIterator<Item> iterator() {
+		synchronized (list) {
+			return list.listIterator();
+		}
+	}
+	//----------------------------------------------------------------
+	//Methods that can change the contents of list--------------------
 	public void add(Item item) {
 		add(item, true);
 	}
@@ -90,16 +109,14 @@ public class Inventory {
 					for (int index = 0; index < list.size(); index++) {
 						Item existingStack = list.get(index);
 						if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-							existingStack.setAmount(existingStack.getAmount() + itemToAdd.getAmount());
+							existingStack.setAmount(player.getWorld().getServer().getDatabase(), existingStack.getAmount() + itemToAdd.getAmount());
 							if (sendInventory)
 								ActionSender.sendInventoryUpdateItem(player, index);
-							//Update the DB
-							player.getWorld().getServer().getDatabase().itemUpdate(existingStack);
 							return;
 						}
 					}
 				} else if (itemToAdd.getAmount() > 1 && (!itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getNoted())) {
-					itemToAdd.setAmount(1);
+					itemToAdd.setAmount(player.getWorld().getServer().getDatabase(),1);
 				}
 
 
@@ -126,150 +143,6 @@ public class Inventory {
 
 		}
 	}
-
-	public boolean canHold(Item item) {
-		synchronized (list) {
-			return (MAX_SIZE - list.size()) >= getRequiredSlots(item);
-		}
-	}
-
-	public boolean canHold(Item item, int addition) {
-		synchronized (list) {
-			return (MAX_SIZE - list.size() + addition) >= getRequiredSlots(item);
-		}
-	}
-
-	public int searchInventoryForItem(int id, boolean noted) {
-		synchronized (list) {
-			Item item;
-			for (int i = 0; i < size(); i++) {
-				item = list.get(i);
-				if (item != null && item.getCatalogId() == id && item.getItemStatus().getNoted() == noted)
-					return i;
-			}
-			return -1;
-		}
-	}
-
-	public boolean contains(Item i) {
-		//synchronized (list) {
-		//	return list.contains(i);
-		//}
-		return hasItemId(i.getCatalogId());
-	}
-
-	public int countId(long id) {
-		synchronized (list) {
-			int temp = 0;
-			for (Item i : list) {
-				if (i.getCatalogId() == id) {
-					temp += i.getAmount();
-				}
-			}
-			return temp;
-		}
-	}
-
-	public boolean full() {
-		synchronized (list) {
-			return list.size() >= MAX_SIZE;
-		}
-	}
-
-	public Item get(int index) {
-		synchronized (list) {
-			if (index < 0 || index >= list.size()) {
-				return null;
-			}
-			return list.get(index);
-		}
-	}
-
-	public Item get(Item item) {
-		synchronized (list) {
-			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).equals(item)) {
-					return list.get(index);
-				}
-			}
-		}
-		return null;
-	}
-
-	public int getFreedSlots(Item item) {
-		return (item.getDef(player.getWorld()).isStackable() && countId(item.getCatalogId()) > item.getAmount() ? 0 : 1);
-	}
-
-	public int getFreedSlots(List<Item> items) {
-		int freedSlots = 0;
-		for (Item item : items) {
-			freedSlots += getFreedSlots(item);
-		}
-		return freedSlots;
-	}
-
-	public List<Item> getItems() {
-		// TODO: This should be made private and all calls converted to use API on ItemContainer. This could stay public, IF we copy the list to a new list before returning.
-		synchronized (list) {
-			return list;
-		}
-	}
-
-	public int getLastIndexById(int id) {
-		synchronized (list) {
-			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).getCatalogId() == id) {
-					return index;
-				}
-			}
-		}
-		return -1;
-	}
-
-	public int getRequiredSlots(Item item) {
-		synchronized (list) {
-			return ((item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) && list.contains(item) ? 0 : 1);
-		}
-	}
-
-	public int getRequiredSlots(List<Item> items) {
-		int requiredSlots = 0;
-		for (Item item : items) {
-			requiredSlots += getRequiredSlots(item);
-		}
-		return requiredSlots;
-	}
-
-	public boolean hasInInventory(int id) {
-		synchronized (list) {
-			for (Item i : list) {
-				if (i.getCatalogId() == id)
-					return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean hasItemId(int id) {
-		synchronized (list) {
-			for (Item i : list) {
-				if (i.getCatalogId() == id)
-					return true;
-			}
-		}
-
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getEquipment().searchEquipmentForItem(id) != -1;
-		else
-			return false;
-	}
-
-	public ListIterator<Item> iterator() {
-		synchronized (list) {
-			return list.listIterator();
-		}
-	}
-
 	public void remove(int index) {
 		synchronized (list) {
 			Item item = get(index);
@@ -282,61 +155,52 @@ public class Inventory {
 
 	public int remove(int id, int amount, boolean sendInventory) {
 		synchronized (list) {
-			int size = list.size();
-			ListIterator<Item> iterator = list.listIterator(size);
+			try {
+				int size = list.size();
+				ListIterator<Item> iterator = list.listIterator(size);
 
-			for (int index = size - 1; iterator.hasPrevious(); index--) {
-				Item i = iterator.previous();
-				if (id == i.getCatalogId() && i != null) {
+				for (int index = size - 1; iterator.hasPrevious(); index--) {
+					Item i = iterator.previous();
+					if (id == i.getCatalogId() && i != null) {
 
-					/* Stack Items */
-					if (i.getDef(player.getWorld()).isStackable() && amount < i.getAmount()) {
-						// More than we need to remove, keep item in inventory.
-						i.setAmount(i.getAmount() - amount);
-						ActionSender.sendInventoryUpdateItem(player, index);
-						try {
-							player.getWorld().getServer().getDatabase().itemUpdate(i);
-						} catch (GameDatabaseException ex) {
-							LOGGER.error(ex.getMessage());
-						}
-					} else if (i.getDef(player.getWorld()).isStackable() && amount > i.getAmount()) {
-						// Not enough, do not remove.
-						return -1;
-					} else if (i.getDef(player.getWorld()).isStackable() && amount == i.getAmount()) {
-						// Exact amount, remove all.
-						if (i.isWielded()) {
-							player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
-						}
-						iterator.remove();
-						try {
-							player.getWorld().getServer().getDatabase().itemUpdate(i);
-						} catch (GameDatabaseException ex) {
-							LOGGER.error(ex.getMessage());
-						}
-						//ActionSender.sendRemoveItem(player, index);
-					}
-
-					/* Non-stack items */
-					else {
-						// Remove 1.
-						if (i.isWielded()) {
-							player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
-						}
-						iterator.remove();
-						try {
+						/* Stack Items */
+						if (i.getDef(player.getWorld()).isStackable() && amount < i.getAmount()) {
+							// More than we need to remove, keep item in inventory.
+							i.setAmount(player.getWorld().getServer().getDatabase(),i.getAmount() - amount);
+							ActionSender.sendInventoryUpdateItem(player, index);
+						} else if (i.getDef(player.getWorld()).isStackable() && amount > i.getAmount()) {
+							// Not enough, do not remove.
+							return -1;
+						} else if (i.getDef(player.getWorld()).isStackable() && amount == i.getAmount()) {
+							// Exact amount, remove all.
+							if (i.isWielded()) {
+								player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
+							}
+							iterator.remove();
 							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, i);
-						} catch (GameDatabaseException ex) {
-							LOGGER.error(ex.getMessage());
+							//ActionSender.sendRemoveItem(player, index);
 						}
-						//ActionSender.sendRemoveItem(player, index);
 
-						amount -= 1;
-						if (amount > 0)
-							return remove(id, amount, sendInventory);
+						/* Non-stack items */
+						else {
+							// Remove 1.
+							if (i.isWielded()) {
+								player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
+							}
+							iterator.remove();
+							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, i);
+							//ActionSender.sendRemoveItem(player, index);
+
+							amount -= 1;
+							if (amount > 0)
+								return remove(id, amount, sendInventory);
+						}
+						if (sendInventory) ActionSender.sendInventory(player);
+						return index;
 					}
-					if (sendInventory) ActionSender.sendInventory(player);
-					return index;
 				}
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
 			}
 		}
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
@@ -355,18 +219,6 @@ public class Inventory {
 
 	public int remove(Item item) {
 		return remove(item.getCatalogId(), item.getAmount(), true);
-	}
-
-	public int size() {
-		synchronized (list) {
-			return list.size();
-		}
-	}
-
-	public void sort() {
-		synchronized (list) {
-			Collections.sort(list);
-		}
 	}
 
 	public void replace(int i, int j) {
@@ -391,17 +243,11 @@ public class Inventory {
 			ActionSender.sendEquipmentStats(player);
 		} else {
 			if (remove(i, 1, false) != -1);
-				add(new Item(j), false);
+			add(new Item(j), false);
 			if (sendInventory)
 				ActionSender.sendInventory(player);
 		}
 	}
-
-
-	public int getFreeSlots() {
-		return MAX_SIZE - size();
-	}
-
 	public void swap(int slot, int to) {
 		if (slot <= 0 && to <= 0 && to == slot) {
 			return;
@@ -488,7 +334,6 @@ public class Inventory {
 			ActionSender.sendEquipmentStats(player, player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getWieldPosition());
 		}
 	}
-
 	public void dropOnDeath(Mob opponent) {
 		// temporary map to sort - ideally should be comparator for item
 		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
@@ -608,8 +453,152 @@ public class Inventory {
 		log.build();
 		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
-
-	public List getList() {
-		return list;
+	//----------------------------------------------------------------
+    //Methods that search the list------------------------------------
+	public Item get(int index) {
+		synchronized (list) {
+			if (index < 0 || index >= list.size()) {
+				return null;
+			}
+			return list.get(index);
+		}
 	}
+
+	public Item get(Item item) {
+		synchronized (list) {
+			for (int index = list.size() - 1; index >= 0; index--) {
+				if (list.get(index).equals(item)) {
+					return list.get(index);
+				}
+			}
+		}
+		return null;
+	}
+	public int searchInventoryForItem(int id, boolean noted) {
+		synchronized (list) {
+			Item item;
+			for (int i = 0; i < size(); i++) {
+				item = list.get(i);
+				if (item != null && item.getCatalogId() == id && item.getItemStatus().getNoted() == noted)
+					return i;
+			}
+			return -1;
+		}
+	}
+	public boolean contains(Item i) {
+		//synchronized (list) {
+		//	return list.contains(i);
+		//}
+		return hasItemId(i.getCatalogId());
+	}
+
+	public int countId(long id) {
+		synchronized (list) {
+			int temp = 0;
+			for (Item i : list) {
+				if (i.getCatalogId() == id) {
+					temp += i.getAmount();
+				}
+			}
+			return temp;
+		}
+	}
+
+	public int getLastIndexById(int id) {
+		synchronized (list) {
+			for (int index = list.size() - 1; index >= 0; index--) {
+				if (list.get(index).getCatalogId() == id) {
+					return index;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public boolean hasInInventory(int id) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getCatalogId() == id)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasItemId(int id) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getCatalogId() == id)
+					return true;
+			}
+		}
+
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+			return player.getEquipment().searchEquipmentForItem(id) != -1;
+		else
+			return false;
+	}
+	//----------------------------------------------------------------
+	//Methods that check the list-------------------------------------
+	public boolean canHold(Item item) {
+		synchronized (list) {
+			return (MAX_SIZE - list.size()) >= getRequiredSlots(item);
+		}
+	}
+
+	public boolean canHold(Item item, int addition) {
+		synchronized (list) {
+			return (MAX_SIZE - list.size() + addition) >= getRequiredSlots(item);
+		}
+	}
+
+	public boolean full() {
+		synchronized (list) {
+			return list.size() >= MAX_SIZE;
+		}
+	}
+
+	public int getFreedSlots(Item item) {
+		return (item.getDef(player.getWorld()).isStackable() && countId(item.getCatalogId()) > item.getAmount() ? 0 : 1);
+	}
+
+	public int getFreedSlots(List<Item> items) {
+		int freedSlots = 0;
+		for (Item item : items) {
+			freedSlots += getFreedSlots(item);
+		}
+		return freedSlots;
+	}
+
+	public int getRequiredSlots(Item item) {
+		synchronized (list) {
+			return ((item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) && list.contains(item) ? 0 : 1);
+		}
+	}
+
+	public int getRequiredSlots(List<Item> items) {
+		int requiredSlots = 0;
+		for (Item item : items) {
+			requiredSlots += getRequiredSlots(item);
+		}
+		return requiredSlots;
+	}
+
+	public int size() {
+		synchronized (list) {
+			return list.size();
+		}
+	}
+
+	public int getFreeSlots() {
+		return MAX_SIZE - size();
+	}
+	//----------------------------------------------------------------
+	//Various methods-------------------------------------------------
+	public void sort() {
+		synchronized (list) {
+			Collections.sort(list);
+		}
+	}
+	//----------------------------------------------------------------
 }

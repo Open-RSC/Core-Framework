@@ -15,52 +15,25 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public class Equipment {
-
-	public enum EquipmentSlot {
-		SLOT_LARGE_HELMET(0),
-		SLOT_PLATE_BODY(1),
-		SLOT_PLATE_LEGS(2),
-		SLOT_OFFHAND(3),
-		SLOT_MAINHAND(4),
-		SLOT_MEDIUM_HELMET(5),
-		SLOT_CHAIN_BODY(6),
-		SLOT_SKIRT(7),
-		SLOT_NECK(8),
-		SLOT_BOOTS(9),
-		SLOT_GLOVES(10),
-		SLOT_CAPE(11),
-		SLOT_AMMO(12),
-		SLOT_RING(13);
-		int index;
-
-		EquipmentSlot(int index) {
-			this.index = index;
-		}
-
-		public int getIndex() {
-			return this.index;
-		}
-
-		public static EquipmentSlot get(int index) {
-			for (EquipmentSlot slot : EquipmentSlot.values()) {
-				if (slot.getIndex() == index)
-					return slot;
-			}
-			return null;
-		}
-	}
-
-
+	//Class members-----------------------------------------------------
 	/**
 	 * The asynchronous logger
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	//Number of equipment slots the player has
+	/**
+	 * The number of equipment slots used for each player
+	 */
 	public static final int SLOT_COUNT = 14;
+	/**
+	 * Holds the currently equipped items of the logged in player
+	 */
 	private final Item[] list = new Item[SLOT_COUNT];
-	private Player player = null;
-
-
+	/**
+	 * Reference back the owner of the equipment
+	 */
+	private final Player player;
+	//------------------------------------------------------------------
+    //Constructors------------------------------------------------------
 	public Equipment(Player p) {
 		synchronized (list) {
 			this.player = p;
@@ -68,102 +41,17 @@ public class Equipment {
 				list[i] = null;
 		}
 	}
-
+	//------------------------------------------------------------------
+	//Class member modifiers--------------------------------------------
+	//------------------------------------------------------------------
+	//Class members retrievers------------------------------------------
 	public Item[] getList() {
-		return this.list;
-	}
-
-	public int getWeaponAim() {
 		synchronized (list) {
-			int total = 1;
-			for (Item item : list)
-				total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
-			return total;
+			return this.list;
 		}
 	}
-
-	public int getWeaponPower() {
-		synchronized (list) {
-			int total = 1;
-			for (Item item : list)
-				total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
-			return total;
-		}
-	}
-
-	public int getArmour() {
-		synchronized (list) {
-			int total = 1;
-			for (Item item : list)
-				total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
-			return total;
-		}
-	}
-
-	public int getMagic() {
-		synchronized (list) {
-			int total = 1;
-			for (Item item : list)
-				total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
-			return total;
-		}
-	}
-
-	public int getPrayer() {
-		synchronized (list) {
-			int total = 1;
-			for (Item item : list)
-				total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();
-			return total;
-		}
-	}
-
-	public int equipCount() {
-		synchronized (list) {
-			int total = 0;
-			for (Item item : list) {
-				if (item != null)
-					total++;
-			}
-			return total;
-		}
-	}
-
-	public int searchEquipmentForItem(int id) {
-		synchronized (list) {
-			Item item;
-			for (int i = 0; i < SLOT_COUNT; i++) {
-				item = list[i];
-				if (item != null && item.getCatalogId() == id)
-					return i;
-			}
-			return -1;
-		}
-	}
-
-	public Item getAmmoItem() {
-		synchronized (list) {
-			return list[12];
-		}
-	}
-
-	public void clearList() {
-		synchronized (list) {
-			for (int i = 0; i < list.length; i++) {
-				list[i] = null;
-			}
-		}
-	}
-
-	public Item get(int index) {
-		synchronized (list) {
-			if (index < 0 || index >= SLOT_COUNT) {
-				return null;
-			}
-			return list[index];
-		}
-	}
-
+	//------------------------------------------------------------------
+    //Methods that can change the contents of the list------------------
 	/**
 	 * Adds an item to the equipment container. Updates the database instantly.
 	 */
@@ -186,8 +74,7 @@ public class Equipment {
 				} else {
 					if (itemDef.isStackable()
 						&& list[slot].getCatalogId() == item.getCatalogId()) {
-						list[slot].changeAmount(item.getAmount());
-						player.getWorld().getServer().getDatabase().itemUpdate(item);
+						list[slot].changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
 						return slot;
 					}
 				}
@@ -201,50 +88,44 @@ public class Equipment {
 	 */
 	public int remove(int id, int amount) {
 		synchronized (list) {
-			for (int i = 0; i < SLOT_COUNT; i++) {
-				int actionTaken = -1;
-				//-1: no action
-				// 0: update quantity
-				// 1: remove item
-				Item curEquip = list[i];
-				if (curEquip == null || curEquip.getDef(player.getWorld()) == null)
-					continue;
-				ItemDefinition curEquipDef = curEquip.getDef(player.getWorld());
+			try {
+				for (int i = 0; i < SLOT_COUNT; i++) {
+					Item curEquip = list[i];
+					if (curEquip == null || curEquip.getDef(player.getWorld()) == null)
+						continue;
+					ItemDefinition curEquipDef = curEquip.getDef(player.getWorld());
 
-				if (curEquip.getCatalogId() == id) {
-					int curAmount = curEquip.getAmount();
-					if (!curEquipDef.isStackable() && amount > 1)
-						return -1;
+					if (curEquip.getCatalogId() == id) {
+						int curAmount = curEquip.getAmount();
+						if (!curEquipDef.isStackable() && amount > 1)
+							return -1;
 
-					if (curAmount > amount) {
-						list[i].changeAmount(-amount);
-						actionTaken = 0;
-					} else if (curAmount < amount) {
-						return -1;
-					} else {
-						actionTaken = 1;
-						list[i] = null;
-						player.updateWornItems(curEquipDef.getWieldPosition(),
-							player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
-					}
-					//Update the DB
-					try {
-						if (actionTaken == 0) {
-							player.getWorld().getServer().getDatabase().itemUpdate(list[i]);
-						} else if (actionTaken == 1) {
+						if (curAmount > amount) {
+							list[i].changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+						} else if (curAmount < amount) {
+							return -1;
+						} else {
+							list[i] = null;
+							player.updateWornItems(curEquipDef.getWieldPosition(),
+								player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
 							player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 						}
-					} catch (GameDatabaseException ex) {
-						LOGGER.error(ex.getMessage());
+						ActionSender.sendEquipmentStats(player);
+						return i;
 					}
-					ActionSender.sendEquipmentStats(player);
-					return i;
 				}
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
 			}
 			return -1;
 		}
 	}
 
+	/**
+	 * Attempts to unequip an item
+	 * @param request
+	 * @return
+	 */
 	public boolean unequipItem(UnequipRequest request) {
 		if (request.item == null || !request.item.isWieldable(player.getWorld())) {
 			return false;
@@ -323,6 +204,11 @@ public class Equipment {
 		return true;
 	}
 
+	/**
+	 * Attempts to equip an item
+	 * @param request
+	 * @return
+	 */
 	public boolean equipItem(EquipRequest request) {
 
 		//Check that they are eligible to equip the item
@@ -360,6 +246,11 @@ public class Equipment {
 		return true;
 	}
 
+	/**
+	 * Private function used by the above function, equipItem.
+	 * @param request
+	 * @return
+	 */
 	private boolean equipItemFromInventory(EquipRequest request) {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
 			synchronized (list) {
@@ -387,6 +278,11 @@ public class Equipment {
 		return true;
 	}
 
+	/**
+	 * Private function used by the above function, equipItem
+	 * @param request
+	 * @return
+	 */
 	private boolean equipItemFromBank(EquipRequest request) {
 		if (!request.player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			request.player.setSuspiciousPlayer(true, "Tried to equip from bank on a world without equipment tab");
@@ -395,9 +291,9 @@ public class Equipment {
 
 		synchronized (list) {
 
-		ItemDefinition itemDef = request.item.getDef(player.getWorld());
-		if (itemDef == null)
-			return false;
+			ItemDefinition itemDef = request.item.getDef(player.getWorld());
+			if (itemDef == null)
+				return false;
 
 			synchronized (player.getBank().getItems()) {
 				//Attempt to remove the item from their bank
@@ -419,6 +315,11 @@ public class Equipment {
 		return true;
 	}
 
+	/**
+	 * Removes equipment that conflicts with an equipItem request
+	 * @param request
+	 * @return
+	 */
 	private boolean unequipConflictingItems(EquipRequest request) {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
 			synchronized (list) {
@@ -476,6 +377,148 @@ public class Equipment {
 		}
 
 		return true;
+	}
+	//------------------------------------------------------------------
+    //Methods that report equipment statistics--------------------------
+	public int getWeaponAim() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
+			}
+		} else {
+			synchronized(player.getInventory().getItems()) {
+				for (Item item : player.getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getWeaponAimBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	public int getWeaponPower() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
+			}
+		} else {
+			synchronized(player.getInventory().getItems()) {
+				for (Item item : player.getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getWeaponPowerBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	public int getArmour() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
+			}
+		} else {
+			synchronized(player.getInventory().getItems()) {
+				for (Item item : player.getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getArmourBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	public int getMagic() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
+			}
+		} else {
+			synchronized(player.getInventory().getItems()) {
+				for (Item item : player.getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getMagicBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	public int getPrayer() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();
+			}
+		} else {
+			synchronized(player.getInventory().getItems()) {
+				for (Item item : player.getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getPrayerBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+	//------------------------------------------------------------------
+	public int equipCount() {
+		synchronized (list) {
+			int total = 0;
+			for (Item item : list) {
+				if (item != null)
+					total++;
+			}
+			return total;
+		}
+	}
+
+	public int searchEquipmentForItem(int id) {
+		synchronized (list) {
+			Item item;
+			for (int i = 0; i < SLOT_COUNT; i++) {
+				item = list[i];
+				if (item != null && item.getCatalogId() == id)
+					return i;
+			}
+			return -1;
+		}
+	}
+
+	public Item getAmmoItem() {
+		synchronized (list) {
+			return list[12];
+		}
+	}
+
+	public void clearList() {
+		synchronized (list) {
+			for (int i = 0; i < list.length; i++) {
+				list[i] = null;
+			}
+		}
+	}
+
+	public Item get(int index) {
+		synchronized (list) {
+			if (index < 0 || index >= SLOT_COUNT) {
+				return null;
+			}
+			return list[index];
+		}
 	}
 
 	public boolean hasEquipped(int id) {
@@ -620,5 +663,42 @@ public class Equipment {
 			return false;
 
 		return true;
+	}
+
+	/**
+	 * Enumerated list that names the equipment slots
+	 */
+	public enum EquipmentSlot {
+		SLOT_LARGE_HELMET(0),
+		SLOT_PLATE_BODY(1),
+		SLOT_PLATE_LEGS(2),
+		SLOT_OFFHAND(3),
+		SLOT_MAINHAND(4),
+		SLOT_MEDIUM_HELMET(5),
+		SLOT_CHAIN_BODY(6),
+		SLOT_SKIRT(7),
+		SLOT_NECK(8),
+		SLOT_BOOTS(9),
+		SLOT_GLOVES(10),
+		SLOT_CAPE(11),
+		SLOT_AMMO(12),
+		SLOT_RING(13);
+		int index;
+
+		EquipmentSlot(int index) {
+			this.index = index;
+		}
+
+		public int getIndex() {
+			return this.index;
+		}
+
+		public static EquipmentSlot get(int index) {
+			for (EquipmentSlot slot : EquipmentSlot.values()) {
+				if (slot.getIndex() == index)
+					return slot;
+			}
+			return null;
+		}
 	}
 }

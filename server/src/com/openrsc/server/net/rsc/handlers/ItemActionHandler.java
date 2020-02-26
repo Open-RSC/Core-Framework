@@ -4,8 +4,15 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ItemActionHandler implements PacketHandler {
+
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public void handlePacket(Packet p, Player player) throws Exception {
 
@@ -43,7 +50,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		item.setAmount(amount);
+		item.setAmount(player.getWorld().getServer().getDatabase(), amount);
 
 		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");

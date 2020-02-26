@@ -896,12 +896,13 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerSkills(int playerId, PlayerSkills[] currSkillLevels) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateStats);
-			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerId);
-			for (PlayerSkills skill : currSkillLevels) {
-				statement.setInt(skill.skillId + 1, skill.skillCurLevel);
+			try (statement) {
+				statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerId);
+				for (PlayerSkills skill : currSkillLevels) {
+					statement.setInt(skill.skillId + 1, skill.skillCurLevel);
+				}
+				statement.executeUpdate();
 			}
-			try {statement.executeUpdate();}
-			finally {statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -912,12 +913,13 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateExperience);
-			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerId);
-			for (PlayerExperience exp : experience) {
-				statement.setInt(exp.skillId + 1, exp.experience);
+			try (statement) {
+				statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerId);
+				for (PlayerExperience exp : experience) {
+					statement.setInt(exp.skillId + 1, exp.experience);
+				}
+				statement.executeUpdate();
 			}
-			try {statement.executeUpdate();}
-			finally {statement.close();}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -927,15 +929,13 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryItemCreate(Item item) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemCreate);
-			statement.setInt(1, item.getItemId());
-			statement.setInt(2, item.getCatalogId());
-			statement.setInt(3, item.getItemStatus().getAmount());
-			statement.setInt(4, item.getItemStatus().getNoted() ? 1 : 0);
-			statement.setInt(5, item.getItemStatus().getDurability());
-			try {
+			try (statement) {
+				statement.setInt(1, item.getItemId());
+				statement.setInt(2, item.getCatalogId());
+				statement.setInt(3, item.getItemStatus().getAmount());
+				statement.setInt(4, item.getItemStatus().getNoted() ? 1 : 0);
+				statement.setInt(5, item.getItemStatus().getDurability());
 				statement.executeUpdate();
-			} finally {
-				statement.close();
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -946,27 +946,42 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryItemDestroy() throws GameDatabaseException {
 
 	}
-	@Override
-	protected void queryItemUpdate() throws GameDatabaseException {
 
+	@Override
+	protected void queryItemUpdate(final Item item) throws GameDatabaseException {
+		try {
+			if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+				throw new GameDatabaseException(this, "An unassigned item attempted to be updated: " + item.getCatalogId());
+			}
+
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemUpdate);
+			try (statement) {
+				statement.setInt(1, item.getAmount());
+				statement.setInt(2, item.getNoted() ? 1 : 0);
+				statement.setInt(3, item.getItemStatus().getDurability());
+				statement.setInt(4, item.getItemId());
+				statement.executeUpdate();
+			}
+		} catch (SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
 	}
+
 	@Override
 	protected void queryInventoryAdd(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
 				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
 					assignItemID(item);
-					queryItemCreate(item);
 				}
 				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryAdd);
-				statement.setInt(1, playerId);
-				statement.setInt(2, item.getItemId());
-				statement.setInt(3, item.isWielded() ? 1 : 0);
-				statement.setInt(4, 0);
-				try {
+				try (statement) {
+					statement.setInt(1, playerId);
+					statement.setInt(2, item.getItemId());
+					statement.setInt(3, item.isWielded() ? 1 : 0);
+					statement.setInt(4, 0);
 					statement.executeUpdate();
-				} finally {
-					statement.close();
 				}
 			} catch (SQLException ex) {
 				// Convert SQLException to a general usage exception
@@ -982,12 +997,10 @@ public class MySqlGameDatabase extends GameDatabase {
 					return;
 
 				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryRemove);
-				statement.setInt(1, playerId);
-				statement.setInt(2, item.getItemId());
-				try {
+				try (statement) {
+					statement.setInt(1, playerId);
+					statement.setInt(2, item.getItemId());
 					statement.executeUpdate();
-				} finally {
-					statement.close();
 				}
 			} catch (SQLException ex) {
 				// Convert SQLException to a general usage exception
@@ -1001,15 +1014,12 @@ public class MySqlGameDatabase extends GameDatabase {
 			try {
 				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
 					assignItemID(item);
-					queryItemCreate(item);
 				}
 				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentAdd);
-				statement.setInt(1, playerId);
-				statement.setInt(2, item.getItemId());
-				try {
+				try (statement) {
+					statement.setInt(1, playerId);
+					statement.setInt(2, item.getItemId());
 					statement.executeUpdate();
-				} finally {
-					statement.close();
 				}
 			} catch (SQLException ex) {
 				// Convert SQLException to a general usage exception
@@ -1026,12 +1036,10 @@ public class MySqlGameDatabase extends GameDatabase {
 					return;
 
 				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentRemove);
-				statement.setInt(1, playerId);
-				statement.setInt(2, item.getItemId());
-				try {
+				try (statement) {
+					statement.setInt(1, playerId);
+					statement.setInt(2, item.getItemId());
 					statement.executeUpdate();
-				} finally {
-					statement.close();
 				}
 			} catch (SQLException ex) {
 				// Convert SQLException to a general usage exception
@@ -1046,16 +1054,13 @@ public class MySqlGameDatabase extends GameDatabase {
 			try {
 				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
 					assignItemID(item);
-					queryItemCreate(item);
 				}
 				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankAdd);
-				statement.setInt(1, playerId);
-				statement.setInt(2, item.getItemId());
-				statement.setInt(3, 0);
-				try {
+				try (statement) {
+					statement.setInt(1, playerId);
+					statement.setInt(2, item.getItemId());
+					statement.setInt(3, 0);
 					statement.executeUpdate();
-				} finally {
-
 				}
 			} catch (SQLException ex) {
 				// Convert SQLException to a general usage exception
@@ -1497,10 +1502,10 @@ public class MySqlGameDatabase extends GameDatabase {
 		return this.itemIDList;
 	}
 
-	public int assignItemID(Item item) {
+	public int assignItemID(Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			if (itemIDList.isEmpty()) {
-				item.setItemId(0);
+				item.setItemId(this, 0);
 			} else {
 				int id = 0;
 				for (Integer itemID : itemIDList) {
@@ -1508,7 +1513,7 @@ public class MySqlGameDatabase extends GameDatabase {
 						break;
 					++id;
 				}
-				item.setItemId(id);
+				item.setItemId(this, id);
 			}
 			itemIDList.add(item.getItemId());
 			return item.getItemId();

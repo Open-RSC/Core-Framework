@@ -135,16 +135,8 @@ public class ThrowingEvent extends GameTickEvent {
 					rangeType = getPlayerOwner().getEquipment().get(slot);
 					if (rangeType == null)
 						return;
-					int newAmount = rangeType.getAmount() - 1;
-					if (newAmount <= 0) {
-						getPlayerOwner().updateWornItems(rangeType.getDef(getWorld()).getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef(getWorld()).getWieldPosition()));
-						getPlayerOwner().getEquipment().remove(rangeType.getCatalogId(), rangeType.getAmount());
-					} else
-						rangeType.setAmount(newAmount);
 
-					ActionSender.sendEquipmentStats(getPlayerOwner());
-
-
+					getPlayerOwner().getEquipment().remove(rangeType.getCatalogId(), 1);
 				} else {
 					slot = getPlayerOwner().getInventory().getLastIndexById(throwingID);
 					if (slot < 0) {
@@ -154,13 +146,7 @@ public class ThrowingEvent extends GameTickEvent {
 					if (rangeType == null) { // This shouldn't happen
 						return;
 					}
-					int newAmount = rangeType.getAmount() - 1;
-					if (newAmount <= 0) {
-						getPlayerOwner().getInventory().remove(slot);
-					} else {
-						rangeType.setAmount(newAmount);
-						ActionSender.sendInventory(getPlayerOwner());
-					}
+					getPlayerOwner().getInventory().remove(rangeType.getCatalogId(), 1, true);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {

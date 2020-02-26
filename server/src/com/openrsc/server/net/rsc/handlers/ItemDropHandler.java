@@ -1,15 +1,18 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class ItemDropHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) {
+	public void handlePacket(Packet p, Player player) throws Exception{
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
@@ -36,12 +39,13 @@ public final class ItemDropHandler implements PacketHandler {
 		} else {
 			tempitem = player.getInventory().get(idx);
 		}
-		final Item item = tempitem;
 
-		if (item == null) {
+		if (tempitem == null) {
 			player.setSuspiciousPlayer(true, "item drop null item");
 			return;
 		}
+		final Item item = tempitem.clone();
+
 		if (amount <= 0) {
 			return;
 		}
@@ -66,7 +70,8 @@ public final class ItemDropHandler implements PacketHandler {
 				if(!(item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted())) {
 					dropAmount = 1;
 				}
-				item.setAmount(dropAmount);
+
+				item.getItemStatus().setAmount(dropAmount);
 
 				if ((!player.getInventory().contains(item) && fromInventory)  || player.getStatus() != Action.DROPPING_GITEM) {
 					player.setStatus(Action.IDLE);

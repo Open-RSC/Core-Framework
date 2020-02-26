@@ -710,9 +710,9 @@ public class Crafting implements InvUseOnItemListener,
 								}
 							}
 							message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
-							resultClone.setAmount(amnt);
+							resultClone.getItemStatus().setAmount(amnt);
 							if (getOwner().getLocation().inBounds(418, 559, 421,563)) {
-								resultClone.setCatalogId(getOwner().getWorld().getServer().getEntityHandler().getItemDef(result.getCatalogId()).getNoteID());
+								resultClone.getItemStatus().setNoted(true);
 							}
 						}
 					}

@@ -3,6 +3,8 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
@@ -231,12 +233,7 @@ public class RangeEvent extends GameTickEvent {
 							}
 						}
 
-						if (newAmount <= 0) {
-							getPlayerOwner().getInventory().remove(slot);
-						} else {
-							arrow.setAmount(newAmount);
-							ActionSender.sendInventory(getPlayerOwner());
-						}
+						getPlayerOwner().getInventory().remove(arrow.getCatalogId(), 1, true);
 						break;
 					}
 				}

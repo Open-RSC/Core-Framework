@@ -1,5 +1,7 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.world.World;
 
@@ -30,7 +32,7 @@ public class Item implements Comparable<Item> {
 	 */
 	private int itemId;
 	//-------------------------------------------------------------------
-	//Class overrided methods--------------------------------------------
+	//Class overridden methods--------------------------------------------
 	@Override
 	public Item clone() {
 		Item retVal = new Item(getCatalogId(), getAmount(), getNoted());
@@ -53,7 +55,7 @@ public class Item implements Comparable<Item> {
 		return "Item(" + getCatalogId() + ", " + getAmount() + ", " + getNoted() + ")";
 	}
 	//-----------------------------------------------------------------
-	//Contructors------------------------------------------------------
+	//Constructors------------------------------------------------------
 	public Item(int catalogId) {
 		this(catalogId, 1, false);
 	}
@@ -68,33 +70,36 @@ public class Item implements Comparable<Item> {
 		itemStatus.setAmount(amount);
 		itemStatus.setNoted(noted);
 		itemStatus.setDurability(100);
-		this.setItemId(ITEM_ID_UNASSIGNED);
+		this.itemId = ITEM_ID_UNASSIGNED;
 	}
 
 	public Item(int itemId, ItemStatus itemStatus) {
-		setItemId(itemId);
-		setItemStatus(itemStatus);
+		this.itemId = itemId;
+		this.itemStatus = itemStatus;
 	}
 	//--------------------------------------------------------------
-	//Item Member Changers------------------------------------------
-	public final void setItemId(int itemId) {
+	//Class member modifiers----------------------------------------
+	public final void setItemId(GameDatabase database, int itemId) throws GameDatabaseException {
 		this.itemId = itemId;
+		database.itemCreate(this);
 	}
 
-	public final void setCatalogId(int newid) {
+	public void setAmount(GameDatabase database, int amount) throws GameDatabaseException{
+		this.itemStatus.setAmount(amount);
+		database.itemUpdate(this);
+
+	}
+
+	public void changeAmount(GameDatabase database, int delta) throws GameDatabaseException{
+		setAmount(database, getAmount() + delta);
+	}
+
+	public final void setCatalogId(GameDatabase database, int newid) {
 		itemStatus.setCatalogId(newid);
 	}
 
 	public final void setItemStatus(ItemStatus itemStatus) {
 		this.itemStatus = itemStatus;
-	}
-
-	public void setAmount(int amount) {
-		this.itemStatus.setAmount(amount);
-	}
-
-	public void changeAmount(int delta) {
-		this.itemStatus.setAmount(this.itemStatus.getAmount() + delta);
 	}
 
 	public void setNoted(boolean noted) {

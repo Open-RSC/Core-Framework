@@ -77,14 +77,14 @@ public final class Shop {
 
 				if (delemitor <= 0) { //its an original item
 					if (amount < items[i].getAmount()) { //add item
-						shopItem.setAmount(++amount);
+						shopItem.getItemStatus().setAmount(++amount);
 						updatePlayers = true;
 					} else if (amount > items[i].getAmount()) {
-						shopItem.setAmount(--amount);
+						shopItem.getItemStatus().setAmount(--amount);
 						updatePlayers = true;
 					}
 				} else { //its custom
-					shopItem.setAmount(--amount);
+					shopItem.getItemStatus().setAmount(--amount);
 
 					if (amount <= 0) {
 						shopItems.remove(i);
@@ -104,7 +104,7 @@ public final class Shop {
 		synchronized (shopItems) {
 			for (Item i : shopItems) {
 				if (i.getCatalogId() == item.getCatalogId()) {
-					i.setAmount(i.getAmount() + item.getAmount());
+					i.getItemStatus().setAmount(i.getAmount() + item.getAmount());
 					has = true;
 					break;
 				}
@@ -138,10 +138,10 @@ public final class Shop {
 						if (!original) {
 							shopItem.remove();
 						} else {
-							i.setAmount(0);
+							i.getItemStatus().setAmount(0);
 						}
 					} else {
-						i.setAmount(i.getAmount() - item.getAmount());
+						i.getItemStatus().setAmount(i.getAmount() - item.getAmount());
 					}
 				}
 			}
