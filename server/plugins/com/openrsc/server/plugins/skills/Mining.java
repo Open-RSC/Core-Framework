@@ -230,8 +230,7 @@ public final class Mining implements ObjectActionListener,
 							getOwner().playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 						} else {
 							//Successful mining attempt
-							if (getOwner() != null && getOwner() instanceof Player &&
-								SkillCapes.shouldActivate(getOwner(), ItemId.MINING_CAPE)) {
+							if (SkillCapes.shouldActivate(getOwner(), ItemId.MINING_CAPE)) {
 								showBubble(getOwner(), new Item(ItemId.MINING_CAPE.id(), 1));
 								addItem(getOwner(), ore.getID(), 1);
 								getOwner().playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(getWorld()).getName().toLowerCase());

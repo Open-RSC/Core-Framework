@@ -174,14 +174,10 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					if (getOwner().getInventory().remove(headlessArrows.getID(), 1) > -1
 						&& getOwner().getInventory().remove(arrowHeads.getID(), 1) > -1) {
 						//Successful make attempt
-						if (getOwner() != null && getOwner() instanceof Player &&
-							SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE)) {
-							getOwner().getInventory().add(new Item(headDef.getArrowID(), 2));
-							getOwner().incExp(Skills.FLETCHING, headDef.getExp() * 2, true);
-						} else {
-							getOwner().getInventory().add(new Item(headDef.getArrowID(), 1));
-							getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
-						}
+						int skillCapeMultiplier = SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE) ? 2 : 1;
+						getOwner().getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
+						getOwner().incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
+
 					} else {
 						interrupt();
 						return;
@@ -415,8 +411,10 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 					}
 					if (getOwner().getInventory().remove(bolt, 1) > -1
 						&& getOwner().getInventory().remove(tip, 1) > -1) {
-						getOwner().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), 1));
-						getOwner().incExp(Skills.FLETCHING, 25, true);
+						//Successful bolt make
+						int skillCapeMultiplier = SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE) ? 2 : 1;
+						getOwner().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
+						getOwner().incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
 					} else interrupt();
 				}
 			}

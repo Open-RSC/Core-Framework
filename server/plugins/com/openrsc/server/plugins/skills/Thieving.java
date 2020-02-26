@@ -377,8 +377,7 @@ public class Thieving extends Functions
 					return;
 				}
 				boolean succeededPickpocket = succeedThieving(getOwner(), pickpocket.getRequiredLevel());
-				if (getOwner() != null &&
-				SkillCapes.shouldActivate(getOwner(), THIEVING_CAPE, succeededPickpocket)) {
+				if (SkillCapes.shouldActivate(getOwner(), THIEVING_CAPE, succeededPickpocket)) {
 					succeededPickpocket = true;
 					showBubble(getOwner(), new Item(THIEVING_CAPE.id()));
 				}
