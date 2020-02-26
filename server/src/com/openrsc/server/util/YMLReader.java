@@ -73,21 +73,16 @@ public class YMLReader {
 
 			String[] elems = line.split(":");
 			switch (elems.length) {
-				case 1:
-					// Handles keys that have no attribute
-					LOGGER.info(fileName + ": Key " + elems[0] +
-						" has no attribute, using default.");
-					break;
 				case 2:
 					// Handle keys that have null for their attribute
-					if (elems[2] == "null") {
+					if (elems[1].equalsIgnoreCase("null")) {
 						LOGGER.info(fileName + ": Key \"" + elems[0] +
 							"\" has null value, using default.");
 					}
 					// Handle normal lines
 					else {
 						// Check if the key exists in the settings list
-						if (!(keyExists(elems[1]))) {
+						if (!(keyExists(elems[0]))) {
 							settings.add(new Setting(elems[0].trim(), elems[1].trim()));
 						}
 						else {

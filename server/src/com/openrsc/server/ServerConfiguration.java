@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+// Basically Rewritten By Ryan
 
 public class ServerConfiguration {
 
@@ -21,295 +24,175 @@ public class ServerConfiguration {
 	 */
 	public final String AVATAR_DIR = "avatars/"; //located with the Server folder
 
-	/**
-	 * RSC GAME TICK.
-	 */
 	public int GAME_TICK = 640;
-	/**
-	 * Walking tick
-	 */
 	public int WALKING_TICK = 640;
-	/**
-	 * the servers name
-	 */
-	public String SERVER_NAME = "Runescape";
-	public String SERVER_NAME_WELCOME = "Runescape Classic";
-	public String WELCOME_TEXT = "You need a members account to use this server";
-	/**
-	 * Server prefix for messages
-	 */
-	public String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
-	/**
-	 * Server prefix for invalid arguments
-	 */
-	public String BAD_SYNTAX_PREFIX = MESSAGE_PREFIX +" Invalid Syntax: ::";
-	/**
-	 * whether or not this is a members world
-	 */
-	public boolean MEMBER_WORLD = false;
-	/**
-	 * this worlds 'number'
-	 */
-	private int WORLD_NUMBER = 2;
-	/**
-	 * the client version needed for login
-	 */
-	public int CLIENT_VERSION = 6;
-	/**
-	 * the maximum allowed players to connect
-	 */
-	public int MAX_PLAYERS = 100;
-	/**
-	 * the maximum allowed players per IP to connect
-	 */
-	public int MAX_PLAYERS_PER_IP = 5;
-	/**
-	 * the port the server is hosted on
-	 */
-	int SERVER_PORT = 43594;
-	/**
-	 * idle timer to force a player logout for standing in the same spot
-	 *
-	 */
-	int IDLE_TIMER = 300000; // 5 minutes
-	/**
-	 * auto save interval
-	 */
-	int AUTO_SAVE = 30000; // 30 seconds
-	/**
-	 * where the server is hosted (i.e. USA, Holland, etc.)
-	 */
-	private String SERVER_LOCATION = "USA";
-	/**
-	 * The HMAC SHA512 + Salt private key.
-	 */
-	private String HMAC_PRIVATE_KEY = "";
-	/**
-	 * AutoRestart hour, minute - let 0, 0 = 0000h, 13, 22 = 1322h (1pm)
-	 */
-	public int RESTART_HOUR = 23;
-	public int RESTART_HOUR_2 = 11;
-	public int RESTART_MINUTE = 55;
-	public int RESTART_MINUTE_2 = 55;
-	/**
-	 * AutoRestart Delay in seconds, alert players
-	 */
-	public int RESTART_DELAY = 300;
-	public int RESTART_DELAY_2 = 300;
-	/**
-	 * Default tile range an aggressive NPC will attack a victim
-	 */
-	public int AGGRO_RANGE = 1;
-	/**
-	 * the mysql database host
-	 */
-	public String MYSQL_HOST = "localhost:3360";
-	/**
-	 * the mysql database name
-	 */
-	public String MYSQL_DB = "openrsc";
-	/**
-	 * the mysql username
-	 */
-	public String MYSQL_USER = "root";
-	/**
-	 * the mysql password
-	 */
-	public String MYSQL_PASS = "root";
-	/**
-	 * mysql prefix
-	 */
-	public String MYSQL_TABLE_PREFIX = "openrsc_";
-	/**
-	 * Player Skill Level Limit
-	 */
-	public int PLAYER_LEVEL_LIMIT = 99;
-	/**
-	 * the combat experience rate
-	 */
-	public double COMBAT_EXP_RATE = 1.0;
-	/**
-	 * the skilling experience rate
-	 */
-	public double SKILLING_EXP_RATE = 1.0;
-	/**
-	 * Wilderness extra boost multiplier (added to SKILLING_EXP_RATE)
-	 */
-	public double WILDERNESS_BOOST = 0;
-	/**
-	 * Skull extra boost multiplier (added to SKILLING_EXP_RATE)
-	 */
-	public double SKULL_BOOST = 0;
-	/**
-	 * Player view distance
-	 */
-	public int VIEW_DISTANCE = 2;
-	/**
-	 * Sprite used for client welcome screen logo
-	 */
-	public String LOGO_SPRITE_ID = "2010";
-	/**
-	 * NPC blocking
-	 * 0 = No NPC blocks
-	 * 1 = 2 * combat level + 1 blocks
-	 * 2 = Any aggressive NPC blocks
-	 * 3 = Any attackable NPC blocks
-	 * 4 = All NPCs block
-	 */
-	public int NPC_BLOCKING = 2;
-	/**
-	 * The maximum amount of connections allowed at any one time per IP
-	 */
-	public static int MAX_CONNECTIONS_PER_IP = 10;
-	/**
-	 * The maximum amount of connection attempts per second for each IP address
-	 */
-	public static int MAX_CONNECTIONS_PER_SECOND = 10;
-	/**
-	 * The maximum amount of packets per second for each IP address
-	 */
-	public static int MAX_PACKETS_PER_SECOND = 1000;
-	/**
-	 * The maximum amount of login attempts allowed per IP per second
-	 */
-	public static int MAX_LOGINS_PER_SECOND = 1;
-	/**
-	 * The maximum amount of password/recovery attempts allowed per IP per 5 minutes
-	 */
-	public static int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = 10;
-	/**
-	 * The amount of time in minutes that users who network flood the server will be IP banned for
-	 */
-	public static int NETWORK_FLOOD_IP_BAN_MINUTES = 20;
-	/**
-	 * The amount of time in minutes that users who are suspicious will be IP banned for
-	 */
-	private static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = 20;
-	/**
-	 * where the server will look for other configuration files
-	 */
-	public String CONFIG_DIR = "conf" + File.separator + "server";
-	private long START_TIME = 0L;
-	public boolean AVATAR_GENERATOR = false; // Not sent to client
-	public boolean IS_DOUBLE_EXP = false;
-	public boolean DISPLAY_LOGO_SPRITE = true;
-	public boolean SPAWN_AUCTION_NPCS = false;
-	public boolean SPAWN_IRON_MAN_NPCS = false;
-	public boolean WANT_PK_BOTS = false;
-	public boolean SHOW_FLOATING_NAMETAGS = false;
-	public boolean WANT_CLANS = false;
-	public boolean WANT_KILL_FEED = false;
-	public static boolean FOG_TOGGLE = false;
-	public boolean GROUND_ITEM_TOGGLE = false;
-	public boolean AUTO_MESSAGE_SWITCH_TOGGLE = false;
-	public boolean BATCH_PROGRESSION = false;
-	public boolean SIDE_MENU_TOGGLE = false;
-	public boolean INVENTORY_COUNT_TOGGLE = false;
-	public boolean ZOOM_VIEW_TOGGLE = false;
-	public boolean MENU_COMBAT_STYLE_TOGGLE = false;
-	public boolean FIGHTMODE_SELECTOR_TOGGLE = false;
-	public boolean EXPERIENCE_COUNTER_TOGGLE = false;
-	public boolean EXPERIENCE_DROPS_TOGGLE = false;
-	public boolean ITEMS_ON_DEATH_MENU = false;
-	public boolean SHOW_ROOF_TOGGLE = false;
-	public boolean WANT_HIDE_IP = false;
-	public boolean WANT_REMEMBER = false;
-	public boolean WANT_GLOBAL_CHAT = false;
-	public boolean WANT_GLOBAL_FRIEND = false;
-	public boolean WANT_SKILL_MENUS = false;
-	public boolean WANT_QUEST_MENUS = false;
-	public boolean WANT_EXPERIENCE_ELIXIRS = false;
-	public int WANT_KEYBOARD_SHORTCUTS = 0;
-	public boolean WANT_CUSTOM_BANKS = false;
-	public boolean WANT_BANK_PINS = false;
-	public boolean WANT_BANK_NOTES = false;
-	public boolean WANT_CERT_DEPOSIT = false;
-	public boolean CUSTOM_FIREMAKING = false;
-	public boolean WANT_DROP_X = false;
-	public boolean WANT_EXP_INFO = false;
-	public boolean WANT_WOODCUTTING_GUILD = false;
-	public boolean WANT_MISSING_GUILD_GREETINGS = false;
-	public boolean WANT_DECANTING = false;
-	public boolean WANT_CERTER_BANK_EXCHANGE = false;
-	public boolean MESSAGE_FULL_INVENTORY = false;
-	public boolean NPC_DONT_RETREAT = false;
-	public boolean NPC_KILL_LIST = false;
-	public boolean NPC_KILL_MESSAGES = false;
-	public boolean NPC_KILL_MESSAGES_FILTER = false;
-	public String NPC_KILL_MESSAGES_NPCs = "King Black Dragon,Black Dragon";
-	public boolean NPC_KILL_LOGGING = true;
-	public boolean VALUABLE_DROP_MESSAGES = false;
-	public double VALUABLE_DROP_RATIO = 0;
-	public boolean VALUABLE_DROP_EXTRAS = false;
-	private String VALUABLE_DROP_ITEMS = "Half of a key,Half Dragon Square Shield";
-	public boolean WANT_CUSTOM_RANK_DISPLAY = false;
-	public boolean RIGHT_CLICK_BANK = false;
-	// **** May be deprecated
-	public boolean FIX_OVERHEAD_CHAT = false;
-	public boolean WANT_FATIGUE = true;
-	public int STOP_SKILLING_FATIGUED = 1; //0 - No skills, 1 - Gathering, 2 - All non combat skills
-	public boolean WANT_CUSTOM_SPRITES = false;
-	public boolean WANT_CUSTOM_LANDSCAPE = false;
-	public boolean PLAYER_COMMANDS = false;
-	public boolean WANT_PETS = false;
-	public boolean AUTO_SERVER_RESTART = false;
-	public boolean AUTO_SERVER_RESTART_2 = false;
-	public int MAX_WALKING_SPEED = 1;
-	public boolean SHOW_UNIDENTIFIED_HERB_NAMES = false;
-	public boolean WANT_QUEST_STARTED_INDICATOR = false;
-	public boolean WANT_CUSTOM_QUESTS = false;
-	public boolean FISHING_SPOTS_DEPLETABLE = false;
-	public boolean IMPROVED_ITEM_OBJECT_NAMES = false;
-	public boolean CRYSTAL_KEY_GIVES_XP = false;
-	public boolean LOOTED_CHESTS_STUCK = false;
-	public boolean WANT_RUNECRAFTING = false;
-	public boolean WANT_HARVESTING = false;
-	public boolean WANT_DISCORD_AUCTION_UPDATES = false;
-	public String DISCORD_AUCTION_WEBHOOK_URL = "";
-	public boolean WANT_DISCORD_MONITORING_UPDATES = false;
-	public String DISCORD_MONITORING_WEBHOOK_URL = "";
-	public boolean WANT_DISCORD_BOT = false;
-	public long CROSS_CHAT_CHANNEL = 0;
-	public boolean WANT_EQUIPMENT_TAB = false;
-	public boolean WANT_BANK_PRESETS = false;
-	public boolean WANT_PARTIES = false;
-	public boolean MINING_ROCKS_EXTENDED = false;
-	public boolean WANT_NEW_RARE_DROP_TABLES = false;
-	public boolean WANT_LEFTCLICK_WEBS = false;
-	public boolean WANT_CUSTOM_WALK_SPEED = false;
-	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED = 0;
-	public boolean WANT_IMPROVED_PATHFINDING = false;
-	//strict check on level requirements for "glitched" validations on rsc
-	public boolean STRICT_CHECK_ALL = true;
-	public boolean STRICT_PDART_CHECK = true;
-	public boolean STRICT_PKNIFE_CHECK = true;
-	public boolean STRICT_PSPEAR_CHECK = true;
-	public int FPS = 50;
-	public boolean WANT_EMAIL = false;
-	public boolean WANT_REGISTRATION_LIMIT = false;
-	public boolean ALLOW_RESIZE = false;
-	public boolean LENIENT_CONTACT_DETAILS = false;
-	//loosened checks
-	public boolean LOOSE_SHALLOW_WATER_CHECK = false;
-	public int PACKET_LIMIT = 100;
-	private int CONNECTION_LIMIT = 10;
-	private int CONNECTION_TIMEOUT = 15;
-	//quest-minigame related
-	private boolean WANT_GIANNE_BADGE = false;
-	private boolean WANT_BLURBERRY_BADGE = false;
-	public boolean WANT_SHOW_KITTENS_CIVILLIAN = false;
-	public boolean WANT_BARTER_WORMBRAINS = false;
-	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = false;
-	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS = false;
-	public boolean CAN_USE_CRACKER_ON_SELF = false;
 
-	public final int RING_OF_RECOIL_LIMIT = 40;
-	public final int RING_OF_FORGING_USES = 75;
-	public final int DWARVEN_RING_USES = 29;
-	public final int DWARVEN_RING_BONUS = 3;
+	public String SERVER_NAME;
+	public String SERVER_NAME_WELCOME;
+	public String WELCOME_TEXT;
+	public String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
+	public String BAD_SYNTAX_PREFIX = MESSAGE_PREFIX +" Invalid Syntax: ::";
+	public boolean MEMBER_WORLD;
+	private int WORLD_NUMBER;
+	public int CLIENT_VERSION;
+	public int MAX_PLAYERS;
+	public int MAX_PLAYERS_PER_IP;
+	int SERVER_PORT;
+	int IDLE_TIMER;
+	int AUTO_SAVE;
+	private String SERVER_LOCATION;
+	private String HMAC_PRIVATE_KEY;
+	public int RESTART_HOUR;
+	public int RESTART_HOUR_2;
+	public int RESTART_MINUTE;
+	public int RESTART_MINUTE_2;
+	public int RESTART_DELAY;
+	public int RESTART_DELAY_2;
+	public int AGGRO_RANGE;
+	public String MYSQL_HOST;
+	public String MYSQL_DB;
+	public String MYSQL_USER;
+	public String MYSQL_PASS;
+	public String MYSQL_TABLE_PREFIX;
+	public int PLAYER_LEVEL_LIMIT;
+	public double COMBAT_EXP_RATE;
+	public double SKILLING_EXP_RATE;
+	public double WILDERNESS_BOOST;
+	public double SKULL_BOOST;
+	public int VIEW_DISTANCE;
+	public String LOGO_SPRITE_ID;
+	public int NPC_BLOCKING;
+	public static int MAX_CONNECTIONS_PER_IP;
+	public static int MAX_CONNECTIONS_PER_SECOND;
+	public static int MAX_PACKETS_PER_SECOND;
+	public static int MAX_LOGINS_PER_SECOND;
+	public static int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
+	public static int NETWORK_FLOOD_IP_BAN_MINUTES;
+	private static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES;
+
+	// Location of the server conf files.
+	public String CONFIG_DIR = "conf" + File.separator + "server";
+
+	private long START_TIME;
+	public boolean AVATAR_GENERATOR; // Not sent to client
+	public boolean IS_DOUBLE_EXP;
+	public boolean DISPLAY_LOGO_SPRITE;
+	public boolean SPAWN_AUCTION_NPCS;
+	public boolean SPAWN_IRON_MAN_NPCS;
+	public boolean WANT_PK_BOTS;
+	public boolean SHOW_FLOATING_NAMETAGS;
+	public boolean WANT_CLANS;
+	public boolean WANT_KILL_FEED;
+	public static boolean FOG_TOGGLE;
+	public boolean GROUND_ITEM_TOGGLE;
+	public boolean AUTO_MESSAGE_SWITCH_TOGGLE;
+	public boolean BATCH_PROGRESSION;
+	public boolean SIDE_MENU_TOGGLE;
+	public boolean INVENTORY_COUNT_TOGGLE;
+	public boolean ZOOM_VIEW_TOGGLE;
+	public boolean MENU_COMBAT_STYLE_TOGGLE;
+	public boolean FIGHTMODE_SELECTOR_TOGGLE;
+	public boolean EXPERIENCE_COUNTER_TOGGLE;
+	public boolean EXPERIENCE_DROPS_TOGGLE;
+	public boolean ITEMS_ON_DEATH_MENU;
+	public boolean SHOW_ROOF_TOGGLE;
+	public boolean WANT_HIDE_IP;
+	public boolean WANT_REMEMBER;
+	public boolean WANT_GLOBAL_CHAT;
+	public boolean WANT_GLOBAL_FRIEND;
+	public boolean WANT_SKILL_MENUS;
+	public boolean WANT_QUEST_MENUS;
+	public boolean WANT_EXPERIENCE_ELIXIRS;
+	public int WANT_KEYBOARD_SHORTCUTS;
+	public boolean WANT_CUSTOM_BANKS;
+	public boolean WANT_BANK_PINS;
+	public boolean WANT_BANK_NOTES;
+	public boolean WANT_CERT_DEPOSIT;
+	public boolean CUSTOM_FIREMAKING;
+	public boolean WANT_DROP_X;
+	public boolean WANT_EXP_INFO;
+	public boolean WANT_WOODCUTTING_GUILD;
+	public boolean WANT_MISSING_GUILD_GREETINGS;
+	public boolean WANT_DECANTING;
+	public boolean WANT_CERTER_BANK_EXCHANGE;
+	public boolean MESSAGE_FULL_INVENTORY;
+	public boolean NPC_DONT_RETREAT;
+	public boolean NPC_KILL_LIST;
+	public boolean NPC_KILL_MESSAGES;
+	public boolean NPC_KILL_MESSAGES_FILTER;
+	public String NPC_KILL_MESSAGES_NPCs;
+	public boolean NPC_KILL_LOGGING;
+	public boolean VALUABLE_DROP_MESSAGES;
+	public double VALUABLE_DROP_RATIO;
+	public boolean VALUABLE_DROP_EXTRAS;
+	private String VALUABLE_DROP_ITEMS;
+	public boolean WANT_CUSTOM_RANK_DISPLAY;
+	public boolean RIGHT_CLICK_BANK;
+	public boolean FIX_OVERHEAD_CHAT;
+	public boolean WANT_FATIGUE;
+	public int STOP_SKILLING_FATIGUED;
+	public boolean WANT_CUSTOM_SPRITES;
+	public boolean WANT_CUSTOM_LANDSCAPE;
+	public boolean PLAYER_COMMANDS;
+	public boolean WANT_PETS;
+	public boolean AUTO_SERVER_RESTART;
+	public boolean AUTO_SERVER_RESTART_2;
+	public int MAX_WALKING_SPEED;
+	public boolean SHOW_UNIDENTIFIED_HERB_NAMES;
+	public boolean WANT_QUEST_STARTED_INDICATOR;
+	public boolean WANT_CUSTOM_QUESTS;
+	public boolean FISHING_SPOTS_DEPLETABLE;
+	public boolean IMPROVED_ITEM_OBJECT_NAMES;
+	public boolean CRYSTAL_KEY_GIVES_XP;
+	public boolean LOOTED_CHESTS_STUCK;
+	public boolean WANT_RUNECRAFTING;
+	public boolean WANT_HARVESTING;
+	public boolean WANT_DISCORD_AUCTION_UPDATES;
+	public String DISCORD_AUCTION_WEBHOOK_URL;
+	public boolean WANT_DISCORD_MONITORING_UPDATES;
+	public String DISCORD_MONITORING_WEBHOOK_URL;
+	public boolean WANT_DISCORD_BOT;
+	public long CROSS_CHAT_CHANNEL;
+	public boolean WANT_EQUIPMENT_TAB;
+	public boolean WANT_BANK_PRESETS;
+	public boolean WANT_PARTIES;
+	public boolean MINING_ROCKS_EXTENDED;
+	public boolean WANT_NEW_RARE_DROP_TABLES;
+	public boolean WANT_LEFTCLICK_WEBS;
+	public boolean WANT_CUSTOM_WALK_SPEED;
+	public int MAX_TICKS_UNTIL_FULL_WALKING_SPEED;
+	public boolean WANT_IMPROVED_PATHFINDING;
+	//strict check on level requirements for "glitched" validations on rsc
+	public boolean STRICT_CHECK_ALL;
+	public boolean STRICT_PDART_CHECK;
+	public boolean STRICT_PKNIFE_CHECK;
+	public boolean STRICT_PSPEAR_CHECK;
+	public int FPS;
+	public boolean WANT_EMAIL;
+	public boolean WANT_REGISTRATION_LIMIT;
+	public boolean ALLOW_RESIZE;
+	public boolean LENIENT_CONTACT_DETAILS;
+	//loosened checks
+	public boolean LOOSE_SHALLOW_WATER_CHECK;
+	public int PACKET_LIMIT;
+	private int CONNECTION_LIMIT;
+	private int CONNECTION_TIMEOUT;
+	//quest-minigame related
+	private boolean WANT_GIANNE_BADGE;
+	private boolean WANT_BLURBERRY_BADGE;
+	public boolean WANT_SHOW_KITTENS_CIVILLIAN;
+	public boolean WANT_BARTER_WORMBRAINS;
+	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
+	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
+	public boolean CAN_USE_CRACKER_ON_SELF;
+
+	public int RING_OF_RECOIL_LIMIT;
+	public int RING_OF_FORGING_USES;
+	public int DWARVEN_RING_USES;
+	public int DWARVEN_RING_BONUS;
 	public List<String> valuableDrops;
-	public boolean WANT_CUSTOM_UI = false;
-	public int CHARACTER_CREATION_MODE = 0;
+	public boolean WANT_CUSTOM_UI;
+	public int CHARACTER_CREATION_MODE;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -342,179 +225,131 @@ public class ServerConfiguration {
 			LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
 		}
 
-		// Initialization confs
-		GAME_TICK = Integer.parseInt(serverProps.getAttribute("game_tick"));
-		WALKING_TICK = Integer.parseInt(serverProps.getAttribute("walking_tick"));
-		WANT_CUSTOM_WALK_SPEED = Boolean.parseBoolean(serverProps.getAttribute("want_custom_walking_speed"));
-		IDLE_TIMER = Integer.parseInt(serverProps.getAttribute("idle_timer"));
-		AUTO_SAVE = Integer.parseInt(serverProps.getAttribute("auto_save"));
-		CLIENT_VERSION = Integer.parseInt(serverProps.getAttribute("client_version"));
-		SERVER_PORT = Integer.parseInt(serverProps.getAttribute("server_port"));
-		SERVER_NAME = serverProps.getAttribute("server_name");
-		SERVER_NAME_WELCOME = serverProps.getAttribute("server_name_welcome");
-		WELCOME_TEXT = serverProps.getAttribute("welcome_text");
-		SERVER_LOCATION = serverProps.getAttribute("server_location");
-		MAX_PLAYERS = Integer.parseInt(serverProps.getAttribute("max_players"));
-		MAX_PLAYERS_PER_IP = Integer.parseInt(serverProps.getAttribute("max_players_per_ip"));
-		MYSQL_USER = serverProps.getAttribute("mysql_user");
-		MYSQL_PASS = serverProps.getAttribute("mysql_pass");
-		MYSQL_DB = serverProps.getAttribute("mysql_db");
-		MYSQL_TABLE_PREFIX = serverProps.getAttribute("mysql_table_prefix");
-		MYSQL_HOST = serverProps.getAttribute("mysql_host");
-		HMAC_PRIVATE_KEY = serverProps.getAttribute("HMAC_PRIVATE_KEY");
-		VIEW_DISTANCE = Integer.parseInt(serverProps.getAttribute("view_distance"));
-		AVATAR_GENERATOR = Boolean.parseBoolean(serverProps.getAttribute("avatar_generator"));
-		DISPLAY_LOGO_SPRITE = Boolean.parseBoolean(serverProps.getAttribute("display_logo_sprite"));
-		LOGO_SPRITE_ID = serverProps.getAttribute("logo_sprite_id");
-		FPS = Integer.parseInt(serverProps.getAttribute("client_fps"));
+		// Database settings
+		MYSQL_DB = tryReadString("mysql_db").orElse("openrsc");
+		MYSQL_HOST = tryReadString("mysql_host").orElse("localhost:3306");
+		MYSQL_USER = tryReadString("mysql_user").orElse("root");
+		MYSQL_PASS = tryReadString("mysql_pass").orElse("root");
+		MYSQL_TABLE_PREFIX = tryReadString("mysql_table_prefix").orElse("openrsc_");
 
-		// Game confs
-		WORLD_NUMBER = Integer.parseInt(serverProps.getAttribute("world_number"));
-		MEMBER_WORLD = Boolean.parseBoolean(serverProps.getAttribute("member_world"));
-		PLAYER_LEVEL_LIMIT = Integer.parseInt(serverProps.getAttribute("player_level_limit"));
-		COMBAT_EXP_RATE = Double.parseDouble(serverProps.getAttribute("combat_exp_rate"));
-		SKILLING_EXP_RATE = Double.parseDouble(serverProps.getAttribute("skilling_exp_rate"));
-		WILDERNESS_BOOST = Double.parseDouble(serverProps.getAttribute("wilderness_boost"));
-		SKULL_BOOST = Double.parseDouble(serverProps.getAttribute("skull_boost"));
-		IS_DOUBLE_EXP = Boolean.parseBoolean(serverProps.getAttribute("double_exp"));
-		PLAYER_COMMANDS = Boolean.parseBoolean(serverProps.getAttribute("player_commands"));
+		// Discord settings
+		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
+		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
+		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
+		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
+		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);
+		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
 
-		SPAWN_AUCTION_NPCS = Boolean.parseBoolean(serverProps.getAttribute("spawn_auction_npcs"));
-		SPAWN_IRON_MAN_NPCS = Boolean.parseBoolean(serverProps.getAttribute("spawn_iron_man_npcs"));
-		WANT_PK_BOTS = Boolean.parseBoolean(serverProps.getAttribute("want_pk_bots"));
-		SHOW_FLOATING_NAMETAGS = Boolean.parseBoolean(serverProps.getAttribute("show_floating_nametags"));
-		WANT_CLANS = Boolean.parseBoolean(serverProps.getAttribute("want_clans"));
-		WANT_KILL_FEED = Boolean.parseBoolean(serverProps.getAttribute("want_kill_feed"));
-		FOG_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("fog_toggle"));
-		GROUND_ITEM_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("ground_item_toggle"));
-		AUTO_MESSAGE_SWITCH_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("auto_message_switch_toggle"));
-		BATCH_PROGRESSION = Boolean.parseBoolean(serverProps.getAttribute("batch_progression"));
-		SIDE_MENU_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("side_menu_toggle"));
-		INVENTORY_COUNT_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("inventory_count_toggle"));
-		ZOOM_VIEW_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("zoom_view_toggle"));
-		MENU_COMBAT_STYLE_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("menu_combat_style_toggle"));
-		FIGHTMODE_SELECTOR_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("fightmode_selector_toggle"));
-		EXPERIENCE_COUNTER_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("experience_counter_toggle"));
-		EXPERIENCE_DROPS_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("experience_drops_toggle"));
-		ITEMS_ON_DEATH_MENU = Boolean.parseBoolean(serverProps.getAttribute("items_on_death_menu"));
-		SHOW_ROOF_TOGGLE = Boolean.parseBoolean(serverProps.getAttribute("show_roof_toggle"));
-		WANT_HIDE_IP = Boolean.parseBoolean(serverProps.getAttribute("want_hide_ip"));
-		WANT_REMEMBER = Boolean.parseBoolean(serverProps.getAttribute("want_remember"));
-		WANT_GLOBAL_CHAT = Boolean.parseBoolean(serverProps.getAttribute("want_global_chat"));
-		WANT_GLOBAL_FRIEND = Boolean.parseBoolean(serverProps.getAttribute("want_global_friend"));
-		WANT_SKILL_MENUS = Boolean.parseBoolean(serverProps.getAttribute("want_skill_menus"));
-		WANT_QUEST_MENUS = Boolean.parseBoolean(serverProps.getAttribute("want_quest_menus"));
-		WANT_EXPERIENCE_ELIXIRS = Boolean.parseBoolean(serverProps.getAttribute("want_experience_elixirs"));
-		WANT_KEYBOARD_SHORTCUTS = Integer.parseInt(serverProps.getAttribute("want_keyboard_shortcuts"));
-		RIGHT_CLICK_BANK = Boolean.parseBoolean(serverProps.getAttribute("right_click_bank"));
-		WANT_CUSTOM_BANKS = Boolean.parseBoolean(serverProps.getAttribute("want_custom_banks"));
-		WANT_BANK_PINS = Boolean.parseBoolean(serverProps.getAttribute("want_bank_pins"));
-		WANT_BANK_NOTES = Boolean.parseBoolean(serverProps.getAttribute("want_bank_notes"));
-		WANT_CERT_DEPOSIT = Boolean.parseBoolean(serverProps.getAttribute("want_cert_deposit"));
-		CUSTOM_FIREMAKING = Boolean.parseBoolean(serverProps.getAttribute("custom_firemaking"));
-		WANT_DROP_X = Boolean.parseBoolean(serverProps.getAttribute("want_drop_x"));
-		WANT_EXP_INFO = Boolean.parseBoolean(serverProps.getAttribute("want_exp_info"));
-		WANT_WOODCUTTING_GUILD = Boolean.parseBoolean(serverProps.getAttribute("want_woodcutting_guild"));
-		WANT_MISSING_GUILD_GREETINGS = Boolean.parseBoolean(serverProps.getAttribute("want_missing_guild_greetings"));
-		WANT_DECANTING = Boolean.parseBoolean(serverProps.getAttribute("want_decanting"));
-		WANT_CERTER_BANK_EXCHANGE = Boolean.parseBoolean(serverProps.getAttribute("want_certer_bank_exchange"));
-		WANT_CUSTOM_RANK_DISPLAY = Boolean.parseBoolean(serverProps.getAttribute("want_custom_rank_display"));
-		FIX_OVERHEAD_CHAT = Boolean.parseBoolean(serverProps.getAttribute("want_fixed_overhead_chat"));
-		MESSAGE_FULL_INVENTORY = Boolean.parseBoolean(serverProps.getAttribute("message_full_inventory"));
-		WANT_FATIGUE = Boolean.parseBoolean(serverProps.getAttribute("want_fatigue"));
-		STOP_SKILLING_FATIGUED = Integer.parseInt(serverProps.getAttribute("stop_skilling_fatigued"));
-		WANT_CUSTOM_SPRITES = Boolean.parseBoolean(serverProps.getAttribute("custom_sprites"));
-		WANT_CUSTOM_LANDSCAPE = Boolean.parseBoolean(serverProps.getAttribute("custom_landscape"));
-		WANT_PETS = Boolean.parseBoolean(serverProps.getAttribute("want_pets"));
-		SHOW_UNIDENTIFIED_HERB_NAMES = Boolean.parseBoolean(serverProps.getAttribute("show_unidentified_herb_names"));
-		WANT_QUEST_STARTED_INDICATOR = Boolean.parseBoolean(serverProps.getAttribute("want_quest_started_indicator"));
-		FISHING_SPOTS_DEPLETABLE = Boolean.parseBoolean(serverProps.getAttribute("fishing_spots_depletable"));
-		IMPROVED_ITEM_OBJECT_NAMES = Boolean.parseBoolean(serverProps.getAttribute("improved_item_object_names"));
-		CRYSTAL_KEY_GIVES_XP = Boolean.parseBoolean(serverProps.getAttribute("crystal_key_gives_xp"));
-		LOOTED_CHESTS_STUCK = Boolean.parseBoolean(serverProps.getAttribute("looted_chests_stuck"));
-		WANT_RUNECRAFTING = Boolean.parseBoolean(serverProps.getAttribute("want_runecrafting"));
-		WANT_HARVESTING = Boolean.parseBoolean(serverProps.getAttribute("want_harvesting"));
-		WANT_DISCORD_AUCTION_UPDATES = Boolean.parseBoolean(serverProps.getAttribute("want_discord_auction_updates"));
-		DISCORD_AUCTION_WEBHOOK_URL = serverProps.getAttribute("discord_auction_webhook_url");
-		WANT_DISCORD_MONITORING_UPDATES = Boolean.parseBoolean(serverProps.getAttribute("want_discord_monitoring_updates"));
-		DISCORD_MONITORING_WEBHOOK_URL = serverProps.getAttribute("discord_monitoring_webhook_url");
-		WANT_DISCORD_BOT = Boolean.parseBoolean(serverProps.getAttribute("want_discord_bot"));
-		CROSS_CHAT_CHANNEL = Long.parseLong(serverProps.getAttribute("cross_chat_channel"));
-		WANT_EQUIPMENT_TAB = Boolean.parseBoolean(serverProps.getAttribute("want_equipment_tab"));
-		WANT_BANK_PRESETS = Boolean.parseBoolean(serverProps.getAttribute("want_bank_presets"));
-		WANT_PARTIES = Boolean.parseBoolean(serverProps.getAttribute("want_parties"));
-		MINING_ROCKS_EXTENDED = Boolean.parseBoolean(serverProps.getAttribute("mining_rocks_extended"));
-		WANT_NEW_RARE_DROP_TABLES = Boolean.parseBoolean(serverProps.getAttribute("want_new_rare_drop_tables"));
-		WANT_LEFTCLICK_WEBS = Boolean.parseBoolean(serverProps.getAttribute("want_leftclick_webs"));
-		WANT_CUSTOM_QUESTS = Boolean.parseBoolean(serverProps.getAttribute("want_custom_quests"));
-		WANT_IMPROVED_PATHFINDING = Boolean.parseBoolean(serverProps.getAttribute("want_improved_pathfinding"));
-		CHARACTER_CREATION_MODE = Integer.parseInt(serverProps.getAttribute("character_creation_mode"));
-
-		NPC_KILL_LIST = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_list"));
-		NPC_KILL_MESSAGES = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_messages"));
-		NPC_KILL_MESSAGES_FILTER = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_messages_filter"));
-		NPC_KILL_MESSAGES_NPCs = serverProps.getAttribute("npc_kill_messages_npcs");
-		NPC_KILL_LOGGING = Boolean.parseBoolean(serverProps.getAttribute("npc_kill_logging"));
-		VALUABLE_DROP_MESSAGES = Boolean.parseBoolean(serverProps.getAttribute("valuable_drop_messages"));
-		VALUABLE_DROP_RATIO = Double.parseDouble(serverProps.getAttribute("valuable_drop_ratio"));
-		VALUABLE_DROP_EXTRAS = Boolean.parseBoolean(serverProps.getAttribute("valuable_drop_extras"));
-		VALUABLE_DROP_ITEMS = serverProps.getAttribute("valuable_drop_items");
-		START_TIME = System.currentTimeMillis();
-		NPC_DONT_RETREAT = Boolean.parseBoolean(serverProps.getAttribute("npc_dont_retreat"));
-		NPC_BLOCKING = Integer.parseInt(serverProps.getAttribute("npc_blocking"));
-		AUTO_SERVER_RESTART = Boolean.parseBoolean(serverProps.getAttribute("auto_server_restart"));
-		RESTART_HOUR = Integer.parseInt(serverProps.getAttribute("restart_hour"));
-		RESTART_MINUTE = Integer.parseInt(serverProps.getAttribute("restart_minute"));
-		RESTART_DELAY = Integer.parseInt(serverProps.getAttribute("restart_delay"));
-		AUTO_SERVER_RESTART_2 = Boolean.parseBoolean(serverProps.getAttribute("auto_server_restart_2"));
-		RESTART_HOUR_2 = Integer.parseInt(serverProps.getAttribute("restart_hour_2"));
-		RESTART_MINUTE_2 = Integer.parseInt(serverProps.getAttribute("restart_minute_2"));
-		RESTART_DELAY_2 = Integer.parseInt(serverProps.getAttribute("restart_delay_2"));
-		AGGRO_RANGE = Integer.parseInt(serverProps.getAttribute("aggro_range"));
-
-		STRICT_CHECK_ALL = Boolean.parseBoolean(serverProps.getAttribute("strict_check_all"));
-		STRICT_PDART_CHECK = Boolean.parseBoolean(serverProps.getAttribute("strict_pdart_check"));
-		STRICT_PKNIFE_CHECK = Boolean.parseBoolean(serverProps.getAttribute("strict_pknife_check"));
-		STRICT_PSPEAR_CHECK = Boolean.parseBoolean(serverProps.getAttribute("strict_pspear_check"));
-
-		LOOSE_SHALLOW_WATER_CHECK = Boolean.parseBoolean(serverProps.getAttribute("loose_shallow_water_check"));
-
-		WANT_EMAIL = Boolean.parseBoolean(serverProps.getAttribute("want_email"));
-		WANT_REGISTRATION_LIMIT = Boolean.parseBoolean(serverProps.getAttribute("want_registration_limit"));
-		ALLOW_RESIZE = Boolean.parseBoolean(serverProps.getAttribute("allow_resize"));
-		LENIENT_CONTACT_DETAILS = Boolean.parseBoolean(serverProps.getAttribute("lenient_contact_details"));
-
-		PACKET_LIMIT = Integer.parseInt(serverProps.getAttribute("packet_limit"));
-		CONNECTION_LIMIT = Integer.parseInt(serverProps.getAttribute("connection_limit"));
-		CONNECTION_TIMEOUT = Integer.parseInt(serverProps.getAttribute("connection_timeout"));
-
-		WANT_GIANNE_BADGE = Boolean.parseBoolean(serverProps.getAttribute("want_gianne_badge"));
-		WANT_BLURBERRY_BADGE = Boolean.parseBoolean(serverProps.getAttribute("want_blurberry_badge"));
-		WANT_SHOW_KITTENS_CIVILLIAN = Boolean.parseBoolean(serverProps.getAttribute("want_show_kittens_civillian"));
-		WANT_BARTER_WORMBRAINS = Boolean.parseBoolean(serverProps.getAttribute("want_barter_wormbrains"));
-		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = Boolean.parseBoolean(serverProps.getAttribute("locked_post_quest_regions_accessible"));
-		CAN_RETRIEVE_POST_QUEST_ITEMS = Boolean.parseBoolean(serverProps.getAttribute("can_retrieve_post_quest_items"));
-		CAN_USE_CRACKER_ON_SELF = Boolean.parseBoolean(serverProps.getAttribute("can_use_cracker_on_self"));
-
-		// Walking/running related
-		MAX_WALKING_SPEED = Integer.parseInt(serverProps.getAttribute("max_walking_speed"));
-		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = Integer.parseInt(serverProps.getAttribute("max_ticks_until_full_walking_speed"));
-
-		MAX_CONNECTIONS_PER_IP = Integer.parseInt(serverProps.getAttribute("max_connections_per_ip"));
-		MAX_CONNECTIONS_PER_SECOND = Integer.parseInt(serverProps.getAttribute("max_connections_per_second"));
-		MAX_PACKETS_PER_SECOND = Integer.parseInt(serverProps.getAttribute("max_packets_per_second"));
-		MAX_LOGINS_PER_SECOND = Integer.parseInt(serverProps.getAttribute("max_logins_per_second"));
-		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = Integer.parseInt(serverProps.getAttribute("max_password_guesses_per_five_minutes"));
-		NETWORK_FLOOD_IP_BAN_MINUTES = Integer.parseInt(serverProps.getAttribute("network_flood_ip_ban_minutes"));
-		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = Integer.parseInt(serverProps.getAttribute("suspicious_player_ip_ban_minutes"));
-		String wantPasswordMassage = serverProps.getAttribute("want_password_massage");
-
-		// Make sure config doesn't exceed max values
-		if (VIEW_DISTANCE > 4)
-			VIEW_DISTANCE = 4;
+		// World settings
+		SERVER_NAME = tryReadString("server_name").orElse("Runescape");
+		SERVER_NAME_WELCOME = tryReadString("server_name_welcome").orElse("Runescape Classic");
+		WELCOME_TEXT = tryReadString("welcome_text").orElse("You need a members account to use this server");
+		DISPLAY_LOGO_SPRITE = tryReadBool("display_logo_sprite").orElse(true);
+		LOGO_SPRITE_ID = tryReadString("logo_sprite_id").orElse("2010");
+		GAME_TICK = tryReadInt("game_tick").orElse(640);
+		WALKING_TICK = tryReadInt("walking_tick").orElse(640);
+		WANT_CUSTOM_WALK_SPEED = tryReadBool("want_custom_walking_speed").orElse(false);
+		IDLE_TIMER = tryReadInt("idle_timer").orElse(300000); // 5 minutes
+		AUTO_SAVE = tryReadInt("auto_save").orElse(30000); // 30 seconds
+		CLIENT_VERSION = tryReadInt("client_version").orElse(6);
+		SERVER_PORT = tryReadInt("server_port").orElse(43594);
+		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(10);
+		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(10);
+		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(1000);
+		MAX_LOGINS_PER_SECOND = tryReadInt("max_logins_per_second").orElse(1);
+		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = tryReadInt("max_password_guesses_per_five_minutes").orElse(10);
+		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(20);
+		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);
+		SERVER_LOCATION = tryReadString("server_location").orElse("USA");
+		MAX_PLAYERS = tryReadInt("max_players").orElse(100);
+		MAX_PLAYERS_PER_IP = tryReadInt("max_players_per_ip").orElse(10);
+		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);
+		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
+		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
+		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
+		COMBAT_EXP_RATE = tryReadDouble("combat_exp_rate").orElse(1.0);
+		SKILLING_EXP_RATE = tryReadDouble("skilling_exp_rate").orElse(1.0);
+		WILDERNESS_BOOST = tryReadDouble("wilderness_boost").orElse(0.0);
+		SKULL_BOOST = tryReadDouble("skull_boost").orElse(0.0);
+		IS_DOUBLE_EXP = tryReadBool("double_xp").orElse(false);
+		// BANK_SIZE??
+		HMAC_PRIVATE_KEY = tryReadString("HMAC_PRIVATE_KEY").orElse("root");
+		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
+		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
+		CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
+		CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
+		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
+		STOP_SKILLING_FATIGUED = tryReadInt("stop_skilling_fatigued").orElse(1);
+		AUTO_SERVER_RESTART = tryReadBool("auto_server_restart").orElse(false);
+		RESTART_HOUR = tryReadInt("restart_hour").orElse(23);
+		RESTART_MINUTE = tryReadInt("restart_minute").orElse(55);
+		RESTART_DELAY = tryReadInt("restart_delay").orElse(300);
+		AUTO_SERVER_RESTART_2 = tryReadBool("auto_server_restart_2").orElse(false);
+		RESTART_HOUR_2 = tryReadInt("restart_hour_2").orElse(11);
+		RESTART_MINUTE_2 = tryReadInt("restart_minute_2").orElse(55);
+		RESTART_DELAY_2 = tryReadInt("restart_delay_2").orElse(300);
+		AGGRO_RANGE = tryReadInt("aggro_range").orElse(1);
+		CHARACTER_CREATION_MODE = tryReadInt("character_creation_mode").orElse(0);
+		RING_OF_RECOIL_LIMIT = tryReadInt("ring_of_recoil_limit").orElse(40);
+		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
+		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
+		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
 
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
+	}
 
-		WANT_CUSTOM_UI = Boolean.parseBoolean(serverProps.getAttribute("want_custom_ui"));
+	// Attempt to read in an integer property
+	// If we can't parse it or find it, we return an
+	// empty optional so that we can use the default.
+	private Optional<Integer> tryReadInt(String key) {
+		try {
+			if (serverProps.keyExists(key))
+				return Optional.of(Integer.parseInt(serverProps.getAttribute(key)));
+		}
+		catch (NumberFormatException ex) {
+			LOGGER.info("Error reading value for key \"" + key + "\" " + ex.getMessage() +
+				". Should be integer. Using default.");
+		}
+		return Optional.empty();
+	}
+
+	private Optional<Double> tryReadDouble(String key) {
+		try {
+			if (serverProps.keyExists(key))
+				return Optional.of(Double.parseDouble(serverProps.getAttribute(key)));
+		}
+		catch (NumberFormatException ex) {
+			LOGGER.info("Error reading value for key \"" + key + "\" " + ex.getMessage() +
+				". Should be double. Using default.");
+		}
+		return Optional.empty();
+	}
+
+	// Attempt to read in an integer property
+	// If the value isn't true or false, or we can't find it, we return an
+	// empty optional so that we can use the default.
+	private Optional<Boolean> tryReadBool(String key) {
+		if (serverProps.keyExists(key)) {
+			String value = serverProps.getAttribute(key);
+			// If the value we read in is either true or false...
+			if (value.compareToIgnoreCase("true") == 0 || value.compareToIgnoreCase("false") == 0) {
+				return Optional.of(Boolean.parseBoolean(value));
+			}
+			else {
+				LOGGER.info("Error reading value for key \"" + key + ".\"" +
+					" Should be true or false. Using default.");
+			}
+		}
+		return Optional.empty();
+	}
+
+	// Attempt to read a string property
+	// If it doesn't exist, we return an empty
+	// optional so we can use the default.
+	private Optional<String> tryReadString(String key) {
+		if(serverProps.keyExists(key)) {
+			return Optional.of(serverProps.getAttribute(key));
+		}
+		return Optional.empty();
 	}
 }
