@@ -37,7 +37,6 @@ public class SkillCapes {
 		double rerollPercent = 10;
 		if (!isHit) {
 			if (rand1to100() <= rerollPercent) {
-				System.out.println("Attack Cape Activated");
 				return true;
 			}
 		}
@@ -48,7 +47,6 @@ public class SkillCapes {
 		double rerollPercent = 15;
 		if (!succeededPickpocket) {
 			if (rand1to100() <= rerollPercent) {
-				System.out.println("Thieving Cape Activated");
 				return true;
 			}
 		}
@@ -58,7 +56,6 @@ public class SkillCapes {
 	private static boolean miningCape() {
 		double rerollPercent = 8;
 		if (rand1to100() <= rerollPercent) {
-			System.out.println("Mining Cape Activated");
 			return true;
 		}
 		return false;
@@ -67,7 +64,6 @@ public class SkillCapes {
 	private static boolean fletchingCape() {
 		double rerollPercent = 20;
 		if (rand1to100() <= rerollPercent) {
-			System.out.println("Fletching Cape Activated");
 			return true;
 		}
 		return false;
