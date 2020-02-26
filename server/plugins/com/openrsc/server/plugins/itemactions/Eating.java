@@ -21,12 +21,16 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onInvAction(final Item item, final Player player, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
 			if (player.cantConsume()) {
 				return;
-			}
+
+			if (player.getInventory().remove(item) == -1)
+				return;
+
 			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
+
 			ActionSender.sendSound(player, "eat");
 
 			int id = item.getCatalogId();
@@ -203,7 +207,6 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 					}
 				}
 			}
-			player.getInventory().remove(item);
 
 			addFoodResult(player, id);
 		}

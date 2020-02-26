@@ -179,6 +179,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			savePlayerNpcKills(player);
 			savePlayerData(player);
 			savePlayerSkills(player);
+			savePlayerSocial(player);
 
 			return true;
 		} catch (final Exception ex) {
