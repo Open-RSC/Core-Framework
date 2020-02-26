@@ -3,7 +3,7 @@ package com.openrsc.server.login;
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.sql.query.logs.SecurityChangeLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.SecurityChangeLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -93,59 +93,65 @@ public class RecoveryChangeRequest extends LoginExecutorProcess{
 				LOGGER.info(getPlayer().getCurrentIP() + " - Set recovery questions failed: Could not find player info in database.");
 				return;
 			}
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT 1 FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT 1 FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
 			statement.setInt(1, playerID);
 			ResultSet result = statement.executeQuery();
 			String table_suffix;
-			if (!result.next()) {
-				//player has not set recovery questions
-				table_suffix = "player_recovery";
-			} else {
-				statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT date_set FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE playerID=?");
-				statement.setInt(1, playerID);
-				result = statement.executeQuery();
-				if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_set")) >= 14) {
-					table_suffix = "player_change_recovery";
+			try {
+				if (!result.next()) {
+					//player has not set recovery questions
+					table_suffix = "player_recovery";
 				} else {
-					ActionSender.sendMessage(getPlayer(), "You have pending recovery questions to get applied");
-					LOGGER.info(getPlayer().getCurrentIP() + " - Set recovery questions failed: There is a pending request to be applied.");
+					statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT date_set FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_change_recovery WHERE playerID=?");
+					statement.setInt(1, playerID);
+					result = statement.executeQuery();
+					if (!result.next() || DataConversions.getDaysSinceTime(result.getLong("date_set")) >= 14) {
+						table_suffix = "player_change_recovery";
+					} else {
+						ActionSender.sendMessage(getPlayer(), "You have pending recovery questions to get applied");
+						LOGGER.info(getPlayer().getCurrentIP() + " - Set recovery questions failed: There is a pending request to be applied.");
+						return;
+					}
+				}
+
+				if (!containsAllInfo) {
+					ActionSender.sendMessage(getPlayer(), "Could not set recovery questions, one or more fields empty");
+					LOGGER.info(getPlayer().getCurrentIP() + " - Set recovery questions failed: One or more fields are empty.");
 					return;
 				}
-			}
 
-			if (!containsAllInfo) {
-				ActionSender.sendMessage(getPlayer(), "Could not set recovery questions, one or more fields empty");
-				LOGGER.info(getPlayer().getCurrentIP() + " - Set recovery questions failed: One or more fields are empty.");
-				return;
-			}
+				statement.close();
+				result.close();
 
-			statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE id=?");
-			statement.setInt(1, playerID);
-			result = statement.executeQuery();
-			result.next();
-			String salt = result.getString("salt");
-			for (int i = 0; i < 5; i++) {
-				getQuestions()[i] = DataConversions.maxLenString(getQuestions()[i], 50, true);
-				getAnswers()[i] = DataConversions.hashPassword(getAnswers()[i], salt);
-			}
+				statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE id=?");
+				statement.setInt(1, playerID);
+				result = statement.executeQuery();
+				result.next();
+				String salt = result.getString("salt");
+				for (int i = 0; i < 5; i++) {
+					getQuestions()[i] = DataConversions.maxLenString(getQuestions()[i], 50, true);
+					getAnswers()[i] = DataConversions.hashPassword(getAnswers()[i], salt);
+				}
+				statement.close();
+				result.close();
 
-			statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement(
-				"INSERT INTO `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + table_suffix + "` (`playerID`, `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			statement.setInt(1, playerID);
-			statement.setString(2, getPlayer().getUsername());
-			statement.setString(3, getQuestions()[0]);
-			statement.setString(4, getAnswers()[0]);
-			statement.setString(5, getQuestions()[1]);
-			statement.setString(6, getAnswers()[1]);
-			statement.setString(7, getQuestions()[2]);
-			statement.setString(8, getAnswers()[2]);
-			statement.setString(9, getQuestions()[3]);
-			statement.setString(10, getAnswers()[3]);
-			statement.setString(11, getQuestions()[4]);
-			statement.setString(12, getAnswers()[4]);
-			statement.setLong(13, System.currentTimeMillis() / 1000);
-			statement.setString(14, getPlayer().getCurrentIP());
-			statement.executeUpdate();
+				statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement(
+					"INSERT INTO `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + table_suffix + "` (`playerID`, `username`, `question1`, `answer1`, `question2`, `answer2`, `question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, `ip_set`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				statement.setInt(1, playerID);
+				statement.setString(2, getPlayer().getUsername());
+				statement.setString(3, getQuestions()[0]);
+				statement.setString(4, getAnswers()[0]);
+				statement.setString(5, getQuestions()[1]);
+				statement.setString(6, getAnswers()[1]);
+				statement.setString(7, getQuestions()[2]);
+				statement.setString(8, getAnswers()[2]);
+				statement.setString(9, getQuestions()[3]);
+				statement.setString(10, getAnswers()[3]);
+				statement.setString(11, getQuestions()[4]);
+				statement.setString(12, getAnswers()[4]);
+				statement.setLong(13, System.currentTimeMillis() / 1000);
+				statement.setString(14, getPlayer().getCurrentIP());
+				statement.executeUpdate();
 
 			/*StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < 5; i++) {
@@ -154,15 +160,19 @@ public class RecoveryChangeRequest extends LoginExecutorProcess{
 			getPlayer().getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.RECOVERY_QUESTIONS_CHANGE,
 				"Added questions/answers {" + sb.toString() + "}"));*/
 
-			getPlayer().getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.RECOVERY_QUESTIONS_CHANGE,
-				"Added questions/answers {" + getPlayer().getUsername() + "}"));
+				getPlayer().getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.RECOVERY_QUESTIONS_CHANGE,
+					"Added questions/answers {" + getPlayer().getUsername() + "}"));
 
-			if (table_suffix.equals("player_recovery")) {
-				ActionSender.sendMessage(getPlayer(), "Recovery questions set successfully!");
-			} else {
-				ActionSender.sendMessage(getPlayer(), "Your request to change recovery has been submitted");
+				if (table_suffix.equals("player_recovery")) {
+					ActionSender.sendMessage(getPlayer(), "Recovery questions set successfully!");
+				} else {
+					ActionSender.sendMessage(getPlayer(), "Your request to change recovery has been submitted");
+				}
+				LOGGER.info(getPlayer().getCurrentIP() + " - Recovery questions change successful");
+			} finally {
+				statement.close();
+				result.close();
 			}
-			LOGGER.info(getPlayer().getCurrentIP() + " - Recovery questions change successful");
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}

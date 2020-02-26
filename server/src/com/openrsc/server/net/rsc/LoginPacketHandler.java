@@ -116,36 +116,44 @@ public class LoginPacketHandler {
 					user = getString(p.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 
-					PreparedStatement statement = server.getDatabaseConnection().prepareStatement("SELECT id FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
+					PreparedStatement statement = server.getDatabase().getConnection().prepareStatement("SELECT id FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
 					statement.setString(1, user);
 					ResultSet res = statement.executeQuery();
 					ResultSet res2 = null;
-					boolean foundAndHasRecovery = false;
+					try {
+						boolean foundAndHasRecovery = false;
 
-					if (res.next()) {
-						statement = server.getDatabaseConnection().prepareStatement("SELECT * FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
-						statement.setInt(1, res.getInt("id"));
-						res2 = statement.executeQuery();
-						if (res2.next()) {
-							foundAndHasRecovery = true;
+						if (res.next()) {
+							statement = server.getDatabase().getConnection().prepareStatement("SELECT * FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
+							statement.setInt(1, res.getInt("id"));
+							res2 = statement.executeQuery();
+							if (res2.next()) {
+								foundAndHasRecovery = true;
+							}
 						}
+
+						if (!foundAndHasRecovery) {
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+							channel.close();
+						} else {
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
+							com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+							String st;
+							for (int n = 0; n < 5; ++n) {
+								st = res2.getString("question" + (n + 1));
+								s.writeByte((byte) st.length() + 1);
+								s.writeString(st);
+							}
+							channel.writeAndFlush(s.toPacket());
+							channel.close();
+						}
+					} finally {
+						statement.close();
+						res.close();
+						if (res2 != null)
+							res2.close();
 					}
 
-					if (!foundAndHasRecovery) {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-						channel.close();
-					} else {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
-						com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-						String st;
-						for (int n = 0; n < 5; ++n) {
-							st = res2.getString("question" + (n + 1));
-							s.writeByte((byte) st.length() + 1);
-							s.writeString(st);
-						}
-						channel.writeAndFlush(s.toPacket());
-						channel.close();
-					}
 				} catch (Exception e) {
 					LOGGER.catching(e);
 					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());

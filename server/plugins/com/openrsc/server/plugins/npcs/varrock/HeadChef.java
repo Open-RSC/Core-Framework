@@ -1,20 +1,16 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
-
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.NpcId;
-
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-
 import com.openrsc.server.constants.NpcId;
 
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
+
 
 
 public class HeadChef implements TalkToNpcExecutiveListener, TalkToNpcListener {

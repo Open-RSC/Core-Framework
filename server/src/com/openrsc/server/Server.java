@@ -3,6 +3,8 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
+import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -16,8 +18,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.*;
 import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.sql.DatabaseConnection;
-import com.openrsc.server.sql.GameLogger;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import io.netty.bootstrap.ServerBootstrap;
@@ -49,7 +49,7 @@ public class Server implements Runnable {
 	private final GameStateUpdater gameUpdater;
 	private final GameEventHandler gameEventHandler;
 	private final DiscordService discordService;
-	private final GameTickEvent monitoring;
+	private final MonitoringEvent monitoring;
 	private final LoginExecutor loginExecutor;
 	private final ServerConfiguration config;
 	private final ScheduledExecutorService scheduledExecutor;
@@ -57,7 +57,7 @@ public class Server implements Runnable {
 	private final CombatScriptLoader combatScriptLoader;
 	private final GameLogger gameLogger;
 	private final EntityHandler entityHandler;
-	private final DatabaseConnection databaseConnection;
+	private final MySqlGameDatabase database;
 	private final AchievementSystem achievementSystem;
 	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
@@ -104,19 +104,19 @@ public class Server implements Runnable {
 		final long startTime = System.currentTimeMillis();
 		Server server = new Server(confName);
 
-		if(!server.isRunning()) {
+		if (!server.isRunning()) {
 			server.start();
 		}
 		final long endTime = System.currentTimeMillis();
 
-		final long bootTime = (long) Math.ceil((double)(endTime - startTime) / 1000.0);
+		final long bootTime = (long) Math.ceil((double) (endTime - startTime) / 1000.0);
 
 		LOGGER.info(server.getName() + " started in " + bootTime + "s");
 
 		return server;
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		LOGGER.info("Launching Game Server...");
 
 		if (args.length == 0) {
@@ -138,7 +138,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	public Server(String configFile) throws IOException {
+	public Server(final String configFile) throws IOException {
 		config = new ServerConfiguration();
 		getConfig().initConfig(configFile);
 		LOGGER.info("Server configuration loaded: " + configFile);
@@ -150,7 +150,7 @@ public class Server implements Runnable {
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
-		databaseConnection = new DatabaseConnection(this, "Database Connection");
+		database = new MySqlGameDatabase(this);
 
 		discordService = new DiscordService(this);
 		loginExecutor = new LoginExecutor(this);
@@ -161,7 +161,7 @@ public class Server implements Runnable {
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		monitoring = new MonitoringEvent(getWorld());
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName()+" : GameThread").build());
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
 	}
 
 	private void initialize() {
@@ -175,6 +175,15 @@ public class Server implements Runnable {
 				frame.setSize(600, 600);
 				frame.setVisible(true);
 			}*/
+
+			LOGGER.info("Connecting to Database...");
+			try {
+				getDatabase().open();
+			} catch (final Exception ex) {
+				LOGGER.catching(ex);
+				System.exit(1);
+			}
+			LOGGER.info("\t Database Connection Completed");
 
 			LOGGER.info("Loading Game Definitions...");
 			getEntityHandler().load();
@@ -196,9 +205,6 @@ public class Server implements Runnable {
 			getAchievementSystem().load();
 			LOGGER.info("\t Achievements Completed");*/
 
-			LOGGER.info("Loading profiling monitoring...");
-			// Send monitoring info as a game event so that it can be profiled.
-			getGameEventHandler().add(monitoring);
 			LOGGER.info("Profiling Completed");
 
 			//Never run ResourceLeakDetector PARANOID in production.
@@ -253,7 +259,11 @@ public class Server implements Runnable {
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
 
 			loginExecutor.start();
-			discordService.start();
+			boolean wantDiscordBot = getConfig().WANT_DISCORD_BOT;
+			boolean wantDiscordAuctionUpdates = getConfig().WANT_DISCORD_AUCTION_UPDATES;
+			boolean wantDiscordMonitoringUpdates = getConfig().WANT_DISCORD_MONITORING_UPDATES;
+			if (wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates)
+				discordService.start();
 			gameLogger.start();
 		}
 	}
@@ -289,9 +299,10 @@ public class Server implements Runnable {
 	public void run() {
 		synchronized (running) {
 			try {
-				timeLate = System.currentTimeMillis() - lastClientUpdate - getConfig().GAME_TICK;
-				if (getTimeLate() >= 0) {
-					lastClientUpdate += getConfig().GAME_TICK;
+				this.timeLate = System.currentTimeMillis() - lastClientUpdate;
+				if (getTimeLate() >= getConfig().GAME_TICK) {
+					this.lastClientUpdate += getConfig().GAME_TICK;
+					this.timeLate -= getConfig().GAME_TICK;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					final long tickStart = System.currentTimeMillis();
@@ -307,6 +318,8 @@ public class Server implements Runnable {
 					this.lastGameStateDuration = lastGameStateDuration;
 					this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
 					this.lastTickDuration = lastTickDuration;
+
+					monitoring.run();
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (Player p : getWorld().getPlayers()) {
@@ -337,7 +350,7 @@ public class Server implements Runnable {
 	}
 
 	protected final long processIncomingPackets() {
-		final long processPacketsStart	= System.currentTimeMillis();
+		final long processPacketsStart = System.currentTimeMillis();
 		for (Player p : getWorld().getPlayers()) {
 			p.processIncomingPackets();
 		}
@@ -347,7 +360,7 @@ public class Server implements Runnable {
 	}
 
 	protected long processOutgoingPackets() {
-		final long processPacketsStart	= System.currentTimeMillis();
+		final long processPacketsStart = System.currentTimeMillis();
 		for (Player p : getWorld().getPlayers()) {
 			p.processOutgoingPackets();
 		}
@@ -380,8 +393,14 @@ public class Server implements Runnable {
 
 		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 10, "Save and Shutdown") {
 			public void action() {
-				kill();
-				getDatabaseConnection().close();
+				LOGGER.info("Killing server process...");
+				System.exit(0);
+				try {
+					LOGGER.info("Closing the database connection...");
+					getDatabase().close();
+				} catch (final Exception ex) {
+					LOGGER.catching(ex);
+				}
 			}
 		};
 		getGameEventHandler().add(up);
@@ -505,8 +524,8 @@ public class Server implements Runnable {
 		return entityHandler;
 	}
 
-	public DatabaseConnection getDatabaseConnection() {
-		return databaseConnection;
+	public MySqlGameDatabase getDatabase() {
+		return database;
 	}
 
 	public AchievementSystem getAchievementSystem() {
@@ -530,6 +549,7 @@ public class Server implements Runnable {
 				return;
 			this.board[x][y] = color;
 		}
+
 		private void drawBorder(int x, int y, Graphics g) {
 			g.setColor(Color.black);
 			g.drawRect(x * width, y * width, width, width);
@@ -539,21 +559,21 @@ public class Server implements Runnable {
 			x *= width;
 			y *= width;
 			if ((tile.traversalMask & (CollisionFlag.FULL_BLOCK_A | CollisionFlag.FULL_BLOCK_B | CollisionFlag.FULL_BLOCK_C)) != 0) {
-				g.fillRect(x,y,width,width);
+				g.fillRect(x, y, width, width);
 				return;
 			}
 			g.setColor(Color.red);
 			if ((tile.traversalMask & CollisionFlag.EAST_BLOCKED) != 0) {
-				g.fillRect(x+width-4,y+1,3,width);
+				g.fillRect(x + width - 4, y + 1, 3, width);
 			}
 			if ((tile.traversalMask & CollisionFlag.WEST_BLOCKED) != 0) {
-				g.fillRect(x+1,y+1,3,width);
+				g.fillRect(x + 1, y + 1, 3, width);
 			}
 			if ((tile.traversalMask & CollisionFlag.NORTH_BLOCKED) != 0) {
-				g.fillRect(x,y+1,width,3);
+				g.fillRect(x, y + 1, width, 3);
 			}
 			if ((tile.traversalMask & CollisionFlag.SOUTH_BLOCKED) != 0) {
-				g.fillRect(x,y+width-4,width,3);
+				g.fillRect(x, y + width - 4, width, 3);
 			}
 		}
 
@@ -562,19 +582,19 @@ public class Server implements Runnable {
 				Iterator<Point> path = mob.getWalkingQueue().path.iterator();
 				if (mob.isPlayer()) {
 					g.setColor(Color.BLUE);
-				}
-				else {
+				} else {
 					g.setColor(Color.ORANGE);
 				}
 				while (path.hasNext()) {
 					Point next = path.next();
 					if (mob.isPlayer())
-						g.fillRect(((mob.getX()+size)-next.getX())*width,(next.getY() - (mob.getY()-size))*width,width,width);
+						g.fillRect(((mob.getX() + size) - next.getX()) * width, (next.getY() - (mob.getY() - size)) * width, width, width);
 					else
-						g.fillRect(((((Npc)mob).getBehavior().getChaseTarget().getX()+size)-next.getX())*width,(next.getY() - (((Npc)mob).getBehavior().getChaseTarget().getY()-size))*width,width,width);
+						g.fillRect(((((Npc) mob).getBehavior().getChaseTarget().getX() + size) - next.getX()) * width, (next.getY() - (((Npc) mob).getBehavior().getChaseTarget().getY() - size)) * width, width, width);
 				}
 			}
 		}
+
 		@Override
 		public void paintComponent(Graphics g) {
 			board = new Color[2 * size + 1][2 * size + 1];
@@ -586,23 +606,23 @@ public class Server implements Runnable {
 
 				for (int x = -size; x <= size; x++) {
 					for (int y = -size; y <= size; y++) {
-						drawBorder(x + size, y+size,g);
+						drawBorder(x + size, y + size, g);
 						TileValue tile = world.getTile(centerx - x, centery + y);
 						if (tile == null) {
 							continue;
 						}
-						drawBlocks(x+size,y+size,tile,g);
+						drawBlocks(x + size, y + size, tile, g);
 
 					}
 				}
 
 				g.setColor(Color.pink);
-				g.fillRect(size*width,size*width,width,width);
+				g.fillRect(size * width, size * width, width, width);
 				drawPath(test, g);
 				for (Npc npc : getWorld().getNpcs()) {
 					if (npc.isChasing()) {
 						g.setColor(Color.red);
-						g.fillRect(((centerx+size)-npc.getX())*width,(npc.getY() - (centery-size))*width,width,width);
+						g.fillRect(((centerx + size) - npc.getX()) * width, (npc.getY() - (centery - size)) * width, width, width);
 						drawPath(npc, g);
 					}
 

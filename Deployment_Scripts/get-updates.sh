@@ -18,7 +18,10 @@ echo ""
 echo "Compiling all code now."
 echo ""
 echo ""
-sudo make compile
+ant -f server/build.xml compile_core
+ant -f server/build.xml compile_plugins
+ant -f Client_Base/build.xml compile
+ant -f PC_Launcher/build.xml compile
 
 # Launcher
 echo ""
@@ -48,6 +51,11 @@ elif [ "$compiling" == "2" ]; then
   # Cache
   sudo chmod 777 -R 'Client_Base/Cache'
   yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/downloads/"
+  sudo chmod 777 -R 'Client_Base/PK'
+
+  yes | sudo cp -a -rf "Client_Base/PK/." "../Website/downloads/PK/"
+  yes | sudo cp -a -rf "Client_Base/Open_PK_Client.jar" "../Website/downloads/Open_PK_Client.jar"
+
   cd '../Website/downloads/' || exit
   find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; > MD5.SUM
   cd '../../Game' || exit

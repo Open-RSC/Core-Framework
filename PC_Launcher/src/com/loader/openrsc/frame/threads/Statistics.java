@@ -50,5 +50,15 @@ public class Statistics implements Runnable {
 			}
 		} catch (Exception ignored) {
 		}
+
+		// DEV
+		try {
+			Document document = Jsoup.connect(Constants.DEV_WORLD_STATS_URL).get();
+
+			for (Element getdevOnline : document.select("a[href$=\"NULLonline\"]")) { // Broken on purpose until a website is operating
+				AppFrame.get().getdevOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getdevOnline.text() + "</span></html>");
+			}
+		} catch (Exception ignored) {
+		}
 	}
 }

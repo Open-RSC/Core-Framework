@@ -35,7 +35,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 		StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
 		try {
-			PreparedStatement setCollected = player.getWorld().getServer().getDatabaseConnection()
+			PreparedStatement setCollected = player.getWorld().getServer().getDatabase().getConnection()
 				.prepareStatement("UPDATE `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "expired_auctions` SET `claim_time`= '" + System.currentTimeMillis()
 					+ "',`claimed`='1' WHERE `claim_id`=?");
@@ -50,7 +50,8 @@ public class PlayerCollectItemsTask extends MarketTask {
 				setCollected.setInt(1, i.claim_id);
 				setCollected.addBatch();
 			}
-			setCollected.executeBatch();
+			try{setCollected.executeBatch();}
+			finally{setCollected.close();}
 		} catch (SQLException e) {
 			LOGGER.catching(e);
 		}

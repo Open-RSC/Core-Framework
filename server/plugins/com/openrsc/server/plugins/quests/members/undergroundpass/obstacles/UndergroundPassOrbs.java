@@ -8,6 +8,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -34,7 +35,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), NORTH_PASSAGE) || inArray(obj.getID(), WEST_PASSAGE) || obj.getID() == SOUTH_WEST_PASSAGE
 				|| obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE
-				|| obj.getID() == SOUTH_WEST_STALAGMITE;
+				|| obj.getID() == SOUTH_WEST_STALAGMITE; 
 	}
 
 	@Override

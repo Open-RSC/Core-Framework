@@ -45,7 +45,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return ipAddress;
 	}
 
-	private void setIpAddress(String ipAddress) {
+	private void setIpAddress(final String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
 
@@ -53,7 +53,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUsername(final String username) {
 		this.username = username;
 	}
 
@@ -61,7 +61,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return password;
 	}
 
-	private void setPassword(String password) {
+	private void setPassword(final String password) {
 		this.password = password;
 	}
 
@@ -69,7 +69,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return usernameHash;
 	}
 
-	private void setUsernameHash(long usernameHash) {
+	private void setUsernameHash(final long usernameHash) {
 		this.usernameHash = usernameHash;
 	}
 
@@ -85,7 +85,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		return clientVersion;
 	}
 
-	private void setClientVersion(int clientVersion) {
+	private void setClientVersion(final int clientVersion) {
 		this.clientVersion = clientVersion;
 	}
 
@@ -94,10 +94,11 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	public abstract void loadingComplete(Player loadedPlayer);
 
 	protected void processInternal() {
-		int loginResponse = validateLogin();
+		final int loginResponse = validateLogin();
 		loginValidated(loginResponse);
 		if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
-			final Player loadedPlayer = getServer().getLoginExecutor().getPlayerDatabase().loadPlayer(this);
+			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
+			LOGGER.info("Player Loaded: " + getUsername());
 
 			getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 				@Override
@@ -119,71 +120,77 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
-			statement = getServer().getLoginExecutor().getPlayerDatabase().getDatabaseConnection().prepareStatement(
-				getServer().getLoginExecutor().getPlayerDatabase().getDatabaseConnection().getGameQueries().playerLoginData
+			statement = getServer().getDatabase().getConnection().prepareStatement(
+				getServer().getDatabase().getQueries().playerLoginData
 			);
 			statement.setString(1, getUsername());
 			playerSet = statement.executeQuery();
 
-			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
-			if(playerSet.first()) {
-				groupId = playerSet.getInt("group_id");
-				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
+			try {
+				boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
+				if(playerSet.first()) {
+					groupId = playerSet.getInt("group_id");
+					isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
+				}
+
+				if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
+					return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
+				}
+
+				if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
+					return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+				}
+
+				if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
+					return (byte) LoginResponse.CLIENT_UPDATED;
+				}
+
+				final long i = getServer().timeTillShutdown();
+				if (i > 0 && i < 30000 && !isAdmin) {
+					return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
+				}
+
+				if (!playerSet.first()) {
+					server.getPacketFilter().addPasswordAttempt(getIpAddress());
+					return (byte) LoginResponse.INVALID_CREDENTIALS;
+				}
+
+				if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
+					return (byte) LoginResponse.WORLD_IS_FULL;
+				}
+
+				if (getServer().getWorld().getPlayer(getUsernameHash()) != null) {
+					return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
+				}
+
+				if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+					return (byte) LoginResponse.IP_IN_USE;
+				}
+
+				final long banExpires = playerSet.getLong("banned");
+				if (banExpires == -1 && !isAdmin) {
+					return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
+				}
+
+				final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
+				if (timeBanLeft >= 1 && !isAdmin) {
+					return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+				}
+
+				if (!DataConversions.checkPassword(getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
+					server.getPacketFilter().addPasswordAttempt(getIpAddress());
+					return (byte) LoginResponse.INVALID_CREDENTIALS;
+				}
+
+				// Doing this at end because we only want to flag the host as an admin _IF_ they know the password.
+				if(isAdmin) {
+					getServer().getPacketFilter().addAdminHost(getIpAddress());
+				}
+			} finally {
+				statement.close();
+				playerSet.close();
 			}
 
-			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
-				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
-			}
-
-			if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
-			}
-
-			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
-				return (byte) LoginResponse.CLIENT_UPDATED;
-			}
-
-			long i = getServer().timeTillShutdown();
-			if (i > 0 && i < 30000 && !isAdmin) {
-				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
-			}
-
-			if (!playerSet.first()) {
-				server.getPacketFilter().addPasswordAttempt(getIpAddress());
-				return (byte) LoginResponse.INVALID_CREDENTIALS;
-			}
-
-			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
-				return (byte) LoginResponse.WORLD_IS_FULL;
-			}
-
-			if (getServer().getWorld().getPlayer(getUsernameHash()) != null) {
-				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
-			}
-
-			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
-				return (byte) LoginResponse.IP_IN_USE;
-			}
-
-			long banExpires = playerSet.getLong("banned");
-			if (banExpires == -1 && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
-			}
-
-			double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
-			if (timeBanLeft >= 1 && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
-			}
-
-			if (!DataConversions.checkPassword(getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
-				server.getPacketFilter().addPasswordAttempt(getIpAddress());
-				return (byte) LoginResponse.INVALID_CREDENTIALS;
-			}
-
-			// Doing this at end because we only want to flag the host as an admin _IF_ they know the password.
-			if(isAdmin) {
-				getServer().getPacketFilter().addAdminHost(getIpAddress());
-			}
 
 		} catch (SQLException e) {
 			LOGGER.catching(e);

@@ -18,7 +18,9 @@ public class Downloader {
 	public Downloader() {
 		excludedFiles.add(Constants.MD5_TABLENAME);
 		excludedFiles.add("android_version.txt");
+		excludedFiles.add("android_version_pk.txt");
 		excludedFiles.add("openrsc.apk");
+		excludedFiles.add("openpk.apk");
 		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
 	}
@@ -59,7 +61,7 @@ public class Downloader {
 			AppFrame.get().getLaunchcabbage().setEnabled(false);
 			AppFrame.get().getLaunchopenpk().setEnabled(false);
 			//AppFrame.get().getLaunchpreservation().setEnabled(false);
-			//AppFrame.get().getLaunchdev().setEnabled(false);
+			AppFrame.get().getLaunchdev().setEnabled(false);
 			AppFrame.get().setDownloadProgress("Checking for updates...", 100.0f);
 
 			File file = new File(Constants.CONF_DIR);
@@ -142,15 +144,13 @@ public class Downloader {
 			}
 
 			if (offset != size) {
-				success = false;
 			} else {
 				File file = new File("./" + Constants.JAR_FILENAME);
 				FileOutputStream output = new FileOutputStream(file);
 				output.write(data);
 				output.close();
 			}
-		} catch (Exception e) {
-			success = false;
+		} catch (Exception ignored) {
 		}
 
 	}
@@ -164,7 +164,7 @@ public class Downloader {
 			AppFrame.get().getLaunchcabbage().setEnabled(true);
 			AppFrame.get().getLaunchopenpk().setEnabled(true);
 			//AppFrame.get().getLaunchpreservation().setEnabled(true);
-			//AppFrame.get().getLaunchdev().setEnabled(true);
+			AppFrame.get().getLaunchdev().setEnabled(true);
 			AppFrame.get().getSpriteCombo().loadSpritePacks();
 			AppFrame.get().setDownloadProgress("Ready to play!", 100.0f);
 		} catch (Exception e) {

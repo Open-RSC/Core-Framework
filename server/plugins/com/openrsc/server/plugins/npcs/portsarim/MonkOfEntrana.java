@@ -14,23 +14,31 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.Arrays;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class MonkOfEntrana implements ObjectActionExecutiveListener, ObjectActionListener, TalkToNpcExecutiveListener,
 	TalkToNpcListener {
 
+	private String[] blockedItems = new String[]{
+		"arrow", "axe", "staff", "bow", "mail", "plate",
+		"bolts", "cannon", "helmet", "mace", "simitar",
+		"shield", "spear", "2-handed", "long", "short",
+		"amulet", "ring", "cape", "gauntlet", "boot",
+		"necklace", "silverlight", "excalibur"
+	};
+
+	private boolean CHECK_ITEM(String itemName) {
+		return Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
+	}
+
 	private boolean CAN_GO(Player p) {
 		synchronized(p.getInventory().getItems()) {
 			for (Item item : p.getInventory().getItems()) {
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();
-				if (name.contains("dagger") || name.contains("scimitar")
-					|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
-					|| (name.contains("sword")
-					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-					|| name.contains("mace") || name.contains("helmet")
-					|| name.contains("axe") || name.contains("recoil")) {
+				if (CHECK_ITEM(name))
 					return true;
-				}
 			}
 		}
 
@@ -41,14 +49,8 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 				if (item == null)
 					continue;
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();
-				if (name.contains("dagger") || name.contains("scimitar")
-					|| (name.contains("bow") && !name.contains("unstrung") && !name.contains("string")) || name.contains("mail")
-					|| (name.contains("sword")
-					&& !name.equalsIgnoreCase("Swordfish") && !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-					|| name.contains("mace") || name.contains("helmet")
-					|| name.contains("axe") || name.contains("recoil")) {
+				if (CHECK_ITEM(name))
 					return true;
-				}
 			}
 		}
 		return false;

@@ -58,7 +58,7 @@
         android:fontStyle="normal"
         android:fontWeight="400"
         android:textSize="16sp"
-        android:fontFamily="@font/pressstart2p" />
+        android:fontFamily="@font/exoregular" />
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

@@ -36,39 +36,46 @@ public class AchievementSystem {
 		loadedAchievements.clear();
 
 		try {
-			PreparedStatement fetchAchievement = getServer().getDatabaseConnection()
+			PreparedStatement fetchAchievement = getServer().getDatabase().getConnection()
 				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
-			PreparedStatement fetchRewards = getServer().getDatabaseConnection()
+			PreparedStatement fetchRewards = getServer().getDatabase().getConnection()
 				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
-			PreparedStatement fetchTasks = getServer().getDatabaseConnection()
+			PreparedStatement fetchTasks = getServer().getDatabase().getConnection()
 				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
 
 			ResultSet result = fetchAchievement.executeQuery();
-			while (result.next()) {
-				ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
-				fetchRewards.setInt(1, result.getInt("id"));
+			try {
+				while (result.next()) {
+					ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
+					fetchRewards.setInt(1, result.getInt("id"));
 
-				ResultSet rewardResult = fetchRewards.executeQuery();
-				while (rewardResult.next()) {
-					TaskReward rewardType = TaskReward.valueOf(TaskReward.class, rewardResult.getString("reward_type"));
-					rewards.add(new AchievementReward(rewardType, rewardResult.getInt("item_id"), rewardResult.getInt("amount"),
-						rewardResult.getInt("guaranteed") == 1 ? true : false));
+					ResultSet rewardResult = fetchRewards.executeQuery();
+					while (rewardResult.next()) {
+						TaskReward rewardType = TaskReward.valueOf(TaskReward.class, rewardResult.getString("reward_type"));
+						rewards.add(new AchievementReward(rewardType, rewardResult.getInt("item_id"), rewardResult.getInt("amount"),
+							rewardResult.getInt("guaranteed") == 1 ? true : false));
+					}
+					rewardResult.close();
+
+					ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
+					fetchTasks.setInt(1, result.getInt("id"));
+
+					ResultSet taskResult = fetchTasks.executeQuery();
+					while (taskResult.next()) {
+						TaskType type = TaskType.valueOf(TaskType.class, taskResult.getString("type"));
+						tasks.add(new AchievementTask(type, taskResult.getInt("do_id"), taskResult.getInt("do_amount")));
+					}
+					taskResult.close();
+
+					Achievement achievement = new Achievement(tasks, rewards, result.getInt("id"),
+						result.getString("name"), result.getString("description"), result.getString("extra"));
+					loadedAchievements.add(achievement);
 				}
-				rewardResult.close();
-
-				ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
-				fetchTasks.setInt(1, result.getInt("id"));
-
-				ResultSet taskResult = fetchTasks.executeQuery();
-				while (taskResult.next()) {
-					TaskType type = TaskType.valueOf(TaskType.class, taskResult.getString("type"));
-					tasks.add(new AchievementTask(type, taskResult.getInt("do_id"), taskResult.getInt("do_amount")));
-				}
-				taskResult.close();
-
-				Achievement achievement = new Achievement(tasks, rewards, result.getInt("id"),
-					result.getString("name"), result.getString("description"), result.getString("extra"));
-				loadedAchievements.add(achievement);
+			} finally {
+				fetchAchievement.close();
+				fetchRewards.close();
+				fetchTasks.close();
+				result.close();
 			}
 		} catch (SQLException e) {
 			LOGGER.catching(e);
@@ -143,7 +150,7 @@ public class AchievementSystem {
 					}
 				}
 
-				//Choice rewards 
+				//Choice rewards
 				Menu itemRewards = new Menu();
 				Menu expRewards = new Menu();
 
@@ -171,7 +178,7 @@ public class AchievementSystem {
 								});
 					}
 				}
-				
+
 				boolean hasItemRewards = false;
 				boolean hasExpRewards = false;
 

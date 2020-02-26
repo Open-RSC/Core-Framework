@@ -10,7 +10,9 @@ import com.openrsc.server.plugins.listeners.action.PlayerMageObjectListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerMageObjectExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class LegendsQuestDarkMetalGate implements ObjectActionListener, ObjectActionExecutiveListener, PlayerMageObjectListener, PlayerMageObjectExecutiveListener {
 

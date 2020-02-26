@@ -82,7 +82,7 @@ public class Market implements Runnable {
 				if (auction.hasExpired()) expiredItems.add(auction);
 
 			if (expiredItems.size() != 0) {
-				PreparedStatement expiredItemsStatement = getWorld().getServer().getDatabaseConnection().prepareStatement(
+				PreparedStatement expiredItemsStatement = getWorld().getServer().getDatabase().getConnection().prepareStatement(
 					"INSERT INTO `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 						+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 				for (MarketItem expiredItem : expiredItems) {
@@ -107,7 +107,8 @@ public class Market implements Runnable {
 						sellerPlayer.message("You can collect it back from a banker.");
 					}
 				}
-				expiredItemsStatement.executeBatch();
+				try{expiredItemsStatement.executeBatch();}
+				finally{expiredItemsStatement.close();}
 			}
 			lastCleanUp = System.currentTimeMillis();
 		} catch (Throwable e) {

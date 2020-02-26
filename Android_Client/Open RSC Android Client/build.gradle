@@ -9,10 +9,8 @@ allprojects {
 }
 
 android {
-    signingConfigs {
-    }
     compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    buildToolsVersion '29.0.3'
     defaultConfig {
         applicationId "com.openrsc.client"
         minSdkVersion 14
@@ -20,16 +18,17 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
             debuggable false
             jniDebuggable false
             renderscriptDebuggable false
             multiDexEnabled = true
             renderscriptOptimLevel = 3
+            minifyEnabled = false
         }
         debug {
             multiDexEnabled = true
+            minifyEnabled = false
         }
     }
     productFlavors {

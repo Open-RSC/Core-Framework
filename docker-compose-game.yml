@@ -6,6 +6,14 @@ services:
     env_file:
       - .env
     container_name: ${GAME_CONTAINER_NAME}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.90'
+          memory: 8192M
+        reservations:
+          cpus: '0.25'
+          memory: 1024M
     build:
       context: .
       dockerfile: server/inc/Dockerfile

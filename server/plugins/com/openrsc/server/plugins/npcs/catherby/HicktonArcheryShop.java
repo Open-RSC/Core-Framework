@@ -15,8 +15,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.openrsc.server.plugins.Functions.*;
+
 
 public class HicktonArcheryShop implements ShopInterface,
 	TalkToNpcListener, TalkToNpcExecutiveListener {

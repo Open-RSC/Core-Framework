@@ -18,6 +18,7 @@ public class AppFrame extends JFrame {
 	private JLabel rscc_online;
 	private JLabel openpk_online;
 	private JLabel rscp_online;
+	private JLabel dev_online;
 
 	private CheckCombo comboBox;
 	private LaunchButton launch1;
@@ -27,10 +28,10 @@ public class AppFrame extends JFrame {
 	private LaunchButton launch5;
 
 	private int preservation_x = 113;
-	private int openrsc_x = 233;
-	private int cabbage_x = 353;
-	private int openpk_x = 473;
-	private int dev_x = 593;
+	private int openrsc_x = 165;
+	private int cabbage_x = 295;
+	private int openpk_x = 420;
+	private int dev_x = 535;
 	private int launch_button_y = 218;
 	private int link_button_y = 359;
 
@@ -117,8 +118,8 @@ public class AppFrame extends JFrame {
 		this.bg.add(this.launch3);
 
 		String dev = "dev";
-		//(this.launch5 = new LaunchButton(openpk)).setBounds(dev_x, launch_button_y, launch_button_width, launch_button_height);
-		//this.bg.add(this.launch5);
+		(this.launch5 = new LaunchButton(dev)).setBounds(dev_x, launch_button_y, launch_button_width, launch_button_height);
+		this.bg.add(this.launch5);
 
 
 		// Control button size
@@ -173,17 +174,16 @@ public class AppFrame extends JFrame {
 		(this.openpk_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
 		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
 		this.openpk_online.setBounds(openpk_x + 10, launch_button_y + 95, 327, 15);
-		this.bg.add(this.openpk_online);
+		//this.bg.add(this.openpk_online);
 
 		/*
 		 * Dev World
 		 */
 		// Online player count
-		JLabel dev_online;
-		(dev_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		dev_online.setBounds(dev_x + 10, launch_button_y + 100, 95, 15);
-		//this.bg.add(this.dev_online); // Disabled on purpose
+		(this.dev_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
+		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
+		this.dev_online.setBounds(dev_x + 10, launch_button_y + 95, 95, 15);
+		//this.bg.add(this.dev_online);
 
 		comboBox = new CheckCombo();
 		//comboBox.combo.setBounds(585, 132, 150, 30);
@@ -231,6 +231,10 @@ public class AppFrame extends JFrame {
 
 	public JLabel getopenpkOnline() {
 		return this.openpk_online;
+	}
+
+	public JLabel getdevOnline() {
+		return this.dev_online;
 	}
 
 	public JLabel getrscpOnline() {

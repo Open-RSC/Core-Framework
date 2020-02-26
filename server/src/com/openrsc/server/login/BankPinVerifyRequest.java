@@ -56,34 +56,39 @@ public class BankPinVerifyRequest extends LoginExecutorProcess {
 			}
 
 			String salt = null;
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 			statement.setString(1, getPlayer().getUsername());
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				salt = result.getString("salt");
-			}
-			else {
-				getPlayer().message("There was an error while attempting to verify your bank pin.");
-				// TODO: Database logging
-				LOGGER.info("Skipping bank pin change for Player " + getPlayer() + " " + getPlayer().getCurrentIP() + " because query results not found.");
-				return;
-			}
-
-			if(getPlayer().getCache().hasKey("bank_pin")) {
-				if(!DataConversions.checkPassword(getBankPin(), salt, getPlayer().getCache().getString("bank_pin"))) {
-					getPlayer().message("Bank pin incorrect");
+			try {
+				if (result.next()) {
+					salt = result.getString("salt");
+				}
+				else {
+					getPlayer().message("There was an error while attempting to verify your bank pin.");
 					// TODO: Database logging
-					LOGGER.info("Bank pin guess fail for " + getPlayer() + " " + getPlayer().getCurrentIP());
+					LOGGER.info("Skipping bank pin change for Player " + getPlayer() + " " + getPlayer().getCurrentIP() + " because query results not found.");
 					return;
 				}
-			}
-			else {
-				getPlayer().setAttribute("bankpin", true);
-				return;
-			}
 
-			getPlayer().message("You have correctly entered your bank pin");
-			getPlayer().setAttribute("bankpin", true);
+				if(getPlayer().getCache().hasKey("bank_pin")) {
+					if(!DataConversions.checkPassword(getBankPin(), salt, getPlayer().getCache().getString("bank_pin"))) {
+						getPlayer().message("Bank pin incorrect");
+						// TODO: Database logging
+						LOGGER.info("Bank pin guess fail for " + getPlayer() + " " + getPlayer().getCurrentIP());
+						return;
+					}
+				}
+				else {
+					getPlayer().setAttribute("bankpin", true);
+					return;
+				}
+
+				getPlayer().message("You have correctly entered your bank pin");
+				getPlayer().setAttribute("bankpin", true);
+			} finally {
+				statement.close();
+				result.close();
+			}
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}

@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.sql.query.logs.GameReport;
+import com.openrsc.server.database.impl.mysql.queries.logging.GameReport;
 
 import java.sql.ResultSet;
 import java.util.Iterator;
@@ -47,21 +47,26 @@ public final class ReportHandler implements PacketHandler {
 			return;
 		}
 
-		ResultSet result = player.getWorld().getServer().getDatabaseConnection().executeQuery("SELECT `username` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
+		ResultSet result = player.getWorld().getServer().getDatabase().getConnection().executeQuery("SELECT `username` FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` WHERE username='" + hash + "'");
 
-		if (!result.next()) {
-			player.message("Invalid player name.");
+		try {
+			if (!result.next()) {
+				player.message("Invalid player name.");
+				result.close();
+				return;
+			}
+
+			player.message("Thank-you, your abuse report has been received.");
+			player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
+			player.setLastReport();
+
+			if (suggestsOrMutes != 0 && player.isMod()) {
+				muteCommand(player, "mute " + hash + " -1");
+			}
+		} finally {
 			result.close();
-			return;
 		}
 
-		player.message("Thank-you, your abuse report has been received.");
-		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
-		player.setLastReport();
-
-		if (suggestsOrMutes != 0 && player.isMod()) {
-			muteCommand(player, "mute " + hash + " -1");
-		}
 	}
 
 	private void muteCommand(Player player, String s) {

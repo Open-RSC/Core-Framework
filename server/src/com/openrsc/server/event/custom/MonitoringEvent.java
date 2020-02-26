@@ -1,6 +1,5 @@
 package com.openrsc.server.event.custom;
 
-import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.MessageType;
@@ -12,11 +11,13 @@ import org.apache.logging.log4j.Logger;
  */
 
 // Send monitoring info as a game event so that it can be profiled.
-public class MonitoringEvent extends GameTickEvent {
-	private static final Logger LOGGER	= LogManager.getLogger();
+public class MonitoringEvent {
 
-	public MonitoringEvent(World world) {
-		super(world, null, 0, "Server Monitoring");
+	private static final Logger LOGGER	= LogManager.getLogger();
+	private World world;
+
+	public MonitoringEvent(final World world) {
+		this.world = world;
 	}
 
 	public void run() {
@@ -49,4 +50,6 @@ public class MonitoringEvent extends GameTickEvent {
 			getWorld().getServer().getDiscordService().monitoringSendServerBehind(message);
 		}
 	}
+
+	public World getWorld() { return this.world; }
 }

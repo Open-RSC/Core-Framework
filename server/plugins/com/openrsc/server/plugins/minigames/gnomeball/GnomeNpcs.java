@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
+import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;

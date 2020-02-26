@@ -88,42 +88,47 @@ public class BankPinChangeRequest extends LoginExecutorProcess {
 
 			String hashedBankPin = null;
 			String salt = null;
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabaseConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
+			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT salt FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`=?");
 			statement.setString(1, getPlayer().getUsername());
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				salt = result.getString("salt");
-			}
-			else {
-				getPlayer().playerServerMessage(MessageType.QUEST, "There was an error while attempting to change your bank pin");
-				// TODO: Database logging
-				LOGGER.info("Skipping bank pin change for Player " + getPlayer() + " " + getPlayer().getCurrentIP() + " because query results not found.");
-				return;
-			}
-
-			if(getOldBankPin() != null && getPlayer().getCache().hasKey("bank_pin") && !getPlayer().getAttribute("bankpin", false)) {
-				if(!DataConversions.checkPassword(getOldBankPin(), salt, getPlayer().getCache().getString("bank_pin"))) {
-					getPlayer().playerServerMessage(MessageType.QUEST, "Can not change bank pin: Invalid old bank pin");
+			try {
+				if (result.next()) {
+					salt = result.getString("salt");
+				}
+				else {
+					getPlayer().playerServerMessage(MessageType.QUEST, "There was an error while attempting to change your bank pin");
 					// TODO: Database logging
-					LOGGER.info("Bank pin guess fail for " + getPlayer() + " " + getPlayer().getCurrentIP());
+					LOGGER.info("Skipping bank pin change for Player " + getPlayer() + " " + getPlayer().getCurrentIP() + " because query results not found.");
 					return;
 				}
+
+				if(getOldBankPin() != null && getPlayer().getCache().hasKey("bank_pin") && !getPlayer().getAttribute("bankpin", false)) {
+					if(!DataConversions.checkPassword(getOldBankPin(), salt, getPlayer().getCache().getString("bank_pin"))) {
+						getPlayer().playerServerMessage(MessageType.QUEST, "Can not change bank pin: Invalid old bank pin");
+						// TODO: Database logging
+						LOGGER.info("Bank pin guess fail for " + getPlayer() + " " + getPlayer().getCurrentIP());
+						return;
+					}
+				}
+
+				if(getNewBankPin() != null) {
+					hashedBankPin = DataConversions.hashPassword(getNewBankPin(), salt);
+
+					// TODO: Database logging
+					LOGGER.info("Changing bank pin for " + getPlayer() + " " + getPlayer().getCurrentIP());
+					getPlayer().playerServerMessage(MessageType.QUEST, getOldBankPin() == null ? "Bank pin set" : "Bank pin changed");
+					getPlayer().getCache().store("bank_pin", hashedBankPin);
+				} else {
+					LOGGER.info("Removing bank pin for " + getPlayer() + " " + getPlayer().getCurrentIP());
+					getPlayer().playerServerMessage(MessageType.QUEST, "Your bank pin has been removed");
+					getPlayer().getCache().remove("bank_pin");
+				}
+
+				getPlayer().setAttribute("bankpin", true);
+			} finally {
+				statement.close();
+				result.close();
 			}
-
-			if(getNewBankPin() != null) {
-				hashedBankPin = DataConversions.hashPassword(getNewBankPin(), salt);
-
-				// TODO: Database logging
-				LOGGER.info("Changing bank pin for " + getPlayer() + " " + getPlayer().getCurrentIP());
-				getPlayer().playerServerMessage(MessageType.QUEST, getOldBankPin() == null ? "Bank pin set" : "Bank pin changed");
-				getPlayer().getCache().store("bank_pin", hashedBankPin);
-			} else {
-				LOGGER.info("Removing bank pin for " + getPlayer() + " " + getPlayer().getCurrentIP());
-				getPlayer().playerServerMessage(MessageType.QUEST, "Your bank pin has been removed");
-				getPlayer().getCache().remove("bank_pin");
-			}
-
-			getPlayer().setAttribute("bankpin", true);
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}

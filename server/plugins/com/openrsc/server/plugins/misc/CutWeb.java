@@ -5,8 +5,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
