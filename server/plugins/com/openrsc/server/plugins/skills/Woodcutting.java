@@ -94,7 +94,7 @@ public class Woodcutting implements ObjectActionListener,
 						getOwner().playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
 						interrupt();
 					} else {
-						getOwner().getInventory().add(log);
+						getOwner().getCarriedItems().getInventory().add(log);
 						getOwner().playerServerMessage(MessageType.QUEST, "You get some wood");
 						getOwner().incExp(Skills.WOODCUT, def.getExp(), true);
 					}

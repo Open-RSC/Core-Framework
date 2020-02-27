@@ -57,7 +57,7 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 				p.message("the tree doesn't feel like talking");
 			}
 		}
-		/** GRAND SPIRIT TREE - TREE GNOME VILLAGE 
+		/** GRAND SPIRIT TREE - TREE GNOME VILLAGE
 		 *  NOTE: may be reached by completing Grand Tree but does not teleport you back there unless you have completed Tree Gnome Village quest
 		 *  **/
 		else if (obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE) {
@@ -117,11 +117,11 @@ public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveL
 	}
 
 	private void breakPlagueSample(Player p) {
-		if (p.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 			p.message("the plague sample is too delicate...");
 			p.message("it disintegrates in the crossing");
-			while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+			while (p.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+				p.getCarriedItems().getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 	}

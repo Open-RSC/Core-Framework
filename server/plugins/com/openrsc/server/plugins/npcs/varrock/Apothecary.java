@@ -29,17 +29,17 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 			p.updateQuestStage(Quests.ROMEO_N_JULIET, 5);
 			return;
 		} else if (p.getQuestStage(Quests.ROMEO_N_JULIET) == 5) {
-			if (!p.getInventory().hasItemId(ItemId.CADAVABERRIES.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.CADAVABERRIES.id())) {
 				npcTalk(p, n, "Keep searching for the berries",
 					"They are needed for the potion");
 			} else {
 				npcTalk(p, n, "Well done. You have the berries");
 				message(p, "You hand over the berries");
-				p.getInventory().remove(ItemId.CADAVABERRIES.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.CADAVABERRIES.id(), 1);
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcTalk(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");
-				p.getInventory().add(new Item(ItemId.CADAVA.id()));
+				p.getCarriedItems().getInventory().add(new Item(ItemId.CADAVA.id()));
 				p.updateQuestStage(Quests.ROMEO_N_JULIET, 6);
 			}
 			return;
@@ -69,21 +69,21 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 				npcTalk(p, n, "Well give me them and 5 gold and I'll make you your potion");
 				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
 				if (sub_option == 0) {
-					int cointimes = p.getInventory().countId(ItemId.COINS.id()) / 5;
-					int roottimes = p.getInventory().countId(ItemId.LIMPWURT_ROOT.id());
-					int eggtimes = p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
+					int cointimes = p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) / 5;
+					int roottimes = p.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id());
+					int eggtimes = p.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
 					int repeattimes = (cointimes < roottimes) ? cointimes : roottimes;
 					repeattimes = (eggtimes < repeattimes) ? eggtimes : repeattimes;
 					p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Apothecary Brews Potion", repeattimes, false) {
 						@Override
 						public void action() {
-							if (p.getInventory().countId(ItemId.COINS.id()) < 5) {
+							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 5) {
 								p.message("You don't have enough coins");
 								interrupt();
 								return;
 							}
-							if (p.getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
-								|| p.getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
+							if (p.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
+								|| p.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
 								p.message("You don't have all the ingredients");
 								interrupt();
 								return;

@@ -23,10 +23,10 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 	@Override
 	public void onInvAction(final Item item, final Player player, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
-			if (player.cantConsume()) {
+			if (player.cantConsume())
 				return;
 
-			if (player.getInventory().remove(item) == -1)
+			if (player.getCarriedItems().getInventory().remove(item) == -1)
 				return;
 
 			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
@@ -287,45 +287,45 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 	private void addFoodResult(Player player, int id) {
 
 		if (id == ItemId.MEAT_PIZZA.id())
-			player.getInventory().add(new Item(ItemId.HALF_MEAT_PIZZA.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_MEAT_PIZZA.id()));
 
 		else if (id == ItemId.ANCHOVIE_PIZZA.id())
-			player.getInventory().add(new Item(ItemId.HALF_ANCHOVIE_PIZZA.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_ANCHOVIE_PIZZA.id()));
 
 		else if (id == ItemId.PINEAPPLE_PIZZA.id())
-			player.getInventory().add(new Item(ItemId.HALF_PINEAPPLE_PIZZA.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_PINEAPPLE_PIZZA.id()));
 
 		else if (id == ItemId.CAKE.id())
-			player.getInventory().add(new Item(ItemId.PARTIAL_CAKE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PARTIAL_CAKE.id()));
 
 		else if (id == ItemId.PARTIAL_CAKE.id())
-			player.getInventory().add(new Item(ItemId.SLICE_OF_CAKE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.SLICE_OF_CAKE.id()));
 
 		else if (id == ItemId.CHOCOLATE_CAKE.id())
-			player.getInventory().add(new Item(ItemId.PARTIAL_CHOCOLATE_CAKE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PARTIAL_CHOCOLATE_CAKE.id()));
 
 		else if (id == ItemId.PARTIAL_CHOCOLATE_CAKE.id())
-			player.getInventory().add(new Item(ItemId.CHOCOLATE_SLICE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.CHOCOLATE_SLICE.id()));
 
 		else if (id == ItemId.APPLE_PIE.id())
-			player.getInventory().add(new Item(ItemId.HALF_AN_APPLE_PIE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_AN_APPLE_PIE.id()));
 
 		else if (id == ItemId.HALF_AN_APPLE_PIE.id())
-			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.REDBERRY_PIE.id())
-			player.getInventory().add(new Item(ItemId.HALF_A_REDBERRY_PIE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_REDBERRY_PIE.id()));
 
 		else if (id == ItemId.HALF_A_REDBERRY_PIE.id())
-			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.MEAT_PIE.id())
-			player.getInventory().add(new Item(ItemId.HALF_A_MEAT_PIE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_MEAT_PIE.id()));
 
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
-			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id())
-			player.getInventory().add(new Item(ItemId.BOWL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 	}
 }

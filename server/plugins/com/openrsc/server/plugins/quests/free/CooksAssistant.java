@@ -27,12 +27,12 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Cook's assistant";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done. You have completed the cook's assistant quest");
@@ -70,39 +70,39 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 					break;
 				case 1:
 					npcTalk(p, n, "How are you getting on with finding the ingredients?");
-					if (p.getInventory().hasItemId(ItemId.EGG.id())
-						&& p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id())
-						&& p.getInventory().hasItemId(ItemId.MILK.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.EGG.id())
+						&& p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())
+						&& p.getCarriedItems().hasCatalogID(ItemId.MILK.id())) {
 						playerTalk(p, n,
 							"I now have everything you need for your cake",
 							"Milk, flour, and an egg!");
 						npcTalk(p, n, "I am saved thankyou!");
 						message(p, "You give some milk, an egg and some flour to the cook");
-						p.getInventory().remove(ItemId.EGG.id(), 1);
-						p.getInventory().remove(ItemId.POT_OF_FLOUR.id(), 1);
-						p.getInventory().remove(ItemId.MILK.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.EGG.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.POT_OF_FLOUR.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.MILK.id(), 1);
 						p.sendQuestComplete(Quests.COOKS_ASSISTANT);
 						p.updateQuestStage(getQuestId(), -1);
 
-					} else if (p.getInventory().hasItemId(ItemId.EGG.id())
-						|| p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id())
-						|| p.getInventory().hasItemId(ItemId.MILK.id())) {
+					} else if (p.getCarriedItems().hasCatalogID(ItemId.EGG.id())
+						|| p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())
+						|| p.getCarriedItems().hasCatalogID(ItemId.MILK.id())) {
 
 						playerTalk(p, n, "I have found some of the things you asked for:");
-						if (p.getInventory().hasItemId(ItemId.MILK.id()))
+						if (p.getCarriedItems().hasCatalogID(ItemId.MILK.id()))
 							playerTalk(p, n, "I have some milk");
-						if (p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id()))
+						if (p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id()))
 							playerTalk(p, n, "I have some flour");
-						if (p.getInventory().hasItemId(ItemId.EGG.id()))
+						if (p.getCarriedItems().hasCatalogID(ItemId.EGG.id()))
 							playerTalk(p, n, "I have an egg");
 
 						npcTalk(p, n, "Great, but can you get the other ingredients as well?",
 								"You still need to find");
-						if (!p.getInventory().hasItemId(ItemId.MILK.id()))
+						if (!p.getCarriedItems().hasCatalogID(ItemId.MILK.id()))
 							npcTalk(p, n, "Some milk");
-						if (!p.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id()))
+						if (!p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id()))
 							npcTalk(p, n, "Some flour");
-						if (!p.getInventory().hasItemId(ItemId.EGG.id()))
+						if (!p.getCarriedItems().hasCatalogID(ItemId.EGG.id()))
 							npcTalk(p, n, "An egg");
 
 						playerTalk(p, n, "OK I'll try and find that for you");

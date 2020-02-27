@@ -122,7 +122,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					closeGenericObject(obj, player, PHOENIX_CHEST_CLOSED, "You close the chest");
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
-							|| player.getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
+							|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
 							message(player, "You search the chest", "The chest is empty");
 							return;
 					} else if (isPhoenixGang(player)) {
@@ -142,7 +142,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					closeCupboard(obj, player, BARM_CUPBOARD_CLOSED);
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
-						|| player.getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
+						|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
 						message(player, "You search the cupboard", "The cupboard is empty");
 						return;
 					} else if (isBlackArmGang(player)) {
@@ -178,7 +178,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					npcTalk(p, n, "Have you got those crossbows for me yet?");
 					playerTalk(p, n, "Yes I have");
 					p.message("You give the crossbows to katrine");
-					p.getInventory().remove(ItemId.PHOENIX_CROSSBOW.id(), 2);
+					p.getCarriedItems().getInventory().remove(ItemId.PHOENIX_CROSSBOW.id(), 2);
 					npcTalk(p, n,
 						"Ok you can join our gang now",
 						"Feel free to enter any the rooms of the ganghouse");
@@ -519,7 +519,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 		} else if (obj.getID() == 20 && obj.getY() == 532) {
 			if (p.getY() <= 531 || p.getY() >= 531) {
 				p.message("The door is locked");
-				if (p.getInventory().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id())) {
 					p.message("You need to use your key to open it");
 					return;
 				}

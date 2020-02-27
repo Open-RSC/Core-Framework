@@ -341,8 +341,8 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	}
 
 	private boolean cantGo(Player p) {
-		synchronized(p.getInventory().getItems()) {
-			for (Item item : p.getInventory().getItems()) {
+		synchronized(p.getCarriedItems().getInventory().getItems()) {
+			for (Item item : p.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();
 				if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
 					|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
@@ -562,8 +562,8 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	}
 
 	private boolean alreadyHasCape(Player player) {
-		synchronized(player.getInventory().getItems()) {
-			for (Item item : player.getInventory().getItems()) {
+		synchronized(player.getCarriedItems().getInventory().getItems()) {
+			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
 					|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
 					return true;
@@ -615,7 +615,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 				Item Item = new Item(i.getID(), i.getAmount());
 				p.getWorld().unregisterItem(i);
 				p.playSound("takeobject");
-				p.getInventory().add(Item);
+				p.getCarriedItems().getInventory().add(Item);
 			}
 		}
 

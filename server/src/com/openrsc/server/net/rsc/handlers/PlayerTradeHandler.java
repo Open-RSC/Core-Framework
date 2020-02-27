@@ -143,13 +143,13 @@ public class PlayerTradeHandler implements PacketHandler {
 
 				synchronized(myOffer) {
 					synchronized(theirOffer) {
-						int myRequiredSlots = player.getInventory().getRequiredSlots(theirOffer);
-						int myAvailableSlots = (30 - player.getInventory().size())
-							+ player.getInventory().getFreedSlots(myOffer);
+						int myRequiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(theirOffer);
+						int myAvailableSlots = (30 - player.getCarriedItems().getInventory().size())
+							+ player.getCarriedItems().getInventory().getFreedSlots(myOffer);
 
-						int theirRequiredSlots = affectedPlayer.getInventory().getRequiredSlots(myOffer);
-						int theirAvailableSlots = (30 - affectedPlayer.getInventory().size())
-							+ affectedPlayer.getInventory().getFreedSlots(theirOffer);
+						int theirRequiredSlots = affectedPlayer.getCarriedItems().getInventory().getRequiredSlots(myOffer);
+						int theirAvailableSlots = (30 - affectedPlayer.getCarriedItems().getInventory().size())
+							+ affectedPlayer.getCarriedItems().getInventory().getFreedSlots(theirOffer);
 
 						if (theirRequiredSlots > theirAvailableSlots) {
 							player.message("Other player doesn't have enough inventory space to receive the objects");
@@ -165,35 +165,35 @@ public class PlayerTradeHandler implements PacketHandler {
 						}
 
 						for (Item item : myOffer) {
-							Item affectedItem = player.getInventory().get(item);
+							Item affectedItem = player.getCarriedItems().getInventory().get(item);
 							if (affectedItem == null) {
 								player.setSuspiciousPlayer(true, "trade item is null");
 								player.getTrade().resetAll();
 								return;
 							}
 							if (affectedItem.isWielded()) {
-								player.getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
-							player.getInventory().remove(item);
+							player.getCarriedItems().getInventory().remove(item);
 						}
 						for (Item item : theirOffer) {
-							Item affectedItem = affectedPlayer.getInventory().get(item);
+							Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
 							if (affectedItem == null) {
 								affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
 								player.getTrade().resetAll();
 								return;
 							}
 							if (affectedItem.isWielded()) {
-								affectedPlayer.getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+								affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
-							affectedPlayer.getInventory().remove(item);
+							affectedPlayer.getCarriedItems().getInventory().remove(item);
 						}
 
 						for (Item item : myOffer) {
-							affectedPlayer.getInventory().add(item);
+							affectedPlayer.getCarriedItems().getInventory().add(item);
 						}
 						for (Item item : theirOffer) {
-							player.getInventory().add(item);
+							player.getCarriedItems().getInventory().add(item);
 						}
 
 						player.getWorld().getServer().getGameLogger().addQuery(
@@ -256,7 +256,7 @@ public class PlayerTradeHandler implements PacketHandler {
 					continue;
 				}
 
-				if (tItem.getAmount() > player.getInventory().countId(tItem.getCatalogId())) {
+				if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId())) {
 					player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
 					player.getTrade().resetAll();
 					return;

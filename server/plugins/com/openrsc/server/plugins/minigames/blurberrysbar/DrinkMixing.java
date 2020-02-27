@@ -51,7 +51,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			p.setBusy(true);
 			message(p, 1900, dm.messages[0]);
 			if (dm.itemIDOther == ItemId.MILK.id()) {
-				p.getInventory().replace(ItemId.MILK.id(), ItemId.BUCKET.id());
+				p.getCarriedItems().getInventory().replace(ItemId.MILK.id(), ItemId.BUCKET.id());
 			} else {
 				removeItem(p, dm.itemIDOther, 1);
 			}
@@ -60,28 +60,28 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			}
 			if (p.getCache().hasKey("fruit_blast_base")) { // fruit blast
 				if (dm.itemIDOther == ItemId.LEMON_SLICES.id()) {
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.FRUIT_BLAST.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.FRUIT_BLAST.id());
 				} else {
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 				}
 				p.setBusy(false);
 				checkAndRemoveBlurberry(p, true);
 			}
 			if (p.getCache().hasKey("drunk_dragon_base")) {
 				if (dm.itemIDOther != ItemId.CREAM.id() && dm.itemIDOther != ItemId.PINEAPPLE_CHUNKS.id()) { // heat to finish drunk dragon
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				}
 			}
 			if (p.getCache().hasKey("sgg_base")) {
 				if (dm.itemIDOther != ItemId.EQUA_LEAVES.id() && dm.itemIDOther != ItemId.LIME_SLICES.id()) { // SGG
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				} else {
 					if (p.getCache().hasKey("leaves_into_drink") && p.getCache().hasKey("lime_slices_to_drink")) {
-						p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.SGG.id());
+						p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.SGG.id());
 						p.setBusy(false);
 						checkAndRemoveBlurberry(p, true);
 					}
@@ -89,19 +89,19 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			}
 			if (p.getCache().hasKey("chocolate_saturday_base")) {
 				if (dm.itemIDOther != ItemId.CHOCOLATE_BAR.id()) { // heat for range - chocolate saturday
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				}
 			}
 			if (p.getCache().hasKey("heated_choco_saturday")) {
 				if (dm.itemIDOther != ItemId.CREAM.id() && dm.itemIDOther != ItemId.CHOCOLATE_DUST.id()) { // finish chocolate saturday
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				} else {
 					if (p.getCache().hasKey("cream_into_drink") && p.getCache().hasKey("choco_dust_into_drink")) {
-						p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.CHOCOLATE_SATURDAY.id());
+						p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.CHOCOLATE_SATURDAY.id());
 						p.setBusy(false);
 						checkAndRemoveBlurberry(p, true);
 					}
@@ -110,7 +110,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			if (p.getCache().hasKey("blurberry_special_base")) {
 				if (dm.itemIDOther != ItemId.DICED_ORANGE.id() && dm.itemIDOther != ItemId.DICED_LEMON.id()
 						&& dm.itemIDOther != ItemId.LIME_SLICES.id() && dm.itemIDOther != ItemId.EQUA_LEAVES.id()) { // blurberry special finish
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				} else {
@@ -118,7 +118,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 						&& p.getCache().hasKey("diced_lemon_in_drink")
 						&& p.getCache().hasKey("lime_slices_to_drink")
 						&& p.getCache().hasKey("leaves_into_drink")) {
-						p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.BLURBERRY_SPECIAL.id());
+						p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.BLURBERRY_SPECIAL.id());
 						p.setBusy(false);
 						checkAndRemoveBlurberry(p, true);
 					}
@@ -127,14 +127,14 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			if (p.getCache().hasKey("pineapple_punch_base")) { // finish pineapple punch
 				if (dm.itemIDOther != ItemId.PINEAPPLE_CHUNKS.id() && dm.itemIDOther != ItemId.LIME_CHUNKS.id()
 						&& dm.itemIDOther != ItemId.LIME_SLICES.id()) {
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				} else {
 					if (p.getCache().hasKey("diced_pa_to_drink")
 						&& p.getCache().hasKey("diced_lime_in_drink")
 						&& p.getCache().hasKey("lime_slices_to_drink")) {
-						p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.PINEAPPLE_PUNCH.id());
+						p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.PINEAPPLE_PUNCH.id());
 						p.setBusy(false);
 						checkAndRemoveBlurberry(p, true);
 					}
@@ -142,13 +142,13 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			}
 			if (p.getCache().hasKey("wizard_blizzard_base")) { // finish wizard blizzard
 				if (dm.itemIDOther != ItemId.PINEAPPLE_CHUNKS.id() && dm.itemIDOther != ItemId.LIME_SLICES.id()) {
-					p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 					p.setBusy(false);
 					checkAndRemoveBlurberry(p, true);
 				} else {
 					if (p.getCache().hasKey("diced_pa_to_drink")
 						&& p.getCache().hasKey("lime_slices_to_drink")) {
-						p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.WIZARD_BLIZZARD.id());
+						p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.WIZARD_BLIZZARD.id());
 						p.setBusy(false);
 						checkAndRemoveBlurberry(p, true);
 					}
@@ -217,15 +217,15 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 				if (checkAndRemoveBlurberry(p, false)) {
 					checkAndRemoveBlurberry(p, true);
 					if (complete) {
-						p.getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.FULL_COCKTAIL_GLASS.id());
+						p.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.FULL_COCKTAIL_GLASS.id());
 						if (!p.getCache().hasKey(nextCache) && nextCache != null)
 							p.getCache().store(nextCache, true);
 					} else {
-						p.getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.HALF_COCKTAIL_GLASS.id());
+						p.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.HALF_COCKTAIL_GLASS.id());
 					}
 				} else {
 					// ??
-					p.getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.COCKTAIL_GLASS.id());
+					p.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.COCKTAIL_GLASS.id());
 				}
 				message(p, 600, "you pour the contents into a glass");
 			} else {

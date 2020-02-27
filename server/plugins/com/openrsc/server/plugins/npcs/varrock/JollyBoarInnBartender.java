@@ -16,7 +16,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARTENDER_OUTSIDE_VARROCK.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Yes please?");
@@ -41,7 +41,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 
 			if (hasItem(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
-				p.getInventory().remove(ItemId.COINS.id(), 2);
+				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
 				addItem(p, ItemId.BEER.id(), 1);
 			} else {
 				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
@@ -71,7 +71,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
 			if (hasItem(p, ItemId.COINS.id(), 10)) {
-				p.getInventory().remove(ItemId.COINS.id(), 10);
+				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 10);
 				message(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");
@@ -84,20 +84,20 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 			}
 		}
 	}
-	
+
 	private void drinkAle(Player p) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.MAGIC, Skills.CRAFTING, Skills.MINING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(p, skillIDs[i]);
 		}
 	}
-	
+
 	private void setAleEffect(Player p, int skillId) {
 		int reduction, currentStat, maxStat;
 		maxStat = p.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
-			maxStat < 40 ? 6 : 
+			maxStat < 40 ? 6 :
 			maxStat < 75 ? 7 : 8;
 		currentStat = p.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {

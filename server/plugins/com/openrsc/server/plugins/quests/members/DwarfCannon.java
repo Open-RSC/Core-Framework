@@ -122,9 +122,9 @@ public class DwarfCannon
 									"i'm afraid you can only have one set at a time");
 								return;
 							}
-							if (p.getInventory().countId(ItemId.COINS.id()) >= 750000) {
+							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 750000) {
 								message(p, "you give the Cannon engineer 750 000 coins");
-								p.getInventory().remove(ItemId.COINS.id(), 750000);
+								p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 750000);
 
 								message(p, "he gives you the four parts that make the cannon");
 								addItem(p, ItemId.DWARF_CANNON_BASE.id(), 1);
@@ -181,22 +181,22 @@ public class DwarfCannon
 
 								switch (cannonStage) {
 									case 1:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
 										break;
 									case 2:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
 										break;
 									case 3:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
 										break;
 									case 4:
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
-										p.getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
+										p.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
 										break;
 								}
 								p.getCache().remove("cannon_stage");
@@ -449,11 +449,11 @@ public class DwarfCannon
 					npcTalk(p, n, "my son told me how you helped him",
 						"i'm eternally grateful",
 						"he said you have his teddy");
-					if (p.getInventory().hasInInventory(ItemId.TEDDY.id())) {
+					if (p.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY.id())) {
 						playerTalk(p, n, "i do, and i fixed it");
 						p.message("You hand over the teddy");
 						p.getCache().set("miniquest_dwarf_youth_rescue", 2);
-						p.getInventory().remove(ItemId.TEDDY.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.TEDDY.id(), 1);
 						npcTalk(p, n, "yet again you've proven a friend to us",
 							"i will talk to our best smithy",
 							"he works at the new lava forge deep underground",
@@ -495,8 +495,8 @@ public class DwarfCannon
 		} else if (n.getID() == NpcId.DWARVEN_YOUTH.id()) {
 			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
 			if (stage < 1) {
-				if (p.getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
-					&& p.getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
+				if (p.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& p.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
 					npcTalk(p, n, "have you found teddy?");
 					playerTalk(p, n, "well.. yes?");
 					npcTalk(p, n, "teddy! i'm so happy!",
@@ -535,7 +535,7 @@ public class DwarfCannon
 				p.damage(DataConversions.random(2, 3));
 			} else {
 				message(p, "you attempt to replace the missing railing", "you replace the railing with no problems");
-				p.getInventory().remove(ItemId.RAILING_DWARF_CANNON.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.RAILING_DWARF_CANNON.id(), 1);
 
 				if (obj.getID() == 181) {
 					p.getCache().store("railone", true);

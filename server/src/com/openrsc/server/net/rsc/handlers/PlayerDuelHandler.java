@@ -183,9 +183,9 @@ public class PlayerDuelHandler implements PacketHandler {
 					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 						Item item;
 						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-							item = player.getEquipment().get(i);
+							item = player.getCarriedItems().getEquipment().get(i);
 							if (item != null) {
-								if (!player.getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
+								if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
 									player.getDuel().resetAll();
 									player.setBusy(false);
 									player.setStatus(Action.IDLE);
@@ -199,9 +199,9 @@ public class PlayerDuelHandler implements PacketHandler {
 						}
 
 						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-							item = affectedPlayer.getEquipment().get(i);
+							item = affectedPlayer.getCarriedItems().getEquipment().get(i);
 							if (item != null) {
-								if (!affectedPlayer.getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
+								if (!affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
 									affectedPlayer.getDuel().resetAll();
 									player.setBusy(false);
 									player.setStatus(Action.IDLE);
@@ -214,10 +214,10 @@ public class PlayerDuelHandler implements PacketHandler {
 							}
 						}
 					} else {
-						synchronized(player.getInventory().getItems()) {
-							for (Item item : player.getInventory().getItems()) {
+						synchronized(player.getCarriedItems().getInventory().getItems()) {
+							for (Item item : player.getCarriedItems().getInventory().getItems()) {
 								if (item.isWielded()) {
-									player.getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
+									player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
 								}
 							}
 						}
@@ -225,11 +225,11 @@ public class PlayerDuelHandler implements PacketHandler {
 						ActionSender.sendInventory(player);
 						ActionSender.sendEquipmentStats(player);
 
-						synchronized(affectedPlayer.getInventory().getItems()) {
-							for (Item item : affectedPlayer.getInventory().getItems()) {
+						synchronized(affectedPlayer.getCarriedItems().getInventory().getItems()) {
+							for (Item item : affectedPlayer.getCarriedItems().getInventory().getItems()) {
 								if (item.isWielded()) {
 									item.setWielded(false);
-									affectedPlayer.getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
+									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
 								}
 							}
 						}
@@ -349,8 +349,8 @@ public class PlayerDuelHandler implements PacketHandler {
 					ActionSender.sendDuelSettingUpdate(affectedPlayer);
 					continue;
 				}
-				if (tItem.getAmount() > player.getInventory().countId(tItem.getCatalogId())) {
-					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && player.getEquipment().hasEquipped(tItem.getCatalogId()))) {
+				if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId())) {
+					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(tItem.getCatalogId()))) {
 						player.setSuspiciousPlayer(true, "not want equipment and duel trade item amount 1 and isweilding item");
 						return;
 					}

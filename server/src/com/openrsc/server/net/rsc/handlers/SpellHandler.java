@@ -72,15 +72,15 @@ public class SpellHandler implements PacketHandler {
 			boolean skipRune = false;
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				for (Item staff : getStaffs(e.getKey())) {
-					if (player.getEquipment().searchEquipmentForItem(staff.getCatalogId()) != -1) {
+					if (player.getCarriedItems().getEquipment().searchEquipmentForItem(staff.getCatalogId()) != -1) {
 						skipRune = true;
 					}
 				}
 			} else {
 				for (Item staff : getStaffs(e.getKey())) {
-					synchronized(player.getInventory().getItems()) {
-						if (player.getInventory().contains(staff)) {
-							for (Item item : player.getInventory().getItems()) {
+					synchronized(player.getCarriedItems().getInventory().getItems()) {
+						if (player.getCarriedItems().getInventory().contains(staff)) {
+							for (Item item : player.getCarriedItems().getInventory().getItems()) {
 								if (item.equals(staff) && item.isWielded()) {
 									skipRune = true;
 									break;
@@ -94,19 +94,19 @@ public class SpellHandler implements PacketHandler {
 			if (skipRune) {
 				continue;
 			}
-			if (player.getInventory().countId(e.getKey()) < e.getValue()) {
+			if (player.getCarriedItems().getInventory().countId(e.getKey()) < e.getValue()) {
 				player.setSuspiciousPlayer(true, "player not all reagents for spell");
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
-			player.getInventory().remove(e.getKey(), e.getValue());
+			player.getCarriedItems().getInventory().remove(e.getKey(), e.getValue());
 		}
 		/*
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
 			for (Item staff : getStaffs(e.getKey())) {
-				if (player.getInventory().contains(staff)) {
-					for (Item item : player.getInventory().getItems()) {
+				if (player.getCarriedItems().getInventory().contains(staff)) {
+					for (Item item : player.getCarriedItems().getInventory().getItems()) {
 						if (item.equals(staff) && item.isWielded()) {
 							skipRune = true;
 							break;
@@ -117,7 +117,7 @@ public class SpellHandler implements PacketHandler {
 			if (skipRune) {
 				continue;
 			}
-			player.getInventory().remove(e.getKey(), e.getValue());
+			player.getCarriedItems().getInventory().remove(e.getKey(), e.getValue());
 		}
 
 		 */
@@ -245,7 +245,7 @@ public class SpellHandler implements PacketHandler {
 					player.message("You have already completed this quest");
 					return;
 				}
-				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.LUCIEN_EDGE.id() && !player.getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.PENDANT_OF_ARMADYL.id())) {
+				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.LUCIEN_EDGE.id() && !player.getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.PENDANT_OF_ARMADYL.id())) {
 					npcTalk(player, affectedNpc, "I'm sure you don't want to attack me really",
 						"I am your friend");
 					message(player, "You decide you don't want to attack Lucien really",
@@ -280,7 +280,7 @@ public class SpellHandler implements PacketHandler {
 				return;
 			}
 			if (spell.getSpellType() == 3) {
-				Item item = player.getInventory().get(p.readShort());
+				Item item = player.getCarriedItems().getInventory().get(p.readShort());
 				if (item == null) { // This shoudln't happen
 					player.resetPath();
 					return;
@@ -352,7 +352,7 @@ public class SpellHandler implements PacketHandler {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
-			player.getInventory().add(new Item(chargedOrb));
+			player.getCarriedItems().getInventory().add(new Item(chargedOrb));
 			player.lastCast = System.currentTimeMillis();
 			player.playSound("spellok");
 			player.playerServerMessage(MessageType.QUEST, "You succesfully charge the orb");
@@ -459,7 +459,7 @@ public class SpellHandler implements PacketHandler {
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
-				Iterator<Item> inventory = player.getInventory().iterator();
+				Iterator<Item> inventory = player.getCarriedItems().getInventory().iterator();
 				int boneCount = 0;
 				while (inventory.hasNext()) {
 					Item i = inventory.next();
@@ -473,7 +473,7 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				for (int i = 0; i < boneCount; i++) {
-					player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.BANANA.id()));
+					player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.BANANA.id()));
 				}
 				// needs verify if default message
 				finalizeSpell(player, spell, DEFAULT);
@@ -541,8 +541,8 @@ public class SpellHandler implements PacketHandler {
 							jewelryType = RING;
 							break;
 					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
+					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
@@ -564,9 +564,9 @@ public class SpellHandler implements PacketHandler {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
+					if (player.getCarriedItems().getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
-						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
+						player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
 					}
 					finalizeSpell(player, spell, "Alchemy spell successful");
 				}
@@ -592,8 +592,8 @@ public class SpellHandler implements PacketHandler {
 						jewelryType = NECKLACE;
 						break;
 				}
-				player.getInventory().remove(affectedItem);
-				player.getInventory().add(new Item(itemID));
+				player.getCarriedItems().getInventory().remove(affectedItem);
+				player.getCarriedItems().getInventory().add(new Item(itemID));
 				finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 			} else
 				player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted emerald " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -605,7 +605,7 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
-					if (player.getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
+					if (player.getCarriedItems().getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
 						if (affectedItem.getCatalogId() == com.openrsc.server.constants.ItemId.IRON_ORE.id()) {
 							smeltingDef = player.getWorld().getServer().getEntityHandler().getItemSmeltingDef(9999);
 							break;
@@ -631,14 +631,14 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				Item bar = new Item(smeltingDef.getBarId());
-				if (player.getInventory().remove(affectedItem) > -1) {
+				if (player.getCarriedItems().getInventory().remove(affectedItem) > -1) {
 					for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 						for (int i = 0; i < reqOre.getAmount(); i++) {
-							player.getInventory().remove(new Item(reqOre.getId()));
+							player.getCarriedItems().getInventory().remove(new Item(reqOre.getId()));
 						}
 					}
 					player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
-					player.getInventory().add(bar);
+					player.getCarriedItems().getInventory().add(bar);
 					player.incExp(com.openrsc.server.constants.Skills.SMITHING, smeltingDef.getExp(), true);
 				}
 				finalizeSpellNoMessage(player, spell);
@@ -663,8 +663,8 @@ public class SpellHandler implements PacketHandler {
 							jewelryType = NECKLACE;
 							break;
 					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
+					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -686,9 +686,9 @@ public class SpellHandler implements PacketHandler {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
+					if (player.getCarriedItems().getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
-						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
+						player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
 					}
 					finalizeSpell(player, spell, "Alchemy spell successful");
 				}
@@ -713,8 +713,8 @@ public class SpellHandler implements PacketHandler {
 							jewelryType = NECKLACE;
 							break;
 					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
+					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -735,8 +735,8 @@ public class SpellHandler implements PacketHandler {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
+					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted dragonstone " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
@@ -744,7 +744,7 @@ public class SpellHandler implements PacketHandler {
 
 		}
 		if (affectedItem.isWielded()) {
-			player.getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+			player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 		}
 
 	}
@@ -865,7 +865,7 @@ public class SpellHandler implements PacketHandler {
 						if (affectedItem.getOwnerUsernameHash() == 0 || affectedItem.getAttribute("npcdrop", false)) {
 							item.setAttribute("npcdrop", true);
 						}
-						getPlayer().getInventory().add(item);
+						getPlayer().getCarriedItems().getInventory().add(item);
 						break;
 				}
 			}
@@ -926,7 +926,7 @@ public class SpellHandler implements PacketHandler {
 						getPlayer().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
 						int fireDamage;
-						if (getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+						if (getPlayer().getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							if (n.getID() == com.openrsc.server.constants.NpcId.DRAGON.id()) {
 								percentage = 10;
 							} else if (n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
@@ -1036,7 +1036,7 @@ public class SpellHandler implements PacketHandler {
 							getPlayer().message("you need to complete underground pass quest to cast this spell");
 							return;
 						}
-						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
 							getPlayer().message("you need the staff of iban to cast this spell");
 							return;
 						}
@@ -1059,15 +1059,15 @@ public class SpellHandler implements PacketHandler {
 					case 33: // Guthix cast
 					case 34: // Saradomin cast
 					case 35: // Zamorak cast
-						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
 							getPlayer().message("you must weild the staff of guthix to cast this spell");
 							return;
 						}
-						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
 							getPlayer().message("you must weild the staff of saradomin to cast this spell");
 							return;
 						}
-						if (!getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
 							getPlayer().message("you must weild the staff of zamorak to cast this spell");
 							return;
 						}
@@ -1181,7 +1181,7 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (getPlayer().getMagicPoints() > 30
-							|| (getPlayer().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
+							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
 						int damage = Formulae.calcSpellHit(max, getPlayer().getMagicPoints());
@@ -1211,7 +1211,7 @@ public class SpellHandler implements PacketHandler {
 		//	player.message("You need to stay out of combat for 10 seconds before using a teleport.");
 		//	return;
 		//}
-		else if (player.getInventory().countId(com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) > 0) {
+		else if (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) > 0) {
 			message(player, "You can't teleport while holding Ana,",
 				"It's just too difficult to concentrate.");
 			canTeleport = false;
@@ -1237,15 +1237,15 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		if (player.getLocation().inKaramja() || player.getLocation().inBrimhaven()) {
-			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()) > 0) {
-				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
+			while (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()) > 0) {
+				player.getCarriedItems().getInventory().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
 			}
 		}
-		if (player.getInventory().hasItemId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id())) {
+		if (player.getCarriedItems().hasCatalogID(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
-			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
+			while (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
+				player.getCarriedItems().getInventory().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {

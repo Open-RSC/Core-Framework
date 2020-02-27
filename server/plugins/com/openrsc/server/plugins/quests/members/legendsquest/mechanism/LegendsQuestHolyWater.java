@@ -33,7 +33,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 		// simple random for the moment
 		message(player, 0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
-		player.getInventory().replace(ItemId.ENCHANTED_VIAL.id(), ItemId.HOLY_WATER_VIAL.id());
+		player.getCarriedItems().getInventory().replace(ItemId.ENCHANTED_VIAL.id(), ItemId.HOLY_WATER_VIAL.id());
 		if(!player.getCache().hasKey("remaining_blessed_bowl")) {
 			player.getCache().set("remaining_blessed_bowl", DataConversions.random(1, 15));
 		} else {
@@ -44,7 +44,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 			// empty the bowl
 			else {
 				player.message("The pure water in the golden bowl has run out...");
-				player.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+				player.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 				player.getCache().remove("remaining_blessed_bowl");
 			}
 		}
@@ -57,7 +57,7 @@ public class LegendsQuestHolyWater implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {
-		if (!player.getEquipment().hasEquipped(ItemId.HOLY_WATER_VIAL.id())) {
+		if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.HOLY_WATER_VIAL.id())) {
 			player.message("You need to equip this item to throw it.");
 		}
 		else {

@@ -43,7 +43,7 @@ public class ErnestTheChicken implements QuestInterface,
 
 	@Override
 	public void handleReward(Player p) {
-		p.getInventory().add(new Item(ItemId.COINS.id(), 300));
+		p.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 300));
 		p.message("Well done. You have completed the Ernest the chicken quest");
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.ERNEST_THE_CHICKEN), true);
 		p.message("@gre@You haved gained 4 quest points!");
@@ -311,19 +311,19 @@ public class ErnestTheChicken implements QuestInterface,
 					// some items
 					else {
 						playerTalk(p, n, "I have found some of the things you need:");
-						if (p.getInventory().hasItemId(ItemId.OIL_CAN.id()))
+						if (p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id()))
 							playerTalk(p, n, "I have a can of oil");
-						if (p.getInventory().hasItemId(ItemId.PRESSURE_GAUGE.id()))
+						if (p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id()))
 							playerTalk(p, n, "I have a pressure gauge");
-						if (p.getInventory().hasItemId(ItemId.RUBBER_TUBE.id()))
+						if (p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id()))
 							playerTalk(p, n, "I have a rubber tube");
 
 						npcTalk(p, n, "Well that's a start", "You still need to find");
-						if (!p.getInventory().hasItemId(ItemId.OIL_CAN.id()))
+						if (!p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id()))
 							npcTalk(p, n, "A can of oil");
-						if (!p.getInventory().hasItemId(ItemId.RUBBER_TUBE.id()))
+						if (!p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id()))
 							npcTalk(p, n, "A rubber tube");
-						if (!p.getInventory().hasItemId(ItemId.PRESSURE_GAUGE.id()))
+						if (!p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id()))
 							npcTalk(p, n, "A Pressure Gauge");
 					}
 					break;

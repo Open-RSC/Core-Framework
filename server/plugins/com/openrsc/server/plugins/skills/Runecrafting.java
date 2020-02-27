@@ -69,7 +69,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 			}
 			player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 100, "Binding runes", player.getInventory().countId(ItemId.RUNE_ESSENCE.id()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 100, "Binding runes", player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id()), false) {
 			@Override
 			public void action() {
 				if (!hasItem(getOwner(), ItemId.RUNE_ESSENCE.id())) {

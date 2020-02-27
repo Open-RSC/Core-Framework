@@ -685,7 +685,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		else if (obj.getID() == YOMMI_TREE && item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
 			int objectX = obj.getX();
 			int objectY = obj.getY();
-			p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 			displayTeleportBubble(p, obj.getX(), obj.getY(), true);
 			message(p, 1300, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
@@ -770,7 +770,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			message(p, 1300, "You carefully place the Dragon Crystal on the rock.",
 				"The rocks seem to vibrate and hum and the crystal starts to glow.");
 			p.message("The vibration in the area diminishes, but the crystal continues to glow.");
-			p.getInventory().replace(ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id());
+			p.getCarriedItems().getInventory().replace(ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id());
 		}
 		else if (obj.getID() == ANCIENT_LAVA_FURNACE) {
 			switch (ItemId.getById(item.getCatalogId())) {
@@ -901,7 +901,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		else if (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8 && p.getY() >= 3723 && p.getY() <= 3740) {
 				p.message("You fill the bowl up with water..");
-				p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+				p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 				return;
 			}
 			message(p, 1300, "The water is awkward to get to...",
@@ -939,15 +939,15 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.");
 				if (emptyID == ItemId.GOLDEN_BOWL.id()) {
 					message(p, 1300, "into your gold bowl.");
-					p.getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id());
+					p.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id());
 					message(p, 1300, "The water doesn't seem to sparkle as much as it did in the pool.");
 				} else if (emptyID == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 					message(p, 1300, "into your blessed gold bowl.");
-					p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+					p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 					message(p, 1300, "The water seems to bubble and sparkle as if alive.");
 				} else {
 					message(p, 1300, "You put some water in the " + p.getWorld().getServer().getEntityHandler().getItemDef(emptyID).getName().toLowerCase() + ".");
-					p.getInventory().replace(emptyID, refilledID);
+					p.getCarriedItems().getInventory().replace(emptyID, refilledID);
 				}
 				removeItem(p, ItemId.CUT_REED_PLANT.id(), 1);
 				message(p, 0, "The cut reed is soaked through with water and is now all soggy.");

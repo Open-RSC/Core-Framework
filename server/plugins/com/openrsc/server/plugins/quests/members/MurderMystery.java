@@ -133,20 +133,20 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					"idiotic questions all day?");
 			}
 		} else if (menu == 2 && p.getCache().hasKey("thread")) {
-			if (n.getID() == NpcId.CAROL_SINCLAIR.id() && !p.getInventory().hasItemId(ItemId.THREAD_RED.id())) {
+			if (n.getID() == NpcId.CAROL_SINCLAIR.id() && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id())) {
 				p.message("you show Carol the thread found at the crime scene");
 				npcTalk(p, n, "Its some thread. Sorry, do you have a point here?",
 					"Or do you just enjoy wasting peoples time?");
-			} else if (n.getID() == NpcId.CAROL_SINCLAIR.id() && p.getInventory().hasItemId(ItemId.THREAD_RED.id())) {
+			} else if (n.getID() == NpcId.CAROL_SINCLAIR.id() && p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id())) {
 				p.message("You show her the thread from the study window");
 				npcTalk(p, n, "Its some red thread... it kind of looks like the",
 					"Same material as my trousers. But obviously its not.");
 
-			} else if (n.getID() == NpcId.ELIZABETH_SINCLAIR.id() && !p.getInventory().hasItemId(ItemId.THREAD_BLUE.id())) {
+			} else if (n.getID() == NpcId.ELIZABETH_SINCLAIR.id() && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 				p.message("You show her the thread from the study window");
 				npcTalk(p, n, "Its some thread. You're not very good",
 					"at this whole investigation thing are you?");
-			} else if (n.getID() == NpcId.ELIZABETH_SINCLAIR.id() && p.getInventory().hasItemId(ItemId.THREAD_BLUE.id())) {
+			} else if (n.getID() == NpcId.ELIZABETH_SINCLAIR.id() && p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 				p.message("You show her the thread from the study window");
 				npcTalk(p, n, "Looks like a Blue thread to me.",
 					" If you can't work that out for yourself I",
@@ -155,38 +155,38 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 					"are made of doesn't it?");
 				npcTalk(p, n, "I suppose it does. So what?");
 
-			} else if (n.getID() == NpcId.ANNA_SINCLAIR.id() && !p.getInventory().hasItemId(ItemId.THREAD_GREEN.id())) {
+			} else if (n.getID() == NpcId.ANNA_SINCLAIR.id() && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())) {
 				p.message("You show Anna the thread from the study");
 				npcTalk(p, n, "Not really, no. Thread is fairly common");
-			} else if (n.getID() == NpcId.ANNA_SINCLAIR.id() && p.getInventory().hasItemId(ItemId.THREAD_GREEN.id())) {
+			} else if (n.getID() == NpcId.ANNA_SINCLAIR.id() && p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())) {
 				p.message("You show Anna the thread from the study");
 				npcTalk(p, n, "Its some Green thread. Its not exactly uncommon is it?",
 					"My trousers are made of the same material");
 
-			} else if (n.getID() == NpcId.FRANK_SINCLAIR.id() && !p.getInventory().hasItemId(ItemId.THREAD_BLUE.id())) {
+			} else if (n.getID() == NpcId.FRANK_SINCLAIR.id() && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 				p.message("Frank examines the thread from the crime scene");
 				npcTalk(p, n, "It looks like thread to me, but I'm not exactly",
 					"an expert. Is it worth something?",
 					"Can I have it? Actually, can you spare me a few gold?");
-			} else if (n.getID() == NpcId.FRANK_SINCLAIR.id() && p.getInventory().hasItemId(ItemId.THREAD_BLUE.id())) {
+			} else if (n.getID() == NpcId.FRANK_SINCLAIR.id() && p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 				p.message("Frank examines the thread from the crime scene");
 				npcTalk(p, n, "it kind of looks like the same material as",
 					"my trousers are made of... same colour anyway",
 					"think its worth anything? Can I have it? Or just some money?");
 
-			} else if (n.getID() == NpcId.BOB_SINCLAIR.id() && !p.getInventory().hasItemId(ItemId.THREAD_RED.id())) {
+			} else if (n.getID() == NpcId.BOB_SINCLAIR.id() && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id())) {
 				p.message("you show him the thread you discovered");
 				npcTalk(p, n, "Its some thread. great clue. No, really.");
-			} else if (n.getID() == NpcId.BOB_SINCLAIR.id() && p.getInventory().hasItemId(ItemId.THREAD_RED.id())) {
+			} else if (n.getID() == NpcId.BOB_SINCLAIR.id() && p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id())) {
 				p.message("you show him the thread you discovered");
 				npcTalk(p, n, "Its some red thread. I suppose you think",
 					"thats some kind of clue? It looks like",
 					"the material my trousers are made of");
 
-			} else if (n.getID() == NpcId.DAVID_SINCLAIR.id() && !p.getInventory().hasItemId(ItemId.THREAD_GREEN.id())) {
+			} else if (n.getID() == NpcId.DAVID_SINCLAIR.id() && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())) {
 				p.message("You show him the thread you found on the study window");
 				npcTalk(p, n, "No. Can I go yet? your face irritates me.");
-			} else if (n.getID() == NpcId.DAVID_SINCLAIR.id() && p.getInventory().hasItemId(ItemId.THREAD_GREEN.id())) {
+			} else if (n.getID() == NpcId.DAVID_SINCLAIR.id() && p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())) {
 				p.message("You show him the thread you found on the study window");
 				npcTalk(p, n, "Its some Green thread, like my trousers are made of.",
 					"Are you finished? I'm not sure which I dislike more",
@@ -540,8 +540,8 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 							int amt;
 							//removes all
 							for (int itemId : itemIds) {
-								amt = Math.max(p.getInventory().countId(itemId), 0);
-								p.getInventory().remove(itemId, amt);
+								amt = Math.max(p.getCarriedItems().getInventory().countId(itemId), 0);
+								p.getCarriedItems().getInventory().remove(itemId, amt);
 							}
 							p.sendQuestComplete(Quests.MURDER_MYSTERY);
 							npcTalk(p, n, "Please accept this reward from the family!");
@@ -1269,8 +1269,8 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 				case 1:
 					message(p, "Some thread seems to have been caught",
 						"on a loose nail on the window");
-					if (!p.getCache().hasKey("thread") && !p.getInventory().hasItemId(ItemId.THREAD_GREEN.id())
-						&& !p.getInventory().hasItemId(ItemId.THREAD_RED.id()) && !p.getInventory().hasItemId(ItemId.THREAD_BLUE.id())) {
+					if (!p.getCache().hasKey("thread") && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())
+						&& !p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id()) && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 						if (p.getCache().hasKey("murder_david")) {
 							addItem(p, ItemId.THREAD_GREEN.id(), 1);
 						} else if (p.getCache().hasKey("murder_anna")) {
@@ -1290,8 +1290,8 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 							p.getCache().store("thread", true);
 						}
 						return;
-					} else if (p.getCache().hasKey("thread") && !p.getInventory().hasItemId(ItemId.THREAD_GREEN.id())
-						&& !p.getInventory().hasItemId(ItemId.THREAD_RED.id()) && !p.getInventory().hasItemId(ItemId.THREAD_BLUE.id())) {
+					} else if (p.getCache().hasKey("thread") && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())
+						&& !p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id()) && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 						if (p.getCache().hasKey("murder_david")) {
 							addItem(p, ItemId.THREAD_GREEN.id(), 1);
 						} else if (p.getCache().hasKey("murder_anna")) {
@@ -1474,7 +1474,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 							p.message("You need something to put the flour in");
 						} else if (hasItem(p, ItemId.POT.id())) {
 							p.message("You take some flour from the barrel");
-							p.getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
+							p.getCarriedItems().getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
 
 							p.message("Theres still plenty of flour left");
 						} else if (hasItem(p, ItemId.MURDER_SCENE_POT.id())) {
@@ -1548,14 +1548,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		if (Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle a small amount of flour on the murderweapon");
 			p.message("the murderweapon is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.A_SILVER_DAGGER.id(), ItemId.A_SILVER_DAGGER_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER.id(), ItemId.A_SILVER_DAGGER_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the floury dagger");
 			p.message("You have a clean impression of the murderers finger prints");
-			p.getInventory().replace(ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.A_SILVER_DAGGER.id());
+			p.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.A_SILVER_DAGGER.id());
 			addItem(p, ItemId.UNIDENTIFIED_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1563,14 +1563,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Annas Necklace");
 			p.message("the necklace is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Necklace");
 			p.message("You have a clean impression of Annas finger prints");
-			p.getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.ANNAS_SILVER_NECKLACE.id());
+			p.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.ANNAS_SILVER_NECKLACE.id());
 			addItem(p, ItemId.ANNAS_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1578,14 +1578,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Bobs Cup");
 			p.message("the cup is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.BOBS_SILVER_TEACUP.id(), ItemId.BOBS_SILVER_TEACUP_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP.id(), ItemId.BOBS_SILVER_TEACUP_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Cup");
 			p.message("You have a clean impression of Bobs finger prints");
-			p.getInventory().replace(ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.BOBS_SILVER_TEACUP.id());
+			p.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.BOBS_SILVER_TEACUP.id());
 			addItem(p, ItemId.BOBS_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1593,14 +1593,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Carols Bottle");
 			p.message("the bottle is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Bottle");
 			p.message("You have a clean impression of Carols finger prints");
-			p.getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.CAROLS_SILVER_BOTTLE.id());
+			p.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.CAROLS_SILVER_BOTTLE.id());
 			addItem(p, ItemId.CAROLS_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1608,14 +1608,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Davids Book");
 			p.message("the book is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.DAVIDS_SILVER_BOOK_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.DAVIDS_SILVER_BOOK_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Book");
 			p.message("You have a clean impression of Davids finger prints");
-			p.getInventory().replace(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.DAVIDS_SILVER_BOOK.id());
+			p.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.DAVIDS_SILVER_BOOK.id());
 			addItem(p, ItemId.DAVIDS_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1623,14 +1623,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Elizabeths Needle");
 			p.message("the needle is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Needle");
 			p.message("You have a clean impression of Elizabeths finger prints");
-			p.getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.ELIZABETHS_SILVER_NEEDLE.id());
+			p.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.ELIZABETHS_SILVER_NEEDLE.id());
 			addItem(p, ItemId.ELIZABETHS_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1638,14 +1638,14 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Franks Pot");
 			p.message("the pot is now coated with a thin layer of flour");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			p.getInventory().replace(ItemId.FRANKS_SILVER_POT.id(), ItemId.FRANKS_SILVER_POT_FLOUR.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT.id(), ItemId.FRANKS_SILVER_POT_FLOUR.id());
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Pot");
 			p.message("You have a clean impression of Franks finger prints");
-			p.getInventory().replace(ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FRANKS_SILVER_POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FRANKS_SILVER_POT.id());
 			addItem(p, ItemId.FRANKS_FINGERPRINT.id(), 1);
 			removeItem(p, ItemId.FLYPAPER.id(), 1);
 
@@ -1653,7 +1653,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 		else if (Functions.compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle a small amount of flour on the strange smelling pot");
 			p.message("The surface isn't shiny enough to take a fingerprint from");
-			p.getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 
 		}
 		else if ((item1.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
@@ -1665,7 +1665,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			if (item1.getCatalogId() == ItemId.DAVIDS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.DAVIDS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_david")) {
 					p.message("The fingerprints are an exact match to Davids");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
 					if (!p.getCache().hasKey("culprit"))
 						p.getCache().store("culprit", true);
 				} else {
@@ -1678,7 +1678,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			} else if (item1.getCatalogId() == ItemId.BOBS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.BOBS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_bob")) {
 					p.message("The fingerprints are an exact match to Bobs");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
 					if (!p.getCache().hasKey("culprit"))
 						p.getCache().store("culprit", true);
 				} else {
@@ -1691,7 +1691,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			} else if (item1.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_eliz")) {
 					p.message("The fingerprints are an exact match to Elizabeths");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
 					if (!p.getCache().hasKey("culprit"))
 						p.getCache().store("culprit", true);
 				} else {
@@ -1704,7 +1704,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			} else if (item1.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_anna")) {
 					p.message("The fingerprints are an exact match to Annas");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
 					if (!p.getCache().hasKey("culprit"))
 						p.getCache().store("culprit", true);
 				} else {
@@ -1717,7 +1717,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			} else if (item1.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_carol")) {
 					p.message("The fingerprints are an exact match to Carols");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
 					if (!p.getCache().hasKey("culprit"))
 						p.getCache().store("culprit", true);
 				} else {
@@ -1730,7 +1730,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 			} else if (item1.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id()) {
 				if (p.getCache().hasKey("murder_frank")) {
 					p.message("The fingerprints are an exact match to Franks");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
 					if (!p.getCache().hasKey("culprit"))
 						p.getCache().store("culprit", true);
 				} else {

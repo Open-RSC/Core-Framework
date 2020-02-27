@@ -34,10 +34,10 @@ public class Refill implements InvUseOnObjectListener,
 			if (REFILLABLE[i] == item.getCatalogId()) {
 				final int itemID = item.getCatalogId();
 				final int refilledID = REFILLED[i];
-				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Refill Water Jug", player.getInventory().countId(itemID), false) {
+				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Refill Water Jug", player.getCarriedItems().getInventory().countId(itemID), false) {
 					@Override
 					public void action() {
-						if (getOwner().getInventory().hasInInventory(itemID)) {
+						if (getOwner().getCarriedItems().getInventory().hasInInventory(itemID)) {
 							showBubble(getOwner(), item);
 							getOwner().playSound("filljug");
 							sleep(300);
@@ -47,7 +47,7 @@ public class Refill implements InvUseOnObjectListener,
 								+ " from the "
 								+ obj.getGameObjectDef().getName().toLowerCase()
 							);
-							getOwner().getInventory().replace(itemID, refilledID,true);
+							getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
 						} else {
 							interrupt();
 						}

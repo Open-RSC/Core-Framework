@@ -35,7 +35,7 @@ public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecu
 		if (item.getDef(player.getWorld()).isStackable()) {
 			//6 darts or 5 bolts/arrows
 			maxAmount = rawItemName.contains("dart") ? 6 : 5;
-			makeAmount = hasItem(player, item.getCatalogId(), maxAmount) ? maxAmount : player.getInventory().countId(item.getCatalogId());
+			makeAmount = hasItem(player, item.getCatalogId(), maxAmount) ? maxAmount : player.getCarriedItems().getInventory().countId(item.getCatalogId());
 
 			procItemName = "some ";
 			if (rawItemName.contains("dart")) {

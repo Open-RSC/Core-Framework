@@ -134,7 +134,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 					if (hasItem(p, ItemId.EMPTY_VIAL.id())) {
 						message(p, "The spell is cast perfectly..",
 								"You enchant one of the empty vials.");
-						p.getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.ENCHANTED_VIAL.id());
+						p.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.ENCHANTED_VIAL.id());
 					} else {
 						p.message("This spell looks as if it needs some other components.");
 					}
@@ -170,12 +170,12 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
-			for (int i = 0; i < p.getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
+			for (int i = 0; i < p.getCarriedItems().getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
 				removeItem(p, ItemId.YOMMI_TREE_SEED.id(), 1);
 				addItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
 			}
 			p.message("You place the seeds in the pure sacred water...");
-			p.getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 			message(p, 1300, "The pure water in the golden bowl has run out...");
 			p.message("You start to see little shoots growing on the seeds.");
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 4) {

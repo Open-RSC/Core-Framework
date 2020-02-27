@@ -24,7 +24,7 @@ public final class ItemDropHandler implements PacketHandler {
 		int idx = (int) p.readShort();
 		int amount = p.readInt();
 
-		if (idx < -1 || idx >= player.getInventory().size()) {
+		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "item drop item idx < -1 or idx >= inv size");
 			return;
 		}
@@ -33,11 +33,11 @@ public final class ItemDropHandler implements PacketHandler {
 		//User wants to drop the item from equipment tab
 		if (idx == -1) {
 			int realid = (int) p.readShort();
-			int slot = player.getEquipment().searchEquipmentForItem(realid);
+			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1)
-				tempitem = player.getEquipment().get(slot);
+				tempitem = player.getCarriedItems().getEquipment().get(slot);
 		} else {
-			tempitem = player.getInventory().get(idx);
+			tempitem = player.getCarriedItems().getInventory().get(idx);
 		}
 
 		if (tempitem == null) {
@@ -55,8 +55,8 @@ public final class ItemDropHandler implements PacketHandler {
 				amount = item.getAmount();
 			}
 		} else if (idx != -1) {
-			if (amount > player.getInventory().countId(item.getCatalogId())) {
-				amount = player.getInventory().countId(item.getCatalogId());
+			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId())) {
+				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 			}
 		}
 
@@ -73,7 +73,7 @@ public final class ItemDropHandler implements PacketHandler {
 
 				item.getItemStatus().setAmount(dropAmount);
 
-				if ((!player.getInventory().contains(item) && fromInventory)  || player.getStatus() != Action.DROPPING_GITEM) {
+				if ((!player.getCarriedItems().getInventory().contains(item) && fromInventory)  || player.getStatus() != Action.DROPPING_GITEM) {
 					player.setStatus(Action.IDLE);
 					return;
 				}
@@ -84,7 +84,7 @@ public final class ItemDropHandler implements PacketHandler {
 				player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 640, "Player Batch Drop") {
 					int dropCount = 0;
 					public void run() {
-						if ((!getOwner().getInventory().contains(item) && fromInventory) || getOwner().getStatus() != Action.DROPPING_GITEM) {
+						if ((!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) || getOwner().getStatus() != Action.DROPPING_GITEM) {
 							stop();
 							player.setStatus(Action.IDLE);
 							return;
@@ -99,8 +99,8 @@ public final class ItemDropHandler implements PacketHandler {
 							player.setStatus(Action.IDLE);
 							return;
 						}
-						if ((fromInventory && !player.getInventory().hasItemId(item.getCatalogId())) ||
-							(!fromInventory && (player.getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
+						if ((fromInventory && !player.getCarriedItems().hasCatalogID(item.getCatalogId())) ||
+							(!fromInventory && (player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
 							player.message("You don't have the entered amount to drop");
 							stop();
 							player.setStatus(Action.IDLE);

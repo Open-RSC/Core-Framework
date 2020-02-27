@@ -44,11 +44,11 @@ public class DragonFireBreath implements OnCombatStartScript {
 				maxHit = 55; // 50+
 			}
 			double reduction = 1.0;
-			if (player.getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 				reduction -= 0.8;// shield lowers by about 80% of the max
 				player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 			}
-			if (player.getEquipment().hasEquipped(ItemId.DRAGON_SCALE_MAIL.id())) {
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_SCALE_MAIL.id())) {
 				reduction -= 0.1;
 				player.playerServerMessage(MessageType.QUEST, "Your scale mail prevents some of the damage from the flames");
 			}

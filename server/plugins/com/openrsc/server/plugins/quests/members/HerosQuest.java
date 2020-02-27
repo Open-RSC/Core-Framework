@@ -331,7 +331,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
-			if (p.getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				return false;
 			} else {
 				p.message("Ouch that is too hot to take");
@@ -438,8 +438,8 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				if (isBlackArmGang(p)) {
 					playerTalk(p, garv, "Hi, I'm Hartigen",
 						"I've come to work here");
-					if (p.getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
-							&& p.getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& p.getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
+					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
+							&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
 						npcTalk(p, garv, "So have you got your i.d paper?");
 						if (hasItem(p, ItemId.ID_PAPER.id())) {
 							npcTalk(p, garv, "You had better come in then",

@@ -54,7 +54,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			int totalMoneySpent = 0;
 
 			int price = shop.getItemBuyPrice(itemID, def.getDefaultPrice(), 0);
-			if (player.getInventory().countId(ItemId.COINS.id()) == price && player.getInventory().size() == 30 && amount == 1) {
+			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) == price && player.getCarriedItems().getInventory().size() == 30 && amount == 1) {
 				if (shop.getItemCount(itemID) - totalBought < 1) {
 					player.message("The shop has ran out of stock");
 					return;
@@ -77,15 +77,15 @@ public final class InterfaceShopHandler implements PacketHandler {
 					break;
 				}
 				price = shop.getItemBuyPrice(itemID, def.getDefaultPrice(), totalBought);
-				if (player.getInventory().countId(ItemId.COINS.id()) < (totalMoneySpent + price)) {
+				if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < (totalMoneySpent + price)) {
 					player.message("You don't have enough coins");
 					break;
 				}
-				if (!player.getInventory().canHold(itemBeingBought, totalBought)) {
+				if (!player.getCarriedItems().getInventory().canHold(itemBeingBought, totalBought)) {
 					player.message("You can't hold the objects you are trying to buy!");
 					break;
 				}
-				if (player.getInventory().size() + totalBought >= 30 && !itemBeingBought.getDef(player.getWorld()).isStackable()) {
+				if (player.getCarriedItems().getInventory().size() + totalBought >= 30 && !itemBeingBought.getDef(player.getWorld()).isStackable()) {
 					break;
 				}
 				totalMoneySpent += price;
@@ -97,10 +97,10 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 
 			shop.removeShopItem(new Item(itemID, totalBought));
-			player.getInventory().remove(ItemId.COINS.id(), totalMoneySpent);
+			player.getCarriedItems().getInventory().remove(ItemId.COINS.id(), totalMoneySpent);
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
-				player.getInventory().add(new Item(itemID, 1), false);
+				player.getCarriedItems().getInventory().add(new Item(itemID, 1), false);
     			// TODO: Does the authentic code send an update per item?
     			ActionSender.sendInventory(player);
 			}
@@ -123,9 +123,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 			for (int i = 0; i < amount; i++) {
 			    int sellAmount = 0;
 				/* If no noted version can be removed */
-				if (player.getInventory().remove(def.getNoteID(), 1) == -1) {
+				if (player.getCarriedItems().getInventory().remove(def.getNoteID(), 1) == -1) {
 					/* Try removing with original item ID */
-					if (player.getInventory().remove(itemID, 1) == -1) {
+					if (player.getCarriedItems().getInventory().remove(itemID, 1) == -1) {
 						/* Break, player doesn't have anything. */
 						player.message("You don't have that many items");
 						break;
@@ -144,7 +144,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					totalMoney += sellAmount;
 				}
 				if (sellAmount > 0) {
-					player.getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
 				}
 
 				// Determine if we are selling a Noted item

@@ -50,7 +50,7 @@ public final class BankHandler implements PacketHandler {
 			case BANK_WITHDRAW:
 				bankSlot = packet.readShort();
 				amount = packet.readInt();
-				if (amount < 1 || player.getBank().countId(bankSlot) < amount) {
+				if (amount < 1 || player.getBank().get(bankSlot).getAmount() < amount) {
 					player.setSuspiciousPlayer(true, "in banking item amount < 0 or bank item count < amount");
 					return;
 				}
@@ -64,8 +64,8 @@ public final class BankHandler implements PacketHandler {
 				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, inventorySlot, amount});
 				break;
 			case BANK_DEPOSIT_ALL_FROM_INVENTORY:
-				for (int k = player.getInventory().size() - 1; k >= 0; k--) {
-					Item depoItem = player.getInventory().get(k);
+				for (int k = player.getCarriedItems().getInventory().size() - 1; k >= 0; k--) {
+					Item depoItem = player.getCarriedItems().getInventory().get(k);
 					player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, depoItem.getCatalogId(), depoItem.getAmount()});
 				}
 				break;
@@ -75,7 +75,7 @@ public final class BankHandler implements PacketHandler {
 					return;
 				}
 				for (int k = Equipment.SLOT_COUNT - 1; k >= 0; k--) {
-					Item depoItem = player.getEquipment().get(k);
+					Item depoItem = player.getCarriedItems().getEquipment().get(k);
 					if (depoItem == null)
 						continue;
 					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, depoItem, false, true})) {
@@ -108,13 +108,13 @@ public final class BankHandler implements PacketHandler {
 					return;
 				}
 				for (int k = 0; k < Inventory.MAX_SIZE; k++) {
-					if (k < player.getInventory().size())
-						player.getBank().presets[presetSlot].inventory[k] = player.getInventory().get(k);
+					if (k < player.getCarriedItems().getInventory().size())
+						player.getBank().presets[presetSlot].inventory[k] = player.getCarriedItems().getInventory().get(k);
 					else
 						player.getBank().presets[presetSlot].inventory[k] = new Item(ItemId.NOTHING.id(),0);
 				}
 				for (int k = 0; k < Equipment.SLOT_COUNT; k++) {
-					Item equipmentItem = player.getEquipment().get(k);
+					Item equipmentItem = player.getCarriedItems().getEquipment().get(k);
 					if (equipmentItem != null)
 						player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
 					else

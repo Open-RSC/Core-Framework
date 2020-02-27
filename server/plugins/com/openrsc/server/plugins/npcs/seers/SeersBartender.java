@@ -19,7 +19,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARTENDER_SEERS.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Good morning, what would you like?");
@@ -38,7 +38,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						if (hasItem(p, ItemId.COINS.id(), 2)) {
 							p.message("You buy a pint of beer");
 							addItem(p, ItemId.BEER.id(), 1);
-							p.getInventory().remove(ItemId.COINS.id(), 2);
+							p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -53,7 +53,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						if (hasItem(p, ItemId.COINS.id(), 16)) {
 							p.message("You buy a nice hot meat pie");
 							addItem(p, ItemId.MEAT_PIE.id(), 1);
-							p.getInventory().remove(ItemId.COINS.id(), 16);
+							p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 16);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -69,7 +69,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						if (hasItem(p, ItemId.COINS.id(), 20)) {
 							p.message("You buy a bowl of home made stew");
 							addItem(p, ItemId.STEW.id(), 1);
-							p.getInventory().remove(ItemId.COINS.id(), 20);
+							p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 20);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -94,7 +94,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of beer");
 					addItem(p, ItemId.BEER.id(), 1);
-					p.getInventory().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
 				} else {
 					playerTalk(p, n,
 						"Oh dear. I don't seem to have enough money");
@@ -113,7 +113,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						"Now which of these was the barrels contained the liverbane ale?",
 						"That'll be 18 coins please");
 					if (hasItem(p, ItemId.COINS.id(), 18)) {
-						p.getInventory().remove(ItemId.COINS.id(), 18);
+						p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 18);
 						message(p,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",
@@ -135,20 +135,20 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 		});
 		defaultMenu.showMenu(p);
 	}
-	
+
 	private void drinkAle(Player p) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.WOODCUT, Skills.FLETCHING, Skills.FIREMAKING};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(p, skillIDs[i]);
 		}
 	}
-	
+
 	private void setAleEffect(Player p, int skillId) {
 		int reduction, currentStat, maxStat;
 		maxStat = p.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
-			maxStat < 40 ? 6 : 
+			maxStat < 40 ? 6 :
 			maxStat < 75 ? 7 : 8;
 		currentStat = p.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {

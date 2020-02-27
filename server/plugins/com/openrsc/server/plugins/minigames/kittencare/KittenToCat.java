@@ -92,7 +92,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 		boolean feeded = false;
 		switch (ItemId.getById(item.getCatalogId())) {
 		case MILK:
-			p.getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
+			p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
 			if(!isGrown) {
 				message(p, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
@@ -153,12 +153,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 	@Override
 	public boolean blockCatGrowth(Player p) {
-		return p.getInventory().hasItemId(ItemId.KITTEN.id());
+		return p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id());
 	}
 
 	@Override
 	public void onCatGrowth(Player p) {
-		if (p.getInventory().hasItemId(ItemId.KITTEN.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id())) {
 			// no events in memory, check in cache
 			KittenState state = new KittenState();
 			state.loadState(p);
@@ -199,12 +199,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
-				p.getInventory().remove(ItemId.KITTEN.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.KITTEN.id(), 1);
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 			}
 			// kitten grows to cat - replace and reset counters
 			else if (kittenEvents >= 32) {
-				p.getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
+				p.getCarriedItems().getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 				message(p, 1200, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");

@@ -77,12 +77,12 @@ public class SpinningWheel implements InvUseOnObjectListener,
 						return;
 					}
 				}
-				if (getOwner().getInventory().remove(item.getCatalogId(), 1) > -1) {
+				if (getOwner().getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
 					showBubble(getOwner(), item);
 					getOwner().playSound("mechanical");
 					getOwner().message("You " + verb + " the "
 						+ consumedItem + " into a " + producedItem);
-					getOwner().getInventory().add(new Item(produce, 1));
+					getOwner().getCarriedItems().getInventory().add(new Item(produce, 1));
 					getOwner().incExp(Skills.CRAFTING, exp, true);
 				} else {
 					interrupt();

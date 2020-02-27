@@ -87,12 +87,12 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 
 	private void attackViyeldi(Player p, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			if (!p.getEquipment().hasEquipped(ItemId.DARK_DAGGER.id())) {
+			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.DARK_DAGGER.id())) {
 				message(p, n, 1300, "Your attack passes straight through Viyeldi.");
 				npcTalk(p, n, "Take challenge with me is useless for I am impervious to your attack",
 					"Take your fight to someone else, and maybe then get back on track.");
 			} else {
-				p.getInventory().replace(ItemId.DARK_DAGGER.id(), ItemId.GLOWING_DARK_DAGGER.id());
+				p.getCarriedItems().getInventory().replace(ItemId.DARK_DAGGER.id(), ItemId.GLOWING_DARK_DAGGER.id());
 				message(p, n, 1300, "You thrust the Dark Dagger at Viyeldi...");
 				npcTalk(p, n, "So, you have fallen for the foul one's trick...");
 				message(p, n, 1300, "You hit Viyeldi squarely with the Dagger .");

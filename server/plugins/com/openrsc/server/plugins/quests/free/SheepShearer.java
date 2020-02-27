@@ -30,15 +30,15 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Sheep shearer";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
-		player.getInventory().add(new Item(ItemId.COINS.id(), 60));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 60));
 		player.message("Well done you have completed the sheep shearer quest");
 		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHEEP_SHEARER), true);
 		player.message("@gre@You haved gained 1 quest point!");
@@ -118,7 +118,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 				case 1:
 					npcTalk(p, n, "How are you doing getting those balls of wool?");
 					int totalWool = 0;
-					int woolCount = p.getInventory().countId(ItemId.BALL_OF_WOOL.id());
+					int woolCount = p.getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id());
 					if (p.getCache().hasKey("sheep_shearer_wool_count")) {
 						totalWool = p.getCache().getInt("sheep_shearer_wool_count");
 						if (totalWool + woolCount > 20) {
@@ -143,7 +143,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I have some");
 						npcTalk(p, n, "Give em here then");
 						for (int i = 0; i < woolCount; ++i) {
-							p.getInventory().remove(ItemId.BALL_OF_WOOL.id(), 1);
+							p.getCarriedItems().getInventory().remove(ItemId.BALL_OF_WOOL.id(), 1);
 							message(p, 600, "You give Fred a ball of wool");
 						}
 						if (totalWool >= 20) {

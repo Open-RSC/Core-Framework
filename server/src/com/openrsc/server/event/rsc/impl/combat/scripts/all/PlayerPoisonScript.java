@@ -34,15 +34,15 @@ public class PlayerPoisonScript implements CombatScript {
 			if (attacker.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item i;
 				for (int q = 0; q < Equipment.SLOT_COUNT; q++) {
-					i = p.getEquipment().get(q);
+					i = p.getCarriedItems().getEquipment().get(q);
 					if (i == null)
 						continue;
 					if (i.getDef(attacker.getWorld()).getName().toLowerCase().contains("poisoned"))
 						return true;
 				}
 			} else {
-				synchronized (p.getInventory().getItems()) {
-					for (Item i : p.getInventory().getItems()) {
+				synchronized (p.getCarriedItems().getInventory().getItems()) {
+					for (Item i : p.getCarriedItems().getInventory().getItems()) {
 						if (i.getDef(attacker.getWorld()).getName().toLowerCase().contains("poisoned")
 							&& i.isWielded()) {
 							return true;

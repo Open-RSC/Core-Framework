@@ -291,7 +291,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 	}
 
 	private void calculateExchangeMenu(Player p, Npc n, boolean useCertificate, Item i, Item certificate) {
-		int count = p.getInventory().countId(useCertificate ? certificate.getCatalogId() : i.getCatalogId());
+		int count = p.getCarriedItems().getInventory().countId(useCertificate ? certificate.getCatalogId() : i.getCatalogId());
 		int mainMenu = -1;
 		if (useCertificate) {
 			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
@@ -346,9 +346,9 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
-				if (p.getInventory().remove(certificate.getCatalogId(), mainMenu) > -1) {
+				if (p.getCarriedItems().getInventory().remove(certificate.getCatalogId(), mainMenu) > -1) {
 					for (int x = 0; x < itemAmount; x++) {
-						p.getInventory().add(new Item(i.getCatalogId(), 1));
+						p.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
 					}
 				}
 				playerTalk(p, n, "Ok thanks.");
@@ -357,9 +357,9 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
-					p.getInventory().remove(i.getCatalogId(), 1);
+					p.getCarriedItems().getInventory().remove(i.getCatalogId(), 1);
 				}
-				p.getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
+				p.getCarriedItems().getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
 				playerTalk(p, n, "Ok thanks.");
 			}
 		}

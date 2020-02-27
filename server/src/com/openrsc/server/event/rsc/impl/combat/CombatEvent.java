@@ -105,7 +105,7 @@ public class CombatEvent extends GameTickEvent {
 			int damage = MeleeFormula.getDamage(hitter, target);
 			inflictDamage(hitter, target, damage);
 			if (target.isPlayer()) {
-				if (((Player)target).getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
+				if (((Player)target).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					int reflectedDamage = damage/10 + ((damage > 0) ? 1 : 0);
 					if (reflectedDamage == 0)
 						return;
@@ -115,7 +115,7 @@ public class CombatEvent extends GameTickEvent {
 						if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
 							reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 							((Player) target).getCache().remove("ringofrecoil");
-							((Player) target).getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+							((Player) target).getCarriedItems().getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 						} else {
 							((Player) target).getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 						}

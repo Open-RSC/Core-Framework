@@ -102,17 +102,17 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (fromInventory) {
-			if (p.getInventory().remove(i.getCatalogId(), i.getAmount()) < 0) {
+			if (p.getCarriedItems().getInventory().remove(i.getCatalogId(), i.getAmount()) < 0) {
 				p.setStatus(Action.IDLE);
 				return;
 			}
 		} else {
-			int slot = p.getEquipment().searchEquipmentForItem(i.getCatalogId());
-			if (slot == -1 || p.getEquipment().get(slot).getAmount() != i.getAmount()) {
+			int slot = p.getCarriedItems().getEquipment().searchEquipmentForItem(i.getCatalogId());
+			if (slot == -1 || p.getCarriedItems().getEquipment().get(slot).getAmount() != i.getAmount()) {
 				p.setStatus(Action.IDLE);
 				return;
 			}
-			p.getEquipment().remove(i.getCatalogId(), i.getAmount());
+			p.getCarriedItems().getEquipment().remove(i.getCatalogId(), i.getAmount());
 			ActionSender.sendEquipmentStats(p);
 			if (i.getDef(p.getWorld()).getWieldPosition() < 12)
 				p.updateWornItems(i.getDef(p.getWorld()).getWieldPosition(), p.getSettings().getAppearance().getSprite(i.getDef(p.getWorld()).getWieldPosition()));
@@ -255,12 +255,12 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onUnequip(UnequipRequest request) {
-		request.player.getEquipment().unequipItem(request);
+		request.player.getCarriedItems().getEquipment().unequipItem(request);
 	}
 
 	@Override
 	public void onEquip(EquipRequest request) {
-		request.player.getEquipment().equipItem(request);
+		request.player.getCarriedItems().getEquipment().equipItem(request);
 	}
 
 	@Override

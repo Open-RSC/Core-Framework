@@ -71,13 +71,13 @@ public final class WaynesChains implements ShopInterface,
 					"and 150 chipped dragon scales");
 				boolean hasChains = false;
 				boolean hasScales = false;
-				if (p.getInventory().countId(ItemId.CHIPPED_DRAGON_SCALE.id()) >= 150) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.CHIPPED_DRAGON_SCALE.id()) >= 150) {
 					hasScales = true;
 					playerTalk(p, n, "i have the scales here");
 				} else
 					playerTalk(p, n, "i don't seem to have enough scales");
 
-				if (p.getInventory().countId(ItemId.DRAGON_METAL_CHAIN.id()) >= 500) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.DRAGON_METAL_CHAIN.id()) >= 500) {
 					hasChains = true;
 					playerTalk(p, n, "i have the chains here");
 				} else
@@ -91,14 +91,14 @@ public final class WaynesChains implements ShopInterface,
 						"sounds fair", "no way");
 					if (option2 == 0) {
 						playerTalk(p, n, "sounds fair");
-						if (p.getInventory().countId(ItemId.COINS.id()) < 500000) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 500000) {
 							playerTalk(p, n, "but I'm short at the moment");
 							npcTalk(p, n, "get the money and return to me");
 							return;
 						}
-						if (p.getInventory().remove(ItemId.CHIPPED_DRAGON_SCALE.id(), 150) > -1) {
-							if (p.getInventory().remove(ItemId.DRAGON_METAL_CHAIN.id() ,500) > -1) {
-								if (p.getInventory().remove(ItemId.COINS.id(), 500000) > -1) {
+						if (p.getCarriedItems().getInventory().remove(ItemId.CHIPPED_DRAGON_SCALE.id(), 150) > -1) {
+							if (p.getCarriedItems().getInventory().remove(ItemId.DRAGON_METAL_CHAIN.id() ,500) > -1) {
+								if (p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 500000) > -1) {
 									p.message("you hand over the materials and money");
 									sleep(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 									p.message("Wayne flashes a smile");

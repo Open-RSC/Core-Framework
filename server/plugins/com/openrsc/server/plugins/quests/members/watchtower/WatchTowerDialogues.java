@@ -643,7 +643,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								"I lost the scroll you gave me",
 								"That's okay");
 							if (finish == 0) {
-								if (!p.getBank().hasItemId(ItemId.SPELL_SCROLL.id()) && !p.getInventory().hasItemId(ItemId.SPELL_SCROLL.id())) {
+								if (!p.getBank().hasItemId(ItemId.SPELL_SCROLL.id()) && !p.getCarriedItems().hasCatalogID(ItemId.SPELL_SCROLL.id())) {
 									npcTalk(p, n, "Never mind, have another...");
 									addItem(p, ItemId.SPELL_SCROLL.id(), 1);
 								} else if (p.getBank().hasItemId(ItemId.SPELL_SCROLL.id())) {

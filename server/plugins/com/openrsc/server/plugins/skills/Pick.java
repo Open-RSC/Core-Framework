@@ -34,7 +34,7 @@ public final class Pick implements ObjectActionExecutiveListener,
 				getOwner().playerServerMessage(MessageType.QUEST, pickMessage);
 				addItem(getOwner(), objID, 1);
 				getOwner().playSound("potato");
-				if (getOwner().getInventory().full())
+				if (getOwner().getCarriedItems().getInventory().full())
 					interrupt();
 			}
 		});

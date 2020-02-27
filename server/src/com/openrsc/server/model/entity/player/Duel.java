@@ -161,13 +161,13 @@ public class Duel implements ContainerListener {
 		Player duelOpponent = getDuelRecipient();
 		synchronized(getDuelOffer().getItems()) {
 			for (Item item : getDuelOffer().getItems()) {
-				Item affectedItem = player.getInventory().get(item);
+				Item affectedItem = player.getCarriedItems().getInventory().get(item);
 				if (affectedItem == null) {
-					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && player.getEquipment().hasEquipped(item.getCatalogId())) {
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(item.getCatalogId())) {
 						player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 							player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 							item.getDef(player.getWorld()).getWearableId(), false);
-						player.getEquipment().remove(item.getCatalogId(), item.getAmount());
+						player.getCarriedItems().getEquipment().remove(item.getCatalogId(), item.getAmount());
 						log.addDroppedItem(item);
 						player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 					}
@@ -175,7 +175,7 @@ public class Duel implements ContainerListener {
 						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
 					continue;
 				} else {
-					player.getInventory().remove(item);
+					player.getCarriedItems().getInventory().remove(item);
 					log.addDroppedItem(item);
 					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 				}

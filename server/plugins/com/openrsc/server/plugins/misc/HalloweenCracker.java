@@ -129,7 +129,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			player.getInventory().remove(item);
+			player.getCarriedItems().getInventory().remove(item);
 
 			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
 
@@ -163,14 +163,14 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				player.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.message("You got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.message(otherPlayer.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				player.getInventory().add(mask);
-				otherPlayer.getInventory().add(prize);
+				player.getCarriedItems().getInventory().add(mask);
+				otherPlayer.getCarriedItems().getInventory().add(prize);
 			} else {
 				otherPlayer.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.message(player.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.message("You got a " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				otherPlayer.getInventory().add(mask);
-				player.getInventory().add(prize);
+				otherPlayer.getCarriedItems().getInventory().add(mask);
+				player.getCarriedItems().getInventory().add(prize);
 			}
 
 			player.setBusy(false);

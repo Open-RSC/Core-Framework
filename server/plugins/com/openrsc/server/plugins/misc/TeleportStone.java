@@ -37,16 +37,16 @@ public class TeleportStone implements InvActionListener, InvActionExecutiveListe
 				p.message("You can't use this teleport after level 30 wilderness");
 				return;
 			}
-			if (p.getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
+			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
 				message(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
-			if (p.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
-				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+				while (p.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+					p.getCarriedItems().getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			switch (menu) {

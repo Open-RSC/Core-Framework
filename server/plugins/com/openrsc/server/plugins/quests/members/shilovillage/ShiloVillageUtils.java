@@ -104,7 +104,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				message(p, "You see the ground in front of you shake ",
 					"as a shard of bone forces its way to the surface.");
 				p.message("You take the bone shard and place it in your inventory.");
-				p.getInventory().replace(ItemId.ZADIMUS_CORPSE.id(), ItemId.BONE_SHARD.id());
+				p.getCarriedItems().getInventory().replace(ItemId.ZADIMUS_CORPSE.id(), ItemId.BONE_SHARD.id());
 				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 3) {
 					p.setQuestStage(Quests.SHILO_VILLAGE, 4);
 				}
@@ -407,7 +407,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 			message(p, "You successfully craft the beads and Bronze Wire ");
 			p.message("into a necklace which you name, 'Beads of the dead'");
 			removeItem(p, ItemId.BRONZE_WIRE.id(), 1);
-			p.getInventory().replace(ItemId.BONE_BEADS.id(), ItemId.BEADS_OF_THE_DEAD.id());
+			p.getCarriedItems().getInventory().replace(ItemId.BONE_BEADS.id(), ItemId.BEADS_OF_THE_DEAD.id());
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.BONE_SHARD.id())) {
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
@@ -422,7 +422,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				message(p, "Remembering Zadimus' words and the strange bone lock,",
 					"you start to craft the bone.");
 				p.message("You succesfully make a key out of the bone shard.");
-				p.getInventory().replace(ItemId.BONE_SHARD.id(), ItemId.BONE_KEY.id());
+				p.getCarriedItems().getInventory().replace(ItemId.BONE_SHARD.id(), ItemId.BONE_KEY.id());
 				p.incExp(Skills.CRAFTING, 35, true);
 			} else {
 				message(p, "You're not quite sure what to make with this.");
@@ -438,7 +438,7 @@ public class ShiloVillageUtils implements DropListener, DropExecutiveListener, I
 				"You successfully craft some of the ivory into beads.");
 			p.message("They may look good as part of a necklace.");
 			p.incExp(Skills.CRAFTING, 35, true);
-			p.getInventory().replace(ItemId.SWORD_POMMEL.id(), ItemId.BONE_BEADS.id());
+			p.getCarriedItems().getInventory().replace(ItemId.SWORD_POMMEL.id(), ItemId.BONE_BEADS.id());
 		}
 	}
 

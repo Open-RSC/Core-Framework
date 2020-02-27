@@ -51,13 +51,13 @@ public class ItemDurability implements InvActionListener, InvActionExecutiveList
 				return;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {
 				player.getCache().remove("ringofrecoil");
-				player.getInventory().shatter(item.getCatalogId());
+				player.getCarriedItems().getInventory().shatter(item.getCatalogId());
 			} else if (item.getCatalogId() == ItemId.RING_OF_FORGING.id()) {
 				player.getCache().remove("ringofforging");
-				player.getInventory().shatter(item.getCatalogId());
+				player.getCarriedItems().getInventory().shatter(item.getCatalogId());
 			} else if (item.getCatalogId() == ItemId.DWARVEN_RING.id()) {
 				player.getCache().remove("dwarvenring");
-				player.getInventory().shatter(item.getCatalogId());
+				player.getCarriedItems().getInventory().shatter(item.getCatalogId());
 			}
 		}
 	}

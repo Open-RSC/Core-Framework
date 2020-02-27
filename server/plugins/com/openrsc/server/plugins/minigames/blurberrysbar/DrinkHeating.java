@@ -30,7 +30,7 @@ public class DrinkHeating implements InvUseOnObjectListener, InvUseOnObjectExecu
 			message(p, "you briefly place the drink in the oven");
 			p.message("you remove the warm drink");
 			if (p.getCache().hasKey("drunk_dragon_base") && p.getCache().hasKey("diced_pa_to_drink") && p.getCache().hasKey("cream_into_drink")) {
-				p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.DRUNK_DRAGON.id());
+				p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.DRUNK_DRAGON.id());
 				checkAndRemoveBlurberry(p, true);
 			}
 			if (p.getCache().hasKey("chocolate_saturday_base") && p.getCache().hasKey("choco_bar_in_drink")) {
@@ -38,7 +38,7 @@ public class DrinkHeating implements InvUseOnObjectListener, InvUseOnObjectExecu
 					p.getCache().store("heated_choco_saturday", true);
 				}
 			} else {
-				p.getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+				p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
 			}
 		}
 		if ((item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id())

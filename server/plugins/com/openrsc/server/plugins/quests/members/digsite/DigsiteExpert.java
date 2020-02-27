@@ -123,7 +123,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 					playerTalk(p, n, "I have these gold nuggets");
 					if (hasItem(p, ItemId.GOLD_NUGGETS.id(), 3)) {
 						p.message("You give the nuggets to the expert");
-						p.getInventory().remove(ItemId.GOLD_NUGGETS.id(), 3);
+						p.getCarriedItems().getInventory().remove(ItemId.GOLD_NUGGETS.id(), 3);
 						addItem(p, ItemId.GOLD.id(), 1);
 						npcTalk(p, n, "Good, that's 3, I can exchange them for normal gold now",
 							"You can get this refined and make a profit!");
@@ -181,7 +181,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 						"Take this letter and give it to one of the workmen",
 						"And they will allow you to use it");
 					p.message("The expert hands you a letter");
-					p.getInventory().replace(ItemId.TALISMAN_OF_ZAROS.id(), ItemId.DIGSITE_SCROLL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.TALISMAN_OF_ZAROS.id(), ItemId.DIGSITE_SCROLL.id());
 					break;
 				case UNIDENTIFIED_LIQUID:
 					playerTalk(p, n, "Do you know what this is ?");
@@ -189,7 +189,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 					playerTalk(p, n, "From one of the barrels at the digsite");
 					npcTalk(p, n, "This is a dangerous liquid called nitroglycerin",
 						"Be careful how you handle it");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id());
 					break;
 				case NITROGLYCERIN:
 					playerTalk(p, n, "Can you tell me any more about this ?");
@@ -205,7 +205,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 						"I know what this is...",
 						"It's called ammonium nitrate - A strong chemical",
 						"Why you want this i'll never know...");
-					p.getInventory().replace(ItemId.UNIDENTIFIED_POWDER.id(), ItemId.AMMONIUM_NITRATE.id());
+					p.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_POWDER.id(), ItemId.AMMONIUM_NITRATE.id());
 					break;
 				case MIXED_CHEMICALS_1:
 					playerTalk(p, n, "Hey, look at this");

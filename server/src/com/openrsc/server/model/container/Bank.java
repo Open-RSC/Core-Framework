@@ -317,8 +317,9 @@ public class Bank {
 
 	public boolean withdrawItem(int bankSlot, final int amount) {
 		Item item;
-		Inventory inventory = getPlayer().getInventory();
+		Inventory inventory = getPlayer().getCarriedItems().getInventory();
 		final int slot = getFirstIndexById(bankSlot);
+
 		if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isStackable()) {
 			item = new Item(bankSlot, amount);
 			if (inventory.canHold(item) && remove(item) > -1) {
@@ -379,14 +380,14 @@ public class Bank {
 
 	public boolean depositItemFromInventory(final int inventorySlot, final int amount) {
 		synchronized (list) {
-			synchronized (player.getInventory().getItems()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				//Make sure there's an item in the slot
-				Item depositItem = getPlayer().getInventory().get(inventorySlot);
+				Item depositItem = getPlayer().getCarriedItems().getInventory().get(inventorySlot);
 				if (depositItem == null)
 					return false;
 
 				//Make sure they have enough of that item
-				if (amount < 1 || player.getInventory().countId(depositItem.getCatalogId()) < amount) {
+				if (amount < 1 || player.getCarriedItems().getInventory().countId(depositItem.getCatalogId()) < amount) {
 					player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
 					return false;
 				}
@@ -396,29 +397,18 @@ public class Bank {
 				if (depositDef == null)
 					return false;
 
+				//Make sure they have enough space in their bank to deposit it
+				if (!canHold(depositItem)) {
+					player.message("You don't have room for that in your bank");
+					return false;
+				}
+
 				//Attempt to remove the item from the inventory
-				if (player.getInventory().remove(depositItem.getCatalogId(), amount, true) == -1)
+				if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), amount, true) == -1)
 					return false;
 
 				add(depositItem);
-//					//Check if their bank already contains the item
-//					int bankSlot = searchBankSlots(depositItem.getCatalogId());
-//					if (bankSlot > -1) { //Their bank already contains the item
-//						Item existingItem = list.get(bankSlot);
-//						existingItem.changeAmount(amount);
-//						player.getWorld().getServer().getDatabase().itemUpdate(existingItem);
-//						ActionSender.updateBankItem(player, bankSlot, depositItem.getCatalogId(), existingItem.getAmount());
-//					} else { //Their bank doesn't contain this item yet
-//						//Make sure they have room to deposit the item
-//						if (player.getFreeBankSlots() > 0) {
-//							add(depositItem);
-//							player.getWorld().getServer().getDatabase().bankAddToPlayer(player, depositItem);
-//							ActionSender.updateBankItem(player, list.size()-1, depositItem.getCatalogId(), amount);
-//						} else {
-//							player.message("Your bank is full.");
-//							return false;
-//						}
-//					}
+
 //				if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(inventorySlot).isStackable()) {
 //					if (!getPlayer().getAttribute("swap_cert", false) || !isCert(inventorySlot)) {
 //						item = new Item(inventorySlot, amount);
@@ -526,8 +516,8 @@ public class Bank {
 
 	public void attemptPresetLoadout(int slot) {
 		synchronized(list) {
-			synchronized (player.getInventory().getItems()) {
-				synchronized (player.getEquipment().getList()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				synchronized (player.getCarriedItems().getEquipment().getList()) {
 					Map<Integer, Integer> itemsOwned = new LinkedHashMap<>();
 					Item tempItem;
 
@@ -545,8 +535,8 @@ public class Bank {
 					}
 
 					//Loop through their inventory and add it to the hashmap
-					for (int i = 0; i < getPlayer().getInventory().size(); i++) {
-						tempItem = getPlayer().getInventory().get(i);
+					for (int i = 0; i < getPlayer().getCarriedItems().getInventory().size(); i++) {
+						tempItem = getPlayer().getCarriedItems().getInventory().get(i);
 						if (tempItem != null) {
 							if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
 								itemsOwned.put(tempItem.getCatalogId(), 0);
@@ -560,7 +550,7 @@ public class Bank {
 					if (getPlayer().getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 						//Loop through their equipment and add it to the hashmap
 						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-							tempItem = getPlayer().getEquipment().get(i);
+							tempItem = getPlayer().getCarriedItems().getEquipment().get(i);
 							if (tempItem != null) {
 								if (!itemsOwned.containsKey(tempItem.getCatalogId())) {
 									itemsOwned.put(tempItem.getCatalogId(), 0);
@@ -579,9 +569,9 @@ public class Bank {
 					}
 
 					for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-						if (getPlayer().getEquipment().get(i) != null) {
-							Item toRemove = getPlayer().getEquipment().get(i);
-							getPlayer().getEquipment().remove(toRemove.getCatalogId(), toRemove.getAmount());
+						if (getPlayer().getCarriedItems().getEquipment().get(i) != null) {
+							Item toRemove = getPlayer().getCarriedItems().getEquipment().get(i);
+							getPlayer().getCarriedItems().getEquipment().remove(toRemove.getCatalogId(), toRemove.getAmount());
 						}
 
 					}
@@ -607,7 +597,7 @@ public class Bank {
 										getPlayer().message("Unable to equip " + presetEquipment.getDef(getPlayer().getWorld()).getName() + " due to lack of skill.");
 										continue;
 									}
-									getPlayer().getEquipment().add(presetEquipment);
+									getPlayer().getCarriedItems().getEquipment().add(presetEquipment);
 									wearableId = presetEquipment.getDef(getPlayer().getWorld()).getWearableId();
 									getPlayer().updateWornItems(i,
 										presetEquipment.getDef(getPlayer().getWorld()).getAppearanceId(),
@@ -624,7 +614,7 @@ public class Bank {
 						}
 					}
 
-					getPlayer().getInventory().getItems().clear();
+					getPlayer().getCarriedItems().getInventory().getItems().clear();
 					//Attempt to load the preset inventory
 					for (int i = 0; i < presets[slot].inventory.length; i++) {
 						Item presetInventory = presets[slot].inventory[i];
@@ -640,7 +630,7 @@ public class Bank {
 								presetAmount = ownedAmount;
 							}
 							if (presetAmount > 0) {
-								getPlayer().getInventory().add(presetInventory, false);
+								getPlayer().getCarriedItems().getInventory().add(presetInventory, false);
 								if (presetAmount == ownedAmount) {
 									itemsOwned.remove(presetInventory.getCatalogId());
 								} else {
@@ -664,7 +654,7 @@ public class Bank {
 							add(new Item(entry.getKey(), entry.getValue()));
 						} else {
 							//Their bank is full, stick it in their inventory
-							getPlayer().getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
+							getPlayer().getCarriedItems().getInventory().add(new Item(entry.getKey(), entry.getValue()), false);
 							getPlayer().message("Your bank was too full and an item was placed into your inventory.");
 						}
 						slotCounter++;

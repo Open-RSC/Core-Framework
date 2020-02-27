@@ -36,7 +36,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		p.setBusy(true);
 		showBubble(p, item);
 		p.playSound("cooking");
-		if (p.getInventory().remove(item) > -1) {
+		if (p.getCarriedItems().getInventory().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
 			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
 				if (inArray(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),
@@ -112,7 +112,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				}
 				addItem(p, gc.cookedID, 1);
 			} else {
-				p.getInventory().add(new Item(gc.burntID));
+				p.getCarriedItems().getInventory().add(new Item(gc.burntID));
 				p.message(gc.messages[2]);
 			}
 		}
@@ -144,7 +144,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into a gnomebatta");
 				p.message("You manage to make some gnome batta dough");
-				p.getInventory().replace(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id());
+				p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id());
 			} else if (menu == 1) {
 				if (p.getSkills().getLevel(Skills.COOKING) < 30) {
 					p.message("you need a cooking level of 30 to mould dough bowls");
@@ -154,7 +154,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into a gnome bowl");
 				p.message("You manage to make some gnome bowl dough");
-				p.getInventory().replace(item.getCatalogId(), ItemId.GNOMEBOWL_DOUGH.id());
+				p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GNOMEBOWL_DOUGH.id());
 			} else if (menu == 2) {
 				if (p.getSkills().getLevel(Skills.COOKING) < 15) {
 					p.message("you need a cooking level of 15 to mould crunchies");
@@ -164,7 +164,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 				showBubble(p, item);
 				message(p, 3000, "you attempt to mould the dough into gnome crunchies");
 				p.message("You manage to make some gnome crunchies dough");
-				p.getInventory().replace(item.getCatalogId(), ItemId.GNOMECRUNCHIE_DOUGH.id());
+				p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GNOMECRUNCHIE_DOUGH.id());
 				if (!p.getCache().hasKey("gnomecrunchie_dough")) {
 					p.getCache().store("gnomecrunchie_dough", true);
 				}

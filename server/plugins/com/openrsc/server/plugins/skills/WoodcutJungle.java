@@ -124,7 +124,7 @@ public class WoodcutJungle implements ObjectActionListener,
 			}
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());
-				p.getInventory().add(log);
+				p.getCarriedItems().getInventory().add(log);
 				p.playerServerMessage(MessageType.QUEST, "You get some wood");
 			}
 			p.teleport(obj.getX(), obj.getY());

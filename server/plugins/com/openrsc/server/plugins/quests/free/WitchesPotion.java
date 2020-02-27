@@ -31,12 +31,12 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Witch's potion";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the witches potion quest");
@@ -93,17 +93,17 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 					break;
 				case 1:
 					npcTalk(p, n, "So have you found the things for the potion");
-					if (p.getInventory().hasItemId(ItemId.RATS_TAIL.id())
-						&& p.getInventory().hasItemId(ItemId.EYE_OF_NEWT.id())
-						&& p.getInventory().hasItemId(ItemId.BURNTMEAT.id())
-						&& p.getInventory().hasItemId(ItemId.ONION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.RATS_TAIL.id())
+						&& p.getCarriedItems().hasCatalogID(ItemId.EYE_OF_NEWT.id())
+						&& p.getCarriedItems().hasCatalogID(ItemId.BURNTMEAT.id())
+						&& p.getCarriedItems().hasCatalogID(ItemId.ONION.id())) {
 						playerTalk(p, n, "Yes I have everthing");
 						npcTalk(p, n, "Excellent, can I have them then?");
 						p.message("You pass the ingredients to Hetty");
-						p.getInventory().remove(ItemId.RATS_TAIL.id(), 1);
-						p.getInventory().remove(ItemId.EYE_OF_NEWT.id(), 1);
-						p.getInventory().remove(ItemId.BURNTMEAT.id(), 1);
-						p.getInventory().remove(ItemId.ONION.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.RATS_TAIL.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.EYE_OF_NEWT.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.BURNTMEAT.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.ONION.id(), 1);
 						message(p,
 							"Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");

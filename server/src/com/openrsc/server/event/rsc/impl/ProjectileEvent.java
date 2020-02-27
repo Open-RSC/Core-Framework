@@ -60,7 +60,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			// out on death.
 			projectileDamage();
 			if (opponent.isPlayer()) {
-				if (((Player) opponent).getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
+				if (((Player) opponent).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					recoilDamage((Player) opponent, caster, damage);
 				} else if (opponent.getSkills().getLevel(3) > 0) {
 					if (((Player) opponent).checkRingOfLife(caster))
@@ -84,7 +84,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
 				reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 				opponent.getCache().remove("ringofrecoil");
-				opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+				opponent.getCarriedItems().getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 			} else {
 				opponent.getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 			}

@@ -44,8 +44,8 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 			p.message("When you have done this speak to the combat instructor again");
 			p.getCache().set("tutorial", 16);
 		} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 16) {
-			if ((!p.getInventory().hasItemId(ItemId.WOODEN_SHIELD.id()) || p.getEquipment().hasEquipped(ItemId.WOODEN_SHIELD.id())) &&
-				(!p.getInventory().hasItemId(ItemId.BRONZE_LONG_SWORD.id()) || p.getEquipment().hasEquipped(ItemId.BRONZE_LONG_SWORD.id()))) {
+			if ((!p.getCarriedItems().hasCatalogID(ItemId.WOODEN_SHIELD.id()) || p.getCarriedItems().getEquipment().hasEquipped(ItemId.WOODEN_SHIELD.id())) &&
+				(!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_LONG_SWORD.id()) || p.getCarriedItems().getEquipment().hasEquipped(ItemId.BRONZE_LONG_SWORD.id()))) {
 				npcTalk(p, n, "Today we're going to be killing giant rats");
 				Npc rat = getNearestNpc(p, NpcId.RAT_TUTORIAL.id(), 10);
 				if (rat != null) {

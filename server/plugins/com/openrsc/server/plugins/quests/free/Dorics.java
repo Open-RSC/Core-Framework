@@ -29,12 +29,12 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Doric's quest";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed Dorics quest");
@@ -91,23 +91,23 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 				break;
 			case 1:
 				npcTalk(p, n, "Have you got my materials yet traveller?");
-				if (p.getInventory().countId(ItemId.CLAY.id()) >= 6
-					&& p.getInventory().countId(ItemId.COPPER_ORE.id()) >= 4
-					&& p.getInventory().countId(ItemId.IRON_ORE.id()) >= 2) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.CLAY.id()) >= 6
+					&& p.getCarriedItems().getInventory().countId(ItemId.COPPER_ORE.id()) >= 4
+					&& p.getCarriedItems().getInventory().countId(ItemId.IRON_ORE.id()) >= 2) {
 					playerTalk(p, n, "I have everything you need");
 					npcTalk(p, n, "Many thanks, pass them here please");
 					p.message("You hand the clay, copper and iron to Doric");
 					for (int i = 0; i < 6; i++)
-						p.getInventory().remove(ItemId.CLAY.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.CLAY.id(), 1);
 					for (int i = 0; i < 4; i++)
-						p.getInventory().remove(ItemId.COPPER_ORE.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.COPPER_ORE.id(), 1);
 					for (int i = 0; i < 2; i++)
-						p.getInventory().remove(ItemId.IRON_ORE.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.IRON_ORE.id(), 1);
 
 					npcTalk(p, n, "I can spare you some coins for your trouble");
 
 					p.message("Doric hands you 180 coins");
-					p.getInventory().add(new Item(ItemId.COINS.id(), 180));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 180));
 
 					npcTalk(p, n, "Please use my anvils any time you want");
 					p.sendQuestComplete(Quests.DORICS_QUEST);

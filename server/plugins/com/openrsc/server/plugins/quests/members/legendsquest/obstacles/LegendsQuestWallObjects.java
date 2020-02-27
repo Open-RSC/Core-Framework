@@ -224,7 +224,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 						if (pourCount >= 4) {
 							p.getCache().remove("douse_flames");
 							p.message("The pure water in the golden bowl has run out...");
-							p.getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
+							p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
 						}
 					}
 					p.message("You quickly walk over the doused flames.");

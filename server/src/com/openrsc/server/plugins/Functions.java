@@ -174,13 +174,13 @@ public class Functions {
 
 		for (final int a : Formulae.woodcuttingAxeIDs) {
 			if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-				if (p.getEquipment().searchEquipmentForItem(a) != -1) {
+				if (p.getCarriedItems().getEquipment().searchEquipmentForItem(a) != -1) {
 					axeId = a;
 					break;
 				}
 			}
 
-			if (p.getInventory().countId(a) > 0) {
+			if (p.getCarriedItems().getInventory().countId(a) > 0) {
 				axeId = a;
 				break;
 			}
@@ -216,7 +216,7 @@ public class Functions {
 	}
 
 	public static boolean hasItemAtAll(Player p, int id) {
-		return p.getBank().contains(new Item(id)) || p.getInventory().contains(new Item(id));
+		return p.getBank().contains(new Item(id)) || p.getCarriedItems().getInventory().contains(new Item(id));
 	}
 
 	public static boolean inArray(Object o, Object... oArray) {
@@ -707,10 +707,10 @@ public class Functions {
 			final Item items = new Item(item, amt);
 			if (!items.getDef(p.getWorld()).isStackable() && amt > 1) {
 				for (int i = 0; i < amt; i++) {
-					p.getInventory().add(new Item(item, 1));
+					p.getCarriedItems().getInventory().add(new Item(item, 1));
 				}
 			} else {
-				p.getInventory().add(items);
+				p.getCarriedItems().getInventory().add(items);
 			}
 		}, "Add Item");
 	}
@@ -1221,7 +1221,7 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean hasItem(final Player p, final int item) {
-		boolean retval = p.getInventory().hasItemId(item);
+		boolean retval = p.getCarriedItems().hasCatalogID(item);
 
 		return retval;
 	}
@@ -1235,11 +1235,11 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean hasItem(final Player p, final int id, final int amt) {
-		int amount = p.getInventory().countId(id);
+		int amount = p.getCarriedItems().getInventory().countId(id);
 		int equipslot = -1;
 		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if ((equipslot = p.getEquipment().searchEquipmentForItem(id)) != -1) {
-				amount += p.getEquipment().get(equipslot).getAmount();
+			if ((equipslot = p.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
+				amount += p.getCarriedItems().getEquipment().get(equipslot).getAmount();
 			}
 		}
 		return amount >= amt;
@@ -1425,9 +1425,9 @@ public class Functions {
 		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			final Item item = new Item(id, 1);
 			if (!item.getDef(p.getWorld()).isStackable()) {
-				p.getInventory().remove(new Item(id, 1));
+				p.getCarriedItems().getInventory().remove(new Item(id, 1));
 			} else {
-				p.getInventory().remove(new Item(id, amt));
+				p.getCarriedItems().getInventory().remove(new Item(id, amt));
 			}
 		}, "Remove Ground Item");
 		return true;
@@ -1442,13 +1442,13 @@ public class Functions {
 	 */
 	public static boolean removeItem(final Player p, final Item... items) {
 		for (Item i : items) {
-			if (!p.getInventory().contains(i)) {
+			if (!p.getCarriedItems().getInventory().contains(i)) {
 				return false;
 			}
 		}
 		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			for (Item ir : items) {
-				p.getInventory().remove(ir);
+				p.getCarriedItems().getInventory().remove(ir);
 			}
 		}, "Remove Multi Ground Item");
 		return true;

@@ -20,11 +20,11 @@ public class ItemActionHandler implements PacketHandler {
 		int amount = p.readInt();
 		int commandIndex;
 
-		if (player == null || player.getInventory() == null) {
+		if (player == null || player.getCarriedItems().getInventory() == null) {
 			return;
 		}
 
-		if (idx < -1 || idx >= player.getInventory().size()) {
+		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "item idx < -1 or idx >= inv size");
 			return;
 		}
@@ -34,12 +34,12 @@ public class ItemActionHandler implements PacketHandler {
 		if (idx == -1)
 		{
 			idx = (int) p.readShort();
-			if (player.getEquipment().searchEquipmentForItem(idx) != -1)
+			if (player.getCarriedItems().getEquipment().searchEquipmentForItem(idx) != -1)
 				tempitem = new Item(idx);
 			commandIndex = p.readByte();
 
 		} else {
-			tempitem = player.getInventory().get(idx);
+			tempitem = player.getCarriedItems().getInventory().get(idx);
 			commandIndex = p.readByte();
 		}
 

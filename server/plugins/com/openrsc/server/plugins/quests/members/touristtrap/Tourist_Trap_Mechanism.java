@@ -41,7 +41,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		Item item = request.item;
 		Player player = request.player;
 		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
-			player.getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true));
+			player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true));
 
 			Npc n = getNearestNpc(player, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
@@ -127,7 +127,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				playerTalk(p, npc, "Shush...It's for your own good!");
 				message(p, "You manage to squeeze Ana into the barrel,",
 					"despite her many complaints.");
-				p.getInventory().replace(ItemId.MINING_BARREL.id(), ItemId.ANA_IN_A_BARREL.id());
+				p.getCarriedItems().getInventory().replace(ItemId.MINING_BARREL.id(), ItemId.ANA_IN_A_BARREL.id());
 				if (npc != null) {
 					npc.remove();
 				}
@@ -194,7 +194,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			removeItem(p, ItemId.FEATHER.id(), 10);
 			if (succeedRate(p)) {
 				message(p, "You succesfully attach the feathers to the dart tip.");
-				p.getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
+				p.getCarriedItems().getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
 				//kosher: dependent on fletching level!
 				p.incExp(Skills.FLETCHING, getMaxLevel(p, Skills.FLETCHING) * 50, true);
 			} else {
@@ -276,7 +276,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		}
 		else if (obj.getID() == MINING_CAVE) {
 			Npc n = getNearestNpc(p, NpcId.MERCENARY_ESCAPEGATES.id(), 10);
-			if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Quests.TOURIST_TRAP) != -1) {
+			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 				p.message("This guard looks as if he's been down here a while.");
 				npcTalk(p, n, "Hey, you're no slave!");
 				npcTalk(p, n, "What are you doing down here?");

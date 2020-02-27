@@ -388,7 +388,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockInvUseOnNpc(Player player, Npc n, Item i) {
 		int cageId = i.getCatalogId();
-		if (player.getInventory().countId(cageId) <= 0) return false;
+		if (player.getCarriedItems().getInventory().countId(cageId) <= 0) return false;
 
 		if (n.getID() == NpcId.KHARID_SCORPION_TAVERLEY.id() && // First Scorpion (Taverly)
 			cageId != ItemId.SCORPION_CAGE_ONE.id() && cageId != ItemId.SCORPION_CAGE_ONE_TWO.id() &&

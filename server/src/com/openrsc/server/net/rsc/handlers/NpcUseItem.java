@@ -19,7 +19,7 @@ public class NpcUseItem implements PacketHandler {
 		player.resetAll();
 		int npcIndex = p.readShort();
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
-		final Item item = player.getInventory().get(p.readShort());
+		final Item item = player.getCarriedItems().getInventory().get(p.readShort());
 		if (affectedNpc == null || item == null) {
 			return;
 		}
@@ -29,7 +29,7 @@ public class NpcUseItem implements PacketHandler {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
-				if (!getPlayer().getInventory().contains(item) || getPlayer().isBusy()
+				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
 					|| affectedNpc.isBusy()
 					|| getPlayer().getStatus() != Action.USING_Item_ON_NPC) {

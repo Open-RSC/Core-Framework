@@ -88,11 +88,11 @@ public class Klarense implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				"I'm not paying that much for a broken boat"
 			});
 			if (choice == 0) {
-				if (p.getInventory().countId(ItemId.COINS.id()) >= 2000) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 2000) {
 					npcTalk(p, n,
 						"Ok she's all yours");
 					p.getCache().store("owns_ship", true);
-					p.getInventory().remove(ItemId.COINS.id(), 2000);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2000);
 				} else {
 					playerTalk(p, n, "Except I don't have that much money on me");
 				}

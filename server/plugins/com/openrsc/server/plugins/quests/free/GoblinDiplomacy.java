@@ -24,19 +24,19 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Goblin diplomacy";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the goblin diplomacy quest");
 		player.message("@gre@You haved gained 5 quest points!");
 		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GOBLIN_DIPLOMACY), true);
 		player.message("general wartface gives you a gold bar as thanks");
-		player.getInventory().add(new Item(ItemId.GOLD_BAR.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.GOLD_BAR.id(), 1));
 	}
 
 	public void onTalkToNpc(Player p, final Npc n) {
@@ -96,10 +96,10 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == 2) {
 				npcTalk(p, n, "Oh it you");
-				if (p.getInventory().hasItemId(ItemId.ORANGE_GOBLIN_ARMOUR.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ORANGE_GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "I have some orange armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getInventory().remove(ItemId.ORANGE_GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().getInventory().remove(ItemId.ORANGE_GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "No I don't like that much");
 					npcTalk(p, otherGoblin, "It clashes with my skin colour");
 					npcTalk(p, n, "Try bringing us dark blue armour");
@@ -111,10 +111,10 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == 3) {
 				npcTalk(p, n, "Oh it you");
-				if (p.getInventory().hasItemId(ItemId.BLUE_GOBLIN_ARMOUR.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BLUE_GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "I have some dark blue armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getInventory().remove(ItemId.BLUE_GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().getInventory().remove(ItemId.BLUE_GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "Doesn't seem quite right");
 					npcTalk(p, otherGoblin, "maybe if it was a bit lighter");
 					npcTalk(p, n, "Yeah try light blue");
@@ -128,10 +128,10 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "Come back when you have some");
 				}
 			} else if (p.getQuestStage(this) == 4) {
-				if (p.getInventory().hasItemId(ItemId.GOBLIN_ARMOUR.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "Ok I've got light blue armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getInventory().remove(ItemId.GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().getInventory().remove(ItemId.GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "That is rather nice");
 					npcTalk(p, otherGoblin,
 						"Yes I could see myself wearing somethin' like that");

@@ -45,7 +45,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				message(p, "you search through the bottom of the cage");
 				if (!p.getCache().hasKey("cons_on_doll")) {
 					p.message("but the souless bieng bites into your arm");
-					if (p.getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
+					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
 						p.message("klanks gaunlett protects you");
 					} else {
 						p.damage(((int) getCurrentLevel(p, Skills.HITS) / 10) + 5);
@@ -57,7 +57,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					addItem(p, ItemId.IBANS_CONSCIENCE.id(), 1);
 				} else {
 					//kosher was separated lol
-					if (p.getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
+					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
 						p.message("but you find find nothing");
 					} else {
 						p.message("you find nothing");
@@ -70,7 +70,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 				sleep(1600);
 				message(p, "you search through the bottom of the cage");
 				p.message("but the souless bieng bites into your arm");
-				if (p.getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
 					p.message("klanks gaunlett protects you");
 					p.message("but you find find nothing");
 				} else {
@@ -105,8 +105,8 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 					p.message("...you cannot enter");
 					return;
 				}
-				if (p.getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_TOP.id())
-					&& p.getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_TOP.id())
+					&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
 					replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					delayedSpawnObject(obj.getWorld(), obj.getLoc(), 3000);
 					p.teleport(792, 3469);

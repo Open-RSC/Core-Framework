@@ -26,7 +26,7 @@ public class SwampToads implements PickupListener, PickupExecutiveListener, InvA
 		if (item.getCatalogId() == ItemId.SWAMP_TOAD.id()) {
 			message(p, 1900, "you pull the legs off the toad");
 			p.message("poor toad..at least they'll grow back");
-			p.getInventory().replace(item.getCatalogId(), ItemId.TOAD_LEGS.id());
+			p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.TOAD_LEGS.id());
 		}
 	}
 

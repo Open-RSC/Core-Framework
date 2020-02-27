@@ -41,7 +41,7 @@ public class CandleMakerShop implements ShopInterface,
 	public void onTalkToNpc(final Player p, final Npc n) {
 		if (p.getCache().hasKey("candlemaker")) {
 			npcTalk(p, n, "Have you got any wax yet?");
-			if (p.getInventory().hasItemId(ItemId.WAX_BUCKET.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.WAX_BUCKET.id())) {
 				playerTalk(p, n, "Yes I have some now");
 				removeItem(p, ItemId.WAX_BUCKET.id(), 1);
 				p.message("You exchange the wax with the candle maker for a black candle");

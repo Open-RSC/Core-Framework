@@ -71,16 +71,16 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			if (DataConversions.random(0, 1) == 1) {
 				otherPlayer.message("The person you pull the cracker with gets the prize");
 				player.message("You get the prize from the cracker");
-				player.getInventory().add(phat);
-				player.getInventory().add(prize);
+				player.getCarriedItems().getInventory().add(phat);
+				player.getCarriedItems().getInventory().add(prize);
 			} else {
 				player.message("The person you pull the cracker with gets the prize");
 				otherPlayer.message("You get the prize from the cracker");
-				otherPlayer.getInventory().add(phat);
-				otherPlayer.getInventory().add(prize);
+				otherPlayer.getCarriedItems().getInventory().add(phat);
+				otherPlayer.getCarriedItems().getInventory().add(prize);
 			}
 
-			player.getInventory().remove(item);
+			player.getCarriedItems().getInventory().remove(item);
 
 			player.setBusy(false);
 			//otherPlayer.setBusy(false);

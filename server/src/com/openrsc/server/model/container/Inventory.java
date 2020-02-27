@@ -174,7 +174,7 @@ public class Inventory {
 						} else if (i.getDef(player.getWorld()).isStackable() && amount == i.getAmount()) {
 							// Exact amount, remove all.
 							if (i.isWielded()) {
-								player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
+								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
 							}
 							iterator.remove();
 							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, i);
@@ -185,7 +185,7 @@ public class Inventory {
 						else {
 							// Remove 1.
 							if (i.isWielded()) {
-								player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
+								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
 							}
 							iterator.remove();
 							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, i);
@@ -204,7 +204,7 @@ public class Inventory {
 			}
 		}
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getEquipment().remove(id, amount);
+			return player.getCarriedItems().getEquipment().remove(id, amount);
 		else
 			return -1;
 	}
@@ -231,10 +231,10 @@ public class Inventory {
 		if (old.getDef(player.getWorld()) != null && newitem.getDef(player.getWorld()) != null
 			&& player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
 			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
-			&& player.getEquipment().hasEquipped(i)) {
+			&& player.getCarriedItems().getEquipment().hasEquipped(i)) {
 			newitem.setWielded(false);
-			if (player.getEquipment().remove(old.getCatalogId(), old.getAmount()) != -1)
-				player.getEquipment().add(newitem);
+			if (player.getCarriedItems().getEquipment().remove(old.getCatalogId(), old.getAmount()) != -1)
+				player.getCarriedItems().getEquipment().add(newitem);
 			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
 				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
 				old.getDef(player.getWorld()).getWearableId(), false);
@@ -248,6 +248,7 @@ public class Inventory {
 				ActionSender.sendInventory(player);
 		}
 	}
+
 	public void swap(int slot, int to) {
 		if (slot <= 0 && to <= 0 && to == slot) {
 			return;
@@ -315,14 +316,14 @@ public class Inventory {
 		}
 		boolean shattered = false;
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-			&& (player.getEquipment().searchEquipmentForItem(itemID)) != -1) {
-			player.getEquipment().remove(itemID, 1);
+			&& (player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID)) != -1) {
+			player.getCarriedItems().getEquipment().remove(itemID, 1);
 			shattered = true;
 		} else {
-			for (int i = 0; i < player.getInventory().size(); i++) {
-				Item item = player.getInventory().get(i);
+			for (int i = 0; i < player.getCarriedItems().getInventory().size(); i++) {
+				Item item = player.getCarriedItems().getInventory().get(i);
 				if (item != null && item.getCatalogId() == itemID) {
-					player.getInventory().remove(i);
+					player.getCarriedItems().getInventory().remove(i);
 					shattered = true;
 					break;
 				}
@@ -345,7 +346,7 @@ public class Inventory {
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				Item equipped = player.getEquipment().get(i);
+				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
 					def = equipped.getDef(player.getWorld());
 					// stackable always lost
@@ -357,7 +358,7 @@ public class Inventory {
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
+					player.getCarriedItems().getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
 				}
 			}
 		}
@@ -440,11 +441,11 @@ public class Inventory {
 		for (Item returnItem : deathItemsList) {
 			add(returnItem, false);
 			if (oldEquippedList.contains(returnItem)) {
-				player.getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
+				player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
 			}
 		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
-			&& !player.getInventory().hasItemId(fam_gloves)) {
+			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
 			add(new Item(fam_gloves, 1));
 		}
 		ActionSender.sendInventory(player);
@@ -489,7 +490,7 @@ public class Inventory {
 		//synchronized (list) {
 		//	return list.contains(i);
 		//}
-		return hasItemId(i.getCatalogId());
+		return hasCatalogID(i.getCatalogId());
 	}
 
 	public int countId(long id) {
@@ -525,7 +526,7 @@ public class Inventory {
 		return false;
 	}
 
-	public boolean hasItemId(int id) {
+	public boolean hasCatalogID(int id) {
 		synchronized (list) {
 			for (Item i : list) {
 				if (i.getCatalogId() == id)
@@ -534,7 +535,7 @@ public class Inventory {
 		}
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getEquipment().searchEquipmentForItem(id) != -1;
+			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
 		else
 			return false;
 	}

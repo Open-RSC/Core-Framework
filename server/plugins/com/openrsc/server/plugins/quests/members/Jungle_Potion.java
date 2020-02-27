@@ -920,7 +920,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 					return;
 				}
 				//no stone-plaque in bank or inventory
-				if(!p.getBank().hasItemId(ItemId.STONE_PLAQUE.id()) && !p.getInventory().hasItemId(ItemId.STONE_PLAQUE.id())) {
+				if(!p.getBank().hasItemId(ItemId.STONE_PLAQUE.id()) && !p.getCarriedItems().hasCatalogID(ItemId.STONE_PLAQUE.id())) {
 					npcTalk(p, n, "Look for something that can identify the place.",
 							"Leave no stone unturned.");
 				}
@@ -1022,7 +1022,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 			}
 		} else if (isObject(obj, QuestObjects.Sito_Scorched_Earth)) {
 			if (!hasItem(p, ItemId.UNIDENTIFIED_SITO_FOIL.id())
-				&& !hasItem(p, ItemId.SITO_FOIL.id()) 
+				&& !hasItem(p, ItemId.SITO_FOIL.id())
 				&& !hasCacheKeySetTrue(p, "got_sito_foil")
 				&& atQuestStage(p, this, 3)) {
 				message(p,
@@ -1035,7 +1035,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 			}
 		} else if (isObject(obj, QuestObjects.Volencia_Rocks)) {
 			if (!hasItem(p, ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id())
-				&& !hasItem(p, ItemId.VOLENCIA_MOSS.id()) 
+				&& !hasItem(p, ItemId.VOLENCIA_MOSS.id())
 				&& !hasCacheKeySetTrue(p, "got_volencia_moss")
 				&& atQuestStage(p, this, 4)) {
 				message(p,
@@ -1059,7 +1059,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (isObject(obj, QuestObjects.Rogues_Purse_Wall)) {
 			if (!hasItem(p, ItemId.UNIDENTIFIED_ROGUES_PURSE.id())
-				&& !hasItem(p, ItemId.ROGUES_PURSE.id()) 
+				&& !hasItem(p, ItemId.ROGUES_PURSE.id())
 				&& !hasCacheKeySetTrue(p, "got_rogues_purse")
 				&& atQuestStage(p, this, 5)) {
 				message(p,
@@ -1071,7 +1071,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("You find nothing of interest.");
 		}
 	}
-	
+
 	private boolean hasCacheKeySetTrue(Player p, String key) {
 		return p.getCache().hasKey(key) && p.getCache().getBoolean(key);
 	}

@@ -56,13 +56,13 @@ public class InterfaceOptionHandler implements PacketHandler {
 				slot = p.readInt();
 				to = p.readInt();
 
-				player.getInventory().swap(slot, to);
+				player.getCarriedItems().getInventory().swap(slot, to);
 				break;
 			case 5: // Swap
 				slot = p.readInt();
 				to = p.readInt();
 
-				player.getInventory().insert(slot, to);
+				player.getCarriedItems().getInventory().insert(slot, to);
 				ActionSender.sendInventory(player);
 				break;
 			case 6:

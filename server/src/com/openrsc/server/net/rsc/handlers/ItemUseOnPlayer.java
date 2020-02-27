@@ -18,7 +18,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		}
 		player.resetAll();
 		final Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
-		final Item item = player.getInventory().get(p.readShort());
+		final Item item = player.getCarriedItems().getInventory().get(p.readShort());
 		if (affectedPlayer == null || item == null) {
 			return;
 		}
@@ -37,7 +37,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
-				if (!getPlayer().getInventory().contains(item)
+				if (!getPlayer().getCarriedItems().getInventory().contains(item)
 					|| !getPlayer().canReach(affectedPlayer) || getPlayer().isBusy()
 					|| getPlayer().isRanging()
 					|| getPlayer().getStatus() != Action.USING_Item_ON_PLAYER) {

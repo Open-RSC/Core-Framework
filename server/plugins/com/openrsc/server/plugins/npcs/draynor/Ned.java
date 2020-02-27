@@ -111,14 +111,14 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				);
 			}
 			if (choice == 0) {
-				if (p.getInventory().countId(ItemId.COINS.id()) < 15) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 15) {
 					p.message("You Don't have enough coins to buy any rope!");
 				} else {
 					playerTalk(p, n, "Okay, please sell me some Rope");
 					p.message("You hand Ned 15 coins");
 					npcTalk(p, n, "There you go, finest rope in Runescape");
-					p.getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					p.getInventory().remove(ItemId.COINS.id(), 15);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 15);
 					p.message("Ned gives you a coil of rope");
 				}
 			} else if (choice == 1) {
@@ -134,8 +134,8 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				} else {
 					playerTalk(p, n, "I have some balls of wool. could you make me some Rope?");
 					npcTalk(p, n, "Sure I can.");
-					p.getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					p.getInventory().remove(ItemId.BALL_OF_WOOL.id(), 4);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
+					p.getCarriedItems().getInventory().remove(ItemId.BALL_OF_WOOL.id(), 4);
 				}
 			}
 		} else if (option == 2) { // Prince Ali's Rescue
@@ -152,7 +152,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					"yes, I think I could do something",
 					"Give me 3 balls of wool and I might be able to do it"
 				);
-				if (p.getInventory().countId(ItemId.BALL_OF_WOOL.id()) >= 3) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id()) >= 3) {
 					int choice = showMenu(p, n,
 						"I have that now. Please, make me a wig",
 						"I will come back when I need you to make me one"
@@ -162,7 +162,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 						message(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
-						p.getInventory().remove(ItemId.BALL_OF_WOOL.id(), 3);
+						p.getCarriedItems().getInventory().remove(ItemId.BALL_OF_WOOL.id(), 3);
 						npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
 						p.message("Ned gives you a pretty good wig");
 						addItem(p, ItemId.WOOL_WIG.id(), 1);

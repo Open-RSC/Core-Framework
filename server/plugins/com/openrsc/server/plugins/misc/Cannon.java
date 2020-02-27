@@ -37,7 +37,7 @@ public class Cannon implements ObjectActionListener,
 	private void pickupBase(Player player, GameObject object) {
 		player.message("you pick up the cannon");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
 		player.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
 			player.getCache().remove("has_cannon");
@@ -50,8 +50,8 @@ public class Cannon implements ObjectActionListener,
 	private void pickupStand(Player player, GameObject object) {
 		player.message("you pick up the cannon");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
 
 		player.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
@@ -65,9 +65,9 @@ public class Cannon implements ObjectActionListener,
 	private void pickupBarrels(Player player, GameObject object) {
 		player.message("you pick up the cannon base");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id(), 1));
 
 		player.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
@@ -81,10 +81,10 @@ public class Cannon implements ObjectActionListener,
 	private void pickupCannon(Player player, GameObject object) {
 		player.message("you pick up the cannon");
 		player.message("it's really heavy");
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id(), 1));
-		player.getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BASE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_STAND.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_BARRELS.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_CANNON_FURNACE.id(), 1));
 
 		player.getWorld().unregisterGameObject(object);
 		if (player.getCache().hasKey("has_cannon")) {
@@ -133,7 +133,7 @@ public class Cannon implements ObjectActionListener,
 			player.setBusy(true);
 			player.message("you place the cannon base on the ground");
 			sleep(1500);
-			player.getInventory().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
+			player.getCarriedItems().getInventory().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
 
 			GameObject cannonBase = new GameObject(
 				player.getWorld(),
@@ -158,7 +158,7 @@ public class Cannon implements ObjectActionListener,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
 			player.setBusy(true);
 			player.message("you add the stand");
-			player.getInventory().remove(ItemId.DWARF_CANNON_STAND.id(), 1);
+			player.getCarriedItems().getInventory().remove(ItemId.DWARF_CANNON_STAND.id(), 1);
 
 			player.getCache().set("cannon_stage", 2);
 			player.getWorld().unregisterGameObject(object);
@@ -175,7 +175,7 @@ public class Cannon implements ObjectActionListener,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
 			player.setBusy(true);
 			player.message("you add the barrels");
-			player.getInventory().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
+			player.getCarriedItems().getInventory().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
 
 			player.getWorld().unregisterGameObject(object);
 			GameObject cannonBarrels = new GameObject(player.getWorld(), object.getLocation(),
@@ -193,7 +193,7 @@ public class Cannon implements ObjectActionListener,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
 			player.setBusy(true);
 			player.message("you add the furnace");
-			player.getInventory().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
+			player.getCarriedItems().getInventory().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
 
 			player.getWorld().unregisterGameObject(object);
 			GameObject cannonFurnace = new GameObject(player.getWorld(), object.getLocation(),
@@ -207,7 +207,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	private void handleFire(Player p) {
-		if (!p.getInventory().contains(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
+		if (!p.getCarriedItems().getInventory().contains(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
 			p.message("you're out of ammo");
 			return;
 		} else if (p.isCannonEventActive()) {

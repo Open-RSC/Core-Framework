@@ -29,7 +29,7 @@ public class Smelting implements InvUseOnObjectListener,
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId())) {
 			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
-				if (p.getInventory().hasItemId(ItemId.CANNON_AMMO_MOULD.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
 					if (getCurrentLevel(p, Skills.SMITHING) < 30) {
 						p.message("You need at least level 30 smithing to make cannon balls");
 						return;
@@ -45,19 +45,19 @@ public class Smelting implements InvUseOnObjectListener,
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
 
-					p.setBatchEvent(new BatchEvent(p.getWorld(), p, delay, "Smelting", p.getInventory().countId(item.getCatalogId()), false) {
+					p.setBatchEvent(new BatchEvent(p.getWorld(), p, delay, "Smelting", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 						@Override
 						public void action() {
 							getOwner().incExp(Skills.SMITHING, 100, true);
-							getOwner().getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
-							if (getOwner().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
-								getOwner().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
+							getOwner().getCarriedItems().getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
+							if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
+								getOwner().getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
 								int charges;
 								if (getOwner().getCache().hasKey("dwarvenring")) {
 									charges = getOwner().getCache().getInt("dwarvenring") + 1;
 									if (charges >= getWorld().getServer().getConfig().DWARVEN_RING_USES) {
 										getOwner().getCache().remove("dwarvenring");
-										getOwner().getInventory().shatter(ItemId.DWARVEN_RING.id());
+										getOwner().getCarriedItems().getInventory().shatter(ItemId.DWARVEN_RING.id());
 									} else
 										getOwner().getCache().put("dwarvenring", charges);
 								}
@@ -90,7 +90,7 @@ public class Smelting implements InvUseOnObjectListener,
 									return;
 								}
 							}
-							if (getOwner().getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
+							if (getOwner().getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
 								getOwner().message("You have no steel bars left");
 								interrupt();
 								return;
@@ -122,7 +122,7 @@ public class Smelting implements InvUseOnObjectListener,
 				p.message("90 smithing is required to use this forge");
 				return;
 			}
-			if (p.getInventory().remove(item.getCatalogId(), 1) > -1) {
+			if (p.getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
 				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
 				sleep(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
@@ -138,14 +138,14 @@ public class Smelting implements InvUseOnObjectListener,
 		}
 		String formattedName = item.getDef(p.getWorld()).getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
-		if (item.getCatalogId() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getInventory().countId(Smelt.COAL.getID()) >= 2) {
+		if (item.getCatalogId() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getCarriedItems().getInventory().countId(Smelt.COAL.getID()) >= 2) {
 			String coalChange = p.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
 			smelt = Smelt.valueOf(formattedName);
 		}
 
-		if (!p.getInventory().contains(item)) {
+		if (!p.getCarriedItems().getInventory().contains(item)) {
 			return;
 		}
 
@@ -175,12 +175,12 @@ public class Smelting implements InvUseOnObjectListener,
 				p.playerServerMessage(MessageType.QUEST, "Practice your smithing using tin and copper to make bronze");
 			return;
 		}
-		if (p.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
+		if (p.getCarriedItems().getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getCarriedItems().getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
 			if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getCatalogId() == Smelt.COPPER_ORE.getID()) {
 				p.playerServerMessage(MessageType.QUEST, "You also need some " + (item.getCatalogId() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
 				return;
 			}
-			if (smelt.getID() == Smelt.COAL.getID() && (p.getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || p.getInventory().countId(Smelt.COAL.getID()) <= 1)) {
+			if (smelt.getID() == Smelt.COAL.getID() && (p.getCarriedItems().getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || p.getCarriedItems().getInventory().countId(Smelt.COAL.getID()) <= 1)) {
 				p.playerServerMessage(MessageType.QUEST, "You need 1 iron-ore and 2 coal to make steel");
 				return;
 			} else {
@@ -210,8 +210,8 @@ public class Smelting implements InvUseOnObjectListener,
 					interrupt();
 					return;
 				}
-				if (getOwner().getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (getOwner().getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
-					if (smelt.getID() == Smelt.COAL.getID() && (getOwner().getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || getOwner().getInventory().countId(Smelt.COAL.getID()) <= 1)) {
+				if (getOwner().getCarriedItems().getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (getOwner().getCarriedItems().getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
+					if (smelt.getID() == Smelt.COAL.getID() && (getOwner().getCarriedItems().getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || getOwner().getCarriedItems().getInventory().countId(Smelt.COAL.getID()) <= 1)) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You need 1 iron-ore and 2 coal to make steel");
 						interrupt();
 						return;
@@ -229,24 +229,24 @@ public class Smelting implements InvUseOnObjectListener,
 					}
 				}
 				showBubble(getOwner(), item);
-				if (getOwner().getInventory().countId(item.getCatalogId()) > 0) {
+				if (getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) > 0) {
 					if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
 						removeItem(getOwner(), ItemId.GOLD_FAMILYCREST.id(), 1);
 					else
-						getOwner().getInventory().remove(smelt.getID(), smelt.getOreAmount());
+						getOwner().getCarriedItems().getInventory().remove(smelt.getID(), smelt.getOreAmount());
 
 					if (smelt.getReqOreAmount() > 0)
-						getOwner().getInventory().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
+						getOwner().getCarriedItems().getInventory().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
 
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
-						if (getOwner().getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {
+						if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {
 							getOwner().message("Your ring of forging shines brightly");
 							addItem(getOwner(), smelt.getSmeltBarId(), 1);
 							if (getOwner().getCache().hasKey("ringofforging")) {
 								int ringCheck = getOwner().getCache().getInt("ringofforging");
 								if (ringCheck + 1 == getWorld().getServer().getConfig().RING_OF_FORGING_USES) {
 									getOwner().getCache().remove("ringofforging");
-									getOwner().getInventory().shatter(ItemId.RING_OF_FORGING.id());
+									getOwner().getCarriedItems().getInventory().shatter(ItemId.RING_OF_FORGING.id());
 								} else {
 									getOwner().getCache().set("ringofforging", ringCheck + 1);
 								}
@@ -266,7 +266,7 @@ public class Smelting implements InvUseOnObjectListener,
 						getOwner().playerServerMessage(MessageType.QUEST, "You retrieve a bar of " + new Item(smelt.getSmeltBarId()).getDef(getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 
 						/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
-						if (getOwner().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
+						if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
 							getOwner().incExp(Skills.SMITHING, smelt.getXp() + 45, true);
 						} else {
 							getOwner().incExp(Skills.SMITHING, smelt.getXp(), true);

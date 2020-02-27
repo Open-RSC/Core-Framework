@@ -1031,7 +1031,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case -1:
 						if (p.getLocation().inTouristTrapCave()) {
 							npcTalk(p, n, "Can't you see I'm busy?");
-							if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
+							if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
 								p.message("A guard notices you and starts running after you.");
 								Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 								if (npcN == null) {
@@ -1225,8 +1225,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
 			message(p, "The slave gives you his dirty, flea infested robe.",
 				"The slave gives you his muddy, sweat soaked shirt.");
-			p.getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
-			p.getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
+			p.getCarriedItems().getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
+			p.getCarriedItems().getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
 			removeItem(p, ItemId.DESERT_BOOTS.id(), 1);
 			Npc newSlave = transform(n, NpcId.ESCAPING_MINING_SLAVE.id(), true);
 			sleep(1000);
@@ -1269,7 +1269,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			if (cID == -1) {
 				if (p.getLocation().inTouristTrapCave()) {
-					if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
+					if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
 						p.message("This guard looks as if he's been down here a while.");
 						npcTalk(p, n, "Hey, you're no slave!",
 							"What are you doing down here?");
@@ -2084,7 +2084,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.message("This slave does not appear interested in talking to you.");
 				return;
 			}
-			if (!p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
+			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && p.getQuestStage(this) != -1) {
 				p.message("A guard notices you and starts running after you.");
 				Npc npcN = getNearestNpc(p, NpcId.MERCENARY.id(), 10);
 				if (npcN == null) {
@@ -2493,7 +2493,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			if (command.equals("open")) {
 				message(p, "You push the door.");
 				playerTalk(p, null, "Ugh!");
-				if (p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && p.getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
 					message(p, "The door opens with some effort ");
 					if (obj.getX() == 81 && obj.getY() == 3633) {
 						p.teleport(82, 802);
@@ -2641,7 +2641,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
@@ -2652,7 +2652,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
@@ -2663,7 +2663,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
@@ -2986,7 +2986,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				item = p.getEquipment().get(i);
+				item = p.getCarriedItems().getEquipment().get(i);
 				if (item == null)
 					continue;
 				if (item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getCatalogId()))
@@ -3005,8 +3005,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				}
 			}
 		} else {
-			synchronized (p.getInventory().getItems()) {
-				for (Item item : p.getInventory().getItems()) {
+			synchronized (p.getCarriedItems().getInventory().getItems()) {
+				for (Item item : p.getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && item.getDef(p.getWorld()).getWieldPosition() > 5 && allowed.contains(item.getCatalogId())) {
 						continue;
 					}

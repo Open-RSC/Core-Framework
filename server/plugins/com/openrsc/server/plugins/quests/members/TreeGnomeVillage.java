@@ -27,7 +27,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 
 	private static final int KHAZARD_CHEST_OPEN = 409;
 	private static final int KHAZARD_CHEST_CLOSED = 410;
-	
+
 	@Override
 	public int getQuestId() {
 		return Quests.TREE_GNOME_VILLAGE;
@@ -235,7 +235,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n,
 						"hello again, we're still desperate for wood soldier");
 					if (hasItem(p, ItemId.LOGS.id(), 6)) {
-						p.getInventory().remove(ItemId.LOGS.id(), 6);
+						p.getCarriedItems().getInventory().remove(ItemId.LOGS.id(), 6);
 						playerTalk(p, n, "i have some here");
 						p.message("you give some wood to the commander");
 						npcTalk(p,

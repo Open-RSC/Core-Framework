@@ -68,7 +68,7 @@ public class DemonSlayer implements QuestInterface,
 							"You pour the liquid down the drain");
 						message(player, "Ok I think I've washed the key down into the sewer",
 							"I'd better go down and get it before someone else finds it");
-						player.getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
+						player.getCarriedItems().getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
 						player.getWorld().registerItem(
 							new GroundItem(player.getWorld(), ItemId.SILVERLIGHT_KEY_3.id(), 117, 3294, 1, player));
 					}
@@ -275,7 +275,7 @@ public class DemonSlayer implements QuestInterface,
 				case 3:
 				case 4:
 					//key obtained, present in inventory
-					if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_1.id())) {
 						npcTalk(p, n, "Ello young thingummywut");
 						int choice3 = showMenu(p, n,
 							"Whats a thingummywut?",
@@ -296,7 +296,7 @@ public class DemonSlayer implements QuestInterface,
 						p.getCache().remove("done_bone_task");
 					} else {
 						npcTalk(p, n, "How are you doing finding bones?");
-						if (p.getInventory().countId(ItemId.BONES.id()) <= 0) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.BONES.id()) <= 0) {
 							playerTalk(p, n, "I haven't got any at the moment");
 							npcTalk(p, n, "Never mind. Keep working on it");
 							return;
@@ -309,8 +309,8 @@ public class DemonSlayer implements QuestInterface,
 						else
 							boneCount = p.getCache().getInt("traiborn_bones");
 
-						while (p.getInventory().countId(ItemId.BONES.id()) > 0) {
-							p.getInventory().remove(new Item(ItemId.BONES.id()));
+						while (p.getCarriedItems().getInventory().countId(ItemId.BONES.id()) > 0) {
+							p.getCarriedItems().getInventory().remove(new Item(ItemId.BONES.id()));
 							p.message("You give Traiborn a set of bones");
 							boneCount++;
 							sleep(600);
@@ -330,7 +330,7 @@ public class DemonSlayer implements QuestInterface,
 								"Return it now unto me");
 							message(p, "Traiborn smiles",
 								"Traiborn hands you a key");
-							p.getInventory().add(new Item(ItemId.SILVERLIGHT_KEY_1.id(), 1));
+							p.getCarriedItems().getInventory().add(new Item(ItemId.SILVERLIGHT_KEY_1.id(), 1));
 							p.getCache().store("done_bone_task", true);
 							playerTalk(p, n, "Thank you very much");
 							npcTalk(p, n,
@@ -346,7 +346,7 @@ public class DemonSlayer implements QuestInterface,
 				case 2:
 					npcTalk(p, n, "Ello young thingummywut");
 					int choice4;
-					if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_1.id())) {
 						choice4 = showMenu(p, n,
 							"Whats a thingummywut?",
 							"Teach me to be a mighty and powerful wizard",
@@ -534,28 +534,28 @@ public class DemonSlayer implements QuestInterface,
 				case 3:
 				case 4:
 					//if silverlight is lost, player needs to regain keys
-					if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT.id())) {
 						npcTalk(p, n, "So how are you doing with getting the keys?");
-						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_2.id())
-							&& p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())
-							&& p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_3.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_2.id())
+							&& p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_1.id())
+							&& p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_3.id())) {
 							playerTalk(p, n, "I've got them all");
 							sirPrysinDialogue(p, n, SirPrysin.GOT_THEM);
 							return;
-						} else if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_2.id())
-							&& !p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())
-							&& !p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_3.id())) {
+						} else if (!p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_2.id())
+							&& !p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_1.id())
+							&& !p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_3.id())) {
 							playerTalk(p, n, "I've not found any of them yet");
 						} else {
 							playerTalk(p, n, "I've made a start");
 						}
-						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_2.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_2.id())) {
 							playerTalk(p, n, "I've got the key off Wizard Traiborn");
 						}
-						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_1.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_1.id())) {
 							playerTalk(p, n, "I've got the key off Captain Rovin");
 						}
-						if (p.getInventory().hasItemId(ItemId.SILVERLIGHT_KEY_3.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT_KEY_3.id())) {
 							playerTalk(p, n,
 								"I've got the key You dropped down the drain");
 						}
@@ -782,7 +782,7 @@ public class DemonSlayer implements QuestInterface,
 				case 3:
 				case 4:
 					npcTalk(p, n, "How goes the quest?");
-					if (!p.getInventory().hasItemId(ItemId.SILVERLIGHT.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.SILVERLIGHT.id())) {
 						playerTalk(p, n,
 							"I found Sir Prysin. Unfortunately, I haven't got the sword yet");
 						playerTalk(p, n, "He's made it complicated for me!");
@@ -897,8 +897,8 @@ public class DemonSlayer implements QuestInterface,
 				playerTalk(p, n, "Errr yeah whatever");
 				break;
 			case GypsyConversation.QUEST_START:// Quest Start
-				if (p.getInventory().hasItemId(ItemId.COINS.id()))
-					p.getInventory().remove(ItemId.COINS.id(), 1);
+				if (p.getCarriedItems().hasCatalogID(ItemId.COINS.id()))
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 1);
 				else {
 					playerTalk(p, n, "Oh dear. I don't have any money");
 					break;
@@ -1086,7 +1086,7 @@ public class DemonSlayer implements QuestInterface,
 					playerTalk(p, null, "I'd rather not. He looks scary");
 					return true;
 				case 4:
-					if (!p.getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())) {
+					if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())) {
 						playerTalk(p, null, "Maybe I'd better wield silverlight first");
 						return true;
 					} else {

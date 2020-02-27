@@ -34,8 +34,8 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 	}
 
 	private boolean CAN_GO(Player p) {
-		synchronized(p.getInventory().getItems()) {
-			for (Item item : p.getInventory().getItems()) {
+		synchronized(p.getCarriedItems().getInventory().getItems()) {
+			for (Item item : p.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();
 				if (CHECK_ITEM(name))
 					return true;
@@ -45,7 +45,7 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				item = p.getEquipment().get(i);
+				item = p.getCarriedItems().getEquipment().get(i);
 				if (item == null)
 					continue;
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();

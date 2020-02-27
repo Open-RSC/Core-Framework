@@ -29,7 +29,7 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 	}
 
 	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if(player.getInventory().remove(item) <= -1) {
+		if(player.getCarriedItems().getInventory().remove(item) <= -1) {
 			return;
 		}
 

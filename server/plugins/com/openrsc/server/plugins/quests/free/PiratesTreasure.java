@@ -73,7 +73,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 						"the crate is already full");
 					return;
 				}
-				if (p.getInventory().remove(item) > -1) {
+				if (p.getCarriedItems().getInventory().remove(item) > -1) {
 					p.message(
 						"you put a banana in the crate");
 
@@ -86,7 +86,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		} else if (item.getCatalogId() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
 			&& p.getQuestStage(this) > 0) {
 			if (p.getCache().hasKey("bananas")) {
-				if (p.getInventory().remove(item) > -1) {
+				if (p.getCarriedItems().getInventory().remove(item) > -1) {
 					p.message(
 						"You stash the rum in the crate");
 					if (!p.getCache().hasKey("rum_in_crate")) {
@@ -140,12 +140,12 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 			case 1:
 				npcTalk(p, n, "Arrrh Matey",
 					"Have Ye brought some rum for yer old mate Frank");
-				if (!p.getInventory().hasItemId(ItemId.KARAMJA_RUM.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id())) {
 					playerTalk(p, n, "No not yet");
 					return;
 				}
 				playerTalk(p, n, "Yes I've got some");
-				p.getInventory().remove(ItemId.KARAMJA_RUM.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.KARAMJA_RUM.id(), 1);
 
 				message(p, "Frank happily takes the rum");
 				npcTalk(p,
@@ -227,7 +227,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 					playerTalk(p, n, "I've filled a crate with bananas");
 					npcTalk(p, n, "Well done here is your payment");
 					p.message("Luthas hands you 30 coins");
-					p.getInventory().add(new Item(ItemId.COINS.id(), 30));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 30));
 					if (p.getCache().hasKey("bananas")) {
 						p.getCache().remove("bananas");
 					}
@@ -323,13 +323,13 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				if (p.getCache().hasKey("rum_delivered") && p.getCache().getBoolean("rum_delivered")) {
 					message(p, "There are a lot of bananas in the crate",
 							"You find your bottle of rum in amoungst the bananas");
-					p.getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
 					p.getCache().remove("rum_delivered");
 				}
 				message(p, "Do you want to take a banana?");
 				int wantabanana = showMenu(p, "Yes", "No");
 				if (wantabanana == 0) {
-					p.getInventory().add(new Item(ItemId.BANANA.id()));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));
 					p.playerServerMessage(MessageType.QUEST, "you take a banana");
 				}
 				break;
@@ -345,8 +345,8 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 
 	@Override
 	public boolean blockTeleport(Player p) {
-		if (p.getInventory().hasItemId(ItemId.KARAMJA_RUM.id()) && (p.getLocation().inKaramja())) {
-			p.getInventory().remove(ItemId.KARAMJA_RUM.id());
+		if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (p.getLocation().inKaramja())) {
+			p.getCarriedItems().getInventory().remove(ItemId.KARAMJA_RUM.id());
 		}
 		return false;
 	}

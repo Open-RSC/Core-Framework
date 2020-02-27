@@ -186,7 +186,7 @@ public class ShantayPassNpcs implements ShopInterface,
 				if (menu6 == 0) {
 					npcTalk(p, n,
 						"Good, I see that you have come to your senses.");
-					if (p.getInventory().countId(ItemId.COINS.id()) >= 5) {
+					if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 						message(p, "You hand over five gold pieces to Shantay.");
 						npcTalk(p, n,
 							"Great Effendi, now please try to keep the peace.");
@@ -233,7 +233,7 @@ public class ShantayPassNpcs implements ShopInterface,
 					if (menu7 == 0) {
 						npcTalk(p, n,
 							"Good, I see that you have come to your senses.");
-						if (p.getInventory().countId(ItemId.COINS.id()) >= 5) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 							message(p,
 								"You hand over five gold pieces to Shantay.");
 							npcTalk(p, n,

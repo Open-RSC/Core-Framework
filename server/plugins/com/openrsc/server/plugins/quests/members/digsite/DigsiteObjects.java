@@ -235,7 +235,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 				case EMPTY_VIAL:
 					p.message("You fill the vial with the liquid");
 					p.message("You close the barrel");
-					p.getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
+					p.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
 					replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
 					playerTalk(p, null, "I'm not sure what this stuff is",
 						"I had better be very careful with it",

@@ -165,7 +165,7 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 				message(p, 1200, "Well done !",
 					"You have completed mapping the Kharazai jungle on the southern end of Karamja,");
 				message(p, 1900, "Grand Vizier Erkle will be pleased.");
-				p.getInventory().replace(ItemId.RADIMUS_SCROLLS.id(), ItemId.RADIMUS_SCROLLS_COMPLETE.id()); // switch map to complete map.
+				p.getCarriedItems().getInventory().replace(ItemId.RADIMUS_SCROLLS.id(), ItemId.RADIMUS_SCROLLS_COMPLETE.id()); // switch map to complete map.
 				checkMapComplete(p);
 				p.getCache().remove("JUNGLE_EAST");
 				p.getCache().remove("JUNGLE_MIDDLE");

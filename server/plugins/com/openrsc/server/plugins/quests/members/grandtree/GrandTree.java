@@ -853,7 +853,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						if (option == 0) {
 							// No extra dialogue
 						} else if (option == 1) {
-							if (p.getInventory().countId(ItemId.COINS.id()) >= 1000) {
+							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 1000) {
 								npcTalk(p, n, "alright, jump in the back of the cart",
 									"it's a food delivery, we should be fine");
 								message(p, "you hide in the cart",

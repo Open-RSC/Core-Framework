@@ -23,8 +23,8 @@ public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 		npc.face(player);
 		npc.setBusy(true);
 		showBubble(player, item);
-		if (player.getInventory().hasInInventory(item.getCatalogId())) {
-			player.getInventory().replace(item.getCatalogId(), ItemId.MILK.id(),true);
+		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.MILK.id(),true);
 		}
 		message(player, 3500, "You milk the cow");
 		npc.setBusy(false);

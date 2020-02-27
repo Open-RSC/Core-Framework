@@ -436,7 +436,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						message(p, "you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
 							"she then smears the paste over a strange mask");
-						p.getInventory().remove(ItemId.DWELLBERRIES.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.DWELLBERRIES.id(), 1);
 						addItem(p, ItemId.GASMASK.id(), 1);
 
 						npcTalk(p,
@@ -665,11 +665,11 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					p.message("This story is to be continued");
 					break;
 				case -1:
-					if (p.getBank().hasItemId(ItemId.MAGIC_SCROLL.id()) || p.getInventory().hasItemId(ItemId.MAGIC_SCROLL.id()) || p.getCache().hasKey("ardougne_scroll")) {
+					if (p.getBank().hasItemId(ItemId.MAGIC_SCROLL.id()) || p.getCarriedItems().hasCatalogID(ItemId.MAGIC_SCROLL.id()) || p.getCache().hasKey("ardougne_scroll")) {
 						npcTalk(p, n, "Ah hello again",
 							"And thank you again");
 						playerTalk(p, n, "No problem");
-					} else if (!p.getBank().hasItemId(ItemId.MAGIC_SCROLL.id()) && !p.getInventory().hasItemId(ItemId.MAGIC_SCROLL.id()) && !p.getCache().hasKey("ardougne_scroll")) {
+					} else if (!p.getBank().hasItemId(ItemId.MAGIC_SCROLL.id()) && !p.getCarriedItems().hasCatalogID(ItemId.MAGIC_SCROLL.id()) && !p.getCache().hasKey("ardougne_scroll")) {
 						int noScroll = showMenu(p, n, false, //do not send over
 							"Do you have any more of those scrolls?",
 							"no problem");
@@ -789,7 +789,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						message(p, "you poor the water onto the soil",
 							"the soil softens slightly");
 					}
-					p.getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
+					p.getCarriedItems().getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
 					BUCKETS_USED++;
 				} else {
 					p.message("You see no reason to do that at the moment");
@@ -869,7 +869,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
-				if (p.getEquipment().hasEquipped(ItemId.GASMASK.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.GASMASK.id())) {
 					p.message("you climb through the sewer pipe");
 					p.teleport(632, 589, false);
 				} else {

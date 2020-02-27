@@ -48,8 +48,8 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 
 		String[] options;
 		int extraOptions = 0;
-		boolean ears = p.getInventory().hasItemId(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0;
-		boolean scythe = p.getInventory().hasItemId(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0;
+		boolean ears = p.getCarriedItems().hasCatalogID(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0;
+		boolean scythe = p.getCarriedItems().hasCatalogID(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0;
 		if (p.getCache().hasKey("bunny_ears") && p.getCache().hasKey("scythe") && !scythe && !ears) {
 			options = new String[]{
 				"I have lost my scythe can I get another one please?",
@@ -118,7 +118,7 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.BUNNY_EARS.id()) {
 			if(!p.isAdmin()) {
-				if (p.getInventory().hasItemId(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0) {
 					p.message("You don't need another set of bunny ears");
 					p.message("You only have one head");
 					return;
@@ -130,7 +130,7 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 		}
 		else if (i.getID() == ItemId.SCYTHE.id()) {
 			if(!p.isAdmin()) {
-				if (p.getInventory().hasItemId(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0) {
 					p.message("You don't need another scythe");
 					p.message("You already have one");
 					return;

@@ -674,7 +674,7 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 			}
 
 			if (player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
-				p.getInventory().add(new Item(id, amount));
+				p.getCarriedItems().getInventory().add(new Item(id, amount));
 			} else {
 				for (int i = 0; i < amount; i++) {
 					if (!player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
@@ -683,7 +683,7 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 							return;
 						}
 					}
-					p.getInventory().add(new Item(id, 1));
+					p.getCarriedItems().getInventory().add(new Item(id, 1));
 				}
 			}
 
@@ -948,17 +948,17 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				int wearableId;
 				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-					Item equipped = p.getEquipment().get(i);
+					Item equipped = p.getCarriedItems().getEquipment().get(i);
 					if (equipped == null)
 						continue;
-					wearableId = p.getEquipment().get(i).getDef(player.getWorld()).getWearableId();
-					p.getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
+					wearableId = p.getCarriedItems().getEquipment().get(i).getDef(player.getWorld()).getWearableId();
+					p.getCarriedItems().getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
 					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
 							wearableId, false);
 				}
 			}
 
-			ListIterator<Item> iterator = p.getInventory().iterator();
+			ListIterator<Item> iterator = p.getCarriedItems().getInventory().iterator();
 
 			for (; iterator.hasNext(); ) {
 				Item i = iterator.next();

@@ -34,9 +34,9 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 		if (player.getWorld().getServer().getConfig().DEBUG)
 		System.out.println("Pet spawn attempt");
 		if (player.getWorld().getServer().getConfig().WANT_PETS){
-			if (player.getInventory().hasItemId(ItemId.A_RED_CRYSTAL.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.A_RED_CRYSTAL.id())) {
 				if (command.equalsIgnoreCase("inspect")) {
-					if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
+					if (player.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
 
 						player.message("You may only summon one pet at a time!");
 						return;
@@ -52,10 +52,10 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 
 	@Override
 	public void onPlayerLogin(Player player) {
-		if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
-			if (player.getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id())) != -1) {
-				player.getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
-				player.getInventory().add(new Item(ItemId.A_RED_CRYSTAL.id()));
+		if (player.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
+			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id())) != -1) {
+				player.getCarriedItems().getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.A_RED_CRYSTAL.id()));
 			}
 		}
 	}

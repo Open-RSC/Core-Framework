@@ -54,7 +54,7 @@ public class CutWeb implements InvUseOnWallObjectListener, InvUseOnWallObjectExe
 		boolean canCut = false;
 		//First, check their equipment for an appropriate weapon
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			Item weapon = player.getEquipment().get(4);
+			Item weapon = player.getCarriedItems().getEquipment().get(4);
 			if (weapon != null)
 				canCut = true;
 		}
@@ -62,15 +62,15 @@ public class CutWeb implements InvUseOnWallObjectListener, InvUseOnWallObjectExe
 		if (!canCut) {
 			//Next check their inventory for an appropriate weapon
 			Item inventoryItem = null;
-			for (int i = 0; i < player.getInventory().size(); i++) {
-				inventoryItem = player.getInventory().get(i);
+			for (int i = 0; i < player.getCarriedItems().getInventory().size(); i++) {
+				inventoryItem = player.getCarriedItems().getInventory().get(i);
 				if (inventoryItem != null && inventoryItem.getDef(player.getWorld()).getWieldPosition() == 4)
 					canCut = true;
 			}
 
 			if (!canCut) {
 				//Lastly, check if they have a knife
-				if (player.getInventory().hasItemId(ItemId.KNIFE.id())) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.KNIFE.id())) {
 					canCut = true;
 				}
 			}

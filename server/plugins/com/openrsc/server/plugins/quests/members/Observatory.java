@@ -267,12 +267,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int planks = showMenu(p, n, "Yes I've got them",
 						"No, sorry not yet");
 					if (planks == 0) {
-						if (p.getInventory().countId(ItemId.PLANK.id()) >= 3) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.PLANK.id()) >= 3) {
 							npcTalk(p,
 								n,
 								"Well done, I can start the tripod construction now",
 								"Now for the bronze");
-							p.getInventory().remove(ItemId.PLANK.id(), 3);
+							p.getCarriedItems().getInventory().remove(ItemId.PLANK.id(), 3);
 
 							p.updateQuestStage(getQuestId(), 2);
 						} else {
@@ -288,10 +288,10 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int bronze = showMenu(p, n, "Yes I have it",
 						"I'm still looking");
 					if (bronze == 0) {
-						if (p.getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
 							npcTalk(p, n, "Great, now all I need is the lens made",
 								"Next on the list is molten glass");
-							p.getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
+							p.getCarriedItems().getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
 
 							p.updateQuestStage(getQuestId(), 3);
 						} else {
@@ -307,7 +307,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int molten = showMenu(p, n, "Here it is!",
 						"No luck yet I'm afraid");
 					if (molten == 0) {
-						if (p.getInventory().countId(ItemId.MOLTEN_GLASS.id()) >= 1) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.MOLTEN_GLASS.id()) >= 1) {
 							npcTalk(p,
 								n,
 								"Excellent! now all I need is to make the lens",
@@ -332,7 +332,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int mould = showMenu(p, n, "Yes, I've managed to find it",
 						"I haven't found it yet", "I had it then lost it");
 					if (mould == 0) {
-						if (p.getInventory().countId(ItemId.LENS_MOULD.id()) >= 1) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.LENS_MOULD.id()) >= 1) {
 							npcTalk(p, n,
 								"At last you've brought all the items I need",
 								"To repair the telescope",
@@ -376,7 +376,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 					int finished = showMenu(p, n, "Yes here it is",
 						"I haven't finished it yet");
 					if (finished == 0) {
-						if (p.getInventory().countId(ItemId.LENS.id()) >= 1) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.LENS.id()) >= 1) {
 							removeItem(p, ItemId.LENS.id(), 1);
 							npcTalk(p, n,
 								"Wonderful, at last I can fix the telescope");

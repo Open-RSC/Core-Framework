@@ -39,12 +39,12 @@ InvUseOnObjectExecutiveListener {
 			.add(new ShortEvent(player.getWorld(), player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
-						if (getOwner().getInventory().remove(s, 1) > -1) {
+						if (getOwner().getCarriedItems().getInventory().remove(s, 1) > -1) {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								getOwner().message("You make a mistake and fail to fill your waterskin.");
 								getOwner().incExp(Skills.WOODCUT, 4, true);
-								getOwner().getInventory().add(new Item(s, 1));
+								getOwner().getCarriedItems().getInventory().add(new Item(s, 1));
 								getOwner().setBusy(false);
 								return;
 							}
@@ -55,7 +55,7 @@ InvUseOnObjectExecutiveListener {
 							int newSkin = ItemId.EMPTY_WATER_SKIN.id();
 							if (s == ItemId.WATER_SKIN_MOSTLY_FULL.id()) newSkin = ItemId.FULL_WATER_SKIN.id();
 							else newSkin = s - 1; // More full is one less id number
-							getOwner().getInventory().add(new Item(newSkin, 1));
+							getOwner().getCarriedItems().getInventory().add(new Item(newSkin, 1));
 
 							// Add dried cacti
 							Point loc = object.getLocation();

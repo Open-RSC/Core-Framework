@@ -45,7 +45,7 @@ public class CoalTrucks implements ObjectActionExecutiveListener, ObjectActionLi
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id()) {
 			p.setBusy(true);
-			int coalAmount = p.getInventory().countId(ItemId.COAL.id());
+			int coalAmount = p.getCarriedItems().getInventory().countId(ItemId.COAL.id());
 			for (int i = 0; i < coalAmount; i++) {
 				if (p.getCache().hasKey("coal_truck")) {
 					if (p.getCache().getInt("coal_truck") >= 120) {

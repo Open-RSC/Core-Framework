@@ -23,20 +23,20 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id()) {
-			if (player.getInventory().remove(new Item(ItemId.EGG.id())) > -1
-				&& player.getInventory().remove(new Item(ItemId.MILK.id())) > -1
-				&& player.getInventory().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
-				&& player.getInventory().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
-				player.getInventory().add(new Item(ItemId.POT.id()));
-				player.getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
+			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.EGG.id())) > -1
+				&& player.getCarriedItems().getInventory().remove(new Item(ItemId.MILK.id())) > -1
+				&& player.getCarriedItems().getInventory().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
+				&& player.getCarriedItems().getInventory().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
+				player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
 				player.playerServerMessage(MessageType.QUEST, "You mix some milk, flour, and egg together into a cake mixture");
 				return;
 			} else {
-				if (!player.getInventory().hasItemId(ItemId.EGG.id()))  // Egg
+				if (!player.getCarriedItems().hasCatalogID(ItemId.EGG.id()))  // Egg
 					player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a cake");
-				else if (!player.getInventory().hasItemId(ItemId.MILK.id()))  // Milk
+				else if (!player.getCarriedItems().hasCatalogID(ItemId.MILK.id()))  // Milk
 					player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a cake");
-				else if (!player.getInventory().hasItemId(ItemId.POT_OF_FLOUR.id())) // Flour
+				else if (!player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())) // Flour
 					player.playerServerMessage(MessageType.QUEST, "I also need some flour to make a cake");
 				return;
 			}
@@ -47,11 +47,11 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				player.message("You need level 35 cooking to do this");
 				return;
 			}
-			if (player.getInventory().contains(item1)
-				&& player.getInventory().contains(item2)) {
+			if (player.getCarriedItems().getInventory().contains(item1)
+				&& player.getCarriedItems().getInventory().contains(item2)) {
 				player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
-				player.getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
-				player.getInventory().remove(ItemId.GRAPES.id(), 1);
+				player.getCarriedItems().getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
+				player.getCarriedItems().getInventory().remove(ItemId.GRAPES.id(), 1);
 
 				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
 					@Override
@@ -63,11 +63,11 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 						}
 						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You make some nice wine");
-							getOwner().getInventory().add(new Item(ItemId.WINE.id()));
+							getOwner().getCarriedItems().getInventory().add(new Item(ItemId.WINE.id()));
 							getOwner().incExp(Skills.COOKING, 440, true);
 						} else {
 							getOwner().playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
-							getOwner().getInventory().add(new Item(ItemId.BAD_WINE.id()));
+							getOwner().getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
 						}
 					}
 				});
@@ -131,7 +131,7 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 		}
 		if (combine.resultItem == ItemId.TOMATO_MIXTURE.id() || combine.resultItem == ItemId.ONION_MIXTURE.id()
 				|| combine.resultItem == ItemId.ONION_AND_TOMATO_MIXTURE.id() || combine.resultItem == ItemId.TASTY_UGTHANKI_KEBAB.id()) {
-			if (!p.getInventory().hasItemId(ItemId.KNIFE.id())) { // No knife
+			if (!p.getCarriedItems().hasCatalogID(ItemId.KNIFE.id())) { // No knife
 				p.message("You need a knife in order to cut this");
 				return;
 			}

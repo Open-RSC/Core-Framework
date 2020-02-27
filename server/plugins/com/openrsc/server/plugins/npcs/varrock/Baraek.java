@@ -18,15 +18,15 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 	public void onTalkToNpc(final Player p, final Npc n) {
 		int menu;
 		boolean bargained = false;
-		boolean hasFur = p.getInventory().hasItemId(ItemId.FUR.id());
+		boolean hasFur = p.getCarriedItems().hasCatalogID(ItemId.FUR.id());
 		if (canGetInfoGang(p) && hasFur) {
-			menu = showMenu(p, n, false, //do not send over 
+			menu = showMenu(p, n, false, //do not send over
 				"Can you tell me where I can find the phoenix gang?",
 				"Can you sell me some furs?",
 				"Hello. I am in search of a quest",
 				"Would you like to buy my fur?");
 		} else if (canGetInfoGang(p) && !hasFur) {
-			menu = showMenu(p, n, false, //do not send over 
+			menu = showMenu(p, n, false, //do not send over
 				"Can you tell me where I can find the phoenix gang?",
 				"Can you sell me some furs?",
 				"Hello. I am in search of a quest");
@@ -39,7 +39,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 				menu += 1;
 			}
 		} else {
-			menu = showMenu(p, n, false, //do not send over 
+			menu = showMenu(p, n, false, //do not send over
 				"Can you sell me some furs?",
 				"Hello. I am in search of a quest");
 			if (menu >= 0) {
@@ -97,9 +97,9 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 					bargained = true;
 				} else {
 					playerTalk(p, n, "Yeah okay here you go");
-					p.getInventory().remove(ItemId.COINS.id(), 20);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 20);
 					p.message("You buy a fur from Baraek");
-					p.getInventory().add(new Item(ItemId.FUR.id()));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}
 			} else if (opts == 1) {
 				playerTalk(p, n, "20 gold coins that's an outrage");
@@ -128,7 +128,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 		}
 
 		if (bargained) {
-			int sub_opts = showMenu(p, n, false, //do not send over 
+			int sub_opts = showMenu(p, n, false, //do not send over
 				"Okay here you go", "No thanks I'll leave it");
 			if (sub_opts == 0) {
 				if (!hasItem(p, ItemId.COINS.id(), 18)) {
@@ -137,9 +137,9 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 						"I have a family to feed");
 				} else {
 					playerTalk(p, n, "Okay here you go");
-					p.getInventory().remove(ItemId.COINS.id(), 18);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 18);
 					p.message("You buy a fur from Baraek");
-					p.getInventory().add(new Item(ItemId.FUR.id()));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}
 			} else if (sub_opts == 1) {
 				playerTalk(p, n, "No thanks, I'll leave it");
@@ -147,7 +147,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 			}
 		}
 	}
-	
+
 	private boolean canGetInfoGang(Player p) {
 		return p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2
 				|| (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3 && !p.getCache().hasKey("arrav_mission"));

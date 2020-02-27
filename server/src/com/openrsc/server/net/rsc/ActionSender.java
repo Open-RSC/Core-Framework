@@ -680,9 +680,9 @@ public class ActionSender {
 			return; /* In this case, it is a trade offer */
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY.opcode);
-		s.writeByte((byte) player.getInventory().size());
-		synchronized(player.getInventory().getItems()) {
-			for (Item item : player.getInventory().getItems()) {
+		s.writeByte((byte) player.getCarriedItems().getInventory().size());
+		synchronized(player.getCarriedItems().getInventory().getItems()) {
+			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
 					"'noted': " + item.getNoted() + "}").getBytes()));
 				//s.writeShort(item.getID());
@@ -728,10 +728,10 @@ public class ActionSender {
 			return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT.opcode);
-		s.writeByte(player.getEquipment().equipCount());
+		s.writeByte(player.getCarriedItems().getEquipment().equipCount());
 		Item item;
 		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-			item = player.getEquipment().get(i);
+			item = player.getCarriedItems().getEquipment().get(i);
 			if (item != null) {
 				s.writeByte(item.getDef(player.getWorld()).getWieldPosition());
 				s.writeShort(item.getCatalogId());
@@ -748,7 +748,7 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT_UPDATE.opcode);
 		s.writeByte(slot);
-		Item item = player.getEquipment().get(slot);
+		Item item = player.getCarriedItems().getEquipment().get(slot);
 		if (item != null) {
 			s.writeShort(item.getCatalogId());
 			if (item.getDef(player.getWorld()).isStackable())
@@ -1081,7 +1081,7 @@ public class ActionSender {
 	}
 
 	public static void sendInventoryUpdateItem(Player player, int slot) {
-		Item item = player.getInventory().get(slot);
+		Item item = player.getCarriedItems().getInventory().get(slot);
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY_UPDATEITEM.opcode);
 		s.writeByte((byte) slot);
@@ -1276,7 +1276,7 @@ public class ActionSender {
 					sendAppearanceScreen(p);
 					for (int itemId : p.getWorld().getServer().getConstants().STARTER_ITEMS) {
 						Item i = new Item(itemId);
-						p.getInventory().add(i, false);
+						p.getCarriedItems().getInventory().add(i, false);
 					}
 					//Block PK chat by default.
 					p.getCache().set("setting_block_global", 3);

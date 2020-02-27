@@ -87,7 +87,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 			return;
 		}
 		final int netId = def.getNetId();
-		if (player.getInventory().countId(netId) <= 0) {
+		if (player.getCarriedItems().getInventory().countId(netId) <= 0) {
 			player.playerServerMessage(MessageType.QUEST,
 				"You need a "
 					+ player.getWorld().getServer().getEntityHandler()
@@ -102,7 +102,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 		}
 		final int baitId = def.getBaitId();
 		if (baitId >= 0) {
-			if (player.getInventory().countId(baitId) <= 0) {
+			if (player.getCarriedItems().getInventory().countId(baitId) <= 0) {
 				player.playerServerMessage(MessageType.QUEST,
 					"You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase() + " left");
 				return;
@@ -126,7 +126,7 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 					}
 					final int baitId = def.getBaitId();
 					if (baitId >= 0) {
-						if (getOwner().getInventory().countId(baitId) <= 0) {
+						if (getOwner().getCarriedItems().getInventory().countId(baitId) <= 0) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You don't have any " + getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
 								+ " left");
 							interrupt();
@@ -152,11 +152,11 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 							interrupt();
 						} else {
 							if (baitId >= 0) {
-								int idx = getOwner().getInventory().getLastIndexById(baitId);
-								Item bait = getOwner().getInventory().get(idx);
+								int idx = getOwner().getCarriedItems().getInventory().getLastIndexById(baitId);
+								Item bait = getOwner().getCarriedItems().getInventory().get(idx);
 								int newCount = bait.getAmount() - 1;
 								if (newCount <= 0) {
-									getOwner().getInventory().remove(idx);
+									getOwner().getCarriedItems().getInventory().remove(idx);
 								} else {
 									bait.changeAmount(getOwner().getWorld().getServer().getDatabase(),-1);
 								}
@@ -177,14 +177,14 @@ public class Fishing implements ObjectActionListener, ObjectActionExecutiveListe
 								for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
 									ObjectFishDef fishDef = iter.next();
 									Item fish = new Item(fishDef.getId());
-									getOwner().getInventory().add(fish);
+									getOwner().getCarriedItems().getInventory().add(fish);
 									getOwner().playerServerMessage(MessageType.QUEST, "You catch " + (fish.getCatalogId() == ItemId.BOOTS.id() || fish.getCatalogId() == ItemId.SEAWEED.id() || fish.getCatalogId() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getCatalogId() == ItemId.OYSTER.id() ? "an" : "a") + " "
 										+ fish.getDef(getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getCatalogId() == ItemId.OYSTER.id() ? " shell" : ""));
 									getOwner().incExp(Skills.FISHING, fishDef.getExp(), true);
 								}
 							} else {
 								Item fish = new Item(fishLst.get(0).getId());
-								getOwner().getInventory().add(fish);
+								getOwner().getCarriedItems().getInventory().add(fish);
 								getOwner().playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
 									+ fish.getDef(getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 									+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));

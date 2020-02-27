@@ -24,11 +24,11 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
 		if (myItem.getCatalogId() == ItemId.POT.id()) {
-			if (player.getInventory().remove(myItem) < 0)
+			if (player.getCarriedItems().getInventory().remove(myItem) < 0)
 				return;
 			player.message("You put the flour in the pot");
 			player.getWorld().unregisterItem(item);
-			player.getInventory().add(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT_OF_FLOUR.id()));
 			return;
 		}
 	}
@@ -36,10 +36,10 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 	@Override
 	public void onPickup(Player player, GroundItem item) {
 		if (item.getID() == ItemId.FLOUR.id()) {
-			if (player.getInventory().hasItemId(ItemId.POT.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.POT.id())) {
 				player.message("You put the flour in the pot");
 				player.getWorld().unregisterItem(item);
-				player.getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
+				player.getCarriedItems().getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
 			} else {
 				player.message("I can't pick it up!");
 				player.message("I need a pot to hold it in");

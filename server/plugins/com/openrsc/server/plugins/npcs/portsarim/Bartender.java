@@ -18,7 +18,7 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARTENDER_PORTSARIM.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
@@ -28,7 +28,7 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 				npcTalk(p, n, "Sure that will be 2 gold coins please");
 				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					playerTalk(p, n, "Ok here you go thanks");
-					p.getInventory().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
 					p.message("you buy a pint of beer");
 					addItem(p, ItemId.BEER.id(), 1);
 				} else {
@@ -78,7 +78,7 @@ public class Bartender implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					npcTalk(p, n,
 						"Ok one black skull ale coming up, 8 coins please");
 					if (hasItem(p, ItemId.COINS.id(), 8)) {
-						p.getInventory().remove(ItemId.COINS.id(), 8);
+						p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 8);
 						message(p, "You buy a black skull ale",
 							"You drink your black skull ale",
 							"Your vision blurs",

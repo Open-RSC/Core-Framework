@@ -27,7 +27,7 @@ public class CookingInstructor implements TalkToNpcExecutiveListener, TalkToNpcL
 				"You will slowly heal",
 				"Eating food will heal you much more quickly",
 				"I'm here to show you some simple cooking");
-			if (!p.getInventory().hasItemId(ItemId.RAW_RAT_MEAT.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.RAW_RAT_MEAT.id())) {
 				addItem(p, ItemId.RAW_RAT_MEAT.id(), 1); // Add raw rat meat
 				npcTalk(p, n, "First you need something to cook");
 				p.message("the instructor gives you a piece of meat");
@@ -43,7 +43,7 @@ public class CookingInstructor implements TalkToNpcExecutiveListener, TalkToNpcL
 			playerTalk(p, n, "I burnt the meat");
 			npcTalk(p, n, "Well I'm sure you'll get the hang of it soon",
 				"Let's try again");
-			if (!p.getInventory().hasItemId(ItemId.RAW_RAT_MEAT.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.RAW_RAT_MEAT.id())) {
 				npcTalk(p, n, "Here's another piece of meat to cook");
 				addItem(p, ItemId.RAW_RAT_MEAT.id(), 1); // Add raw rat meat again
 			}

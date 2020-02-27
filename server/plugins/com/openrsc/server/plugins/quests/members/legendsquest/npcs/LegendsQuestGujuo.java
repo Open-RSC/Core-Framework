@@ -178,7 +178,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 								"Please, now consider yourself a friend of my people.",
 								"And visit us anytime.");
 							if (hasItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id())) {
-								removeItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), p.getInventory().countId(ItemId.GERMINATED_YOMMI_TREE_SEED.id()));
+								removeItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), p.getCarriedItems().getInventory().countId(ItemId.GERMINATED_YOMMI_TREE_SEED.id()));
 								npcTalk(p, n, "I'll take those Germinated Yommi tree seeds to Ungadulu,",
 									"I'm sure he'll apreciate them.");
 							}
@@ -199,7 +199,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 									"I've lost the tribal gift you gave me.",
 									"Ok thanks for your help."};
 						}
-						
+
 						int last = showMenu(p, n, menuOpts);
 						if (last == 0) {
 							npcTalk(p, n, "Just that everything is fine in the jungle with us.",
@@ -936,9 +936,9 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 							message(p, 1300, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
 							if (hasItem(p, ItemId.GOLDEN_BOWL.id())) {
-								p.getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+								p.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 							} else if (hasItem(p, ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id())) {
-								p.getInventory().replace(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+								p.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 							}
 							GujuoDialogue(p, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 						} else {
@@ -962,7 +962,7 @@ public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveL
 			}
 		}
 	}
-	
+
 	public void gujuoBye(Player p, Npc n) {
 		int yell = DataConversions.random(0, 3);
 		if (yell == 0) {

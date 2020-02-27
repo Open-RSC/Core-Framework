@@ -105,7 +105,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 					if (!p.getCache().hasKey("winch_rope_1")) {
 						p.message("You tie the rope to the bucket");
 						p.getCache().store("winch_rope_1", true);
-						p.getInventory().remove(ItemId.ROPE.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.ROPE.id(), 1);
 					} else {
 						p.message("There is already a rope tied to this bucket");
 					}
@@ -118,7 +118,7 @@ public class DigsiteWinch implements ObjectActionListener, ObjectActionExecutive
 					if (!p.getCache().hasKey("winch_rope_2")) {
 						p.message("You tie the rope to the bucket");
 						p.getCache().store("winch_rope_2", true);
-						p.getInventory().remove(ItemId.ROPE.id(), 1);
+						p.getCarriedItems().getInventory().remove(ItemId.ROPE.id(), 1);
 					} else {
 						p.message("There is already a rope tied to this bucket");
 					}

@@ -161,7 +161,7 @@ public final class Harvesting implements ObjectActionListener,
 							getOwner().playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
 							interrupt();
 						} else {
-							getOwner().getInventory().add(present);
+							getOwner().getCarriedItems().getInventory().add(present);
 							getOwner().playerServerMessage(MessageType.QUEST, "You get a nice looking present");
 						}
 						if (DataConversions.random(1, 1000) <= 100) {
@@ -211,7 +211,7 @@ public final class Harvesting implements ObjectActionListener,
 			return;
 		}
 
-		if (player.getInventory().countId(ItemId.HERB_CLIPPERS.id()) <= 0) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.HERB_CLIPPERS.id()) <= 0) {
 			player.playerServerMessage(MessageType.QUEST,
 				"You need some "
 					+ player.getWorld().getServer().getEntityHandler()
@@ -255,7 +255,7 @@ public final class Harvesting implements ObjectActionListener,
 						getOwner().playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
 						interrupt();
 					} else {
-						getOwner().getInventory().add(produce);
+						getOwner().getCarriedItems().getInventory().add(produce);
 						getOwner().playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
 							: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
 						getOwner().incExp(Skills.HARVESTING, prodEnum.get(prodId).getXp(), true);
@@ -329,11 +329,11 @@ public final class Harvesting implements ObjectActionListener,
 						interrupt();
 					} else {
 						String itemName = produce.getDef(player.getWorld()).getName().toLowerCase();
-						getOwner().getInventory().add(produce);
+						getOwner().getCarriedItems().getInventory().add(produce);
 						// if player did soil (or have an active one) they get small chance for another produce
 						if (DataConversions.random(1, chanceAskSoil * 3) == 1
 							&& evt.get() == HarvestingEvents.SOIL.getID()) {
-							getOwner().getInventory().add(produce);
+							getOwner().getCarriedItems().getInventory().add(produce);
 						}
 						getOwner().playerServerMessage(MessageType.QUEST, "You get " +
 							(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
@@ -421,7 +421,7 @@ public final class Harvesting implements ObjectActionListener,
 				}
 				p.playerServerMessage(MessageType.QUEST, "You add soil to the spot");
 				p.setAttribute("soiled", new TimePoint(obj.getX(), obj.getY(), timestamp));
-				p.getInventory().replace( ItemId.SOIL.id(), ItemId.BUCKET.id());
+				p.getCarriedItems().getInventory().replace( ItemId.SOIL.id(), ItemId.BUCKET.id());
 			}
 			return HarvestingEvents.SOIL.getID();
 		}
@@ -434,7 +434,7 @@ public final class Harvesting implements ObjectActionListener,
 		} else {
 			int uses = p.getCache().getInt("uses_wcan");
 			if (uses >= 4) {
-				p.getInventory().remove(ItemId.WATERING_CAN.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.WATERING_CAN.id(), 1);
 				p.getCache().remove("uses_wcan");
 			} else {
 				p.getCache().put("uses_wcan", uses + 1);

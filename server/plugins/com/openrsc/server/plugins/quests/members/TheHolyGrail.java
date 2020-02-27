@@ -288,7 +288,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 		if (obj.getID() == 116) {
 			p.message("You go through the door");
 			doDoor(obj, p);
-			if (p.getInventory().countId(ItemId.MAGIC_WHISTLE.id()) != 2
+			if (p.getCarriedItems().getInventory().countId(ItemId.MAGIC_WHISTLE.id()) != 2
 				&& (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 || p
 				.getQuestStage(Quests.THE_HOLY_GRAIL) == -1)) {
 				createGroundItem(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, p);
@@ -369,7 +369,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
-			if (p.getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
 				n.killedBy(p);
 				n.resetCombatEvent();
 				p.message("Well done you have defeated the black knight titan");

@@ -177,10 +177,10 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I'm afraid I've you lost some of the stuff that you gave me");
 						npcTalk(p, n, "That's alright, I've got plenty");
 						message(p, "Elena replaces your items");
-						p.getInventory().replace(ItemId.LIQUID_HONEY.id(), ItemId.LIQUID_HONEY.id());
-						p.getInventory().replace(ItemId.ETHENEA.id(), ItemId.ETHENEA.id());
-						p.getInventory().replace(ItemId.SULPHURIC_BROLINE.id(), ItemId.SULPHURIC_BROLINE.id());
-						p.getInventory().replace(ItemId.PLAGUE_SAMPLE.id(), ItemId.PLAGUE_SAMPLE.id());
+						p.getCarriedItems().getInventory().replace(ItemId.LIQUID_HONEY.id(), ItemId.LIQUID_HONEY.id());
+						p.getCarriedItems().getInventory().replace(ItemId.ETHENEA.id(), ItemId.ETHENEA.id());
+						p.getCarriedItems().getInventory().replace(ItemId.SULPHURIC_BROLINE.id(), ItemId.SULPHURIC_BROLINE.id());
+						p.getCarriedItems().getInventory().replace(ItemId.PLAGUE_SAMPLE.id(), ItemId.PLAGUE_SAMPLE.id());
 						npcTalk(p, n, "OK so that's the colourless ethenea...",
 							"Some highly toxic sulphuric broline...",
 							"And some bog-standard liquid honey...");
@@ -875,7 +875,7 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(this) == 7) {
-				if (p.getEquipment().hasEquipped(ItemId.PRIEST_ROBE.id()) && p.getEquipment().hasEquipped(ItemId.PRIEST_GOWN.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PRIEST_ROBE.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.PRIEST_GOWN.id())) {
 					npcTalk(p, n, "Father, thank heavens you're here. My husband is very ill",
 						"Perhaps you could go and perform his final ceremony");
 					playerTalk(p, n, "I'll see what I can do");

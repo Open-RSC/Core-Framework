@@ -10,10 +10,7 @@ import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.container.Bank;
-import com.openrsc.server.model.container.Equipment;
-import com.openrsc.server.model.container.Inventory;
-import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.container.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -338,7 +335,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player);
 		final Inventory inv = new Inventory(player, invItems);
 
-		player.setInventory(inv);
+		player.getCarriedItems().setInventory(inv);
 	}
 
 	private void loadPlayerEquipment(final Player player) throws GameDatabaseException {
@@ -357,10 +354,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 					}
 				}
 
-				player.setEquipment(equipment);
+				player.getCarriedItems().setEquipment(equipment);
 			}
 		} else
-			player.setEquipment(new Equipment(player));
+			player.getCarriedItems().setEquipment(new Equipment(player));
 	}
 
 	private void loadPlayerBank(final Player player) throws GameDatabaseException {
@@ -563,14 +560,14 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	protected void querySavePlayerInventory(Player player) throws GameDatabaseException {
-		final int invSize = player.getInventory().size();
+		final int invSize = player.getCarriedItems().getInventory().size();
 		final PlayerInventory[] inventory = new PlayerInventory[invSize];
 
 		for(int i = 0; i < invSize; i++) {
 			inventory[i] = new PlayerInventory();
-			inventory[i].itemId = player.getInventory().get(i).getItemId();
-			inventory[i].item = player.getInventory().get(i);
-			inventory[i].wielded = player.getInventory().get(i).isWielded();
+			inventory[i].itemId = player.getCarriedItems().getInventory().get(i).getItemId();
+			inventory[i].item = player.getCarriedItems().getInventory().get(i);
+			inventory[i].wielded = player.getCarriedItems().getInventory().get(i).isWielded();
 			inventory[i].slot = i;
 		}
 
@@ -584,11 +581,11 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			final ArrayList<PlayerEquipped> list = new ArrayList<>();
 
 			for (int i = 0; i < equipSize; i++) {
-				final Item item = player.getEquipment().get(i);
+				final Item item = player.getCarriedItems().getEquipment().get(i);
 				if(item != null) {
 					final PlayerEquipped equipment = new PlayerEquipped();
-					equipment.itemId = player.getEquipment().get(i).getItemId();
-					equipment.itemStatus = player.getEquipment().get(i).getItemStatus();
+					equipment.itemId = player.getCarriedItems().getEquipment().get(i).getItemId();
+					equipment.itemStatus = player.getCarriedItems().getEquipment().get(i).getItemStatus();
 					list.add(equipment);
 				}
 			}

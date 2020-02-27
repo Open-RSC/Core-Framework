@@ -36,10 +36,10 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				"dice orange");
 			if (menu == 0) {
 				p.message("you slice the orange");
-				p.getInventory().replace(ItemId.ORANGE.id(), ItemId.ORANGE_SLICES.id());
+				p.getCarriedItems().getInventory().replace(ItemId.ORANGE.id(), ItemId.ORANGE_SLICES.id());
 			} else if (menu == 1) {
 				p.message("you cut the orange into chunks");
-				p.getInventory().replace(ItemId.ORANGE.id(), ItemId.DICED_ORANGE.id());
+				p.getCarriedItems().getInventory().replace(ItemId.ORANGE.id(), ItemId.DICED_ORANGE.id());
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LIME.id())) {
@@ -49,10 +49,10 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				"dice lime");
 			if (menu == 0) {
 				p.message("you slice the lime");
-				p.getInventory().replace(ItemId.LIME.id(), ItemId.LIME_SLICES.id());
+				p.getCarriedItems().getInventory().replace(ItemId.LIME.id(), ItemId.LIME_SLICES.id());
 			} else if (menu == 1) {
 				p.message("you cut the lime into chunks");
-				p.getInventory().replace(ItemId.LIME.id(), ItemId.LIME_CHUNKS.id());
+				p.getCarriedItems().getInventory().replace(ItemId.LIME.id(), ItemId.LIME_CHUNKS.id());
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.PINEAPPLE.id()) ||
@@ -69,11 +69,11 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				"dice pineapple");
 			if (menu == 0) {
 				p.message("you slice the pineapple into rings");
-				p.getInventory().replace(pineappleId, ItemId.PINEAPPLE_RING.id());
+				p.getCarriedItems().getInventory().replace(pineappleId, ItemId.PINEAPPLE_RING.id());
 				addItem(p, ItemId.PINEAPPLE_RING.id(), 3);
 			} else if (menu == 1) {
 				p.message("you cut the pineapple into chunks");
-				p.getInventory().replace(pineappleId, ItemId.PINEAPPLE_CHUNKS.id());
+				p.getCarriedItems().getInventory().replace(pineappleId, ItemId.PINEAPPLE_CHUNKS.id());
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LEMON.id())) {
@@ -83,10 +83,10 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				"dice lemon");
 			if (menu == 0) {
 				p.message("you slice the lemon");
-				p.getInventory().replace(ItemId.LEMON.id(), ItemId.LEMON_SLICES.id());
+				p.getCarriedItems().getInventory().replace(ItemId.LEMON.id(), ItemId.LEMON_SLICES.id());
 			} else if (menu == 1) {
 				p.message("you cut the lemon into chunks");
-				p.getInventory().replace(ItemId.LEMON.id(), ItemId.DICED_LEMON.id());
+				p.getCarriedItems().getInventory().replace(ItemId.LEMON.id(), ItemId.DICED_LEMON.id());
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.GRAPEFRUIT.id())) {
@@ -96,10 +96,10 @@ public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 				"dice grapefruit");
 			if (menu == 0) {
 				p.message("you slice the grapefruit");
-				p.getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.GRAPEFRUIT_SLICES.id());
+				p.getCarriedItems().getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.GRAPEFRUIT_SLICES.id());
 			} else if (menu == 1) {
 				p.message("you cut the grapefruit into chunks");
-				p.getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.DICED_GRAPEFRUIT.id());
+				p.getCarriedItems().getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.DICED_GRAPEFRUIT.id());
 			}
 		}
 	}

@@ -118,7 +118,7 @@ public class GemMining implements ObjectActionListener,
 					}
 				}
 				if (getGem(p, 40, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
-					Item gem = new Item(getGemFormula(p.getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
+					Item gem = new Item(getGemFormula(p.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					//check if there is still gem at the rock
 					GameObject object = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 					if (object == null) {
@@ -126,7 +126,7 @@ public class GemMining implements ObjectActionListener,
 					} else {
 						getOwner().message(minedString(gem.getCatalogId()));
 						getOwner().incExp(com.openrsc.server.constants.Skills.MINING, 200, true); // always 50XP
-						getOwner().getInventory().add(gem);
+						getOwner().getCarriedItems().getInventory().add(gem);
 					}
 
 					if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
@@ -171,7 +171,7 @@ public class GemMining implements ObjectActionListener,
 	private int getAxe(Player p) {
 		int lvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
-			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
+			if (p.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
 					return Formulae.miningAxeIDs[i];
 				}

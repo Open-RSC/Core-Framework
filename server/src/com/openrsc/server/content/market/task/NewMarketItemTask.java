@@ -34,7 +34,7 @@ public class NewMarketItemTask extends MarketTask {
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Amount must be greater than zero", false);
 			return;
 		}
-		if (owner.getInventory().countId(newItem.getItemID()) < newItem.getAmount()) {
+		if (owner.getCarriedItems().getInventory().countId(newItem.getItemID()) < newItem.getAmount()) {
 			return;
 		}
 		/*int feeCost = (int) (newItem.getPrice() * 0.025);
@@ -42,12 +42,12 @@ public class NewMarketItemTask extends MarketTask {
 			feeCost = 5;
 
 		if(feeCost >= 5) {
-			if((!owner.getInventory().contains(new Item(10)) && (!owner.getBank().contains(new Item(10))))) {
+			if((!owner.getCarriedItems().getInventory().contains(new Item(10)) && (!owner.getBank().contains(new Item(10))))) {
 				ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ You have no coins in your inventory or bank to cover the auction fee.", false);
 				return;
 			} else {
-				if(owner.getInventory().countId(10) >= feeCost) {
-					owner.getInventory().remove(10, feeCost);
+				if(owner.getCarriedItems().getInventory().countId(10) >= feeCost) {
+					owner.getCarriedItems().getInventory().remove(10, feeCost);
 				} else if(owner.getBank().countId(10) >= feeCost){
 					owner.getBank().remove(10, feeCost);
 				} else {
@@ -58,8 +58,8 @@ public class NewMarketItemTask extends MarketTask {
 		}*/
 
 		if (!def.isStackable())
-			for (int i = 0; i < newItem.getAmount(); i++) owner.getInventory().remove(newItem.getItemID(), 1);
-		else owner.getInventory().remove(newItem.getItemID(), newItem.getAmount());
+			for (int i = 0; i < newItem.getAmount(); i++) owner.getCarriedItems().getInventory().remove(newItem.getItemID(), 1);
+		else owner.getCarriedItems().getInventory().remove(newItem.getItemID(), newItem.getAmount());
 
 		if (def.getOriginalItemID() != -1) newItem.setItemID(def.getOriginalItemID());
 
@@ -71,10 +71,10 @@ public class NewMarketItemTask extends MarketTask {
 			Item item = new Item(newItem.getItemID(), newItem.getAmount());
 			if (item.getDef(owner.getWorld()).isStackable()) {
 				for (int i = 0; i < newItem.getAmount(); i++) {
-					owner.getInventory().add(new Item(newItem.getItemID(), 1));
+					owner.getCarriedItems().getInventory().add(new Item(newItem.getItemID(), 1));
 				}
 			} else {
-				owner.getInventory().add(new Item(newItem.getItemID(), newItem.getAmount()));
+				owner.getCarriedItems().getInventory().add(new Item(newItem.getItemID(), newItem.getAmount()));
 			}
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Failed to add item to Auction. % Item(s) have been returned to your inventory.", false);
 		}

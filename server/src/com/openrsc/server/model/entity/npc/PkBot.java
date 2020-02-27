@@ -274,7 +274,7 @@ public class PkBot extends Npc {
 		return true;
 	}
 	/*public int getRangeEquip() {
-		for (Item item : getInventory().getItems()) {
+		for (Item item : getCarriedItems().getInventory().getItems()) {
 			if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
 				|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
 				return item.getID();

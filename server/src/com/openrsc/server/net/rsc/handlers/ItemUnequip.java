@@ -40,7 +40,7 @@ public class ItemUnequip implements PacketHandler {
 				return;
 			}
 
-			request.item = player.getInventory().get(inventorySlot);
+			request.item = player.getCarriedItems().getInventory().get(inventorySlot);
 			request.inventorySlot = inventorySlot;
 			request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
 		} else if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT) {
@@ -83,34 +83,34 @@ public class ItemUnequip implements PacketHandler {
 
 	private void correctIndex(UnequipRequest request) {
 		if (request.equipmentSlot == EquipmentSlot.SLOT_LARGE_HELMET) {
-			if (request.player.getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex()) != null) {
-				request.item = request.player.getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex());
+			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex());
 				request.equipmentSlot = EquipmentSlot.SLOT_LARGE_HELMET;
-			} else if (request.player.getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex()) != null) {
-				request.item = request.player.getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex());
+			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex());
 				request.equipmentSlot = EquipmentSlot.SLOT_MEDIUM_HELMET;
 			}
 		} else if (request.equipmentSlot == Equipment.EquipmentSlot.SLOT_PLATE_BODY) {
-			if (request.player.getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex()) != null) {
-				request.item = request.player.getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex());
+			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex());
 				request.equipmentSlot = EquipmentSlot.SLOT_PLATE_BODY;
-			} else if (request.player.getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex()) != null) {
-				request.item = request.player.getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex());
+			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex());
 				request.equipmentSlot = EquipmentSlot.SLOT_CHAIN_BODY;
 			}
 		} else if (request.equipmentSlot == Equipment.EquipmentSlot.SLOT_PLATE_LEGS) {
-			if (request.player.getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex()) != null) {
-				request.item = request.player.getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex());
+			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex());
 				request.equipmentSlot = EquipmentSlot.SLOT_PLATE_LEGS;
-			} else if (request.player.getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex()) != null) {
-				request.item = request.player.getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex());
+			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex());
 				request.equipmentSlot = EquipmentSlot.SLOT_SKIRT;
 			}
 		} else if (request.equipmentSlot.getIndex() > 4) {
-			request.item = request.player.getEquipment().get(request.equipmentSlot.getIndex() + 3);
+			request.item = request.player.getCarriedItems().getEquipment().get(request.equipmentSlot.getIndex() + 3);
 			request.equipmentSlot = EquipmentSlot.get(request.equipmentSlot.getIndex() + 3);
 		} else {
-			request.item = request.player.getEquipment().get(request.equipmentSlot.getIndex());
+			request.item = request.player.getCarriedItems().getEquipment().get(request.equipmentSlot.getIndex());
 			request.equipmentSlot = EquipmentSlot.get(request.equipmentSlot.getIndex());
 		}
 	}

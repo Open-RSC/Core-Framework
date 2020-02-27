@@ -91,7 +91,7 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 		} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p))
 			|| (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
 			npcTalk(p, n, "Hows your little mission going?");
-			if (p.getInventory().hasItemId(ItemId.SCROLL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.SCROLL.id())) {
 				playerTalk(p, n, "I have the intelligence report");
 				npcTalk(p, n, "Lets see it then");
 				message(p, "You hand over the report");

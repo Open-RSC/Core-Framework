@@ -130,10 +130,10 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				int choice = showMenu(p, n, options);
 				if (choice == 0) {
 				} else if (choice == 1) {
-					if (p.getInventory().hasItemId(ItemId.BEER.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 						p.message("You give a beer to Dr Harlow");
-						p.getInventory().remove(
-							p.getInventory().getLastIndexById(ItemId.BEER.id()));
+						p.getCarriedItems().getInventory().remove(
+							p.getCarriedItems().getInventory().getLastIndexById(ItemId.BEER.id()));
 						npcTalk(p, n, "Cheersh matey");
 					} else {
 						playerTalk(p, n, "I'll just go and buy one");
@@ -148,10 +148,10 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 					int choice2 = showMenu(p, n, "Ok mate",
 						"But this is your friend Morgan we're talking about");
 					if (choice2 == 0) {
-						if (p.getInventory().hasItemId(ItemId.BEER.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 							p.message("You give a beer to Dr Harlow");
 							npcTalk(p, n, "Cheersh matey");
-							p.getInventory().remove(p.getInventory().getLastIndexById(ItemId.BEER.id()));
+							p.getCarriedItems().getInventory().remove(p.getCarriedItems().getInventory().getLastIndexById(ItemId.BEER.id()));
 							playerTalk(p, n, "So tell me how to kill vampires then");
 							npcTalk(p, n,
 								"Yesh yesh vampires I was very good at killing em once");
@@ -163,7 +163,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 								"Yes your killing blow must be done with a stake",
 								"I jusht happen to have one on me");
 							p.message("Dr Harlow hands you a stake");
-							p.getInventory().add(new Item(ItemId.STAKE.id()));
+							p.getCarriedItems().getInventory().add(new Item(ItemId.STAKE.id()));
 							npcTalk(p,
 								n,
 								"You'll need a hammer to hand to drive it in properly as well",
@@ -226,9 +226,9 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 				closeCupboard(obj, player, GARLIC_CUPBOARD_CLOSED);
 			} else {
 				player.message("You search the cupboard");
-				if (!player.getInventory().hasItemId(ItemId.GARLIC.id())) {
+				if (!player.getCarriedItems().hasCatalogID(ItemId.GARLIC.id())) {
 					player.message("You find a clove of garlic that you take");
-					player.getInventory().add(new Item(ItemId.GARLIC.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.GARLIC.id()));
 				} else {
 					player.message("The cupboard is empty");
 				}
@@ -257,8 +257,8 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
-			if (p.getEquipment().hasEquipped(ItemId.STAKE.id()) && p.getInventory().hasItemId(ItemId.HAMMER.id())) {
-				p.getInventory().remove(p.getInventory().getLastIndexById(ItemId.STAKE.id()));
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.STAKE.id()) && p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id())) {
+				p.getCarriedItems().getInventory().remove(p.getCarriedItems().getInventory().getLastIndexById(ItemId.STAKE.id()));
 				p.message("You hammer the stake in to the vampires chest!");
 				n.killedBy(p);
 				n.remove();
@@ -276,7 +276,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
-			if (p.getInventory().hasItemId(ItemId.GARLIC.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.GARLIC.id())) {
 				p.message("The vampire appears to weaken");
 				//if a better approx is found, replace
 				for (int i = 0; i < 3; i++) {

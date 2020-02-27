@@ -129,24 +129,24 @@ public class ThrowingEvent extends GameTickEvent {
 				Item rangeType;
 				int slot;
 				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-					slot = getPlayerOwner().getEquipment().searchEquipmentForItem(throwingID);
+					slot = getPlayerOwner().getCarriedItems().getEquipment().searchEquipmentForItem(throwingID);
 					if (slot < 0)
 						return;
-					rangeType = getPlayerOwner().getEquipment().get(slot);
+					rangeType = getPlayerOwner().getCarriedItems().getEquipment().get(slot);
 					if (rangeType == null)
 						return;
 
-					getPlayerOwner().getEquipment().remove(rangeType.getCatalogId(), 1);
+					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType.getCatalogId(), 1);
 				} else {
-					slot = getPlayerOwner().getInventory().getLastIndexById(throwingID);
+					slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(throwingID);
 					if (slot < 0) {
 						return;
 					}
-					rangeType = getPlayerOwner().getInventory().get(slot);
+					rangeType = getPlayerOwner().getCarriedItems().getInventory().get(slot);
 					if (rangeType == null) { // This shouldn't happen
 						return;
 					}
-					getPlayerOwner().getInventory().remove(rangeType.getCatalogId(), 1, true);
+					getPlayerOwner().getCarriedItems().getInventory().remove(rangeType.getCatalogId(), 1, true);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {
@@ -169,7 +169,7 @@ public class ThrowingEvent extends GameTickEvent {
 					if (npc.getID() == NpcId.DRAGON.id()) {
 						getPlayerOwner().message("The dragon breathes fire at you");
 						int maxHit = 65;
-						if (getPlayerOwner().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							maxHit = 10;
 							getPlayerOwner().message("Your shield prevents some of the damage from the flames");
 						}

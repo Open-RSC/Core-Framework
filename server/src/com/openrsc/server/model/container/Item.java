@@ -110,7 +110,7 @@ public class Item implements Comparable<Item> {
 		this.wielded = wielded;
 	}
 	//---------------------------------------------------------------
-	//Item Member Retrievals ----------------------------------------
+	//Class Member Retrievals ----------------------------------------
 	public final int getItemId() {
 		return itemId;
 	}

@@ -56,7 +56,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 				p.message("you need a bucket first");
 			} else {
 				p.message("you poor some of the strong brew into your bucket");
-				p.getInventory().replace(ItemId.BUCKET.id(), ItemId.DWARF_BREW.id());
+				p.getCarriedItems().getInventory().replace(ItemId.BUCKET.id(), ItemId.DWARF_BREW.id());
 			}
 		}
 		else if (obj.getID() == PILE_OF_MUD) {
@@ -79,7 +79,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 				if (!p.getCache().hasKey("brew_on_tomb") && !p.getCache().hasKey("ash_on_doll")) {
 					p.getCache().store("brew_on_tomb", true);
 				}
-				p.getInventory().replace(ItemId.DWARF_BREW.id(), ItemId.BUCKET.id());
+				p.getCarriedItems().getInventory().replace(ItemId.DWARF_BREW.id(), ItemId.BUCKET.id());
 			} else {
 				message(p, "you consider pouring the brew over the grave");
 				p.message("but it seems such a waste");

@@ -17,8 +17,8 @@ public final class ItemUseOnItem implements PacketHandler {
 		player.resetAll();
 		int itemIndex1 = p.readShort();
 		int itemIndex2 = p.readShort();
-		Item item1 = player.getInventory().get(itemIndex1);
-		Item item2 = player.getInventory().get(itemIndex2);
+		Item item1 = player.getCarriedItems().getInventory().get(itemIndex1);
+		Item item2 = player.getCarriedItems().getInventory().get(itemIndex2);
 
 		if (item1 == null || item2 == null) {
 			player.setSuspiciousPlayer(true, "use item on item has null item1 or item2");

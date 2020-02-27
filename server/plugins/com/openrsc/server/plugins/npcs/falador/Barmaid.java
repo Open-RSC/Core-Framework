@@ -40,7 +40,7 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 					"So it will cost you 70 coins");
 				if (hasItem(p, ItemId.COINS.id(), 70)) {
 					message(p, "You buy a hand of death cocktail");
-					p.getInventory().remove(ItemId.COINS.id(), 70);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 70);
 					message(p, "You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(p);
@@ -74,8 +74,8 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 
 				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy an Asgarnian Ale");
-					p.getInventory().remove(ItemId.COINS.id(), 2);
-					p.getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id(), 1));
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id(), 1));
 				} else {
 					playerTalk(p, n, notEnoughMoney);
 				}
@@ -85,8 +85,8 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 
 				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of Wizard's Mind Bomb");
-					p.getInventory().remove(ItemId.COINS.id(), 2);
-					p.getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id(), 1));
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id(), 1));
 				} else {
 					playerTalk(p, n, notEnoughMoney);
 				}
@@ -96,8 +96,8 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 
 				if (hasItem(p, ItemId.COINS.id(), 3)) {
 					p.message("You buy a pint of Dwarven Stout");
-					p.getInventory().remove(ItemId.COINS.id(), 3);
-					p.getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 3);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
 				} else {
 					playerTalk(p, n, notEnoughMoney);
 				}

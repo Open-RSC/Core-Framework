@@ -128,8 +128,8 @@ public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUs
 	}
 
 	private boolean hasABow(Player p) {
-		synchronized(p.getInventory().getItems()) {
-			for (Item bow : p.getInventory().getItems()) {
+		synchronized(p.getCarriedItems().getInventory().getItems()) {
+			for (Item bow : p.getCarriedItems().getInventory().getItems()) {
 				String bowName = bow.getDef(p.getWorld()).getName().toLowerCase();
 				if (bowName.contains("bow")) {
 					return true;

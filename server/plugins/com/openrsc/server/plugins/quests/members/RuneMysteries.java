@@ -50,7 +50,7 @@ public class RuneMysteries implements QuestInterface {
 					npcTalk(p, n, "Thank you very much, stranger",
 						"I am sure the head wizard will reward you",
 						"for such an interesting find");
-					if (p.getInventory().getFreeSlots() > 0) {
+					if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
 						message(p, "The Duke hands you a talisman.");
 						addItem(p, ItemId.AIR_TALISMAN.id(), 1);
 						p.setQuestStage(Quests.RUNE_MYSTERIES, 1);
@@ -145,7 +145,7 @@ public class RuneMysteries implements QuestInterface {
 							"all the hubbub is about. Just some crude amulet, I'll wager.");
 						playerTalk(p, n, "Okay, here you go.");
 
-						if (!p.getInventory().hasItemId(ItemId.AIR_TALISMAN.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.AIR_TALISMAN.id())) {
 							playerTalk(p, n, "Oh, I seem to have lost the talisman.");
 							npcTalk(p, n, "Pity. If you happen to find it, bring it to me.");
 							return;
@@ -185,11 +185,11 @@ public class RuneMysteries implements QuestInterface {
 				}
 				break;
 			case 2:
-				if (!p.getInventory().hasItemId(ItemId.RESEARCH_PACKAGE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_PACKAGE.id())) {
 					playerTalk(p, n, "I lost the research package");
 					npcTalk(p, n, "My my... I think I can pack up another one.");
 
-					if (p.getInventory().getFreeSlots() > 0) {
+					if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
 						message(p, "The head wizard gives you a research package.");
 						npcTalk(p, n, "Be more careful this time");
 						addItem(p, ItemId.RESEARCH_PACKAGE.id(), 1);
@@ -207,7 +207,7 @@ public class RuneMysteries implements QuestInterface {
 				playerTalk(p, n, "Yes, I have. He gave me some research notes to pass on to you.");
 				npcTalk(p, n, "May I have them?");
 
-				if (!p.getInventory().hasItemId(ItemId.RESEARCH_NOTES.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_NOTES.id())) {
 					playerTalk(p, n, "Er... I seem to have lost them.");
 					npcTalk(p, n, "Sigh... go find them and return to me.");
 					return;
@@ -288,7 +288,7 @@ public class RuneMysteries implements QuestInterface {
 
 	public static void auburyDialog(Player p, Npc n) {
 		if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 2) {
-			if (p.getInventory().hasItemId(ItemId.RESEARCH_PACKAGE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_PACKAGE.id())) {
 				playerTalk(p, n, "I've been sent here with a package for you.",
 					"It's from Sedridor, the head wizard at the Wizards' Tower.");
 				npcTalk(p, n, "Really? Surely he can't have...",
@@ -319,11 +319,11 @@ public class RuneMysteries implements QuestInterface {
 				npcTalk(p, n, "See if you can find another one and return to me");
 			}
 		} else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 3) {
-			if (!p.getInventory().hasItemId(ItemId.RESEARCH_NOTES.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_NOTES.id())) {
 				playerTalk(p, n, "I lost your research notes...");
 				npcTalk(p, n, "I see. Here, I have another copy.");
 
-				if (p.getInventory().getFreeSlots() > 0) {
+				if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
 					message(p, "Aubury hands you his research notes.");
 					addItem(p, ItemId.RESEARCH_NOTES.id(), 1);
 				} else {

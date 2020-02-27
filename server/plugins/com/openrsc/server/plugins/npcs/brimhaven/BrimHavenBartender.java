@@ -17,7 +17,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARTENDER_BRIMHAVEN.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		npcTalk(p, n, "Yohoho me hearty what would you like to drink?");
@@ -37,7 +37,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "One grog coming right up", "That'll be 3 gold");
 			if (hasItem(p, ItemId.COINS.id(), 3)) {
 				p.message("You buy a pint of Grog");
-				p.getInventory().remove(ItemId.COINS.id(), 3);
+				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 3);
 				addItem(p, ItemId.GROG.id(), 1);
 			} else {
 				playerTalk(p, n,
@@ -47,7 +47,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "That'll be 27 gold");
 			if (hasItem(p, ItemId.COINS.id(), 27)) {
 				p.message("You buy a bottle of rum");
-				p.getInventory().remove(ItemId.COINS.id(), 27);
+				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 27);
 				addItem(p, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
 				playerTalk(p, n,
@@ -57,7 +57,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "Haha time to be breaking out the old supergrog",
 				"That'll be 15 coins please");
 			if (hasItem(p, ItemId.COINS.id(), 15)) {
-				p.getInventory().remove(ItemId.COINS.id(), 15);
+				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 15);
 				message(p,
 					"The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");
@@ -76,13 +76,13 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			setAleEffect(p, skillIDs[i]);
 		}
 	}
-	
+
 	private void setAleEffect(Player p, int skillId) {
 		int reduction, currentStat, maxStat;
 		maxStat = p.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 20 ? 5 :
-			maxStat < 40 ? 6 : 
+			maxStat < 40 ? 6 :
 			maxStat < 70 ? 7 : 8;
 		currentStat = p.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {

@@ -44,7 +44,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 				p.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
 				if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
 					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
-					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
 					message(p, "sometimes you will burn food",
 							"As your cooking level increases this will happen less",
 							"Now speak to the cooking instructor again");
@@ -55,12 +55,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					message(p, "Now speak to the cooking instructor again");
 					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					p.getCache().set("tutorial", 31);
-					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
 
 				} else {
 					//per-wiki says rest of meats are burned
 					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
-					p.getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
 				}
 				p.setBusy(false);
 			} else {
@@ -145,7 +145,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 			else
 				p.message(cookingOnMessage(p, item, object, needOven));
 			showBubble(p, item);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", p.getInventory().countId(item.getCatalogId()), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 				@Override
 				public void action() {
 					if (getOwner().getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
@@ -167,15 +167,15 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					}
 					showBubble(getOwner(), item);
 					getOwner().playSound("cooking");
-					if (getOwner().getInventory().remove(item) > -1) {
+					if (getOwner().getCarriedItems().getInventory().remove(item) > -1) {
 						if (!Formulae.burnFood(getOwner(), item.getCatalogId(), getOwner().getSkills().getLevel(Skills.COOKING))
 								|| item.getCatalogId() == ItemId.RAW_LAVA_EEL.id()
 								|| (item.getCatalogId() == ItemId.UNCOOKED_PITTA_BREAD.id() && getOwner().getSkills().getLevel(Skills.COOKING) >= 58)) {
-							getOwner().getInventory().add(cookedFood);
+							getOwner().getCarriedItems().getInventory().add(cookedFood);
 							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
 							getOwner().incExp(Skills.COOKING, cookingDef.getExp(), true);
 						} else {
-							getOwner().getInventory().add(new Item(cookingDef.getBurnedId()));
+							getOwner().getCarriedItems().getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getCatalogId() == ItemId.COOKEDMEAT.id()) {
 								getOwner().playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 							} else {
@@ -209,7 +209,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 	}
 
 	private void cookMethod(final Player p, final int itemID, final int product, final boolean hasBubble, final String... messages) {
-		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", p.getInventory().countId(itemID), false) {
+		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", p.getCarriedItems().getInventory().countId(itemID), false) {
 			@Override
 			public void action() {
 				if (hasItem(p, itemID, 1)) {

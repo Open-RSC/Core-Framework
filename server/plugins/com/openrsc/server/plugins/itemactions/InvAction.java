@@ -142,23 +142,23 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		}
 		else if (id == ItemId.BURNTPIE.id() && command.equalsIgnoreCase("empty dish")) {
 			player.message("you remove the burnt pie from the pie dish");
-			player.getInventory().replace(item.getCatalogId(), ItemId.PIE_DISH.id());
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.PIE_DISH.id());
 		}
 		else if (id == ItemId.BURNT_STEW.id() && command.equalsIgnoreCase("empty")) {
 			player.message("you remove the burnt stew from the bowl");
-			player.getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
 		}
 		else if (id == ItemId.BURNT_CURRY.id() && command.equalsIgnoreCase("empty")) {
 			player.message("you remove the burnt curry from the bowl");
-			player.getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
 		}
 		else if (id == ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
 			player.message("You empty the plain water out of the Blessed Golden Bowl.");
-			player.getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
 		}
 		else if (id == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
 			player.message("You empty the plain water out of the Golden Bowl.");
-			player.getInventory().replace(item.getCatalogId(), ItemId.GOLDEN_BOWL.id());
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GOLDEN_BOWL.id());
 		}
 		else if (id == ItemId.SPADE.id()) {
 			// nothing - no action/message was triggered with spade's dig option
@@ -168,9 +168,9 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	private void handleOyster(Player player, int oyster) {
 		player.message("you open the oyster shell");
 		if (DataConversions.random(0, 10) == 1) {
-			player.getInventory().replace(oyster, ItemId.OYSTER_PEARLS.id());
+			player.getCarriedItems().getInventory().replace(oyster, ItemId.OYSTER_PEARLS.id());
 		} else {
-			player.getInventory().replace(oyster, ItemId.EMPTY_OYSTER.id());
+			player.getCarriedItems().getInventory().replace(oyster, ItemId.EMPTY_OYSTER.id());
 		}
 	}
 
@@ -386,7 +386,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 		if (removeItem(player, ItemId.UNLIT_TORCH.id(), 1)) {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
-			player.getInventory().add(new Item(ItemId.LIT_TORCH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_TORCH.id()));
 			player.incExp(Skills.FIREMAKING, 450, true);
 			if (player.getQuestStage(Quests.SEA_SLUG) == 5 && !player.getCache().hasKey("lit_torch")) {
 				player.getCache().store("lit_torch", true);
@@ -500,7 +500,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 			if (player.getCache().hasKey("bird_feed")) {
 				player.getCache().remove("bird_feed");
 			}
-			player.getInventory().replace(ItemId.MESSENGER_PIGEONS.id(), ItemId.PIGEON_CAGE.id());
+			player.getCarriedItems().getInventory().replace(ItemId.MESSENGER_PIGEONS.id(), ItemId.PIGEON_CAGE.id());
 		} else {
 			player.message("the pigeons don't want to leave");
 		}

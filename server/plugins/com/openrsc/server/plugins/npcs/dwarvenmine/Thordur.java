@@ -29,7 +29,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			thordurDialogue(p, n, LIKE_IT_HERE);
 		}
 	}
-	
+
 	private void thordurDialogue(Player p, Npc n, int cID) {
 		switch (cID) {
 		case WANTED_SAY_HI:
@@ -118,7 +118,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					playerTalk(p, n,
 						"Oh dear I don't actually seem to have enough money");
 				} else {
-					p.getInventory().remove(ItemId.COINS.id(), 10);
+					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 10);
 					addItem(p, ItemId.DISK_OF_RETURNING.id(), 1);
 					p.message("Thordur hands you a special disk");
 					sleep(1200);
@@ -141,7 +141,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.THORDUR.id();
 	}
-	
+
 	static final int WANTED_SAY_HI = 0;
 	static final int WHO_ARE_YOU = 1;
 	static final int LIKE_IT_HERE = 2;

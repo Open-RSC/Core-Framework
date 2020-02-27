@@ -194,7 +194,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					break;
 				case VIAL:
 					npcTalk(p, npc, "Oh lovely, fresh water...thanks!");
-					p.getInventory().replace(ItemId.VIAL.id(), ItemId.EMPTY_VIAL.id());
+					p.getCarriedItems().getInventory().replace(ItemId.VIAL.id(), ItemId.EMPTY_VIAL.id());
 					break;
 				case SKAVID_MAP:
 					p.message("You give the map to the wizard");

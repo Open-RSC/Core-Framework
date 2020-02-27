@@ -44,27 +44,27 @@ public class BuyMarketItemTask extends MarketTask {
 		int priceForEach = item.getPrice() / item.getAmountLeft();
 		int auctionPrice = amount * priceForEach;
 
-		if (playerBuyer.getInventory().countId(ItemId.COINS.id()) < auctionPrice) {
+		if (playerBuyer.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < auctionPrice) {
 			ActionSender.sendBox(playerBuyer, "@ora@[Auction House - Warning] % @whi@ You don't have enough coins!", false);
 			return;
 		}
 
 		ItemDefinition def = playerBuyer.getWorld().getServer().getEntityHandler().getItemDef(item.getItemID());
-		if (!playerBuyer.getInventory().full()
-			&& (!def.isStackable() && playerBuyer.getInventory().size() + amount <= 30)) {
+		if (!playerBuyer.getCarriedItems().getInventory().full()
+			&& (!def.isStackable() && playerBuyer.getCarriedItems().getInventory().size() + amount <= 30)) {
 			if (!def.isStackable()) {
 				for (int i = 0; i < amount; i++)
-					playerBuyer.getInventory().add(new Item(item.getItemID(), 1));
+					playerBuyer.getCarriedItems().getInventory().add(new Item(item.getItemID(), 1));
 			} else {
-				playerBuyer.getInventory().add(new Item(item.getItemID(), amount));
+				playerBuyer.getCarriedItems().getInventory().add(new Item(item.getItemID(), amount));
 			}
-			playerBuyer.getInventory().remove(ItemId.COINS.id(), auctionPrice);
+			playerBuyer.getCarriedItems().getInventory().remove(ItemId.COINS.id(), auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your inventory.", false);
 			updateDiscord = true;
 			playerBuyer.save();
 		} else if (!playerBuyer.getBank().full()) {
 			playerBuyer.getBank().add(new Item(item.getItemID(), amount));
-			playerBuyer.getInventory().remove(ItemId.COINS.id(), auctionPrice);
+			playerBuyer.getCarriedItems().getInventory().remove(ItemId.COINS.id(), auctionPrice);
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your bank.", false);
 			updateDiscord = true;
 			playerBuyer.save();

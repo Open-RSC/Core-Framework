@@ -41,7 +41,7 @@ public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPl
 			if (otherPlayer.isBusy() || player.isBusy()) {
 				return;
 			}
-			if (otherPlayer.getInventory().full()) {
+			if (otherPlayer.getCarriedItems().getInventory().full()) {
 				player.message("Other player doesn't have enough inventory space to receive the object");
 				return;
 			}

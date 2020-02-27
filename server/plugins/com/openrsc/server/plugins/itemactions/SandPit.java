@@ -26,14 +26,14 @@ InvUseOnObjectExecutiveListener {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Sand", player.getCarriedItems().getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
-				if (getOwner().getInventory().hasInInventory(itemID)) {
+				if (getOwner().getCarriedItems().getInventory().hasInInventory(itemID)) {
 					showBubble(getOwner(), item);
 					sleep(300);
 					getOwner().message("you fill the bucket with sand");
-					getOwner().getInventory().replace(itemID, refilledID,true);
+					getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
 				} else {
 					interrupt();
 				}

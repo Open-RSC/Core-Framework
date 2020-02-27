@@ -319,7 +319,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				"and are washed up by the river side");
 		} else if (obj.getID() == 470) {
 			message(p, "you search the bookcase");
-			if (!p.getInventory().hasItemId(ItemId.BOOK_ON_BAXTORIAN.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.BOOK_ON_BAXTORIAN.id())) {
 				message(p, "and find a book named 'book on baxtorian'");
 				addItem(p, ItemId.BOOK_ON_BAXTORIAN.id(), 1);
 			} else
@@ -330,7 +330,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			message(p, "you search the crate");
-			if (!p.getInventory().hasItemId(ItemId.LARGE_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.LARGE_KEY.id())) {
 				message(p, "and find a large key");
 				addItem(p, ItemId.LARGE_KEY.id(), 1);
 			} else {
@@ -357,7 +357,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 						"i locked myself in here for protection",
 						"but i've left the key somewhere",
 						"and now i'm stuck");
-					if (!p.getInventory().hasItemId(ItemId.LARGE_KEY.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.LARGE_KEY.id())) {
 						playerTalk(p, n, "okay, i'll have a look for a key");
 					} else {
 						playerTalk(p, n, "i found a key");
@@ -402,7 +402,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 		} else if (obj.getID() == 471) {
 			message(p, "the doors begin to open");
 
-			if (p.getEquipment().hasEquipped(ItemId.GLARIALS_AMULET.id())) {
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.GLARIALS_AMULET.id())) {
 				doGate(p, obj, 63);
 				message(p, "You go through the door");
 			} else {
@@ -415,7 +415,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 492) {
 			message(p, "you search the crate");
-			if (!p.getInventory().hasItemId(ItemId.AN_OLD_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.AN_OLD_KEY.id())) {
 				message(p, "you find an old key");
 				addItem(p, ItemId.AN_OLD_KEY.id(), 1);
 			} else {
@@ -696,7 +696,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				p.message("the rune stone crumbles into dust");
 				p.getCache().store(
 					"waterfall_" + obj.getID() + "_" + item.getCatalogId(), true);
-				p.getInventory().remove(item.getCatalogId(), 1);
+				p.getCarriedItems().getInventory().remove(item.getCatalogId(), 1);
 
 			} else {
 				p.message("you have already placed " + article(item.getDef(p.getWorld()).getName()) + item.getDef(p.getWorld()).getName()
@@ -852,8 +852,8 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	private boolean CANT_GO(Player p) {
-		synchronized(p.getInventory().getItems()) {
-			for (Item item : p.getInventory().getItems()) {
+		synchronized(p.getCarriedItems().getInventory().getItems()) {
+			for (Item item : p.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(p.getWorld()).getName().toLowerCase();
 				if (name.contains("dagger") || name.contains("scimitar")
 					|| name.contains("bow") || name.contains("mail")

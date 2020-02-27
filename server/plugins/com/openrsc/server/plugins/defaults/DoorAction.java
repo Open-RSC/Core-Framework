@@ -308,7 +308,7 @@ public class DoorAction {
 				break;
 
 			case 104: // Temple of Ikov: First door (533, 3342)
-				if (p.getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id()) || p.getY() >= 3335 && p.getY() <= 3341) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id()) || p.getY() >= 3335 && p.getY() <= 3341) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -319,7 +319,7 @@ public class DoorAction {
 				break;
 
 			case 105: // Temple of Ikov: Bridge door (546, 3328)
-				if (p.getEquipment().hasEquipped(ItemId.BOOTS_OF_LIGHTFOOTEDNESS.id()) || p.getX() >= 546) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.BOOTS_OF_LIGHTFOOTEDNESS.id()) || p.getX() >= 546) {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
@@ -349,8 +349,8 @@ public class DoorAction {
 			case 113: // Fight Arena (621, 699), (603, 717)
 				boolean stop = false;
 				Npc guard = null;
-				if (p.getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
-					&& p.getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 					doDoor(obj, p);
 				} else if (obj.getX() == 603 && p.getX() < obj.getX()) {
 					guard = getNearestNpc(p, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 8);
@@ -583,7 +583,7 @@ public class DoorAction {
 					sleep(600);
 					p.setBusy(false);
 					p.message("You need a crafting level of 40 to enter the guild");
-				} else if (!p.getEquipment().hasEquipped(ItemId.BROWN_APRON.id())) {
+				} else if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())) {
 					Npc master = p.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcTalk(p, master, "Where's your brown apron?",
@@ -605,7 +605,7 @@ public class DoorAction {
 					}
 					sleep(600);
 					p.message("You need a cooking level of 32 to enter");
-				} else if (!p.getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
+				} else if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
 					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcTalk(p, chef, "Where's your chef's hat",
@@ -642,8 +642,8 @@ public class DoorAction {
 					return;
 				}
 				if (p.getX() <= 270) {
-					if (!p.getEquipment().hasEquipped(ItemId.IRON_CHAIN_MAIL_BODY.id())
-						|| !p.getEquipment().hasEquipped(ItemId.MEDIUM_BRONZE_HELMET.id())) {
+					if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.IRON_CHAIN_MAIL_BODY.id())
+						|| !p.getCarriedItems().getEquipment().hasEquipped(ItemId.MEDIUM_BRONZE_HELMET.id())) {
 						p.message(
 							"Only guards are allowed in there!");
 						return;
@@ -761,7 +761,7 @@ public class DoorAction {
 					}
 					Npc DOOR_MOURNER = getNearestNpc(p, NpcId.MOURNER_DOOR.id(), 10);
 					if (DOOR_MOURNER != null) {
-						if (p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
+						if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 							npcTalk(p, DOOR_MOURNER, "in you go doc");
 							doDoor(obj, p);
 							p.playerServerMessage(MessageType.QUEST, "You go through the door");
@@ -773,7 +773,7 @@ public class DoorAction {
 						}
 					}
 				} else if ((p.getQuestStage(Quests.BIOHAZARD) > 5 || p.getQuestStage(Quests.BIOHAZARD) == -1) &&
-					p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
+					p.getCarriedItems().getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 					doDoor(obj, p);
 				} else {
 					p.message("the door is locked");
@@ -786,7 +786,7 @@ public class DoorAction {
 					p.playerServerMessage(MessageType.QUEST, "You go through the door");
 					return;
 				}
-				if (p.getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
 					doDoor(obj, p);
 					p.playerServerMessage(MessageType.QUEST, "You go through the door");
 				} else {
@@ -801,7 +801,7 @@ public class DoorAction {
 						doDoor(obj, p);
 						return;
 					}
-					if (p.getEquipment().hasEquipped(ItemId.PRIEST_ROBE.id()) && p.getEquipment().hasEquipped(ItemId.PRIEST_GOWN.id())) {
+					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PRIEST_ROBE.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.PRIEST_GOWN.id())) {
 						p.message("guidors wife allows you to go in");
 						p.playerServerMessage(MessageType.QUEST, "You go through the door");
 						doDoor(obj, p);
@@ -943,7 +943,7 @@ public class DoorAction {
 				showsBubble = true;
 				break;
 		}
-		if (player.getInventory().hasItemId(keyItem) && item.getCatalogId() == keyItem) {
+		if (player.getCarriedItems().hasCatalogID(keyItem) && item.getCatalogId() == keyItem) {
 			if (keyItem == ItemId.FRONT_DOOR_KEY.id() && player.getQuestStage(Quests.WITCHS_HOUSE) == 0) {
 				playerTalk(player, null, "It'd be rude to break into this house");
 				return;
@@ -956,7 +956,7 @@ public class DoorAction {
 			player.message("you go through the door");
 			if (remove) {
 				player.message("Your " + item.getDef(player.getWorld()).getName().toLowerCase() + " has gone!");
-				player.getInventory().remove(keyItem, 1);
+				player.getCarriedItems().getInventory().remove(keyItem, 1);
 				if (obj.getID() == 52) {
 					player.getCache().store("melzar_unlocked", true);
 				}
@@ -1198,15 +1198,15 @@ public class DoorAction {
 								"There have been reports of a someone bringing a virus into Varrock");
 						}
 						if (hasItem(player, ItemId.ETHENEA.id())) {
-							while (player.getInventory().remove(new Item(ItemId.ETHENEA.id())) != -1) ;
+							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.ETHENEA.id())) != -1) ;
 							player.message("He takes the vial of ethenea from you");
 						}
 						if (hasItem(player, ItemId.SULPHURIC_BROLINE.id())) {
-							while (player.getInventory().remove(new Item(ItemId.SULPHURIC_BROLINE.id())) != -1) ;
+							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.SULPHURIC_BROLINE.id())) != -1) ;
 							player.message("He takes the vial of sulphuric broline from you");
 						}
 						if (hasItem(player, ItemId.LIQUID_HONEY.id())) {
-							while (player.getInventory().remove(new Item(ItemId.LIQUID_HONEY.id())) != -1) ;
+							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.LIQUID_HONEY.id())) != -1) ;
 							player.message("He takes the vial of liquid honey from you");
 						}
 					}

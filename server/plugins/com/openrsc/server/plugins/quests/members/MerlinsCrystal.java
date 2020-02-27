@@ -253,7 +253,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 					int opt = showMenu(p, beggar, "Yes certainly",
 						"No I don't have any bread with me");
 					if (opt == 0) {
-						if (!p.getInventory().hasItemId(ItemId.BREAD.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.BREAD.id())) {
 							playerTalk(p, beggar,
 								"Except that I don't have any bread at the moment");
 							npcTalk(p, beggar,

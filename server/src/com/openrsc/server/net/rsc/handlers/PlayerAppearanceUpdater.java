@@ -46,18 +46,18 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 
 		if (player.isMale()) {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-				Item top = player.getEquipment().get(1);
+				Item top = player.getCarriedItems().getEquipment().get(1);
 				if (top != null && top.getDef(player.getWorld()).isFemaleOnly()) {
-					player.getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
+					player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
 					ActionSender.sendEquipmentStats(player, 1);
 				}
 			} else {
-				Inventory inv = player.getInventory();
+				Inventory inv = player.getCarriedItems().getInventory();
 				for (int slot = 0; slot < inv.size(); slot++) {
 					Item i = inv.get(slot);
 					if (i.isWieldable(player.getWorld()) && i.getDef(player.getWorld()).getWieldPosition() == 1
 						&& i.isWielded() && i.getDef(player.getWorld()).isFemaleOnly()) {
-						player.getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
+						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
 						ActionSender.sendInventoryUpdateItem(player, slot);
 						break;
 					}

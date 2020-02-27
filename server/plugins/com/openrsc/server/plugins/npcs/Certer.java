@@ -122,14 +122,14 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				p.message("As an Ultimate Iron Man. you cannot use certer bank exchange.");
 				return;
 			}
-			certAmount = p.getInventory().countId(certID);
+			certAmount = p.getCarriedItems().getInventory().countId(certID);
 			if (certAmount <= 0) {
 				p.message("You don't have any " + names[index]
 					+ " certificates");
 				return;
 			}
 			Item bankItem = new Item(itemID, certAmount * 5);
-			if (p.getInventory().remove(new Item(certID, certAmount)) > -1) {
+			if (p.getCarriedItems().getInventory().remove(new Item(certID, certAmount)) > -1) {
 				p.message("You exchange the certificates, "
 					+ bankItem.getAmount() + " "
 					+ bankItem.getDef(p.getWorld()).getName()
@@ -139,15 +139,15 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 		} else {
 			certAmount += 1;
 			int itemAmount = certAmount * 5;
-			if (p.getInventory().countId(certID) < certAmount) {
+			if (p.getCarriedItems().getInventory().countId(certID) < certAmount) {
 				p.message("You don't have that many certificates");
 				return;
 			}
-			if (p.getInventory().remove(certID, certAmount) > -1) {
+			if (p.getCarriedItems().getInventory().remove(certID, certAmount) > -1) {
 				p.message("You exchange your certificates for "
 					+ certerDef.getType() + ending);
 				for (int x = 0; x < itemAmount; x++) {
-					p.getInventory().add(new Item(itemID, 1));
+					p.getCarriedItems().getInventory().add(new Item(itemID, 1));
 				}
 			}
 		}
@@ -187,12 +187,12 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					+ itemAmount + " "
 					+ p.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName()
 					+ " is taken from your bank");
-				p.getInventory().add(new Item(certID, certAmount));
+				p.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 			}
 		} else {
 			certAmount += 1;
 			int itemAmount = certAmount * 5;
-			if (p.getInventory().countId(itemID) < itemAmount) {
+			if (p.getCarriedItems().getInventory().countId(itemID) < itemAmount) {
 				p.message("You don't have that " + (ending.equals("") ? "much" : "many")
 						+ " " + certerDef.getType() + ending);
 				return;
@@ -200,9 +200,9 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			p.message("You exchange your " + certerDef.getType() + ending
 				+ " for certificates");
 			for (int x = 0; x < itemAmount; x++) {
-				p.getInventory().remove(itemID, 1);
+				p.getCarriedItems().getInventory().remove(itemID, 1);
 			}
-			p.getInventory().add(new Item(certID, certAmount));
+			p.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 		}
 	}
 

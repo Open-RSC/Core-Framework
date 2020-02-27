@@ -29,14 +29,14 @@ public class Tanner implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				npcTalk(p, n, "Ok");
 				while (true) {
 					sleep(500);
-					if (p.getInventory().countId(ItemId.COW_HIDE.id()) < 1) {
+					if (p.getCarriedItems().getInventory().countId(ItemId.COW_HIDE.id()) < 1) {
 						playerTalk(p, n, "I don't have any cow hides left now");
 						break;
-					} else if (p.getInventory().countId(ItemId.COINS.id()) < 1) {
+					} else if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 1) {
 						//message possibly non kosher
 						playerTalk(p, n, "I don't have any coins left now");
 						break;
-					} else if (p.getInventory().remove(new Item(ItemId.COW_HIDE.id())) > -1 && p.getInventory().remove(ItemId.COINS.id(), 1) > -1) {
+					} else if (p.getCarriedItems().getInventory().remove(new Item(ItemId.COW_HIDE.id())) > -1 && p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 1) > -1) {
 						p.message("You swap a cow hide for a piece of leather");
 						addItem(p, ItemId.LEATHER.id(), 1);
 					} else {

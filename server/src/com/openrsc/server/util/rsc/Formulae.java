@@ -279,7 +279,7 @@ public final class Formulae {
 	public static boolean burnFood(Player p, int foodId, int cookingLevel) {
 		//gauntlets of cooking effective on lobsters, swordfish and shark
 		//chef: Wearing them means you will burn your lobsters, swordfish and shark less
-		int bonusLevel = p.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id()) ?
+		int bonusLevel = p.getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id()) ?
 			(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
@@ -326,13 +326,13 @@ public final class Formulae {
 
 			if (hitChance > (defender.isNpc() ? 50 : 60)) {
 				int max;
-				if (owner.getEquipment().hasEquipped(ItemId.STAFF_OF_IBAN.id()) && iban) {
+				if (owner.getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_IBAN.id()) && iban) {
 					max = DataConversions.random(0, 25);
 				} else {
 					if (owner.isCharged() &&
-						(owner.getEquipment().hasEquipped(ItemId.ZAMORAK_CAPE.id()) ||
-							owner.getEquipment().hasEquipped(ItemId.SARADOMIN_CAPE.id()) ||
-							owner.getEquipment().hasEquipped(ItemId.GUTHIX_CAPE.id()))) {
+						(owner.getCarriedItems().getEquipment().hasEquipped(ItemId.ZAMORAK_CAPE.id()) ||
+							owner.getCarriedItems().getEquipment().hasEquipped(ItemId.SARADOMIN_CAPE.id()) ||
+							owner.getCarriedItems().getEquipment().hasEquipped(ItemId.GUTHIX_CAPE.id()))) {
 						max = DataConversions.random(0, 25);
 					} else {
 						max = DataConversions.random(0, 18);

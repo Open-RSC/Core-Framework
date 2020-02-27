@@ -34,7 +34,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 						message(p, "Caleb holds the gauntlets and closes his eyes",
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
-						p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_COOKING.id());
+						p.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_COOKING.id());
 						p.getCache().set("famcrest_gauntlets", Gauntlets.COOKING.id());
 					} else if (menu == 1) {
 						npcTalk(p, n, "Ok suit yourself");

@@ -63,7 +63,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 					@Override
 					public void doSpell() {
 						if (otherPlayer.isPlayer()) {
-							player.getInventory().remove(item);
+							player.getCarriedItems().getInventory().remove(item);
 							player.message("you throw the ball");
 
 							// only the shops interface is reset is closed if they are accessing it
@@ -71,7 +71,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 								otherPlayer.resetShop();
 							}
 
-							otherPlayer.getInventory().add(item);
+							otherPlayer.getCarriedItems().getInventory().add(item);
 							otherPlayer.message("Warning! " + player.getUsername() + " is shooting at you!");
 							otherPlayer.message("you catch the ball");
 							playerTalk(player, null, "Good catch");

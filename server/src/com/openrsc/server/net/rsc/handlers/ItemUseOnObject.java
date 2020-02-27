@@ -22,7 +22,7 @@ public class ItemUseOnObject implements PacketHandler {
 				GameObject obj = getPlayer().getViewArea().getWallObjectWithDir(
 					object.getLocation(), object.getDirection());
 				if (getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getInventory().hasItemId(item.getCatalogId()) || obj == null
+					|| !getPlayer().getCarriedItems().hasCatalogID(item.getCatalogId()) || obj == null
 					|| !obj.equals(object)
 					|| getPlayer().getStatus() != Action.USING_Item_ON_DOOR) {
 					return;
@@ -59,7 +59,7 @@ public class ItemUseOnObject implements PacketHandler {
 				getPlayer().face(object);
 				GameObject obj = getPlayer().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj == null || getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getInventory().contains(item)
+					|| !getPlayer().getCarriedItems().getInventory().contains(item)
 					|| !getPlayer().atObject(object) || obj == null
 					|| getPlayer().getStatus() != Action.USING_Item_ON_OBJECT) {
 					return;
@@ -106,14 +106,14 @@ public class ItemUseOnObject implements PacketHandler {
 			{
 				//they used the item from their equipment slot
 				int itemID = p.readShort();
-				int realSlot = player.getEquipment().searchEquipmentForItem(itemID);
+				int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
 				if (realSlot == -1)
 					return;
-				item = player.getEquipment().get(realSlot);
+				item = player.getCarriedItems().getEquipment().get(realSlot);
 				if (item == null)
 					return;
 			} else
-				item = player.getInventory().get(slotID);
+				item = player.getCarriedItems().getInventory().get(slotID);
 			if (object == null || object.getType() == 0 || item == null) { // This
 				player.setSuspiciousPlayer(true, "item on null equipment slot or something");
 				return;
@@ -128,9 +128,9 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			int slotID = p.readShort();
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
-				item = player.getEquipment().get(slotID - Inventory.MAX_SIZE);
+				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
-				item = player.getInventory().get(slotID);
+				item = player.getCarriedItems().getInventory().get(slotID);
 			if (object == null || object.getType() == 1 || item == null) { // This
 				player.setSuspiciousPlayer(true, "null item or object");
 				return;

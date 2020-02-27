@@ -43,16 +43,16 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 				p.message("You can't use this teleport after level 30 wilderness");
 				return;
 			}
-			if (p.getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
+			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
 				message(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
-			if (p.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 				p.message("the plague sample is too delicate...");
 				p.message("it disintegrates in the crossing");
-				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+				while (p.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+					p.getCarriedItems().getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			if (menu != -1) {
@@ -73,7 +73,7 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 				} else {
 					int rubs = p.getCache().getInt("charged_ds_amulet");
 					if (rubs >= 3) {
-						p.getInventory().replace(ItemId.CHARGED_DRAGONSTONE_AMULET.id(), ItemId.DRAGONSTONE_AMULET.id());
+						p.getCarriedItems().getInventory().replace(ItemId.CHARGED_DRAGONSTONE_AMULET.id(), ItemId.DRAGONSTONE_AMULET.id());
 						p.getCache().remove("charged_ds_amulet");
 					} else {
 						p.getCache().put("charged_ds_amulet", rubs + 1);
@@ -94,16 +94,16 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
 			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getInventory().countId(item.getCatalogId()), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 
 				@Override
 				public void action() {
-					if (!p.getInventory().hasItemId(item.getCatalogId())) {
+					if (!p.getCarriedItems().hasCatalogID(item.getCatalogId())) {
 						stop();
 						return;
 					}
-					if (p.getInventory().remove(item) > -1) {
-						p.getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+					if (p.getCarriedItems().getInventory().remove(item) > -1) {
+						p.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 					} else
 						interrupt();
 				}

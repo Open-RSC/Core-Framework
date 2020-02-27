@@ -329,8 +329,8 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
 
-			otherPlayer.getInventory().add(prize);
-			player.getInventory().remove(item);
+			otherPlayer.getCarriedItems().getInventory().add(prize);
+			player.getCarriedItems().getInventory().remove(item);
 
 			player.setBusy(false);
 			//otherPlayer.setBusy(false);

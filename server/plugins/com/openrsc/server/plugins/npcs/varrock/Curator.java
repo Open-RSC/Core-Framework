@@ -23,7 +23,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to the museum of Varrock");
-		if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) && p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id()) && p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
 			// curator authentically does not check if you already have a certificate in your inventory before triggering this
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
 				playerTalk(p, n,
@@ -56,7 +56,7 @@ public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, I
 
 				return;
 			}
-		} else if (p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getInventory().hasItemId(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+		} else if (p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0) {
 				// possible this triggers always, but confirmed that it does occur authentically after the quest is complete. (state < 0)
 				playerTalk(p, n,

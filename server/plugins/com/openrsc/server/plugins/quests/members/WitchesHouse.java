@@ -311,7 +311,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				removeNpc(rat);
 				message(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
-				p.getInventory().remove(ItemId.MAGNET.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.MAGNET.id(), 1);
 				p.updateQuestStage(getQuestId(), 2);
 			}
 		}
@@ -405,7 +405,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	private boolean wearingInsulatingGloves(Player p) {
-		return p.getEquipment().hasEquipped(ItemId.LEATHER_GLOVES.id()) || p.getEquipment().hasEquipped(ItemId.ICE_GLOVES.id());
+		return p.getCarriedItems().getEquipment().hasEquipped(ItemId.LEATHER_GLOVES.id()) || p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id());
 	}
 
 	//considerations: sq/kite shields, med/large helms, plate-bodies/plate-tops/chains, legs/skirts
@@ -437,7 +437,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 		boolean isWearingMetal = false;
 
 		for (int itemId : METAL_ARMOURS) {
-			isWearingMetal |= p.getEquipment().hasEquipped(itemId);
+			isWearingMetal |= p.getCarriedItems().getEquipment().hasEquipped(itemId);
 			if (isWearingMetal) break;
 		}
 

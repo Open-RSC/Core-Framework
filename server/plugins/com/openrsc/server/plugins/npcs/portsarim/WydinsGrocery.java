@@ -88,7 +88,7 @@ public final class WydinsGrocery implements ShopInterface,
 					npcTalk(p, n, "Well you're keen I'll give you that",
 						"Ok I'll give you a go",
 						"Have you got your own apron?");
-					if (p.getEquipment().hasEquipped(ItemId.WHITE_APRON.id())) {
+					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.WHITE_APRON.id())) {
 						playerTalk(p, n, "Yes I have one right here");
 						npcTalk(p, n,
 							"Wow you are well prepared, you're hired",
@@ -104,7 +104,7 @@ public final class WydinsGrocery implements ShopInterface,
 					playerTalk(p, n, "Sorry I didn't realise");
 				}
 			} else {
-				if (!p.getEquipment().hasEquipped(ItemId.WHITE_APRON.id())) {
+				if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.WHITE_APRON.id())) {
 					npcTalk(p, n, "Can you put your apron on before going in there please");
 				} else {
 					if (p.getX() < 277) {

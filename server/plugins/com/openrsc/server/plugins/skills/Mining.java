@@ -31,7 +31,7 @@ public final class Mining implements ObjectActionListener,
 	public static int getAxe(Player p) {
 		int lvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
-			if (p.getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
+			if (p.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
 					return Formulae.miningAxeIDs[i];
 				}
@@ -215,10 +215,10 @@ public final class Mining implements ObjectActionListener,
 					}
 				}
 				if (getOre(getWorld().getServer(), def, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
-					if (DataConversions.random(1, 200) <= (getOwner().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
+					if (DataConversions.random(1, 200) <= (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 						getOwner().playSound("foundgem");
 						Item gem = new Item(getGem(), 1);
-						getOwner().getInventory().add(gem);
+						getOwner().getCarriedItems().getInventory().add(gem);
 						getOwner().playerServerMessage(MessageType.QUEST, "You just found a" + gem.getDef(getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
 						interrupt();
 					} else {
@@ -227,7 +227,7 @@ public final class Mining implements ObjectActionListener,
 						if (obj == null) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 						} else {
-							getOwner().getInventory().add(ore);
+							getOwner().getCarriedItems().getInventory().add(ore);
 							getOwner().playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(getWorld()).getName().toLowerCase());
 							getOwner().incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
 						}

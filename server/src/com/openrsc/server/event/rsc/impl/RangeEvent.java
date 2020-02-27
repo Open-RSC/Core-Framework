@@ -145,7 +145,7 @@ public class RangeEvent extends GameTickEvent {
 				int arrowID = -1;
 				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
 				{
-					Item ammo = getPlayerOwner().getEquipment().getAmmoItem();
+					Item ammo = getPlayerOwner().getCarriedItems().getEquipment().getAmmoItem();
 					if (ammo == null || ammo.getDef(getOwner().getWorld()) == null)
 					{
 						getPlayerOwner().message("you don't have any ammo equipped");
@@ -180,15 +180,15 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().resetRange();
 						return;
 					}
-					getPlayerOwner().getEquipment().remove(ammo.getCatalogId(), 1);
+					getPlayerOwner().getCarriedItems().getEquipment().remove(ammo.getCatalogId(), 1);
 					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
 				} else {
 					for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
-						int slot = getPlayerOwner().getInventory().getLastIndexById(aID);
+						int slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(aID);
 						if (slot < 0) {
 							continue;
 						}
-						Item arrow = getPlayerOwner().getInventory().get(slot);
+						Item arrow = getPlayerOwner().getCarriedItems().getInventory().get(slot);
 						if (arrow == null) { // This shouldn't happen
 							continue;
 						}
@@ -233,7 +233,7 @@ public class RangeEvent extends GameTickEvent {
 							}
 						}
 
-						getPlayerOwner().getInventory().remove(arrow.getCatalogId(), 1, true);
+						getPlayerOwner().getCarriedItems().getInventory().remove(arrow.getCatalogId(), 1, true);
 						break;
 					}
 				}
@@ -256,7 +256,7 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
 						int fireDamage;
-						if (getPlayerOwner().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							if (npc.getID() == NpcId.DRAGON.id()) {
 								percentage = 10;
 							} else if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {

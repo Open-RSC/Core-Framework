@@ -218,8 +218,8 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			playerTalk(p, n, "hello");
-			if (p.getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
-				&& p.getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+				&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 				npcTalk(p, n, "can i help you stranger?",
 					"oh.. you're a guard as well", "that's ok then",
 					"we don't like outsiders around here");
@@ -230,8 +230,8 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 		}
 		else if (n.getID() == NpcId.GUARD_KHAZARD_BYPRISONER.id()) {
 			if (p.getQuestStage(getQuestId()) >= 2) {
-				if (p.getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
-					&& p.getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "hello, hope you're keeping busy?");
 					playerTalk(p, n, "of course");
@@ -256,8 +256,8 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 		else if (n.getID() == NpcId.GUARD_KHAZARD_BRIBABLE.id()) {
 			if (p.getQuestStage(getQuestId()) == 3
 				|| p.getQuestStage(getQuestId()) == -1) {
-				if (p.getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
-					&& p.getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "less chat and more work",
 						"i can't stand lazy guards");

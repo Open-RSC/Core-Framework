@@ -252,13 +252,13 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 		}
 		switch (cID) {
 			case Joe.BEER:
-				if (p.getInventory().countId(ItemId.BEER.id()) == 0) {
+				if (p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) == 0) {
 					npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					playerTalk(p, n,
 						"Of course, it must be tough being here without a drink", "Oh dear seems like I don't have any beer");
 
-				} else if ((p.getInventory().countId(ItemId.BEER.id()) >= 1 && p.getInventory().countId(ItemId.BEER.id()) <= 2)) {
+				} else if ((p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) >= 1 && p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) <= 2)) {
 					npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					playerTalk(p, n,
@@ -271,7 +271,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					playerTalk(p, n, "How are you? still ok. Not too drunk?");
 					npcTalk(p, n, "No, I don't get drunk with only one drink",
 						"You would need a few to do that, but thanks for the beer");
-				} else if (p.getInventory().countId(ItemId.BEER.id()) >= 3) {
+				} else if (p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) >= 3) {
 					npcTalk(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					playerTalk(p, n,
@@ -285,7 +285,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					playerTalk(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
 					message(p, "You hand two more beers to the guard");
-					p.getInventory().remove(ItemId.BEER.id(), 2);
+					p.getCarriedItems().getInventory().remove(ItemId.BEER.id(), 2);
 					message(p, "he takes a sip of one, and then he drinks them both");
 					npcTalk(p,
 						n,

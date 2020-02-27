@@ -132,7 +132,7 @@ public class Thieving extends Functions
 					}
 				}
 
-				getPlayerOwner().getInventory().add(selectedLoot);
+				getPlayerOwner().getCarriedItems().getInventory().add(selectedLoot);
 				String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(getPlayerOwner().getWorld()).getName().toLowerCase();
 				getPlayerOwner().message("You steal a " + stall.getLootPrefix() + loot);
 
@@ -256,7 +256,7 @@ public class Thieving extends Functions
 		Collections.sort(loot);
 		for (LootItem l : loot) {
 			if (l.getChance() >= random) {
-				player.getInventory().add(new Item(l.getId(), l.getAmount()));
+				player.getCarriedItems().getInventory().add(new Item(l.getId(), l.getAmount()));
 			}
 		}
 		player.incExp(Skills.THIEVING, xp, true);
@@ -394,7 +394,7 @@ public class Thieving extends Functions
 					total = 0;
 					for (LootItem loot : lootTable) {
 						if (loot.getChance() >= 100) {
-							getOwner().getInventory().add(new Item(loot.getId(), loot.getAmount()));
+							getOwner().getCarriedItems().getInventory().add(new Item(loot.getId(), loot.getAmount()));
 							continue;
 						}
 						if (hit >= total && hit < (total + loot.getChance())) {
@@ -409,7 +409,7 @@ public class Thieving extends Functions
 					}
 					getOwner().playerServerMessage(MessageType.QUEST, "You pick the " + thievedMobSt + "'s pocket");
 					if (selectedLoot != null) {
-						getOwner().getInventory().add(selectedLoot);
+						getOwner().getCarriedItems().getInventory().add(selectedLoot);
 					}
 				} else {
 					getOwner().face(npc);

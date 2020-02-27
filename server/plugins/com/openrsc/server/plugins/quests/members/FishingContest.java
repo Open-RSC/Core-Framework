@@ -162,7 +162,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 						"No thanks, I'll just watch the fun");
 					if (first == 0) {
 						npcTalk(p, n, "Marvelous");
-						if (p.getInventory().countId(ItemId.COINS.id()) >= 5) {
+						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 							p.message("You pay bonzo 5 coins");
 							removeItem(p, ItemId.COINS.id(), 5);
 							npcTalk(p, n, "Ok we've got all the fishermen",
@@ -487,7 +487,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
 			message(player, "You stash the garlic in the pipe");
-			player.getInventory().remove(ItemId.GARLIC.id(), 1);
+			player.getCarriedItems().getInventory().remove(ItemId.GARLIC.id(), 1);
 			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
 				npcTalk(player, sinister,
 					"Arrgh what is that ghastly smell",
@@ -580,13 +580,13 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				// fishing using worm gives raw sardine
 				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("You catch a sardine");
-					p.getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
+					p.getCarriedItems().getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
 					p.message("You catch some shrimps");
-					p.getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
-					p.getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
+					p.getCarriedItems().getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
 					addCatchCache(p, ItemId.RAW_SHRIMP.id());
 				}
 
@@ -624,13 +624,13 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				// fishing using worm gives raw carp
 				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
 					p.message("You catch a giant carp");
-					p.getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
-					p.getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
+					p.getCarriedItems().getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
 				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
 					p.message("You catch a sardine");
-					p.getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
+					p.getCarriedItems().getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				}
 

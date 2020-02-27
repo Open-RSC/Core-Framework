@@ -53,7 +53,7 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 							npcTalk(p, n, "I see you have the unholy symbol of our Lord",
 								"I will bless it for you");
 							p.message("The ghost mutters in a strange voice");
-							p.getInventory().replace(ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id(), ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id());
+							p.getCarriedItems().getInventory().replace(ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id(), ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id());
 							message(p, "The unholy symbol throbs with power");
 							npcTalk(p, n, "The symbol of our lord has been blessed with power!",
 								"My master calls...");

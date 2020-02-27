@@ -37,7 +37,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
-		final Item myItem = player.getInventory().get(id);
+		final Item myItem = player.getCarriedItems().getInventory().get(id);
 		if (myItem == null)
 			return;
 

@@ -101,7 +101,7 @@ public final class Moderator implements CommandListener, CommandExecutiveListene
 				return;
 			}
 
-			List<Item> inventory = p.getInventory().getItems();
+			List<Item> inventory = p.getCarriedItems().getInventory().getItems();
 			ArrayList<String> itemStrings = new ArrayList<>();
 
 			synchronized(inventory) {

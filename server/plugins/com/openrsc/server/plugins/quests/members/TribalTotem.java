@@ -170,7 +170,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 					npcTalk(p, n, "Have you got our totem back?");
-					if (p.getInventory().countId(ItemId.TRIBAL_TOTEM.id()) >= 1) {
+					if (p.getCarriedItems().getInventory().countId(ItemId.TRIBAL_TOTEM.id()) >= 1) {
 						playerTalk(p, n, "Yes I have");
 						npcTalk(p, n, "Thank you brave adventurer");
 						p.sendQuestComplete(Quests.TRIBAL_TOTEM);

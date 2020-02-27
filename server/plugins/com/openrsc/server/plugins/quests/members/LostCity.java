@@ -437,7 +437,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 			sleep(500);
 			p.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
-			if (p.getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {
 				p.setBusy(true);
 				message(p, "The world starts to shimmer",
 					"You find yourself in different surroundings");

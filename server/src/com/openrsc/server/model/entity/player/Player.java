@@ -19,10 +19,7 @@ import com.openrsc.server.login.PlayerRemoveRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
-import com.openrsc.server.model.container.Bank;
-import com.openrsc.server.model.container.Equipment;
-import com.openrsc.server.model.container.Inventory;
-import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.container.*;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -125,6 +122,11 @@ public final class Player extends Mob {
 	private volatile int questionOption;
 
 	/**
+	 * An atomic reference to the players carried items.
+	 * Multiple threads access this and it never changes.
+	 */
+	private final AtomicReference<CarriedItems> carriedItems = new AtomicReference<>();
+	/**
 	 * Players cache is used to store various objects into database
 	 */
 	private final Cache cache = new Cache();
@@ -188,15 +190,6 @@ public final class Player extends Mob {
 	 * The npc we are currently interacting with
 	 */
 	private Npc interactingNpc = null;
-	/**
-	 * Atomic reference to the inventory, multiple threads use this instance and
-	 * it is never changed during session.
-	 */
-	private AtomicReference<Inventory> inventory = new AtomicReference<Inventory>();
-	/**
-	 * Equipped items
-	 */
-	private AtomicReference<Equipment> equipment = new AtomicReference<Equipment>();
 	/**
 	 * Channel
 	 */
@@ -324,14 +317,14 @@ public final class Player extends Mob {
 	/*public void unwieldMembersItems() {
 		if (!getServer().getConfig().MEMBER_WORLD) {
 			boolean found = false;
-			for (Item i : getInventory().getItems()) {
+			for (Item i : getCarriedItems().getInventory().getItems()) {
 
 				if (i.isWielded() && i.getDef().isMembersOnly()) {
-					getInventory().unwieldItem(i, true);
+					getCarriedItems().getInventory().unwieldItem(i, true);
 					found = true;
 				}
 				if (i.getID() == 2109 && i.isWielded()) {
-					getInventory().unwieldItem(i, true);
+					getCarriedItems().getInventory().unwieldItem(i, true);
 				}
 			}
 			if (found) {
@@ -372,6 +365,7 @@ public final class Player extends Mob {
 
 		setBusy(true);
 
+		carriedItems.set(new CarriedItems(this));
 		trade = new Trade(this);
 		duel = new Duel(this);
 		playerSettings = new PlayerSettings(this);
@@ -806,7 +800,7 @@ public final class Player extends Mob {
 
 	public void checkEquipment2() {
 		for (int slot = 0; slot < Equipment.SLOT_COUNT; slot++) {
-			Item item = getEquipment().get(slot);
+			Item item = getCarriedItems().getEquipment().get(slot);
 			if (item == null)
 				continue;
 			int requiredLevel = item.getDef(getWorld()).getRequiredLevel();
@@ -858,11 +852,11 @@ public final class Player extends Mob {
 				request.player = this;
 				request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
 				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
-				getEquipment().unequipItem(request);
+				getCarriedItems().getEquipment().unequipItem(request);
 				ActionSender.sendEquipmentStats(this);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
-				if (getEquipment().get(slot) != null) {
+				if (getCarriedItems().getEquipment().get(slot) != null) {
 					getWorld().getServer().getPluginHandler().handlePlugin(this, "Drop", new Object[]{this, item, false});
 				}
 			}
@@ -875,7 +869,7 @@ public final class Player extends Mob {
 			checkEquipment2();
 			return;
 		}
-		ListIterator<Item> iterator = getInventory().iterator();
+		ListIterator<Item> iterator = getCarriedItems().getInventory().iterator();
 		for (int slot = 0; iterator.hasNext(); slot++) {
 			Item item = iterator.next();
 			if (item.isWielded()) {
@@ -1073,22 +1067,6 @@ public final class Player extends Mob {
 		this.interactingNpc = interactingNpc;
 	}
 
-	public synchronized Inventory getInventory() {
-		return inventory.get();
-	}
-
-	public synchronized Equipment getEquipment() {
-		return equipment.get();
-	}
-
-	public synchronized void setInventory(final Inventory i) {
-		inventory.set(i);
-	}
-
-	public synchronized void setEquipment(final Equipment e) {
-		equipment.set(e);
-	}
-
 	public String getLastIP() {
 		return lastIP;
 	}
@@ -1200,15 +1178,15 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				item = getEquipment().get(i);
+				item = getCarriedItems().getEquipment().get(i);
 				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
 					|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
 					return item.getCatalogId();
 				}
 			}
 		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
+			synchronized(getCarriedItems().getInventory().getItems()) {
+				for (Item item : getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
 						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
 						return item.getCatalogId();
@@ -1223,14 +1201,14 @@ public final class Player extends Mob {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				item = getEquipment().get(i);
+				item = getCarriedItems().getEquipment().get(i);
 				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getCatalogId())) {
 					return item.getCatalogId();
 				}
 			}
 		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
+			synchronized(getCarriedItems().getInventory().getItems()) {
+				for (Item item : getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
 						return item.getCatalogId();
 					}
@@ -1381,29 +1359,29 @@ public final class Player extends Mob {
 	@Override
 	public int getArmourPoints() {
 		//Currently the only thing that affects armour is the equipment
-		return Math.max(getEquipment().getArmour(), 1);
+		return Math.max(getCarriedItems().getEquipment().getArmour(), 1);
 	}
 
 	@Override
 	public int getWeaponAimPoints() {
 		//Currently the only thing that affects weapon aim is the equipment
-		return Math.max(getEquipment().getWeaponAim(), 1);
+		return Math.max(getCarriedItems().getEquipment().getWeaponAim(), 1);
 	}
 
 	@Override
 	public int getWeaponPowerPoints() {
 		//Currently the only thing that affects weapon power is the equipment
-		return Math.max(getEquipment().getWeaponPower(), 1);
+		return Math.max(getCarriedItems().getEquipment().getWeaponPower(), 1);
 	}
 
 	public int getPrayerPoints() {
 		//Currently the only thing that affects prayer is the equipment
-		return Math.max(getEquipment().getPrayer(), 1);
+		return Math.max(getCarriedItems().getEquipment().getPrayer(), 1);
 	}
 
 	public int getMagicPoints() {
 		//Currently the only thing that affects prayer is the equipment
-		return Math.max(getEquipment().getMagic(), 1);
+		return Math.max(getCarriedItems().getEquipment().getMagic(), 1);
 	}
 
 	public int[] getWornItems() {
@@ -1837,7 +1815,7 @@ public final class Player extends Mob {
 			getDuel().dropOnDeath();
 		} else {
 			if (!hasElevatedPriveledges())
-				getInventory().dropOnDeath(mob);
+				getCarriedItems().getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(IronmanMode.Hardcore.id())) {
 			updateHCIronman(IronmanMode.Ironman.id());
@@ -1881,12 +1859,12 @@ public final class Player extends Mob {
 
 	private int getEquippedWeaponID() {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			Item i = getEquipment().get(4);
+			Item i = getCarriedItems().getEquipment().get(4);
 			if (i != null)
 				return i.getCatalogId();
 		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item i : getInventory().getItems()) {
+			synchronized(getCarriedItems().getInventory().getItems()) {
+				for (Item i : getCarriedItems().getInventory().getItems()) {
 					if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
 						return i.getCatalogId();
 				}
@@ -3100,13 +3078,13 @@ public final class Player extends Mob {
 			return false;
 		}
 
-		if (!this.getInventory().canHold(itemFinal)) {
+		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
 			return false;
 		}
 
 		getWorld().unregisterItem(item);
 		this.playSound("takeobject");
-		this.getInventory().add(itemFinal);
+		getCarriedItems().getInventory().add(itemFinal);
 		getWorld().getServer().getGameLogger().addQuery(new GenericLog(this.getWorld(), this.getUsername() + " picked up " + item.getDef().getName() + " x"
 			+ item.getAmount() + " at " + this.getLocation().toString()));
 
@@ -3114,7 +3092,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean checkRingOfLife(final Mob hitter) {
-		if (this.isPlayer() && this.getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
+		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
 			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {
@@ -3128,10 +3106,17 @@ public final class Player extends Mob {
 				}
 				this.teleport(120, 648, false);
 				this.message("Your ring of Life shines brightly");
-				this.getInventory().shatter(ItemId.RING_OF_LIFE.id());
+				getCarriedItems().getInventory().shatter(ItemId.RING_OF_LIFE.id());
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Return a synchronized access to the player's carried Items
+	 */
+	public synchronized CarriedItems getCarriedItems() {
+		return this.carriedItems.get();
 	}
 }

@@ -25,7 +25,7 @@ public class ItemUseOnNpc implements PacketHandler {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
-		final Item item = player.getInventory().get(itemID);
+		final Item item = player.getCarriedItems().getInventory().get(itemID);
 		if (affectedNpc == null || item == null) {
 			return;
 		}
@@ -35,7 +35,7 @@ public class ItemUseOnNpc implements PacketHandler {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
-				if (!getPlayer().getInventory().contains(item) || getPlayer().isBusy()
+				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
 					|| affectedNpc.isBusy()
 					|| getPlayer().getStatus() != Action.USING_Item_ON_NPC) {

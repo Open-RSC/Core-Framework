@@ -20,7 +20,7 @@ public abstract class BatchEvent extends DelayedEvent {
 		ActionSender.sendProgressBar(owner, delay, repeatFor);
 		owner.setBusyTimer(delay + 200);
 	}
-	
+
 	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor) {
 		this(world, owner, delay, descriptor, repeatFor, true);
 	}
@@ -36,7 +36,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			} else {
 				interrupt();
 			}
-			/*if (owner.getInventory().full() && gathering) { // this is a PITA to have to drop inventory items too keep going so Marwolf comments this out
+			/*if (owner.getCarriedItems().getInventory().full() && gathering) { // this is a PITA to have to drop inventory items too keep going so Marwolf comments this out
 				interrupt();
 				if (getServer().getConfig().BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
 			}*/

@@ -36,7 +36,7 @@ public final class ItemEquip implements PacketHandler {
 				return;
 			}
 
-			request.item = player.getInventory().get(inventorySlot);
+			request.item = player.getCarriedItems().getInventory().get(inventorySlot);
 			request.requestType = EquipRequest.RequestType.FROM_INVENTORY;
 			request.inventorySlot = inventorySlot;
 		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
@@ -118,7 +118,7 @@ public final class ItemEquip implements PacketHandler {
 //		if (pID == ITEM_UNEQUIP_FROM_INVENTORY.getOpcode() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 //			Item loop;
 //			for (int i = 0; i < Equipment.slots; i++) {
-//				loop = player.getEquipment().get(i);
+//				loop = player.getCarriedItems().getEquipment().get(i);
 //				if (loop != null && loop.getCatalogId() == idx) {
 //					item = loop;
 //					item.setWielded(true);
@@ -130,12 +130,12 @@ public final class ItemEquip implements PacketHandler {
 //				player.setSuspiciousPlayer(true, "idx < 0 or idx >= 30");
 //				return;
 //			}
-//			item = player.getInventory().get(idx);
+//			item = player.getCarriedItems().getInventory().get(idx);
 //		} else if (pID == ITEM_EQUIP_FROM_BANK.getOpcode()) {
 //			item = player.getBank().get(idx);
 //		} else if (pID == ITEM_REMOVE_TO_BANK.getOpcode()) {
 //			int wieldPos = player.getWorld().getServer().getEntityHandler().getItemDef(idx).getWieldPosition();
-//			item = player.getEquipment().get(wieldPos);
+//			item = player.getCarriedItems().getEquipment().get(wieldPos);
 //			if (item != null && item.getCatalogId() != idx)
 //				item = null;
 //		}

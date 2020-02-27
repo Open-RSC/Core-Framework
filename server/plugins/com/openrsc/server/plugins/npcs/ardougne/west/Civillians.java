@@ -13,12 +13,12 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		boolean hasCat = p.getInventory().hasItemId(ItemId.CAT.id());
-		boolean hasKitten = p.getInventory().hasItemId(ItemId.KITTEN.id());
-		boolean hasKardiasCat = p.getInventory().hasItemId(ItemId.KARDIA_CAT.id());
-		boolean hasGertrudesCat = p.getInventory().hasItemId(ItemId.GERTRUDES_CAT.id());
-		boolean hasFluffsKittens = p.getInventory().hasItemId(ItemId.KITTENS.id());
-		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat 
+		boolean hasCat = p.getCarriedItems().hasCatalogID(ItemId.CAT.id());
+		boolean hasKitten = p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id());
+		boolean hasKardiasCat = p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id());
+		boolean hasGertrudesCat = p.getCarriedItems().hasCatalogID(ItemId.GERTRUDES_CAT.id());
+		boolean hasFluffsKittens = p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id());
+		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat
 				|| (hasFluffsKittens && p.getWorld().getServer().getConfig().WANT_SHOW_KITTENS_CIVILLIAN);
 		switch(NpcId.getById(n.getID())) {
 		case CIVILLIAN_APRON:
@@ -79,7 +79,7 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 			break;
 		}
 	}
-	
+
 	private void civilianWantCatDialogue(Player p, Npc n) {
 		int menu = showMenu(p, n, "i have a cat that i could sell", "nope, they're not easy to get hold of");
 		if (menu == 0) {
@@ -108,7 +108,7 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 			// nothing
 		}
 	}
-	
+
 	private void civilianShowKittenDialogue(Player p, Npc n) {
 		int menu = showMenu(p, n, "i have a kitten that i could sell", "nope, they're not easy to get hold of");
 		if (menu == 0) {
@@ -120,20 +120,20 @@ public class Civillians implements TalkToNpcExecutiveListener, TalkToNpcListener
 			// nothing
 		}
 	}
-	
+
 	private void civilianShowKardiasCatDialogue(Player p, Npc n) {
 		playerTalk(p, n, "i have a cat..look");
 		npcTalk(p, n, "hmmm..doesn't look like it's seen daylight in years",
 				"that's not going to catch any mice");
 	}
-	
+
 	//no known method to obtain gertrudes cat
 	private void civilianShowGertrudesCatDialogue(Player p, Npc n) {
 		playerTalk(p, n, "i have a cat..look");
 		npcTalk(p, n, "hmmm..doesn't look like it belongs to you",
 				"i cannot buy it");
 	}
-	
+
 	//very likely did not trigger something, it does not appear to trigger dialogue in OSRS
 	//and kardias cat is wikified to have dialogue in OSRS
 	private void civilianShowFluffsKittensDialogue(Player p, Npc n) {

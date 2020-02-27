@@ -24,12 +24,12 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Romeo & Juliet";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the quest of Romeo and Juliet");
@@ -103,7 +103,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						"My faith in you is restored!");
 				}
 				p.message("You pass Juliet's message to Romeo");
-				p.getInventory().remove(ItemId.MESSAGE.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.MESSAGE.id(), 1);
 				npcTalk(p, n, "Tragic news. Her father is opposing our marriage",
 					"If her father sees me, he will kill me",
 					"I dare not go near his lands",
@@ -176,7 +176,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Certinly, I will deliver your message straight away");
 						npcTalk(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
-						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
+						p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
@@ -195,7 +195,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Certinly, I will deliver your message straight away");
 						npcTalk(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
-						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
+						p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
@@ -210,7 +210,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						"Certinly, I will deliver your message straight away");
 					npcTalk(p, n, "It may be our only hope");
 					p.message("Juliet gives you a message");
-					p.getInventory().add(new Item(ItemId.MESSAGE.id()));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 					p.getCache().set("romeo_juliet_msgs", 1);
 					p.updateQuestStage(getQuestId(), 2);
 				} else if (choice == 3) {
@@ -227,7 +227,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 					"Certinly, I will deliver your message straight away");
 				npcTalk(p, n, "It may be our only hope");
 				p.message("Juliet gives you a message");
-				p.getInventory().add(new Item(ItemId.MESSAGE.id()));
+				p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 				p.getCache().set("romeo_juliet_msgs", 1);
 				p.updateQuestStage(getQuestId(), 2);
 				break;
@@ -240,7 +240,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "How could you lose this most important message?",
 							"Please, take this message to him, and please don't lose it");
 						p.message("Juliet gives you another message");
-						p.getInventory().add(new Item(ItemId.MESSAGE.id()));
+						p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 2);
 					} else if (count < 3) {
 						npcTalk(p, n, "It seems I cannot trust you with a simple message",
@@ -275,7 +275,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "I have a potion from Father Lawrence",
 					"it should make you seem dead, and get you away from this place");
 				p.message("You pass the potion to Juliet");
-				p.getInventory().remove(ItemId.CADAVA.id(), 1);
+				p.getCarriedItems().getInventory().remove(ItemId.CADAVA.id(), 1);
 				npcTalk(p, n,
 					"Wonderful. I just hope Romeo can remember to get me from the Crypt",
 					"Many thanks kind friend",
