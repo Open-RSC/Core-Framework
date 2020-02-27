@@ -79,9 +79,8 @@ public class Item implements Comparable<Item> {
 	}
 	//--------------------------------------------------------------
 	//Class member modifiers----------------------------------------
-	public final void setItemId(GameDatabase database, int itemId) throws GameDatabaseException {
+	public final void setItemId(int itemId) throws GameDatabaseException {
 		this.itemId = itemId;
-		database.itemCreate(this);
 	}
 
 	public void setAmount(GameDatabase database, int amount) throws GameDatabaseException{

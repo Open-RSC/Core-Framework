@@ -131,12 +131,14 @@ public class Inventory {
 						+ itemToAdd.getCatalogId() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
 					return;
 				}
+
+				//Update the database
+				player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+
 				list.add(itemToAdd);
 				if (sendInventory) {
 					ActionSender.sendInventory(player);
 				}
-				//Update the database
-				player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
 			}

@@ -364,7 +364,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player);
 		final Bank bank = new Bank(player);
 		for (int i = 0; i < bankItems.length; i++) {
-			bank.add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
+			bank.getItems().add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
 		}
 		if (getServer().getConfig().WANT_BANK_PRESETS) {
 			final PlayerBankPreset bankPresets[] = queryLoadPlayerBankPresets(player);

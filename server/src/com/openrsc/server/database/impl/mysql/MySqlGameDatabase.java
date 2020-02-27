@@ -1505,7 +1505,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	public int assignItemID(Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			if (itemIDList.isEmpty()) {
-				item.setItemId(this, 0);
+				item.setItemId(0);
 			} else {
 				int id = 0;
 				for (Integer itemID : itemIDList) {
@@ -1513,9 +1513,10 @@ public class MySqlGameDatabase extends GameDatabase {
 						break;
 					++id;
 				}
-				item.setItemId(this, id);
+				item.setItemId(id);
 			}
 			itemIDList.add(item.getItemId());
+			itemCreate(item);
 			return item.getItemId();
 		}
 	}
