@@ -49,7 +49,7 @@ public class CarriedItems {
 	 * Searches both the inventory and equipment for a specific
 	 * catalog ID. Can specify if notes are allowed.
 	 * @param catalogID: item being searched for
-	 * @param allowNoted: specifies if that item can be noted or not
+	 * param allowNoted: specifies if that item can be noted or not
 	 * @return BOOLEAN
 	 */
 	//TODO: Add parameter allowNoted
@@ -58,6 +58,14 @@ public class CarriedItems {
 			return true;
 		else
 			return getEquipment().hasCatalogID(catalogID);
+	}
+
+	public int remove(int catalogID, int amount, boolean updateClient) {
+		int result = getInventory().remove(catalogID, amount, updateClient);
+		if (result == -1)
+			return getEquipment().remove(catalogID, amount);
+
+		return result;
 	}
 	//</editor-fold>
 }

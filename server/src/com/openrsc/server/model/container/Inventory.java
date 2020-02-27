@@ -153,6 +153,7 @@ public class Inventory {
 		}
 	}
 
+	//TODO: Remove all instances of Inventory.remove and replace with CarriedItems.remove
 	public int remove(int id, int amount, boolean sendInventory) {
 		synchronized (list) {
 			try {
