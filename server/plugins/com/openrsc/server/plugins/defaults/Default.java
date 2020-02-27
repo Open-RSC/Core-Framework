@@ -95,11 +95,6 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onDeposit(Player player, Integer inventorySlot, Integer amount) {
-		player.getBank().depositItemFromInventory(inventorySlot, amount);
-	}
-
-	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (fromInventory) {
 			if (p.getCarriedItems().getInventory().remove(i.getCatalogId(), i.getAmount()) < 0) {
@@ -266,5 +261,10 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onWithdraw(Player p, Integer bankSlot, Integer amount) {
 		p.getBank().withdrawItemToInventory(bankSlot, amount);
+	}
+
+	@Override
+	public void onDeposit(Player player, Integer inventorySlot, Integer amount) {
+		player.getBank().depositItemFromInventory(inventorySlot, amount);
 	}
 }

@@ -125,7 +125,6 @@ public class Bank {
 				LOGGER.error(ex.getMessage());
 				return false;
 			}
-
 			return true;
 		}
 	}
@@ -229,10 +228,7 @@ public class Bank {
 		synchronized(list) {
 			int requiredSlots = 0;
 			for (Item item : items) {
-				if (list.contains(item)) {
-					continue;
-				}
-				requiredSlots++;
+				requiredSlots += getRequiredSlots(item);
 			}
 			return requiredSlots;
 		}
@@ -383,121 +379,126 @@ public class Bank {
 	}
 
 	public boolean withdrawItemToInventory(int bankSlot, final int amount) {
-		synchronized (player.getCarriedItems()) {
-			Item item;
-			Inventory inventory = getPlayer().getCarriedItems().getInventory();
-			final int slot = getFirstIndexById(bankSlot);
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				Item item;
+				Inventory inventory = getPlayer().getCarriedItems().getInventory();
+				final int slot = getFirstIndexById(bankSlot);
 
-			if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isStackable()) {
-				item = new Item(bankSlot, amount);
-				if (inventory.canHold(item) && remove(item) > -1) {
-					inventory.add(item, false);
-				} else {
-					getPlayer().message("You don't have room to hold everything!");
-				}
-			} else {
-				if (!getPlayer().getAttribute("swap_note", false)) {
-					for (int i = 0; i < amount; i++) {
-						if (getFirstIndexById(bankSlot) < 0) {
-							break;
-						}
-						item = new Item(bankSlot, 1);
-						if (inventory.canHold(item) && remove(item) > -1) {
-							inventory.add(item, false);
-						} else {
-							getPlayer().message("You don't have room to hold everything!");
-							break;
-						}
+				if (getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isStackable()) {
+					item = new Item(bankSlot, amount);
+					if (inventory.canHold(item) && remove(item) > -1) {
+						inventory.add(item, false);
+					} else {
+						getPlayer().message("You don't have room to hold everything!");
 					}
 				} else {
-					for (int i = 0; i < amount; i++) {
-						if (getFirstIndexById(bankSlot) < 0) {
-							break;
+					if (!getPlayer().getAttribute("swap_note", false)) {
+						for (int i = 0; i < amount; i++) {
+							if (getFirstIndexById(bankSlot) < 0) {
+								break;
+							}
+							item = new Item(bankSlot, 1);
+							if (inventory.canHold(item) && remove(item) > -1) {
+								inventory.add(item, false);
+							} else {
+								getPlayer().message("You don't have room to hold everything!");
+								break;
+							}
 						}
-						if (!getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isNoteable()) {
-							getPlayer().message("There is no equivalent note item for that.");
-							break;
-						}
+					} else {
+						for (int i = 0; i < amount; i++) {
+							if (getFirstIndexById(bankSlot) < 0) {
+								break;
+							}
+							if (!getPlayer().getWorld().getServer().getEntityHandler().getItemDef(bankSlot).isNoteable()) {
+								getPlayer().message("There is no equivalent note item for that.");
+								break;
+							}
 
-						item = new Item(bankSlot, 1);
-						Item notedItem = new Item(item.getDef(getPlayer().getWorld()).getId()).asNote();
+							item = new Item(bankSlot, 1);
+							Item notedItem = new Item(item.getDef(getPlayer().getWorld()).getId()).asNote();
 					/*if (notedItem.getDef(getPlayer().getWorld()) == null) {
 						LOGGER.error("Mistake with the notes: " + item.getCatalogId() + " - " + notedItem.getCatalogId());
 						break;
 					}*/
 
-						if (inventory.canHold(notedItem) && remove(item) > -1) {
-							inventory.add(notedItem, false);
-						} else {
-							getPlayer().message("You don't have room to hold everything!");
-							break;
+							if (inventory.canHold(notedItem) && remove(item) > -1) {
+								inventory.add(notedItem, false);
+							} else {
+								getPlayer().message("You don't have room to hold everything!");
+								break;
+							}
 						}
 					}
 				}
-			}
 
-			if (slot > -1) {
-				ActionSender.sendInventory(getPlayer());
-				ActionSender.updateBankItem(getPlayer(), slot, bankSlot, countId(bankSlot));
+				if (slot > -1) {
+					ActionSender.sendInventory(getPlayer());
+					ActionSender.updateBankItem(getPlayer(), slot, bankSlot, countId(bankSlot));
 
-				return true;
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	public boolean depositItemFromInventory(final int inventorySlot, final int amount) {
-		synchronized (player.getCarriedItems()) {
-			//Make sure there's an item in the slot
-			Item depositItem = getPlayer().getCarriedItems().getInventory().get(inventorySlot);
-			if (depositItem == null)
-				return false;
-
-			//Make sure they have enough of that item
-			if (amount < 1 || player.getCarriedItems().getInventory().countId(depositItem.getCatalogId()) < amount) {
-				player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
-				return false;
-			}
-
-			//Check the item definition
-			ItemDefinition depositDef = depositItem.getDef(player.getWorld());
-			if (depositDef == null)
-				return false;
-
-			//Make sure they have enough space in their bank to deposit it
-			if (!canHold(depositItem)) {
-				player.message("You don't have room for that in your bank");
-				return false;
-			}
-
-			int amountLeft;
-			//Attempt to remove the item from the inventory
-			//Check if the item is non-stackable with amount > 1
-			if (!depositDef.isStackable() && amount > 1) {
-				if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), 1, true) == -1)
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				//Make sure there's an item in the slot
+				Item depositItem = getPlayer().getCarriedItems().getInventory().get(inventorySlot);
+				if (depositItem == null)
 					return false;
-				amountLeft = amount - 1;
-			} else {
-				if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), amount, true) == -1)
+
+				//Make sure they have enough of that item
+				if (amount < 1 || player.getCarriedItems().getInventory().countId(depositItem.getCatalogId()) < amount) {
+					player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
 					return false;
-				amountLeft = 0;
-			}
+				}
 
-			//Determine if we need to split the stack
-			if (depositDef.isStackable() && depositItem.getAmount() > amount) { //Yes, the stack is being split
-				depositItem = new Item(depositItem.getCatalogId(), amount);
-			}
+				//Check the item definition
+				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
+				if (depositDef == null)
+					return false;
 
-			if (!add(depositItem)) {
-				//The deposit failed. Re-add the items to the inventory
-				player.getCarriedItems().getInventory().add(depositItem);
-			}
+				//Make sure they have enough space in their bank to deposit it
+				if (!canHold(depositItem)) {
+					player.message("You don't have room for that in your bank");
+					return false;
+				}
 
-			//If we need to deposit more non-stackables then do it recursively
-			if (amount > 0)
-				return depositItemFromInventory(inventorySlot, amountLeft);
-			else
-				return true;
+				//This is used for non-stackable deposits of amount > 1
+				int amountLeft;
+				//Attempt to remove the item from the inventory
+				//Check if the item is non-stackable with amount > 1
+				if (!depositDef.isStackable() && amount > 1) {
+					if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), 1, true) == -1)
+						return false;
+					amountLeft = amount - 1;
+				} else {
+					if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), amount, true) == -1)
+						return false;
+					amountLeft = 0;
+				}
+
+				//Determine if we need to split the stack
+				if (depositDef.isStackable() && depositItem.getAmount() > amount) { //Yes, the stack is being split
+					depositItem = new Item(depositItem.getCatalogId(), amount);
+				}
+
+				if (!add(depositItem)) {
+					//The deposit failed. Re-add the items to the inventory
+					player.getCarriedItems().getInventory().add(depositItem);
+				}
+
+				//If we need to deposit more non-stackables then do it recursively
+				if (amountLeft > 0)
+					return depositItemFromInventory(inventorySlot, amountLeft);
+				else
+					return true;
+			}
 		}
 	}
 

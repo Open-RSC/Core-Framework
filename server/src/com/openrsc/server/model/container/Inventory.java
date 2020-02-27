@@ -575,8 +575,28 @@ public class Inventory {
 	}
 
 	public int getRequiredSlots(Item item) {
-		synchronized (list) {
-			return ((item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) && list.contains(item) ? 0 : 1);
+		synchronized(list) {
+			//Check if there's a stack that can be added to
+			for (Item inventoryItem : list) {
+				//Check for matching catalogID
+				if (inventoryItem.getCatalogId() != item.getCatalogId())
+					continue;
+
+				//Make sure there's room in the stack
+				if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+					continue;
+
+				//Check that both items have the same noted status
+				if (inventoryItem.getNoted() != item.getNoted())
+					continue;
+
+				//Check if all of the stack can fit in the existing stack
+				int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+				return remainingSize < item.getAmount() ? 1 : 0;
+			}
+
+			//No existing stack was found
+			return 1;
 		}
 	}
 
