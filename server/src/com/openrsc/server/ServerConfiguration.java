@@ -295,6 +295,57 @@ public class ServerConfiguration {
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
 
+		// Client
+		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
+		ZOOM_VIEW_TOGGLE = tryReadBool("zoom_view_toggle").orElse(false);
+		FOG_TOGGLE = tryReadBool("fog_toggle").orElse(false);
+		GROUND_ITEM_TOGGLE = tryReadBool("ground_item_toggle").orElse(false);
+		MENU_COMBAT_STYLE_TOGGLE = tryReadBool("menu_combat_style_toggle").orElse(false);
+		FIGHTMODE_SELECTOR_TOGGLE = tryReadBool("fightmode_selector_toggle").orElse(false);
+		EXPERIENCE_COUNTER_TOGGLE = tryReadBool("experience_counter_toggle").orElse(false);
+		EXPERIENCE_DROPS_TOGGLE = tryReadBool("experience_drops_toggle").orElse(false);
+		ITEMS_ON_DEATH_MENU = tryReadBool("items_on_death_menu").orElse(false);
+		SHOW_ROOF_TOGGLE = tryReadBool("show_roof_toggle").orElse(false);
+		WANT_SKILL_MENUS = tryReadBool("want_skill_menus").orElse(false);
+		WANT_QUEST_MENUS = tryReadBool("want_quest_menus").orElse(false);
+		WANT_QUEST_STARTED_INDICATOR = tryReadBool("want_quest_started_indicator").orElse(false);
+		WANT_HIDE_IP = tryReadBool("want_hide_ip").orElse(false);
+		WANT_REMEMBER = tryReadBool("want_remember").orElse(false);
+		FPS = tryReadInt("client_fps").orElse(50);
+		WANT_EMAIL = tryReadBool("want_email").orElse(false);
+		ALLOW_RESIZE = tryReadBool("allow_resize").orElse(false);
+		LENIENT_CONTACT_DETAILS = tryReadBool("lenient_contact_details").orElse(false);
+
+		// Custom features
+		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);
+		WANT_CUSTOM_UI = tryReadBool("want_custom_ui").orElse(false);
+		WANT_CUSTOM_QUESTS = tryReadBool("want_custom_quests").orElse(false);
+		SPAWN_AUCTION_NPCS = tryReadBool("spawn_auction_npcs").orElse(false);
+		SPAWN_IRON_MAN_NPCS = tryReadBool("spawn_iron_man_npcs").orElse(false);
+		SHOW_FLOATING_NAMETAGS = tryReadBool("show_floating_nametags").orElse(false);
+		WANT_CLANS = tryReadBool("want_clans").orElse(false);
+		WANT_KILL_FEED = tryReadBool("want_kill_feed").orElse(false);
+		SIDE_MENU_TOGGLE = tryReadBool("side_menu_toggle").orElse(false);
+		INVENTORY_COUNT_TOGGLE = tryReadBool("inventory_count_toggle").orElse(false);
+		AUTO_MESSAGE_SWITCH_TOGGLE = tryReadBool("auto_message_switch_toggle").orElse(false);
+		BATCH_PROGRESSION = tryReadBool("batch_progression").orElse(false);
+		WANT_GLOBAL_CHAT = tryReadBool("want_global_chat").orElse(false);
+		WANT_GLOBAL_FRIEND = tryReadBool("want_global_friend").orElse(false);
+		WANT_EXPERIENCE_ELIXIRS = tryReadBool("want_experience_elixirs").orElse(false);
+		WANT_KEYBOARD_SHORTCUTS = tryReadInt("want_keyboard_shortcuts").orElse(0);
+		WANT_CUSTOM_RANK_DISPLAY = tryReadBool("want_custom_rank_display").orElse(false);
+		CUSTOM_FIREMAKING = tryReadBool("custom_firemaking").orElse(false);
+		WANT_DROP_X = tryReadBool("want_drop_x").orElse(false);
+		WANT_EXP_INFO = tryReadBool("want_exp_info").orElse(false);
+		WANT_WOODCUTTING_GUILD = tryReadBool("want_woodcutting_guild").orElse(false);
+		WANT_MISSING_GUILD_GREETINGS = tryReadBool("want_missing_guild_greetings").orElse(false);
+		WANT_DECANTING = tryReadBool("want_decanting").orElse(false);
+		PLAYER_COMMANDS = tryReadBool("player_commands").orElse(false);
+		NPC_BLOCKING = tryReadInt("npc_blocking").orElse(2);
+		NPC_DONT_RETREAT = tryReadBool("npc_dont_retreat").orElse(false);
+		MESSAGE_FULL_INVENTORY = tryReadBool("message_full_inventory").orElse(false);
+		WANT_PETS = tryReadBool("want_pets").orElse(false);
+
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 	}
 
