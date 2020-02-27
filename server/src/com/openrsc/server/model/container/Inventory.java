@@ -82,15 +82,15 @@ public class Inventory {
 	}
 	//----------------------------------------------------------------
 	//Methods that can change the contents of list--------------------
-	public void add(Item item) {
-		add(item, true);
+	public Boolean add(Item item) {
+		return add(item, true);
 	}
 
-	public void add(Item itemToAdd, boolean sendInventory) {
+	public Boolean add(Item itemToAdd, boolean sendInventory) {
 		synchronized (list) {
 			try {
 				if (itemToAdd.getAmount() <= 0) {
-					return;
+					return false;
 				}
 				// TODO Achievement gather item task?? keep or remove.
 
@@ -112,7 +112,7 @@ public class Inventory {
 							existingStack.setAmount(player.getWorld().getServer().getDatabase(), existingStack.getAmount() + itemToAdd.getAmount());
 							if (sendInventory)
 								ActionSender.sendInventoryUpdateItem(player, index);
-							return;
+							return true;
 						}
 					}
 				} else if (itemToAdd.getAmount() > 1 && (!itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getNoted())) {
@@ -129,7 +129,7 @@ public class Inventory {
 						94000);
 					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
 						+ itemToAdd.getCatalogId() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
-					return;
+					return true;
 				}
 
 				//Update the database
@@ -139,10 +139,11 @@ public class Inventory {
 				if (sendInventory) {
 					ActionSender.sendInventory(player);
 				}
+				return true;
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
+				return false;
 			}
-
 		}
 	}
 	public void remove(int index) {

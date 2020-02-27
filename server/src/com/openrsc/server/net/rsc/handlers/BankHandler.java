@@ -50,10 +50,6 @@ public final class BankHandler implements PacketHandler {
 			case BANK_WITHDRAW:
 				bankSlot = packet.readShort();
 				amount = packet.readInt();
-				if (amount < 1 || player.getBank().get(bankSlot).getAmount() < amount) {
-					player.setSuspiciousPlayer(true, "in banking item amount < 0 or bank item count < amount");
-					return;
-				}
 
 				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, bankSlot, amount});
 				break;
