@@ -89,61 +89,134 @@ public class Inventory {
 	public Boolean add(Item itemToAdd, boolean sendInventory) {
 		synchronized (list) {
 			try {
+				//Bounds check on the amount
 				if (itemToAdd.getAmount() <= 0) {
 					return false;
 				}
-				// TODO Achievement gather item task?? keep or remove.
 
-				StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-				for (int i = 0; i < stackTrace.length; i++) {
-					if (stackTrace[i].toString().contains("com.openrsc.server.plugins.")) {
-						player.getWorld().getServer().getAchievementSystem().checkAndIncGatherItemTasks(player, itemToAdd);
-					}
-				}
+				//Check the itemDef
+				ItemDefinition itemDef = itemToAdd.getDef(player.getWorld());
+				if (itemDef == null)
+					return false;
 
-				if (itemToAdd.getAttribute("npcdrop", false)) {
-					player.getWorld().getServer().getAchievementSystem().checkAndIncGatherItemTasks(player, itemToAdd);
-				}
+				//Check if the item is a stackable
+				if (itemDef.isStackable()) { /**Item IS stackable*/
+					//Check if there's a stack that can be added to
+					for (Item inventoryItem : list) {
+						//Check for matching catalogID
+						if (inventoryItem.getCatalogId() != itemToAdd.getCatalogId())
+							continue;
 
-				if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus().getNoted()) {
-					for (int index = 0; index < list.size(); index++) {
-						Item existingStack = list.get(index);
-						if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-							existingStack.setAmount(player.getWorld().getServer().getDatabase(), existingStack.getAmount() + itemToAdd.getAmount());
-							if (sendInventory)
-								ActionSender.sendInventoryUpdateItem(player, index);
-							return true;
+						//Make sure there's room in the stack
+						if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+							continue;
+
+						//Check if we need to split the stack
+						int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+						if (remainingSize >= itemToAdd.getAmount()) { /**Don't need to split the stack*/
+							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
+						} else { /**Do need to split the stack*/
+
+							itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
+							itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
+							list.add(itemToAdd);
+							player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+
+							//Update the existing stack to max_value
+							inventoryItem.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
 						}
 					}
-				} else if (itemToAdd.getAmount() > 1 && (!itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getNoted())) {
-					itemToAdd.setAmount(player.getWorld().getServer().getDatabase(),1);
-				}
+				} else { /**Item is NOT stackable*/
+					//Check if the item is noted
+					if (itemToAdd.getNoted()) { /**The item IS noted*/
+						//Check if there's a stack that can be added to
+						Item existingStack = null;
+						int index = -1;
+						for (Item inventoryItem : list) {
+							++index;
 
+							//Check for matching catalogID
+							if (inventoryItem.getCatalogId() != itemToAdd.getCatalogId())
+								continue;
 
-				if (this.full()) {
-					if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
-						player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
+							//Check for matching noted status
+							if (!inventoryItem.getNoted())
+								continue;
+
+							//Make sure there's room in the stack
+							if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+								continue;
+
+							//An existing stack was found
+							existingStack = inventoryItem;
+							break;
+						}
+							//Check if all of the stack can fit in the existing stack
+							int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+							if (remainingSize >= itemToAdd.getAmount()) { /**Don't need to split the stack*/
+								inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
+							} else { /**Do need to split the stack*/
+
+								itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
+								itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
+								list.add(itemToAdd);
+								player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+
+								//Update the existing stack to max_value
+								inventoryItem.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
+							}
+
+						//There's no stack found
+
+					} else { /**The item is NOT noted*/
+
 					}
-					player.getWorld().registerItem(
-						new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
-						94000);
-					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
-						+ itemToAdd.getCatalogId() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
-					return true;
 				}
-
-				//Update the database
-				player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
-
-				list.add(itemToAdd);
-				if (sendInventory) {
-					ActionSender.sendInventory(player);
-				}
-				return true;
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
 				return false;
 			}
+
+
+//				if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus().getNoted()) {
+//					for (int index = 0; index < list.size(); index++) {
+//						Item existingStack = list.get(index);
+//						if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
+//							existingStack.setAmount(player.getWorld().getServer().getDatabase(), existingStack.getAmount() + itemToAdd.getAmount());
+//							if (sendInventory)
+//								ActionSender.sendInventoryUpdateItem(player, index);
+//							return true;
+//						}
+//					}
+//				} else if (itemToAdd.getAmount() > 1 && (!itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getNoted())) {
+//					itemToAdd.setAmount(player.getWorld().getServer().getDatabase(),1);
+//				}
+//
+//
+//				if (this.full()) {
+//					if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+//						player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
+//					}
+//					player.getWorld().registerItem(
+//						new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
+//						94000);
+//					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
+//						+ itemToAdd.getCatalogId() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
+//					return true;
+//				}
+//
+//				//Update the database
+//				player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+//
+//				list.add(itemToAdd);
+//				if (sendInventory) {
+//					ActionSender.sendInventory(player);
+//				}
+//				return true;
+//			} catch (GameDatabaseException ex) {
+//				LOGGER.error(ex.getMessage());
+//				return false;
+//			}
 		}
 	}
 	public void remove(int index) {
@@ -577,27 +650,58 @@ public class Inventory {
 
 	public int getRequiredSlots(Item item) {
 		synchronized(list) {
-			//Check if there's a stack that can be added to
-			for (Item inventoryItem : list) {
-				//Check for matching catalogID
-				if (inventoryItem.getCatalogId() != item.getCatalogId())
-					continue;
+			//Check item definition
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (itemDef == null)
+				return Integer.MAX_VALUE;
 
-				//Make sure there's room in the stack
-				if (inventoryItem.getAmount() == Integer.MAX_VALUE)
-					continue;
+			//Check if the item is a stackable
+			if (itemDef.isStackable()) { /**Item IS stackable*/
+				//Check if there's a stack that can be added to
+				for (Item inventoryItem : list) {
+					//Check for matching catalogID
+					if (inventoryItem.getCatalogId() != item.getCatalogId())
+						continue;
 
-				//Check that both items have the same noted status
-				if (inventoryItem.getNoted() != item.getNoted())
-					continue;
+					//Make sure there's room in the stack
+					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+						continue;
 
-				//Check if all of the stack can fit in the existing stack
-				int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
-				return remainingSize < item.getAmount() ? 1 : 0;
+					//Check if all of the stack can fit in the existing stack
+					int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+					return remainingSize < item.getAmount() ? 1 : 0;
+				}
+
+				//Theres no stack found
+				return 1;
+			} else { /**Item is NOT stackable*/
+				//Check if the item is noted
+				if (item.getNoted()) { /**The item IS noted*/
+					//Check if there's a stack that can be added to
+					for (Item inventoryItem : list) {
+						//Check for matching catalogID
+						if (inventoryItem.getCatalogId() != item.getCatalogId())
+							continue;
+
+						//Check for matching noted status
+						if (!inventoryItem.getNoted())
+							continue;
+
+						//Make sure there's room in the stack
+						if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+							continue;
+
+						//Check if all of the stack can fit in the existing stack
+						int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+						return remainingSize < item.getAmount() ? 1 : 0;
+					}
+
+					//There's no stack found
+					return 1;
+				} else { /**The item is NOT noted*/
+					return 1;
+				}
 			}
-
-			//No existing stack was found
-			return 1;
 		}
 	}
 
