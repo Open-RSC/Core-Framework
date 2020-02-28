@@ -193,6 +193,9 @@ public class ServerConfiguration {
 	public List<String> valuableDrops;
 	public boolean WANT_CUSTOM_UI;
 	public int CHARACTER_CREATION_MODE;
+	public boolean CHECK_ADMIN_IP;
+	public String ADMIN_IP;
+	public List<String> adminIp;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -213,8 +216,7 @@ public class ServerConfiguration {
 		}
 
 		catch (Exception e) {
-			LOGGER.catching(e);
-			System.exit(1);
+			LOGGER.info("Properties file connections.conf not found, using default properties.");
 		}
 
 		try { // Always try to load local.conf first
@@ -294,6 +296,8 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
+		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
+		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -345,8 +349,14 @@ public class ServerConfiguration {
 		NPC_DONT_RETREAT = tryReadBool("npc_dont_retreat").orElse(false);
 		MESSAGE_FULL_INVENTORY = tryReadBool("message_full_inventory").orElse(false);
 		WANT_PETS = tryReadBool("want_pets").orElse(false);
+		MAX_WALKING_SPEED = tryReadInt("max_walking_speed").orElse(1);
+		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = tryReadInt("max_ticks_until_full_walking_speed").orElse(0);
+		SHOW_UNIDENTIFIED_HERB_NAMES = tryReadBool("show_unidentified_herb_names").orElse(false);
+		FISHING_SPOTS_DEPLETABLE = tryReadBool("fishing_spots_depletable").orElse(false);
+
 
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
+		adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}
 
 	// Attempt to read in an integer property
