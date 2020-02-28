@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-// Basically Rewritten By Ryan
+// Basically Rewritten by Ryan
 
 public class ServerConfiguration {
 
@@ -201,6 +201,12 @@ public class ServerConfiguration {
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
 			"An established connection was aborted by the software in your host machine",
 			"Connection reset by peer");
+
+	public String configFile;
+	private String[] deprecatedKeys = new String[]{
+		"bank_size", "want_password_massage"
+	};
+
 	/**
 	 * @param file
 	 * @throws IOException
@@ -209,23 +215,32 @@ public class ServerConfiguration {
 	private YMLReader serverProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
+		// Try to load the connections.conf. If not, we'll use the defaults
+		// (But you really want this file)
 		try {
-			// connections.conf file should ALWAYS be here!
 			serverProps.loadFromYML("connections.conf");
 			LOGGER.info("Loaded connections.conf");
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.info("Properties file connections.conf not found, using default properties.");
 		}
 
-		try { // Always try to load local.conf first
+		// Always try to load from local.conf first.
+		try {
 			serverProps.loadFromYML("local.conf");
-
-		} catch (Exception e) { // Otherwise default to default.conf
-			serverProps.loadFromYML(defaultFile);
-			LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
+			configFile = "local.conf";
+		} catch (Exception e) { // Otherwise try to load from command line.
+			try {
+				serverProps.loadFromYML(defaultFile);
+				LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
+				configFile = defaultFile;
+			} catch (Exception ex) { // If not, we use the defaults listed below.
+				LOGGER.info("Properties file local.conf not found, no other properties file provided." +
+					" Using default properties.");
+				configFile = "Default values";
+			}
 		}
+
+		notifyDeprecated();
 
 		// Database settings
 		MYSQL_DB = tryReadString("mysql_db").orElse("openrsc");
@@ -273,8 +288,7 @@ public class ServerConfiguration {
 		SKILLING_EXP_RATE = tryReadDouble("skilling_exp_rate").orElse(1.0);
 		WILDERNESS_BOOST = tryReadDouble("wilderness_boost").orElse(0.0);
 		SKULL_BOOST = tryReadDouble("skull_boost").orElse(0.0);
-		IS_DOUBLE_EXP = tryReadBool("double_xp").orElse(false);
-		// BANK_SIZE??
+		IS_DOUBLE_EXP = tryReadBool("double_exp").orElse(false);
 		HMAC_PRIVATE_KEY = tryReadString("HMAC_PRIVATE_KEY").orElse("root");
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
@@ -353,10 +367,72 @@ public class ServerConfiguration {
 		MAX_TICKS_UNTIL_FULL_WALKING_SPEED = tryReadInt("max_ticks_until_full_walking_speed").orElse(0);
 		SHOW_UNIDENTIFIED_HERB_NAMES = tryReadBool("show_unidentified_herb_names").orElse(false);
 		FISHING_SPOTS_DEPLETABLE = tryReadBool("fishing_spots_depletable").orElse(false);
+		IMPROVED_ITEM_OBJECT_NAMES = tryReadBool("improved_item_object_names").orElse(false);
+		CRYSTAL_KEY_GIVES_XP = tryReadBool("crystal_key_gives_xp").orElse(false);
+		LOOTED_CHESTS_STUCK = tryReadBool("looted_chests_stuck").orElse(false);
+		WANT_RUNECRAFTING = tryReadBool("want_runecrafting").orElse(false);
+		WANT_HARVESTING = tryReadBool("want_harvesting").orElse(false);
+		WANT_CUSTOM_LANDSCAPE = tryReadBool("custom_landscape").orElse(false);
+		WANT_EQUIPMENT_TAB = tryReadBool("want_equipment_tab").orElse(false);
+		WANT_BANK_PRESETS = tryReadBool("want_bank_presets").orElse(false);
+		WANT_PARTIES = tryReadBool("want_parties").orElse(false);
+		MINING_ROCKS_EXTENDED = tryReadBool("mining_rocks_extended").orElse(false);
+		WANT_NEW_RARE_DROP_TABLES = tryReadBool("want_new_rare_drop_tables").orElse(false);
+		WANT_LEFTCLICK_WEBS = tryReadBool("want_leftclick_webs").orElse(false);
+		WANT_IMPROVED_PATHFINDING = tryReadBool("want_improved_pathfinding").orElse(false);
+		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
+		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
+		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
 
+		// Bank
+		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
+		WANT_CUSTOM_BANKS = tryReadBool("want_custom_banks").orElse(false);
+		WANT_BANK_PINS = tryReadBool("want_bank_pins").orElse(false);
+		WANT_BANK_NOTES = tryReadBool("want_bank_notes").orElse(false);
+		WANT_CERT_DEPOSIT = tryReadBool("want_cert_deposit").orElse(false);
+		WANT_CERTER_BANK_EXCHANGE = tryReadBool("want_certer_bank_exchange").orElse(false);
+
+		// NPC kills
+		NPC_KILL_LIST = tryReadBool("npc_kill_list").orElse(false);
+		NPC_KILL_MESSAGES = tryReadBool("npc_kill_messages").orElse(false);
+		NPC_KILL_MESSAGES_FILTER = tryReadBool("npc_kill_messages_filter").orElse(false);
+		NPC_KILL_MESSAGES_NPCs = tryReadString("npc_kill_messages_npcs").orElse("King Black Dragon,Black Dragon");
+		NPC_KILL_LOGGING = tryReadBool("npc_kill_logging").orElse(true);
+
+		// Valuable drops
+		VALUABLE_DROP_MESSAGES = tryReadBool("valuable_drop_messages").orElse(false);
+		VALUABLE_DROP_RATIO = tryReadDouble("valuable_drop_ratio").orElse(0.0);
+		VALUABLE_DROP_EXTRAS = tryReadBool("valuable_drop_extras").orElse(false);
+		VALUABLE_DROP_ITEMS = tryReadString("valuable_drop_items").orElse("Half of a key,Half Dragon Square Shield");
+
+		// Glitch checks
+		STRICT_CHECK_ALL = tryReadBool("strict_check_all").orElse(true);
+		STRICT_PDART_CHECK = tryReadBool("strict_pdart_check").orElse(true);
+		STRICT_PKNIFE_CHECK = tryReadBool("strict_pknife_check").orElse(true);
+		STRICT_PSPEAR_CHECK = tryReadBool("strict_pspear_check").orElse(true);
+		LOOSE_SHALLOW_WATER_CHECK = tryReadBool("loose_shallow_water_check").orElse(false);
+
+		// Custom quests and minigames
+		WANT_GIANNE_BADGE = tryReadBool("want_gianne_badge").orElse(false);
+		WANT_BLURBERRY_BADGE = tryReadBool("want_blurberry_badge").orElse(false);
+		WANT_SHOW_KITTENS_CIVILLIAN = tryReadBool("want_show_kittens_civillian").orElse(false);
+		WANT_BARTER_WORMBRAINS = tryReadBool("want_barter_wormbrains").orElse(false);
+		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
+		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
 
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 		adminIp = Arrays.asList(ADMIN_IP.split(","));
+	}
+
+	// Notify the user if they have any deprecated
+	// keys in their config files.
+	private void notifyDeprecated() {
+		for (int i = 0; i < deprecatedKeys.length; ++i) {
+			if (serverProps.keyExists(deprecatedKeys[i])) {
+				LOGGER.info(deprecatedKeys[i] + " is a deprecated key. You can remove it from " +
+					configFile + ".");
+			}
+		}
 	}
 
 	// Attempt to read in an integer property
