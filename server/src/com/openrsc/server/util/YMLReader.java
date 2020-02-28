@@ -72,18 +72,22 @@ public class YMLReader {
 			}
 
 			String[] elems = line.split(":");
+
+			// Trim the whitespace
+			for (int i = 0; i < elems.length; ++i) { elems[i] = elems[i].trim(); }
+
 			switch (elems.length) {
 				case 2:
 					// Handle keys that have null for their attribute
 					if (elems[1].equalsIgnoreCase("null")) {
 						LOGGER.info(fileName + ": Key \"" + elems[0] +
-							"\" has null value, using default.");
+							"\" has null value.");
 					}
 					// Handle normal lines
 					else {
 						// Check if the key exists in the settings list
 						if (!(keyExists(elems[0]))) {
-							settings.add(new Setting(elems[0].trim(), elems[1].trim()));
+							settings.add(new Setting(elems[0], elems[1]));
 						}
 						else {
 							LOGGER.info(fileName + ": Duplicate key: " + elems[0]);
@@ -92,7 +96,7 @@ public class YMLReader {
 					break;
 				case 3:
 					// Handles the line with the server port (it contains an extra colon)
-					settings.add(new Setting(elems[0].trim(), (elems[1].trim() + ":" + elems[2].trim())));
+					settings.add(new Setting(elems[0], (elems[1] + ":" + elems[2])));
 					break;
 			}
 		}
