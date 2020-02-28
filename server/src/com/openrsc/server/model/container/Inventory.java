@@ -42,6 +42,7 @@ public class Inventory {
 	 * Reference back to the player who owns this inventory
 	 */
 	private Player player;
+
 	//----------------------------------------------------------------
 	//Constructors----------------------------------------------------
 	public Inventory(Player player, PlayerInventory[] inventory) {
@@ -61,7 +62,9 @@ public class Inventory {
 				} else
 					list.add(item);
 			}
-		} catch (Exception ex) { ex.printStackTrace(); }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	//----------------------------------------------------------------
 	//Class member modifiers------------------------------------------
@@ -80,6 +83,7 @@ public class Inventory {
 			return list.listIterator();
 		}
 	}
+
 	//----------------------------------------------------------------
 	//Methods that can change the contents of list--------------------
 	public Boolean add(Item item) {
@@ -99,83 +103,81 @@ public class Inventory {
 				if (itemDef == null)
 					return false;
 
-				//Check if the item is a stackable
-				if (itemDef.isStackable()) { /**Item IS stackable*/
-					//Check if there's a stack that can be added to
+				//Check if there's an existing slot in the inventory that can hold the item
+				Item existingStack = null;
+				int index = -1;
+				if (itemDef.isStackable() || itemToAdd.getNoted()) {
 					for (Item inventoryItem : list) {
+						++index;
 						//Check for matching catalogID
 						if (inventoryItem.getCatalogId() != itemToAdd.getCatalogId())
+							continue;
+
+						//Check for matching noted status
+						if (itemToAdd.getNoted() != inventoryItem.getNoted())
 							continue;
 
 						//Make sure there's room in the stack
 						if (inventoryItem.getAmount() == Integer.MAX_VALUE)
 							continue;
 
-						//Check if we need to split the stack
-						int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
-						if (remainingSize >= itemToAdd.getAmount()) { /**Don't need to split the stack*/
-							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
-						} else { /**Do need to split the stack*/
-
-							itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
-							itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
-							list.add(itemToAdd);
-							player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
-
-							//Update the existing stack to max_value
-							inventoryItem.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
-						}
+						existingStack = inventoryItem;
+						break;
 					}
-				} else { /**Item is NOT stackable*/
-					//Check if the item is noted
-					if (itemToAdd.getNoted()) { /**The item IS noted*/
-						//Check if there's a stack that can be added to
-						Item existingStack = null;
-						int index = -1;
-						for (Item inventoryItem : list) {
-							++index;
+				}
 
-							//Check for matching catalogID
-							if (inventoryItem.getCatalogId() != itemToAdd.getCatalogId())
-								continue;
+				if (existingStack == null) { /**We need to add a new item to the list*/
+					//Make sure they have room in the inventory
+					if (list.size() >= MAX_SIZE)
+						return false;
 
-							//Check for matching noted status
-							if (!inventoryItem.getNoted())
-								continue;
+					//Update the database and make sure the item ID is set
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
 
-							//Make sure there's room in the stack
-							if (inventoryItem.getAmount() == Integer.MAX_VALUE)
-								continue;
+					list.add(itemToAdd);
 
-							//An existing stack was found
-							existingStack = inventoryItem;
-							break;
-						}
-							//Check if all of the stack can fit in the existing stack
-							int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
-							if (remainingSize >= itemToAdd.getAmount()) { /**Don't need to split the stack*/
-								inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
-							} else { /**Do need to split the stack*/
+					//Update the client
+					if (sendInventory)
+						ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
+				} else { /**There is an existing stack that can be added to*/
+					//Check if the existing stack has enough room to hold the amount
+					int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
+					if (remainingSize >= itemToAdd.getAmount()) { /**Don't need to split the stack*/
+						//Change the existing stack amount
+						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
 
-								itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
-								itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
-								list.add(itemToAdd);
-								player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+						//Update the client
+						if (sendInventory)
+							ActionSender.sendInventoryUpdateItem(player, index);
+					} else { /**Do need to split the stack*/
+						//Make sure they have room in the inventory
+						if (list.size() >= MAX_SIZE)
+							return false;
 
-								//Update the existing stack to max_value
-								inventoryItem.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
-							}
+						//Determine how much is left over
+						itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
+						itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
 
-						//There's no stack found
+						//Update the database and assign a new item ID
+						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
 
-					} else { /**The item is NOT noted*/
+						list.add(itemToAdd);
 
+						//Update the existing stack amount to max value
+						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
+
+						//Update the client
+						ActionSender.sendInventoryUpdateItem(player, index);
+						ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
 					}
 				}
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
 				return false;
 			}
+			return true;
+		}
+	}
 
 
 //				if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus().getNoted()) {
@@ -217,8 +219,7 @@ public class Inventory {
 //				LOGGER.error(ex.getMessage());
 //				return false;
 //			}
-		}
-	}
+
 	public void remove(int index) {
 		synchronized (list) {
 			Item item = get(index);

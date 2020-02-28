@@ -94,7 +94,7 @@ public class Bank {
 					list.add(itemToAdd);
 
 					//Update the client
-					ActionSender.updateBankItem(player, index + 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
 				} else { //There is an existing stack that can be added to
 					//Check if the existing stack has enough room to hold the amount
 					int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
@@ -263,9 +263,9 @@ public class Bank {
 		}
 	}
 
-	public void remove(int index) {
+	public void remove(int bankSlot) {
 		synchronized(list) {
-			Item item = get(index);
+			Item item = get(bankSlot);
 			if (item == null) {
 				return;
 			}
@@ -273,21 +273,40 @@ public class Bank {
 		}
 	}
 
-	public int remove(int id, int amount) {
+	public int remove(int catalogID, int amount) {
 		synchronized(list) {
 			try {
-				Iterator<Item> iterator = list.iterator();
-				for (int index = 0; iterator.hasNext(); index++) {
-					Item i = iterator.next();
-					if (id == i.getCatalogId() && amount <= i.getAmount()) {
-						if (amount < i.getAmount()) {
-							i.setAmount(player.getWorld().getServer().getDatabase(),i.getAmount() - amount);
-						} else {
-							//need a bank remove query here
-							iterator.remove();
-						}
-						return index;
+				ListIterator<Item> iterator = list.listIterator();
+				Item bankItem = null;
+				for (int index=0; iterator.hasNext(); ++index) {
+					bankItem = iterator.next();
+
+					//Match the catalog ID
+					if (bankItem.getCatalogId() != catalogID)
+						continue;
+
+					//Check that there's enough in the stack
+					if (bankItem.getAmount() < amount)
+						return -1;
+
+					//Check if there's exactly enough or if we need to split the stack
+					if (bankItem.getAmount() == amount) {/**Exactly enough*/
+						iterator.remove();
+
+						//Update the DB
+						player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
+
+						//Update the client
+						//if (true) //Need a new parameter for the function that flags if should update the client
+						// Need a new function for removing an item from the bank
+					} else { /**Need to split the stack*/
+						bankItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+
+						if (true)//Need a new parameter for the function that flags if should update the client
+							ActionSender.updateBankItem(player, index, bankItem.getCatalogId(), bankItem.getAmount());
 					}
+
+					return index;
 				}
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
