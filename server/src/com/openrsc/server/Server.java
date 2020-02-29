@@ -141,7 +141,7 @@ public class Server implements Runnable {
 	public Server(final String configFile) throws IOException {
 		config = new ServerConfiguration();
 		getConfig().initConfig(configFile);
-		LOGGER.info("Server configuration loaded: " + configFile);
+		LOGGER.info("Server configuration loaded: " + getConfig().configFile);
 
 		name = getConfig().SERVER_NAME;
 

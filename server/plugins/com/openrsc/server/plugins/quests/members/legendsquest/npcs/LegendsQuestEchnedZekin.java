@@ -60,6 +60,9 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 				message(p, second_nezikchened, 1300, "The spirit lets out an unearthly, blood curdling scream...");
 				message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
 				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
+			}
+			second_nezikchened.startCombat(p);
+			if (useHolySpell) {
 				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
 				if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
 					message(p, 1300, "A sense of fear comes over you ",
@@ -69,20 +72,19 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						"You feel a great sense of loss...");
 				}
 				p.getSkills().setLevel(Skills.PRAYER, newPray);
+
+				sleep(7000);
+				message(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
+				if (DataConversions.random(0, 1) == 1) {
+					message(p, 1300, "The dagger hits you with an agonising blow...");
+					p.damage(14);
+				} else {
+					message(p, 600, "But you neatly manage to dodge the attack.");
+				}
 			} else {
 				message(p, 1300, "A terrible fear comes over you. ",
 					"You feel a terrible sense of loss...");
 				p.getSkills().setLevel(Skills.PRAYER, 0);
-			}
-		}
-		if (useHolySpell) {
-			sleep(7000);
-			message(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
-			if (DataConversions.random(0, 1) == 1) {
-				message(p, 1300, "The dagger hits you with an agonising blow...");
-				p.damage(14);
-			} else {
-				message(p, 600, "But you neatly manage to dodge the attack.");
 			}
 		}
 	}

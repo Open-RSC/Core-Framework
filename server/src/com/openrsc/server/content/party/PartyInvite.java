@@ -20,7 +20,7 @@ public class PartyInvite {
 
 		if (invited.isIronMan(IronmanMode.Ironman.id()) || invited.isIronMan(IronmanMode.Ultimate.id())
 			|| invited.isIronMan(IronmanMode.Hardcore.id()) || invited.isIronMan(IronmanMode.Transfer.id())) {
-			player.message(invited.getUsername() + " is an Iron Man. They stand alone.");
+			player.message(invited.getUsername() + " is an Iron Man. " + (invited.isMale() ? "He" : "She") + " stands alone.");
 			return;
 		}
 		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())

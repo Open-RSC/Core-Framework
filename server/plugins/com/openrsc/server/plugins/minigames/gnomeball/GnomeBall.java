@@ -55,7 +55,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
+				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
 			} else {
 				// does not matter where the players are at, neither in the field or wild,
 				// nor if they have free inventory space
