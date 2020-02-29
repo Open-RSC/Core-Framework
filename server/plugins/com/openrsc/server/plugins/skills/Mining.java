@@ -203,7 +203,7 @@ public final class Mining implements ObjectActionListener,
 		showBubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 		retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000;
-		int delay = player.getWorld().getServer().getConfig().GAME_TICK;
+		int delay = player.getWorld().getServer().getConfig().GAME_TICK * 3;
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delay, "Mining", retrytimes, true) {
 			@Override
 			public void action() {
