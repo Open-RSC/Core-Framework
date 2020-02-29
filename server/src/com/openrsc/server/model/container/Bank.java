@@ -297,8 +297,8 @@ public class Bank {
 						player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
 
 						//Update the client
-						//if (true) //Need a new parameter for the function that flags if should update the client
-						// Need a new function for removing an item from the bank
+						if (true) //need a parameter for flagging to update the client or not
+							ActionSender.updateBankItem(player, index, 0, 0);
 					} else { /**Need to split the stack*/
 						bankItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
 
@@ -402,6 +402,9 @@ public class Bank {
 	public boolean withdrawItemToInventory(int bankSlot, final int amount) {
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				//Check if the bank is empty
+				if (list.isEmpty())
+					return false;
 
 				//Make sure there's an item in the slot
 				Item withdrawItem = list.get(bankSlot);
@@ -428,6 +431,9 @@ public class Bank {
 				//This is used for non-stackable withdraws of amount > 1
 				int amountLeft;
 
+				//This holds the original amount before removal
+				int originalAmount = withdrawItem.getAmount();
+
 				//Attempt to remove the item from the bank
 				//Check if the item is non-stackable with amount > 1
 				if (!withdrawDef.isStackable() && amount > 1) {
@@ -441,7 +447,7 @@ public class Bank {
 				}
 
 				//Determine if we need to split the stack
-				if (withdrawDef.isStackable() && withdrawItem.getAmount() > amount) { //Yes, the stack is being split
+				if (originalAmount > amount) { //Yes, the stack is being split
 					withdrawItem = new Item(withdrawItem.getCatalogId(), amount);
 				}
 
@@ -518,6 +524,26 @@ public class Bank {
 		}
 	}
 
+	public boolean depositAllFromInventory() {
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				try {
+					for (int index = player.getCarriedItems().getInventory().getItems().size()-1; index >= 0; --index) {
+						Item inventoryItem = player.getCarriedItems().getInventory().get(index);
+						System.out.println("Depositing " + inventoryItem.getDef(player.getWorld()).getName() + "x"
+							+ inventoryItem.getAmount() + " from slot " + index);
+						if (!depositItemFromInventory(index, inventoryItem.getAmount()))
+							return false;
+					}
+				} catch (Exception ex) {
+					LOGGER.error(ex.getMessage());
+					return false;
+				}
+				return true;
+			}
+		}
+	}
+
 	public boolean depositItemFromInventory(final int inventorySlot, final int amount) {
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
@@ -526,23 +552,27 @@ public class Bank {
 				if (depositItem == null)
 					return false;
 
+				System.out.println("Debug1");
 				//Bounds checks on amount
 				if (amount < 1 || player.getCarriedItems().getInventory().countId(depositItem.getCatalogId()) < amount) {
 					player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or inventory count < amount");
 					return false;
 				}
 
+				System.out.println("Debug2");
 				//Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
 				if (depositDef == null)
 					return false;
 
+				System.out.println("Debug3");
 				//Make sure they have enough space in their bank to deposit it
 				if (!canHold(depositItem)) {
 					player.message("You don't have room for that in your bank");
 					return false;
 				}
 
+				System.out.println("Debug4");
 				//This is used for non-stackable deposits of amount > 1
 				int amountLeft;
 				//Attempt to remove the item from the inventory
@@ -557,6 +587,7 @@ public class Bank {
 					amountLeft = 0;
 				}
 
+				System.out.println("Debug5");
 				//Determine if we need to split the stack
 				if (depositDef.isStackable() && depositItem.getAmount() > amount) { //Yes, the stack is being split
 					depositItem = new Item(depositItem.getCatalogId(), amount);
@@ -567,6 +598,7 @@ public class Bank {
 					player.getCarriedItems().getInventory().add(depositItem);
 				}
 
+				System.out.println("Debug6");
 				//If we need to deposit more non-stackables then do it recursively
 				if (amountLeft > 0)
 					return depositItemFromInventory(inventorySlot, amountLeft);

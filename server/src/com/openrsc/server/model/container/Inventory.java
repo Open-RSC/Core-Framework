@@ -230,59 +230,80 @@ public class Inventory {
 		}
 	}
 
-	//TODO: Remove all instances of Inventory.remove and replace with CarriedItems.remove
-	public int remove(int id, int amount, boolean sendInventory) {
+	public int remove(int catalogId, int amount, boolean sendInventory) {
 		synchronized (list) {
 			try {
+				//Check if the inventory is empty
+				if (list.isEmpty())
+					return -1;
+
 				int size = list.size();
 				ListIterator<Item> iterator = list.listIterator(size);
 
-				for (int index = size - 1; iterator.hasPrevious(); index--) {
-					Item i = iterator.previous();
-					if (id == i.getCatalogId() && i != null) {
+				for (int index = size - 1; iterator.hasPrevious(); --index) {
+					Item inventoryItem = iterator.previous();
 
-						/* Stack Items */
-						if (i.getDef(player.getWorld()).isStackable() && amount < i.getAmount()) {
-							// More than we need to remove, keep item in inventory.
-							i.setAmount(player.getWorld().getServer().getDatabase(),i.getAmount() - amount);
-							ActionSender.sendInventoryUpdateItem(player, index);
-						} else if (i.getDef(player.getWorld()).isStackable() && amount > i.getAmount()) {
-							// Not enough, do not remove.
+					//Check the itemDef
+					ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
+					if (inventoryDef == null)
+						continue;
+
+					//Match catalog ID
+					if (inventoryItem.getCatalogId() != catalogId)
+						continue;
+
+					if (inventoryDef.isStackable() || inventoryItem.getNoted()) { /**Stackable Items*/
+						//Make sure there's enough in the stack
+						if (inventoryItem.getAmount() < amount)
 							return -1;
-						} else if (i.getDef(player.getWorld()).isStackable() && amount == i.getAmount()) {
-							// Exact amount, remove all.
-							if (i.isWielded()) {
-								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
-							}
+
+						//Check if we need to split the stack
+						if (inventoryItem.getAmount() == amount) { /**Don't need to split the stack*/
 							iterator.remove();
-							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, i);
-							//ActionSender.sendRemoveItem(player, index);
+
+							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+
+							//Update the client
+							if (sendInventory)
+								ActionSender.sendRemoveItem(player, index);
+						} else { /**Need to split the stack*/
+							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+
+							//Update the client
+							if (sendInventory)
+								ActionSender.sendInventoryUpdateItem(player, index);
 						}
 
-						/* Non-stack items */
-						else {
-							// Remove 1.
-							if (i.isWielded()) {
-								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
-							}
-							iterator.remove();
-							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, i);
-							//ActionSender.sendRemoveItem(player, index);
 
-							amount -= 1;
-							if (amount > 0)
-								return remove(id, amount, sendInventory);
-						}
-						if (sendInventory) ActionSender.sendInventory(player);
+
+
 						return index;
+					} else { /**Non-stackable items*/
+
+						//There needs to be a check here if the noted version should be allowed
+
+						//Unequip if necessary
+						if (inventoryItem.isWielded())
+							player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, inventoryItem, UnequipRequest.RequestType.FROM_INVENTORY, false));
+
+						iterator.remove();
+
+						//Update the database
+						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+
+						//Update the client
+						if (sendInventory)
+							ActionSender.sendRemoveItem(player, index);
 					}
+
+					return index;
 				}
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
 			}
 		}
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getCarriedItems().getEquipment().remove(id, amount);
+			return player.getCarriedItems().getEquipment().remove(catalogId, amount);
 		else
 			return -1;
 	}

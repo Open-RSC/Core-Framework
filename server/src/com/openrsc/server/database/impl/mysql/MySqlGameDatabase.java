@@ -1070,7 +1070,19 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 	@Override
 	protected void queryBankRemove(final int playerId, final Item item) throws GameDatabaseException {
-
+		synchronized (itemIDList) {
+			try {
+				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankRemove);
+				try (statement) {
+					statement.setInt(1, playerId);
+					statement.setInt(2, item.getItemId());
+					statement.executeUpdate();
+				}
+			} catch (SQLException ex) {
+				// Convert SQLException to a general usage exception
+				throw new GameDatabaseException(this, ex.getMessage());
+			}
+		}
 	}
 //	@Override
 //	protected void querySavePlayerInventoryAdd(int playerId, PlayerInventory invItem) throws GameDatabaseException {

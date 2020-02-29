@@ -32,8 +32,9 @@ public class Equipment {
 	 * Reference back the owner of the equipment
 	 */
 	private final Player player;
+
 	//------------------------------------------------------------------
-    //Constructors------------------------------------------------------
+	//Constructors------------------------------------------------------
 	public Equipment(Player p) {
 		synchronized (list) {
 			this.player = p;
@@ -41,6 +42,7 @@ public class Equipment {
 				list[i] = null;
 		}
 	}
+
 	//------------------------------------------------------------------
 	//Class member modifiers--------------------------------------------
 	//------------------------------------------------------------------
@@ -51,7 +53,8 @@ public class Equipment {
 		}
 	}
 	//------------------------------------------------------------------
-    //Methods that can change the contents of the list------------------
+	//Methods that can change the contents of the list------------------
+
 	/**
 	 * Adds an item to the equipment container. Updates the database instantly.
 	 */
@@ -78,7 +81,9 @@ public class Equipment {
 						return slot;
 					}
 				}
-			} catch(GameDatabaseException ex) {LOGGER.error(ex.getMessage());}
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+			}
 		}
 		return -1;
 	}
@@ -123,6 +128,7 @@ public class Equipment {
 
 	/**
 	 * Attempts to unequip an item
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -206,6 +212,7 @@ public class Equipment {
 
 	/**
 	 * Attempts to equip an item
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -248,12 +255,14 @@ public class Equipment {
 
 	/**
 	 * Private function used by the above function, equipItem.
+	 *
 	 * @param request
 	 * @return
 	 */
 	private boolean equipItemFromInventory(EquipRequest request) {
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
-			synchronized (list) {
+		synchronized (player.getCarriedItems()) {
+			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
+
 				ItemDefinition itemDef = request.item.getDef(player.getWorld());
 				if (itemDef == null)
 					return false;
@@ -262,17 +271,13 @@ public class Equipment {
 				if (player.getCarriedItems().getInventory().remove(request.item) == -1)
 					return false;
 
-				//TODO: This shouldn't be needed
-				request.item.setWielded(false);
-
 				add(request.item);
-			}
-		} else { //On a world without equipment tab
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
+
+			} else { //On a world without equipment tab
 				request.item.setWielded(true);
 			}
-		}
 
+		}
 		//Update the inventory
 		ActionSender.sendInventory(player);
 		return true;
@@ -280,33 +285,43 @@ public class Equipment {
 
 	/**
 	 * Private function used by the above function, equipItem
+	 *
 	 * @param request
 	 * @return
 	 */
 	private boolean equipItemFromBank(EquipRequest request) {
-		if (!request.player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			request.player.setSuspiciousPlayer(true, "Tried to equip from bank on a world without equipment tab");
-			return false;
-		}
-
 		synchronized (list) {
-
-			ItemDefinition itemDef = request.item.getDef(player.getWorld());
-			if (itemDef == null)
-				return false;
-
 			synchronized (player.getBank().getItems()) {
-				//Attempt to remove the item from their bank
-				int amount = request.item.getAmount();
-				if (!itemDef.isStackable())
-					amount = 1;
-				if (player.getBank().remove(request.item.getCatalogId(), amount) == -1)
+				if (!request.player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					request.player.setSuspiciousPlayer(true, "Tried to equip from bank on a world without equipment tab");
+					return false;
+				}
+
+				ItemDefinition itemDef = request.item.getDef(player.getWorld());
+				if (itemDef == null)
 					return false;
 
-				//TODO: This shouldn't be needed
-				request.item.setWielded(false);
+				int originalAmount = player.getBank().countId(request.item.getCatalogId());
 
-				add(request.item);
+				if (!itemDef.isStackable()) { /**Not a stackable item*/
+					if (player.getBank().remove(request.item.getCatalogId(), 1) == -1)
+						return false;
+
+					if (originalAmount > 1) { /**Need to split the stack*/
+						add(new Item(request.item.getCatalogId(), 1));
+					} else { /**Don't need to split the stack*/
+						add(request.item);
+					}
+				} else { /**Stackable item*/
+					if (player.getBank().remove(request.item.getCatalogId(), request.item.getAmount()) == -1)
+						return false;
+
+					if (originalAmount > request.item.getAmount()) { /**Need to split the stack*/
+						add(new Item(request.item.getCatalogId(), request.item.getAmount()));
+					} else { /**Don't need to split the stack*/
+						add(request.item);
+					}
+				}
 			}
 		}
 
@@ -317,6 +332,7 @@ public class Equipment {
 
 	/**
 	 * Removes equipment that conflicts with an equipItem request
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -344,7 +360,8 @@ public class Equipment {
 					}
 					for (int p = 0; p < Equipment.SLOT_COUNT; p++) {
 						i = list[p];
-						if (i != null && request.item.wieldingAffectsItem(player.getWorld(), i)) {
+						if (i != null && request.item.wieldingAffectsItem(player.getWorld(), i)
+						&& i.getCatalogId() != request.item.getCatalogId()) {
 							if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_EQUIPMENT, false)))
 								return false;
 						}
@@ -378,8 +395,9 @@ public class Equipment {
 
 		return true;
 	}
+
 	//------------------------------------------------------------------
-    //Methods that report equipment statistics--------------------------
+	//Methods that report equipment statistics--------------------------
 	public int getWeaponAim() {
 		int total = 1;
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
@@ -388,7 +406,7 @@ public class Equipment {
 					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
 			}
 		} else {
-			synchronized(player.getCarriedItems().getInventory().getItems()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				for (Item item : player.getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded()) {
 						total += item.getDef(player.getWorld()).getWeaponAimBonus();
@@ -407,7 +425,7 @@ public class Equipment {
 					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
 			}
 		} else {
-			synchronized(player.getCarriedItems().getInventory().getItems()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				for (Item item : player.getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded()) {
 						total += item.getDef(player.getWorld()).getWeaponPowerBonus();
@@ -426,7 +444,7 @@ public class Equipment {
 					total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
 			}
 		} else {
-			synchronized(player.getCarriedItems().getInventory().getItems()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				for (Item item : player.getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded()) {
 						total += item.getDef(player.getWorld()).getArmourBonus();
@@ -445,7 +463,7 @@ public class Equipment {
 					total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
 			}
 		} else {
-			synchronized(player.getCarriedItems().getInventory().getItems()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				for (Item item : player.getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded()) {
 						total += item.getDef(player.getWorld()).getMagicBonus();
@@ -464,7 +482,7 @@ public class Equipment {
 					total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();
 			}
 		} else {
-			synchronized(player.getCarriedItems().getInventory().getItems()) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				for (Item item : player.getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded()) {
 						total += item.getDef(player.getWorld()).getPrayerBonus();
@@ -474,6 +492,7 @@ public class Equipment {
 		}
 		return total;
 	}
+
 	//------------------------------------------------------------------
 	public int equipCount() {
 		synchronized (list) {
@@ -529,11 +548,11 @@ public class Equipment {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
 		} else {
-				for (Item i : player.getCarriedItems().getInventory().getItems()) {
-					if (i.getCatalogId() == id && i.isWielded()) {
-						return true;
-					}
+			for (Item i : player.getCarriedItems().getInventory().getItems()) {
+				if (i.getCatalogId() == id && i.isWielded()) {
+					return true;
 				}
+			}
 		}
 		return false;
 	}
