@@ -761,6 +761,9 @@ public class MySqlGameDatabase extends GameDatabase {
 			updateLongs(getQueries().save_DeleteFriends, playerId);
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddFriends);
 			for (final PlayerFriend friend : friends) {
+				String username = DataConversions.hashToUsername(friend.playerHash);
+				if (username.equalsIgnoreCase("invalid_name"))
+					continue;
 				statement.setInt(1, playerId);
 				statement.setLong(2, friend.playerHash);
 				statement.setString(3, DataConversions.hashToUsername(friend.playerHash));

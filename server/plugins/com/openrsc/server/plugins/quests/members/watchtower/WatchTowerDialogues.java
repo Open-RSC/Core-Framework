@@ -592,33 +592,31 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								npcTalk(p, n, "Then you shall get nothing from me!");
 							}
 						} else {
-							if (p.getCache().hasKey("ogre_og")) {
-								npcTalk(p, n, "What do you want small thing ?");
-								int menu = showMenu(p, n,
-									"I seek entrance to the city of ogres",
+							npcTalk(p, n, "What do you want small thing ?");
+							int menu = showMenu(p, n,
+								"I seek entrance to the city of ogres",
+								"Die creature");
+							if (menu == 0) {
+								npcTalk(p, n, "Ha ha ha! you'll never get in there");
+								playerTalk(p, n, "I fear not for that city");
+								npcTalk(p, n, "Bold words for a thing so small");
+								int subMenu = showMenu(p, n,
+									"I could do something for you...",
 									"Die creature");
-								if (menu == 0) {
-									npcTalk(p, n, "Ha ha ha! you'll never get in there");
-									playerTalk(p, n, "I fear not for that city");
-									npcTalk(p, n, "Bold words for a thing so small");
-									int subMenu = showMenu(p, n,
-										"I could do something for you...",
-										"Die creature");
-									if (subMenu == 0) {
-										npcTalk(p, n, "Ha ha ha! this creature thinks it can help me!",
-											"I would eat you now, but for your puny size",
-											"Prove to me your might",
-											"Bring me the bones of a dragon to chew on",
-											"And I may spare you from a painful death");
-										p.getCache().store("ogre_toban", true);
-									} else if (subMenu == 1) {
-										npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
-										n.startCombat(p);
-									}
-								} else if (menu == 1) {
+								if (subMenu == 0) {
+									npcTalk(p, n, "Ha ha ha! this creature thinks it can help me!",
+										"I would eat you now, but for your puny size",
+										"Prove to me your might",
+										"Bring me the bones of a dragon to chew on",
+										"And I may spare you from a painful death");
+									p.getCache().store("ogre_toban", true);
+								} else if (subMenu == 1) {
 									npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
 									n.startCombat(p);
 								}
+							} else if (menu == 1) {
+								npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
+								n.startCombat(p);
 							}
 						}
 					}
