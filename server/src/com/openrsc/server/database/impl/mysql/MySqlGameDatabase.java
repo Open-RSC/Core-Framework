@@ -946,8 +946,18 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 	}
 	@Override
-	protected void queryItemDestroy() throws GameDatabaseException {
-
+	protected void queryItemPurge(final Item item) throws GameDatabaseException {
+		try {
+			purgeItemID(item);
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemPurge);
+			try (statement) {
+				statement.setInt(1, item.getItemId());
+				statement.executeUpdate();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
 	}
 
 	@Override
@@ -1533,6 +1543,19 @@ public class MySqlGameDatabase extends GameDatabase {
 			itemIDList.add(item.getItemId());
 			itemCreate(item);
 			return item.getItemId();
+		}
+	}
+
+	public void purgeItemID(Item item) {
+		synchronized (itemIDList) {
+			Iterator<Integer> iterator = itemIDList.iterator();
+			while (iterator.hasNext()) {
+				Integer listID = iterator.next();
+				if (listID == item.getItemId()) {
+					iterator.remove();
+					return;
+				}
+			}
 		}
 	}
 }

@@ -10,7 +10,7 @@ public class MySqlQueries {
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
 	public final String playerExists, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
-	public final String save_ItemCreate, save_ItemUpdate, save_ItemDestroy; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
+	public final String save_ItemCreate, save_ItemUpdate, save_ItemPurge; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_AddBankPreset;
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
@@ -75,7 +75,7 @@ public class MySqlQueries {
 		save_DeleteBank = "DELETE i,i2 FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
 		save_ItemCreate = "INSERT INTO `" + PREFIX + "itemstatuses`(`itemID`, `catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?, ?)";
-		save_ItemDestroy = "";
+		save_ItemPurge = "DELETE FROM `" + PREFIX + "itemstatuses` WHERE `itemID`=?";
 		save_ItemUpdate = "UPDATE `" + PREFIX + "itemstatuses` SET `amount`=?, `noted`=?, `durability`=? WHERE `itemID`=?";
 		save_BankAdd = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `itemID`, `slot`) VALUES(?, ?, ?)";
 		save_BankRemove = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=? AND `itemID`=?";

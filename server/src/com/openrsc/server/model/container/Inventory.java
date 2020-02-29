@@ -142,14 +142,19 @@ public class Inventory {
 				} else { /**There is an existing stack that can be added to*/
 					//Check if the existing stack has enough room to hold the amount
 					int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
-					if (remainingSize >= itemToAdd.getAmount()) { /**Don't need to split the stack*/
+					if (remainingSize >= itemToAdd.getAmount()) { /**The existing stack can take the entire deposit*/
 						//Change the existing stack amount
 						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
+
+						//Check if this is a stack join
+						if (itemToAdd.getItemId() != Item.ITEM_ID_UNASSIGNED) {
+							player.getWorld().getServer().getDatabase().itemPurge(itemToAdd);
+						}
 
 						//Update the client
 						if (sendInventory)
 							ActionSender.sendInventoryUpdateItem(player, index);
-					} else { /**Do need to split the stack*/
+					} else { /**The existing stack will overflow*/
 						//Make sure they have room in the inventory
 						if (list.size() >= MAX_SIZE)
 							return false;
