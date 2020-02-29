@@ -169,7 +169,6 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 								"and you lose concentration,",
 							"you slip and fall....");
 						p.damage(DataConversions.random(10, 15));
-						message(p, "you slip and fall....");
 					}
 					else {
 						message(p, 1300, "And although fear stabs at your heart...",
