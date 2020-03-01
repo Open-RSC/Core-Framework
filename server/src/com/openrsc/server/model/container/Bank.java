@@ -410,55 +410,78 @@ public class Bank {
 
 	}
 
-	public boolean withdrawItemToInventory(int bankSlot, final int requestedAmount) {
+	public boolean withdrawItemToInventory(final int catalogID, final int requestedAmount) {
+		//Adjusts the requested amount if they ask for more than they have
+		int adjustedRequestedAmount;
+
+		//Will hold the amount actually withdrawn with this one method call
+		int withdrawAmount;
+
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				//Check if the bank is empty
 				if (list.isEmpty())
 					return false;
 
-				//Make sure there's an item in the slot
-				Item withdrawItem = list.get(bankSlot);
-				if (withdrawItem == null)
-					return false;
-
 				//Bounds checks on amount
-				if (requestedAmount < 1 || withdrawItem.getAmount() < requestedAmount) {
-					player.setSuspiciousPlayer(true, "bank deposit item amount < 0 or bank count < amount");
+				if (requestedAmount < 1) {
+					player.setSuspiciousPlayer(true, "bank deposit item amount < 1");
 					return false;
 				}
+
+				//Cap the max requestedAmount
+				int idCount = countId(catalogID);
+
+				adjustedRequestedAmount = Math.min(idCount, requestedAmount);
+
+				//Make sure they actually have the item in the bank
+				if (adjustedRequestedAmount <= 0)
+					return false;
+
+				//Find bank slot that contains the requested catalogID
+				Item withdrawItem = null, iteratedItem = null;
+				ListIterator<Item> bankIterator = list.listIterator(list.size());
+
+				for (int index = list.size() - 1; bankIterator.hasPrevious(); --index) {
+					iteratedItem = bankIterator.previous();
+
+					if (iteratedItem.getCatalogId() == catalogID) {
+						withdrawItem = iteratedItem;
+						break;
+					}
+				}
+
+				//Double check the item was found
+				if (withdrawItem == null)
+					return false;
 
 				//Check the item definition
 				ItemDefinition withdrawDef = withdrawItem.getDef(player.getWorld());
 				if (withdrawDef == null)
 					return false;
 
+				//Logic for if they have two stacks of the same catalogID
+				withdrawAmount = Math.min(withdrawItem.getAmount(), adjustedRequestedAmount);
+
+				//Limit non-stackables to a withdraw of 1
+				//TODO: need to add a check for if the user requested notes
+				if (!withdrawDef.isStackable())
+					withdrawAmount = 1;
+
 				//Make sure they have enough space in their inventory
-				if (!player.getCarriedItems().getInventory().canHold(withdrawItem)) {
+				if (!player.getCarriedItems().getInventory().canHold(new Item(withdrawItem.getCatalogId(), withdrawAmount))) {
 					player.message("You don't have room to hold everything!");
 					return false;
 				}
 
-				//Will hold the amount actually withdrawn with this one method call
-				int withdrawAmount;
-
-				//This holds the original amount before removal
-				int originalAmount = withdrawItem.getAmount();
-
-				//Check if the item is non-stackable with amount > 1
-				if (!withdrawDef.isStackable())
-					withdrawAmount = 1;
-				else
-					withdrawAmount = requestedAmount;
+				//Determine if we need to split the stack
+				if (withdrawItem.getAmount() > withdrawAmount) { //Yes, the stack is being split
+					withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount);
+				}
 
 				//Attempt to remove the item from the bank
 				if (remove(withdrawItem.getCatalogId(), withdrawAmount) == -1)
 					return false;
-
-				//Determine if we need to split the stack
-				if (originalAmount > withdrawAmount) { //Yes, the stack is being split
-					withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount);
-				}
 
 				if (!player.getCarriedItems().getInventory().add(withdrawItem, false)) {
 					//The deposit failed. Re-add the items to the bank
@@ -466,9 +489,9 @@ public class Bank {
 					return false;
 				}
 
-				//If we need to withdraw more non-stackables then do it recursively
-				if (requestedAmount > withdrawAmount)
-					return withdrawItemToInventory(bankSlot, requestedAmount - withdrawAmount);
+				//Check if we need to withdraw again to meet the request
+				if (withdrawAmount < adjustedRequestedAmount)
+					return withdrawItemToInventory(withdrawItem.getCatalogId(), adjustedRequestedAmount - withdrawAmount);
 				else {
 					//Update the client
 					ActionSender.sendInventory(player);
@@ -559,11 +582,45 @@ public class Bank {
 		}
 	}
 
-	public boolean depositItemFromInventory(final int inventorySlot, int requestedAmount, final Boolean updateClient) {
+	public boolean depositItemFromInventory(final int catalogID, final int requestedAmount, final Boolean updateClient) {
+		//Adjusts the requested amount if they ask for more than they have
+		int adjustedRequestedAmount;
+
+		//Will hold the amount actually deposit with this one method call
+		int depositAmount;
+
+
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				//Make sure there's an item in the slot
-				Item depositItem = getPlayer().getCarriedItems().getInventory().get(inventorySlot);
+				//Bounds checks on amount
+				if (requestedAmount < 1) {
+					player.setSuspiciousPlayer(true, "bank deposit item amount < 1");
+					return false;
+				}
+
+				//Cap the max requestedAmount
+				int idCount = player.getCarriedItems().getInventory().countId(catalogID);
+
+				adjustedRequestedAmount = Math.min(idCount, requestedAmount);
+
+				//Make sure they actually have the item in their inventory
+				if (adjustedRequestedAmount <= 0)
+					return false;
+
+				//Find inventory slot that contains the requested catalogID
+				Item depositItem = null, iteratedItem = null;
+				ListIterator<Item> inventoryIterator = player.getCarriedItems().getInventory().getItems().listIterator(player.getCarriedItems().getInventory().getItems().size());
+
+				for (int index = player.getCarriedItems().getInventory().getItems().size() - 1; inventoryIterator.hasPrevious(); --index) {
+					iteratedItem = inventoryIterator.previous();
+
+					if (iteratedItem.getCatalogId() == catalogID) {
+						depositItem = iteratedItem;
+						break;
+					}
+				}
+
+				//Double check there was an item found
 				if (depositItem == null)
 					return false;
 
@@ -572,25 +629,12 @@ public class Bank {
 				if (depositDef == null)
 					return false;
 
-				//Bounds checks on amount
-				if (requestedAmount < 1) {
-					player.setSuspiciousPlayer(true, "bank deposit item amount < 0");
-					return false;
-				}
+				//Logic for if they have two stacks of the same catalogID
+				depositAmount = Math.min(depositItem.getAmount(), adjustedRequestedAmount);
 
-				//Change requested deposit amount to amount held in inventory
-				int inventoryCount = countId(depositItem.getCatalogId());
-				if (requestedAmount > inventoryCount)
-					requestedAmount = inventoryCount;
-
-				//Will hold the actual amount deposited with this one method call
-				int depositAmount;
-
-				//Determine how much we actually want to deposit
+				//Limit non-stackables to a withdraw of 1
 				if (!depositDef.isStackable() && !depositItem.getNoted())
 					depositAmount = 1;
-				else
-					depositAmount = requestedAmount;
 
 				//Make sure they have enough space in their bank to deposit it
 				if (!canHold(new Item(depositItem.getCatalogId(), depositAmount))) {
@@ -598,25 +642,27 @@ public class Bank {
 					return false;
 				}
 
+				//Determine if we need to split the stack
+				if (depositAmount < depositItem.getAmount()) { //Yes, the stack is being split
+					depositItem = new Item(depositItem.getCatalogId(), depositAmount);
+				}
+
 				//Attempt to remove the item from the inventory
 				if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), depositAmount, updateClient) == -1)
 					return false;
 
-				//Determine if we need to split the stack
-				if (depositDef.isStackable() && depositItem.getAmount() > depositAmount) { //Yes, the stack is being split
-					depositItem = new Item(depositItem.getCatalogId(), depositAmount);
-				}
-
 				if (!add(depositItem)) {
 					//The deposit failed. Re-add the items to the inventory
 					player.getCarriedItems().getInventory().add(depositItem);
+					return false;
 				}
 
-				//If we need to deposit more non-stackables then do it recursively
-				if (amountLeft > 0)
-					return depositItemFromInventory(inventorySlot, amountLeft, updateClient);
-				else
+				//Check if we need to deposit again to meet the request
+				if (depositAmount < adjustedRequestedAmount)
+					return depositItemFromInventory(depositItem.getCatalogId(), adjustedRequestedAmount - depositAmount, updateClient);
+				else {
 					return true;
+				}
 			}
 		}
 	}
