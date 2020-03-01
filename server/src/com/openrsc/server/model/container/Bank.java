@@ -568,7 +568,7 @@ public class Bank {
 						Item inventoryItem = player.getCarriedItems().getInventory().get(index);
 						System.out.println("Depositing " + inventoryItem.getDef(player.getWorld()).getName() + "x"
 							+ inventoryItem.getAmount() + " from slot " + index);
-						if (!depositItemFromInventory(index, inventoryItem.getAmount(), false))
+						if (!depositItemFromInventory(inventoryItem.getCatalogId(), inventoryItem.getAmount(), false))
 							return false;
 					}
 
