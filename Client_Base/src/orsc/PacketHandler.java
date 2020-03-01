@@ -1367,7 +1367,8 @@ public class PacketHandler {
 			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
 			//int itemID = packetsIncoming.getShort();
 			if (isNote.orElse(false)) {
-				mc.setInventoryItemID(i, (itemID + 1) * -1);
+				mc.setInventoryItemID(i, itemID);
+				//mc.setInventoryItemID(i, (itemID + 1) * -1);
 			} else {
 				mc.setInventoryItemID(i, itemID);
 			}

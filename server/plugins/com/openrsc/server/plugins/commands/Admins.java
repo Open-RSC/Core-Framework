@@ -637,7 +637,7 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 			// StaffLog(player, 7));
 		} else if (cmd.equalsIgnoreCase("item")) {
 			if (args.length < 1) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (noted) (player)");
 				return;
 			}
 
@@ -645,7 +645,7 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 			try {
 				id = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (player)");
+				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (amount) (noted) (player)");
 				return;
 			}
 
@@ -661,9 +661,20 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 				amount = 1;
 			}
 
-			Player p;
+			boolean noted;
 			if (args.length >= 3) {
-				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
+				try {
+					noted = Integer.parseInt(args[2]) == 1;
+				} catch (NumberFormatException nfe) {
+					noted = Boolean.parseBoolean(args[2]);
+				}
+			} else {
+				noted = false;
+			}
+
+			Player p;
+			if (args.length >= 4) {
+				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[3]));
 			} else {
 				p = player;
 			}
@@ -675,6 +686,8 @@ public final class Admins implements CommandListener, CommandExecutiveListener {
 
 			if (player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
 				p.getCarriedItems().getInventory().add(new Item(id, amount));
+			} else if (noted && player.getWorld().getServer().getEntityHandler().getItemDef(id).isNoteable()) {
+				p.getCarriedItems().getInventory().add(new Item(id, amount, true));
 			} else {
 				for (int i = 0; i < amount; i++) {
 					if (!player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
