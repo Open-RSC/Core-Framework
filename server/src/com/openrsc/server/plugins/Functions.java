@@ -1408,11 +1408,12 @@ public class Functions {
 	}
 
 	public static void message(final Player player, final Npc npc, int delay, final String... messages) {
+		boolean playerWasBusy = player.isBusy();
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
 					if (npc.isRemoved()) {
-						player.setBusy(false);
+						player.setBusy(playerWasBusy);
 						return;
 					}
 					npc.setBusyTimer(delay);
@@ -1422,7 +1423,7 @@ public class Functions {
 			}
 			sleep(delay);
 		}
-		player.setBusy(false);
+		player.setBusy(playerWasBusy);
 	}
 
 	/**
@@ -1432,17 +1433,21 @@ public class Functions {
 	 * @param messages
 	 */
 	public static void message(final Player player, final String... messages) {
+		boolean playerWasBusy = player.isBusy();
+		boolean npcWasBusy = player.getInteractingNpc().isBusy();
+
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (player.getInteractingNpc() != null) {
-					player.getInteractingNpc().setBusyTimer(1900);
+					player.getInteractingNpc().setBusy(true);
 				}
 				player.getWorld().getServer().getGameEventHandler().submit(() -> player.message("@que@" + message), "Multi Message Player");
-				player.setBusyTimer(1900);
+				player.setBusy(true);
 			}
 			sleep(1900);
 		}
-		player.setBusyTimer(0);
+		player.setBusy(playerWasBusy);
+		player.getInteractingNpc().setBusy(npcWasBusy);
 	}
 
 	/**
@@ -1453,10 +1458,13 @@ public class Functions {
 	 * @param messages - String array of npc dialogue lines.
 	 */
 	public static void npcTalk(final Player player, final Npc npc, final int delay, final String... messages) {
+		boolean npcWasBusy = npc.isBusy();
+		boolean playerWasBusy = player.isBusy();
+
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc.isRemoved()) {
-					player.setBusy(false);
+					player.setBusy(playerWasBusy);
 					return;
 				}
 				npc.setBusy(true);
@@ -1477,8 +1485,8 @@ public class Functions {
 			sleep(delay);
 
 		}
-		npc.setBusy(false);
-		player.setBusy(false);
+		npc.setBusy(npcWasBusy);
+		player.setBusy(playerWasBusy);
 	}
 
 	public static void npcTalk(final Player player, final Npc npc, final String... messages) {
@@ -1508,11 +1516,12 @@ public class Functions {
 	 * @param messages
 	 */
 	public static void playerTalk(final Player player, final Npc npc, final String... messages) {
+		boolean playerWasBusy = player.isBusy();
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
 					if (npc.isRemoved()) {
-						player.setBusy(false);
+						player.setBusy(playerWasBusy);
 						return;
 					}
 				}
@@ -1629,10 +1638,12 @@ public class Functions {
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
 		final long start = System.currentTimeMillis();
+		boolean npcWasBusy = npc.isBusy();
+		boolean playerWasBusy = player.isBusy();
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
-				player.setBusy(false);
+				player.setBusy(playerWasBusy);
 				return -1;
 			}
 			npc.setBusy(true);
@@ -1644,7 +1655,7 @@ public class Functions {
 			while (!player.checkUnderAttack()) {
 				if (player.getOption() != -1) {
 					if (npc != null && options[player.getOption()] != null) {
-						npc.setBusy(false);
+						npc.setBusy(npcWasBusy);
 						if (sendToClient)
 							playerTalk(player, npc, options[player.getOption()]);
 					}
@@ -1653,7 +1664,7 @@ public class Functions {
 					player.resetMenuHandler();
 					if (npc != null) {
 						npc.setBusy(false);
-						player.setBusyTimer(0);
+						player.setBusy(false);
 					}
 					return -1;
 				}

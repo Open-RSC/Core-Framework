@@ -7,6 +7,7 @@ import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.NamedThreadFactory;
@@ -395,7 +396,17 @@ public final class PluginHandler {
 						public int action() {
 							try {
 								LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
+								Npc interactingNpc = null;
+								if (owner != null && owner.isPlayer())
+									interactingNpc = ((Player)owner).getInteractingNpc();
 								m.invoke(cls, data);
+								if (interfce.equalsIgnoreCase("TalkToNpc")) {
+									((Player)owner).setBusy(false);
+									if (interactingNpc != null)
+										interactingNpc.setBusy(false);
+									if (((Player)owner).getInteractingNpc() != null)
+										((Player)owner).getInteractingNpc().setBusy(false);
+								}
 								return 1;
 							} catch (final Exception ex) {
 								LOGGER.catching(ex);
