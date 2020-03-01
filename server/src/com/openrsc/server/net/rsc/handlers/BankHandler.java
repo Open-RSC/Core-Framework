@@ -42,7 +42,10 @@ public final class BankHandler implements PacketHandler {
 		if (opcode == null)
 			return;
 
+		//These variables are set from packet values
 		int catalogID, amount, presetSlot;
+		boolean wantsNotes = false;
+
 		switch (opcode) {
 			case BANK_CLOSE:
 				player.resetBank();
@@ -51,7 +54,10 @@ public final class BankHandler implements PacketHandler {
 				catalogID = packet.readShort();
 				amount = packet.readInt();
 
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, catalogID, amount});
+				if (player.getWorld().getServer().getConfig().WANT_BANK_NOTES)
+					wantsNotes = packet.readByte() == 1;
+
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, catalogID, amount, wantsNotes});
 				break;
 			case BANK_DEPOSIT:
 				catalogID = packet.readShort();

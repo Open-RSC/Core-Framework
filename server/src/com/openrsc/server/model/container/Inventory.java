@@ -680,11 +680,15 @@ public class Inventory {
 				return Integer.MAX_VALUE;
 
 			//Check if the item is a stackable
-			if (itemDef.isStackable()) { /**Item IS stackable*/
+			if (itemDef.isStackable() || item.getNoted()) { /**Item IS stackable*/
 				//Check if there's a stack that can be added to
 				for (Item inventoryItem : list) {
 					//Check for matching catalogID
 					if (inventoryItem.getCatalogId() != item.getCatalogId())
+						continue;
+
+					//Check for matching noted status
+					if (!inventoryItem.getNoted())
 						continue;
 
 					//Make sure there's room in the stack
@@ -698,33 +702,8 @@ public class Inventory {
 
 				//Theres no stack found
 				return 1;
-			} else { /**Item is NOT stackable*/
-				//Check if the item is noted
-				if (item.getNoted()) { /**The item IS noted*/
-					//Check if there's a stack that can be added to
-					for (Item inventoryItem : list) {
-						//Check for matching catalogID
-						if (inventoryItem.getCatalogId() != item.getCatalogId())
-							continue;
-
-						//Check for matching noted status
-						if (!inventoryItem.getNoted())
-							continue;
-
-						//Make sure there's room in the stack
-						if (inventoryItem.getAmount() == Integer.MAX_VALUE)
-							continue;
-
-						//Check if all of the stack can fit in the existing stack
-						int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
-						return remainingSize < item.getAmount() ? 1 : 0;
-					}
-
-					//There's no stack found
-					return 1;
-				} else { /**The item is NOT noted*/
-					return 1;
-				}
+			} else {
+				return 1;
 			}
 		}
 	}

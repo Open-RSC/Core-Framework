@@ -11,5 +11,5 @@ public interface WithdrawListener {
 	/**
 	 * Called when a user withdraws an item
 	 */
-	public void onWithdraw(Player p, Integer catalogID, Integer amount);
+	public void onWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes);
 }

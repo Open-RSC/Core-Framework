@@ -259,8 +259,8 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onWithdraw(Player p, Integer catalogID, Integer amount) {
-		p.getBank().withdrawItemToInventory(catalogID, amount);
+	public void onWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
+		p.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
 	}
 
 	@Override

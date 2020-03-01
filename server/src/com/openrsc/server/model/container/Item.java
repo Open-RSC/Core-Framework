@@ -95,16 +95,17 @@ public class Item implements Comparable<Item> {
 		setAmount(database, getAmount() + delta);
 	}
 
+	public void setNoted(GameDatabase database, boolean noted) throws GameDatabaseException{
+		this.itemStatus.setNoted(noted);
+		database.itemUpdate(this);
+	}
+
 	public final void setCatalogId(GameDatabase database, int newid) {
 		itemStatus.setCatalogId(newid);
 	}
 
 	public final void setItemStatus(ItemStatus itemStatus) {
 		this.itemStatus = itemStatus;
-	}
-
-	public void setNoted(boolean noted) {
-		this.itemStatus.setNoted(noted);
 	}
 
 	public void setWielded(boolean wielded) {
@@ -219,11 +220,5 @@ public class Item implements Comparable<Item> {
 			return object;
 		}
 		return fail;
-	}
-
-	public Item asNote() {
-		Item clone = this.clone();
-		clone.setNoted(true);
-		return clone;
 	}
 }

@@ -6,5 +6,5 @@ public interface WithdrawExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from withdrawing an item
 	 */
-	void blockWithdraw(Player p, Integer catalogID, Integer amount);
+	void blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes);
 }

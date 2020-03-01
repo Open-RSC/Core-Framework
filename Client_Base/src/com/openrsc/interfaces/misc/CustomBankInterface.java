@@ -252,15 +252,12 @@ public final class CustomBankInterface extends BankInterface {
 					selectedEquipmentSlot = -1;
 					rightClickMenu = false;
 					swapNoteMode = false;
-					sendNoteMode();
 				} else if (mc.getMouseX() >= x + 349 && mc.getMouseX() <= x + 422 && mc.getMouseY() >= y + 206
 					&& mc.getMouseY() <= y + 220) {
 					swapNoteMode = false;
-					sendNoteMode();
 				} else if (!equipmentMode && mc.getMouseX() >= x + 423 && mc.getMouseX() <= x + 498 && mc.getMouseY() >= y + 206
 					&& mc.getMouseY() <= y + 220) {
 					swapNoteMode = true;
-					sendNoteMode();
 				} else if (mc.getMouseX() >= modeOffset && mc.getMouseX() <= modeOffset + modeWidth && mc.getMouseY() >= y + 206
 					&& mc.getMouseY() <= y + 220) {
 					organizeMode = 1;
@@ -1029,13 +1026,6 @@ public final class CustomBankInterface extends BankInterface {
 		mc.packetHandler.getClientStream().finishPacket();
 	}
 
-	private void sendNoteMode() {
-		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().bufferBits.putByte(1);
-		mc.packetHandler.getClientStream().bufferBits.putByte(swapNoteMode ? 1 : 0);
-		mc.packetHandler.getClientStream().finishPacket();
-	}
-
 	private void sendInventoryOrganize(int draggingInventoryID2, int inventorySlot) {
 		mc.packetHandler.getClientStream().newPacket(199);
 		mc.packetHandler.getClientStream().bufferBits.putByte(organizeMode == 1 ? 4 : 5);
@@ -1111,6 +1101,10 @@ public final class CustomBankInterface extends BankInterface {
 				i = bankItems.get(selectedBankSlot).amount;
 			}
 			mc.packetHandler.getClientStream().bufferBits.putInt(i);
+
+			if (Config.S_WANT_BANK_NOTES)
+				mc.packetHandler.getClientStream().bufferBits.putByte(swapNoteMode ? 1 : 0);
+
 			mc.packetHandler.getClientStream().finishPacket();
 			rightClickMenu = false;
 			selectedBankSlot = -1;

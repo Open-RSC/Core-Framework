@@ -410,12 +410,15 @@ public class Bank {
 
 	}
 
-	public boolean withdrawItemToInventory(final int catalogID, final int requestedAmount) {
+	public boolean withdrawItemToInventory(final Integer catalogID, final Integer requestedAmount, final Boolean wantsNotes) {
 		//Adjusts the requested amount if they ask for more than they have
 		int adjustedRequestedAmount;
 
 		//Will hold the amount actually withdrawn with this one method call
 		int withdrawAmount;
+
+		//Flag for if the item is withdrawn as a note
+		boolean withdrawNoted = wantsNotes;
 
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
@@ -460,23 +463,31 @@ public class Bank {
 				if (withdrawDef == null)
 					return false;
 
+				//Don't allow notes for stackables
+				if (wantsNotes && withdrawDef.isStackable())
+					withdrawNoted = false;
+
 				//Logic for if they have two stacks of the same catalogID
 				withdrawAmount = Math.min(withdrawItem.getAmount(), adjustedRequestedAmount);
 
 				//Limit non-stackables to a withdraw of 1
-				//TODO: need to add a check for if the user requested notes
-				if (!withdrawDef.isStackable())
+				if (!withdrawDef.isStackable() && !withdrawNoted)
 					withdrawAmount = 1;
 
 				//Make sure they have enough space in their inventory
-				if (!player.getCarriedItems().getInventory().canHold(new Item(withdrawItem.getCatalogId(), withdrawAmount))) {
+				if (!player.getCarriedItems().getInventory().canHold(new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted))) {
 					player.message("You don't have room to hold everything!");
 					return false;
 				}
 
 				//Determine if we need to split the stack
-				if (withdrawItem.getAmount() > withdrawAmount) { //Yes, the stack is being split
-					withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount);
+				if (withdrawItem.getAmount() > withdrawAmount) { /**The stack is being split*/
+					withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted);
+				} else { /**The stack is not being split*/
+					if (withdrawNoted) {
+						try{withdrawItem.setNoted(player.getWorld().getServer().getDatabase(), true);}
+						catch (GameDatabaseException ex) { LOGGER.error(ex.getMessage()); return false;}
+					}
 				}
 
 				//Attempt to remove the item from the bank
@@ -491,7 +502,7 @@ public class Bank {
 
 				//Check if we need to withdraw again to meet the request
 				if (withdrawAmount < adjustedRequestedAmount)
-					return withdrawItemToInventory(withdrawItem.getCatalogId(), adjustedRequestedAmount - withdrawAmount);
+					return withdrawItemToInventory(withdrawItem.getCatalogId(), adjustedRequestedAmount - withdrawAmount, wantsNotes);
 				else {
 					//Update the client
 					ActionSender.sendInventory(player);
@@ -589,7 +600,6 @@ public class Bank {
 		//Will hold the amount actually deposit with this one method call
 		int depositAmount;
 
-
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				//Bounds checks on amount
@@ -645,6 +655,12 @@ public class Bank {
 				//Determine if we need to split the stack
 				if (depositAmount < depositItem.getAmount()) { //Yes, the stack is being split
 					depositItem = new Item(depositItem.getCatalogId(), depositAmount);
+				}
+
+				//Player's shouldn't be able to bank notes
+				if (depositItem.getNoted()) {
+					try{depositItem.setNoted(player.getWorld().getServer().getDatabase(), false);}
+					catch (GameDatabaseException ex) { LOGGER.error(ex.getMessage()); return false; }
 				}
 
 				//Attempt to remove the item from the inventory

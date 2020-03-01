@@ -149,7 +149,6 @@ public class BankInterface {
 				mc.mouseButtonItemCountIncrement = 1;
 			if (Config.S_WANT_BANK_NOTES) {
 				this.swapNoteMode = !this.swapNoteMode;
-				sendNoteMode();
 			} else
 				sendWithdraw(mc.mouseButtonItemCountIncrement); // Withdraw 1
 		} else if (mc.getInventoryCount(itemID) >= 1 && currMouseX >= selectedX + 220 && currMouseY >= selectedY + 265
@@ -169,7 +168,6 @@ public class BankInterface {
 				&& currMouseX < selectedX + 280 && currMouseY <= selectedY + 251) {
 				if (Config.S_WANT_BANK_NOTES) {
 					this.swapNoteMode = !this.swapNoteMode;
-					sendNoteMode();
 				} else
 					sendWithdraw(5); // Withdraw 5
 			} else if ((amount >= 10 || Config.S_WANT_BANK_NOTES) && currMouseX >= selectedX + 280 && currMouseY >= selectedY + 240
@@ -517,6 +515,10 @@ public class BankInterface {
 			i = amt;
 		}
 		mc.packetHandler.getClientStream().bufferBits.putInt(i);
+
+		if (Config.S_WANT_BANK_NOTES)
+			mc.packetHandler.getClientStream().bufferBits.putByte(swapNoteMode ? 1 : 0);
+
 		mc.packetHandler.getClientStream().finishPacket();
 		if (mc.getMouseButtonDownTime() == 0) {
 			mc.setMouseClick(0);
@@ -554,13 +556,6 @@ public class BankInterface {
 			bankItems.get(slot).itemID = itemID;
 			bankItems.get(slot).amount = amount;
 		}
-	}
-
-	private void sendNoteMode() {
-		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().bufferBits.putByte(1);
-		mc.packetHandler.getClientStream().bufferBits.putByte(swapNoteMode ? 1 : 0);
-		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendCertMode() {
