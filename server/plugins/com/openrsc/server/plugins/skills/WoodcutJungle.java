@@ -13,6 +13,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements ObjectActionListener,
@@ -71,7 +73,7 @@ public class WoodcutJungle implements ObjectActionListener,
 			return;
 		}
 
-		if (!hasItem(p, ItemId.MACHETTE.id())) {
+		if (!p.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
 			message(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
 			return;
 		}
@@ -79,7 +81,7 @@ public class WoodcutJungle implements ObjectActionListener,
 		int axeId = -1;
 		if (obj.getID() != JUNGLE_VINE) {
 			for (final int a : Formulae.woodcuttingAxeIDs) {
-				if (hasItem(p, a)) {
+				if (p.getCarriedItems().hasCatalogID(a, Optional.of(false))) {
 					axeId = a;
 					break;
 				}

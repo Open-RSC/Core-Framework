@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 public class InvAction extends Functions implements InvActionListener, InvActionExecutiveListener {
 
 	@Override
@@ -609,7 +611,7 @@ public class InvAction extends Functions implements InvActionListener, InvAction
 	private void handleShamanRobe(Player player) {
 		if (player.getQuestStage(Quests.WATCHTOWER) == 8 || player.getQuestStage(Quests.WATCHTOWER) == 9) {
 			player.message("You search the robe");
-			if (hasItem(player, ItemId.POWERING_CRYSTAL3.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL3.id(), Optional.empty())) {
 				message(player, "You find nothing");
 			} else if (player.getBank().hasItemId(ItemId.POWERING_CRYSTAL3.id())) {
 				playerTalk(player, null, "I already have this in my bank");

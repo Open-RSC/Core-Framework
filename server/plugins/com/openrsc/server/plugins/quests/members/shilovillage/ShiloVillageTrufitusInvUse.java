@@ -9,6 +9,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
@@ -242,7 +244,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOn
 				npcTalk(p, n, "It may be possible to make a ward like that?",
 					"But what is the best thing to make it from?");
 				// having zadimus corpse prolly
-				if(hasItem(p, ItemId.ZADIMUS_CORPSE.id())) {
+				if(p.getCarriedItems().hasCatalogID(ItemId.ZADIMUS_CORPSE.id(), Optional.of(false))) {
 					npcTalk(p, n, "Now...what was it that Zadimus said...");
 				} else {
 					npcTalk(p, n, "Perhaps you'll get some clues from other items?");

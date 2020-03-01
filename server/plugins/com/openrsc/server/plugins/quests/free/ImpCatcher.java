@@ -9,6 +9,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ImpCatcher implements QuestInterface, TalkToNpcListener,
@@ -23,12 +25,12 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Imp catcher";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
 	public void handleReward(Player p) {
 		p.message("Well done. You have completed the Imp catcher quest");
@@ -44,8 +46,10 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 		if (n.getID() == NpcId.WIZARD_MIZGOG.id()) {
 			if (p.getQuestStage(this) == 1) {
 				npcTalk(p, n, "So how are you doing finding my beads?");
-				if (!hasItem(p, ItemId.RED_BEAD.id()) && !hasItem(p, ItemId.YELLOW_BEAD.id()) && !hasItem(p, ItemId.BLACK_BEAD.id())
-					&& !hasItem(p, ItemId.WHITE_BEAD.id())) { // NEED TO GET INFO PROBABLY SAME
+				if (!p.getCarriedItems().hasCatalogID(ItemId.RED_BEAD.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.YELLOW_BEAD.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.BLACK_BEAD.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.WHITE_BEAD.id(), Optional.of(false))) { // NEED TO GET INFO PROBABLY SAME
 					// AS PRINCE ALI.
 					playerTalk(p, n, "I've not found any yet");
 					npcTalk(p,
@@ -55,8 +59,10 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 						"Go kill some imps");
 					return;
 				}
-				if (hasItem(p, ItemId.RED_BEAD.id()) && hasItem(p, ItemId.YELLOW_BEAD.id()) && hasItem(p, ItemId.BLACK_BEAD.id())
-					&& hasItem(p, ItemId.WHITE_BEAD.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.RED_BEAD.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.YELLOW_BEAD.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.BLACK_BEAD.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.WHITE_BEAD.id(), Optional.of(false))) {
 					playerTalk(p, n, "I've got all four beads",
 						"It was hard work I can tell you");
 					npcTalk(p, n, "Give them here and I'll sort out a reward");
@@ -70,8 +76,10 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener,
 					message(p, "The Wizard hands you an amulet");
 					addItem(p, ItemId.AMULET_OF_ACCURACY.id(), 1);
 					p.sendQuestComplete(Quests.IMP_CATCHER);
-				} else if (hasItem(p, ItemId.RED_BEAD.id()) || hasItem(p, ItemId.YELLOW_BEAD.id())
-					|| hasItem(p, ItemId.BLACK_BEAD.id()) || hasItem(p, ItemId.WHITE_BEAD.id())) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.RED_BEAD.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.YELLOW_BEAD.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.BLACK_BEAD.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.WHITE_BEAD.id(), Optional.of(false))) {
 					playerTalk(p, n, "I have found some of your beads");
 					npcTalk(p, n, "Come back when you have them all",
 						"The four colours of beads I need",

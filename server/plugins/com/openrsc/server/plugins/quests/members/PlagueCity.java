@@ -16,6 +16,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class PlagueCity implements QuestInterface, TalkToNpcListener,
@@ -136,7 +138,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "uurgh",
 						"My head still hurts too much to think straight",
 						"Oh for one of Trudi's hangover cures");
-					if (hasItem(p, ItemId.HANGOVER_CURE.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.HANGOVER_CURE.id(), Optional.of(false))) {
 						playerTalk(p, n, "Try this");
 						message(p, "You give Bravek the hangover cure",
 							"Bravek gulps down the foul looking liquid");
@@ -160,7 +162,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				case 11:
 				case -1:
 					npcTalk(p, n, "thanks again for the hangover cure");
-					if (hasItem(p, ItemId.WARRANT.id()) || p.getQuestStage(getQuestId()) == 11
+					if (p.getCarriedItems().hasCatalogID(ItemId.WARRANT.id(), Optional.of(false)) || p.getQuestStage(getQuestId()) == 11
 						|| p.getQuestStage(getQuestId()) == -1) {
 						playerTalk(p, n, "Not a problem, happy to help out");
 						npcTalk(p, n, "I'm just having a little bit of whisky",
@@ -371,7 +373,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 							"Any particular woman you have in mind?");
 						playerTalk(p, n, "Yes a lady called Elena");
 						npcTalk(p, n, "What does she look like?");
-						if (hasItem(p, ItemId.PICTURE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.PICTURE.id(), Optional.of(false))) {
 							p.message("You show the picture to Jethick");
 							npcTalk(p,
 								n,
@@ -380,7 +382,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 								"I think she is staying over with the Rehnison family",
 								"They live in the small timbered building at the far north side of town",
 								"I've not seen her around here in a while mind you");
-							if (!hasItem(p, ItemId.PLAGUE_CITY_BOOK.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.PLAGUE_CITY_BOOK.id(), Optional.of(false))) {
 								npcTalk(p,
 									n,
 									"I don't suppose you could run me a little errand?",
@@ -431,7 +433,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "yes he told me",
 						"I've begun making your special gas mask",
 						"but i need some dwellberries to finish it");
-					if (hasItem(p, ItemId.DWELLBERRIES.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.DWELLBERRIES.id(), Optional.of(false))) {
 						playerTalk(p, n, "yes I've got some here");
 						message(p, "you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
@@ -595,7 +597,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				case 1:
 					playerTalk(p, n, "hello Edmond");
 					npcTalk(p, n, "have you got the dwellberries?");
-					if (hasItem(p, ItemId.DWELLBERRIES.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.DWELLBERRIES.id(), Optional.of(false))) {
 						playerTalk(p, n, "yes i have some here");
 						npcTalk(p, n, "take them to my wife alrena");
 					} else {
@@ -848,7 +850,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				closeCupboard(obj, p, ALRENAS_CUPBOARD_CLOSED);
 			} else {
 				if (p.getQuestStage(this) >= 2 || p.getQuestStage(this) == -1) {
-					if (!hasItem(p, ItemId.GASMASK.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.GASMASK.id(), Optional.of(false))) {
 						p.message("you find a protective mask");
 						addItem(p, ItemId.GASMASK.id(), 1);
 					} else {
@@ -886,7 +888,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				p.message("the barrel is empty");
 				return;
 			}
-			if (!hasItem(p, ItemId.LITTLE_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.LITTLE_KEY.id(), Optional.of(false))) {
 				p.message("You find a small key in the barrel");
 				addItem(p, ItemId.LITTLE_KEY.id(), 1);
 			} else {
@@ -907,7 +909,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 				p.message("you go through the gate");
 				p.teleport(637, 3447, false);
 			} else {
-				if (hasItem(p, ItemId.LITTLE_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.LITTLE_KEY.id(), Optional.of(false))) {
 					p.message("The gate is locked");
 					p.message("Why don't you use your key on the gate?");
 				} else {

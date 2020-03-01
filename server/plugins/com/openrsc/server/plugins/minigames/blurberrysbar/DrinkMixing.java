@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.blurberrysbar;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
@@ -7,9 +8,9 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvActionListener, InvActionExecutiveListener {
 
@@ -35,7 +36,8 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 				dm = mix;
 			}
 		}
-		if ((hasItem(p, ItemId.FULL_COCKTAIL_GLASS.id()) || hasItem(p, ItemId.ODD_LOOKING_COCKTAIL.id()))
+		if ((p.getCarriedItems().hasCatalogID(ItemId.FULL_COCKTAIL_GLASS.id(), Optional.of(false))
+			|| p.getCarriedItems().hasCatalogID(ItemId.ODD_LOOKING_COCKTAIL.id(), Optional.of(false)))
 				&& dm.itemID == ItemId.COCKTAIL_SHAKER.id()) {
 			p.message("you need to finish, drink or drop your unfished cocktail");
 			p.message("before you can start another - blurberry's rules");
@@ -47,7 +49,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			int next = p.getCache().getInt(dm.cacheName);
 			p.getCache().set(dm.cacheName, (next + 1));
 		}
-		if (hasItem(p, dm.itemIDOther)) {
+		if (p.getCarriedItems().hasCatalogID(dm.itemIDOther, Optional.of(false))) {
 			p.setBusy(true);
 			message(p, 1900, dm.messages[0]);
 			if (dm.itemIDOther == ItemId.MILK.id()) {
@@ -165,7 +167,7 @@ public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 	@Override
 	public void onInvAction(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id()) {
-			if (hasItem(p, ItemId.COCKTAIL_GLASS.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.COCKTAIL_GLASS.id(), Optional.of(false))) {
 				boolean complete = false;
 				String nextCache = null;
 				if (p.getCache().hasKey("lemon_in_shaker")

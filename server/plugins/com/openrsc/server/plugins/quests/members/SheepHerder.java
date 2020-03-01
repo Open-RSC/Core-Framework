@@ -24,6 +24,7 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -138,7 +139,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n,
 						"please find those four sheep as soon as you can",
 						"every second counts");
-					if (!hasItem(p, ItemId.POISONED_ANIMAL_FEED.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.POISONED_ANIMAL_FEED.id(), Optional.empty())) {
 						playerTalk(p, n, "Some more sheep poison might be useful");
 						message(p, "The councillor gives you some more sheep poison");
 						addItem(p, ItemId.POISONED_ANIMAL_FEED.id(), 1);
@@ -171,7 +172,7 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 						npcTalk(p, n, "not quite's not good enough",
 							"all four sheep must be captured, slain and their remains burnt");
 						playerTalk(p, n, "ok i'll get to it");
-						if (!hasItem(p, ItemId.POISONED_ANIMAL_FEED.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.POISONED_ANIMAL_FEED.id(), Optional.empty())) {
 							playerTalk(p, n, "Some more sheep poison might be useful");
 							p.message("The councillor gives you some more sheep poison");
 							addItem(p, ItemId.POISONED_ANIMAL_FEED.id(), 1);

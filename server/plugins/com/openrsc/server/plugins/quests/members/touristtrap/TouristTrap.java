@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -155,7 +156,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 							"*Sob*");
 						break;
 					case 9:
-						if (!hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 							npcTalk(p, n, "Please bring my daughter back to me.",
 								"She is most likely lost in the Desert somewhere.",
 								"I miss her so much....",
@@ -383,7 +384,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
-						if (hasItem(p, ItemId.METAL_KEY.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 							npcTalk(p, n, "Move along now...we've had enough of your sort!");
 							return;
 						}
@@ -402,7 +403,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 3:
 					case 4:
 					case 5:
-						if (hasItem(p, ItemId.METAL_KEY.id()) || p.getLocation().inTouristTrapCave()) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) || p.getLocation().inTouristTrapCave()) {
 							npcTalk(p, n, "Move along now...we've had enough of your sort!");
 							return;
 						}
@@ -528,7 +529,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					npcTalk(p, n, "Let's see how good you are with desert survival techniques!");
 					message(p, "You're bundled into the back of a cart and blindfolded...");
 					message(p, "Sometime later you wake up in the desert.");
-					if (hasItem(p, ItemId.BOWL_OF_WATER.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcTalk(p, n, "You won't be needing that water any more!");
 						message(p, "The guards throw your water away...");
 						removeItem(p, ItemId.BOWL_OF_WATER.id(), 1);
@@ -819,7 +820,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 9:
 					case 10:
 					case -1:
-						if (hasItem(p, ItemId.METAL_KEY.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 							npcTalk(p, n, "Move along now...we've had enough of your sort!");
 							return;
 						}
@@ -1041,7 +1042,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 								npcTalk(p, npcN, "Hey! You're no slave!");
 								npcN.startCombat(p);
 								message(p, "The Guards search you!");
-								if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+								if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
 									removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 								}
 								message(p, "Some guards rush to help their comrade.",
@@ -1053,7 +1054,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 									p.teleport(89, 801);
 								}
 							}
-						} else if (hasItem(p, ItemId.SLAVES_ROBE_BOTTOM.id()) && hasItem(p, ItemId.SLAVES_ROBE_TOP.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.SLAVES_ROBE_BOTTOM.id(), Optional.of(false))
+							&& p.getCarriedItems().hasCatalogID(ItemId.SLAVES_ROBE_TOP.id(), Optional.of(false))) {
 							npcTalk(p, n, "Not much to do here but mine all day long.");
 						} else {
 							npcTalk(p, n, "Oh bother, I was caught by the guards again...",
@@ -1218,8 +1220,9 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void necessaryStuffSlave(Player p, Npc n) {
-		if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
-				hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "Great! You have the Desert Clothes!");
 			message(p, "The slave starts getting undressed right in front of you.");
 			npcTalk(p, n, "Ok, here's the clothes, I won't need them anymore.");
@@ -1238,26 +1241,33 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			return;
 		}
 
-		if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		if (!p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
-		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (!p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need desert robe and shirt if you want these clothes off me.");
-		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (!p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need a desert shirt and boots if you want these clothes off me.");
-		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need desert robe and boots if you want these clothes off me.");
-		} else if (!hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (!p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need a desert shirt if you want these clothes off me.");
-		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && !hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need desert robe if you want these clothes off me.");
-		} else if (hasItem(p, ItemId.DESERT_SHIRT.id()) && hasItem(p, ItemId.DESERT_ROBE.id()) &&
-			!hasItem(p, ItemId.DESERT_BOOTS.id())) {
+		} else if (p.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
+			&& !p.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcTalk(p, n, "I need desert boots if you want these clothes off me.");
 		}
 
@@ -1587,11 +1597,13 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 6:
 					case 7:
 						npcTalk(p, n, "Hello Effendi!");
-						if (hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
 							alShabimDialogue(p, n, AlShabim.MADE_WEAPON);
-						} else if (hasItem(p, ItemId.TECHNICAL_PLANS.id()) && !hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))
+							&& !p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
 							alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
-						} else if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id()) && !hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))
+							&& !p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 							npcTalk(p, n, "How are things going Effendi?");
 							int dede = showMenu(p, n,
 								"Very well thanks!",
@@ -1628,7 +1640,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case 9:
 					case 10:
 					case -1:
-						if (hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
 							npcTalk(p, n, "Hello Effendi!",
 								"Wonderful, I see you have made the new weapon!",
 								"Where did you get this from Effendi!",
@@ -1636,7 +1648,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 							removeItem(p, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
 							return;
 						}
-						if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 							npcTalk(p, n, "Hello Effendi!");
 							alShabimDialogue(p, n, AlShabim.HAVE_PLANS);
 							return;
@@ -1644,7 +1656,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						if (p.getQuestStage(this) == 8) {
 							npcTalk(p, n, "Hello Effendi!",
 								"Many thanks with your help previously Effendi!");
-							if (hasItem(p, ItemId.TENTI_PINEAPPLE.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.TENTI_PINEAPPLE.id(), Optional.of(false))) {
 								int mopt = showMenu(p, n,
 									"What is this place?",
 									"Goodbye!");
@@ -1713,7 +1725,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Yes, I'm very interested.",
 						"No, sorry.");
 					if (tati == 0) {
-						if (hasItem(p, ItemId.BRONZE_BAR.id()) && hasItem(p, ItemId.FEATHER.id(), 10)) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_BAR.id(), Optional.of(false))
+							&& hasItem(p, ItemId.FEATHER.id(), 10)) {
 							npcTalk(p, n, "Aha! I see you have the items we need!",
 								"Are you still willing to help make the weapon?");
 							int make = showMenu(p, n,
@@ -1750,7 +1763,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					message(p, "You show Al Shabim the prototype dart.");
 					removeItem(p, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
 					npcTalk(p, n, "This is truly fantastic Effendi!");
-					if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 						npcTalk(p, n, "We will take the technical plans for the weapon as well.");
 						removeItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 						message(p, "You hand over the technical plans for the weapon.");
@@ -1763,7 +1776,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					npcTalk(p, n, "Please accept this selection of six bronze throwing darts",
 						"as a token of our appreciation.");
 					addItem(p, ItemId.BRONZE_THROWING_DART.id(), 6);
-					if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))) {
 						npcTalk(p, n, "I'll take that key off your hands as well effendi!");
 						removeItem(p, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 						npcTalk(p, n, "Many thanks!");
@@ -1800,7 +1813,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						} else {
 							message(p, "The captain looks up from his work as you address him.");
 						}
-						if (hasItem(p, ItemId.TECHNICAL_PLANS.id()) || p.getQuestStage(this) >= 8 || p.getQuestStage(this) == -1) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false)) || p.getQuestStage(this) >= 8 || p.getQuestStage(this) == -1) {
 							npcTalk(p, n, "I don't have time to talk to you.",
 								"Move along please!");
 							return;
@@ -1861,7 +1874,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					break;
 				case Siad.PUNISHED:
 					message(p, "The Guards search you!");
-					if (hasItem(p, ItemId.METAL_KEY.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 						p.message("The guards find the main gate key and remove it!");
 						removeItem(p, ItemId.METAL_KEY.id(), 1);
 					}
@@ -2094,7 +2107,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				npcTalk(p, npcN, "Hey! You're no slave!");
 				npcN.startCombat(p);
 				message(p, "The Guards search you!");
-				if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
 					removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 				}
 				message(p, "Some guards rush to help their comrade.",
@@ -2266,7 +2279,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					Npc guard = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 					if (guard != null) {
 						npcTalk(p, guard, "I heard that! So you used a key did you?! ");
-						if (hasItem(p, ItemId.METAL_KEY.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 							npcTalk(p, guard, "Right, we'll have that key off you!");
 							removeItem(p, ItemId.METAL_KEY.id(), 1);
 						}
@@ -2325,7 +2338,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				case -1:
 					npcTalk(p, n, "Sorry, but you can't use the tent without permission.",
 						"But thanks for your help to the Bedabin people.");
-					if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 						npcTalk(p, n, "And we'll take those plans off your hands as well!");
 						removeItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 					}
@@ -2386,7 +2399,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == STONE_GATE && p.getY() >= 735) {
 			if (command.equals("go through")) {
-				if (!hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					p.message("you go through the gate");
 					p.teleport(62, 732);
 				} else {
@@ -2431,10 +2444,10 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 		} else if (obj.getID() == IRON_GATE) {
 			if (command.equals("open")) {
-				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					failEscapeAnaInBarrel(p, null);
 					return;
-				} else if (!hasItem(p, ItemId.METAL_KEY.id())) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 					p.message("This gate is locked, you'll need a key to open it.");
 				} else {
 					message(p, "You use the metal key to unlock the gates.",
@@ -2516,7 +2529,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						return;
 					}
 					message(p, "The Guards search you!");
-					if (hasItem(p, ItemId.METAL_KEY.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 						p.message("The guards find the main gate key and remove it!");
 						removeItem(p, ItemId.METAL_KEY.id(), 1);
 					}
@@ -2538,21 +2551,22 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 		} else if (obj.getID() == DESK) {
 			message(p, "You search the captains desk while he's not looking.");
-			if (hasItem(p, ItemId.CELL_DOOR_KEY.id()) && hasItem(p, ItemId.METAL_KEY.id()) &&
-				((p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) ? true : hasItem(p, ItemId.WROUGHT_IRON_KEY.id()))) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) &&
+				((p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) || p.getCarriedItems().hasCatalogID(ItemId.WROUGHT_IRON_KEY.id(), Optional.of(false)))) {
 				message(p, "...but you find nothing of interest.");
 				return;
 			}
-			if (!hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
 				message(p, "You find a cell door key.");
 				addItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 			}
-			if (!hasItem(p, ItemId.METAL_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 				message(p, "You find a large metalic key.");
 				addItem(p, ItemId.METAL_KEY.id(), 1);
 			}
 			//only after player has past to stage of wrought iron key
-			if (!(p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) && !hasItem(p, ItemId.WROUGHT_IRON_KEY.id())) {
+			if (!(p.getQuestStage(this) >= 0 && p.getQuestStage(this) <= 9) && !p.getCarriedItems().hasCatalogID(ItemId.WROUGHT_IRON_KEY.id(), Optional.of(false))) {
 				message(p, "You find a large wrought iron key.");
 				addItem(p, ItemId.WROUGHT_IRON_KEY.id(), 1);
 			}
@@ -2567,8 +2581,8 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 		} else if (obj.getID() == CAPTAINS_CHEST) {
 			if (p.getCache().hasKey("tourist_chest") || p.getQuestStage(this) == -1) {
-				if (hasItem(p, ItemId.BEDOBIN_COPY_KEY.id())) {
-					if (!hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 						message(p, "While the Captain's distracted, you quickly unlock the chest.",
 							"You use the Bedobin Copy Key to open the chest.",
 							"You open the chest and take out the plans.");
@@ -2630,7 +2644,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				p.getCache().store("first_kill_captn", true);
 			}
 			n.killedBy(p);
-			if (!hasItem(p, ItemId.METAL_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 				addItem(p, ItemId.METAL_KEY.id(), 1);
 				message(p, "The mercenary captain drops a metal key on the floor.",
 					"You quickly grab the key and add it to your inventory.");
@@ -2696,7 +2710,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					npcTalk(p, affectedmob, "Let's see how good you are with desert survival techniques!");
 					message(p, "You're bundled into the back of a cart and blindfolded...",
 						"Sometime later you wake up in the desert.");
-					if (hasItem(p, ItemId.BOWL_OF_WATER.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcTalk(p, affectedmob, "You won't be needing that water any more!");
 						message(p, "The guards throw your water away...");
 						removeItem(p, ItemId.BOWL_OF_WATER.id(), 1);
@@ -2763,7 +2777,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void failEscapeAnaInBarrel(Player p, Npc n) {
-		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 			n = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 			sleep(650);
 			npcTalk(p, n, "Hey, where d'ya think you're going with that barrel?",
@@ -2798,7 +2812,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void failWindowAnaInBarrel(Player p, Npc n) {
-		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 			message(p, "You focus all of your strength on the bar. Your muscles ripple!",
 				"You manage to bend the bars on the window .",
 				"You'll never get Ana in the Barrel through the window.",
@@ -2833,7 +2847,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					"Maybe they'll let you out soon?");
 			}
 		} else if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
-			if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
 				p.message("You unlock the door and walk through.");
 				doDoor(obj, p);
 			} else {
@@ -2857,7 +2871,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					case -1:
 						npcTalk(p, n, "Sorry, but you can't use the tent without permission.",
 							"But thanks for your help to the Bedabin people.");
-						if (hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 							npcTalk(p, n, "And we'll take those plans off your hands as well!");
 							removeItem(p, ItemId.TECHNICAL_PLANS.id(), 1);
 						}
@@ -2899,7 +2913,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 			}
 		} else if (obj.getID() == STURDY_IRON_GATE) {
 			if (p.getY() >= 3617) {
-				if (hasItem(p, ItemId.WROUGHT_IRON_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.WROUGHT_IRON_KEY.id(), Optional.of(false))) {
 					p.message("You use the wrought iron key to unlock the gate.");
 					p.teleport(p.getX(), p.getY() - 1);
 				} else {
@@ -2929,7 +2943,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Maybe they'll let you out soon?");
 				}
 			} else { //success-cell
-				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar and climb out of the window.");
@@ -2952,7 +2966,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						"Maybe they'll let you out soon?");
 				}
 			} else { //success-hill
-				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) { //from the hill outside the window (fail-safe)
+				if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) { //from the hill outside the window (fail-safe)
 					failWindowAnaInBarrel(p, null);
 				} else {
 					message(p, "You manage to bend the bar !");
@@ -3054,7 +3068,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == NpcId.AL_SHABIM.id() && hasItem(player, ItemId.PROTOTYPE_THROWING_DART.id())) {
+		if (npc.getID() == NpcId.AL_SHABIM.id() && player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
 			if (player.getQuestStage(this) == 7) {
 				alShabimDialogue(player, npc, AlShabim.MADE_WEAPON);
 			} else if (player.getQuestStage(this) > 7 || player.getQuestStage(this) == -1) {

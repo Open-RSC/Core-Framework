@@ -16,6 +16,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -139,7 +140,7 @@ public final class Harvesting implements ObjectActionListener,
 		} else {
 			expectedTool = ItemId.HAND_SHOVEL.id();
 		}
-		return hasItem(p, expectedTool) ? expectedTool : ItemId.NOTHING.id();
+		return p.getCarriedItems().hasCatalogID(expectedTool, Optional.of(false)) ? expectedTool : ItemId.NOTHING.id();
 	}
 
 	@Override
@@ -405,7 +406,7 @@ public final class Harvesting implements ObjectActionListener,
 		if (DataConversions.random(1, chanceAskWatering) == 1) {
 			if (p.getAttribute("watered", null) == null
 				|| expiredAction(obj, p, "watered")) {
-				if (!hasItem(p, ItemId.WATERING_CAN.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.WATERING_CAN.id(), Optional.of(false))) {
 					return HarvestingEvents.NEGLECTED.getID();
 				}
 				p.playerServerMessage(MessageType.QUEST, "You water the harvesting spot");
@@ -416,7 +417,7 @@ public final class Harvesting implements ObjectActionListener,
 		} else if (DataConversions.random(1, chanceAskSoil) == 1) {
 			if (p.getAttribute("soiled", null) == null
 				|| expiredAction(obj, p, "soiled")) {
-				if (!hasItem(p, ItemId.SOIL.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.SOIL.id(), Optional.of(false))) {
 					return HarvestingEvents.NEGLECTED.getID();
 				}
 				p.playerServerMessage(MessageType.QUEST, "You add soil to the spot");

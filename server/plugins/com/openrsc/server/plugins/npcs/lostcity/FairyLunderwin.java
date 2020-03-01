@@ -1,14 +1,15 @@
 package com.openrsc.server.plugins.npcs.lostcity;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class FairyLunderwin implements TalkToNpcListener,
 	TalkToNpcExecutiveListener {
@@ -24,17 +25,19 @@ public class FairyLunderwin implements TalkToNpcListener,
 			npcTalk(p, n, "I am buying cabbage, we have no such thing where I come from",
 				"I pay hansomly for this wounderous object",
 				"Would 100 gold coins per cabbage be a fair price?");
-			if (hasItem(p, ItemId.CABBAGE.id()) || hasItem(p, ItemId.SPECIAL_DEFENSE_CABBAGE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.CABBAGE.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {
 				int menu = showMenu(p, n, false, //do not send over
 					"Yes, I will sell you all my cabbages",
 					"No, I will keep my cabbbages");
 				if (menu == 0) {
 					playerTalk(p, n, "Yes, I will sell you all my cabbages");
-					while (hasItem(p, ItemId.CABBAGE.id()) || hasItem(p, ItemId.SPECIAL_DEFENSE_CABBAGE.id())) {
+					while (p.getCarriedItems().hasCatalogID(ItemId.CABBAGE.id(), Optional.of(false))
+						|| p.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {
 						message(p, 60, "You sell a cabbage");
-						if (hasItem(p, ItemId.CABBAGE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.CABBAGE.id(), Optional.of(false))) {
 							removeItem(p, ItemId.CABBAGE.id(), 1);
-						} else if (hasItem(p, ItemId.SPECIAL_DEFENSE_CABBAGE.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {
 							removeItem(p, ItemId.SPECIAL_DEFENSE_CABBAGE.id(), 1);
 						}
 						addItem(p, ItemId.COINS.id(), 100);

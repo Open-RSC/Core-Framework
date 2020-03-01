@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassDungeonFloor implements ObjectActionListener, ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -52,7 +54,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 			removeObject(claws_of_iban);
 		}
 		else if (obj.getID() == DWARF_BARREL) {
-			if (!hasItem(p, ItemId.BUCKET.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.BUCKET.id(), Optional.of(false))) {
 				p.message("you need a bucket first");
 			} else {
 				p.message("you poor some of the strong brew into your bucket");
@@ -93,7 +95,7 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, Object
 					.getType()));
 				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 10000);
 				message(p, "you search through the remains");
-				if (!hasItem(p, ItemId.IBANS_ASHES.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.IBANS_ASHES.id(), Optional.of(false))) {
 					p.message("and find the ashes of ibans corpse");
 					createGroundItem(ItemId.IBANS_ASHES.id(), 1, 726, 654, p);
 				} else {

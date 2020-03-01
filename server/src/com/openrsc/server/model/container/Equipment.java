@@ -517,8 +517,24 @@ public class Equipment {
 		}
 	}
 
+	public int searchEquipmentForItem(int id, boolean noted) {
+		synchronized (list) {
+			Item item;
+			for (int i = 0; i < SLOT_COUNT; i++) {
+				item = list[i];
+				if (item != null && item.getCatalogId() == id && item.getNoted() == noted)
+					return i;
+			}
+			return -1;
+		}
+	}
+
 	public boolean hasCatalogID(int catalogID) {
 		return searchEquipmentForItem(catalogID) != -1;
+	}
+
+	public boolean hasCatalogID(int catalogID, boolean noted) {
+		return searchEquipmentForItem(catalogID, noted) != -1;
 	}
 
 	public Item getAmmoItem() {

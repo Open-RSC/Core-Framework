@@ -19,6 +19,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -156,7 +158,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					break;
 				case 4:
 					if (p.getCache().hasKey("good_side")) {
-						if (hasItem(p, ItemId.CARNILLEAN_ARMOUR.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.of(false))) {
 							playerTalk(p, n, "ceril, how are you?",
 								"Look, I've found the armour");
 							npcTalk(p, n, "well done i must say i am impressed");
@@ -353,7 +355,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				case 6:
 					playerTalk(p, n, "hello jones");
 					npcTalk(p, n, "have you managed to find the script?");
-					if (hasItem(p, ItemId.SCRIPT_OF_HAZEEL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have it here");
 						npcTalk(p, n, "incredible, we owe you a lot",
 							"you better get it back to our hideout as quick as you can",
@@ -902,7 +904,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 							"hazeel will punish you for your interference");
 						return;
 					} else if (p.getCache().hasKey("evil_side")) {
-						if (!hasItem(p, ItemId.MARK_OF_HAZEEL.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.MARK_OF_HAZEEL.id(), Optional.of(false))) {
 							playerTalk(p, n, "hello",
 								"I poured the poison into the carnillean's meal as requested");
 							npcTalk(p, n, "yes we have people on the inside who informed me of your deed",
@@ -945,7 +947,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 				case 6:
 					playerTalk(p, n, "hello again");
 					npcTalk(p, n, "have you managed to find the script of hazeel?");
-					if (hasItem(p, ItemId.SCRIPT_OF_HAZEEL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
 						playerTalk(p, n, "yes, i found it in the house");
 						npcTalk(p, n, "amazing, the last piece",
 							"now the time has come to change history and avenge lord hazeel",
@@ -1116,7 +1118,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 					/** COMPLETE EVIL SIDE **/
 					playerTalk(p, n, "hello");
 					npcTalk(p, n, "Do you have the sacred script of hazeel?");
-					if (hasItem(p, ItemId.SCRIPT_OF_HAZEEL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
 						playerTalk(p, n, "yes I have it here");
 						npcTalk(p, n, "finally our lord hazeel can return");
 						message(p, "alomone takes the hazeel script");
@@ -1202,7 +1204,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 		if (n.getID() == NpcId.ALOMONE.id()) {
 			if (p.getCache().hasKey("good_side")) {
 				n.killedBy(p);
-				if (!hasItem(p, ItemId.CARNILLEAN_ARMOUR.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.empty())) {
 					message(p, "you have killed alomone",
 						"lying behind his corpse",
 						"you see the carnillean family armour",
@@ -1271,7 +1273,7 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, TalkToNpcE
 		else if (obj.getID() == BASEMENT_CRATE) {
 			message(player, "you search the crate");
 			if (player.getQuestStage(this) == 5 && player.getCache().hasKey("evil_side")) {
-				if (!hasItem(player, ItemId.CARNILLEAN_KEY.id())) {
+				if (!player.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_KEY.id(), Optional.of(false))) {
 					player.message("under the food packages");
 					player.message("you find an old rusty key");
 					addItem(player, ItemId.CARNILLEAN_KEY.id(), 1);

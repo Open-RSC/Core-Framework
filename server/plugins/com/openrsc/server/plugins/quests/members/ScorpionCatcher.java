@@ -20,6 +20,7 @@ import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveL
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -84,11 +85,11 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 				case 2:
 
 					// Still needs first scorpion
-					if (!hasItem(p, ItemId.SCORPION_CAGE_ONE.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_THREE.id())) {
-						if (!hasItem(p, ItemId.SCORPION_CAGE_NONE.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_THREE.id(), Optional.of(false))) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_NONE.id(), Optional.of(false))) {
 							playerTalk(p, n, "I need to locate some scorpions");
 							seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
 						} else {
@@ -110,10 +111,10 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 					}
 
 					// Still needs second scorpion
-					else if (!hasItem(p, ItemId.SCORPION_CAGE_TWO.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_TWO_THREE.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) {
+					else if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_TWO.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_TWO_THREE.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) {
 						playerTalk(p, n, "Hi I have retrieved the scorpion from near the spiders");
 						npcTalk(p, n, "Well I've checked my looking glass",
 							"There seems to be a kharid scorpion in a village full of  axe wielding warriors",
@@ -122,10 +123,10 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 					}
 
 					// Still needs third scorpion
-					else if (!hasItem(p, ItemId.SCORPION_CAGE_THREE.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_THREE.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_TWO_THREE.id()) &&
-						!hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) {
+					else if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_THREE.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_THREE.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_TWO_THREE.id(), Optional.of(false)) &&
+						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) {
 						npcTalk(p, n, "Many greetings");
 						playerTalk(p, n, "I have retrieved a second scorpion");
 						npcTalk(p, n,
@@ -174,7 +175,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 
 	public void velrakDialogue(Player p, Npc n, int choice) {
 		if (choice == -1) {
-			if (hasItem(p, ItemId.DUSTY_KEY.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.DUSTY_KEY.id(), Optional.of(false))) {
 				playerTalk(p, n, "Are you still here?");
 				npcTalk(p, n, "Yes, I'm still plucking up courage",
 					"To run out past those black knights");
@@ -227,7 +228,8 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 					npcTalk(p, n, "How goes your quest?");
-					if (!hasItem(p, ItemId.SCORPION_CAGE_NONE.id()) && !hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) { // No empty cage, no full cage
+					if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_NONE.id(), Optional.of(false))
+						&& !p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) { // No empty cage, no full cage
 						int menu = showMenu(p, n,
 							"I've lost my cage",
 							"I've not caught all the scorpions yet");
@@ -238,7 +240,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 						} else if (menu == 1) {
 							npcTalk(p, n, "Well remember, go speak to the seers north of here if you need any help");
 						}
-					} else if (hasItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id())) { // full cage
+					} else if (p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) { // full cage
 						playerTalk(p, n, "I have retrieved all your scorpions");
 						npcTalk(p, n, "aha my little scorpions home at last");
 						removeItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), 1);
@@ -261,7 +263,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 							"battlestaff of air", "battlestaff of earth",
 							"I won't bother yet actually");
 						if (five == 0) {
-							if (!hasItem(p, ItemId.BATTLESTAFF_OF_FIRE.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_FIRE.id(), Optional.of(false))) {
 								playerTalk(p, n, "I don't have a battlestaff of fire yet though");
 								return;
 							}
@@ -274,7 +276,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 1) {
-							if (!hasItem(p, ItemId.BATTLESTAFF_OF_WATER.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_WATER.id(), Optional.of(false))) {
 								playerTalk(p, n, "I don't have a battlestaff of water yet though");
 								return;
 							}
@@ -287,7 +289,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 2) {
-							if (!hasItem(p, ItemId.BATTLESTAFF_OF_AIR.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_AIR.id(), Optional.of(false))) {
 								playerTalk(p, n, "I don't have a battlestaff of air yet though");
 								return;
 							}
@@ -300,7 +302,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 3) {
-							if (!hasItem(p, ItemId.BATTLESTAFF_OF_EARTH.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_EARTH.id(), Optional.of(false))) {
 								playerTalk(p, n, "I don't have a battlestaff of earth yet though");
 								return;
 							}

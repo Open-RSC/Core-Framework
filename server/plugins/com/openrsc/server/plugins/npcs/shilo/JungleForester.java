@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
@@ -294,7 +296,7 @@ public class JungleForester implements TalkToNpcListener, TalkToNpcExecutiveList
 	public void onInvUseOnNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) { // the complete map.
 			p.message("You show the completed map of Kharazi Jungle to the Forester.");
-			if (hasItem(p, ItemId.BULL_ROARER.id())) { // if already have the bull roarer
+			if (p.getCarriedItems().hasCatalogID(ItemId.BULL_ROARER.id(), Optional.empty())) { // if already have the bull roarer
 				npcTalk(p, n, "It's a great map, thanks for letting me take a copy!",
 					"It has helped me out a number of times now.");
 				return;

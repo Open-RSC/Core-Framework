@@ -7,6 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
@@ -26,7 +28,7 @@ public class UndergroundPassDemons implements PlayerKilledNpcListener, PlayerKil
 			} else {
 				teleportPlayer(p, n);
 				message(p, "the demon slumps to the floor");
-				if (!hasItem(p, n.getID() + 364)) {
+				if (!p.getCarriedItems().hasCatalogID(n.getID() + 364, Optional.empty())) {
 					p.message("around it's neck you find a strange looking amulet");
 					addItem(p, n.getID() + 364, 1); // will give correct ammys for all.
 				}

@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -877,7 +879,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 						"Thats terrible! And I was only there the other day too",
 						"They bought the last of my Patented Multi Purpose Poison!");
 					int menu;
-					if (hasItem(p, ItemId.MURDER_SCENE_POT.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
 						menu = showMenu(p, n,
 							"Patented Multi Purpose Poison?",
 							"Who did you sell Poison to at the house?",
@@ -1220,7 +1222,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 				case 0:
 				case 1:
 					p.message("This knife doesn't seem sturdy enough to have killed Lord Sinclair");
-					if (!hasItem(p, ItemId.A_SILVER_DAGGER.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.A_SILVER_DAGGER.id(), Optional.of(false))) {
 						addItem(p, ItemId.A_SILVER_DAGGER.id(), 1);
 					} else {
 						p.message("You already have the murderweapon");
@@ -1237,7 +1239,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 				case 0:
 				case 1:
 					p.message("It seems like Lord Sinclair was drinking from this before he died");
-					if (!hasItem(p, ItemId.MURDER_SCENE_POT.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
 						addItem(p, ItemId.MURDER_SCENE_POT.id(), 1);
 					} else {
 						p.message("You already have the sickly smelling pot");
@@ -1349,7 +1351,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 				case 1:
 					if (obj.getID() == 1133) {
 						p.message("Theres something shiny hidden at the bottom");
-						if (!hasItem(p, ItemId.BOBS_SILVER_TEACUP.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.BOBS_SILVER_TEACUP.id(), Optional.of(false))) {
 							p.message("You take Bobs silver cup");
 							addItem(p, ItemId.BOBS_SILVER_TEACUP.id(), 1);
 						} else {
@@ -1357,7 +1359,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 						}
 					} else if (obj.getID() == 1132) {
 						p.message("Theres something shiny hidden at the bottom");
-						if (!hasItem(p, ItemId.ANNAS_SILVER_NECKLACE.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.ANNAS_SILVER_NECKLACE.id(), Optional.of(false))) {
 							p.message("You take Annas Silver Necklace");
 							addItem(p, ItemId.ANNAS_SILVER_NECKLACE.id(), 1);
 						} else {
@@ -1365,7 +1367,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 						}
 					} else if (obj.getID() == 1136) {
 						p.message("Theres something shiny hidden at the bottom");
-						if (!hasItem(p, ItemId.ELIZABETHS_SILVER_NEEDLE.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.ELIZABETHS_SILVER_NEEDLE.id(), Optional.of(false))) {
 							p.message("You take Elizabeths silver needle");
 							addItem(p, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), 1);
 						} else {
@@ -1373,7 +1375,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 						}
 					} else if (obj.getID() == 1137) {
 						p.message("Theres something shiny hidden at the bottom");
-						if (!hasItem(p, ItemId.FRANKS_SILVER_POT.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.FRANKS_SILVER_POT.id(), Optional.of(false))) {
 							p.message("You take franks silver pot");
 							addItem(p, ItemId.FRANKS_SILVER_POT.id(), 1);
 						} else {
@@ -1381,7 +1383,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 						}
 					} else if (obj.getID() == 1135) {
 						p.message("Theres something shiny hidden at the bottom");
-						if (!hasItem(p, ItemId.DAVIDS_SILVER_BOOK.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.DAVIDS_SILVER_BOOK.id(), Optional.of(false))) {
 							p.message("You take Davids silver book");
 							addItem(p, ItemId.DAVIDS_SILVER_BOOK.id(), 1);
 						} else {
@@ -1389,7 +1391,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 						}
 					} else if (obj.getID() == 1134) {
 						p.message("Theres something shiny hidden at the bottom");
-						if (!hasItem(p, ItemId.CAROLS_SILVER_BOTTLE.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.CAROLS_SILVER_BOTTLE.id(), Optional.of(false))) {
 							p.message("You take Carols silver bottle");
 							addItem(p, ItemId.CAROLS_SILVER_BOTTLE.id(), 1);
 						} else {
@@ -1470,14 +1472,15 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 							"It must have been someone the dog knew to get past it quietly");
 					} else if (obj.getID() == 1138) {
 						p.message("A barrel full of finely sifted flour");
-						if (!hasItem(p, ItemId.POT.id()) && !hasItem(p, ItemId.MURDER_SCENE_POT.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.POT.id(), Optional.of(false))
+							&& !p.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
 							p.message("You need something to put the flour in");
-						} else if (hasItem(p, ItemId.POT.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.POT.id(), Optional.of(false))) {
 							p.message("You take some flour from the barrel");
 							p.getCarriedItems().getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
 
 							p.message("Theres still plenty of flour left");
-						} else if (hasItem(p, ItemId.MURDER_SCENE_POT.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
 							message(p, "You probably shouldn't use evidence from a crime",
 								"scene to keep flour in...");
 						}

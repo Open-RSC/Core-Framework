@@ -16,6 +16,8 @@ import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -428,7 +430,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 		if (obj.getID() == 57) {
 			//special door dwarven mine
 			if (p.getX() >= 259 && hasItem(p, ItemId.WIZARDS_MIND_BOMB.id(), 1) && hasItem(p, ItemId.SILK.id(), 1)
-					&& hasItem(p, ItemId.LOBSTER_POT.id(), 1) && hasItem(p, ItemId.UNFIRED_BOWL.id())) {
+					&& hasItem(p, ItemId.LOBSTER_POT.id(), 1) && p.getCarriedItems().hasCatalogID(ItemId.UNFIRED_BOWL.id(), Optional.of(false))) {
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
 				if (!p.getLocation().equals(location)) {

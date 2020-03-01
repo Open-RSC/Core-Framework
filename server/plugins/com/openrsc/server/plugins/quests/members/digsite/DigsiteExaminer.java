@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveListener {
@@ -40,7 +42,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"Thanks!",
 							"I have lost my trowel!");
 						if (finalMenu == 1) {
-							if (hasItem(p, ItemId.TROWEL.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.TROWEL.id(), Optional.of(false))) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
@@ -78,7 +80,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 					case 1:
 						playerTalk(p, n, "Hello");
 						npcTalk(p, n, "Hello again");
-						if (hasItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), Optional.of(false))) {
 							playerTalk(p, n, "Here is the stamped letter you asked for");
 							removeItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
 							p.updateQuestStage(Quests.DIGSITE, 2);
@@ -90,7 +92,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 								"I have lost the letter you gave me",
 								"All right I'll try and get it");
 							if (opt == 0) {
-								if (hasItem(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id())) {
+								if (p.getCarriedItems().hasCatalogID(ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), Optional.of(false))) {
 									npcTalk(p, n, "Oh now come on",
 										"You have it with you!");
 								} else {
@@ -135,7 +137,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						} else if (opt3 == 2) {
 							npcTalk(p, n, "Oh, no problem at all");
 						} else if (opt3 == 3) {
-							if (hasItem(p, ItemId.TROWEL.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.TROWEL.id(), Optional.of(false))) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
@@ -163,7 +165,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 						} else if (opt4 == 2) {
 							npcTalk(p, n, "Oh, no problem at all");
 						} else if (opt4 == 3) {
-							if (hasItem(p, ItemId.TROWEL.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.TROWEL.id(), Optional.of(false))) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {
@@ -185,7 +187,7 @@ public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"Thanks!",
 							"I have lost my trowel!");
 						if (opt5 == 1) {
-							if (hasItem(p, ItemId.TROWEL.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.TROWEL.id(), Optional.of(false))) {
 								npcTalk(p, n, "Really ?",
 									"Look in your backpack and make sure first");
 							} else {

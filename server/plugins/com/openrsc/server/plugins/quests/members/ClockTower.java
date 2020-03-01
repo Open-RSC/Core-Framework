@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ClockTower implements QuestInterface, TalkToNpcListener,
@@ -340,8 +342,10 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			message(p, "You pour water over the cog",
 				"The cog quickly cools down");
-			if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
-					|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
+				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
+				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
+				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_RED.id(), Optional.empty())) {
 				p.message("You can only carry one");
 			} else {
 				p.message("You take the cog");
@@ -354,8 +358,10 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_PURPLE.id() || i.getID() == ItemId.LARGE_COG_BLUE.id() || i.getID() == ItemId.LARGE_COG_RED.id()) {
-			if (hasItem(p, ItemId.LARGE_COG_PURPLE.id()) || hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_BLUE.id())
-				|| hasItem(p, ItemId.LARGE_COG_RED.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
+				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
+				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
+				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_RED.id(), Optional.empty())) {
 				p.message("The cogs are heavy, you can only carry one");
 				return true;
 			}
@@ -373,18 +379,22 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 			if (p.getCarriedItems().hasCatalogID(ItemId.ICE_GLOVES.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				message(p, "The ice gloves cool down the cog",
 					"You can carry it now");
-				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
-						|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_RED.id(), Optional.empty())) {
 					p.message("You can only carry one");
 				} else {
 					p.message("You take the cog");
 					addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
 				}
-			} else if (hasItem(p, ItemId.BUCKET_OF_WATER.id())) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.BUCKET_OF_WATER.id(), Optional.of(false))) {
 				message(p, "You pour water over the cog",
 					"The cog quickly cools down");
-				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
-						|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_RED.id(), Optional.empty())) {
 					p.message("You can only carry one");
 				} else {
 					p.message("You take the cog");
@@ -395,8 +405,10 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 				message(p,
 					"The cog is red hot from the flames, too hot to carry",
 					"The cogs are heavy");
-				if (hasItem(p, ItemId.LARGE_COG_BLACK.id()) || hasItem(p, ItemId.LARGE_COG_PURPLE.id())
-						|| hasItem(p, ItemId.LARGE_COG_BLUE.id()) || hasItem(p, ItemId.LARGE_COG_RED.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_RED.id(), Optional.empty())) {
 					p.message("You can only carry one");
 				}
 			}

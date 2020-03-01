@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -57,7 +59,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 				npcTalk(p, n, "What, you gots the crystal...");
 				int lastMenu = showMenu(p, n, "But I've lost it!", "Oh okay then");
 				if (lastMenu == 0) {
-					if (hasItem(p, ItemId.POWERING_CRYSTAL2.id()) || p.getQuestStage(Quests.WATCHTOWER) == -1) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL2.id(), Optional.empty()) || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 						npcTalk(p, n, "I have no more for you!");
 					} else {
 						npcTalk(p, n, "All right, take this one then...");
@@ -373,7 +375,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (menu == 0) {
 							npcTalk(p, n, "I have nothing left for you but the cooking pot!");
 						} else if (menu == 1) {
-							if (!hasItem(p, ItemId.OGRE_RELIC_PART_BASE.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC_PART_BASE.id(), Optional.empty())) {
 								npcTalk(p, n, "Stupid morsel, I have another",
 									"Take it and go now before I lose my temper");
 								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
@@ -381,7 +383,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								npcTalk(p, n, "You lie to me morsel!");
 							}
 						} else if (menu == 2) {
-							if (!hasItem(p, ItemId.POWERING_CRYSTAL1.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL1.id(), Optional.empty())) {
 								npcTalk(p, n, "I suppose you want another ?",
 									"I suppose just this once I could give you my copy...");
 								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
@@ -394,7 +396,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (p.getCache().hasKey("ogre_grew")) {
 							npcTalk(p, n, "The morsel is back",
 								"Does it have our tooth for us ?");
-							if (hasItem(p, ItemId.OGRE_TOOTH.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.OGRE_TOOTH.id(), Optional.of(false))) {
 								playerTalk(p, n, "I have it");
 								npcTalk(p, n, "It's got it, good good",
 									"That should annoy gorad wonderfully",
@@ -467,7 +469,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (menu == 0) {
 							npcTalk(p, n, "No, I have no more tasks for you, now go away");
 						} else if (menu == 1) {
-							if (!hasItem(p, ItemId.OGRE_RELIC_PART_HEAD.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC_PART_HEAD.id(), Optional.empty())) {
 								npcTalk(p, n, "Grrr, why do I bother ?",
 									"It's a good job I have another part!");
 								addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
@@ -565,7 +567,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							npcTalk(p, n, "Have you arrived for dinner ?",
 								"Ha ha ha! begone small thing!");
 						} else if (subMenu == 1) {
-							if (!hasItem(p, ItemId.OGRE_RELIC_PART_BODY.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC_PART_BODY.id(), Optional.empty())) {
 								npcTalk(p, n, "Small thing, how could you be so careless ?",
 									"Here, take this one");
 								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);

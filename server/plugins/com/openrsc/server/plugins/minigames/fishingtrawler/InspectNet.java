@@ -8,6 +8,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class InspectNet implements ObjectActionListener, ObjectActionExecutiveListener {
@@ -25,7 +27,7 @@ public class InspectNet implements ObjectActionListener, ObjectActionExecutiveLi
 
 		if (trawler != null && trawler.isNetBroken()) {
 			player.message("it's begining to rip");
-			if (!hasItem(player, ItemId.ROPE.id())) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false))) {
 				player.message("you'll need some rope to fix it");
 				return;
 			}

@@ -12,6 +12,8 @@ import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeNpcs implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener,
@@ -185,7 +187,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				}
 			} else {
 				// player does not have ball
-				if (!hasItem(p, ItemId.GNOME_BALL.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 					loadIfNotMemory(p, "gnomeball_npc");
 					// and neither does a gnome baller
 					if (inArray(p.getAttribute("gnomeball_npc", -1), 0)) {
@@ -227,7 +229,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				p.message("you can't make the pass from here");
 			}
 			else if (currentZone == GnomeField.Zone.ZONE_PASS) {
-				if (!hasItem(p, ItemId.GNOME_BALL.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 					p.message("you need the ball first");
 				}
 				else {
@@ -247,7 +249,7 @@ TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExe
 				}
 			}
 			else if (command.equals("pass to")) {
-				if (!hasItem(p, ItemId.GNOME_BALL.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 					p.message("you need the ball first");
 				} else {
 					p.message("you can't make the pass from here");

@@ -9,6 +9,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -27,7 +28,7 @@ public final class DukeOfLumbridge implements TalkToNpcExecutiveListener,
 				menu.add("Rune mysteries");
 
 		if (p.getQuestStage(Quests.DRAGON_SLAYER) >= 2 || p.getQuestStage(Quests.DRAGON_SLAYER) < 0
-				&& !hasItem(p, ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+				&& !p.getCarriedItems().hasCatalogID(ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), Optional.empty())) {
 			menu.add(0,"I seek a shield that will protect me from dragon breath");
 
 			int choice = showMenu(p, n, false, menu.toArray(new String[menu.size()]));

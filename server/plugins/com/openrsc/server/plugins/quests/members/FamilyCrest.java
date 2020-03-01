@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FamilyCrest implements QuestInterface, TalkToNpcListener,
@@ -113,8 +115,9 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 						p.message("You give the crest to Dimintheis");
 						removeItem(p, ItemId.FAMILY_CREST.id(), 1);
 						gave_crest = true;
-					} else if (hasItem(p, ItemId.CREST_FRAGMENT_ONE.id()) && hasItem(p, ItemId.CREST_FRAGMENT_TWO.id())
-							&& hasItem(p, ItemId.CREST_FRAGMENT_THREE.id())) {
+					} else if (p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_THREE.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have retrieved your crest");
 						p.message("You give the parts of the crest to Dimintheis");
 						removeItem(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
@@ -205,7 +208,8 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				case -1:
 					npcTalk(p, n, "I have heard word from my father",
 						"Thankyou for helping to restore our family honour");
-					if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false))
+						&& getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
 						playerTalk(p, n,
 							"Your father said that you could improve these Gauntlets in some way for me");
 						npcTalk(p,
@@ -279,7 +283,8 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					break;
 				case 6:
 					npcTalk(p, n, "So how are you doing getting the jewellry?");
-					if (hasItem(p, ItemId.RUBY_RING_FAMILYCREST.id()) && hasItem(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.RUBY_RING_FAMILYCREST.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have it");
 						npcTalk(p, n, "These are brilliant");
 						p.message("You exchange the jewellry for a piece of crest");
@@ -318,7 +323,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					break;
 				case 8:
 					npcTalk(p, n, "How are you doing getting the rest of the crest?");
-					if (!hasItem(p, ItemId.CREST_FRAGMENT_TWO.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))) {
 						int menu2 = showMenu(p, n,
 							"I am still working on it",
 							"I have lost the piece you gave me");
@@ -361,7 +366,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				}
 			} else if (p.getQuestStage(this) == -1) {
 				npcTalk(p, n, "Hello again");
-				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
 					playerTalk(p, n,
 						"Your father tells me, you can improve these gauntlets a bit");
 					npcTalk(p,

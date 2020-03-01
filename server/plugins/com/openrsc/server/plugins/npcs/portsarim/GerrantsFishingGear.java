@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class GerrantsFishingGear implements
@@ -74,7 +76,9 @@ public final class GerrantsFishingGear implements
 				"The method for this would be take an ordinary fishing rod",
 				"And cover it with fire proof blamish oil");
 			// check no Blaimish snail slime, oil and rod to re-issue
-			if (!hasItem(p, ItemId.BLAMISH_SNAIL_SLIME.id()) && !hasItem(p, ItemId.BLAMISH_OIL.id()) && !hasItem(p, ItemId.OILY_FISHING_ROD.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.BLAMISH_SNAIL_SLIME.id(), Optional.empty())
+				&& !p.getCarriedItems().hasCatalogID(ItemId.BLAMISH_OIL.id(), Optional.empty())
+				&& !p.getCarriedItems().hasCatalogID(ItemId.OILY_FISHING_ROD.id(), Optional.empty())) {
 				npcTalk(p, n, "Now I may have a jar of Blamish snail slime",
 					"I wonder where I put it");
 				p.message("Gerrant searches about a bit");

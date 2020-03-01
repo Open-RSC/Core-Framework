@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
@@ -233,7 +235,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 				break;
 			case 2:
 				int count = messageCount(p);
-				if (count <= 2 && hasItem(p, ItemId.MESSAGE.id()))
+				if (count <= 2 && p.getCarriedItems().hasCatalogID(ItemId.MESSAGE.id(), Optional.of(false)))
 					npcTalk(p, n, "Please, deliver the message to Romeo with all speed");
 				else {
 					if (count < 2) {
@@ -356,7 +358,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 					"Remember, Cadava potion, for Father Lawrence");
 				break;
 			case 5:
-				if (hasItem(p, ItemId.MESSAGE.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.MESSAGE.id(), Optional.of(false))) {
 					npcTalk(p, n, "Did you find the Apothecary?");
 					playerTalk(p, n, "I am on my way back to him with the ingredients");
 					npcTalk(p, n, "Good work. Get the potion to Juliet when you have it",

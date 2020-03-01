@@ -1,8 +1,8 @@
 package com.openrsc.server.plugins.npcs.lumbridge;
 
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -10,11 +10,9 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import java.util.Optional;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 
@@ -22,7 +20,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	public void onTalkToNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		npcTalk(p, n, "Go away, I'm meditating");
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !hasItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id())) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_GHOSTSPEAK.id(), Optional.empty())) {
 			defaultMenu.addOption(new Option(
 				"Father Aereck sent me to talk to you") {
 				@Override
@@ -109,7 +107,7 @@ public class Urhney implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				}
 			});
 		}
-		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2 && !hasItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id())) {
+		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2 && !p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_GHOSTSPEAK.id(), Optional.empty())) {
 			defaultMenu.addOption(new Option(
 				"I've lost the amulet") {
 				@Override

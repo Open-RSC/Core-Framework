@@ -6,7 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
@@ -20,7 +19,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListener,
 	TalkToNpcExecutiveListener, ObjectActionListener,
 	ObjectActionExecutiveListener {
-	
+
 	@Override
 	public int getMiniGameId() {
 		return Minigames.ALFRED_GRIMHANDS_BARCRAWL;
@@ -40,7 +39,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 	public void handleReward(Player p) {
 		//mini-quest complete handled already
 	}
-	
+
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == 311 && obj.getX() == 494;
@@ -74,7 +73,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 			}
 			if (p.getCache().hasKey("barcrawl")) {
 				npcTalk(p, n, "So hows the barcrawl coming along?");
-				if (!hasItem(p, ItemId.BARCRAWL_CARD.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 					final int third = showMenu(p, n, false, //do not send over
 						"I've lost my  barcrawl card",
 						"Not to bad, my barcrawl card is in my bank now");
@@ -100,7 +99,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 					&& p.getCache().hasKey("barthree")
 					&& p.getCache().hasKey("barfour")
 					&& p.getCache().hasKey("barfive")
-					&& p.getCache().hasKey("barsix") && hasItem(p, ItemId.BARCRAWL_CARD.id())) {
+					&& p.getCache().hasKey("barsix") && p.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 					playerTalk(p, n,
 						"I think I jusht about done them all, but I losht count");
 					message(p, "You give the card to the barbarian");

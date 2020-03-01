@@ -8,6 +8,7 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -25,7 +26,7 @@ public class SilkMerchant implements TalkToNpcExecutiveListener, TalkToNpcListen
 			if (attacker != null)
 				attacker.setChasing(p);
 
-		} else if (hasItem(p, ItemId.SILK.id())) {
+		} else if (p.getCarriedItems().hasCatalogID(ItemId.SILK.id(), Optional.of(false))) {
 			playerTalk(p, n, "Hello I have some fine silk from Al Kharid to sell to you");
 			npcTalk(p, n, "Ah I may be intersted in that",
 				"What sort of price were you looking at per piece of silk?");

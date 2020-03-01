@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /***
@@ -79,7 +81,7 @@ public class ErnestTheChicken implements QuestInterface,
 		}
 		if (obj.getID() == QuestObjects.COMPOST
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
-			if (!hasItem(p, ItemId.CLOSET_KEY.id()) && p.getQuestStage(this) > 0) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.CLOSET_KEY.id(), Optional.empty()) && p.getQuestStage(this) > 0) {
 				message(p, "You dig through the compost heap",
 					"You find a small key");
 				addItem(p, ItemId.CLOSET_KEY.id(), 1);
@@ -271,18 +273,18 @@ public class ErnestTheChicken implements QuestInterface,
 					npcTalk(p, n, "Have you found anything yet?");
 
 					// no items
-					if (!hasItem(p, ItemId.RUBBER_TUBE.id())
-						&& !hasItem(p, ItemId.PRESSURE_GAUGE.id())
-						&& !hasItem(p, ItemId.OIL_CAN.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id(), Optional.of(false))
+						&& !p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id(), Optional.of(false))
+						&& !p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
 						playerTalk(p, n, "I'm afraid I don't have any yet!");
 						npcTalk(p, n,
 							"I need a rubber tube, a pressure gauge and a can of oil",
 							"Then your friend can stop being a chicken");
 					}
 					// all items
-					else if (hasItem(p, ItemId.RUBBER_TUBE.id())
-						&& hasItem(p, ItemId.PRESSURE_GAUGE.id())
-						&& hasItem(p, ItemId.OIL_CAN.id())) {
+					else if (p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have everything");
 						npcTalk(p, n, "Give em here then");
 						message(p,
@@ -465,7 +467,7 @@ public class ErnestTheChicken implements QuestInterface,
 		switch (obj.getID()) {
 			case 35:
 				//only allow is player is stuck, otherwise promote using key
-				if (p.getX() == 211 && p.getY() == 545 && !hasItem(p, ItemId.CLOSET_KEY.id())) {
+				if (p.getX() == 211 && p.getY() == 545 && !p.getCarriedItems().hasCatalogID(ItemId.CLOSET_KEY.id(), Optional.of(false))) {
 					doDoor(obj, p);
 					p.message("You go through the door");
 				} else {

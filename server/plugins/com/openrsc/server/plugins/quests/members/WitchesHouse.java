@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WitchesHouse implements QuestInterface, TalkToNpcListener,
@@ -95,7 +97,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 				case 3:
-					if (hasItem(p, ItemId.BALL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BALL.id(), Optional.of(false))) {
 						playerTalk(p, n, "Hi I have got your ball back",
 							"It was harder than I thought it would be");
 						npcTalk(p, n, "Thankyou very much");
@@ -226,7 +228,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 255) {
-			if (!hasItem(p, ItemId.FRONT_DOOR_KEY.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.FRONT_DOOR_KEY.id(), Optional.of(false))) {
 				p.message("You find a key under the mat");
 				addItem(p, ItemId.FRONT_DOOR_KEY.id(), 1);
 			} else {
@@ -260,7 +262,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 			} else if (command.equalsIgnoreCase("close")) {
 				closeCupboard(obj, p, WITCHES_HOUSE_CUPBOARD_CLOSED);
 			} else {
-				if (!hasItem(p, ItemId.MAGNET.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.MAGNET.id(), Optional.of(false))) {
 					p.message("You find a magnet in the cupboard");
 					addItem(p, ItemId.MAGNET.id(), 1);
 					if (p.getQuestStage(this) > 0) {

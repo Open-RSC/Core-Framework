@@ -15,6 +15,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Mining implements ObjectActionListener,
@@ -45,7 +47,7 @@ public final class Mining implements ObjectActionListener,
 							   Player player) {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
-				if (hasItem(player, getAxe(player))) {
+				if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
 					if (getCurrentLevel(player, com.openrsc.server.constants.Skills.MINING) >= 50) {
 						player.message("you manage to dig a way through the rockslide");
 						if (player.getX() <= 425) {
@@ -64,7 +66,7 @@ public final class Mining implements ObjectActionListener,
 				player.playerServerMessage(MessageType.QUEST, "they are just in the way");
 			}
 		} else if (object.getID() == 770) {
-			if (hasItem(player, getAxe(player))) {
+			if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
 				player.setBusyTimer(1600);
 				message(player, "you mine the rock", "and break of several large chunks");
 				addItem(player, ItemId.ROCKS.id(), 1);
@@ -74,7 +76,7 @@ public final class Mining implements ObjectActionListener,
 		} else if (object.getID() == 1026) { // watchtower - rock of dalgroth
 			if (command.equalsIgnoreCase("mine")) {
 				if (player.getQuestStage(Quests.WATCHTOWER) == 9) {
-					if (!hasItem(player, getAxe(player))) {
+					if (!player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
 						player.playerServerMessage(MessageType.QUEST, "You need a pickaxe to mine the rock");
 						return;
 					}
@@ -82,7 +84,7 @@ public final class Mining implements ObjectActionListener,
 						player.playerServerMessage(MessageType.QUEST, "You need a mining level of 40 to mine this crystal out");
 						return;
 					}
-					if (hasItem(player, ItemId.POWERING_CRYSTAL4.id())) {
+					if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.empty())) {
 						playerTalk(player, null, "I already have this crystal",
 							"There is no benefit to getting another");
 						return;

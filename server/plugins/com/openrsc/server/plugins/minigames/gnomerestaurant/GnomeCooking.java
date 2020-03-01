@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -10,9 +11,9 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeCooking implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
 
@@ -120,9 +121,12 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	private boolean mouldDough(Item item, Player p) {
-		if (hasItem(p, ItemId.GNOMEBATTA_DOUGH.id()) || hasItem(p, ItemId.GNOMEBOWL_DOUGH.id())
-				|| hasItem(p, ItemId.GNOMECRUNCHIE_DOUGH.id()) || hasItem(p, ItemId.GNOMEBATTA.id())
-				|| hasItem(p, ItemId.GNOMEBOWL.id()) || hasItem(p, ItemId.GNOMECRUNCHIE.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA_DOUGH.id(), Optional.of(false))
+			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL_DOUGH.id(), Optional.of(false))
+			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE_DOUGH.id(), Optional.of(false))
+			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA.id(), Optional.of(false))
+			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
+			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
 			message(p, "you need to finish, eat or drop the unfinished dish you hold");
 			p.message("before you can make another - giannes rules");
 			return false;

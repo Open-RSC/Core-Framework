@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener,
@@ -210,7 +212,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 				}
 			} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0) && isBlackArmGang(p)) {
 				if (p.getQuestStage(Quests.HEROS_QUEST) > 0) {
-					if (!hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && p.getCache().hasKey("armband")) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.empty()) && p.getCache().hasKey("armband")) {
 						playerTalk(p, n, "I have lost my master thief armband");
 						npcTalk(p, n, "Well I have a spare", "Don't lose it again");
 						addItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
@@ -218,7 +220,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					}
 					playerTalk(p, n, "Hey");
 					npcTalk(p, n, "Hey");
-					if (hasItem(p, ItemId.CANDLESTICK.id()) && !p.getCache().hasKey("armband")) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && !p.getCache().hasKey("armband")) {
 						int choice3 = showMenu(p, n,
 							"Who are all those people in there?",
 							"I have a candlestick now");

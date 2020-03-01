@@ -1,8 +1,5 @@
 package com.openrsc.server.plugins;
 
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
@@ -32,7 +29,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 public class Functions {
 

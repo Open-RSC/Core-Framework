@@ -18,6 +18,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener, PickupListener,
@@ -61,7 +63,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 				if (p.getQuestStage(this) == 3) {
 					playerTalk(p, n, "Hello ghost, how are you?");
 					npcTalk(p, n, "How are you doing finding my skull?");
-					if (!hasItem(p, ItemId.QUEST_SKULL.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.QUEST_SKULL.id(), Optional.of(false))) {
 						playerTalk(p, n, "Sorry, I can't find it at the moment");
 						npcTalk(p,
 							n,
@@ -71,7 +73,7 @@ public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener
 							"I suppose it might take a little while to find");
 						// kosher: this condition made player need to restart skull process incl. skeleton fight
 						p.getCache().remove("tried_grab_skull");
-					} else if (hasItem(p, ItemId.QUEST_SKULL.id())) {
+					} else {
 						playerTalk(p, n, "I have found it");
 						npcTalk(p,
 							n,

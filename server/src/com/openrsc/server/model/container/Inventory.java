@@ -4,6 +4,7 @@ import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemDefinition;
@@ -14,8 +15,6 @@ import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -637,6 +636,20 @@ public class Inventory {
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
 			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
+		else
+			return false;
+	}
+
+	public boolean hasCatalogID(int id, boolean noted) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getCatalogId() == id && i.getNoted() == noted)
+					return true;
+			}
+		}
+
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id, noted) != -1;
 		else
 			return false;
 	}

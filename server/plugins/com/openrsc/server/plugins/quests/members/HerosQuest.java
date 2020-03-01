@@ -15,6 +15,7 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -97,7 +98,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 		} else if (sub_menu2 == 1) {
 			npcTalk(p, n, "Yeah I'll give you time to settle in");
 		} else if (sub_menu2 == 2) {
-			if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) ) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.MISCELLANEOUS_KEY.id(), Optional.empty()) ) {
 				npcTalk(p, n, "Hmm well you could find out what this key does",
 					"Apparantly it's to something in this building",
 					"Though I don't for the life of me know what");
@@ -135,7 +136,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else if (sub_menu2 == 1) {
 				npcTalk(p, n, "Yeah I'll give you time to settle in");
 			} else if (sub_menu2 == 2) {
-				if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) ) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.MISCELLANEOUS_KEY.id(), Optional.empty()) ) {
 					npcTalk(p, n, "Hmm well you could find out what this key does",
 						"Apparantly it's to something in this building",
 						"Though I don't for the life of me know what");
@@ -175,7 +176,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				"I'll get your hours of duty sorted in a bit",
 				"Oh and have you got your I.D paper",
 				"Internal security is almost as important as external security for a guard");
-			if (!hasItem(p, ItemId.ID_PAPER.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
 				playerTalk(p, n, "Oh dear I don't have that with me any more");
 			} else {
 				p.message("You hand your I.D paper to grip");
@@ -199,7 +200,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getCache().hasKey("hq_impersonate")) {
-				if (hasItem(p, ItemId.ID_PAPER.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.empty())) {
 					return;
 				} else {
 					playerTalk(p, n, "I have lost Hartigen's I.D paper");
@@ -292,7 +293,9 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 				case 2:
 					npcTalk(p, n, "Greetings welcome to the hero's guild",
 						"How goes thy quest?");
-					if (hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && hasItem(p, ItemId.LAVA_EEL.id()) && hasItem(p, ItemId.RED_FIREBIRD_FEATHER.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have all the things needed");
 						removeItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 						removeItem(p, ItemId.LAVA_EEL.id(), 1);
@@ -441,7 +444,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
 							&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
 						npcTalk(p, garv, "So have you got your i.d paper?");
-						if (hasItem(p, ItemId.ID_PAPER.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
 							npcTalk(p, garv, "You had better come in then",
 								"Grip will want to talk to you");
 							p.getCache().store("garv_door", true);
@@ -580,7 +583,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 			} else if (command.equalsIgnoreCase("close")) {
 				closeGenericObject(obj, p, CANDLESTICK_CHEST_CLOSED, "You close the chest");
 			} else {
-				if (!hasItem(p, ItemId.CANDLESTICK.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.empty())) {
 					addItem(p, ItemId.CANDLESTICK.id(), 2);
 					message(p, "You find two candlesticks in the chest",
 						"So that will be one for you",

@@ -19,6 +19,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FightArena implements QuestInterface, TalkToNpcListener,
@@ -281,7 +283,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 					"bored, bored, bored",
 					"you would think the slaves would be more entertaining",
 					"selfish.. the lot of 'em");
-				if (hasItem(p, ItemId.KHALI_BREW.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.KHALI_BREW.id(), Optional.of(false))) {
 					playerTalk(p, n, "do you still fancy a drink?");
 					npcTalk(p, n,
 						"I really shouldn't... ok then, just the one",
@@ -410,7 +412,8 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 			} else if (command.equalsIgnoreCase("close")) {
 				closeCupboard(obj, p, GUARDS_CUPBOARD_CLOSED);
 			} else {
-				if (!hasItem(p, ItemId.KHAZARD_CHAINMAIL.id()) && !hasItem(p, ItemId.KHAZARD_HELMET.id())
+				if (!p.getCarriedItems().hasCatalogID(ItemId.KHAZARD_CHAINMAIL.id(), Optional.empty())
+					&& !p.getCarriedItems().hasCatalogID(ItemId.KHAZARD_HELMET.id(), Optional.empty())
 					&& p.getQuestStage(getQuestId()) >= 1) {
 					p.message("You search the cupboard...");
 					p.message("You find a khazard helmet");
@@ -448,7 +451,7 @@ public class FightArena implements QuestInterface, TalkToNpcListener,
 			Npc servil = getNearestNpc(p, NpcId.JEREMY_SERVIL.id(), 5);
 			Npc guard = getNearestNpc(p, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 5);
 			if (servil != null && guard != null) {
-				if (p.getCache().hasKey("guard_sleeping") && hasItem(p, ItemId.KHAZARD_CELL_KEYS.id())) {
+				if (p.getCache().hasKey("guard_sleeping") && p.getCarriedItems().hasCatalogID(ItemId.KHAZARD_CELL_KEYS.id(), Optional.of(false))) {
 					playerTalk(p, servil, "Jeremy, look, I have the cell keys");
 					npcTalk(p, servil, "Wow! Please help me");
 					playerTalk(p, servil, "ok, keep quiet");

@@ -13,7 +13,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.showBubble;
 
 public class Woodcutting implements ObjectActionListener,
@@ -56,7 +57,7 @@ public class Woodcutting implements ObjectActionListener,
 		}
 		int axeId = -1;
 		for (final int a : Formulae.woodcuttingAxeIDs) {
-			if (hasItem(player, a)) {
+			if (player.getCarriedItems().hasCatalogID(a, Optional.of(false))) {
 				axeId = a;
 				break;
 			}

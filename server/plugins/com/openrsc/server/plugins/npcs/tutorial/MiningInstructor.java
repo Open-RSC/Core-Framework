@@ -1,18 +1,15 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class MiningInstructor implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	/**
@@ -46,7 +43,7 @@ public class MiningInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 			npcTalk(p, n, "Now hit those rocks");
 			p.getCache().set("tutorial", 51);
 		} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 51) {
-			if (!hasItem(p, ItemId.BRONZE_PICKAXE.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_PICKAXE.id(), Optional.of(false))) {
 				playerTalk(p, n, "I have lost my pickaxe");
 				message(p, "The instructor somehow produces a large pickaxe from inside his jacket",
 					"The instructor gives you the pickaxe");

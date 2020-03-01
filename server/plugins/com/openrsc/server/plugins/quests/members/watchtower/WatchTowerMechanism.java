@@ -17,6 +17,8 @@ import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveLis
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -103,7 +105,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 						"That's a crystal found!",
 						"You are clever",
 						"Hold onto it until you have all four...");
-					if (hasItem(p, ItemId.POWERING_CRYSTAL4.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false))) {
 						lastCrystalChat(p, npc);
 					} else {
 						npcTalk(p, npc, "Keep searching for the others",
@@ -121,7 +123,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					npcTalk(p, npc, "Superb!",
 						"Keep up the good work",
 						"Hold onto it until you have all four...");
-					if (hasItem(p, ItemId.POWERING_CRYSTAL4.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false))) {
 						lastCrystalChat(p, npc);
 					} else {
 						npcTalk(p, npc, "Keep searching for the others",
@@ -139,7 +141,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 					npcTalk(p, npc, "I must say i'm impressed",
 						"May Saradomin speed you in finding them all",
 						"Hold onto it until you have all four...");
-					if (hasItem(p, ItemId.POWERING_CRYSTAL4.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false))) {
 						lastCrystalChat(p, npc);
 					} else {
 						npcTalk(p, npc, "Keep searching for the others",

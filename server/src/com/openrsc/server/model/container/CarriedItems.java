@@ -1,7 +1,8 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.model.entity.player.Player;
-import java.util.concurrent.atomic.AtomicReference;
+
+import java.util.Optional;
 
 public class CarriedItems {
 	//<editor-fold desc="Class Members">
@@ -54,10 +55,28 @@ public class CarriedItems {
 	 */
 	//TODO: Add parameter allowNoted
 	public boolean hasCatalogID(final int catalogID) {
-		if (getInventory().hasCatalogID(catalogID))
+		return this.hasCatalogID(catalogID, Optional.of(false));
+		/*if (getInventory().hasCatalogID(catalogID))
 			return true;
 		else
-			return getEquipment().hasCatalogID(catalogID);
+			return getEquipment().hasCatalogID(catalogID);*/
+	}
+
+	public boolean hasCatalogID(final int catalogID, final Optional<Boolean> noted) {
+		// noted not specified, check both normal and noted counterparts
+		if (!noted.isPresent()) {
+			if (getInventory().hasCatalogID(catalogID))
+				return true;
+			else
+				return getEquipment().hasCatalogID(catalogID);
+		} else {
+			boolean isNoted = noted.get();
+			if (getInventory().hasCatalogID(catalogID, isNoted))
+				return true;
+			else
+				return getEquipment().hasCatalogID(catalogID, isNoted);
+		}
+
 	}
 
 	//TODO: Add parameter allowNoted

@@ -12,6 +12,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 
@@ -211,7 +213,9 @@ public class DoorAction {
 							npcTalk(p, achetties,
 								"Greetings welcome to the hero's guild",
 								"How goes thy quest?");
-							if (hasItem(p, ItemId.RED_FIREBIRD_FEATHER.id()) && hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && hasItem(p, ItemId.LAVA_EEL.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))
+								&& p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.of(false))
+								&& p.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))) {
 								playerTalk(p, achetties, "I have all the things needed");
 								p.sendQuestComplete(Quests.HEROS_QUEST);
 							} else {
@@ -447,7 +451,7 @@ public class DoorAction {
 					if (mourner != null) {
 						npcTalk(p, mourner, "I'd stand away from there",
 							"That black cross means that house has been touched by the plague");
-						if (hasItem(p, ItemId.WARRANT.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.WARRANT.id(), Optional.of(false))) {
 							playerTalk(p, mourner,
 								"I have a warrant from Bravek to enter here");
 							npcTalk(p, mourner, "this is highly irregular",
@@ -703,7 +707,7 @@ public class DoorAction {
 						int m = showMenu(p, n, "Okay", "A diamond, are you crazy?",
 							"I haven't brought my diamonds with me");
 						if (m == 0) {
-							if (!hasItem(p, ItemId.DIAMOND.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id(), Optional.of(false))) {
 								playerTalk(p, n,
 									"I haven't brought my diamonds with me");
 							} else {
@@ -728,7 +732,7 @@ public class DoorAction {
 						int m = showMenu(p, n, "Okay", "A diamond, are you crazy?",
 							"I haven't brought my diamonds with me");
 						if (m == 0) {
-							if (!hasItem(p, ItemId.DIAMOND.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id(), Optional.of(false))) {
 								playerTalk(p, n,
 									"I haven't brought my diamonds with me");
 							} else {
@@ -1197,15 +1201,15 @@ public class DoorAction {
 							npcTalk(player, guard, "Halt. I need to conduct a search on you",
 								"There have been reports of a someone bringing a virus into Varrock");
 						}
-						if (hasItem(player, ItemId.ETHENEA.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
 							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.ETHENEA.id())) != -1) ;
 							player.message("He takes the vial of ethenea from you");
 						}
-						if (hasItem(player, ItemId.SULPHURIC_BROLINE.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.SULPHURIC_BROLINE.id(), Optional.of(false))) {
 							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.SULPHURIC_BROLINE.id())) != -1) ;
 							player.message("He takes the vial of sulphuric broline from you");
 						}
-						if (hasItem(player, ItemId.LIQUID_HONEY.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
 							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.LIQUID_HONEY.id())) != -1) ;
 							player.message("He takes the vial of liquid honey from you");
 						}

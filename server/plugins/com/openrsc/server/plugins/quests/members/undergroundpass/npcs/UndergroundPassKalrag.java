@@ -8,7 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.message;
 
 public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
@@ -25,7 +26,7 @@ public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKil
 			message(p, "kalrag slumps to the floor",
 				"poison flows from the corpse over the soil");
 			if (!p.getCache().hasKey("poison_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
-				if (hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))) {
 					message(p, "you smear the doll of iban in the poisoned blood");
 					p.message("it smells horrific");
 					p.getCache().store("poison_on_doll", true);

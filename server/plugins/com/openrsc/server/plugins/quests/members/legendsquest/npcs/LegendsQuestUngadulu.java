@@ -17,6 +17,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.message;
@@ -163,7 +165,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 							break;
 						} else {
 							//per-wiki
-							if (!hasItem(p, ItemId.TOTEM_POLE.id()) && !hasItem(p, ItemId.YOMMI_TREE_SEED.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.TOTEM_POLE.id(), Optional.of(false))
+								&& !p.getCarriedItems().hasCatalogID(ItemId.YOMMI_TREE_SEED.id(), Optional.of(false))) {
 								npcTalk(p, n, "I see you have no totem pole, or Yommi tree seeds, is everything Ok?");
 								int menuopts = showMenu(p, n, "Yes, everything's fine.", "I need more Yommi tree seeds.");
 								if (menuopts == 0) {
@@ -331,7 +334,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					if (reply4 == 0) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.DO_YOU_KNOW_ANYTHING_ABOUT_DAGGERS);
 					} else if (reply4 == 1) {
-						if (hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 							npcTalk(p, n, "You can use that Holy Force spell to try and defeat the spirit.",
 									"Come back and let me know if I can help in any other way.");
 						} else {
@@ -451,7 +454,8 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					}
 					break;
 				case Ungadulu.I_NEED_MORE_YOMMI_TREE_SEEDS:
-					if (hasItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id()) || hasItem(p, ItemId.YOMMI_TREE_SEED.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.GERMINATED_YOMMI_TREE_SEED.id(), Optional.of(false))
+						|| p.getCarriedItems().hasCatalogID(ItemId.YOMMI_TREE_SEED.id(), Optional.of(false))) {
 						npcTalk(p, n, "You already have some Yommi tree seeds...",
 							"Use those first and then come back to me if you need any more.");
 						p.message("Ungadulu goes back to his studies.");
@@ -488,7 +492,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					}
 					break;
 				case Ungadulu.HOW_DO_I_GET_OUT_OF_HERE:
-					if (hasItem(p, ItemId.MAGICAL_FIRE_PASS.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.MAGICAL_FIRE_PASS.id(), Optional.of(false))) {
 						npcTalk(p, n, "Just use the Magical Fire Pass that I gave you to",
 							"get past the flames...",
 							"Then you should be able to find your way out through",
@@ -531,7 +535,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 					}
 					break;
 				case Ungadulu.COLLECT_SOME_YOMMI_SEEDS_FOR_GUJUO:
-					if (!hasItem(p, ItemId.YOMMI_TREE_SEED.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.YOMMI_TREE_SEED.id(), Optional.of(false))) {
 						npcTalk(p, n, "Oh, yes, Bwana...you will be doing a great favour to our people",
 							"by doing this..however, you must know that it is a difficult task.",
 							"the Yommi tree is difficult to grow. You must have a natural ability",

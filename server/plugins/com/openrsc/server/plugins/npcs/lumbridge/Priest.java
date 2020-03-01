@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -36,7 +38,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				npcTalk(p, n, "I always wondered what that amulet was",
 					"Well I hope it's useful. Tell me if you get rid of the ghost");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
-				&& !hasItem(p, ItemId.QUEST_SKULL.id())) {
+				&& !p.getCarriedItems().hasCatalogID(ItemId.QUEST_SKULL.id(), Optional.of(false))) {
 				playerTalk(
 					p,
 					n,
@@ -47,7 +49,7 @@ public class Priest implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				playerTalk(p, n, "Yes I think a warlock has stolen it");
 				npcTalk(p, n, "I hate warlocks", "Ah well good luck");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
-				&& hasItem(p, ItemId.QUEST_SKULL.id())) {
+				&& p.getCarriedItems().hasCatalogID(ItemId.QUEST_SKULL.id(), Optional.of(false))) {
 				playerTalk(p, n, "I've finally found the ghost's skull");
 				npcTalk(p, n,
 					"Great. Put it in the ghost's coffin and see what happens!");
