@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GertrudesCat implements QuestInterface, TalkToNpcListener,
@@ -173,7 +175,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 				case -1:
 					playerTalk(p, n, "hello again gertrude");
 					npcTalk(p, n, "well hello adventurer, how are you?");
-					if (hasItem(p, ItemId.KITTEN.id()) || p.getBank().hasItemId(ItemId.KITTEN.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id(), Optional.empty()) || p.getBank().hasItemId(ItemId.KITTEN.id())) {
 						playerTalk(p, n, "pretty good thanks, yourself?");
 						npcTalk(p, n,
 							"same old, running after shilob most of the time");
@@ -434,7 +436,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == 1039) {
 			message(p, "you search the crate...", "...but find nothing...");
-			if (hasItem(p, ItemId.KITTENS.id()) || !p.getCache().hasKey("cat_sardine")
+			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
 				|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
 				//nothing
 			} else {
@@ -442,7 +444,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 1041) {
 			message(p, "you search the barrel...", "...but find nothing...");
-			if (hasItem(p, ItemId.KITTENS.id()) || !p.getCache().hasKey("cat_sardine")
+			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
 				|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
 				//nothing
 			} else {
@@ -450,7 +452,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 1040) {
 			message(p, "you search the crate...");
-			if (hasItem(p, ItemId.KITTENS.id()) || !p.getCache().hasKey("cat_sardine")
+			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
 				|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
 				message(p, "you find nothing...");
 			} else {

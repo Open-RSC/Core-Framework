@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SheepShearer implements QuestInterface, TalkToNpcListener,
@@ -159,7 +161,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 							npcTalk(p, n, "I need more before I can pay you");
 							playerTalk(p, n, "Ok I'll work on it");
 						}
-					} else if (hasItem(p, ItemId.WOOL.id())) {
+					} else if (p.getCarriedItems().hasCatalogID(ItemId.WOOL.id(), Optional.of(false))) {
 						playerTalk(p, n, "Well I've got some wool",
 							"I've not managed to make it into a ball though");
 						npcTalk(p, n, "Well go find a spinning wheel then",

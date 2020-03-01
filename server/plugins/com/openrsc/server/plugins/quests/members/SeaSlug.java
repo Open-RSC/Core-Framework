@@ -18,6 +18,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SeaSlug implements QuestInterface, TalkToNpcListener,
@@ -176,7 +178,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 							"i need to get kennith of this platform but i can't get past the fishermen");
 						npcTalk(p, n, "the sea slugs are scared of heat",
 							"i figured that out when i tried to cook them");
-						if (!hasItem(p, ItemId.UNLIT_TORCH.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.UNLIT_TORCH.id(), Optional.of(false))) {
 							npcTalk(p, n, "here");
 							message(p, "bailey gives you a torch");
 							addItem(p, ItemId.UNLIT_TORCH.id(), 1);
@@ -190,13 +192,13 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 								"i better figure a way to light this torch");
 						}
 					} else {
-						if (hasItem(p, ItemId.LIT_TORCH.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
 							playerTalk(p, n, "i've managed to light the torch");
 							npcTalk(p, n, "well done traveler",
 								"you better get kennith out of here soon",
 								"the fishermen are becoming stranger by the minute",
 								"and they keep pulling up those blasted sea slugs");
-						} else if (hasItem(p, ItemId.UNLIT_TORCH.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.UNLIT_TORCH.id(), Optional.of(false))) {
 							//nothing
 						} else {
 							playerTalk(p, n, "i've managed to lose my torch");
@@ -574,7 +576,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	}
 
 	public void checkTorchCrossing(Player p) {
-		if (hasItem(p, ItemId.LIT_TORCH.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
 			p.getCarriedItems().getInventory().replace(ItemId.LIT_TORCH.id(), ItemId.UNLIT_TORCH.id());
 			message(p, "your torch goes out on the crossing");
 		}
@@ -611,7 +613,7 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			if (p.getQuestStage(getQuestId()) >= 5) {
-				if (!hasItem(p, ItemId.LIT_TORCH.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
 					int damage = DataConversions.getRandom().nextInt(1) + 7;
 					p.message("You attempt to climb up the ladder");
 					p.message("the fishermen approach you");

@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.message;
@@ -102,7 +104,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 						npcTalk(p, n, "call me aluft");
 						playerTalk(p, n, "ok");
 						npcTalk(p, n, "so how did you get on?");
-						if (hasItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.CHEESE_AND_TOMATO_BATTA.id(), Optional.of(false))) {
 							playerTalk(p, n, "no problem, it was easy");
 							message(p, 1900, "you give aluft the gnome batta");
 							removeItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
@@ -131,7 +133,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 					case 3:
 						playerTalk(p, n, "hi aluft");
 						npcTalk(p, n, "hello there, how did you get on");
-						if (hasItem(p, ItemId.CHOCOLATE_BOMB.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))) {
 							playerTalk(p, n, "here you go");
 							removeItem(p, ItemId.CHOCOLATE_BOMB.id(), 1);
 							message(p, 1200, "you give aluft the choc bomb");
@@ -163,7 +165,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 						npcTalk(p, n, "aluft");
 						playerTalk(p, n, "sorry, aluft");
 						npcTalk(p, n, "so where's my toad batta?");
-						if (hasItem(p, ItemId.TOAD_BATTA.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.TOAD_BATTA.id(), Optional.of(false))) {
 							playerTalk(p, n, "here you go, easy");
 							message(p, 1900, "you give mr gianne the toad batta");
 							removeItem(p, ItemId.TOAD_BATTA.id(), 1);
@@ -189,7 +191,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 					case 5:
 						playerTalk(p, n, "hello again aluft");
 						npcTalk(p, n, "hello traveller, how did you do?");
-						if (hasItem(p, ItemId.WORM_HOLE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 							playerTalk(p, n, "here, see what you think");
 							message(p, 1900, "you give mr gianne the worm hole");
 							removeItem(p, ItemId.WORM_HOLE.id(), 1);
@@ -215,7 +217,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 					case 6:
 						playerTalk(p, n, "hi aluft\"");
 						npcTalk(p, n, "hello, how are you getting on?");
-						if (hasItem(p, ItemId.TOAD_CRUNCHIES.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.TOAD_CRUNCHIES.id(), Optional.of(false))) {
 							playerTalk(p, n, "here, try it");
 							message(p, 1900, "you give mr gianne the toad crunchie");
 							removeItem(p, ItemId.TOAD_CRUNCHIES.id(), 1);
@@ -269,8 +271,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 		if (job == 0) {
 			npcTalk(p, n, "hello again, are the dishes ready?");
 			if (hasItem(p, ItemId.WORM_BATTA.id(), 2)
-					&& hasItem(p, ItemId.VEG_BATTA.id())
-					&& hasItem(p, ItemId.TOAD_BATTA.id())) {
+					&& p.getCarriedItems().hasCatalogID(ItemId.VEG_BATTA.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.TOAD_BATTA.id(), Optional.of(false))) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft two worm batta's a veg batta and a toad batta");
 				p.incExp(Skills.COOKING, 425, true);
@@ -290,7 +292,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 			}
 		} else if (job == 1) {
 			npcTalk(p, n, "hello again, are the dishes ready?");
-			if (hasItem(p, ItemId.CHOCOLATE_BOMB.id())
+			if (p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
 					&& hasItem(p, ItemId.CHOC_CRUNCHIES.id(), 2)
 					&& hasItem(p, ItemId.TOAD_CRUNCHIES.id(), 2)) {
 				playerTalk(p, n, "here you go aluft");
@@ -329,7 +331,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 			}
 		} else if (job == 3) {
 			npcTalk(p, n, "hello again traveller how did you do?");
-			if (hasItem(p, ItemId.CHOCOLATE_BOMB.id())
+			if (p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
 					&& hasItem(p, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				playerTalk(p, n, "here you go aluft");
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");
@@ -348,7 +350,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 		} else if (job == 4) {
 			npcTalk(p, n, "hello again traveller how did you do?");
 			if (hasItem(p, ItemId.VEG_BATTA.id(), 2)
-					&& hasItem(p, ItemId.WORM_HOLE.id())) {
+					&& p.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				playerTalk(p, n, "here you go aluft");
 				message(p, 1900, "you give aluft two veg batta's and a worm hole");
 				removeItem(p, ItemId.VEG_BATTA.id(), 2);
@@ -367,9 +369,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 			}
 		} else if (job == 5) {
 			npcTalk(p, n, "hello again, are the dishes ready?");
-			if (hasItem(p, ItemId.VEGBALL.id())
-					&& hasItem(p, ItemId.TANGLED_TOADS_LEGS.id())
-					&& hasItem(p, ItemId.WORM_HOLE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.TANGLED_TOADS_LEGS.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft one veg ball, one twisted toads legs and one worm hole");
 				removeItem(p, ItemId.VEGBALL.id(), 1);
@@ -388,8 +390,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 			}
 		} else if (job == 6) {
 			npcTalk(p, n, "hello again traveller how did you do?");
-			if (hasItem(p, ItemId.CHEESE_AND_TOMATO_BATTA.id())
-					&& hasItem(p, ItemId.VEGBALL.id())
+			if (p.getCarriedItems().hasCatalogID(ItemId.CHEESE_AND_TOMATO_BATTA.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))
 					&& hasItem(p, ItemId.WORM_CRUNCHIES.id(), 2)) {
 				message(p, 1900, "you give one cheese and tomato batta,one veg ball...",
 						"...and two portions of worm crunchies");
@@ -411,9 +413,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 			// intentional glitch on minigame, see https://youtu.be/jtc97eKmFWc?t=806
 			npcTalk(p, n, "hello again, are the dishes ready?");
 			if (hasItem(p, ItemId.SPICE_CRUNCHIES.id(), 2)
-					&& hasItem(p, ItemId.FRUIT_BATTA.id())
-					&& hasItem(p, ItemId.CHOCOLATE_BOMB.id())
-					&& hasItem(p, ItemId.VEGBALL.id())) {
+					&& p.getCarriedItems().hasCatalogID(ItemId.FRUIT_BATTA.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft the tangled toads legs and two worm crunchies");
 				removeItem(p, ItemId.SPICE_CRUNCHIES.id(), 2);
@@ -436,7 +438,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 			// recreated job from message on job 7
 			// made it intentionally glitched
 			npcTalk(p, n, "hello again, are the dishes ready?");
-			if (hasItem(p, ItemId.TANGLED_TOADS_LEGS.id())
+			if (p.getCarriedItems().hasCatalogID(ItemId.TANGLED_TOADS_LEGS.id(), Optional.of(false))
 					&& hasItem(p, ItemId.WORM_CRUNCHIES.id(), 2)) {
 				playerTalk(p, n, "all done, here you go");
 				message(p, 1900, "you give aluft one choc bomb and two choc crunchies");

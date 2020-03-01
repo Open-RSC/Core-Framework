@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Apothecary implements TalkToNpcExecutiveListener,
@@ -111,7 +113,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 		} else if (option == 1) {
 			npcTalk(p, n, "I do indeed. I gave it to my mother. That's why I now live alone");
 		} else if (option == 2) {
-			if (hasItem(p, ItemId.POTION.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.POTION.id(), Optional.of(false))) {
 				npcTalk(p, n, "Only that spot cream. Hope you enjoy it",
 					"Yes, ok. Try this potion");
 				addItem(p, ItemId.POTION.id(), 1);

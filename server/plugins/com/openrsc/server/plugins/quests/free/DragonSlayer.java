@@ -485,7 +485,9 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
 				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId())) {
-			if (hasItem(p, ItemId.MAP_PIECE_1.id(), 1) && hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && hasItem(p, ItemId.MAP_PIECE_3.id(), 1)) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
 				removeItem(p, ItemId.MAP_PIECE_1.id(), 1);
 				removeItem(p, ItemId.MAP_PIECE_2.id(), 1);
 				removeItem(p, ItemId.MAP_PIECE_3.id(), 1);

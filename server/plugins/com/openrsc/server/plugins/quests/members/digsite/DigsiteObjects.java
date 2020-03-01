@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -122,9 +124,9 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		else if (inArray(obj.getID(), SACKS)) {
 			p.playerServerMessage(MessageType.QUEST, "You search the sacks");
-			if (obj.getID() == SACKS[0] || hasItem(p, ItemId.SPECIMEN_JAR.id())) {
+			if (obj.getID() == SACKS[0] || p.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
 				p.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
-			} else if (obj.getID() == SACKS[1] && !hasItem(p, ItemId.SPECIMEN_JAR.id())) {
+			} else if (obj.getID() == SACKS[1] && !p.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
 				playerTalk(p, null, "Hey there's something under here");
 				p.message("You find a specimen jar!");
 				addItem(p, ItemId.SPECIMEN_JAR.id(), 1);
@@ -156,7 +158,7 @@ public class DigsiteObjects implements ObjectActionListener, ObjectActionExecuti
 		}
 		else if (obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
 			if (command.equalsIgnoreCase("search")) {
-				if (!hasItem(p, ItemId.ROCK_PICK.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.ROCK_PICK.id(), Optional.of(false))) {
 					p.message("You find a rock pick");
 					addItem(p, ItemId.ROCK_PICK.id(), 1);
 				} else {

@@ -38,7 +38,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObje
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id()) {
 			openChest(obj, 2000, TOBAN_CHEST_OPEN);
-			if (hasItem(p, ItemId.STOLEN_GOLD.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
 				message(p, "You have already got the stolen gold");
 			} else {
 				p.message("You find a stash of gold inside");

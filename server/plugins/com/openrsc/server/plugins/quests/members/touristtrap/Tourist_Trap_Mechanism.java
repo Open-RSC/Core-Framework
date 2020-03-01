@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Tourist_Trap_Mechanism implements UnequipListener, UnequipExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
@@ -107,7 +109,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				npcTalk(p, npc, "I think you might have me confused with someone else.");
 				return;
 			}
-			if (!hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 				boolean isFirstTime = !p.getCache().hasKey("tried_ana_barrel");
 				if (p.getCache().hasKey("ana_lift") || p.getCache().hasKey("ana_cart")
 					|| p.getCache().hasKey("ana_in_cart")) {
@@ -142,7 +144,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 
 	private void makeDartTip(Player p, GameObject obj) {
 		if (obj.getID() == 1006) {
-			if (!hasItem(p, ItemId.TECHNICAL_PLANS.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 				message(p, "This anvil is experimental...",
 					"You need detailed plans of the item you want to make in order to use it.");
 				return;
@@ -150,7 +152,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			message(p, "Do you want to follow the technical plans ?");
 			int menu = showMenu(p, "Yes. I'd like to try.", "No, not just yet.");
 			if (menu == 0) {
-				if (!hasItem(p, ItemId.HAMMER.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
 					p.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
@@ -165,7 +167,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				if (succeedRate(p)) {
 					message(p, "You finally manage to forge a sharp, pointed...",
 						"... dart tip...");
-					if (!hasItem(p, ItemId.PROTOTYPE_DART_TIP.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_DART_TIP.id(), Optional.of(false))) {
 						addItem(p, ItemId.PROTOTYPE_DART_TIP.id(), 1);
 					}
 					message(p, "You study the technical plans even more...",
@@ -266,7 +268,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			makeDartTip(p, obj);
 		}
 		else if (obj.getID() == MINING_CAVE_BACK) {
-			if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 				failCaveAnaInBarrel(p, null);
 				return;
 			}
@@ -309,7 +311,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				}
 			} else if (command.equals("search")) {
 				p.message("You search the mine cart.");
-				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					p.message("There isn't enough space for both you and Ana in the cart.");
 					return;
 				}
@@ -340,7 +342,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		}
 		else if (obj.getID() == MINING_BARREL) {
 			if (p.getCache().hasKey("ana_is_up")) {
-				if (hasItem(p, ItemId.MINING_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.MINING_BARREL.id(), Optional.of(false))) {
 					p.message("You can only manage one of these at a time.");
 					return;
 				}
@@ -351,7 +353,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				return;
 			}
 			if (p.getCache().hasKey("ana_cart")) {
-				if (hasItem(p, ItemId.MINING_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.MINING_BARREL.id(), Optional.of(false))) {
 					p.message("You can only manage one of these at a time.");
 					return;
 				}
@@ -361,7 +363,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 				p.getCache().remove("ana_cart");
 				return;
 			}
-			if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 				p.message("You cannot carry another barrel while you're carrying Ana.");
 				return;
 			}
@@ -372,7 +374,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 			p.message("Would you like to take one?");
 			int menu = showMenu(p, "Yeah, cool!", "No thanks.");
 			if (menu == 0) {
-				if (hasItem(p, ItemId.MINING_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.MINING_BARREL.id(), Optional.of(false))) {
 					p.message("You can only manage one of these at a time.");
 				} else {
 					p.message("You take the barrel, it's not that heavy, just awkward.");
@@ -385,7 +387,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		else if (obj.getID() == LIFT_PLATFORM) {
 			Npc n = getNearestNpc(p, NpcId.MERCENARY_LIFTPLATFORM.id(), 5);
 			if (n != null) {
-				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					anaToLift(p, n);
 					return;
 				}
@@ -417,7 +419,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 		}
 		else if (obj.getID() == MINING_CART_ABOVE) {
 			p.message("You search the mine cart.");
-			if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 				message(p, "There should be enough space for Ana (in the barrel) to go on here.");
 			}
 			if (p.getCache().hasKey("ana_in_cart")) {
@@ -458,7 +460,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 						getOutWithAnaInCart(p, cartDriver, -1);
 						return;
 					}
-					if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 						npcTalk(p, cartDriver, "What're you doing carrying that big barrel around?",
 							"Put it in the back of the cart like all the others!");
 						return;
@@ -793,7 +795,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	}
 
 	private void failCaveAnaInBarrel(Player p, Npc n) {
-		if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 			n = spawnNpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
 			sleep(650);
 			npcTalk(p, n, "Hey, where d'ya think you're going with that Barrel?");
@@ -870,10 +872,10 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
-			if (hasItem(p, ItemId.PROTOTYPE_DART_TIP.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_DART_TIP.id(), Optional.of(false))) {
 				p.message("You have already made the prototype dart tip.");
 				p.message("You don't need to make another one.");
-			} else if (hasItem(p, ItemId.PROTOTYPE_THROWING_DART.id())) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
 				p.message("You have already made the prototype dart.");
 				p.message("You don't need to make another one.");
 			} else {
@@ -1012,7 +1014,7 @@ PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener,
 					getOutWithAnaInCart(p, n, -1);
 					return;
 				}
-				if (hasItem(p, ItemId.ANA_IN_A_BARREL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					npcTalk(p, n, "What're you doing carrying that big barrel around?",
 						"Put it in the back of the cart like all the others!");
 					return;

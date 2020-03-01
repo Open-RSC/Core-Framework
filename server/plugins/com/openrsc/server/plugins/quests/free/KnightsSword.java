@@ -12,6 +12,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class KnightsSword implements QuestInterface, TalkToNpcListener,
@@ -91,7 +93,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "Yeah what about it?");
 				break;
 			case 2:
-				if (!hasItem(p, ItemId.REDBERRY_PIE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) {
 					playerTalk(p, n, "Hello are you are an Imcando Dwarf?");
 					npcTalk(p, n, "Yeah what about it?");
 				} else {
@@ -136,7 +138,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 				p.updateQuestStage(this, 4);
 				break;
 			case 4:
-				if (hasItem(p, ItemId.PORTRAIT.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false))) {
 					playerTalk(p, n,
 						"I have found a picture of the sword I would like you to make");
 					p.message("You give the portrait to Thurgo");
@@ -167,13 +169,13 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 				break;
 			case 5:
 			case 6:
-				if (hasItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.FALADIAN_KNIGHTS_SWORD.id(), Optional.of(false))) {
 					playerTalk(p, n,
 						"Thanks for your help in getting the sword for me");
 					npcTalk(p, n, "No worries mate");
 					return;
 				}
-				if (hasItem(p, ItemId.IRON_BAR.id(), 2) && hasItem(p, ItemId.BLURITE_ORE.id())) {
+				if (hasItem(p, ItemId.IRON_BAR.id(), 2) && p.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
 					npcTalk(p, n, "How are you doing finding sword materials?");
 					playerTalk(p, n, "I have them all");
 					message(p, "You give some blurite ore and two iron bars to Thurgo");
@@ -204,7 +206,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 		message(p, "Thurgo's eyes light up");
 		npcTalk(p, n, "I'd never say no to a redberry pie");
 		npcTalk(p, n, "It's great stuff");
-		if (!hasItem(p, ItemId.REDBERRY_PIE.id())) { //should not happen here
+		if (!p.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) { //should not happen here
 			playerTalk(p, n, "Well that's too bad, because I don't have any");
 			message(p, "Thurgo does not look impressed");
 		} else {
@@ -267,7 +269,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 					break;
 				case 5:
 				case 6:
-					if (hasItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.FALADIAN_KNIGHTS_SWORD.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have retrieved your sword for you");
 						npcTalk(p, n, "Thankyou, Thankyou",
 							"I was seriously worried I'd have to own up to Sir Vyvin");
@@ -403,7 +405,7 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 						message(p,
 							"Maybe you need to get someone to distract Sir Vyvin for you");
 					} else {
-						if (hasItem(p, ItemId.PORTRAIT.id()) || p.getQuestStage(this) < 4) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false)) || p.getQuestStage(this) < 4) {
 							p.message("There is just a load of junk in here");
 							return;
 						}

@@ -1,13 +1,15 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.quests.free.DragonSlayer;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -63,12 +65,14 @@ public final class NedInShip implements TalkToNpcExecutiveListener,
 				if (opt == 0) {
 					npcTalk(p, n, "Ok show me the map and we'll set sail now");
 					boolean gave_map = false;
-					if (hasItem(p, ItemId.MAP.id(), 1)) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.MAP.id(), Optional.of(false))) {
 						message(p, "You give the map to ned");
 						playerTalk(p, n, "Here it is");
 						removeItem(p, ItemId.MAP.id(), 1);
 						gave_map = true;
-					} else if (hasItem(p, ItemId.MAP_PIECE_1.id(), 1) && hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && hasItem(p, ItemId.MAP_PIECE_3.id(), 1)) {
+					} else if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
 						message(p, "You give the parts of the map to ned");
 						playerTalk(p, n, "Here it is");
 						removeItem(p, ItemId.MAP_PIECE_1.id(), 1);

@@ -17,6 +17,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class VampireSlayer implements QuestInterface, TalkToNpcListener,
@@ -120,7 +122,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 			case 2:
 				String[] options;
 				npcTalk(p, n, "Buy me a drrink pleassh");
-				if (!hasItem(p, ItemId.STAKE.id())
+				if (!p.getCarriedItems().hasCatalogID(ItemId.STAKE.id(), Optional.empty())
 					&& p.getQuestStage(Quests.VAMPIRE_SLAYER) != -1) {
 					options = new String[]{"No you've had enough", "Ok mate",
 						"Morgan needs your help"};

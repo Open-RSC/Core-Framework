@@ -19,6 +19,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FishingContest implements QuestInterface, TalkToNpcListener,
@@ -115,7 +117,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 					}
 
 					for (String aCatch : catches) {
-						hasCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && hasItem(p, ItemId.RAW_GIANT_CARP.id()));
+						hasCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && p.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
 					}
 
 					npcTalk(p, n, "so how are you doing so far?");
@@ -142,7 +144,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 					return;
 				} else {
 					// with trophy does not allow to enter competition
-					if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 						npcTalk(p, n, "Hello champ",
 							"So any hints on how to fish so well");
 						playerTalk(p, n, "I think I'll keep them to myself");
@@ -207,7 +209,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			"Lets see who caught the biggest fish");
 		message(p, "You hand over your catch");
 		for (String aCatch : catches) {
-			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && hasItem(p, ItemId.RAW_GIANT_CARP.id()));
+			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && p.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
 			removeItem(p, Integer.valueOf(aCatch), 1);
 		}
 		p.getCache().remove("contest_catches");
@@ -453,7 +455,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				npcTalk(p, n, "Have you won yet?");
 				playerTalk(p, n, "Yes I have");
 				npcTalk(p, n, "Well done, so where is the trophy?");
-				if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 					playerTalk(p, n, "I have it right here");
 					message(p, "you give the trophy to the dwarf");
 					removeItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
@@ -514,7 +516,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 
 				if (morris != null) {
 					npcTalk(p, morris, "competition pass please");
-					if (hasItem(p, ItemId.FISHING_COMPETITION_PASS.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_COMPETITION_PASS.id(), Optional.of(false))) {
 						message(p, "You show Morris your pass");
 						npcTalk(p, morris, "Move on through");
 						doGate(p, obj, 357);
@@ -558,7 +560,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 		Npc sinister = getNearestNpc(p, NpcId.SINISTER_STRANGER.id(), 10);
 		Npc bonzo = getNearestNpc(p, NpcId.BONZO.id(), 15);
 		if (obj.getID() == 351) {
-			if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 				p.message("you have already won the fishing competition");
 				return;
 			} else if (bonzo != null && !p.getCache().hasKey("paid_contest_fee")) {
@@ -571,19 +573,20 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//else do catch
 				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
-				} else if (!hasItem(p, ItemId.FISHING_ROD.id())) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
 					p.message("I don't have the equipment to catch a fish");
-				} else if (!hasItem(p, ItemId.FISHING_BAIT.id()) && !hasItem(p, ItemId.RED_VINE_WORMS.id())) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("you have no bait to catch fish here");
 				}
 				// fishing using worm gives raw sardine
-				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
+				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("You catch a sardine");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
 					p.getCarriedItems().getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
-				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					p.message("You catch some shrimps");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
 					p.getCarriedItems().getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
@@ -601,7 +604,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		else if (obj.getID() == 352) {
-			if (hasItem(p, ItemId.HEMENSTER_FISHING_TROPHY.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 				p.message("you have already won the fishing competition");
 				return;
 			} else if (bonzo != null && !p.getCache().hasKey("paid_contest_fee")) {
@@ -615,19 +618,20 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				//else do catch
 				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
 					p.message("You need at least level 10 fishing to lure these fish");
-				} else if (!hasItem(p, ItemId.FISHING_ROD.id())) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
 					p.message("I don't have the equipment to catch a fish");
-				} else if (!hasItem(p, ItemId.FISHING_BAIT.id()) && !hasItem(p, ItemId.RED_VINE_WORMS.id())) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("you have no bait to catch fish here");
 				}
 				// fishing using worm gives raw carp
-				else if (hasItem(p, ItemId.RED_VINE_WORMS.id())) {
+				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("You catch a giant carp");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
 					p.getCarriedItems().getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
-				} else if (hasItem(p, ItemId.FISHING_BAIT.id())) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					p.message("You catch a sardine");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
 					p.getCarriedItems().getInventory().remove(ItemId.FISHING_BAIT.id(), 1);

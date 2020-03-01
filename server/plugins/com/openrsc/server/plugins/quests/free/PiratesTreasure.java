@@ -16,6 +16,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 
@@ -173,7 +175,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 				break;
 			case 2:
 				npcTalk(p, n, "Arrrh Matey");
-				if (hasItem(p, ItemId.CHEST_KEY.id()) || p.getBank().hasItemId(ItemId.CHEST_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.CHEST_KEY.id(), Optional.empty()) || p.getBank().hasItemId(ItemId.CHEST_KEY.id())) {
 					npcTalk(p, n, "Arrrh Matey");
 					int menu1 = showMenu(p, n, "Arrrh",
 						"Do you want to trade?");

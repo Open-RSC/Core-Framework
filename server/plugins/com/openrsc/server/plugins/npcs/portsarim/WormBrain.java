@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveL
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class WormBrain implements WallObjectActionListener, WallObjectActionExecutiveListener {
@@ -29,7 +31,7 @@ public final class WormBrain implements WallObjectActionListener, WallObjectActi
 			message(p, "...you knock on the cell door");
 			npcTalk(p, n, "Whut you want?");
 			Menu defaultMenu = new Menu();
-			if (p.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !hasItem(p, ItemId.MAP_PIECE_1.id())) {
+			if (p.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {
 				defaultMenu.addOption(new Option("I believe you've got a piece of a map that I need") {
 					@Override
 					public void action() {

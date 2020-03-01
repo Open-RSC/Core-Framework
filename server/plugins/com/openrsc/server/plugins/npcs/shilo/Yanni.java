@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -8,10 +10,9 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Yanni implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
 
@@ -38,31 +39,31 @@ public class Yanni implements TalkToNpcListener, TalkToNpcExecutiveListener, Inv
 					"Maybe some other time?");
 			if (menu == 0) {
 				npcTalk(p, n, "Great Bwana!");
-				if (hasItem(p, ItemId.BONE_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BONE_KEY.id(), Optional.of(false))) {
 					npcTalk(p, n, "I'll give you 100 Gold for the Bone Key.");
 					hasItemsInterest |= true;
 				}
-				if (hasItem(p, ItemId.STONE_PLAQUE.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.STONE_PLAQUE.id(), Optional.of(false))) {
 					npcTalk(p, n, "I'll give you 100 Gold for the Stone-Plaque.");
 					hasItemsInterest |= true;
 				}
-				if (hasItem(p, ItemId.TATTERED_SCROLL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.TATTERED_SCROLL.id(), Optional.of(false))) {
 					npcTalk(p, n, "I'll give you 100 Gold for your tattered scroll");
 					hasItemsInterest |= true;
 				}
-				if (hasItem(p, ItemId.CRUMPLED_SCROLL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.CRUMPLED_SCROLL.id(), Optional.of(false))) {
 					npcTalk(p, n, "I'll give you 100 Gold for your crumpled scroll");
 					hasItemsInterest |= true;
 				}
-				if (hasItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.of(false))) {
 					npcTalk(p, n, "I'll give you 100 Gold for your Bervirius Tomb Notes.");
 					hasItemsInterest |= true;
 				}
-				if (hasItem(p, ItemId.LOCATING_CRYSTAL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.of(false))) {
 					npcTalk(p, n, "WOW! I'll give you 500 Gold for your Locating Crystal!");
 					hasItemsInterest |= true;
 				}
-				if (hasItem(p, ItemId.BEADS_OF_THE_DEAD.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BEADS_OF_THE_DEAD.id(), Optional.of(false))) {
 					npcTalk(p, n, "Great I'll give you 1000 Gold for your Beads of the Dead.");
 					hasItemsInterest |= true;
 				}

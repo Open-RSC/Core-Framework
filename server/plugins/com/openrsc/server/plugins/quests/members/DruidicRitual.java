@@ -16,6 +16,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DruidicRitual implements QuestInterface, TalkToNpcListener,
@@ -233,8 +235,10 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 					break;
 				case 2:
 					npcTalk(p, n, "Have you got what I need yet?");
-					if (hasItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id()) && hasItem(p, ItemId.ENCHANTED_BEAR_MEAT.id())
-							&& hasItem(p, ItemId.ENCHANTED_RAT_MEAT.id()) && hasItem(p, ItemId.ENCHANTED_BEEF.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_CHICKEN_MEAT.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_BEAR_MEAT.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_RAT_MEAT.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_BEEF.id(), Optional.of(false))) {
 						playerTalk(p, n, "Yes I have everything");
 						message(p, "You give the meats to Sanfew");
 						removeItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);

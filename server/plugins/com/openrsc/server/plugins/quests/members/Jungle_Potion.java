@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Jungle_Potion implements QuestInterface, ObjectActionListener,
@@ -178,7 +180,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 							"Of course!", "Not yet, sorry, what's the clue again?");
 						if (option == 0) {
 							playerTalk(p, n, "Of Course!");
-							if (!hasItem(p, ItemId.SNAKE_WEED.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.SNAKE_WEED.id(), Optional.of(false))) {
 								npcTalk(p, n, "Please don't try to deceive me!",
 									"I really need that Snake Weed if I am to make this potion");
 							} else { // DONE
@@ -211,7 +213,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Of course!", "Not yet, sorry.");
 						if (o == 0) {
 							playerTalk(p, n, "Of Course!");
-							if (hasItem(p, ItemId.ARDRIGAL.id())) { // DONE
+							if (p.getCarriedItems().hasCatalogID(ItemId.ARDRIGAL.id(), Optional.of(false))) { // DONE
 								npcTalk(p, n,
 									"Ah, I see you have found the 'Ardrigal'",
 									"you are doing well Bwana, the next",
@@ -243,7 +245,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Of course!", "Not yet, sorry.");
 						if (os == 0) { // DONE
 							playerTalk(p, n, "Of Course!");
-							if (hasItem(p, ItemId.SITO_FOIL.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.SITO_FOIL.id(), Optional.of(false))) {
 								npcTalk(p,
 									n,
 									"Well done Bwana, just two more herbs",
@@ -274,7 +276,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 								"Of course!", "Not yet, sorry.");
 						if (oo == 0) {
 							playerTalk(p, n, "Of Course!");
-							if (!hasItem(p, ItemId.VOLENCIA_MOSS.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.VOLENCIA_MOSS.id(), Optional.of(false))) {
 								npcTalk(p,
 									n,
 									"Please don't try to deceive me!",
@@ -313,7 +315,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 						int ol = showMenu(p, n, "Yes Sir, indeedy I do!",
 							"Not yet, sorry.");
 						if (ol == 0) {
-							if (!hasItem(p, ItemId.ROGUES_PURSE.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))) {
 								npcTalk(p, n, "Please don't try to deceive me!",
 									"Rogues Purse is the last herb",
 									"for the potion and possibly the most",
@@ -989,8 +991,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("Yep, it looks like a vine...");
 				return;
 			}
-			if (!hasItem(p, ItemId.UNIDENTIFIED_SNAKE_WEED.id())
-				&& !hasItem(p, ItemId.SNAKE_WEED.id()) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), Optional.of(false))
+				&& !p.getCarriedItems().hasCatalogID(ItemId.SNAKE_WEED.id(), Optional.of(false)) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 						(!hasCacheKeySetTrue(p, "got_snake_weed") && atQuestStage(p, this, 1)) )) {
 				message(p, "Small amounts of a herb are growing near this vine");
 				createGroundItem(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
@@ -1010,7 +1012,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("You find nothing of interest this time, sorry!");
 				return;
 			}
-			if (!hasItem(p, ItemId.UNIDENTIFIED_ARDRIGAL.id()) && !hasItem(p, ItemId.ARDRIGAL.id()) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_ARDRIGAL.id(), Optional.of(false))
+				&& !p.getCarriedItems().hasCatalogID(ItemId.ARDRIGAL.id(), Optional.of(false)) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 					(!hasCacheKeySetTrue(p, "got_ardigal") && atQuestStage(p, this, 2)) )) {
 				message(p, "You find a herb plant growing at the base of the palm");
 				createGroundItem(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), p);
@@ -1021,8 +1024,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("You find nothing of interest this time, sorry!");
 			}
 		} else if (isObject(obj, QuestObjects.Sito_Scorched_Earth)) {
-			if (!hasItem(p, ItemId.UNIDENTIFIED_SITO_FOIL.id())
-				&& !hasItem(p, ItemId.SITO_FOIL.id())
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_SITO_FOIL.id(), Optional.of(false))
+				&& !p.getCarriedItems().hasCatalogID(ItemId.SITO_FOIL.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_sito_foil")
 				&& atQuestStage(p, this, 3)) {
 				message(p,
@@ -1034,8 +1037,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 				p.message("You just find scorched earth.");
 			}
 		} else if (isObject(obj, QuestObjects.Volencia_Rocks)) {
-			if (!hasItem(p, ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id())
-				&& !hasItem(p, ItemId.VOLENCIA_MOSS.id())
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(), Optional.of(false))
+				&& !p.getCarriedItems().hasCatalogID(ItemId.VOLENCIA_MOSS.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_volencia_moss")
 				&& atQuestStage(p, this, 4)) {
 				message(p,
@@ -1058,8 +1061,8 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (isObject(obj, QuestObjects.Rogues_Purse_Wall)) {
-			if (!hasItem(p, ItemId.UNIDENTIFIED_ROGUES_PURSE.id())
-				&& !hasItem(p, ItemId.ROGUES_PURSE.id())
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), Optional.of(false))
+				&& !p.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_rogues_purse")
 				&& atQuestStage(p, this, 5)) {
 				message(p,

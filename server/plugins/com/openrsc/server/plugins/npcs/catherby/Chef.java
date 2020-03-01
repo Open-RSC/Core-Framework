@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.members.FamilyCrest.getGauntletEnchantment;
 
@@ -22,7 +24,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			case -1:
 				npcTalk(p, n, "I hear you have brought the completed crest to my father",
 					"Impressive work I must say");
-				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
 					playerTalk(p, n, "My Father says you can improve these gauntlets for me");
 					npcTalk(p, n, "Yes that is true",
 						"I can change them to gauntlets of cooking",
@@ -63,8 +65,11 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 				break;
 			case 2:
 				npcTalk(p, n, "How is the fish collecting going?");
-				if (!hasItem(p, ItemId.SWORDFISH.id()) && !hasItem(p, ItemId.BASS.id()) && !hasItem(p, ItemId.TUNA.id())
-						&& !hasItem(p, ItemId.SALMON.id()) && !hasItem(p, ItemId.SHRIMP.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.SWORDFISH.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.BASS.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.TUNA.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.SALMON.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.SHRIMP.id(), Optional.of(false))) {
 					playerTalk(p, n, "I haven't got all the fish yet");
 					npcTalk(p, n, "Remember I want cooked swordfish, bass, tuna, salmon and shrimp");
 				} else {
@@ -134,7 +139,7 @@ public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			case 7:
 			case 8:
 				npcTalk(p, n, "How are you doing getting the rest of the crest?");
-				if (!hasItem(p, ItemId.CREST_FRAGMENT_ONE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))) {
 					int menu = showMenu(p, n,
 						"I am still working on it",
 						"I have lost the piece you gave me");

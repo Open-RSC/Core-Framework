@@ -18,6 +18,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class PrinceAliRescue implements QuestInterface, WallObjectActionListener,
@@ -559,7 +561,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"You cannot steal the key, it is on an Adamantite chain",
 					"I cannot see the harm");
 				p.message("Keli shows you a small key on a stronglooking chain");
-				if (p.getQuestStage(this) == 2 && hasItem(p, ItemId.SOFT_CLAY.id())) {
+				if (p.getQuestStage(this) == 2 && p.getCarriedItems().hasCatalogID(ItemId.SOFT_CLAY.id(), Optional.of(false))) {
 					final int menu1 = showMenu(p, n,
 						"Could I touch the key for a moment please",
 						"I should not disturb someone as tough as you");
@@ -691,13 +693,13 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					npcTalk(p, n, "That is no concern of yours, adventurer");
 					break;
 				case 2:
-					if((p.getCache().hasKey("joe_is_drunk")) && hasItem(p, ItemId.BRONZE_KEY.id())) {
+					if((p.getCache().hasKey("joe_is_drunk")) && p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 						npcTalk(p, n, "Great! The guard is now harmless",
 								"Now you just need to use the rope on Keli to remove her",
 								"Then you can go in and give everything to the prince");
 						return;
 					}
-					if ((p.getCache().hasKey("key_sent")) && !hasItem(p, ItemId.BRONZE_KEY.id())) {
+					if ((p.getCache().hasKey("key_sent")) && !p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 						npcTalk(p, n,
 							"My father sent this key for you, be careful not to lose it");
 						message(p,
@@ -706,8 +708,10 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						p.getCache().remove("key_sent");
 						return;
 					}
-					if ((!p.getCache().hasKey("joe_is_drunk")) && hasItem(p, ItemId.ROPE.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())
-						&& hasItem(p, ItemId.BLONDE_WIG.id())) {
+					if ((!p.getCache().hasKey("joe_is_drunk")) && p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))) {
 						npcTalk(p, n, "Good, you have all the basic equipment",
 							"What are your plans to stop the guard interfering?");
 						final int chose = showMenu(p, n,
@@ -733,13 +737,13 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 							"I need to get the key made",
 							"What can i do with the guards?",
 							"I will go and get the rest of the escape equipment" };
-					if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 						choices = new String[] { "I must make a disguise. What do you suggest?",
 								"What can i do with the guards?",
 								"I will go and get the rest of the escape equipment" };
 					}
 					int choice = showMenu(p, n, choices);
-					if (hasItem(p, ItemId.BRONZE_KEY.id()) && choice > 0) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false)) && choice > 0) {
 						//skip option of key made
 						choice++;
 					}
@@ -802,7 +806,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					"so we need a disguise well enough to fool them at a distance");
 
 				//note: not known if there was a check for regular wig, yet osrs-rs2 didn't feature one
-				if (!hasItem(p, ItemId.BLONDE_WIG.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))) {
 					npcTalk(p,
 						n,
 						"You need a wig, maybe made from wool",
@@ -815,10 +819,10 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 
 				npcTalk(p,
 					n,
-					!hasItem(p, ItemId.PINK_SKIRT.id()) ? "You will need to get a pink skirt, same as Keli's"
+					!p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false)) ? "You will need to get a pink skirt, same as Keli's"
 						: "You have got the skirt, good");
 
-				if (!hasItem(p, ItemId.PASTE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))) {
 					npcTalk(p,
 						n,
 						"we still need something to colour the Princes skin lighter",
@@ -828,11 +832,13 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					npcTalk(p, n, "You have the skin paint, well done",
 						"I thought you would struggle to make that");
 				}
-				if (hasItem(p, ItemId.BLONDE_WIG.id()) && hasItem(p, ItemId.PINK_SKIRT.id()) && hasItem(p, ItemId.PASTE.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))) {
 					npcTalk(p, n, "You do have everything for the disguise");
 				}
 
-				if (!hasItem(p, ItemId.ROPE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false))) {
 					npcTalk(p,
 						n,
 						"You will still need some rope to tie up Keli, of course",
@@ -846,12 +852,12 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				String[] choices = new String[] { "I need to get the key made",
 						"What can i do with the guards?",
 						"I will go and get the rest of the escape equipment" };
-				if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 					choices = new String[] { "What can i do with the guards?",
 							"I will go and get the rest of the escape equipment" };
 				}
 				int choice = showMenu(p, n, choices);
-				if (hasItem(p, ItemId.BRONZE_KEY.id()) && choice >= 0) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false)) && choice >= 0) {
 					choice++;
 				}
 				if (choice == 0) {
@@ -883,12 +889,12 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				String[] choices2 = new String[] { "I must make a disguise. What do you suggest?",
 						"I need to get the key made",
 						"I will go and get the rest of the escape equipment" };
-				if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 					choices2 = new String[] { "I must make a disguise. What do you suggest?",
 							"I will go and get the rest of the escape equipment" };
 				}
 				int choice2 = showMenu(p, n, choices2);
-				if (hasItem(p, ItemId.BRONZE_KEY.id()) && choice2 > 0) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false)) && choice2 > 0) {
 					choice2++;
 				}
 				if (choice2 == 0) {
@@ -983,7 +989,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 						return;
 					}
 					p.message("The door is locked");
-					if (hasItem(p, ItemId.BRONZE_KEY.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 						p.message("Maybe you should try using your key on it");
 					}
 				}
@@ -1035,7 +1041,8 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					}
 					break;
 				case 2:
-					if (hasItem(p, ItemId.KEYPRINT.id()) && hasItem(p, ItemId.BRONZE_BAR.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.KEYPRINT.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.BRONZE_BAR.id(), Optional.of(false))) {
 						npcTalk(p, n, "Well done, we can make the key now.");
 						p.message("Osman takes the Key imprint and the bronze bar");
 						removeItem(p, ItemId.KEYPRINT.id(), 1);
@@ -1143,7 +1150,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				break;
 			case Osman.STILL_NEED:
 				npcTalk(p, n, "Let me check. You need:");
-				if (!hasItem(p, ItemId.BRONZE_KEY.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 					npcTalk(p, n,
 						"A print of the key in soft clay, and a bronze bar");
 					npcTalk(p, n, "Then collect the key from Leela");
@@ -1152,16 +1159,16 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				}
 				npcTalk(p,
 					n,
-					!hasItem(p, ItemId.BLONDE_WIG.id()) ? "You need to make a Blonde Wig somehow. Leela may help"
+					!p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false)) ? "You need to make a Blonde Wig somehow. Leela may help"
 						: "The wig you have got, well done");
-				npcTalk(p, n, !hasItem(p, ItemId.PINK_SKIRT.id()) ? "A skirt the same as Keli's,"
+				npcTalk(p, n, !p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false)) ? "A skirt the same as Keli's,"
 					: "You have the skirt, good");
 				npcTalk(p,
 					n,
-					!hasItem(p, ItemId.PASTE.id()) ? "Something to colour the Princes skin lighter"
+					!p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false)) ? "Something to colour the Princes skin lighter"
 						: "You have the skin paint, well done",
 					"I thought you would struggle to make that");
-				npcTalk(p, n, !hasItem(p, ItemId.ROPE.id()) ? "Rope to tie Keli up with"
+				npcTalk(p, n, !p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false)) ? "Rope to tie Keli up with"
 					: "Yes, you have the rope.");
 				npcTalk(p, n,
 					"You still need some way to stop the guard from interfering");
@@ -1180,8 +1187,10 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 				npcTalk(p, n, "That is very very kind of you, how do I get out?");
 				playerTalk(p, n, "With a disguise, I have removed the Lady Keli",
 					"She is tied up, but will not stay tied up for long");
-				if (!hasItem(p, ItemId.BLONDE_WIG.id()) || !hasItem(p, ItemId.PINK_SKIRT.id()) || !hasItem(p, ItemId.PASTE.id())
-					|| !hasItem(p, ItemId.BRONZE_KEY.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))
+					|| !p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false))
+					|| !p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))
+					|| !p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 					//from behavior on osrs just returns, no evidence rsc had otherwise behavior
 					return;
 				}

@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,10 +11,18 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.plugins.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -78,13 +85,13 @@ public class DwarfCannon
 					break;
 				case 6:
 					playerTalk(p, n, "hello again");
-					if (!hasItem(p, ItemId.NULODIONS_NOTES.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.NULODIONS_NOTES.id(), Optional.empty())) {
 						playerTalk(p, n, "i've lost the notes");
 						npcTalk(p, n, "here take these");
 						message(p, "the Cannon engineer gives you some more notes");
 						addItem(p, ItemId.NULODIONS_NOTES.id(), 1);
 					}
-					if (!hasItem(p, ItemId.CANNON_AMMO_MOULD.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id(), Optional.empty())) {
 						playerTalk(p, n, "i've lost the cannon ball mould");
 						npcTalk(p, n, "deary me, you are trouble", "here take this one");
 						playerTalk(p, n, "the Cannon engineer gives you another mould");
@@ -115,8 +122,10 @@ public class DwarfCannon
 						if (cannon == 0) {
 							npcTalk(p, n, "ok then, but keep it quiet..");
 							npcTalk(p, n, "this thing's top secret");
-							if (hasItem(p, ItemId.DWARF_CANNON_BASE.id()) || hasItem(p, ItemId.DWARF_CANNON_STAND.id())
-									|| hasItem(p, ItemId.DWARF_CANNON_BARRELS.id()) || hasItem(p, ItemId.DWARF_CANNON_FURNACE.id())
+							if (p.getCarriedItems().hasCatalogID(ItemId.DWARF_CANNON_BASE.id(), Optional.empty())
+								|| p.getCarriedItems().hasCatalogID(ItemId.DWARF_CANNON_STAND.id(), Optional.empty())
+								|| p.getCarriedItems().hasCatalogID(ItemId.DWARF_CANNON_BARRELS.id(), Optional.empty())
+								|| p.getCarriedItems().hasCatalogID(ItemId.DWARF_CANNON_FURNACE.id(), Optional.empty())
 								|| p.getCache().hasKey("has_cannon")) {
 								npcTalk(p, n, "wait a moment, our records show you already own some cannon equipment",
 									"i'm afraid you can only have one set at a time");
@@ -266,7 +275,7 @@ public class DwarfCannon
 					} else {
 						npcTalk(p, n, "the goblins are still getting in", "so there must still be some broken railings");
 						playerTalk(p, n, "don't worry, i'll find them soon enough");
-						if (!hasItem(p, ItemId.RAILING_DWARF_CANNON.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.RAILING_DWARF_CANNON.id(), Optional.of(false))) {
 							playerTalk(p, n, "but i'm out of railings");
 							npcTalk(p, n, "ok, we've got plenty");
 							message(p, "the Dwarf commander gives you another railing");
@@ -281,7 +290,7 @@ public class DwarfCannon
 						npcTalk(p, n, "have you been to the watch tower yet?");
 						playerTalk(p, n, "yes, i went up but there was no one");
 						npcTalk(p, n, "that's strange, gilob never leaves his post");
-						if (hasItem(p, ItemId.DWARF_REMAINS.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.DWARF_REMAINS.id(), Optional.of(false))) {
 							playerTalk(p, n, "i may have some bad news for you commander");
 							message(p, "you show the Dwarf commander the remains");
 							npcTalk(p, n, "what's this?, oh no , it can't be!");
@@ -373,7 +382,7 @@ public class DwarfCannon
 					playerTalk(p, n, "it's not an easy job, but i'm getting there");
 					npcTalk(p, n, "good stuff, let me know if you have any luck",
 						"if we manage to get that thing working...", "those goblins will be know trouble at all");
-					if (!hasItem(p, ItemId.TOOL_KIT.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.TOOL_KIT.id(), Optional.of(false))) {
 						playerTalk(p, n, "i'm afraid i lost the tool kit");
 						npcTalk(p, n, "that was silly, never mind, here you go");
 						message(p, "the Dwarf commander gives you another tool kit");
@@ -382,8 +391,8 @@ public class DwarfCannon
 					break;
 				case 5:
 				case 6:
-					if (p.getCache().hasKey("spoken_nulodion") && hasItem(p, ItemId.NULODIONS_NOTES.id())
-							&& hasItem(p, ItemId.CANNON_AMMO_MOULD.id())) {
+					if (p.getCache().hasKey("spoken_nulodion") && p.getCarriedItems().hasCatalogID(ItemId.NULODIONS_NOTES.id(), Optional.of(false))
+							&& p.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id(), Optional.of(false))) {
 						playerTalk(p, n, "hi");
 						npcTalk(p, n, "hello traveller, any word from the Cannon engineer?");
 						playerTalk(p, n, "yes, i have spoken to him", "he gave me these to give to you");
@@ -766,7 +775,7 @@ public class DwarfCannon
 	@Override
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.DWARF_REMAINS.id()) {
-			if(hasItem(p, ItemId.DWARF_REMAINS.id())) {
+			if(p.getCarriedItems().hasCatalogID(ItemId.DWARF_REMAINS.id(), Optional.of(false))) {
 				p.message("carrying one 'dwarfs remains' is bad enough");
 				return;
 			}

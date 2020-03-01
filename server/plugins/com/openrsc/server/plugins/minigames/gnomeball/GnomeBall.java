@@ -23,6 +23,8 @@ import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, PickupListener, PickupExecutiveListener,
@@ -214,7 +216,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	@Override
 	public void onPickup(Player p, GroundItem item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
-			if (hasItem(p, ItemId.GNOME_BALL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 				message(p, 1200, "you can only carry one ball at a time", "otherwise it would be too easy");
 			} else {
 				p.getWorld().unregisterItem(item);
@@ -246,7 +248,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player player) {
 		if (obj.getID() == 702) {
-			if (player.getY() > 456 || !hasItem(player, ItemId.GNOME_BALL.id())) {
+			if (player.getY() > 456 || !player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 				player.message("you open the gate");
 				player.message("and walk through");
 				doGate(player, obj, 357);

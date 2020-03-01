@@ -7,6 +7,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
@@ -39,7 +41,7 @@ public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveL
 			int next = p.getCache().getInt(gm.cacheName);
 			p.getCache().set(gm.cacheName, (next + 1));
 		}
-		if (hasItem(p, gm.itemIDOther)) {
+		if (p.getCarriedItems().hasCatalogID(gm.itemIDOther, Optional.of(false))) {
 			p.setBusy(true);
 			if (gm.itemIDOther != ItemId.GNOME_SPICE.id())
 				removeItem(p, gm.itemIDOther, 1);

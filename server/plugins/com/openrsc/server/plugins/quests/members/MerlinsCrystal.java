@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -294,7 +296,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return p.getX() == 448 && p.getY() == 435 && i.getCatalogId() == ItemId.BAT_BONES.id()
-			&& p.getCache().hasKey("magic_words") && hasItem(p, ItemId.LIT_BLACK_CANDLE.id());
+			&& p.getCache().hasKey("magic_words") && p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false));
 	}
 
 	@Override
@@ -324,7 +326,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 			playerTalk(p, n, "Snarthanto Candon Termtrick");
 		}
 		n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", p));
-		if (hasItem(p, ItemId.LIT_BLACK_CANDLE.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))) {
 			removeItem(p, ItemId.LIT_BLACK_CANDLE.id(), 1);
 		}
 		n.startCombat(p);
@@ -345,7 +347,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 				case 3:
 				case 5:
 					npcTalk(p, n, "How goes thy quest?");
-					if (hasItem(p, ItemId.HOLY_GRAIL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.HOLY_GRAIL.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have retrieved the grail");
 						npcTalk(p, n, "wow incredible you truly are a splendid knight");
 						removeItem(p, ItemId.HOLY_GRAIL.id(), 1);
@@ -374,7 +376,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 						"they certainly point somewhere",
 						"just blowing gently on them",
 						"Will make them show the way to go");
-					if (!hasItem(p, ItemId.MAGIC_GOLDEN_FEATHER.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.MAGIC_GOLDEN_FEATHER.id(), Optional.of(false))) {
 						p.message("King arthur gives you a feather");
 						addItem(p, ItemId.MAGIC_GOLDEN_FEATHER.id(), 1);
 					}

@@ -21,6 +21,8 @@ import com.openrsc.server.plugins.skills.Thieving;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -284,7 +286,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 		}
 		else if (inArray(obj.getID(), SMASH_BOULDERS)) {
-			if (hasItem(p, Mining.getAxe(p))) {
+			if (p.getCarriedItems().hasCatalogID(Mining.getAxe(p), Optional.of(false))) {
 				if (getCurrentLevel(p, Skills.MINING) < 52) {
 					p.message("You need a mining ability of at least 52 to affect these boulders.");
 					return;
@@ -342,7 +344,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						p.message("You need a thieving level of at least 50 to attempt this.");
 						return;
 					}
-					if (hasItem(p, 714)) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false))) {
 						message(p, 1300, "You attempt to pick the lock..");
 						p.message("It looks very sophisticated ...");
 						playerTalk(p, null, "Hmmm, interesting...");
@@ -372,7 +374,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			}
 		}
 		else if (obj.getID() == CRUDE_DESK) {
-			if (hasItem(p, ItemId.SHAMANS_TOME.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.SHAMANS_TOME.id(), Optional.empty())) {
 				message(p, 1300, "You search the desk ...");
 				p.message("...but find nothing.");
 			} else {
@@ -399,7 +401,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		else if (obj.getID() == TABLE) {
 			p.message("You start searching the table...");
-			if (hasItem(p, ItemId.SCRAWLED_NOTES.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.SCRAWLED_NOTES.id(), Optional.empty())) {
 				p.message("You cannot find anything else in here.");
 			} else {
 				sleep(1300);
@@ -409,7 +411,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		else if (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search")) {
 			p.message("You search the flea infested rags..");
-			if (hasItem(p, ItemId.SCATCHED_NOTES.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.SCATCHED_NOTES.id(), Optional.empty())) {
 				p.message("You cannot find anything else in here.");
 			} else {
 				sleep(1300);
@@ -419,7 +421,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		else if (obj.getID() == CRATE) {
 			p.message("You search the crate.");
-			if (hasItem(p, ItemId.SCRIBBLED_NOTES.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.SCRIBBLED_NOTES.id(), Optional.empty())) {
 				p.message("You cannot find anything else in here.");
 			} else {
 				sleep(1300);
@@ -555,7 +557,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 		}
 		else if (obj.getID() == LEGENDS_CUPBOARD) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 1 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-				if (hasItem(p, ItemId.MACHETTE.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
 					p.message("The cupboard is empty.");
 				} else {
 					message(p, 1200, "You open the cupboard and find a machette.",
@@ -710,12 +712,12 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			p.message("can be planted in the fertile soil.");
 		}
 		else if (obj.getID() == FERTILE_EARTH && item.getCatalogId() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
-			if (p.getQuestStage(Quests.LEGENDS_QUEST) != 8 || !hasItem(p, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
+			if (p.getQuestStage(Quests.LEGENDS_QUEST) != 8 || !p.getCarriedItems().hasCatalogID(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))) {
 				p.message("You'll need some sacred water to feed ");
 				p.message("the tree when it starts growing.");
 				return;
 			}
-			if (!hasItem(p, ItemId.RUNE_AXE.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.RUNE_AXE.id(), Optional.of(false))) {
 				p.message("You'll need a very tough, very sharp axe to");
 				p.message("fell the tree once it is grown.");
 				return;
@@ -854,7 +856,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 						message(p, 1300, "A barely visible " + item.getDef(p.getWorld()).getName() + " becomes clear again, spinning above the rock.");
 						p.message("And then fades again...");
 					} else {
-						if (attachmentMode != -1 && !hasItem(p, ItemId.BOOKING_OF_BINDING.id())) {
+						if (attachmentMode != -1 && !p.getCarriedItems().hasCatalogID(ItemId.BOOKING_OF_BINDING.id(), Optional.empty())) {
 							removeItem(p, item.getCatalogId(), 1);
 							p.message("You carefully move the gem closer to the rock.");
 							p.message("The " + item.getDef(p.getWorld()).getName() + " glows and starts spinning as it hovers above the rock.");
@@ -929,7 +931,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 			int emptyID = -1;
 			int refilledID = -1;
 			for (int i = 0; i < REFILLABLE.length; i++) {
-				if (hasItem(p, REFILLABLE[i])) {
+				if (p.getCarriedItems().hasCatalogID(REFILLABLE[i], Optional.of(false))) {
 					emptyID = REFILLABLE[i];
 					refilledID = REFILLED[i];
 					break;
@@ -959,7 +961,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActi
 	}
 
 	private void replaceTotemPole(Player p, GameObject obj, boolean calledGujuo) {
-		if (hasItem(p, ItemId.TOTEM_POLE.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.TOTEM_POLE.id(), Optional.of(false))) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
 				p.updateQuestStage(Quests.LEGENDS_QUEST, 10);
 			}

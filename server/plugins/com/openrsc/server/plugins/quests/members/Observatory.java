@@ -18,6 +18,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Observatory implements QuestInterface, TalkToNpcListener,
@@ -380,7 +382,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 							removeItem(p, ItemId.LENS.id(), 1);
 							npcTalk(p, n,
 								"Wonderful, at last I can fix the telescope");
-							if (hasItem(p, ItemId.LENS_MOULD.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
 								npcTalk(p, n,
 									"I'll take back that mould for use again");
 								removeItem(p, ItemId.LENS_MOULD.id(), 1);
@@ -486,7 +488,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 		else if (obj.getID() == 919) { // KEY CHEST FOUND!
 			p.message("You search the chest");
 			p.message("You find a small key inside");
-			if (hasItem(p, ItemId.KEEP_KEY.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.KEEP_KEY.id(), Optional.of(false))) {
 				message(p, "You already have a keep key",
 					"Another one will have no use");
 			} else {
@@ -527,7 +529,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 			}
 		}
 		else if (obj.getID() == 927) {
-			if (!hasItem(p, ItemId.LENS_MOULD.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
 				p.message("Underneath you find a peculiar mould");
 				addItem(p, ItemId.LENS_MOULD.id(), 1);
 			} else {

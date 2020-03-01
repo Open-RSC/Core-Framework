@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Aggie implements TalkToNpcListener,
@@ -91,9 +93,12 @@ public final class Aggie implements TalkToNpcListener,
 				}
 				break;
 			case Aggie.SKIN_PASTE:
-				if (hasItem(p, ItemId.ASHES.id()) && (hasItem(p, ItemId.POT_OF_FLOUR.id()) || hasItem(p, ItemId.FLOUR.id()))
-					&& (hasItem(p, ItemId.BUCKET_OF_WATER.id()) || hasItem(p, ItemId.JUG_OF_WATER.id()))
-					&& hasItem(p, ItemId.REDBERRIES.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ASHES.id(), Optional.of(false))
+					&& (p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.FLOUR.id(), Optional.of(false)))
+					&& (p.getCarriedItems().hasCatalogID(ItemId.BUCKET_OF_WATER.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.JUG_OF_WATER.id(), Optional.of(false)))
+					&& p.getCarriedItems().hasCatalogID(ItemId.REDBERRIES.id(), Optional.of(false))) {
 					npcTalk(p, n,
 						"Yes I can, you have the ingredients for it already");
 					npcTalk(p, n, "Would you like me to mix you some?");
@@ -152,7 +157,7 @@ public final class Aggie implements TalkToNpcListener,
 					removeItem(p, ItemId.COINS.id(), 20);
 					npcTalk(p, n,
 						"Thats a fine for insulting a witch, you should learn some respect");
-				} else if (hasItem(p, ItemId.POT_OF_FLOUR.id())) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false))) {
 					message(p, "Aggie waves her hands near you, and you seem to have lost some flour");
 					removeItem(p, ItemId.POT_OF_FLOUR.id(), 1);
 					npcTalk(p, n, "Thankyou for your kind present of flour",

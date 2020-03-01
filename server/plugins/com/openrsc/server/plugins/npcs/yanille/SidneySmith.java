@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.yanille;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -7,6 +8,8 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -17,21 +20,21 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 	/**
 	 * ITEM UNCERTED
 	 */
-	public static final int PRAYER_RESTORE_POT = 483;
-	public static final int SUPER_ATTACK_POT = 486;
-	public static final int SUPER_STRENGTH_POT = 492;
-	public static final int SUPER_DEFENSE_POT = 495;
-	public static final int DRAGON_BONES = 814;
-	public static final int LIMPWURT_ROOT = 220;
+	public static final int PRAYER_RESTORE_POT = ItemId.FULL_RESTORE_PRAYER_POTION.id();
+	public static final int SUPER_ATTACK_POT = ItemId.FULL_SUPER_ATTACK_POTION.id();
+	public static final int SUPER_STRENGTH_POT = ItemId.FULL_SUPER_STRENGTH_POTION.id();
+	public static final int SUPER_DEFENSE_POT = ItemId.FULL_SUPER_DEFENSE_POTION.id();
+	public static final int DRAGON_BONES = ItemId.DRAGON_BONES.id();
+	public static final int LIMPWURT_ROOT = ItemId.LIMPWURT_ROOT.id();
 	/**
 	 * ITEM CERTED
 	 */
-	public static final int PRAYER_CERT = 1272;
-	public static final int SUPER_ATTACK_CERT = 1273;
-	public static final int SUPER_DEFENSE_CERT = 1274;
-	public static final int SUPER_STRENGTH_CERT = 1275;
-	public static final int DRAGON_BONES_CERT = 1270;
-	public static final int LIMPWURT_ROOT_CERT = 1271;
+	public static final int PRAYER_CERT = ItemId.PRAYER_POTION_CERTIFICATE.id();
+	public static final int SUPER_ATTACK_CERT = ItemId.SUPER_ATTACK_POTION_CERTIFICATE.id();
+	public static final int SUPER_DEFENSE_CERT = ItemId.SUPER_DEFENSE_POTION_CERTIFICATE.id();
+	public static final int SUPER_STRENGTH_CERT = ItemId.SUPER_STRENGTH_POTION_CERTIFICATE.id();
+	public static final int DRAGON_BONES_CERT = ItemId.DRAGON_BONE_CERTIFICATE.id();
+	public static final int LIMPWURT_ROOT_CERT = ItemId.LIMPWURT_ROOT_CERTIFICATE.id();
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {
@@ -113,12 +116,12 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				}
 				break;
 			case Sidney.CERTIFICATE_TO_GOODS:
-				if (!hasItem(p, PRAYER_CERT) &&
-					!hasItem(p, SUPER_ATTACK_CERT) &&
-					!hasItem(p, SUPER_DEFENSE_CERT) &&
-					!hasItem(p, SUPER_STRENGTH_CERT) &&
-					!hasItem(p, DRAGON_BONES_CERT) &&
-					!hasItem(p, LIMPWURT_ROOT_CERT)) {
+				if (!p.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false)) &&
+					!p.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false)) &&
+					!p.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false)) &&
+					!p.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false)) &&
+					!p.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false)) &&
+					!p.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
 					npcTalk(p, n, "Sorry, but you don't have any certificates that I can change.",
 						"I can only change the following certificates into goods.",
 						"Dragon Bone Certificates,",
@@ -234,28 +237,28 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			"* Super Strength Potion Certificates *",
 			"-*- Menu 2 -*-");
 		if (certs == 0) {
-			if (hasItem(p, PRAYER_CERT)) {
+			if (p.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Prayer Restore Potion Certificates to change.");
 			}
 		} else if (certs == 1) {
-			if (hasItem(p, SUPER_ATTACK_CERT)) {
+			if (p.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Super attack Potion Certificates to change.");
 			}
 		} else if (certs == 2) {
-			if (hasItem(p, SUPER_DEFENSE_CERT)) {
+			if (p.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Super Defense Potion Certificates to change.");
 			}
 		} else if (certs == 3) {
-			if (hasItem(p, SUPER_STRENGTH_CERT)) {
+			if (p.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
@@ -272,14 +275,14 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			"* Limpwurt Root Certificates *",
 			"-*- Menu 1 -*-");
 		if (menu == 0) {
-			if (hasItem(p, DRAGON_BONES_CERT)) {
+			if (p.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
 					"Dragon Bone Certificates to change.");
 			}
 		} else if (menu == 1) {
-			if (hasItem(p, LIMPWURT_ROOT_CERT)) {
+			if (p.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
 			} else {
 				npcTalk(p, n, "Sorry, but you don't have any ",
@@ -379,17 +382,17 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 			SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,
 			LIMPWURT_ROOT, PRAYER_CERT, SUPER_ATTACK_CERT, SUPER_DEFENSE_CERT,
 			SUPER_STRENGTH_CERT, DRAGON_BONES_CERT, LIMPWURT_ROOT_CERT)) {
-			switch (item.getCatalogId()) {
-				case PRAYER_RESTORE_POT:
+			switch (ItemId.getById(item.getCatalogId())) {
+				case FULL_RESTORE_PRAYER_POTION:
 					calculateExchangeMenu(player, npc, false, item, new Item(PRAYER_CERT));
 					break;
-				case SUPER_ATTACK_POT:
+				case FULL_SUPER_ATTACK_POTION:
 					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_ATTACK_CERT));
 					break;
-				case SUPER_STRENGTH_POT:
+				case FULL_SUPER_STRENGTH_POTION:
 					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_STRENGTH_CERT));
 					break;
-				case SUPER_DEFENSE_POT:
+				case FULL_SUPER_DEFENSE_POTION:
 					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_DEFENSE_CERT));
 					break;
 				case DRAGON_BONES:
@@ -398,22 +401,22 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				case LIMPWURT_ROOT:
 					calculateExchangeMenu(player, npc, false, item, new Item(LIMPWURT_ROOT_CERT));
 					break;
-				case PRAYER_CERT:
+				case PRAYER_POTION_CERTIFICATE:
 					calculateExchangeMenu(player, npc, true, new Item(PRAYER_RESTORE_POT), item);
 					break;
-				case SUPER_ATTACK_CERT:
+				case SUPER_ATTACK_POTION_CERTIFICATE:
 					calculateExchangeMenu(player, npc, true, new Item(SUPER_ATTACK_POT), item);
 					break;
-				case SUPER_STRENGTH_CERT:
+				case SUPER_STRENGTH_POTION_CERTIFICATE:
 					calculateExchangeMenu(player, npc, true, new Item(SUPER_STRENGTH_POT), item);
 					break;
-				case SUPER_DEFENSE_CERT:
+				case SUPER_DEFENSE_POTION_CERTIFICATE:
 					calculateExchangeMenu(player, npc, true, new Item(SUPER_DEFENSE_POT), item);
 					break;
-				case DRAGON_BONES_CERT:
+				case DRAGON_BONE_CERTIFICATE:
 					calculateExchangeMenu(player, npc, true, new Item(DRAGON_BONES), item);
 					break;
-				case LIMPWURT_ROOT_CERT:
+				case LIMPWURT_ROOT_CERTIFICATE:
 					calculateExchangeMenu(player, npc, true, new Item(LIMPWURT_ROOT), item);
 					break;
 				default:

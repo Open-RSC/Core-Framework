@@ -6,6 +6,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LadyOfTheWaves implements ObjectActionListener, ObjectActionExecutiveListener {
@@ -41,7 +43,7 @@ public class LadyOfTheWaves implements ObjectActionListener, ObjectActionExecuti
 
 	private void sail(Player p, int option) {
 		p.setBusy(true);
-		if (hasItem(p, ItemId.SHIP_TICKET.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.SHIP_TICKET.id(), Optional.of(false))) {
 			removeItem(p, ItemId.SHIP_TICKET.id(), 1);
 			message(p, 1200, "@yel@Captain: Thanks for the ticket, let's set sail!");
 			message(p, 1200, "You board the ship and it sails off.");

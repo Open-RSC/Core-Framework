@@ -20,6 +20,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TribalTotem implements QuestInterface, TalkToNpcListener,
@@ -350,7 +352,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
 			message(p, "There is a label on this crate", "It says",
 				"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
-			if (hasItem(p, ItemId.ADDRESS_LABEL.id()) || p.getCache().hasKey("label")) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || p.getCache().hasKey("label")) {
 				message(p, "It doesn't seem possible to open the crate");
 			} else {
 				message(p, "You take the label");
@@ -398,7 +400,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 				closeGenericObject(obj, p, HANDELMORT_CHEST_CLOSED, "You close the chest");
 			} else {
 				p.message("You search the chest");
-				if (hasItem(p, ItemId.TRIBAL_TOTEM.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.TRIBAL_TOTEM.id(), Optional.empty())) {
 					p.message("The chest is empty");
 				} else {
 					p.message("You find a tribal totem which you take");

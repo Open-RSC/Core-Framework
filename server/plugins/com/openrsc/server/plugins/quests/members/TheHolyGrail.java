@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
@@ -470,7 +472,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 			"I have not been able to find that castle again though");
 		playerTalk(p, percival,
 			"Well I do have the means to get us there - a magic whistle");
-		if (hasItem(p, ItemId.MAGIC_WHISTLE.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
 			message(p, "You give a whistle to Sir Percival",
 				"You tell sir Percival what to do with the whistle");
 			removeItem(p, ItemId.MAGIC_WHISTLE.id(), 1);

@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -281,7 +283,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				"Yes, I'll carefully move the rocks to see what's behind them.",
 				"No, I'll leave them, I don't like the look of that ceiling.");
 			if (menu == 0) {
-				if (hasItem(p, ItemId.TATTERED_SCROLL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.TATTERED_SCROLL.id(), Optional.of(false))) {
 					p.message("You see nothing here but an empty book case behind rocks.");
 				} else {
 					message(p, "You start to slowly move the rocks to one side.");
@@ -310,7 +312,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			if (command.equalsIgnoreCase("Look")) {
 				message(p, "You take a look at the Gallows.",
 					"The gallows look pretty eerie.");
-				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ZADIMUS_CORPSE.id(), Optional.of(false)) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					message(p, "An empty noose swings eerily in the half light of the tomb.");
 				} else {
 					message(p, "A grisly sight meets your eyes. A human corpse hangs from the noose.",
@@ -318,7 +320,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
 				message(p, "You search the gallows.");
-				if (hasItem(p, ItemId.ZADIMUS_CORPSE.id()) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ZADIMUS_CORPSE.id(), Optional.of(false)) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					p.message("The gallows look pretty eerie. You search but find nothing.");
 				} else {
 					message(p, "You find a human corpse hanging in the noose.",
@@ -345,7 +347,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			}
 		}
 		else if (obj.getID() == CAVE_SACK) {
-			if (hasItem(p, ItemId.CRUMPLED_SCROLL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.CRUMPLED_SCROLL.id(), Optional.of(false))) {
 				p.message("You find nothing in the sacks.");
 			} else {
 				p.message("You find a tattatered, very ornate scroll.");
@@ -495,7 +497,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				if (p.getCache().hasKey("SV_DIG_BUMP")) {
 					message(p, "You see a small fissure in the granite",
 							"that you might just be able to crawl through.");
-					if(!hasItem(p, ItemId.LIT_CANDLE.id()) && !p.getCache().hasKey("SV_DIG_LIT")) {
+					if(!p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false)) && !p.getCache().hasKey("SV_DIG_LIT")) {
 						p.message("It's very dark beyond the fissure.");
 					}
 					ShiloVillageUtils.BUMPY_DIRT_HOLDER(p);
@@ -623,7 +625,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 				if (!p.getCache().hasKey("SV_DIG_LIT")) {
 					message(p, "You hold the candle to the fissure and see that",
 							"there is quite a large drop after you get through the hole.");
-					if(!hasItem(p, ItemId.ROPE.id())) {
+					if(!p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false))) {
 						p.message("It's a pity you don't have some rope");
 					}
 					else {
@@ -649,7 +651,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 					message(p, "You dig a small hole and almost immediately hit granite",
 						"You excavate the hole a bit more and see that there is a small fissure",
 						"that you might just be able to crawl through.");
-					if(!hasItem(p, ItemId.LIT_CANDLE.id()) && !p.getCache().hasKey("SV_DIG_LIT")) {
+					if(!p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false)) && !p.getCache().hasKey("SV_DIG_LIT")) {
 						p.message("It's very dark beyond the fissure.");
 					}
 					p.getCache().store("SV_DIG_BUMP", true);

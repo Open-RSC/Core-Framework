@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKardiaTheWitch implements ObjectActionListener, ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, PickupExecutiveListener, PickupListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
@@ -55,7 +57,7 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 					npcTalk(p, witch, "haa haa.. die mortal");
 				}
 			} else if (click == 1) {
-				if (hasItem(p, ItemId.KARDIA_CAT.id()) && !p.getCache().hasKey("kardia_cat")) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !p.getCache().hasKey("kardia_cat")) {
 					message(p, "you place the cat by the door");
 					removeItem(p, ItemId.KARDIA_CAT.id(), 1);
 					p.teleport(776, 3535);
@@ -77,12 +79,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Obje
 
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
-		return i.getID() == ItemId.KARDIA_CAT.id() && hasItem(p, ItemId.KARDIA_CAT.id());
+		return i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false));
 	}
 
 	@Override
 	public void onPickup(Player p, GroundItem i) {
-		if (i.getID() == ItemId.KARDIA_CAT.id() && hasItem(p, ItemId.KARDIA_CAT.id())) {
+		if (i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false))) {
 			message(p, "it's not very nice to squeeze one cat into a satchel");
 			p.message("...two's just plain cruel!");
 		}

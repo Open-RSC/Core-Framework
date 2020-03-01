@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -46,7 +48,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 					} else if (p.getCache().hasKey("get_gold_ogre")) {
 						if (ogre_guard != null) {
 							npcTalk(p, ogre_guard, "Creature, did you bring me the gold ?");
-							if (hasItem(p, ItemId.GOLD_BAR.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.GOLD_BAR.id(), Optional.of(false))) {
 								playerTalk(p, ogre_guard, "Here it is");
 								removeItem(p, ItemId.GOLD_BAR.id(), 1);
 								npcTalk(p, ogre_guard, "It's brought it!",
@@ -96,7 +98,7 @@ public class WatchTowerGateObstacles implements ObjectActionListener, ObjectActi
 					} else if (p.getCache().hasKey("get_ogre_companionship")) {
 						if (ogre_guard != null) {
 							npcTalk(p, ogre_guard, "Well, what proof of friendship did you bring ?");
-							if (hasItem(p, ItemId.OGRE_RELIC.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC.id(), Optional.of(false))) {
 								playerTalk(p, ogre_guard, "I have a relic from a chieftan");
 								npcTalk(p, ogre_guard, "It's got the statue of Dalgroth",
 									"Welcome to Gu'Tanoth",

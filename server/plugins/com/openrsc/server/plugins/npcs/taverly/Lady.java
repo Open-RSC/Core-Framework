@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -31,7 +33,7 @@ public class Lady implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			}
 		});
 		if ((p.getQuestStage(Quests.MERLINS_CRYSTAL) >= 3 || p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1)
-			&& !hasItem(p, ItemId.EXCALIBUR.id())) {
+			&& !p.getCarriedItems().hasCatalogID(ItemId.EXCALIBUR.id(), Optional.empty())) {
 			defaultMenu.addOption(new Option("I seek the sword Exalibur") {
 				@Override
 				public void action() {

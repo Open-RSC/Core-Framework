@@ -17,6 +17,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
@@ -63,7 +65,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			if (p.getQuestStage(getQuestId()) == 6
 				|| p.getQuestStage(getQuestId()) == -1) {
-				if (hasItem(p, ItemId.ORBS_OF_PROTECTION.id()) || p.getQuestStage(getQuestId()) == -1) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.empty()) || p.getQuestStage(getQuestId()) == -1) {
 					playerTalk(p, n, "i thought i killed you?");
 					npcTalk(p, n,
 						"fool.. warriors blessed by khazard don't die",
@@ -113,7 +115,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "ok, take care");
 					break;
 				case 5:
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "how are you tracker?");
 						npcTalk(p, n, "now we have the globe i'm much better",
 							"they won't stand a chance without it");
@@ -170,7 +172,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					p.message("The poor gnome has gone mad");
 					break;
 				case 5:
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "hello again\"");
 						npcTalk(p, n, "don't talk to me, you can't see me",
 							"no one can just the demons");
@@ -298,7 +300,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 						"to enter the stronghold and retrieve the orb");
 					break;
 				case 5:
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "i have the orb of protection");
 						npcTalk(p, n, "incredible, for a human",
 							"you really are something");
@@ -426,7 +428,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					break;
 				case 5:
 					playerTalk(p, n, "king bolren are you ok?");
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "i have the orb");
 						npcTalk(p, n, "thank you traveller, but it's too late",
 							"we're all doomed", "oh my the misery, the horror");
@@ -472,7 +474,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 				case 6:
-					if (hasItem(p, ItemId.ORBS_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "bolren, i have returned");
 						npcTalk(p, n, "you made it back", "do you have the orbs?");
 						playerTalk(p, n, "i have them here");
@@ -535,7 +537,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				case -1:
 					playerTalk(p, n, "hello again bolren");
 					npcTalk(p, n, "well hello, it's good to see you again");
-					if (!hasItem(p, ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id(), Optional.empty())) {
 						playerTalk(p, n, "i've lost my amulet");
 						npcTalk(p, n, "oh dear", "here take another");
 						addItem(p, ItemId.GNOME_EMERALD_AMULET_OF_PROTECTION.id(), 1);
@@ -572,7 +574,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				case 5:
 					playerTalk(p, n, "hello remsai");
 					npcTalk(p, n, "hello, did you find the orb?");
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "i have it here");
 						npcTalk(p, n, "you're our saviour");
 					} else {
@@ -582,7 +584,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					}
 					break;
 				case 6:
-					if (hasItem(p, ItemId.ORBS_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "i've returned");
 						npcTalk(p, n, "you're back, well done brave adventurer",
 							"now the orbs are safe",
@@ -681,7 +683,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 				case 5:
 					playerTalk(p, n, "hello elkoy");
 					npcTalk(p, n, "you're back! and the orb?");
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, n, "i have it here");
 						npcTalk(p,
 							n,
@@ -862,7 +864,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, trackerTwo, "go");
 					break;
 				case 5:
-					if (hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.of(false))) {
 						playerTalk(p, trackerTwo, "how are you tracker?");
 						npcTalk(p, trackerTwo, "now we have the globe 'm much better",
 							"soon my comrades will come and free me");
@@ -922,7 +924,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 			} else if (command.equalsIgnoreCase("close")) {
 				closeGenericObject(obj, p, KHAZARD_CHEST_OPEN, "You close the chest");
 			} else {
-				if (!hasItem(p, ItemId.ORB_OF_PROTECTION.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_PROTECTION.id(), Optional.empty())) {
 					p.message("You search the chest");
 					p.message("And find the orb of protection");
 					addItem(p, ItemId.ORB_OF_PROTECTION.id(), 1);
@@ -988,7 +990,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					"As he falls to the ground...",
 					"A ghostly vapour floats upwards from his battle worn armour",
 					"Out of sight, you hear a shrill scream in the still air of the valley");
-				if (!hasItem(p, ItemId.ORBS_OF_PROTECTION.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.empty())) {
 					p.message("You search his satchel and find the orbs of protection");
 					addItem(p, ItemId.ORBS_OF_PROTECTION.id(), 1);
 					if (!p.getCache().hasKey("looted_orbs_protect")) {

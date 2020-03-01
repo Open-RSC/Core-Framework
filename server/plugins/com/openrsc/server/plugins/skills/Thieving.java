@@ -27,6 +27,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thieving extends Functions
@@ -37,7 +38,7 @@ public class Thieving extends Functions
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		//lockpick said to make picking a bit easier
-		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (hasItem(player, ItemId.LOCKPICK.id()) ? 10 : 0);
+		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) ? 10 : 0);
 		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
 	}
 
@@ -466,7 +467,7 @@ public class Thieving extends Functions
 					player.setBusyTimer(0);
 					return;
 				}
-				if (!hasItem(player, ItemId.LOCKPICK.id())) {
+				if (!player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false))) {
 					player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 					player.setBusyTimer(0);
 					return;
@@ -636,7 +637,7 @@ public class Thieving extends Functions
 				player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 				return;
 			}
-			if (!hasItem(player, ItemId.LOCKPICK.id()) && requiresLockpick) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) && requiresLockpick) {
 				player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 				return;
 			}

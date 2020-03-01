@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
 import static com.openrsc.server.plugins.Functions.hasItem;
@@ -66,7 +68,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 					// Returns Fruit Blast, Assigns Drunk Dragon
 					case 2:
 						npcTalk(player, npc, "so where's my fruit blast");
-						if (hasItem(player, ItemId.FRUIT_BLAST.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.FRUIT_BLAST.id(), Optional.of(false))) {
 							assignDrunkDragon(player, npc);
 						} else {
 							npcTalk(player, npc, "i don't know what you have there but it's no fruit blast");
@@ -78,7 +80,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 						playerTalk(player, npc, "hello blurberry");
 						npcTalk(player, npc, "hello again traveller",
 							"how did you do?");
-						if (hasItem(player, ItemId.DRUNK_DRAGON.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.DRUNK_DRAGON.id(), Optional.of(false))) {
 							assignSGG(player, npc);
 						} else {
 							npcTalk(player, npc, "i dont know what that is but it's no drunk dragon");
@@ -89,7 +91,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 					case 4:
 						playerTalk(player, npc, "hi blurberry");
 						npcTalk(player, npc, "so have you got my s g g?");
-						if (hasItem(player, ItemId.SGG.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.SGG.id(), Optional.of(false))) {
 							assignChocolateSaturday(player, npc);
 						} else {
 							npcTalk(player, npc, "i dont know what that is but it's no s g g");
@@ -100,7 +102,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 					case 5:
 						playerTalk(player, npc, "hello blurberry");
 						npcTalk(player, npc, "hello, how did it go with the choc saturday");
-						if (hasItem(player, ItemId.CHOCOLATE_SATURDAY.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_SATURDAY.id(), Optional.of(false))) {
 							assignBlurberrySpecial(player, npc);
 						} else {
 							playerTalk(player, npc, "i haven't managed to make it yet");
@@ -113,7 +115,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 					case 6:
 						playerTalk(player, npc, "hi again");
 						npcTalk(player, npc, "so how did you do");
-						if (hasItem(player, ItemId.BLURBERRY_SPECIAL.id())) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
 							completeBlurberrysBar(player, npc);
 						} else {
 							playerTalk(player, npc, "I haven't managed to make it yet");
@@ -176,9 +178,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 		playerTalk(p, n, "hi");
 		npcTalk(p, n, "have you made the order?");
 		if (job == 0) {
-			if (hasItem(p, ItemId.PINEAPPLE_PUNCH.id())
-				&& hasItem(p, ItemId.CHOCOLATE_SATURDAY.id())
-				&& hasItem(p, ItemId.DRUNK_DRAGON.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.PINEAPPLE_PUNCH.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_SATURDAY.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.DRUNK_DRAGON.id(), Optional.of(false))) {
 				playerTalk(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
 				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
 				removeItem(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
@@ -196,7 +198,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 			}
 		} else if (job == 1) {
 			if (hasItem(p, ItemId.WIZARD_BLIZZARD.id(), 2)
-				&& hasItem(p, ItemId.SGG.id())) {
+				&& p.getCarriedItems().hasCatalogID(ItemId.SGG.id(), Optional.of(false))) {
 				playerTalk(p, n, "here you go, two wizard blizzards and an s.g.g.");
 				p.message("you give blurberry two wizard blizzards and an s.g.g.");
 				removeItem(p, ItemId.WIZARD_BLIZZARD.id(), 2);
@@ -213,9 +215,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 			}
 		} else if (job == 2) {
 			//dialogue recreated
-			if (hasItem(p, ItemId.WIZARD_BLIZZARD.id())
-				&& hasItem(p, ItemId.PINEAPPLE_PUNCH.id())
-				&& hasItem(p, ItemId.BLURBERRY_SPECIAL.id())
+			if (p.getCarriedItems().hasCatalogID(ItemId.WIZARD_BLIZZARD.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.PINEAPPLE_PUNCH.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))
 				&& hasItem(p, ItemId.FRUIT_BLAST.id(), 2)) {
 				playerTalk(p, n, "here you go, one wizard blizzard,one pineapple punch, one blurberry special",
 						"and two fruit blasts");
@@ -239,7 +241,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 		} else if (job == 3) {
 			//dialogue recreated
 			if (hasItem(p, ItemId.SGG.id(), 2)
-				&& hasItem(p, ItemId.BLURBERRY_SPECIAL.id())) {
+				&& p.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
 				playerTalk(p, n, "here you go, two s.g.g. and one blurberry special");
 				p.message("you give blurberry two s.g.g. and one blurberry special");
 				removeItem(p, ItemId.SGG.id(), 2);
@@ -256,7 +258,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 			}
 		} else if (job == 4) {
 			//dialogue recreated
-			if (hasItem(p, ItemId.FRUIT_BLAST.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.FRUIT_BLAST.id(), Optional.of(false))) {
 				playerTalk(p, n, "here you go, one fruit blast");
 				p.message("you give blurberry one fruit blast");
 				removeItem(p, ItemId.FRUIT_BLAST.id(), 1);

@@ -12,6 +12,8 @@ import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListener,
@@ -37,7 +39,9 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 				"...and i'll supply you with a mage staff ready for battle");
 			p.getCache().set("mage_arena", 3);
 		} else if ((p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 3) &&
-			(hasItem(p, ItemId.ZAMORAK_CAPE.id()) || hasItem(p, ItemId.SARADOMIN_CAPE.id()) || hasItem(p, ItemId.GUTHIX_CAPE.id()))) {
+			(p.getCarriedItems().hasCatalogID(ItemId.ZAMORAK_CAPE.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.SARADOMIN_CAPE.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.GUTHIX_CAPE.id(), Optional.of(false)))) {
 			npcTalk(p, n, "hello adventurer, have you made your choice?");
 			playerTalk(p, n, "i have");
 			npcTalk(p, n, "good, good .. i hope you chose well",
@@ -45,11 +49,11 @@ public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListen
 				"now i will give you a magic staff",
 				"these are all the weapons and armour you'll need here");
 			p.message("the mage guardian gives you a magic staff");
-			if (hasItem(p, ItemId.ZAMORAK_CAPE.id(), 1)) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ZAMORAK_CAPE.id(), Optional.of(false))) {
 				addItem(p, ItemId.STAFF_OF_ZAMORAK.id(), 1);
-			} else if (hasItem(p, ItemId.SARADOMIN_CAPE.id(), 1)) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.SARADOMIN_CAPE.id(), Optional.of(false))) {
 				addItem(p, ItemId.STAFF_OF_SARADOMIN.id(), 1);
-			} else if (hasItem(p, ItemId.GUTHIX_CAPE.id(), 1)) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.GUTHIX_CAPE.id(), Optional.of(false))) {
 				addItem(p, ItemId.STAFF_OF_GUTHIX.id(), 1);
 			}
 			p.getCache().set("mage_arena", 4);

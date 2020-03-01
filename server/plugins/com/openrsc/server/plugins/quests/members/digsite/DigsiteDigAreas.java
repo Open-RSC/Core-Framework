@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
 import static com.openrsc.server.plugins.Functions.hasItem;
@@ -278,7 +280,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 				}
 			}
 			if (getLevel3Digsite(p)) {
-				if (!hasItem(p, ItemId.SPECIMEN_JAR.id())) { // HAS SPECIMEN JAR
+				if (!p.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) { // HAS SPECIMEN JAR
 					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Ahem! I don't see your sample jar");
@@ -291,7 +293,7 @@ public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecut
 					}
 					return;
 				}
-				if (!hasItem(p, ItemId.SPECIMEN_BRUSH.id())) { // HAS SPECIMEN BRUSH
+				if (!p.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_BRUSH.id(), Optional.of(false))) { // HAS SPECIMEN BRUSH
 					Npc workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 30000);
 					if (workman != null) {
 						npcTalk(p, workman, "Wait just a minute!");

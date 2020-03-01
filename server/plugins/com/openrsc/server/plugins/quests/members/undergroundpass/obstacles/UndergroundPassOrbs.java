@@ -8,13 +8,14 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -216,28 +217,28 @@ public class UndergroundPassOrbs implements ObjectActionListener, ObjectActionEx
 	@Override
 	public boolean blockPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
-			if (hasItem(p, ItemId.ORB_OF_LIGHT_WHITE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_WHITE.id(), Optional.empty())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}
 			return false;
 		}
 		else if (i.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
-			if (hasItem(p, ItemId.ORB_OF_LIGHT_BLUE.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_BLUE.id(), Optional.empty())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}
 			return false;
 		}
 		else if (i.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
-			if (hasItem(p, ItemId.ORB_OF_LIGHT_PINK.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_PINK.id(), Optional.empty())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}
 			return false;
 		}
 		else if (i.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
-			if (hasItem(p, ItemId.ORB_OF_LIGHT_YELLOW.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_YELLOW.id(), Optional.empty())) {
 				p.message("you are already carrying this orb");
 				return true;
 			}

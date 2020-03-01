@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DoctorOrbon implements TalkToNpcListener,
@@ -35,7 +37,8 @@ public class DoctorOrbon implements TalkToNpcListener,
 				playerTalk(p, n, "not yet");
 				npcTalk(p, n, "you must hurry",
 					"they could have the whole town infected in days");
-				if (!hasItem(p, ItemId.PROTECTIVE_TROUSERS.id()) || !hasItem(p, ItemId.PROTECTIVE_JACKET.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.PROTECTIVE_TROUSERS.id(), Optional.empty())
+					|| !p.getCarriedItems().hasCatalogID(ItemId.PROTECTIVE_JACKET.id(), Optional.empty())) {
 					npcTalk(p,
 						n,
 						"I see you don't have your protective clothing with you",

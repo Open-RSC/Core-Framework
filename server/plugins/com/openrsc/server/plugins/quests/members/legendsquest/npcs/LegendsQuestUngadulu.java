@@ -900,7 +900,7 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecuti
 						"He was the guardian of the dead hero's that protected the source.",
 						"Their tormented spirits will now be at the beck and",
 						"call of the one who gave you the dagger.");
-					if (hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 						npcTalk(p, npc, "Take the Holy Force spell I gave you and pray that you",
 							"can defeat this spirit before it's too late.");
 					} else {

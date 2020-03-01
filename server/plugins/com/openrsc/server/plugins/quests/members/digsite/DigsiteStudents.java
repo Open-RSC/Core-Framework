@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveListener {
@@ -43,7 +45,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"All that have passed the appropriate earth sciences exams");
 						playerTalk(p, n, "Thanks for the information");
 					} else if (p.getCache().hasKey("student_orange_s")) { // started orange student help
-						if (hasItem(p, ItemId.ROCK_SAMPLE_ORANGE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_ORANGE.id(), Optional.of(false))) {
 							playerTalk(p, n, "Look what I found");
 							removeItem(p, ItemId.ROCK_SAMPLE_ORANGE.id(), 1);
 							p.getCache().store("student_orange_c", true); // store completed orange student help
@@ -132,7 +134,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 						playerTalk(p, n, "Okay I'll remember that");
 					} else if (p.getCache().hasKey("student_green_s")) { // started green student help
 
-						if (hasItem(p, ItemId.ROCK_SAMPLE_GREEN.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_GREEN.id(), Optional.of(false))) {
 							playerTalk(p, n, "Hi, is this your rock sample ?");
 							removeItem(p, ItemId.ROCK_SAMPLE_GREEN.id(), 1);
 							p.getCache().store("student_green_c", true); // completed green student help
@@ -222,7 +224,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 							"Gloves and boots to be worn at all times, proper tools must be used");
 						playerTalk(p, n, "Great, thanks for your advice");
 					} else if (p.getCache().hasKey("student_purple_s")) { // started purple student help
-						if (hasItem(p, ItemId.ROCK_SAMPLE_PURPLE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_PURPLE.id(), Optional.of(false))) {
 							playerTalk(p, n, "Guess what I found ?");
 							removeItem(p, ItemId.ROCK_SAMPLE_PURPLE.id(), 1);
 							p.getCache().store("student_purple_c", true); // completed purple student help
@@ -282,7 +284,7 @@ public class DigsiteStudents implements TalkToNpcListener, TalkToNpcExecutiveLis
 						playerTalk(p, n, "Hello there");
 						npcTalk(p, n, "Oh hi again",
 							"Did you bring me the opal ?");
-						if (hasItem(p, ItemId.UNCUT_OPAL.id())) { // OPAL
+						if (p.getCarriedItems().hasCatalogID(ItemId.UNCUT_OPAL.id(), Optional.of(false))) { // OPAL
 							playerTalk(p, n, "Would that opal look like this by any chance ?");
 							removeItem(p, ItemId.UNCUT_OPAL.id(), 1);
 							p.getCache().store("student_purple_exam3", true); // completed purple student help
