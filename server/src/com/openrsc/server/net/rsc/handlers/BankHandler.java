@@ -42,22 +42,22 @@ public final class BankHandler implements PacketHandler {
 		if (opcode == null)
 			return;
 
-		int inventorySlot, bankSlot, amount, presetSlot;
+		int catalogID, amount, presetSlot;
 		switch (opcode) {
 			case BANK_CLOSE:
 				player.resetBank();
 				break;
 			case BANK_WITHDRAW:
-				bankSlot = packet.readShort();
+				catalogID = packet.readShort();
 				amount = packet.readInt();
 
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, bankSlot, amount});
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, catalogID, amount});
 				break;
 			case BANK_DEPOSIT:
-				inventorySlot = packet.readShort();
+				catalogID = packet.readShort();
 				amount = packet.readInt();
 
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, inventorySlot, amount});
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, catalogID, amount});
 				break;
 			case BANK_DEPOSIT_ALL_FROM_INVENTORY:
 				player.getBank().depositAllFromInventory();

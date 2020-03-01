@@ -259,12 +259,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onWithdraw(Player p, Integer bankSlot, Integer amount) {
-		p.getBank().withdrawItemToInventory(bankSlot, amount);
+	public void onWithdraw(Player p, Integer catalogID, Integer amount) {
+		p.getBank().withdrawItemToInventory(catalogID, amount);
 	}
 
 	@Override
-	public void onDeposit(Player player, Integer inventorySlot, Integer amount) {
-		player.getBank().depositItemFromInventory(inventorySlot, amount, true);
+	public void onDeposit(Player player, Integer catalogID, Integer amount) {
+		player.getBank().depositItemFromInventory(catalogID, amount, true);
 	}
 }

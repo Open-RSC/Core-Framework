@@ -35,8 +35,10 @@ public class Item implements Comparable<Item> {
 	//Class overridden methods--------------------------------------------
 	@Override
 	public Item clone() {
-		Item retVal = new Item(getCatalogId(), getAmount(), getNoted());
-		retVal.setWielded(this.wielded);
+		Item retVal = new Item(getCatalogId());
+		retVal.itemId = ITEM_ID_UNASSIGNED;
+		retVal.wielded = this.isWielded();
+		retVal.itemStatus = this.getItemStatus();
 		return retVal;
 	}
 

@@ -6,5 +6,5 @@ public interface DepositExecutiveListener {
 	/**
 	 * Return true if you wish to prevent a user from depositing an item
 	 */
-	boolean blockDeposit(Player p, Integer inventorySlot, Integer amount);
+	boolean blockDeposit(Player p, Integer catalogID, Integer amount);
 }

@@ -279,9 +279,6 @@ public class Inventory {
 								ActionSender.sendInventoryUpdateItem(player, index);
 						}
 
-
-
-
 						return index;
 					} else { /**Non-stackable items*/
 

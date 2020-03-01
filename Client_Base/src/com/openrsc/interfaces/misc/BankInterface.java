@@ -489,7 +489,7 @@ public class BankInterface {
 	public void sendDeposit(int i) {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		mc.packetHandler.getClientStream().newPacket(23);
-		mc.packetHandler.getClientStream().bufferBits.putShort(this.selectedBankSlot);
+		mc.packetHandler.getClientStream().bufferBits.putShort(itemID);
 		if (i > mc.getInventoryCount(itemID)) {
 			i = mc.getInventoryCount(itemID);
 		}
@@ -507,11 +507,12 @@ public class BankInterface {
 		}
 	}
 
+
 	public void sendWithdraw(int i) {
 		int itemID = currentBankIDs.get(this.selectedBankSlot);
 		int amt = currentBankCounts.get(this.selectedBankSlot);
 		mc.packetHandler.getClientStream().newPacket(22);
-		mc.packetHandler.getClientStream().bufferBits.putShort(this.selectedBankSlot);
+		mc.packetHandler.getClientStream().bufferBits.putShort(itemID);
 		if (i > amt) {
 			i = amt;
 		}
@@ -523,6 +524,7 @@ public class BankInterface {
 		}
 		if (amt - i < 1) this.selectedBankSlot = -1;
 	}
+
 
 	public void drawString(String str, int x, int y, int font, int color) {
 		mc.getSurface().drawString(str, x, y, color, font);
