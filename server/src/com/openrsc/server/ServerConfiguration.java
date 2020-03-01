@@ -436,34 +436,42 @@ public class ServerConfiguration {
 	}
 
 	// Attempt to read in an integer property
-	// If we can't parse it or find it, we return an
-	// empty optional so that we can use the default.
+	// If we can't parse it, we terminate the server. If we
+	// cannot find it, we return an empty optional so that
+	// we can use the default.
 	private Optional<Integer> tryReadInt(String key) {
 		try {
 			if (serverProps.keyExists(key))
 				return Optional.of(Integer.parseInt(serverProps.getAttribute(key)));
 		}
 		catch (NumberFormatException ex) {
-			LOGGER.info("Error reading value for key \"" + key + "\" " + ex.getMessage() +
-				". Should be integer. Using default.");
+			LOGGER.error("Error reading value for key \"" + key + "\" " + ex.getMessage() +
+				". Should be an integer. Terminating server.");
+			System.exit(1);
 		}
 		return Optional.empty();
 	}
 
+	// Attempt to read in an double property
+	// If we can't parse it, we terminate the server. If we
+	// cannot find it, we return an empty optional so that
+	// we can use the default.
 	private Optional<Double> tryReadDouble(String key) {
 		try {
 			if (serverProps.keyExists(key))
 				return Optional.of(Double.parseDouble(serverProps.getAttribute(key)));
 		}
 		catch (NumberFormatException ex) {
-			LOGGER.info("Error reading value for key \"" + key + "\" " + ex.getMessage() +
-				". Should be double. Using default.");
+			LOGGER.error("Error reading value for key \"" + key + "\" " + ex.getMessage() +
+				". Should be a double. Terminating server.");
+			System.exit(1);
 		}
 		return Optional.empty();
 	}
 
-	// Attempt to read in an integer property
-	// If the value isn't true or false, or we can't find it, we return an
+	// Attempt to read in an bool property
+	// If we cannot read the value (it isn't true or false), we terminate the server.
+	// If we cannot find the key, we return an
 	// empty optional so that we can use the default.
 	private Optional<Boolean> tryReadBool(String key) {
 		if (serverProps.keyExists(key)) {
@@ -473,8 +481,10 @@ public class ServerConfiguration {
 				return Optional.of(Boolean.parseBoolean(value));
 			}
 			else {
-				LOGGER.info("Error reading value for key \"" + key + ".\"" +
-					" Should be true or false. Using default.");
+				LOGGER.error("Error reading value for key \"" + key + "\" for input string \"" +
+					serverProps.getAttribute(key) + ".\"" +
+					" Should be true or false. Terminating server.");
+				System.exit(1);
 			}
 		}
 		return Optional.empty();
