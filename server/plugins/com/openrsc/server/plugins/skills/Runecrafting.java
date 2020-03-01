@@ -8,6 +8,7 @@ import com.openrsc.server.external.ObjectRunecraftingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
@@ -120,18 +121,16 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 				}
 				player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
 			}
-			player.setBatchEvent(new BatchEvent(player.getWorld(), player, 100, "Binding runes", player.getInventory().countId(ItemId.RUNE_ESSENCE.id()), false) {
-				@Override
-				public void action() {
-					if (!hasItem(getOwner(), ItemId.RUNE_ESSENCE.id())) {
-						interrupt();
-						return;
-					}
-					removeItem(getOwner(), ItemId.RUNE_ESSENCE.id(), 1);
-					addItem(getOwner(), def.getRuneId(), getRuneMultiplier(getOwner(), def.getRuneId()));
-					getOwner().incExp(Skills.RUNECRAFTING, def.getExp(), true);
+			int successCount = 0;
+			int repeatTimes = player.getInventory().countId(ItemId.RUNE_ESSENCE.id());
+			for (int loop = 0; loop < repeatTimes; ++loop) {
+				if (player.getInventory().remove(ItemId.RUNE_ESSENCE.id(), 1, false) != -1) {
+					player.getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())),false);
+					++successCount;
 				}
-			});
+			}
+			ActionSender.sendInventory(player);
+			player.incExp(Skills.RUNECRAFTING, def.getExp() * successCount, true);
 		}
 	}
 
