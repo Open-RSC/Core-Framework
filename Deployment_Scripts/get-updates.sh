@@ -22,53 +22,49 @@ ant -f server/build.xml compile_core
 ant -f server/build.xml compile_plugins
 ant -f Client_Base/build.xml compile
 ant -f PC_Launcher/build.xml compile
+gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
 
 # Launcher
 echo ""
-echo "Compiling for development or production use?
+echo "Copy and md5sum newly compiled client and cache files to the Website downloads folder?
 
 Choices:
-  ${RED}1${NC} - Development
-  ${RED}2${NC} - Production"
+  ${RED}1${NC} - No
+  ${RED}2${NC} - Yes"
 echo ""
 echo "Type the choice number and press enter."
 echo ""
 read -r compiling
 
 if [ "$compiling" == "1" ]; then
-  echo ""
+    echo ""
 elif [ "$compiling" == "2" ]; then
-  # Client
-  yes | sudo cp -rf Client_Base/*.jar ../Website/downloads/
-  sudo chmod +x ../Website/downloads/*.jar
-  sudo chmod 777 ../Website/downloads/*.jar
+    # PC Client
+    yes | sudo cp -f Client_Base/*.jar ../Website/downloads/
 
-  # Launcher
-  yes | sudo cp -rf PC_Launcher/*.jar ../Website/downloads/
-  sudo chmod +x ../Website/downloads/*.jar
-  sudo chmod 777 ../Website/downloads/*.jar
+    # Android client
+    yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/downloads/
 
-  # Cache
-  sudo chmod 777 -R 'Client_Base/Cache'
-  yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/downloads/"
-  sudo chmod 777 -R 'Client_Base/PK'
+    # Launcher
+    yes | sudo cp -rf PC_Launcher/*.jar ../Website/downloads/
 
-  yes | sudo cp -a -rf "Client_Base/PK/." "../Website/downloads/PK/"
-  yes | sudo cp -a -rf "Client_Base/Open_PK_Client.jar" "../Website/downloads/Open_PK_Client.jar"
+    # Set file permissions within the Website downloads folder
+    sudo chmod +x ../Website/downloads/*.jar
+    sudo chmod +x ../Website/downloads/*.jar
+    sudo chmod 777 ../Website/downloads/*.jar
+    sudo chmod 777 ../Website/downloads/*.apk
 
-  cd '../Website/downloads/' || exit
-  find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; > MD5.SUM
-  cd '../../Game' || exit
-  #sudo rm ../Website/downloads/MD5CHECKSUM
-  #sudo touch ../Website/downloads/MD5CHECKSUM && sudo chmod 777 ../Website/downloads/MD5CHECKSUM
-  #md5sum ../Website/downloads/* | sed 's/Website\/downloads\///g' | grep "^[a-zA-Z0-9]*" | awk '{print $2"="$1}' | tee ../Website/downloads/MD5CHECKSUM
-  #sudo sed -i 's/MD5CHECKSUM=/#MD5CHECKSUM=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  #sudo sed -i 's/index=/#index=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  #sudo sed -i 's/openrsc.apk=/#openrsc.apk=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
-  #sudo sed -i 's/android_version.txt=/#android_version.txt=/g' "../Website/downloads/MD5CHECKSUM" # no need for Android
-  #sudo sed -i 's/OpenRSC=/#OpenRSC=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  #sudo sed -i 's/Cache=/#Cache=/g' "../Website/downloads/MD5CHECKSUM" # disables a bad line
-  #sudo sed -i 's/..\///g' "../Website/downloads/MD5CHECKSUM" # Removes ../
+    # Cache copy and file permissions
+    sudo chmod 777 -R 'Client_Base/Cache'                                                       # Normal cache related files
+    yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/downloads/"                          # Normal cache related files
+
+    sudo chmod 777 -R 'Client_Base/PK'                                                          # Open PK related files
+    yes | sudo cp -a -rf "Client_Base/PK/." "../Website/downloads/PK/"                          # Open PK related files
+    yes | sudo cp -f "Client_Base/Open_PK_Client.jar" "../Website/downloads/Open_PK_Client.jar" # Open PK related files
+
+    cd '../Website/downloads/' || exit
+    find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; >MD5.SUM # Performs md5 hashing of all files in cache and writes to a text file for the launcher to read
+    cd '../../Game' || exit
 fi
 
 clear
@@ -86,7 +82,7 @@ echo ""
 read -r finished
 
 if [ "$finished" == "1" ]; then
-  make run-server
+    make run-server
 elif [ "$finished" == "2" ]; then
-  make start-linux
+    make start-linux
 fi
