@@ -22,6 +22,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShantayPassNpcs implements ShopInterface,
@@ -63,12 +65,12 @@ public class ShantayPassNpcs implements ShopInterface,
 				"Nothing thanks.");
 			if (menu == 0) {
 				npcTalk(p, n, "Of course!");
-				if (!hasItem(p, SHANTAY_PASS)) {
+				if (!p.getCarriedItems().hasCatalogID(SHANTAY_PASS, Optional.of(false))) {
 					npcTalk(p, n, "You'll need a Shantay pass to go through the gate into the desert.",
 						"See Shantay, he'll sell you one for a very reasonable price.");
 				} else {
 					int menus;
-					if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+					if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 						message(p, "There is a large poster on the wall near the gateway. It reads..",
 							"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 							"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
@@ -101,7 +103,7 @@ public class ShantayPassNpcs implements ShopInterface,
 						p.message("You hand over a Shantay Pass.");
 						removeItem(p, SHANTAY_PASS, 1);
 						playerTalk(p, npc, "Sure, here you go!");
-						if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+						if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 							npcTalk(p, npc, "Here, have a disclaimer...",
 								"It means that Shantay isn't responsible if you die in the desert.");
 							p.message("The guard gives you a disclaimer.");
@@ -134,7 +136,7 @@ public class ShantayPassNpcs implements ShopInterface,
 			}
 
 			npcTalk(p, n, "Hello Effendi, I am Shantay.");
-			if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+			if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 				npcTalk(p, n, "I see you're new!",
 					"Make sure you read the poster before going into the desert.");
 			}
@@ -144,7 +146,7 @@ public class ShantayPassNpcs implements ShopInterface,
 			}
 		} else if (n.getID() == ASSISTANT) {
 			npcTalk(p, n, "Hello Effendi, I am a Shantay Pass Assistant.");
-			if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+			if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 				npcTalk(p, n, "I see you're new!",
 					"Make sure you read the poster before going into the desert.");
 			}
@@ -398,7 +400,7 @@ public class ShantayPassNpcs implements ShopInterface,
 		if (obj.getID() == STONE_GATE && p.getY() < 735) {
 			if (command.equals("go through")) {
 				int menu;
-				if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+				if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 					message(p, "There is a large poster on the wall near the gateway. It reads..",
 						"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 						"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
@@ -417,7 +419,7 @@ public class ShantayPassNpcs implements ShopInterface,
 				}
 				Npc shantayGuard = getNearestNpc(p, SHANTAY_STANDING_GUARD, 5);
 				if (menu == 0) {
-					if (!hasItem(p, SHANTAY_PASS)) {
+					if (!p.getCarriedItems().hasCatalogID(SHANTAY_PASS, Optional.of(false))) {
 						message(p, "A guard stops you on your way out of the gate...");
 						if (shantayGuard != null) {
 							npcTalk(p, shantayGuard, "You need a Shantay pass to get through this gate.",
@@ -431,7 +433,7 @@ public class ShantayPassNpcs implements ShopInterface,
 							p.message("You hand over a Shantay Pass.");
 							removeItem(p, SHANTAY_PASS, 1);
 							playerTalk(p, shantayGuard, "Sure, here you go!");
-							if (!hasItem(p, SHANTAY_DISCLAIMER)) {
+							if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 								npcTalk(p, shantayGuard, "Here, have a disclaimer...",
 									"It means that Shantay isn't responsible if you die in the desert.");
 								p.message("The guard gives you a disclaimer.");

@@ -5,13 +5,14 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -195,7 +196,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 				p.message("nothing remains");
 				return;
 			}
-			if (!hasItem(p, ItemId.UNDERGROUND_PASS_UNICORN_HORN.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNDERGROUND_PASS_UNICORN_HORN.id(), Optional.empty())) {
 				sleep(1600);
 				p.message("all that remains is a damaged horn");
 				addItem(p, ItemId.UNDERGROUND_PASS_UNICORN_HORN.id(), 1);
@@ -276,7 +277,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, Objec
 			} else if (click == 1) {
 				if (obj.getID() == 168) {
 					message(p, "you search the cage");
-					if (!hasItem(p, ItemId.RAILING.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.RAILING.id(), Optional.of(false))) {
 						p.message("you find a loose railing lying on the floor");
 						addItem(p, ItemId.RAILING.id(), 1);
 					} else

@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActionExecutiveListener,
@@ -37,7 +39,7 @@ public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActi
 				if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 					choke(p);
 				}
-				if (hasItem(p, ItemId.RASHILIYA_CORPSE.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.RASHILIYA_CORPSE.id(), Optional.of(false))) {
 					p.message("You find nothing new on the Dolmen.");
 					return;
 				}

@@ -1,14 +1,15 @@
 package com.openrsc.server.plugins.npcs.edgeville;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BrotherJered implements TalkToNpcExecutiveListener,
 	TalkToNpcListener {
@@ -17,13 +18,14 @@ public class BrotherJered implements TalkToNpcExecutiveListener,
 	public void onTalkToNpc(Player p, Npc n) {
 		int option = showMenu(p, n, "What can you do to help a bold adventurer like myself?", "Praise be to Saradomin");
 		if (option == 0) {
-			if (!hasItem(p, ItemId.UNBLESSED_HOLY_SYMBOL.id()) && !hasItem(p, ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.UNBLESSED_HOLY_SYMBOL.id(), Optional.of(false))
+				&& !p.getCarriedItems().hasCatalogID(ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(), Optional.of(false))) {
 				npcTalk(p, n, "If you have a silver star",
 						"Which is the holy symbol of Saradomin",
 						"Then I can bless it",
 						"Then if you are wearing it",
 						"It will help you when you are praying");
-			} else if (hasItem(p, ItemId.UNBLESSED_HOLY_SYMBOL.id())) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.UNBLESSED_HOLY_SYMBOL.id(), Optional.of(false))) {
 				npcTalk(p, n, "Well I can bless that star of Saradomin you have");
 				int sub_option = showMenu(p, n, false, //do not send over
 						"Yes Please", "No thankyou");
@@ -38,7 +40,7 @@ public class BrotherJered implements TalkToNpcExecutiveListener,
 				} else if (sub_option == 1) {
 					playerTalk(p, n, "No Thankyou");
 				}
-			} else if (hasItem(p, ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id())) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(), Optional.of(false))) {
 				npcTalk(p, n, "Well if you put a string on that holy symbol",
 						"I can bless it for you\"");
 			}

@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -93,9 +95,11 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 					p.message("There is nothing on the Dolmen.");
 					return;
 				}
-				if (hasItem(p, ItemId.SWORD_POMMEL.id()) && hasItem(p, ItemId.LOCATING_CRYSTAL.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
+					&& p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
 					p.message("There is nothing on the Dolmen.");
-				} else if (hasItem(p, ItemId.SWORD_POMMEL.id()) || hasItem(p, ItemId.LOCATING_CRYSTAL.id())) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
 					p.message("You can see an item on the Dolmen");
 				} else {
 					p.message("You can see that there are some items on the Dolmen.");
@@ -103,28 +107,31 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 			} else if (command.equalsIgnoreCase("Search")) {
 				message(p, "The Dolmen is intricately decorated with the symbol of");
 				message(p, "two crossed palm trees. It might be the family crest?");
-				if (hasItem(p, ItemId.SWORD_POMMEL.id()) && hasItem(p, ItemId.LOCATING_CRYSTAL.id())) {
+				if (p.getCarriedItems().hasCatalogID( ItemId.SWORD_POMMEL.id(), Optional.empty())
+					&& p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
 					message(p, "There is nothing on the Dolmen.");
-				} else if (hasItem(p, ItemId.SWORD_POMMEL.id()) || hasItem(p, ItemId.LOCATING_CRYSTAL.id())) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
+					|| p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
 					message(p, "You can see an item on the Dolmen");
 				} else {
 					message(p, "You can see that there are some items on the Dolmen.");
 				}
-				if (!hasItem(p, ItemId.SWORD_POMMEL.id()) && !hasItem(p, ItemId.BONE_BEADS.id())) { // SWORD POMMEL
+				if (!p.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
+					&& !p.getCarriedItems().hasCatalogID(ItemId.BONE_BEADS.id(), Optional.empty())) { // SWORD POMMEL
 					message(p, "You find a rusty sword with an ivory pommel.");
 					p.message("You take the pommel and place it into your inventory.");
 					addItem(p, ItemId.SWORD_POMMEL.id(), 1);
 					sleep(500);
 				}
-				if (!hasItem(p, ItemId.LOCATING_CRYSTAL.id())) { // crystal
+				if (!p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) { // crystal
 					message(p, "You find a Crystal Sphere ");
 					addItem(p, ItemId.LOCATING_CRYSTAL.id(), 1);
 				}
 				message(p, "You find some writing on the dolmen,");
-				if (!hasItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id()) && p.getCache().hasKey("dropped_writing")) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && p.getCache().hasKey("dropped_writing")) {
 					message(p, "You would need some Papyrus and Charcoal");
 					p.message("to take more notes from this Dolmen!");
-				} else if (!hasItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id()) && !p.getCache().hasKey("dropped_writing")) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && !p.getCache().hasKey("dropped_writing")) {
 					message(p, "you grab some nearby scraps of delicate paper together ",
 						"and copy the text as best you can and collect");
 					p.message("them together as a scroll");
@@ -144,11 +151,11 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 		if (obj.getID() == TOMB_DOLMEN) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case PAPYRUS:
-					if (hasItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.of(false))) {
 						p.message("You already have Bervirius Tomb Notes in your inventory.");
 					} else {
 						message(p, "You try to take some new notes on the delicate papyrus.");
-						if (!hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) {
 							p.message("You need some charcoal to make notes.");
 							return;
 						}

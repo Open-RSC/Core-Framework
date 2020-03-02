@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.npcs.ardougne.west;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.event.rsc.GameStateEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -45,11 +46,11 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 					}
 
 					if (option == 0) {
-						if (hasItem(p, ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id(), Optional.of(false))) {
 							npcTalk(p, n, "I see you have the unholy symbol of our Lord",
 								"It is blessed with the Lord Zamorak's power",
 								"Come to me when your faith weakens");
-						} else if (hasItem(p, ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id())) {
+						} else if (p.getCarriedItems().hasCatalogID(ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id(), Optional.of(false))) {
 							npcTalk(p, n, "I see you have the unholy symbol of our Lord",
 								"I will bless it for you");
 							p.message("The ghost mutters in a strange voice");
@@ -62,7 +63,7 @@ public class SpiritOfScorpius implements TalkToNpcListener, TalkToNpcExecutiveLi
 								"Who have no symbol of our Lord's love!");
 						}
 					} else if (option == 1) {
-						if (hasItem(p, ItemId.UNHOLY_SYMBOL_MOULD.id(), 1)) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.UNHOLY_SYMBOL_MOULD.id(), Optional.of(false))) {
 							npcTalk(p, n, "One you already have, another is not needed",
 								"Leave me be!");
 						} else {

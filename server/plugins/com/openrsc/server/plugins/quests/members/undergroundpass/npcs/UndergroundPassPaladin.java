@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassPaladin implements TalkToNpcListener,
@@ -67,7 +69,7 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 			n.killedBy(p);
 			message(p, "the paladin slumps to the floor",
 				"you search his body");
-			if (!hasItem(p, ItemId.COAT_OF_ARMS_RED.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.COAT_OF_ARMS_RED.id(), Optional.empty())) {
 				addItem(p, ItemId.COAT_OF_ARMS_RED.id(), 1);
 				p.message("and find a paladin coat of arms");
 			} else {

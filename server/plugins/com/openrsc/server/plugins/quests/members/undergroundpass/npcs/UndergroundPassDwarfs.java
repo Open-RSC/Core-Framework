@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassDwarfs implements TalkToNpcListener,
@@ -90,12 +92,13 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					if (p.getCache().hasKey("doll_of_iban")) {
 						playerTalk(p, n, "niloof, i found the witch's house");
 						npcTalk(p, n, "and...?");
-						if (hasItem(p, ItemId.A_DOLL_OF_IBAN.id()) && !hasItem(p, ItemId.OLD_JOURNAL.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))
+							&& !p.getCarriedItems().hasCatalogID(ItemId.OLD_JOURNAL.id(), Optional.of(false))) {
 							npcTalk(p, n, "i found this old book",
 								"i'm not sure if it's of any use to you traveller");
 							addItem(p, ItemId.OLD_JOURNAL.id(), 1);
 							return;
-						} else if (!hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
+						} else if (!p.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))) {
 							playerTalk(p, n, "i found a strange doll and a book",
 									"but i've lost the doll");
 							npcTalk(p, n, "well it's a good job i found it");
@@ -107,7 +110,7 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 									"if you can retrieve these,combined with the doll...",
 									"you will be able destroy iban...",
 									"and ressurect the 'well of voyage'");
-							if (!hasItem(p, ItemId.OLD_JOURNAL.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.OLD_JOURNAL.id(), Optional.of(false))) {
 								npcTalk(p, n, "i found this old book",
 										"i'm not sure if it's of any use to you traveller");
 								addItem(p, ItemId.OLD_JOURNAL.id(), 1);
@@ -139,7 +142,7 @@ public class UndergroundPassDwarfs implements TalkToNpcListener,
 					npcTalk(p, n, "traveller, thank the stars you're still around",
 							"i thought your time had come");
 					playerTalk(p, n, "i've still a few years in me yet");
-					if (!hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))) {
 						npcTalk(p, n, "i found something i think you need traveller");
 						playerTalk(p, n, "the doll?");
 						npcTalk(p, n, "i found it while slaying some of the souless, here");

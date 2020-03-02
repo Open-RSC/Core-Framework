@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListe
 import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -166,7 +168,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 				playerTalk(p, null, "Here's Some armour, it could be evidence...");
 				addItem(p, ItemId.ARMOUR.id(), 1);
 			} else if (obj.getID() == CORRECT_BUSHES[1]) {
-				if (!hasItem(p, ItemId.FINGERNAILS.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.FINGERNAILS.id(), Optional.empty())) {
 					playerTalk(p, null, "What's this ?",
 						"Disgusting! some fingernails",
 						"They may be a clue though... I'd better take them");
@@ -175,14 +177,14 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 					playerTalk(p, null, "I have already searched this place");
 				}
 			} else if (obj.getID() == CORRECT_BUSHES[2]) {
-				if (!hasItem(p, ItemId.WATCH_TOWER_EYE_PATCH.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.WATCH_TOWER_EYE_PATCH.id(), Optional.empty())) {
 					playerTalk(p, null, "I've found an eyepatch, I better show this to the wizards");
 					addItem(p, ItemId.WATCH_TOWER_EYE_PATCH.id(), 1);
 				} else {
 					playerTalk(p, null, "I have already searched this place");
 				}
 			} else if (obj.getID() == CORRECT_BUSHES[3]) {
-				if (!hasItem(p, ItemId.ROBE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.ROBE.id(), Optional.empty())) {
 					playerTalk(p, null, "Aha! a robe");
 					addItem(p, ItemId.ROBE.id(), 1);
 					playerTalk(p, null, "This could be a clue...");
@@ -197,9 +199,11 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 		}
 
 		else if (inArray(obj.getID(), TELEPORT_CAVES)) {
-			if (hasItem(p, ItemId.SKAVID_MAP.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.SKAVID_MAP.id(), Optional.of(false))) {
 				//a light source
-				if (hasItem(p, ItemId.LIT_CANDLE.id()) || hasItem(p, ItemId.LIT_BLACK_CANDLE.id()) || hasItem(p, ItemId.LIT_TORCH.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))
+					|| p.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
 					p.message("You enter the cave");
 					if (obj.getID() == TELEPORT_CAVES[0]) {
 						p.teleport(650, 3555);
@@ -241,11 +245,11 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 			playerTalk(p, null, "Wow! that tunnel went a long way");
 		}
 		else if (obj.getID() == TOBAN_CHEST_CLOSED) {
-			if (hasItem(p, ItemId.KEY.id(), 1)) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.KEY.id(), Optional.of(false))) {
 				p.message("You use the key Og gave you");
 				removeItem(p, ItemId.KEY.id(), 1);
 				openChest(obj, 2000, TOBAN_CHEST_OPEN);
-				if (hasItem(p, ItemId.STOLEN_GOLD.id())) {
+				if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
 					message(p, "You have already got the stolen gold");
 				} else {
 					p.message("You find a stash of gold inside");
@@ -447,7 +451,7 @@ public class WatchTowerObstacles implements ObjectActionListener, ObjectActionEx
 							p.teleport(635, 774);
 							return;
 						}
-						if (hasItem(p, ItemId.ROCK_CAKE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_CAKE.id(), Optional.of(false))) {
 							playerTalk(p, ogre_guard, "How about this ?");
 							p.message("You give the guard a rock cake");
 							removeItem(p, ItemId.ROCK_CAKE.id(), 1);

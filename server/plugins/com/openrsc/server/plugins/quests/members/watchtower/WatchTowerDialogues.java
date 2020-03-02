@@ -312,7 +312,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							"Get lost!");
 					}
 				} else if (menu == 1) {
-					if (hasItem(p, ItemId.SKAVID_MAP.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.SKAVID_MAP.id(), Optional.of(false))) {
 						npcTalk(p, n, "Are you blind ? what is that you are carrying ?");
 						playerTalk(p, n, "Oh, that map....");
 					} else {
@@ -485,7 +485,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								"I haven't got it yet",
 								"I have lost the key!");
 							if (subMenu == 0) {
-								if (hasItem(p, ItemId.STOLEN_GOLD.id(), 1)) {
+								if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.of(false))) {
 									npcTalk(p, n, "Well well, the little rat has got it!",
 										"take this to show the little rat is a friend to the ogres",
 										"Hahahahaha!");
@@ -504,7 +504,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 								npcTalk(p, n, "Don't come back until you have it",
 									"Unless you want to be on tonight's menu!");
 							} else if (subMenu == 2) {
-								if (hasItem(p, ItemId.KEY.id())) {
+								if (p.getCarriedItems().hasCatalogID(ItemId.KEY.id(), Optional.of(false))) {
 									npcTalk(p, n, "Oh yeah! what's that then ?");
 									p.message("It seems you still have the key...");
 								} else {
@@ -580,7 +580,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						if (p.getCache().hasKey("ogre_toban")) {
 							npcTalk(p, n, "Ha ha ha! small thing returns",
 								"Did you bring the dragon bone ?");
-							if (hasItem(p, ItemId.DRAGON_BONES.id())) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.DRAGON_BONES.id(), Optional.of(false))) {
 								playerTalk(p, n, "When I say I will get something I get it!");
 								removeItem(p, ItemId.DRAGON_BONES.id(), 1);
 								npcTalk(p, n, "Ha ha ha! small thing has done it",
@@ -726,7 +726,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 					case 1:
 						npcTalk(p, n, "Hello again",
 							"Did you find anything of interest ?");
-						if (hasItem(p, ItemId.FINGERNAILS.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.FINGERNAILS.id(), Optional.of(false))) {
 							playerTalk(p, n, "Have a look at these");
 							removeItem(p, ItemId.FINGERNAILS.id(), 1);
 							npcTalk(p, n, "Interesting, very interesting",
@@ -752,15 +752,17 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						/** EASTER EGG? IN OFFICIAL RSC THE RELATED QUEST ITEMS WERE NOT CHECKED
 						 * BUT INSTEAD THE REGULAR ONES (see wiki)
 						 * **/
-						else if (hasItem(p, ItemId.EYE_PATCH.id()) || hasItem(p, ItemId.GOBLIN_ARMOUR.id())
-							|| hasItem(p, ItemId.IRON_DAGGER.id()) || hasItem(p, ItemId.WIZARDS_ROBE.id())) {
-							if (hasItem(p, ItemId.EYE_PATCH.id())) {
+						else if (p.getCarriedItems().hasCatalogID(ItemId.EYE_PATCH.id(), Optional.of(false))
+							|| p.getCarriedItems().hasCatalogID(ItemId.GOBLIN_ARMOUR.id(), Optional.of(false))
+							|| p.getCarriedItems().hasCatalogID(ItemId.IRON_DAGGER.id(), Optional.of(false))
+							|| p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_ROBE.id(), Optional.of(false))) {
+							if (p.getCarriedItems().hasCatalogID(ItemId.EYE_PATCH.id(), Optional.of(false))) {
 								playerTalk(p, n, "I found this eye patch");
-							} else if (hasItem(p, ItemId.GOBLIN_ARMOUR.id())) {
+							} else if (p.getCarriedItems().hasCatalogID(ItemId.GOBLIN_ARMOUR.id(), Optional.of(false))) {
 								playerTalk(p, n, "Have a look at this goblin armour");
-							} else if (hasItem(p, ItemId.IRON_DAGGER.id())) {
+							} else if (p.getCarriedItems().hasCatalogID(ItemId.IRON_DAGGER.id(), Optional.of(false))) {
 								playerTalk(p, n, "I found a dagger");
-							} else if (hasItem(p, ItemId.WIZARDS_ROBE.id())) {
+							} else if (p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_ROBE.id(), Optional.of(false))) {
 								playerTalk(p, n, "I have this robe");
 							}
 							npcTalk(p, n, "Let me see...",
@@ -799,7 +801,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 							"What you need is some form of proof of friendship",
 							"Something to trick them into believing you are their friend",
 							"...Which shouldn't be too hard considering their intelligence!");
-						if (!hasItem(p, ItemId.OGRE_RELIC.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC.id(), Optional.empty())) {
 							int lostRelicMenu = showMenu(p, n,
 								"I have lost the relic you gave me",
 								"I will find my way in, no problem");
@@ -878,7 +880,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, T
 						break;
 					case 7:
 						npcTalk(p, n, "Any more news ?");
-						if (hasItem(p, ItemId.OGRE_POTION.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.OGRE_POTION.id(), Optional.of(false))) {
 							playerTalk(p, n, "Yes I have made the potion");
 							npcTalk(p, n, "That's great news, let me infuse it with magic...");
 							p.message("The wizard mutters strange words over the liquid");

@@ -142,7 +142,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 			"And that includes me",
 			"leaving was tough for me",
 			"I took this small cloth from the table as a keepsake");
-		if (!hasItem(p, ItemId.HOLY_TABLE_NAPKIN.id(), 1) && p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3) {
+		if (!p.getCarriedItems().hasCatalogID(ItemId.HOLY_TABLE_NAPKIN.id(), Optional.empty()) && p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3) {
 			playerTalk(p, n, "I don't suppose I could borrow that?",
 				"it could come in useful on my quest");
 			p.message("Galahad reluctantly passes you a small cloth");

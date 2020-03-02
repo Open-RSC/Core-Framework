@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
@@ -23,7 +25,8 @@ public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, Pla
 			n.killedBy(p);
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				message(p, "you search the diciples remains");
-				if (!hasItem(p, ItemId.STAFF_OF_IBAN.id()) && !hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN.id(), Optional.empty())
+					&& !p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.empty())) {
 					p.message("and find a staff of iban");
 					addItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id(), 1);
 				} else {

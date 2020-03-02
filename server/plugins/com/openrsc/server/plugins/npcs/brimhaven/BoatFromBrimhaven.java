@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.brimhaven;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -11,10 +13,9 @@ import com.openrsc.server.plugins.listeners.executive.IndirectTalkToNpcExecutive
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 	TalkToNpcListener, IndirectTalkToNpcExecutiveListener, IndirectTalkToNpcListener,
@@ -41,7 +42,7 @@ public class BoatFromBrimhaven implements TalkToNpcExecutiveListener,
 			npcTalk(p, n,
 				"Because Asgarnia has banned the import of intoxicating spirits");
 		} else if (sub_opt == 1) {
-			if (hasItem(p, ItemId.KARAMJA_RUM.id(), 1)) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
 				npcTalk(p, n, "Aha trying to smuggle rum are we?");
 				message(p, "The customs official confiscates your rum");
 				removeItem(p, ItemId.KARAMJA_RUM.id(), 1);

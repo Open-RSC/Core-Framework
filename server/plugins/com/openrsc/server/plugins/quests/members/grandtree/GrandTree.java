@@ -173,14 +173,15 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					npcTalk(p, n, "traveller, you've returned",
 						"any word from hazelmere?");
 					playerTalk(p, n, "not yet i'm afraid");
-					if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id()) || !hasItem(p, ItemId.BARK_SAMPLE.id())) {
-						if (!hasItem(p, ItemId.BARK_SAMPLE.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id(), Optional.of(false))
+						|| !p.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
 							playerTalk(p, n, "but i've lost the bark sample");
 							npcTalk(p, n, "here take another and try to hang on to it");
 							p.message("king shareem gives you another bark sample");
 							addItem(p, ItemId.BARK_SAMPLE.id(), 1);
 						}
-						if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id(), Optional.of(false))) {
 							playerTalk(p, n, "but i've lost the book you gave me");
 							npcTalk(p, n, "don't worry i have more",
 								"here you go");
@@ -224,14 +225,15 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 							}
 						}
 					} else if (menu == 1) {
-						if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id()) || !hasItem(p, ItemId.BARK_SAMPLE.id())) {
-							if (!hasItem(p, ItemId.BARK_SAMPLE.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id(), Optional.of(false))
+							|| !p.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
 								playerTalk(p, n, "but i've lost the bark sample");
 								npcTalk(p, n, "here take another and try to hang on to it");
 								p.message("king shareem gives you another bark sample");
 								addItem(p, ItemId.BARK_SAMPLE.id(), 1);
 							}
-							if (!hasItem(p, ItemId.TREE_GNOME_TRANSLATION.id())) {
+							if (!p.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id(), Optional.of(false))) {
 								playerTalk(p, n, "but i've lost the book you gave me");
 								npcTalk(p, n, "don't worry i have more",
 									"here you go");
@@ -359,8 +361,10 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				case 13:
 					playerTalk(p, n, "hello again narnode");
 					npcTalk(p, n, "please traveller, take my advice and leave");
-					if (!hasItem(p, ItemId.PEBBLE_3.id()) || !hasItem(p, ItemId.PEBBLE_2.id())
-							|| !hasItem(p, ItemId.PEBBLE_4.id()) || !hasItem(p, ItemId.PEBBLE_1.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_3.id(), Optional.of(false))
+						|| !p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_2.id(), Optional.of(false))
+						|| !p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_4.id(), Optional.of(false))
+						|| !p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_1.id(), Optional.of(false))) {
 						playerTalk(p, n, "have you any more of those pebbles");
 						npcTalk(p, n, "well, yes as it goes, why?");
 						playerTalk(p, n, "i lost some");
@@ -378,20 +382,22 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 						if (p.getCache().hasKey("pebble_4")) {
 							p.getCache().remove("pebble_4");
 						}
-						if (!hasItem(p, ItemId.PEBBLE_3.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_3.id(), Optional.of(false))) {
 							addItem(p, ItemId.PEBBLE_3.id(), 1);
 						}
-						if (!hasItem(p, ItemId.PEBBLE_2.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_2.id(), Optional.of(false))) {
 							addItem(p, ItemId.PEBBLE_2.id(), 1);
 						}
-						if (!hasItem(p, ItemId.PEBBLE_4.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_4.id(), Optional.of(false))) {
 							addItem(p, ItemId.PEBBLE_4.id(), 1);
 						}
-						if (!hasItem(p, ItemId.PEBBLE_1.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_1.id(), Optional.of(false))) {
 							addItem(p, ItemId.PEBBLE_1.id(), 1);
 						}
-					} else if (hasItem(p, ItemId.PEBBLE_3.id()) && hasItem(p, ItemId.PEBBLE_2.id())
-							&& hasItem(p, ItemId.PEBBLE_4.id()) && hasItem(p, ItemId.PEBBLE_1.id())) {
+					} else if (p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_3.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_2.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_4.id(), Optional.of(false))
+						&& p.getCarriedItems().hasCatalogID(ItemId.PEBBLE_1.id(), Optional.of(false))) {
 						npcTalk(p, n, "it's not safe for you here");
 					}
 					break;
@@ -421,7 +427,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 					break;
 				case 1:
 					playerTalk(p, n, "hello");
-					if (hasItem(p, ItemId.BARK_SAMPLE.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
 						message(p, "you give the mage the bark sample");
 						removeItem(p, ItemId.BARK_SAMPLE.id(), 1);
 						message(p, "the mage speaks in a strange ancient tongue",
@@ -944,7 +950,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 				case 16:
 					npcTalk(p, n, "traveller, have you managed to find the rock",
 						"i think there's only one");
-					if (hasItem(p, ItemId.DACONIA_ROCK.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.DACONIA_ROCK.id(), Optional.of(false))) {
 						playerTalk(p, n, "is this it?");
 						npcTalk(p, n, "yes, excellent, well done");
 						message(p, "you give king shareem the daconia rock");

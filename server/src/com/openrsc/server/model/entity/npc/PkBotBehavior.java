@@ -17,6 +17,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 // TODO: Very dirty class. It doesn't reuse a lot of code from NpcBehaviour.
@@ -298,7 +300,7 @@ public class PkBotBehavior extends NpcBehavior {
 				&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
 				for (Player p : npc.getViewArea().getPlayersInView()) {
 					int range = 1;
-					if (!p.withinRange(npc, range) || !hasItem(p, ItemId.GNOME_BALL.id())
+					if (!p.withinRange(npc, range) || !p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
 						|| !inArray(p.getAttribute("gnomeball_npc", -1), -1, 0))
 						continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
 

@@ -13,6 +13,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 
@@ -117,7 +119,7 @@ public class Ladders {
 				}
 			}
 		} else if (obj.getID() == 776) {
-			if (hasItem(player, ItemId.PARAMAYA_REST_TICKET.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.PARAMAYA_REST_TICKET.id(), Optional.of(false))) {
 				player.message("The barman takes your ticket and allows you up to");
 				player.message("the dormitory.");
 				player.teleport(395, 2713);
@@ -194,7 +196,7 @@ public class Ladders {
 				player.teleport(274, 3397, false);
 			}
 		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
-			if (!hasItem(player, ItemId.DISK_OF_RETURNING.id())) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
 				message(player, "you seem to be missing a disk to use the ladder");
 			} else {
 				message(player, 1200, "You climb down the ladder");

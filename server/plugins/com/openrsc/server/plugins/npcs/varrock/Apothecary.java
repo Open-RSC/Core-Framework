@@ -65,8 +65,8 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 
 		if (option == 0) {
 			if (hasItem(p, ItemId.COINS.id(), 5)
-				&& hasItem(p, ItemId.LIMPWURT_ROOT.id(), 1)
-				&& hasItem(p, ItemId.RED_SPIDERS_EGGS.id(), 1)) {
+				&& p.getCarriedItems().hasCatalogID(ItemId.LIMPWURT_ROOT.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.RED_SPIDERS_EGGS.id(), Optional.of(false))) {
 				playerTalk(p, n, "I have the root and spiders eggs needed to make it");
 				npcTalk(p, n, "Well give me them and 5 gold and I'll make you your potion");
 				int sub_option = showMenu(p, n, "Yes ok", "No thanks");
@@ -74,8 +74,8 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 					int cointimes = p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) / 5;
 					int roottimes = p.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id());
 					int eggtimes = p.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
-					int repeattimes = (cointimes < roottimes) ? cointimes : roottimes;
-					repeattimes = (eggtimes < repeattimes) ? eggtimes : repeattimes;
+					int repeattimes = Math.min(cointimes, roottimes);
+					repeattimes = Math.min(eggtimes, repeattimes);
 					p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Apothecary Brews Potion", repeattimes, false) {
 						@Override
 						public void action() {

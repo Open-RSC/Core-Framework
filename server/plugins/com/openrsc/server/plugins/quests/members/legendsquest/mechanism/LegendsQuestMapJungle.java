@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.mechanism;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -8,13 +9,9 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestMapJungle implements InvActionListener, InvActionExecutiveListener {
 
@@ -93,13 +90,16 @@ public class LegendsQuestMapJungle implements InvActionListener, InvActionExecut
 					checkMapComplete(p);
 					return;
 				}
-				if (!hasItem(p, ItemId.PAPYRUS.id()) && !hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) { // no charcoal or papyrus
+				if (!p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // no charcoal or papyrus
 					message(p, 1200, "You'll need some papyrus and charcoal to complete this map.");
 					canMap = false;
-				} else if (hasItem(p, ItemId.PAPYRUS.id()) && !hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) { // has papyrus but no charcoal
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
+					&& !p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // has papyrus but no charcoal
 					message(p, 1200, "You'll need some charcoal to complete this map.");
 					canMap = false;
-				} else if (!hasItem(p, ItemId.PAPYRUS.id()) && hasItem(p, ItemId.A_LUMP_OF_CHARCOAL.id())) { // has charcoal but no papyrus
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
+					&& p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // has charcoal but no papyrus
 					message(p, 1200, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
 				}

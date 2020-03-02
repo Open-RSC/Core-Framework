@@ -16,6 +16,8 @@ import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestInvAction implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
@@ -131,7 +133,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvActionExecut
 						p.message("You need at least ten magic points to cast this spell.");
 						return;
 					}
-					if (hasItem(p, ItemId.EMPTY_VIAL.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.EMPTY_VIAL.id(), Optional.of(false))) {
 						message(p, "The spell is cast perfectly..",
 								"You enchant one of the empty vials.");
 						p.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.ENCHANTED_VIAL.id());

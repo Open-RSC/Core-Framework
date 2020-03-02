@@ -226,7 +226,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 			case Oziach.FIRST_PIECE:
 				npcTalk(p, n, "deep in a strange building known as Melzar's maze");
 				npcTalk(p, n, "Located north west of Rimmington");
-				if (!hasItem(p, ItemId.MAZE_KEY.id(), 1)) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.MAZE_KEY.id(), Optional.of(false))) {
 					npcTalk(p, n, "You will need this to get in");
 					npcTalk(p, n,
 						"This is the key to the front entrance to the maze");

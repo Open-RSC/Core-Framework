@@ -16,6 +16,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -212,7 +213,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", p.getCarriedItems().getInventory().countId(itemID), false) {
 			@Override
 			public void action() {
-				if (hasItem(p, itemID, 1)) {
+				if (p.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
 					if (hasBubble)
 						showBubble(p, new Item(itemID));
 					p.playSound("cooking");

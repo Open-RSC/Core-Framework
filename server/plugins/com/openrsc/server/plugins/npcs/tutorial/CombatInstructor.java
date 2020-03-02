@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
@@ -9,14 +11,9 @@ import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveLi
 import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.message;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerMageNpcExecutiveListener, PlayerAttackNpcExecutiveListener {
 	/**
@@ -28,7 +25,8 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (!hasItem(p, ItemId.WOODEN_SHIELD.id(), 1) && (!hasItem(p, ItemId.BRONZE_LONG_SWORD.id(), 1)) && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 15) {
+		if (!p.getCarriedItems().hasCatalogID(ItemId.WOODEN_SHIELD.id(), Optional.of(false))
+			&& (!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_LONG_SWORD.id(), Optional.of(false))) && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 15) {
 			npcTalk(p, n, "Aha a new recruit",
 				"I'm here to teach you the basics of fighting",
 				"First of all you need weapons");

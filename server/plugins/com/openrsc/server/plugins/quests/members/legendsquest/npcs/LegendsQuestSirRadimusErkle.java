@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.hasItem;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
@@ -256,7 +258,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					case 9:
 					case 10:
 						npcTalk(p, n, "Hello there, how is the quest going?");
-						if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
+							|| p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 							radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 						} else {
 							radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -377,7 +380,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 							"Bring back a tribal gift from the natives",
 							"so that we can display it in the Legends Guild.",
 							"I hope that answers your question!");
-					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
+						|| p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -385,7 +389,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					break;
 				case RadimusInHouse.ANOTHER_MACHETE:
 					npcTalk(p, n, "Well, just get another one from the cupboard.");
-					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
+						|| p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -397,7 +402,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					message(p, 1200, "Sir Radimus mutters under his breath.");
 					npcTalk(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some charcoal!");
-					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
+						|| p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -409,7 +415,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 					message(p, 1200, "Sir Radimus mutters under his breath.");
 					npcTalk(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some papyrus!");
-					if (hasItem(p, ItemId.RADIMUS_SCROLLS.id()) || hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
+						|| p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_HAS_SCROLLS);
 					} else {
 						radimusInHouseDialogue(p, n, RadimusInHouse.SAME_MENU_NO_SCROLLS);
@@ -466,7 +473,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 			}
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 10) {
 				npcTalk(p, n, (p.isMale() ? "Sir" : "Madam") + ", this is truly amazing...");
-				if (!hasItem(p, ItemId.RADIMUS_SCROLLS_COMPLETE.id())) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 					npcTalk(p, n, "However, I need you to complete the map of the ,",
 						"Kharazi Jungle before your quest is complete.");
 				} else {

@@ -12,6 +12,8 @@ import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
@@ -47,12 +49,12 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				man.setChasing(p);
 			}
 		} else if (p.getQuestStage(Quests.HEROS_QUEST) >= 1 && isPhoenixGang(p)) {
-			if (!hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && p.getCache().hasKey("armband")) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.empty()) && p.getCache().hasKey("armband")) {
 				playerTalk(p, n, "I have lost my master thief armband");
 				npcTalk(p, n, "You need to be more careful", "Ah well", "Have this spare");
 				addItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 				return;
-			} else if (hasItem(p, ItemId.CANDLESTICK.id()) && !p.getCache().hasKey("armband")) {
+			} else if (p.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && !p.getCache().hasKey("armband")) {
 				playerTalk(p, n, "I have retrieved a candlestick");
 				npcTalk(p, n, "Hmm not a bad job",
 					"Let's see it, make sure it's genuine");
@@ -77,7 +79,7 @@ public class ManPhoenix implements TalkToNpcExecutiveListener,
 				"Use the secret word gherkin to show you're one of us");
 			p.getCache().store("pheonix_mission", true);
 			p.getCache().store("pheonix_alf", true);
-		} else if (!p.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !hasItem(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id()) &&
+		} else if (!p.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !p.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id(), Optional.of(false)) &&
 			(p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
 			&& isPhoenixGang(p)) {
 			npcTalk(p, n, "Greetings fellow gang member");
