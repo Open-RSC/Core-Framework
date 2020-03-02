@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.clan.ClanPlayer;
@@ -10,6 +11,7 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -694,31 +696,70 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	//Sends the player a bank preset
-	public static void sendBankPreset(Player player, int slot) {
-		if (player == null)
+	/**
+	 * Sends the client all bank preset data
+	 * @param player
+	 */
+	public static void sendBankPresets(final Player player) {
+		for (int i = 0; i < BankPreset.PRESET_COUNT; i++) {
+			sendBankPreset(player, i);
+		}
+	}
+
+	/**
+	 * Sends the client bank preset data for one slot
+	 * @param player: player to send the information to
+	 * @param slot: slot to send the data from
+	 */
+	public static void sendBankPreset(final Player player, final int slot) {
+
+		//Various checks on the parameters
+		if (player == null || slot >= BankPreset.PRESET_COUNT || slot < 0)
 			return;
+
+		//Start building the packet
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_PRESET.opcode);
+
+		//Write the preset slot as a short
 		s.writeShort(slot);
-		for (Item item : player.getBank().presets[slot].inventory) {
-			if (item.getCatalogId() == -1)
-				s.writeByte(-1);
-			else
-				s.writeShort(item.getCatalogId());
 
-			if (item.getDef(player.getWorld()) != null && item.getDef(player.getWorld()).isStackable())
+		//Loop through the inventory data
+		for (Item item : player.getBank().getBankPreset(slot).getInventory()) {
+
+			//Check if this slot contains anything
+			if (item == null || item.getDef(player.getWorld()) == null || item.getCatalogId() == ItemId.NOTHING.id()) {
+				s.writeByte(ItemId.NOTHING.id());
+				continue;
+			}
+
+			//Write catalog ID to the packet as a short
+			s.writeShort(item.getCatalogId());
+
+			//If the item is stackable or is noted, write the amount to the packet as an Int
+			if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
 				s.writeInt(item.getAmount());
 		}
-		for (Item item : player.getBank().presets[slot].equipment) {
-			if (item.getCatalogId() == -1)
-				s.writeByte(-1);
-			else
-				s.writeShort(item.getCatalogId());
-			if (item.getDef(player.getWorld()) != null && item.getDef(player.getWorld()).isStackable())
+
+		//Loop through the equipment data
+		for (Item item : player.getBank().getBankPreset(slot).getEquipment()) {
+
+			//Check if this slot contains anything
+			if (item == null || item.getDef(player.getWorld()) == null || item.getCatalogId() == ItemId.NOTHING.id()) {
+				s.writeByte(ItemId.NOTHING.id());
+				continue;
+			}
+
+			//Write catalog ID to the packet as a short
+			s.writeShort(item.getCatalogId());
+
+			//If the item is stackable or is noted, write the amount to the packet as an Int
+			if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
 				s.writeInt(item.getAmount());
 
 		}
+
+		//Finish the packet
 		player.write(s.toPacket());
 	}
 
@@ -1550,12 +1591,6 @@ public class ActionSender {
 		pb.writeByte(2);
 		pb.writeByte(2);
 		player.write(pb.toPacket());
-	}
-
-	public static void sendBankPresets(Player player) {
-		for (int i = 0; i < Bank.PRESET_COUNT; i++) {
-			sendBankPreset(player, i);
-		}
 	}
 
 	public enum Opcode {

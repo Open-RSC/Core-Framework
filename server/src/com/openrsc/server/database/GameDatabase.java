@@ -137,6 +137,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			loadPlayerInventory(loaded);
 			loadPlayerEquipment(loaded);
 			loadPlayerBank(loaded);
+			loadPlayerBankPresets(loaded);
 			loadPlayerSocial(loaded);
 			loadPlayerQuests(loaded);
 			//loadPlayerAchievements(loaded);
@@ -370,18 +371,30 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		for (int i = 0; i < bankItems.length; i++) {
 			bank.getItems().add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
 		}
-		if (getServer().getConfig().WANT_BANK_PRESETS) {
-			final PlayerBankPreset bankPresets[] = queryLoadPlayerBankPresets(player);
-			for (PlayerBankPreset bankPreset : bankPresets) {
-				final int slot = bankPreset.slot;
-				final byte[] inventoryItems = bankPreset.inventory;
-				final byte[] equipmentItems = bankPreset.equipment;
-				bank.loadPreset(slot, inventoryItems, equipmentItems);
-			}
-		}
 		player.setBank(bank);
 	}
 
+	private void loadPlayerBankPresets(final Player player) throws GameDatabaseException {
+
+		//Check the player is on a world with bank presets
+		if (!player.getWorld().getServer().getConfig().WANT_BANK_PRESETS)
+			return;
+
+		//Make sure the player's bank isn't null
+		if (player.getBank() == null)
+			return;
+
+
+		final PlayerBankPreset bankPresets[] = queryLoadPlayerBankPresets(player);
+
+		for (PlayerBankPreset bankPreset : bankPresets) {
+			final int slot = bankPreset.slot;
+			final byte[] inventoryItems = bankPreset.inventory;
+			final byte[] equipmentItems = bankPreset.equipment;
+			player.getBank().getBankPreset(slot).loadFromByteData(inventoryItems, equipmentItems);
+		}
+
+	}
 	private void loadPlayerSocial(final Player player) throws GameDatabaseException {
 		player.getSocial().addFriends(queryLoadPlayerFriends(player));
 		player.getSocial().addIgnore(queryLoadPlayerIgnored(player));
@@ -618,11 +631,11 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
 				final ArrayList<PlayerBankPreset> list = new ArrayList<>();
 
-				for (int k = 0; k < Bank.PRESET_COUNT; k++) {
-					if (player.getBank().presets[k].changed) {
+				for (int k = 0; k < BankPreset.PRESET_COUNT; k++) {
+					if (player.getBank().getBankPreset(k).changed) {
 						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
 						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
-						for (final Item inventoryItem : player.getBank().presets[k].inventory) {
+						for (final Item inventoryItem : player.getBank().getBankPreset(k).getInventory()) {
 							if (inventoryItem.getCatalogId() == -1)
 								inventoryWriter.writeByte(-1);
 							else {
@@ -636,7 +649,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 						final ByteArrayOutputStream equipmentBuffer = new ByteArrayOutputStream();
 						final DataOutputStream equipmentWriter = new DataOutputStream(equipmentBuffer);
-						for (Item equipmentItem : player.getBank().presets[k].equipment) {
+						for (Item equipmentItem : player.getBank().getBankPreset(k).getEquipment()) {
 							if (equipmentItem.getCatalogId() == -1)
 								equipmentWriter.writeByte(-1);
 							else {

@@ -2,10 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.model.container.Bank;
-import com.openrsc.server.model.container.Equipment;
-import com.openrsc.server.model.container.Inventory;
-import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.container.*;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -88,11 +85,11 @@ public final class BankHandler implements PacketHandler {
 					return;
 				}
 				presetSlot = packet.readShort();
-				if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
+				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
 					return;
 				}
-				player.getBank().attemptPresetLoadout(presetSlot);
+				player.getBank().getBankPreset(presetSlot).attemptPresetLoadout();
 				ActionSender.sendEquipmentStats(player);
 				ActionSender.sendInventory(player);
 				break;
@@ -102,24 +99,24 @@ public final class BankHandler implements PacketHandler {
 					return;
 				}
 				presetSlot = packet.readShort();
-				if (presetSlot < 0 || presetSlot >= Bank.PRESET_COUNT) {
+				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet six bank preset slot < 0 or preset slot >= preset count");
 					return;
 				}
 				for (int k = 0; k < Inventory.MAX_SIZE; k++) {
 					if (k < player.getCarriedItems().getInventory().size())
-						player.getBank().presets[presetSlot].inventory[k] = player.getCarriedItems().getInventory().get(k);
+						player.getBank().getBankPreset(presetSlot).getInventory()[k] = player.getCarriedItems().getInventory().get(k);
 					else
-						player.getBank().presets[presetSlot].inventory[k] = new Item(ItemId.NOTHING.id(),0);
+						player.getBank().getBankPreset(presetSlot).getInventory()[k] = new Item(ItemId.NOTHING.id(),0);
 				}
 				for (int k = 0; k < Equipment.SLOT_COUNT; k++) {
 					Item equipmentItem = player.getCarriedItems().getEquipment().get(k);
 					if (equipmentItem != null)
-						player.getBank().presets[presetSlot].equipment[k] = equipmentItem;
+						player.getBank().getBankPreset(presetSlot).getEquipment()[k] = equipmentItem;
 					else
-						player.getBank().presets[presetSlot].equipment[k] = new Item(ItemId.NOTHING.id(),0);
+						player.getBank().getBankPreset(presetSlot).getEquipment()[k] = new Item(ItemId.NOTHING.id(),0);
 				}
-				player.getBank().presets[presetSlot].changed = true;
+				player.getBank().getBankPreset(presetSlot).changed = true;
 				break;
 			default:
 				return;
