@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DarkMage implements TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -20,7 +22,7 @@ public class DarkMage implements TalkToNpcExecutiveListener, TalkToNpcListener {
 			playerTalk(p, n, "i just wondered what you're doing?");
 			npcTalk(p, n, "i experiment with dark magic",
 				"it's a dangerous craft");
-			if (hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id()) && p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.of(false)) && p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				playerTalk(p, n, "could you fix this staff?");
 				p.message("you show the mage your staff of iban");
 				npcTalk(p, n, "almighty zamorak! the staff of iban!");

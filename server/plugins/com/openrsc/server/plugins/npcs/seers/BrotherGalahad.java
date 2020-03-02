@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcListener {
@@ -36,7 +38,7 @@ public class BrotherGalahad implements TalkToNpcExecutiveListener, TalkToNpcList
 			"Are you any relation to Sir Galahad?",
 			"do you get lonely here on your own?"
 		};
-		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 && !hasItem(p, ItemId.HOLY_TABLE_NAPKIN.id())) {
+		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 && !p.getCarriedItems().hasCatalogID(ItemId.HOLY_TABLE_NAPKIN.id(), Optional.empty())) {
 			menuOps = new String[]{
 				"Are you any relation to Sir Galahad?",
 				"I'm on a quest to find the holy grail",

@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,18 +17,9 @@ import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestU
 import com.openrsc.server.plugins.quests.members.shilovillage.ShiloVillageUtils;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.createGroundItem;
-import static com.openrsc.server.plugins.Functions.doWallMovePlayer;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import java.util.Optional;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestWallObjects implements WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
 
@@ -120,7 +114,7 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, WallOb
 			}
 		}
 		else if (obj.getID() == FLAME_WALL) {
-			if (hasItem(p, ItemId.MAGICAL_FIRE_PASS.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.MAGICAL_FIRE_PASS.id(), Optional.of(false))) {
 				doWallMovePlayer(obj, p, 210, 5000, false);
 				p.message("You feel completely fine to walk through these flames..");
 				return;

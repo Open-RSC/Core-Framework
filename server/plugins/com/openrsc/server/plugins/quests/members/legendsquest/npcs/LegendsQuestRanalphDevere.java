@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener,
@@ -15,18 +17,18 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		return n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) && !p.getCache().hasKey("cavernous_opening");
+		return n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening");
 	}
 
 	@Override
 	public void onPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) && !p.getCache().hasKey("cavernous_opening")) {
+		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening")) {
 			attackMessage(p, n);
 		}
 	}
 
 	private void attackMessage(Player p, Npc n) {
-		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) && !p.getCache().hasKey("cavernous_opening")) {
+		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening")) {
 			npcTalk(p, n, "Upon my honour, I will defend till the end...");
 			n.setChasing(p);
 			npcTalk(p, n, "May your aim be true and the best of us win...");
@@ -53,7 +55,9 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 			LegendsQuestNezikchened.demonFight(p);
 		}
 		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCache().hasKey("cavernous_opening")) {
-			if (hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) || hasItem(p, ItemId.A_RED_CRYSTAL.id()) || hasItem(p, ItemId.A_GLOWING_RED_CRYSTAL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.A_RED_CRYSTAL.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id(), Optional.of(false))) {
 				npcTalk(p, n, "A fearsome foe you are, and bettered me once have you done already.");
 				p.message("Your opponent is retreating");
 				n.remove();
@@ -73,24 +77,24 @@ public class LegendsQuestRanalphDevere implements PlayerAttackNpcListener, Playe
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) && !p.getCache().hasKey("cavernous_opening");
+		return n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening");
 	}
 
 	@Override
 	public void onPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) && !p.getCache().hasKey("cavernous_opening")) {
+		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening")) {
 			attackMessage(p, n);
 		}
 	}
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		return n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id()) && !p.getCache().hasKey("cavernous_opening");
+		return n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening");
 	}
 
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !hasItem(p, ItemId.A_HUNK_OF_CRYSTAL.id())) {
+		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_HUNK_OF_CRYSTAL.id(), Optional.of(false))) {
 			attackMessage(p, n);
 		}
 	}

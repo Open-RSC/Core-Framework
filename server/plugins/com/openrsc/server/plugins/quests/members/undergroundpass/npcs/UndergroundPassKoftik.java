@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
@@ -17,7 +19,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 	/**
 	 * Note: King Lathas (Quest starer) is located in the Biohazard quest template
 	 **/
-	
+
 	@Override
 	public int getQuestId() {
 		return Quests.UNDERGROUND_PASS;
@@ -148,7 +150,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 				case 2:
 					playerTalk(p, n, "koftik, how can we cross the bridge?");
 					npcTalk(p, n, "i'm not sure, seems as if others were here before us though");
-					if (!hasItem(p, ItemId.DAMP_CLOTH.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.DAMP_CLOTH.id(), Optional.empty())) {
 						npcTalk(p, n, "i found this cloth amongst the charred remains of arrows");
 						playerTalk(p, n, "charred arrows?");
 						npcTalk(p, n, "they must have been trying to burn something");
@@ -182,7 +184,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 				case 7:
 				case -1:
 					playerTalk(p, n, "hi koftik");
-					if (!hasItem(p, ItemId.DAMP_CLOTH.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.DAMP_CLOTH.id(), Optional.empty())) {
 						addItem(p, ItemId.DAMP_CLOTH.id(), 1);
 						p.message("koftik gives you a damp cloth");
 					}
@@ -190,7 +192,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener,
 				case 8:
 					playerTalk(p, n, "thanks for getting me out koftik");
 					npcTalk(p, n, "always a pleasure squire");
-					if (!hasItem(p, ItemId.DAMP_CLOTH.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.DAMP_CLOTH.id(), Optional.empty())) {
 						addItem(p, ItemId.DAMP_CLOTH.id(), 1);
 						p.message("koftik gives you a damp cloth");
 					}

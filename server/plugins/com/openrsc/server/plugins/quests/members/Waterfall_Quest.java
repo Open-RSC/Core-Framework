@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
@@ -218,7 +220,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				hadleyMainDialogue(p, n, HADLEY.ALL);
 			}
 		} else if (n.getID() == NpcId.GOLRIE.id()) {
-			if (!hasItem(p, ItemId.GLARIALS_PEBBLE.id(), 1)) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.GLARIALS_PEBBLE.id(), Optional.of(false))) {
 				playerTalk(p, n, "is your name golrie?");
 				npcTalk(p, n, "that's me",
 					"i've been stuck in here for weeks",
@@ -383,7 +385,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				closeGenericObject(obj, p, BAXTORIAN_CUPBOARD_CLOSED, "you shut the cupboard");
 			} else {
 				message(p, "you search the cupboard");
-				if (!hasItem(p, ItemId.GLARIALS_URN.id(), 1)) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.GLARIALS_URN.id(), Optional.empty())) {
 					p.message("and find a metel urn");
 					addItem(p, ItemId.GLARIALS_URN.id(), 1);
 				} else {
@@ -392,7 +394,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 			}
 		} else if (obj.getID() == 467) {
 			message(p, "you search the coffin");
-			if (!hasItem(p, ItemId.GLARIALS_AMULET.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.GLARIALS_AMULET.id(), Optional.empty())) {
 				message(p, "inside you find a small amulet",
 					"you take the amulet and close the coffin");
 				addItem(p, ItemId.GLARIALS_AMULET.id(), 1);
@@ -644,7 +646,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 480 && item.getCatalogId() == ItemId.LARGE_KEY.id()) {
-			if (hasItem(p, ItemId.LARGE_KEY.id(), 1)) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_KEY.id(), Optional.of(false))) {
 				doGate(p, obj);
 			}
 		} else if (obj.getID() == 479 && item.getCatalogId() == ItemId.GLARIALS_PEBBLE.id()) {

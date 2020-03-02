@@ -1,21 +1,18 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import java.util.Optional;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
@@ -96,10 +93,10 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						 * HAS HOLY FORCE SPELL.
 						 */
 						if (p.getCache().hasKey("gave_glowing_dagger")) {
-							neziAttack(p, n, hasItem(p, ItemId.HOLY_FORCE_SPELL.id()));
+							neziAttack(p, n, p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false)));
 							return;
 						}
-						if (hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 							npcTalk(p, n, "Something seems different about you...",
 								"Your sense of purpose seems not bent to my will...",
 								"Give me the dagger that you used to slay Viyeldi or taste my wrath!");
@@ -121,7 +118,8 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						/**
 						 * HAS DARK GLOWING DAGGER - KILLED VIYELDI
 						 */
-						else if (hasItem(p, ItemId.GLOWING_DARK_DAGGER.id()) && !hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
+						else if (p.getCarriedItems().hasCatalogID(ItemId.GLOWING_DARK_DAGGER.id(), Optional.of(false))
+						&& !p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 							npcTalk(p, n, "Aha, I see you have completed your task. ",
 								"I'll take that dagger from you now.");
 							removeItem(p, ItemId.GLOWING_DARK_DAGGER.id(), 1);
@@ -149,7 +147,9 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						/**
 						 * HAS THE DARK DAGGER
 						 */
-						else if (hasItem(p, ItemId.DARK_DAGGER.id()) && !hasItem(p, ItemId.GLOWING_DARK_DAGGER.id()) && !hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
+						else if (p.getCarriedItems().hasCatalogID(ItemId.DARK_DAGGER.id(), Optional.of(false))
+						&& !p.getCarriedItems().hasCatalogID(ItemId.GLOWING_DARK_DAGGER.id(), Optional.of(false))
+						&& !p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 							message(p, "The shapeless entity of Echned Zekin appears in front of you.");
 							npcTalk(p, n, "Why do you return when your task is still incomplete?");
 							message(p, "There is an undercurrent of anger in his voice.");
@@ -306,7 +306,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 					npcTalk(p, n, "You would release me from my torment and the source would",
 						"be available to you.",
 						"However, you must realise that this will be no easy task.");
-					if (!hasItem(p, ItemId.DARK_DAGGER.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.DARK_DAGGER.id(), Optional.of(false))) {
 						npcTalk(p, n, "I will furnish you with a weapon which will help you",
 							"to achieve your aims...",
 							"Here, take this...");

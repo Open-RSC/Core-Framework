@@ -110,7 +110,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				case 7:
 				case 8:
 					boolean gave_crest = false;
-					if (hasItem(p, ItemId.FAMILY_CREST.id(), 1)) {
+					if (p.getCarriedItems().hasCatalogID(ItemId.FAMILY_CREST.id(), Optional.of(false))) {
 						playerTalk(p, n, "I have retrieved your crest");
 						p.message("You give the crest to Dimintheis");
 						removeItem(p, ItemId.FAMILY_CREST.id(), 1);

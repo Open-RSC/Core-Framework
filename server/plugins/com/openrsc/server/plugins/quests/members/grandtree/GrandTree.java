@@ -16,6 +16,8 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
@@ -1419,7 +1421,7 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcEx
 			message(p, "you search the root...");
 			if (obj.getID() == ROOT_THREE) {
 				if (p.getQuestStage(this) == 16) {
-					if (!hasItem(p, ItemId.DACONIA_ROCK.id())) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.DACONIA_ROCK.id(), Optional.empty())) {
 						message(p, "and find a small glowing rock");
 						addItem(p, ItemId.DACONIA_ROCK.id(), 1);
 					} else {

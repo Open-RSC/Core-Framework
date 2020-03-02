@@ -137,7 +137,7 @@ public class ErnestTheChicken implements QuestInterface,
 				break;
 			case QuestObjects.FOUNTAIN:
 				if (p.getCache().hasKey("poisoned_fountain")) {
-					if (!hasItem(p, ItemId.PRESSURE_GAUGE.id(), 1)) {
+					if (!p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id(), Optional.empty())) {
 						playerTalk(p, null,
 							"There seems to be a pressure gauge in here",
 							"There are also some dead fish");

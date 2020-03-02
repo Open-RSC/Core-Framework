@@ -17,6 +17,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
@@ -411,7 +413,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 
 	@Override
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
-		if (hasItem(p, ItemId.DRAMEN_BRANCH.id(), 1)) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
 				message(p,
 					"You are not a high enough crafting level to craft this staff",

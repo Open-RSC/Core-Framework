@@ -306,7 +306,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					closeGenericObject(obj, p, DWARVEN_CHEST_CLOSED, "You close the chest");
 				} else {
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-					if (!hasItem(p, ItemId.MAP_PIECE_3.id(), 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
+					if (!p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.empty()) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
 						&& p.getCache().hasKey("dwarven_unlocked")) {
 						addItem(p, ItemId.MAP_PIECE_3.id(), 1);
 						p.message("You find a piece of map in the chest");
@@ -324,7 +324,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					closeGenericObject(obj, p, MELZAR_CHEST_CLOSED, "You close the chest");
 				} else {
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-					if (!hasItem(p, ItemId.MAP_PIECE_2.id(), 1) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
+					if (!p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.empty()) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
 						&& p.getCache().hasKey("melzar_unlocked")) {
 						addItem(p, ItemId.MAP_PIECE_2.id(), 1);
 						p.message("You find a piece of map in the chest");
@@ -429,8 +429,10 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 57) {
 			//special door dwarven mine
-			if (p.getX() >= 259 && hasItem(p, ItemId.WIZARDS_MIND_BOMB.id(), 1) && hasItem(p, ItemId.SILK.id(), 1)
-					&& hasItem(p, ItemId.LOBSTER_POT.id(), 1) && p.getCarriedItems().hasCatalogID(ItemId.UNFIRED_BOWL.id(), Optional.of(false))) {
+			if (p.getX() >= 259 && p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_MIND_BOMB.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.SILK.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.LOBSTER_POT.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.UNFIRED_BOWL.id(), Optional.of(false))) {
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
 				if (!p.getLocation().equals(location)) {
@@ -512,13 +514,13 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					p.message("You don't need to mess about with broken ships");
 					p.message("Now you have found that secret passage from Karamja");
 				} else if (!p.getCache().hasKey("ship_repair") && hasItem(p, ItemId.NAILS.id(), 4)
-					&& hasItem(p, ItemId.PLANK.id(), 1)) {
+					&& p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					p.message("You hammer the plank over the hole");
 					p.message("You still need more planks to close the hole completely");
 					p.getCarriedItems().getInventory().remove(ItemId.NAILS.id(), 4);
 					p.getCarriedItems().getInventory().remove(ItemId.PLANK.id(), 1);
 					p.getCache().set("ship_repair", 1);
-				} else if (hasItem(p, ItemId.NAILS.id(), 4) && hasItem(p, ItemId.PLANK.id(), 1)) {
+				} else if (hasItem(p, ItemId.NAILS.id(), 4) && p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					int planks_added = p.getCache().getInt("ship_repair");
 					p.message("You hammer the plank over the hole");
 					p.getCarriedItems().getInventory().remove(ItemId.NAILS.id(), 4);
@@ -534,7 +536,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					}
 				} else if (!hasItem(p, ItemId.NAILS.id(), 4)) {
 					p.message("You need 4 steel nails to attach the plank with");
-				} else if (!hasItem(p, ItemId.HAMMER.id(), 1)) {
+				} else if (!p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
 					p.message("You need a hammer to hammer the nails in with");
 				} else {
 					p.message("Nothing interesting happens");

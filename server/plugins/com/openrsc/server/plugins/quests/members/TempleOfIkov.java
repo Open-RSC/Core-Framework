@@ -15,6 +15,8 @@ import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
@@ -128,7 +130,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 					case -1:
 					case -2:
 						npcTalk(p, n, "I thought I told you not to meet me here again");
-						if (hasItem(p, ItemId.PENDANT_OF_LUCIEN.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.PENDANT_OF_LUCIEN.id(), Optional.empty())) {
 							playerTalk(p, n, "Yes you did, sorry");
 						} else {
 							int lostAmuletMenu = showMenu(p, n,
@@ -218,7 +220,8 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 1:
-						if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id()) && !hasItem(p, ItemId.STAFF_OF_ARMADYL.id())) {
+						if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id())
+							&& !p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
 							npcTalk(p, n, "Ahh tis a foul agent of Lucien",
 								"Get ye from our master's house");
 							if (n != null) {
@@ -226,7 +229,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 							}
 							return;
 						}
-						if (hasItem(p, ItemId.STAFF_OF_ARMADYL.id())) {
+						if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
 							npcTalk(p, n, "Stop",
 								"You cannot take the staff of Armadyl");
 							n.setChasing(p);
@@ -331,7 +334,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 						break;
 					case 2:
 						npcTalk(p, n, "Any luck against Lucien?");
-						if (!hasItem(p, ItemId.PENDANT_OF_ARMADYL.id())) {
+						if (!p.getCarriedItems().hasCatalogID(ItemId.PENDANT_OF_ARMADYL.id(), Optional.empty())) {
 							int option = showMenu(p, n, "Not yet", "No I've lost the pendant you gave me");
 							if (option == 0) {
 								npcTalk(p, n, "Well good luck on your quest");
@@ -420,7 +423,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 				return;
 			}
 			npcTalk(p, n, "Have you got the staff of Armadyl yet?");
-			if (hasItem(p, ItemId.STAFF_OF_ARMADYL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
 				int menu = showMenu(p, n,
 					"Yes here it is",
 					"No not yet");
@@ -464,7 +467,9 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	@Override
 	public void onObjectAction(GameObject obj, String command, Player p) {
 		if (obj.getID() == STAIR_DOWN) {
-			if (hasItem(p, ItemId.LIT_CANDLE.id()) || hasItem(p, ItemId.LIT_BLACK_CANDLE.id()) || hasItem(p, ItemId.LIT_TORCH.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))
+				|| p.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
 				p.message("Your flame lights up the room");
 				p.teleport(537, 3372);
 			} else {
@@ -550,7 +555,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 				p.message("I shouldn't steal this");
 				return;
 			}
-			if (hasItem(p, ItemId.STAFF_OF_ARMADYL.id())) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
 				p.message("I already have one of those");
 				return;
 			}

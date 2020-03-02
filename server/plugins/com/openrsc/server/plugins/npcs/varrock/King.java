@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
@@ -20,7 +22,7 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
-		if (hasItem(p, ItemId.CERTIFICATE.id())) {
+		if (p.getCarriedItems().hasCatalogID(ItemId.CERTIFICATE.id(), Optional.of(false))) {
 			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
@@ -48,7 +50,8 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 					"To whoever helped you get the shield");
 			}
 			return;
-		} else if (hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id()) && hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
+		} else if (p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id(), Optional.of(false))
+			&& p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id(), Optional.of(false))) {
 			playerTalk(p, n, "Your majesty",
 				"I have recovered the shield of Arrav",
 				"I would like to claim the reward");

@@ -15,6 +15,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
@@ -52,7 +54,7 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 						playerTalk(p, null, "aaarrgghh");
 					}
 				}
-				if (!hasItem(p, ItemId.IBANS_CONSCIENCE.id()) && !p.getCache().hasKey("cons_on_doll")) {
+				if (!p.getCarriedItems().hasCatalogID(ItemId.IBANS_CONSCIENCE.id(), Optional.of(false)) && !p.getCache().hasKey("cons_on_doll")) {
 					p.message("you find the remains of a dove");
 					addItem(p, ItemId.IBANS_CONSCIENCE.id(), 1);
 				} else {
@@ -82,7 +84,9 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener, Objec
 		}
 		else if (obj.getID() == DEMONS_CHEST_CLOSED) {
 			message(p, "you attempt to open the chest");
-			if (hasItem(p, ItemId.AMULET_OF_OTHAINIAN.id()) && hasItem(p, ItemId.AMULET_OF_DOOMION.id()) && hasItem(p, ItemId.AMULET_OF_HOLTHION.id()) && !p.getCache().hasKey("shadow_on_doll")) {
+			if (p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_OTHAINIAN.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_DOOMION.id(), Optional.of(false))
+				&& p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_HOLTHION.id(), Optional.of(false)) && !p.getCache().hasKey("shadow_on_doll")) {
 				message(p, "the three amulets glow red in your satchel");
 				removeItem(p, ItemId.AMULET_OF_OTHAINIAN.id(), 1);
 				removeItem(p, ItemId.AMULET_OF_DOOMION.id(), 1);

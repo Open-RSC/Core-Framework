@@ -1,17 +1,15 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import java.util.Optional;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class FishingInstructor implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	/**
@@ -39,7 +37,7 @@ public class FishingInstructor implements TalkToNpcExecutiveListener, TalkToNpcL
 		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 41) {
 			npcTalk(p, n, "Left click on that splashing sparkling water",
 					"then you can catch some shrimp");
-			if (!hasItem(p, ItemId.NET.id())) {
+			if (!p.getCarriedItems().hasCatalogID(ItemId.NET.id(), Optional.of(false))) {
 				playerTalk(p, n, "I have lost my net");
 				npcTalk(p, n, "Hmm a good fisherman doesn't lose his net",
 					"Ah well heres another one");

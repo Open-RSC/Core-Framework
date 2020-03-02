@@ -13,6 +13,8 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 public class Runecrafting implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectExecutiveListener,InvUseOnObjectListener {
 
@@ -58,7 +60,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 			return;
 		}
 
-		if (!hasItem(player,ItemId.RUNE_ESSENCE.id())){
+		if (!player.getCarriedItems().hasCatalogID(ItemId.RUNE_ESSENCE.id(), Optional.of(false))){
 			player.message("You have no rune essence to bind.");
 			return;
 		}
@@ -72,7 +74,7 @@ public class Runecrafting implements ObjectActionListener, ObjectActionExecutive
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 100, "Binding runes", player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id()), false) {
 			@Override
 			public void action() {
-				if (!hasItem(getOwner(), ItemId.RUNE_ESSENCE.id())) {
+				if (!getOwner().getCarriedItems().hasCatalogID(ItemId.RUNE_ESSENCE.id(), Optional.of(false))) {
 					interrupt();
 					return;
 				}

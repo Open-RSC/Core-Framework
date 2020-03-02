@@ -195,7 +195,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					if (p.getCache().hasKey("spoken_tramp")) {
 						p.getCache().remove("spoken_tramp");
 					}
-				} else if (hasItem(p, ItemId.PHOENIX_CROSSBOW.id(), 1)) {
+				} else if (p.getCarriedItems().hasCatalogID(ItemId.PHOENIX_CROSSBOW.id(), Optional.of(false))) {
 					npcTalk(p, n, "Have you got those crossbows for me yet?");
 					playerTalk(p, n, "I have one");
 					npcTalk(p, n, "I need two",
