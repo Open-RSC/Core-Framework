@@ -1926,6 +1926,14 @@ public final class Player extends Mob {
 			}
 		}
 
+		//Free any NPC that player was talking with (poison)
+		this.resetMenuHandler();
+		if (getInteractingNpc() != null) {
+			getInteractingNpc().setBusy(false);
+			setInteractingNpc(null);
+		}
+
+
 		//getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
 		getUpdateFlags().reset();
 		//getUpdateFlags().setAppearanceChanged(true);
