@@ -27,7 +27,7 @@ export installmode=docker
   sudo mv /tmp/daemon.json /etc/docker/daemon.json
   sudo chown root:root /etc/docker/daemon.json
   sudo service docker restart
-  sudo docker network create nginx-proxy
+  sudo docker network create database
 
   # Start Docker and pull containers
   sudo make start

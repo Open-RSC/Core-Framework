@@ -20,6 +20,9 @@ docker-install:
 get-updates:
 	`pwd`/Deployment_Scripts/get-updates.sh
 
+compile:
+	`pwd`/Deployment_Scripts/get-updates.sh
+
 #---------------------------------------------------------------
 
 # Section for Building the Docker image and pushing to DockerHub
@@ -58,19 +61,6 @@ restart-db:
 
 logs-db:
 	docker-compose -f docker-compose-db.yml logs -f
-
-#---------------------------------------------------------------
-
-# Compiles the game server, client, and launcher before restarting the game server
-# Note: Mac Terminal has an error and will not complete the copy-files.sh script command, this only works on Linux.
-compile:
-	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-compile.yml up
-	docker-compose -f docker-compose-compile.yml down -v
-	chmod +x Deployment_Scripts/copy-files.sh
-	./Deployment_Scripts/copy-files.sh
-	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-game.yml up -d
 
 #---------------------------------------------------------------
 

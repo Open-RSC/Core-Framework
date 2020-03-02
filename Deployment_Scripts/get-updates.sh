@@ -22,11 +22,11 @@ ant -f server/build.xml compile_core
 ant -f server/build.xml compile_plugins
 ant -f Client_Base/build.xml compile
 ant -f PC_Launcher/build.xml compile
-gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
+#gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
 
 # Launcher
 echo ""
-echo "Copy and md5sum newly compiled client and cache files to the Website downloads folder?
+echo "Copy and md5sum compiled client and cache files to the Website downloads folder?
 
 Choices:
   ${RED}1${NC} - No
@@ -43,7 +43,7 @@ elif [ "$compiling" == "2" ]; then
     yes | sudo cp -f Client_Base/*.jar ../Website/downloads/
 
     # Android client
-    yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/downloads/
+    #yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/downloads/
 
     # Launcher
     yes | sudo cp -rf PC_Launcher/*.jar ../Website/downloads/
@@ -51,8 +51,7 @@ elif [ "$compiling" == "2" ]; then
     # Set file permissions within the Website downloads folder
     sudo chmod +x ../Website/downloads/*.jar
     sudo chmod +x ../Website/downloads/*.jar
-    sudo chmod 777 ../Website/downloads/*.jar
-    sudo chmod 777 ../Website/downloads/*.apk
+    sudo chmod -R 777 ../Website/downloads
 
     # Cache copy and file permissions
     sudo chmod 777 -R 'Client_Base/Cache'                                                       # Normal cache related files

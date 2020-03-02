@@ -20,13 +20,9 @@ NC=$(tput sgr0) # No Color
   sleep 3
   echo ""
   sudo add-apt-repository ppa:cwchien/gradle -y
-  sudo apt install openjdk-13-jdk ant gradle android-sdk -y
+  sudo apt install openjdk-13-jdk ant gradle -y
   export JAVA_HOME=/usr/lib/jvm/java-13-openjdk-amd64
   export PATH=$PATH:$JAVA_HOME/bin
-  export ANDROID_SDK_ROOT=$HOME/android-sdk
-  export ANDROID_HOME=$HOME/android-sdk
-  export PATH=$PATH:$ANDROID_HOME/tools/bin
-  export PATH=$PATH:$ANDROID_HOME/platform-tools
 
   # UFW Firewall configuration
   echo ""
@@ -65,11 +61,14 @@ NC=$(tput sgr0) # No Color
     sudo useradd $user
     sudo usermod -aG sudo $user
   fi
-  echo ""
 
-  sudo sed -i 's/#PubkeyAuthentication/PubkeyAuthentication/g' /etc/ssh/sshd_config
-  sudo sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
-  sudo sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+  #echo ""
+  #echo ""
+  #sleep 3
+  #echo ""
+  #sudo sed -i 's/#PubkeyAuthentication/PubkeyAuthentication/g' /etc/ssh/sshd_config
+  #sudo sed -i 's/#AuthorizedKeysFile/AuthorizedKeysFile/g' /etc/ssh/sshd_config
+  #sudo sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
   sudo service ssh restart
   systemctl restart sshd
 
