@@ -1434,7 +1434,7 @@ public class Functions {
 	 */
 	public static void message(final Player player, final String... messages) {
 		boolean playerWasBusy = player.isBusy();
-		boolean npcWasBusy = player.getInteractingNpc().isBusy();
+		boolean npcWasBusy = player.getInteractingNpc() != null && player.getInteractingNpc().isBusy();
 
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
@@ -1447,7 +1447,9 @@ public class Functions {
 			sleep(1900);
 		}
 		player.setBusy(playerWasBusy);
-		player.getInteractingNpc().setBusy(npcWasBusy);
+		if (player.getInteractingNpc() != null) {
+			player.getInteractingNpc().setBusy(npcWasBusy);
+		}
 	}
 
 	/**
@@ -1638,7 +1640,7 @@ public class Functions {
 
 	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
 		final long start = System.currentTimeMillis();
-		boolean npcWasBusy = npc.isBusy();
+		boolean npcWasBusy = npc != null && npc.isBusy();
 		boolean playerWasBusy = player.isBusy();
 		if (npc != null) {
 			if (npc.isRemoved()) {
