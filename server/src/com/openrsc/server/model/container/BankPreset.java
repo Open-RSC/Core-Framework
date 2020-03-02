@@ -1,8 +1,10 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -11,10 +13,25 @@ import java.util.Map;
 public class BankPreset {
 	public static final int PRESET_COUNT = 2;
 
+	/**
+	 * Array holding the inventory of the preset
+	 */
 	private Item[] inventory;
+
+	/**
+	 * Array holding the equipment of the preset
+	 */
 	private Item[] equipment;
 
-	public boolean changed = false;
+	/**
+	 * Reference to the player who owns this preset
+	 */
+	private Player player;
+
+	/**
+	 * Flag if the preset has been changed and not saved
+	 */
+	private boolean changed = false;
 
 	public BankPreset() {
 		this.inventory = new Item[Inventory.MAX_SIZE];
@@ -23,46 +40,55 @@ public class BankPreset {
 		Arrays.fill(inventory, new Item(ItemId.NOTHING.id(), 0));
 		Arrays.fill(equipment, new Item(ItemId.NOTHING.id(), 0));
 	}
+
+	public boolean hasChanged() {
+		return this.changed;
+	}
+
+	public void setChanged(boolean value) {
+		this.changed = value;
+	}
+
 	public Item[] getInventory() { return this.inventory; }
 	public Item[] getEquipment() { return this.equipment; }
 
 	public void loadFromByteData(byte[] inventoryItems, byte[] equipmentItems) {
-//		ByteBuffer blobData = ByteBuffer.wrap(inventoryItems);
-//		byte[] itemID = new byte[2];
-//		for (int i = 0; i < Inventory.MAX_SIZE; i++) {
-//			itemID[0] = blobData.get();
-//			if (itemID[0] == -1)
-//				continue;
-//			itemID[1] = blobData.get();
-//			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-//			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
-//			if (item == null)
-//				continue;
-//
-//			presets[slot].inventory[i].setCatalogId(itemIDreal);
-//			if (item.isStackable())
-//				presets[slot].inventory[i].setAmount(blobData.getInt());
-//			else
-//				presets[slot].inventory[i].setAmount(1);
-//		}
-//
-//		blobData = ByteBuffer.wrap(equipmentItems);
-//		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-//			itemID[0] = blobData.get();
-//			if (itemID[0] == -1)
-//				continue;
-//			itemID[1] = blobData.get();
-//			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
-//			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
-//			if (item == null)
-//				continue;
-//
-//			presets[slot].equipment[i].setCatalogId(itemIDreal);
-//			if (item.isStackable())
-//				presets[slot].equipment[i].setAmount(blobData.getInt());
-//			else
-//				presets[slot].equipment[i].setAmount(1);
-//		}
+		ByteBuffer blobData = ByteBuffer.wrap(inventoryItems);
+		byte[] itemID = new byte[2];
+		for (int i = 0; i < Inventory.MAX_SIZE; i++) {
+			itemID[0] = blobData.get();
+			if (itemID[0] == -1)
+				continue;
+			itemID[1] = blobData.get();
+			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+			if (item == null)
+				continue;
+
+			inventory[i].getItemStatus().setCatalogId(itemIDreal);
+			if (item.isStackable())
+				inventory[i].getItemStatus().setAmount(blobData.getInt());
+			else
+				inventory[i].getItemStatus().setAmount(1);
+		}
+
+		blobData = ByteBuffer.wrap(equipmentItems);
+		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+			itemID[0] = blobData.get();
+			if (itemID[0] == -1)
+				continue;
+			itemID[1] = blobData.get();
+			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
+			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
+			if (item == null)
+				continue;
+
+			equipment[i].getItemStatus().setCatalogId(itemIDreal);
+			if (item.isStackable())
+				equipment[i].getItemStatus().setAmount(blobData.getInt());
+			else
+				equipment[i].getItemStatus().setAmount(1);
+		}
 	}
 
 	public void attemptPresetLoadout() {

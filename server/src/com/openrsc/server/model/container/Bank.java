@@ -409,10 +409,8 @@ public class Bank {
 					return false;
 
 				//Bounds checks on amount
-				if (requestedAmount < 1) {
-					player.setSuspiciousPlayer(true, "bank deposit item amount < 1");
+				if (requestedAmount < 1)
 					return false;
-				}
 
 				//Cap the max requestedAmount
 				int idCount = countId(catalogID);
@@ -584,11 +582,10 @@ public class Bank {
 
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
+
 				//Bounds checks on amount
-				if (requestedAmount < 1) {
-					player.setSuspiciousPlayer(true, "bank deposit item amount < 1");
+				if (requestedAmount < 1)
 					return false;
-				}
 
 				//Cap the max requestedAmount
 				int idCount = player.getCarriedItems().getInventory().countId(catalogID);

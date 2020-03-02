@@ -632,7 +632,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 				final ArrayList<PlayerBankPreset> list = new ArrayList<>();
 
 				for (int k = 0; k < BankPreset.PRESET_COUNT; k++) {
-					if (player.getBank().getBankPreset(k).changed) {
+					if (player.getBank().getBankPreset(k).hasChanged()) {
 						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
 						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
 						for (final Item inventoryItem : player.getBank().getBankPreset(k).getInventory()) {
@@ -666,6 +666,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 						preset.equipment = equipmentBuffer.toByteArray();
 						preset.slot = k;
 						list.add(preset);
+
+						player.getBank().getBankPreset(k).setChanged(false);
 					}
 				}
 
