@@ -33,7 +33,8 @@ public class BankPreset {
 	 */
 	private boolean changed = false;
 
-	public BankPreset() {
+	public BankPreset(Player player) {
+		this.player = player;
 		this.inventory = new Item[Inventory.MAX_SIZE];
 		this.equipment = new Item[Equipment.SLOT_COUNT];
 
@@ -57,8 +58,10 @@ public class BankPreset {
 		byte[] itemID = new byte[2];
 		for (int i = 0; i < Inventory.MAX_SIZE; i++) {
 			itemID[0] = blobData.get();
-			if (itemID[0] == -1)
+			if (itemID[0] == -1) {
+				inventory[i].getItemStatus().setCatalogId(ItemId.NOTHING.id());
 				continue;
+			}
 			itemID[1] = blobData.get();
 			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
 			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);
@@ -75,8 +78,10 @@ public class BankPreset {
 		blobData = ByteBuffer.wrap(equipmentItems);
 		for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 			itemID[0] = blobData.get();
-			if (itemID[0] == -1)
+			if (itemID[0] == -1) {
+				equipment[i].getItemStatus().setCatalogId(ItemId.NOTHING.id());
 				continue;
+			}
 			itemID[1] = blobData.get();
 			int itemIDreal = (((int) itemID[0] << 8) & 0xFF00) | (int) itemID[1] & 0xFF;
 			ItemDefinition item = player.getWorld().getServer().getEntityHandler().getItemDef(itemIDreal);

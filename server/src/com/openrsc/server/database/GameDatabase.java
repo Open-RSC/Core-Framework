@@ -167,7 +167,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 				return false;
 			}
 
-			//savePlayerBank(player);
+			savePlayerBankPresets(player);
 			//savePlayerInventory(player);
 			//savePlayerEquipment(player);
 			//savePlayerAchievements(player);
@@ -384,8 +384,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		if (player.getBank() == null)
 			return;
 
-
-		final PlayerBankPreset bankPresets[] = queryLoadPlayerBankPresets(player);
+		final PlayerBankPreset[] bankPresets = queryLoadPlayerBankPresets(player);
 
 		for (PlayerBankPreset bankPreset : bankPresets) {
 			final int slot = bankPreset.slot;
@@ -484,6 +483,9 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	private void savePlayerBank(final Player player) throws GameDatabaseException {
 		querySavePlayerBank(player);
+	}
+
+	private void savePlayerBankPresets(final Player player) throws GameDatabaseException {
 		querySavePlayerBankPresets(player);
 	}
 

@@ -29,7 +29,7 @@ public class Bank {
 		this.player = player;
 		this.bankPresets = new BankPreset[BankPreset.PRESET_COUNT];
 		for (int i = 0; i < bankPresets.length; ++i)
-			bankPresets[i] = new BankPreset();
+			bankPresets[i] = new BankPreset(player);
 	}
 
 	/**

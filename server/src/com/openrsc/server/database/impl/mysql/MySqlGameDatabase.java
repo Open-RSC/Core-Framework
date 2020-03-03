@@ -734,19 +734,15 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerBankPresets(int playerId, PlayerBankPreset[] bankPreset) throws GameDatabaseException {
 		try {
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
-				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddBankPreset);
-
-				for (int i = 0; i < bankPreset.length; i++) {
-					statement.setInt(1, playerId);
-					statement.setInt(2, bankPreset[i].slot);
-					statement.setBlob(3, new javax.sql.rowset.serial.SerialBlob(bankPreset[i].inventory));
-					statement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(bankPreset[i].equipment));
-					statement.addBatch();
-				}
-				try {
+				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddBankPreset);) {
+					for (PlayerBankPreset playerBankPreset : bankPreset) {
+						statement.setInt(1, playerId);
+						statement.setInt(2, playerBankPreset.slot);
+						statement.setBlob(3, new javax.sql.rowset.serial.SerialBlob(playerBankPreset.inventory));
+						statement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(playerBankPreset.equipment));
+						statement.addBatch();
+					}
 					statement.executeBatch();
-				} finally {
-					statement.close();
 				}
 			}
 		} catch (final SQLException ex) {
