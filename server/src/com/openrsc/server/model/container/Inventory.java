@@ -295,9 +295,9 @@ public class Inventory {
 						//Update the client
 						if (sendInventory)
 							ActionSender.sendRemoveItem(player, index);
-					}
 
-					return inventoryItem.getItemId();
+						return inventoryItem.getItemId();
+					}
 				}
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());

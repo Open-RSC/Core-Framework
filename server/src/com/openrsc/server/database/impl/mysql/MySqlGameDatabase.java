@@ -951,7 +951,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected void queryItemPurge(final Item item) throws GameDatabaseException {
 		try {
-			purgeItemID(item);
+			purgeItemID(item.getItemId());
 			try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemPurge);) {
 				statement.setInt(1, item.getItemId());
 				statement.executeUpdate();
@@ -1541,12 +1541,12 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 	}
 
-	public void purgeItemID(Item item) {
+	private void purgeItemID(int itemID) {
 		synchronized (itemIDList) {
 			Iterator<Integer> iterator = itemIDList.iterator();
 			while (iterator.hasNext()) {
 				Integer listID = iterator.next();
-				if (listID == item.getItemId()) {
+				if (listID == itemID) {
 					iterator.remove();
 					return;
 				}
