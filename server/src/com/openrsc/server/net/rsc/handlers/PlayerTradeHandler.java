@@ -21,14 +21,16 @@ public class PlayerTradeHandler implements PacketHandler {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getDuel().isDuelActive();
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = p.getID();
-		int packetOne = OpcodeIn.PLAYER_TRADE.getOpcode();
-		int packetTwo = OpcodeIn.TRADE_ACCEPTED.getOpcode();
-		int packetThree = OpcodeIn.TRADE_DECLINED.getOpcode();
-		int packetFour = OpcodeIn.TRADE_OFFER.getOpcode();
-		int packetFive = OpcodeIn.TRADE_CONFIRM_ACCEPTED.getOpcode();
+		/**
+		 * Opcodes covered by this handler
+		 * PLAYER_TRADE
+		 * TRADE_ACCEPTED
+		 * TRADE_DECLINED
+		 * TRADE_OFFER
+		 * TRADE_CONFIRM_ACCEPTED
+		 */
 
 		Player affectedPlayer = null;
 
@@ -37,236 +39,251 @@ public class PlayerTradeHandler implements PacketHandler {
 			return;
 		}
 
-		if (pID == packetOne) { // Sending trade request
-			if (player.getWorld() != null) {
-				affectedPlayer = player.getWorld().getPlayer(p.readShort());
-			}
+		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
+			OpcodeIn.PLAYER_INIT_TRADE_REQUEST, OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST,
+			OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER, OpcodeIn.PLAYER_DECLINED_TRADE,
+			OpcodeIn.PLAYER_ACCEPTED_TRADE);
 
-			if (affectedPlayer == null) {
-				return;
-			}
-			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
-				|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-				player.message("You are an Iron Man. You stand alone.");
-				player.getTrade().resetAll();
-				return;
-			}
-			if (affectedPlayer.isIronMan(IronmanMode.Ironman.id()) || affectedPlayer.isIronMan(IronmanMode.Ultimate.id())
-				|| affectedPlayer.isIronMan(IronmanMode.Hardcore.id()) || affectedPlayer.isIronMan(IronmanMode.Transfer.id())) {
-				player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
-				player.getTrade().resetAll();
-				return;
-			}
-			if (affectedPlayer.getTrade().isTradeActive()) {
-				player.message("That person is already trading");
-				return;
-			}
-			if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
-				|| player.getTrade().isTradeActive()) {
-				player.getTrade().resetAll();
-				return;
-			}
-			if (player.equals(affectedPlayer)) {
-				player.setSuspiciousPlayer(true, "player trading themselves");
-				player.getTrade().resetAll();
-				return;
-			}
-			if ((affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS)
-				&& !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
-				|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) {
-				return;
-			}
+		if (opcode == null)
+			return;
 
-			if (!affectedPlayer.withinRange(player.getLocation(), 4)) {
-				player.message("I'm not near enough");
-				player.getTrade().resetAll();
-				return;
-			}
-
-			if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedPlayer.getLocation())) {
-				player.message("There is an obstacle in the way");
-				player.getTrade().resetAll();
-				player.resetPath();
-				return;
-			}
-			player.getTrade().setTradeRecipient(affectedPlayer);
-
-			if (!player.getTrade().isTradeActive() && affectedPlayer.getTrade().getTradeRecipient() != null
-				&& affectedPlayer.getTrade().getTradeRecipient().equals(player)
-				&& !affectedPlayer.getTrade().isTradeActive()) {
-				player.getTrade().setTradeActive(true);
-				player.resetPath();
-				player.resetAllExceptTrading();
-				affectedPlayer.getTrade().setTradeActive(true);
-				affectedPlayer.resetPath();
-				affectedPlayer.resetAllExceptTrading();
-
-				ActionSender.sendTradeWindowOpen(player);
-				ActionSender.sendTradeWindowOpen(affectedPlayer);
-			} else {
-				ActionSender.sendMessage(player, null, 0, MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
-					? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0);
-
-				ActionSender.sendMessage(affectedPlayer, player, 1, MessageType.TRADE, "", player.getIcon());
-
-			}
-		} else if (pID == packetTwo) { // Trade accepted
-			affectedPlayer = player.getTrade().getTradeRecipient();
-			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
-				|| !affectedPlayer.getTrade().isTradeActive()) {
-				player.setSuspiciousPlayer(true, "accepted trade isn't active or affected player is null or busy");
-				player.getTrade().resetAll();
-				return;
-			}
-			player.getTrade().setTradeAccepted(true);
-			ActionSender.sendTradeAcceptUpdate(affectedPlayer);
-
-			if (affectedPlayer.getTrade().isTradeAccepted()) {
-				ActionSender.sendSecondTradeScreen(player);
-				ActionSender.sendSecondTradeScreen(affectedPlayer);
-			}
-
-		} else if (pID == packetFive) { // Second Confirm accepted
-			affectedPlayer = player.getTrade().getTradeRecipient();
-			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
-				|| !affectedPlayer.getTrade().isTradeActive() || !player.getTrade().isTradeAccepted()
-				|| !affectedPlayer.getTrade().isTradeAccepted()) {
-				player.setSuspiciousPlayer(true, "confirm trade isn't active or affected player is null or busy");
-				player.getTrade().resetAll();
-				return;
-			}
-			player.getTrade().setTradeConfirmAccepted(true);
-
-			if (affectedPlayer.getTrade().isTradeConfirmAccepted()) {
-				List<Item> myOffer = player.getTrade().getTradeOffer().getItems();
-				List<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
-
-				synchronized(myOffer) {
-					synchronized(theirOffer) {
-						int myRequiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(theirOffer);
-						int myAvailableSlots = (30 - player.getCarriedItems().getInventory().size())
-							+ player.getCarriedItems().getInventory().getFreedSlots(myOffer);
-
-						int theirRequiredSlots = affectedPlayer.getCarriedItems().getInventory().getRequiredSlots(myOffer);
-						int theirAvailableSlots = (30 - affectedPlayer.getCarriedItems().getInventory().size())
-							+ affectedPlayer.getCarriedItems().getInventory().getFreedSlots(theirOffer);
-
-						if (theirRequiredSlots > theirAvailableSlots) {
-							player.message("Other player doesn't have enough inventory space to receive the objects");
-							affectedPlayer.message("You don't have enough inventory space to receive the objects");
-							player.getTrade().resetAll();
-							return;
-						}
-						if (myRequiredSlots > myAvailableSlots) {
-							player.message("You don't have enough inventory space to receive the objects");
-							affectedPlayer.message("Other player doesn't have enough inventory space to receive the objects");
-							player.getTrade().resetAll();
-							return;
-						}
-
-						for (Item item : myOffer) {
-							Item affectedItem = player.getCarriedItems().getInventory().get(item);
-							if (affectedItem == null) {
-								player.setSuspiciousPlayer(true, "trade item is null");
-								player.getTrade().resetAll();
-								return;
-							}
-							if (affectedItem.isWielded()) {
-								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
-							}
-							player.getCarriedItems().remove(item);
-
-						}
-						for (Item item : theirOffer) {
-							Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
-							if (affectedItem == null) {
-								affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
-								player.getTrade().resetAll();
-								return;
-							}
-							if (affectedItem.isWielded()) {
-								affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
-							}
-							affectedPlayer.getCarriedItems().remove(item);
-						}
-
-						for (Item item : myOffer) {
-							affectedPlayer.getCarriedItems().getInventory().add(item);
-						}
-						for (Item item : theirOffer) {
-							player.getCarriedItems().getInventory().add(item);
-						}
-
-						player.getWorld().getServer().getGameLogger().addQuery(
-							new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
-						player.save();
-						affectedPlayer.save();
-						player.message("Trade completed successfully");
-
-						affectedPlayer.message("Trade completed successfully");
-						player.getTrade().resetAll();
-					}
-				}
-			}
-		} else if (pID == packetThree) { // Trade declined
-			affectedPlayer = player.getTrade().getTradeRecipient();
-			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
-				|| !affectedPlayer.getTrade().isTradeActive()) {
-				player.setSuspiciousPlayer(true, "declined trade isn't active or affected player is null or busy");
-				player.getTrade().resetAll();
-				return;
-			}
-			affectedPlayer.message("Other player has declined trade");
-
-			player.getTrade().resetAll();
-		} else if (pID == packetFour) { // Receive offered item data
-			affectedPlayer = player.getTrade().getTradeRecipient();
-			if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
-				|| !affectedPlayer.getTrade().isTradeActive()
-				|| (player.getTrade().isTradeAccepted() && affectedPlayer.getTrade().isTradeAccepted())
-				|| player.getTrade().isTradeConfirmAccepted()
-				|| affectedPlayer.getTrade().isTradeConfirmAccepted()) { // This
-				player.setSuspiciousPlayer(true, "offered item player isn't active or affected player is null or busy");
-				player.getTrade().resetAll();
-				return;
-			}
-
-			player.getTrade().setTradeAccepted(false);
-			player.getTrade().setTradeConfirmAccepted(false);
-			affectedPlayer.getTrade().setTradeAccepted(false);
-			affectedPlayer.getTrade().setTradeConfirmAccepted(false);
-
-
-			player.getTrade().resetOffer();
-			int count = (int) p.readByte();
-			for (int slot = 0; slot < count; slot++) {
-				Item tItem = new Item(p.readShort(), p.readInt());
-
-				if (tItem.getAmount() < 1) {
-					player.setSuspiciousPlayer(true, "item less than 0");
-					player.setRequiresOfferUpdate(true);
-					continue;
-				}
-				if (tItem.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
-					player.message("This object cannot be traded with other players");
-					player.setRequiresOfferUpdate(true);
-					continue;
-				}
-				if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					player.setRequiresOfferUpdate(true);
-					continue;
+		switch (opcode) {
+			case PLAYER_INIT_TRADE_REQUEST:
+				if (player.getWorld() != null) {
+					affectedPlayer = player.getWorld().getPlayer(packet.readShort());
 				}
 
-				if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId())) {
-					player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
+				if (affectedPlayer == null) {
+					return;
+				}
+				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
+					player.message("You are an Iron Man. You stand alone.");
 					player.getTrade().resetAll();
 					return;
 				}
-				player.getTrade().addToOffer(tItem);
-			}
+				if (affectedPlayer.isIronMan(IronmanMode.Ironman.id()) || affectedPlayer.isIronMan(IronmanMode.Ultimate.id())
+					|| affectedPlayer.isIronMan(IronmanMode.Hardcore.id()) || affectedPlayer.isIronMan(IronmanMode.Transfer.id())) {
+					player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
+					player.getTrade().resetAll();
+					return;
+				}
+				if (affectedPlayer.getTrade().isTradeActive()) {
+					player.message("That person is already trading");
+					return;
+				}
+				if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
+					|| player.getTrade().isTradeActive()) {
+					player.getTrade().resetAll();
+					return;
+				}
+				if (player.equals(affectedPlayer)) {
+					player.setSuspiciousPlayer(true, "player trading themselves");
+					player.getTrade().resetAll();
+					return;
+				}
+				if ((affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS)
+					&& !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
+					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) {
+					return;
+				}
 
-			affectedPlayer.setRequiresOfferUpdate(true);
-			player.setRequiresOfferUpdate(true);
+				if (!affectedPlayer.withinRange(player.getLocation(), 4)) {
+					player.message("I'm not near enough");
+					player.getTrade().resetAll();
+					return;
+				}
+
+				if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedPlayer.getLocation())) {
+					player.message("There is an obstacle in the way");
+					player.getTrade().resetAll();
+					player.resetPath();
+					return;
+				}
+				player.getTrade().setTradeRecipient(affectedPlayer);
+
+				if (!player.getTrade().isTradeActive() && affectedPlayer.getTrade().getTradeRecipient() != null
+					&& affectedPlayer.getTrade().getTradeRecipient().equals(player)
+					&& !affectedPlayer.getTrade().isTradeActive()) {
+					player.getTrade().setTradeActive(true);
+					player.resetPath();
+					player.resetAllExceptTrading();
+					affectedPlayer.getTrade().setTradeActive(true);
+					affectedPlayer.resetPath();
+					affectedPlayer.resetAllExceptTrading();
+
+					ActionSender.sendTradeWindowOpen(player);
+					ActionSender.sendTradeWindowOpen(affectedPlayer);
+				} else {
+					ActionSender.sendMessage(player, null, 0, MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
+						? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0);
+
+					ActionSender.sendMessage(affectedPlayer, player, 1, MessageType.TRADE, "", player.getIcon());
+
+				}
+				break;
+			case PLAYER_ACCEPTED_INIT_TRADE_REQUEST:
+				affectedPlayer = player.getTrade().getTradeRecipient();
+				if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
+					|| !affectedPlayer.getTrade().isTradeActive()) {
+					player.setSuspiciousPlayer(true, "accepted trade isn't active or affected player is null or busy");
+					player.getTrade().resetAll();
+					return;
+				}
+				player.getTrade().setTradeAccepted(true);
+				ActionSender.sendTradeAcceptUpdate(affectedPlayer);
+
+				if (affectedPlayer.getTrade().isTradeAccepted()) {
+					ActionSender.sendSecondTradeScreen(player);
+					ActionSender.sendSecondTradeScreen(affectedPlayer);
+				}
+				break;
+			case PLAYER_ADDED_ITEMS_TO_TRADE_OFFER:
+				affectedPlayer = player.getTrade().getTradeRecipient();
+				if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
+					|| !affectedPlayer.getTrade().isTradeActive()
+					|| (player.getTrade().isTradeAccepted() && affectedPlayer.getTrade().isTradeAccepted())
+					|| player.getTrade().isTradeConfirmAccepted()
+					|| affectedPlayer.getTrade().isTradeConfirmAccepted()) { // This
+					player.setSuspiciousPlayer(true, "offered item player isn't active or affected player is null or busy");
+					player.getTrade().resetAll();
+					return;
+				}
+
+				player.getTrade().setTradeAccepted(false);
+				player.getTrade().setTradeConfirmAccepted(false);
+				affectedPlayer.getTrade().setTradeAccepted(false);
+				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
+
+
+				player.getTrade().resetOffer();
+				int count = (int) packet.readByte();
+				for (int slot = 0; slot < count; slot++) {
+					Item tItem = new Item(packet.readShort(), packet.readInt());
+
+					if (tItem.getAmount() < 1) {
+						player.setSuspiciousPlayer(true, "item less than 0");
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
+					if (tItem.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
+						player.message("This object cannot be traded with other players");
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
+					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
+
+					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId())) {
+						player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
+						player.getTrade().resetAll();
+						return;
+					}
+					player.getTrade().addToOffer(tItem);
+				}
+
+				affectedPlayer.setRequiresOfferUpdate(true);
+				player.setRequiresOfferUpdate(true);
+				break;
+			case PLAYER_DECLINED_TRADE:
+				affectedPlayer = player.getTrade().getTradeRecipient();
+				if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
+					|| !affectedPlayer.getTrade().isTradeActive()) {
+					player.setSuspiciousPlayer(true, "declined trade isn't active or affected player is null or busy");
+					player.getTrade().resetAll();
+					return;
+				}
+				affectedPlayer.message("Other player has declined trade");
+
+				player.getTrade().resetAll();
+				break;
+			case PLAYER_ACCEPTED_TRADE:
+				affectedPlayer = player.getTrade().getTradeRecipient();
+				if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
+					|| !affectedPlayer.getTrade().isTradeActive() || !player.getTrade().isTradeAccepted()
+					|| !affectedPlayer.getTrade().isTradeAccepted()) {
+					player.setSuspiciousPlayer(true, "confirm trade isn't active or affected player is null or busy");
+					player.getTrade().resetAll();
+					return;
+				}
+				player.getTrade().setTradeConfirmAccepted(true);
+
+				if (affectedPlayer.getTrade().isTradeConfirmAccepted()) {
+					List<Item> myOffer = player.getTrade().getTradeOffer().getItems();
+					List<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
+
+					synchronized(myOffer) {
+						synchronized(theirOffer) {
+							int myRequiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(theirOffer);
+							int myAvailableSlots = (30 - player.getCarriedItems().getInventory().size())
+								+ player.getCarriedItems().getInventory().getFreedSlots(myOffer);
+
+							int theirRequiredSlots = affectedPlayer.getCarriedItems().getInventory().getRequiredSlots(myOffer);
+							int theirAvailableSlots = (30 - affectedPlayer.getCarriedItems().getInventory().size())
+								+ affectedPlayer.getCarriedItems().getInventory().getFreedSlots(theirOffer);
+
+							if (theirRequiredSlots > theirAvailableSlots) {
+								player.message("Other player doesn't have enough inventory space to receive the objects");
+								affectedPlayer.message("You don't have enough inventory space to receive the objects");
+								player.getTrade().resetAll();
+								return;
+							}
+							if (myRequiredSlots > myAvailableSlots) {
+								player.message("You don't have enough inventory space to receive the objects");
+								affectedPlayer.message("Other player doesn't have enough inventory space to receive the objects");
+								player.getTrade().resetAll();
+								return;
+							}
+
+							for (Item item : myOffer) {
+								Item affectedItem = player.getCarriedItems().getInventory().get(item);
+								if (affectedItem == null) {
+									player.setSuspiciousPlayer(true, "trade item is null");
+									player.getTrade().resetAll();
+									return;
+								}
+								if (affectedItem.isWielded()) {
+									player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+								}
+								player.getCarriedItems().remove(item);
+
+							}
+							for (Item item : theirOffer) {
+								Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
+								if (affectedItem == null) {
+									affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
+									player.getTrade().resetAll();
+									return;
+								}
+								if (affectedItem.isWielded()) {
+									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+								}
+								affectedPlayer.getCarriedItems().remove(item);
+							}
+
+							for (Item item : myOffer) {
+								affectedPlayer.getCarriedItems().getInventory().add(item);
+							}
+							for (Item item : theirOffer) {
+								player.getCarriedItems().getInventory().add(item);
+							}
+
+							player.getWorld().getServer().getGameLogger().addQuery(
+								new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
+							player.save();
+							affectedPlayer.save();
+							player.message("Trade completed successfully");
+
+							affectedPlayer.message("Trade completed successfully");
+							player.getTrade().resetAll();
+						}
+					}
+				}
+				break;
+			default:
+				return;
 		}
 	}
 

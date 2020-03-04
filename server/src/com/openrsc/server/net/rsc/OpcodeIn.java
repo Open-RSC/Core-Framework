@@ -42,7 +42,7 @@ public enum OpcodeIn {
 	PLAYER_USE_ITEM(113),
 	PLAYER_ATTACK(171),
 	PLAYER_DUEL(103),
-	PLAYER_TRADE(142),
+	PLAYER_INIT_TRADE_REQUEST(142),
 	PLAYER_FOLLOW(165),
 
 	GROUND_ITEM_CAST_SPELL(249),
@@ -71,10 +71,10 @@ public enum OpcodeIn {
 	SHOP_BUY(236),
 	SHOP_SELL(221),
 
-	TRADE_ACCEPTED(55),
-	TRADE_DECLINED(230),
-	TRADE_OFFER(46),
-	TRADE_CONFIRM_ACCEPTED(104),
+	PLAYER_ACCEPTED_INIT_TRADE_REQUEST(55),
+	PLAYER_DECLINED_TRADE(230),
+	PLAYER_ADDED_ITEMS_TO_TRADE_OFFER(46),
+	PLAYER_ACCEPTED_TRADE(104),
 
 	PRAYER_ACTIVATED(60),
 	PRAYER_DEACTIVATED(254),
@@ -122,6 +122,14 @@ public enum OpcodeIn {
 
 	public static OpcodeIn get(int opcode) {
 		for (OpcodeIn opcodeIn : OpcodeIn.values()) {
+			if (opcodeIn.getOpcode() == opcode)
+				return opcodeIn;
+		}
+		return null;
+	}
+
+	public static OpcodeIn getFromList(int opcode, OpcodeIn... choices) {
+		for (OpcodeIn opcodeIn : choices) {
 			if (opcodeIn.getOpcode() == opcode)
 				return opcodeIn;
 		}

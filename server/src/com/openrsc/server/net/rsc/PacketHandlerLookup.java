@@ -85,11 +85,6 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.DUEL_OFFER_ITEM.getOpcode(), PlayerDuelHandler.class);
 		bind(OpcodeIn.DUEL_SECOND_ACCEPTED.getOpcode(), PlayerDuelHandler.class);
 
-		bind(OpcodeIn.TRADE_ACCEPTED.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_DECLINED.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_OFFER.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_CONFIRM_ACCEPTED.getOpcode(), PlayerTradeHandler.class);
-
 		bind(OpcodeIn.SOCIAL_ADD_FRIEND.getOpcode(), FriendHandler.class);
 		bind(OpcodeIn.SOCIAL_REMOVE_FRIEND.getOpcode(), FriendHandler.class);
 		bind(OpcodeIn.SOCIAL_ADD_IGNORE.getOpcode(), FriendHandler.class);
@@ -117,11 +112,11 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.SET_RECOVERY.getOpcode(), SecuritySettingsHandler.class);
 		bind(OpcodeIn.SET_DETAILS.getOpcode(), SecuritySettingsHandler.class);
 
-		bind(OpcodeIn.PLAYER_TRADE.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_ACCEPTED.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_CONFIRM_ACCEPTED.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_DECLINED.getOpcode(), PlayerTradeHandler.class);
-		bind(OpcodeIn.TRADE_OFFER.getOpcode(), PlayerTradeHandler.class);
+		bind(OpcodeIn.PLAYER_INIT_TRADE_REQUEST.getOpcode(), PlayerTradeHandler.class);
+		bind(OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST.getOpcode(), PlayerTradeHandler.class);
+		bind(OpcodeIn.PLAYER_ACCEPTED_TRADE.getOpcode(), PlayerTradeHandler.class);
+		bind(OpcodeIn.PLAYER_DECLINED_TRADE.getOpcode(), PlayerTradeHandler.class);
+		bind(OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode(), PlayerTradeHandler.class);
 
 		bind(OpcodeIn.SLEEPWORD_ENTERED.getOpcode(), SleepHandler.class);
 		bind(OpcodeIn.ON_TUTORIAL_ISLAND.getOpcode(), TutorialHandler.class);
