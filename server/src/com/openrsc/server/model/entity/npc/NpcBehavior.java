@@ -157,8 +157,6 @@ public class NpcBehavior {
 					if (npc.withinRange(target, 1)
 						&& npc.canReach(target)
 						&& !target.inCombat()) {
-						if (target.isPlayer() && ((Player)target).getInteractingNpc() != null)
-							((Player)target).getInteractingNpc().setBusy(false);
 						setFighting(target);
 					}
 				}

@@ -15,9 +15,6 @@ public class MenuReplyHandler implements PacketHandler {
 			player.getMenu().handleReply(player, option);
 		} else if (menuHandler != null) {
 			if (option == -1) {
-				if (player.getInteractingNpc() != null)
-					player.getInteractingNpc().setBusy(false);
-				player.setBusy(false);
 				menuHandler.handleReply(option, null);
 				return;
 			}

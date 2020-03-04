@@ -928,8 +928,6 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				p.setBusy(true);
-				npc.setBusy(true);
 				getWorld().getServer().getPluginHandler().handlePlugin(npc, "TalkToNpc", new Object[]{p, npc});
 			}
 		});
