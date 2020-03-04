@@ -34,7 +34,7 @@ public class SkillCapes {
 	}
 
 	private static boolean attackCape(boolean isHit) {
-		double rerollPercent = 10;
+		double rerollPercent = 35;
 		if (!isHit) {
 			if (rand1to100() <= rerollPercent) {
 				return true;

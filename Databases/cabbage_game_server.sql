@@ -4821,7 +4821,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2104, 0, -1, 'Fishing hood', 'Fishing skillcape hood', '', 0, 0, 0, 1, 1, 312, 33, 0, 99, 10, 0, 0, 0, 0, 0,
         99000),
        (2105, 0, -1, 'Cooking cape', 'The cape worn by the world\'s best chefs', '', 0, 0, 0, 1, 1, 311, 2048, 11, 99,
-        7, 0, 0, 0, 0, 0, 99000),
+        7, 6, 0, 0, 0, 0, 99000),
        (2106, 0, -1, 'Experience Elixir', 'A mysterious experience elixir once produced by hetty', 'Drink', 0, 0, 1, 1,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2250),
        (2107, 0, -1, 'Teleport Stone', 'Teleports you to any town', 'Teleport', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -4832,7 +4832,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         0, 0, 0, 0, 0, 0, 0, 0, 3075),
        (2110, 0, -1, 'Spotted cape', 'A dark brown spotted cape', '', 0, 0, 0, 1, 1, 314, 2048, 11, 1, 1, 2, 0, 0, 0, 0,
         2),
-       (2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 315, 2048, 11, 99, 0, 0, 0,
+       (2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 315, 2048, 11, 99, 0, 6, 0,
         0, 0, 0, 99000),
        (2112, 0, -1, 'Blood egg', 'Happy Easter', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 10),
        (2113, 0, -1, 'Easter egg', 'A cracked open easter egg - Happy Easter!', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1,
@@ -5343,9 +5343,9 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2398, -1, 2397, 'Leather top', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
        (2399, 2400, -1, 'Leather skirt', 'A ladies skirt made of leather', '', 0, 0, 0, 0, 1, 428, 128, 7, 1, 1, 3, 0, 0, 0, 0, 14),
        (2400, -1, 2393, 'Leather skirt', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
-       (2401, 0, -1, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 0, 0, 0, 0, 0, 99000),
-       (2402, 0, -1, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 0, 0, 0, 0, 0, 99000),
-       (2403, 0, -1, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 0, 0, 0, 0, 0, 99000);
+       (2401, 0, -1, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 6, 0, 0, 0, 0, 99000),
+       (2402, 0, -1, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000),
+       (2403, 0, -1, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`

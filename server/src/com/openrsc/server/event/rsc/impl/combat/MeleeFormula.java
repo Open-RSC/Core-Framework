@@ -75,14 +75,18 @@ class MeleeFormula {
 	 */
 	public static int getDamage(final Mob source, final Mob victim) {
 		boolean isHit = calculateMeleeAccuracy(source, victim);
-		if ( source != null && source instanceof Player &&
-			SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit))
-			isHit = calculateMeleeAccuracy(source, victim);
-		final int damage = isHit ? calculateDamage(source) : 0;
+		boolean wasHit = isHit;
+		if (source instanceof Player) {
+			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
+				isHit = calculateMeleeAccuracy(source, victim);
+			}
+			if (!wasHit && isHit)
+				((Player) source).message("Your attack cape has prevented a zero hit");
+		}
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
-		return damage;
+		return isHit ? calculateDamage(source) : 0;
 	}
 
 	private static int getMeleeDamage(final Mob source) {
