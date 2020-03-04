@@ -76,7 +76,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener,
 				}
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
 				Item newItem = new Item(herb.getNewId());
-				if (getOwner().getCarriedItems().getInventory().remove(item.getCatalogId(),1,false) > -1) {
+				if (getOwner().getCarriedItems().remove(item.getCatalogId(),1,false) > -1) {
 					getOwner().getCarriedItems().getInventory().add(newItem,true);
 					getOwner().playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(getWorld()).getName());
 					getOwner().incExp(Skills.HERBLAW, herb.getExp(), true);

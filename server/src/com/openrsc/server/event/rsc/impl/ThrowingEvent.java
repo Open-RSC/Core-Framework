@@ -146,7 +146,7 @@ public class ThrowingEvent extends GameTickEvent {
 					if (rangeType == null) { // This shouldn't happen
 						return;
 					}
-					getPlayerOwner().getCarriedItems().getInventory().remove(rangeType.getCatalogId(), 1, true);
+					getPlayerOwner().getCarriedItems().remove(rangeType.getCatalogId(), 1, true);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {

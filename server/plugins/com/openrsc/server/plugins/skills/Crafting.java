@@ -603,7 +603,7 @@ public class Crafting implements InvUseOnItemListener,
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().getInventory().remove(gem.getCatalogId(), 1, false) > -1) {
+				if (getOwner().getCarriedItems().remove(gem.getCatalogId(), 1, false) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail
 

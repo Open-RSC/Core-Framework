@@ -175,6 +175,7 @@ public class PlayerTradeHandler implements PacketHandler {
 								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
 							player.getCarriedItems().getInventory().remove(item);
+							player.getWorld().getServer().getDatabase().purgeItemID();
 						}
 						for (Item item : theirOffer) {
 							Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);

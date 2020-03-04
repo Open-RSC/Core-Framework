@@ -233,7 +233,7 @@ public class RangeEvent extends GameTickEvent {
 							}
 						}
 
-						getPlayerOwner().getCarriedItems().getInventory().remove(arrow.getCatalogId(), 1, true);
+						getPlayerOwner().getCarriedItems().remove(arrow.getCatalogId(), 1, true);
 						break;
 					}
 				}

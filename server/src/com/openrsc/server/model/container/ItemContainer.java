@@ -27,7 +27,7 @@ public class ItemContainer {
 				return;
 			}
 
-			if (item.getDef(player.getWorld()).isStackable() || alwaysStack) {
+			if (item.getDef(player.getWorld()).isStackable() || alwaysStack || item.getNoted()) {
 				for (int index = 0; index < list.size(); index++) {
 					Item existingStack = list.get(index);
 					if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
@@ -36,7 +36,7 @@ public class ItemContainer {
 						return;
 					}
 				}
-			} else if (item.getAmount() > 1 && !item.getDef(player.getWorld()).isStackable()) {
+			} else if (item.getAmount() > 1 && !item.getDef(player.getWorld()).isStackable() && !item.getNoted()) {
 				item.getItemStatus().setAmount(1);
 			}
 

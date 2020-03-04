@@ -278,7 +278,7 @@ public class Inventory {
 								ActionSender.sendInventoryUpdateItem(player, index);
 						}
 
-						return index;
+						return inventoryItem.getItemId();
 					} else { /**Non-stackable items*/
 
 						//There needs to be a check here if the noted version should be allowed
@@ -297,16 +297,12 @@ public class Inventory {
 							ActionSender.sendRemoveItem(player, index);
 					}
 
-					return index;
+					return inventoryItem.getItemId();
 				}
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
 			}
 		}
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getCarriedItems().getEquipment().remove(catalogId, amount);
-		else
-			return -1;
 	}
 
 	public int remove(int id, int amount) {

@@ -1421,9 +1421,9 @@ public class Functions {
 		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			final Item item = new Item(id, 1);
 			if (!item.getDef(p.getWorld()).isStackable()) {
-				p.getCarriedItems().getInventory().remove(new Item(id, 1));
+				p.getCarriedItems().remove(id, 1, true);
 			} else {
-				p.getCarriedItems().getInventory().remove(new Item(id, amt));
+				p.getCarriedItems().remove(id, amt, true);
 			}
 		}, "Remove Ground Item");
 		return true;
