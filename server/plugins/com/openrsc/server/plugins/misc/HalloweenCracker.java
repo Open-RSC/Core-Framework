@@ -129,7 +129,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			player.getCarriedItems().getInventory().remove(item);
+			player.getCarriedItems().remove(item);
 
 			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
 

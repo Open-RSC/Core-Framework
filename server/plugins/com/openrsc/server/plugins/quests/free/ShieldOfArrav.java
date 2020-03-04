@@ -180,7 +180,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 					npcTalk(p, n, "Have you got those crossbows for me yet?");
 					playerTalk(p, n, "Yes I have");
 					p.message("You give the crossbows to katrine");
-					p.getCarriedItems().getInventory().remove(ItemId.PHOENIX_CROSSBOW.id(), 2);
+					p.getCarriedItems().remove(ItemId.PHOENIX_CROSSBOW.id(), 2);
 					npcTalk(p, n,
 						"Ok you can join our gang now",
 						"Feel free to enter any the rooms of the ganghouse");

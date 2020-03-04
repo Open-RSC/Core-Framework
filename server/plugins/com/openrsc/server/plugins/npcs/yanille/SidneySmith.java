@@ -349,7 +349,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
-				if (p.getCarriedItems().getInventory().remove(certificate.getCatalogId(), mainMenu) > -1) {
+				if (p.getCarriedItems().remove(certificate.getCatalogId(), mainMenu) > -1) {
 					for (int x = 0; x < itemAmount; x++) {
 						p.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
 					}
@@ -360,7 +360,7 @@ public class SidneySmith implements TalkToNpcListener, TalkToNpcExecutiveListene
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
-					p.getCarriedItems().getInventory().remove(i.getCatalogId(), 1);
+					p.getCarriedItems().remove(i.getCatalogId(), 1);
 				}
 				p.getCarriedItems().getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
 				playerTalk(p, n, "Ok thanks.");

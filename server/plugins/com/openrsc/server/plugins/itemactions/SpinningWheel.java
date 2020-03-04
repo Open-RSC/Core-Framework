@@ -77,7 +77,7 @@ public class SpinningWheel implements InvUseOnObjectListener,
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
+				if (getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
 					showBubble(getOwner(), item);
 					getOwner().playSound("mechanical");
 					getOwner().message("You " + verb + " the "

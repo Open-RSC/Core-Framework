@@ -100,10 +100,10 @@ public class WitchesPotion implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "Yes I have everthing");
 						npcTalk(p, n, "Excellent, can I have them then?");
 						p.message("You pass the ingredients to Hetty");
-						p.getCarriedItems().getInventory().remove(ItemId.RATS_TAIL.id(), 1);
-						p.getCarriedItems().getInventory().remove(ItemId.EYE_OF_NEWT.id(), 1);
-						p.getCarriedItems().getInventory().remove(ItemId.BURNTMEAT.id(), 1);
-						p.getCarriedItems().getInventory().remove(ItemId.ONION.id(), 1);
+						p.getCarriedItems().remove(ItemId.RATS_TAIL.id(), 1);
+						p.getCarriedItems().remove(ItemId.EYE_OF_NEWT.id(), 1);
+						p.getCarriedItems().remove(ItemId.BURNTMEAT.id(), 1);
+						p.getCarriedItems().remove(ItemId.ONION.id(), 1);
 						message(p,
 							"Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");

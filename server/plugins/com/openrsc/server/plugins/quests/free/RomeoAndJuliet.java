@@ -105,7 +105,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 						"My faith in you is restored!");
 				}
 				p.message("You pass Juliet's message to Romeo");
-				p.getCarriedItems().getInventory().remove(ItemId.MESSAGE.id(), 1);
+				p.getCarriedItems().remove(ItemId.MESSAGE.id(), 1);
 				npcTalk(p, n, "Tragic news. Her father is opposing our marriage",
 					"If her father sees me, he will kill me",
 					"I dare not go near his lands",
@@ -277,7 +277,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
 				playerTalk(p, n, "I have a potion from Father Lawrence",
 					"it should make you seem dead, and get you away from this place");
 				p.message("You pass the potion to Juliet");
-				p.getCarriedItems().getInventory().remove(ItemId.CADAVA.id(), 1);
+				p.getCarriedItems().remove(ItemId.CADAVA.id(), 1);
 				npcTalk(p, n,
 					"Wonderful. I just hope Romeo can remember to get me from the Crypt",
 					"Many thanks kind friend",

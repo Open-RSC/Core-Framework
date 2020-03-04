@@ -145,7 +145,7 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener,
 						playerTalk(p, n, "I have some");
 						npcTalk(p, n, "Give em here then");
 						for (int i = 0; i < woolCount; ++i) {
-							p.getCarriedItems().getInventory().remove(ItemId.BALL_OF_WOOL.id(), 1);
+							p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 1);
 							message(p, 600, "You give Fred a ball of wool");
 						}
 						if (totalWool >= 20) {

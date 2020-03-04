@@ -23,10 +23,10 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id()) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.EGG.id())) > -1
-				&& player.getCarriedItems().getInventory().remove(new Item(ItemId.MILK.id())) > -1
-				&& player.getCarriedItems().getInventory().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
-				&& player.getCarriedItems().getInventory().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
+				&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+				&& player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
+				&& player.getCarriedItems().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
 				player.playerServerMessage(MessageType.QUEST, "You mix some milk, flour, and egg together into a cake mixture");
@@ -50,8 +50,8 @@ public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveLi
 			if (player.getCarriedItems().getInventory().contains(item1)
 				&& player.getCarriedItems().getInventory().contains(item2)) {
 				player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
-				player.getCarriedItems().getInventory().remove(ItemId.JUG_OF_WATER.id(), 1);
-				player.getCarriedItems().getInventory().remove(ItemId.GRAPES.id(), 1);
+				player.getCarriedItems().remove(ItemId.JUG_OF_WATER.id(), 1);
+				player.getCarriedItems().remove(ItemId.GRAPES.id(), 1);
 
 				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
 					@Override

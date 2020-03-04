@@ -97,7 +97,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 					bargained = true;
 				} else {
 					playerTalk(p, n, "Yeah okay here you go");
-					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 20);
+					p.getCarriedItems().remove(ItemId.COINS.id(), 20);
 					p.message("You buy a fur from Baraek");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}
@@ -137,7 +137,7 @@ public final class Baraek implements TalkToNpcExecutiveListener,
 						"I have a family to feed");
 				} else {
 					playerTalk(p, n, "Okay here you go");
-					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 18);
+					p.getCarriedItems().remove(ItemId.COINS.id(), 18);
 					p.message("You buy a fur from Baraek");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}

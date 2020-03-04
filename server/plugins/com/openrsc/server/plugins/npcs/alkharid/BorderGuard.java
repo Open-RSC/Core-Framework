@@ -46,7 +46,7 @@ public final class BorderGuard implements TalkToNpcExecutiveListener,
 				break;
 			case 2:
 				playerTalk(p, n, "Yes ok");
-				if (p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 10) > -1) {
+				if (p.getCarriedItems().remove(ItemId.COINS.id(), 10) > -1) {
 					p.message("You pay the guard");
 					npcTalk(p, n, "You may pass");
 					p.message("The gate swings open");

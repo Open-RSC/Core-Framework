@@ -543,7 +543,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 							//removes all
 							for (int itemId : itemIds) {
 								amt = Math.max(p.getCarriedItems().getInventory().countId(itemId), 0);
-								p.getCarriedItems().getInventory().remove(itemId, amt);
+								p.getCarriedItems().remove(itemId, amt);
 							}
 							p.sendQuestComplete(Quests.MURDER_MYSTERY);
 							npcTalk(p, n, "Please accept this reward from the family!");

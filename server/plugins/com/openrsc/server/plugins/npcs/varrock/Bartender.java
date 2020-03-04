@@ -40,7 +40,7 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 			if (hasItem(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
 				addItem(p, ItemId.BEER.id(), 1);
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 			} else
 				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
 		} else if (reply == 1) {
@@ -84,7 +84,7 @@ public class Bartender implements TalkToNpcListener, TalkToNpcExecutiveListener 
 				"These barbarian barcrawls cause too much damage to my bar",
 				"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
 			if (hasItem(p, ItemId.COINS.id(), 50)) {
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 50);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 50);
 				p.message("You buy some gutrot");
 				sleep(800);
 				p.message("You drink the gutrot");

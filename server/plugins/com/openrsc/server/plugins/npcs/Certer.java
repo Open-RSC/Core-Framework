@@ -129,7 +129,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				return;
 			}
 			Item bankItem = new Item(itemID, certAmount * 5);
-			if (p.getCarriedItems().getInventory().remove(new Item(certID, certAmount)) > -1) {
+			if (p.getCarriedItems().remove(new Item(certID, certAmount)) > -1) {
 				p.message("You exchange the certificates, "
 					+ bankItem.getAmount() + " "
 					+ bankItem.getDef(p.getWorld()).getName()
@@ -143,7 +143,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				p.message("You don't have that many certificates");
 				return;
 			}
-			if (p.getCarriedItems().getInventory().remove(certID, certAmount) > -1) {
+			if (p.getCarriedItems().remove(certID, certAmount) > -1) {
 				p.message("You exchange your certificates for "
 					+ certerDef.getType() + ending);
 				for (int x = 0; x < itemAmount; x++) {
@@ -200,7 +200,7 @@ public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
 			p.message("You exchange your " + certerDef.getType() + ending
 				+ " for certificates");
 			for (int x = 0; x < itemAmount; x++) {
-				p.getCarriedItems().getInventory().remove(itemID, 1);
+				p.getCarriedItems().remove(itemID, 1);
 			}
 			p.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 		}

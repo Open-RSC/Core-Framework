@@ -37,7 +37,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		p.setBusy(true);
 		showBubble(p, item);
 		p.playSound("cooking");
-		if (p.getCarriedItems().getInventory().remove(item) > -1) {
+		if (p.getCarriedItems().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
 			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
 				if (inArray(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),

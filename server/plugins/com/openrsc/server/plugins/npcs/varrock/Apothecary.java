@@ -37,7 +37,7 @@ public final class Apothecary implements TalkToNpcExecutiveListener,
 			} else {
 				npcTalk(p, n, "Well done. You have the berries");
 				message(p, "You hand over the berries");
-				p.getCarriedItems().getInventory().remove(ItemId.CADAVABERRIES.id(), 1);
+				p.getCarriedItems().remove(ItemId.CADAVABERRIES.id(), 1);
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcTalk(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");

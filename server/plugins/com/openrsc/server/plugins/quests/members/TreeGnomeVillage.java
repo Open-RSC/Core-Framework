@@ -237,7 +237,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n,
 						"hello again, we're still desperate for wood soldier");
 					if (hasItem(p, ItemId.LOGS.id(), 6)) {
-						p.getCarriedItems().getInventory().remove(ItemId.LOGS.id(), 6);
+						p.getCarriedItems().remove(ItemId.LOGS.id(), 6);
 						playerTalk(p, n, "i have some here");
 						p.message("you give some wood to the commander");
 						npcTalk(p,

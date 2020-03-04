@@ -45,7 +45,7 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 				player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, String.format("Bury %s", item.getDef(player.getWorld()).getName()), item.getAmount(), false) {
 					@Override
 					public void action() {
-						if (getOwner().getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
+						if (getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
 							player.message("You dig a hole in the ground");
 							buryBonesHelper(player, item);
 						} else
@@ -56,7 +56,7 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 				player.getWorld().getServer().getGameEventHandler()
 					.add(new MiniEvent(player.getWorld(), player, "Bury Bones") {
 						public void action() {
-							if (getOwner().getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
+							if (getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
 								player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 								player.message("You dig a hole in the ground");
 								buryBonesHelper(player, item);

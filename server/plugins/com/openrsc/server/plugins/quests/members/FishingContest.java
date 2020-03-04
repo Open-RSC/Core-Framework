@@ -489,7 +489,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
 			message(player, "You stash the garlic in the pipe");
-			player.getCarriedItems().getInventory().remove(ItemId.GARLIC.id(), 1);
+			player.getCarriedItems().remove(ItemId.GARLIC.id(), 1);
 			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
 				npcTalk(player, sinister,
 					"Arrgh what is that ghastly smell",
@@ -584,12 +584,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("You catch a sardine");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getCarriedItems().getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					p.getCarriedItems().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					p.message("You catch some shrimps");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
-					p.getCarriedItems().getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
+					p.getCarriedItems().remove(ItemId.FISHING_BAIT.id(), 1);
 					addCatchCache(p, ItemId.RAW_SHRIMP.id());
 				}
 
@@ -629,12 +629,12 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("You catch a giant carp");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
-					p.getCarriedItems().getInventory().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					p.getCarriedItems().remove(ItemId.RED_VINE_WORMS.id(), 1);
 					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					p.message("You catch a sardine");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getCarriedItems().getInventory().remove(ItemId.FISHING_BAIT.id(), 1);
+					p.getCarriedItems().remove(ItemId.FISHING_BAIT.id(), 1);
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				}
 

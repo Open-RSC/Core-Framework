@@ -97,7 +97,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 
 			shop.removeShopItem(new Item(itemID, totalBought));
-			player.getCarriedItems().getInventory().remove(ItemId.COINS.id(), totalMoneySpent);
+			player.getCarriedItems().remove(ItemId.COINS.id(), totalMoneySpent);
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
 				player.getCarriedItems().getInventory().add(new Item(itemID, 1), false);
@@ -123,9 +123,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 			for (int i = 0; i < amount; i++) {
 			    int sellAmount = 0;
 				/* If no noted version can be removed */
-				if (player.getCarriedItems().getInventory().remove(def.getNoteID(), 1) == -1) {
+				if (player.getCarriedItems().remove(def.getNoteID(), 1) == -1) {
 					/* Try removing with original item ID */
-					if (player.getCarriedItems().getInventory().remove(itemID, 1) == -1) {
+					if (player.getCarriedItems().remove(itemID, 1) == -1) {
 						/* Break, player doesn't have anything. */
 						player.message("You don't have that many items");
 						break;

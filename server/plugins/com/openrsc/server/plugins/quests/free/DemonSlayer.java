@@ -310,7 +310,7 @@ public class DemonSlayer implements QuestInterface,
 							boneCount = p.getCache().getInt("traiborn_bones");
 
 						while (p.getCarriedItems().getInventory().countId(ItemId.BONES.id()) > 0) {
-							p.getCarriedItems().getInventory().remove(new Item(ItemId.BONES.id()));
+							p.getCarriedItems().remove(new Item(ItemId.BONES.id()));
 							p.message("You give Traiborn a set of bones");
 							boneCount++;
 							sleep(600);
@@ -898,7 +898,7 @@ public class DemonSlayer implements QuestInterface,
 				break;
 			case GypsyConversation.QUEST_START:// Quest Start
 				if (p.getCarriedItems().hasCatalogID(ItemId.COINS.id()))
-					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 1);
+					p.getCarriedItems().remove(ItemId.COINS.id(), 1);
 				else {
 					playerTalk(p, n, "Oh dear. I don't have any money");
 					break;

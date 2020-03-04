@@ -98,11 +98,11 @@ public class Dorics implements QuestInterface, TalkToNpcListener,
 					npcTalk(p, n, "Many thanks, pass them here please");
 					p.message("You hand the clay, copper and iron to Doric");
 					for (int i = 0; i < 6; i++)
-						p.getCarriedItems().getInventory().remove(ItemId.CLAY.id(), 1);
+						p.getCarriedItems().remove(ItemId.CLAY.id(), 1);
 					for (int i = 0; i < 4; i++)
-						p.getCarriedItems().getInventory().remove(ItemId.COPPER_ORE.id(), 1);
+						p.getCarriedItems().remove(ItemId.COPPER_ORE.id(), 1);
 					for (int i = 0; i < 2; i++)
-						p.getCarriedItems().getInventory().remove(ItemId.IRON_ORE.id(), 1);
+						p.getCarriedItems().remove(ItemId.IRON_ORE.id(), 1);
 
 					npcTalk(p, n, "I can spare you some coins for your trouble");
 

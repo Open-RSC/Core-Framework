@@ -274,7 +274,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 								n,
 								"Well done, I can start the tripod construction now",
 								"Now for the bronze");
-							p.getCarriedItems().getInventory().remove(ItemId.PLANK.id(), 3);
+							p.getCarriedItems().remove(ItemId.PLANK.id(), 3);
 
 							p.updateQuestStage(getQuestId(), 2);
 						} else {
@@ -293,7 +293,7 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 						if (p.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
 							npcTalk(p, n, "Great, now all I need is the lens made",
 								"Next on the list is molten glass");
-							p.getCarriedItems().getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
+							p.getCarriedItems().remove(ItemId.BRONZE_BAR.id(), 1);
 
 							p.updateQuestStage(getQuestId(), 3);
 						} else {

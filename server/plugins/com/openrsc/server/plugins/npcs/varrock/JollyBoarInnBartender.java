@@ -41,7 +41,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 
 			if (hasItem(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 				addItem(p, ItemId.BEER.id(), 1);
 			} else {
 				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
@@ -71,7 +71,7 @@ public class JollyBoarInnBartender implements TalkToNpcListener, TalkToNpcExecut
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
 			if (hasItem(p, ItemId.COINS.id(), 10)) {
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 10);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 10);
 				message(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");

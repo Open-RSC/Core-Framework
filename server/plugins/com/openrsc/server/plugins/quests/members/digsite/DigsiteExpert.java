@@ -123,7 +123,7 @@ public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToN
 					playerTalk(p, n, "I have these gold nuggets");
 					if (hasItem(p, ItemId.GOLD_NUGGETS.id(), 3)) {
 						p.message("You give the nuggets to the expert");
-						p.getCarriedItems().getInventory().remove(ItemId.GOLD_NUGGETS.id(), 3);
+						p.getCarriedItems().remove(ItemId.GOLD_NUGGETS.id(), 3);
 						addItem(p, ItemId.GOLD.id(), 1);
 						npcTalk(p, n, "Good, that's 3, I can exchange them for normal gold now",
 							"You can get this refined and make a profit!");

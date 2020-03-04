@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -122,7 +121,7 @@ public class Smelting implements InvUseOnObjectListener,
 				p.message("90 smithing is required to use this forge");
 				return;
 			}
-			if (p.getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
+			if (p.getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
 				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
 				sleep(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
@@ -233,10 +232,10 @@ public class Smelting implements InvUseOnObjectListener,
 					if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
 						removeItem(getOwner(), ItemId.GOLD_FAMILYCREST.id(), 1);
 					else
-						getOwner().getCarriedItems().getInventory().remove(smelt.getID(), smelt.getOreAmount());
+						getOwner().getCarriedItems().remove(smelt.getID(), smelt.getOreAmount());
 
 					if (smelt.getReqOreAmount() > 0)
-						getOwner().getCarriedItems().getInventory().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
+						getOwner().getCarriedItems().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
 
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
 						if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {

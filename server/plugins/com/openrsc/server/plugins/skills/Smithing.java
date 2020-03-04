@@ -48,7 +48,7 @@ public class Smithing implements InvUseOnObjectListener,
 						player.message("You need 90 smithing to work dragon metal");
 						return;
 					}
-					if (player.getCarriedItems().getInventory().remove(ItemId.DRAGON_BAR.id(), 1) > -1) {
+					if (player.getCarriedItems().remove(ItemId.DRAGON_BAR.id(), 1) > -1) {
 						addItem(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
 						player.incExp(Skills.SMITHING, 1000, true);
 					}
@@ -154,8 +154,8 @@ public class Smithing implements InvUseOnObjectListener,
 					"You hammer long and hard and use all of your skill.",
 					"Eventually, it is ready...",
 					"You have repaired the Dragon Square Shield.");
-			player.getCarriedItems().getInventory().remove(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
-			player.getCarriedItems().getInventory().remove(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
+			player.getCarriedItems().remove(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
+			player.getCarriedItems().remove(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
 			player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id(), 1));
 			player.incExp(Skills.SMITHING, 300, true);
 		}
@@ -173,7 +173,7 @@ public class Smithing implements InvUseOnObjectListener,
 			} else {
 				if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skills.SMITHING))) {
 					for (int x = 0; x < 2; x++) {
-						player.getCarriedItems().getInventory().remove(ItemId.GOLD_BAR.id(), 1);
+						player.getCarriedItems().remove(ItemId.GOLD_BAR.id(), 1);
 					}
 					player.message("You forge a beautiful bowl made out of solid gold.");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
@@ -181,7 +181,7 @@ public class Smithing implements InvUseOnObjectListener,
 				} else {
 					player.message("You make a mistake forging the bowl..");
 					player.message("You pour molten gold all over the floor..");
-					player.getCarriedItems().getInventory().remove(ItemId.GOLD_BAR.id(), 1);
+					player.getCarriedItems().remove(ItemId.GOLD_BAR.id(), 1);
 					player.incExp(Skills.SMITHING, 4, true);
 				}
 			}
@@ -245,7 +245,7 @@ public class Smithing implements InvUseOnObjectListener,
 				}
 				getOwner().playSound("anvil");
 				for (int x = 0; x < def.getRequiredBars(); x++) {
-					getOwner().getCarriedItems().getInventory().remove(new Item(item.getCatalogId(), 1));
+					getOwner().getCarriedItems().remove(new Item(item.getCatalogId(), 1));
 				}
 
 				showBubble(getOwner(), item);
@@ -381,7 +381,7 @@ public class Smithing implements InvUseOnObjectListener,
 			return;
 		}
 		showBubble(player, item);
-		player.getCarriedItems().getInventory().remove(ItemId.STEEL_BAR.id(), 1);
+		player.getCarriedItems().remove(ItemId.STEEL_BAR.id(), 1);
 		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.NAILS.id(), 2));
 		player.incExp(Skills.SMITHING, 70, true);
@@ -403,7 +403,7 @@ public class Smithing implements InvUseOnObjectListener,
 		}
 		if (bronzeWireOption == 0) {
 			showBubble(player, item);
-			player.getCarriedItems().getInventory().remove(ItemId.BRONZE_BAR.id(), 1);
+			player.getCarriedItems().remove(ItemId.BRONZE_BAR.id(), 1);
 			player.playerServerMessage(MessageType.QUEST, "You hammer the Bronze Bar and make some bronze wire");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
 			player.incExp(Skills.SMITHING, 50, true);

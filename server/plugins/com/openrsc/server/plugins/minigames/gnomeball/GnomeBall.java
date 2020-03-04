@@ -65,7 +65,7 @@ InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActio
 					@Override
 					public void doSpell() {
 						if (otherPlayer.isPlayer()) {
-							player.getCarriedItems().getInventory().remove(item);
+							player.getCarriedItems().remove(item);
 							player.message("you throw the ball");
 
 							// only the shops interface is reset is closed if they are accessing it

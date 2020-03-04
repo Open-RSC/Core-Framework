@@ -34,8 +34,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		 * Dye the wig with yellow dye and get blonde wig for Prince Ali rescue Quest
 		 */
 		if (compareItemsIds(item1, item2, ItemId.WOOL_WIG.id(), ItemId.YELLOWDYE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.YELLOWDYE.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.WOOL_WIG.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.YELLOWDYE.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.WOOL_WIG.id())) > -1) {
 				player.message("You dye the wig blond");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BLONDE_WIG.id()));
 
@@ -44,7 +44,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.POT_OF_FLOUR.id(), ItemId.SWAMP_TAR.id())) {
-			if (player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false)) && player.getCarriedItems().getInventory().remove(new Item(ItemId.SWAMP_TAR.id())) > -1) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false)) && player.getCarriedItems().remove(new Item(ItemId.SWAMP_TAR.id())) > -1) {
 				player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 				player.message("you mix the flour with the swamp tar");
 				player.message("it mixes into a paste");
@@ -55,7 +55,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.TINDERBOX.id(), ItemId.UNLIT_BLACK_CANDLE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.UNLIT_BLACK_CANDLE.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.UNLIT_BLACK_CANDLE.id())) > -1) {
 				player.message("You light the candle");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_BLACK_CANDLE.id()));
 
@@ -64,7 +64,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.TINDERBOX.id(), ItemId.UNLIT_CANDLE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.UNLIT_CANDLE.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.UNLIT_CANDLE.id())) > -1) {
 				player.message("You light the candle");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_CANDLE.id()));
 
@@ -73,8 +73,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.BLAMISH_OIL.id(), ItemId.FISHING_ROD.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.BLAMISH_OIL.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.FISHING_ROD.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.BLAMISH_OIL.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.FISHING_ROD.id())) > -1) {
 				player.message("You rub the oil onto the fishing rod");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.OILY_FISHING_ROD.id()));
 
@@ -83,7 +83,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.BROKEN_GLASS.id(), ItemId.DAMP_STICKS.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
 				player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Dry Sticks with Lens") {
@@ -99,8 +99,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.MILK.id(), ItemId.CHOCOLATE_DUST.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.MILK.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.CHOCOLATE_DUST.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_DUST.id())) > -1) {
 				player.message("You mix the chocolate into the bucket");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CHOCOLATY_MILK.id()));
 
@@ -109,8 +109,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.CHOCOLATY_MILK.id(), ItemId.SNAPE_GRASS.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.CHOCOLATY_MILK.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.SNAPE_GRASS.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.CHOCOLATY_MILK.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.SNAPE_GRASS.id())) > -1) {
 				player.message("You mix the snape grass into the bucket");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.HANGOVER_CURE.id()));
 
@@ -127,7 +127,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.COCONUT.id(), ItemId.MACHETTE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.COCONUT.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.COCONUT.id())) > -1) {
 				player.message("You slice open the coconut with the machette");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_COCONUT.id()));
 			}
@@ -139,8 +139,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		 * Combine Dyes
 		 */
 		else if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.YELLOWDYE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.YELLOWDYE.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.REDDYE.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.YELLOWDYE.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.REDDYE.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.ORANGEDYE.id()));
 				player.message("You mix the Dyes");
 
@@ -149,8 +149,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.BLUEDYE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.BLUEDYE.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.REDDYE.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.BLUEDYE.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.REDDYE.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PURPLEDYE.id()));
 				player.message("You mix the Dyes");
 
@@ -159,8 +159,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.YELLOWDYE.id(), ItemId.BLUEDYE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.BLUEDYE.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.YELLOWDYE.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.BLUEDYE.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.YELLOWDYE.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.GREENDYE.id()));
 				player.message("You mix the Dyes");
 
@@ -169,16 +169,16 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.GOBLIN_ARMOUR.id(), ItemId.ORANGEDYE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.ORANGEDYE.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.GOBLIN_ARMOUR.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.ORANGEDYE.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.GOBLIN_ARMOUR.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.ORANGE_GOBLIN_ARMOUR.id()));
 				player.message("You dye the goblin armor");
 			}
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.GOBLIN_ARMOUR.id(), ItemId.BLUEDYE.id())) {
-			if (player.getCarriedItems().getInventory().remove(new Item(ItemId.BLUEDYE.id())) > -1
-					&& player.getCarriedItems().getInventory().remove(new Item(ItemId.GOBLIN_ARMOUR.id())) > -1) {
+			if (player.getCarriedItems().remove(new Item(ItemId.BLUEDYE.id())) > -1
+					&& player.getCarriedItems().remove(new Item(ItemId.GOBLIN_ARMOUR.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BLUE_GOBLIN_ARMOUR.id()));
 				player.message("You dye the goblin armor");
 			}
@@ -191,7 +191,7 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.TOOTH_KEY_HALF.id(), ItemId.LOOP_KEY_HALF.id())) {
-			if (player.getCarriedItems().getInventory().remove(item1) > -1 && player.getCarriedItems().getInventory().remove(item2) > -1) {
+			if (player.getCarriedItems().remove(item1) > -1 && player.getCarriedItems().remove(item2) > -1) {
 				player.message("You join the two halves of the key together");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
 				if (player.getWorld().getServer().getConfig().CRYSTAL_KEY_GIVES_XP) {
@@ -209,9 +209,9 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				player.message("You still need one more piece of map");
 			} else {
 				player.message("You put all the pieces of map together");
-				player.getCarriedItems().getInventory().remove(pieces[0], 1);
-				player.getCarriedItems().getInventory().remove(pieces[1], 1);
-				player.getCarriedItems().getInventory().remove(pieces[2], 1);
+				player.getCarriedItems().remove(pieces[0], 1);
+				player.getCarriedItems().remove(pieces[1], 1);
+				player.getCarriedItems().remove(pieces[2], 1);
 				player.getCarriedItems().getInventory().add(new Item(ItemId.MAP.id(), 1));
 			}
 		}
@@ -225,9 +225,9 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 				player.message("You still need one more piece of the crest");
 			} else {
 				player.message("You put all the pieces of the crest together");
-				player.getCarriedItems().getInventory().remove(fragments[0], 1);
-				player.getCarriedItems().getInventory().remove(fragments[1], 1);
-				player.getCarriedItems().getInventory().remove(fragments[2], 1);
+				player.getCarriedItems().remove(fragments[0], 1);
+				player.getCarriedItems().remove(fragments[1], 1);
+				player.getCarriedItems().remove(fragments[2], 1);
 				player.getCarriedItems().getInventory().add(new Item(ItemId.FAMILY_CREST.id(), 1));
 			}
 		}
@@ -236,8 +236,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			if (il == item1.getCatalogId()) {
 				for (int i = 0; i < dye.length; i++) {
 					if (dye[i] == item2.getCatalogId()) {
-						if (player.getCarriedItems().getInventory().remove(new Item(item1.getCatalogId())) > -1
-								&& player.getCarriedItems().getInventory().remove(new Item(item2.getCatalogId())) > -1) {
+						if (player.getCarriedItems().remove(new Item(item1.getCatalogId())) > -1
+								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
 							player.incExp(Skills.CRAFTING, 10, true);
@@ -250,8 +250,8 @@ public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutive
 			else if (il == item2.getCatalogId()) {
 				for (int i = 0; i < dye.length; i++) {
 					if (dye[i] == item1.getCatalogId()) {
-						if (player.getCarriedItems().getInventory().remove(new Item(item1.getCatalogId())) > -1
-								&& player.getCarriedItems().getInventory().remove(new Item(item2.getCatalogId())) > -1) {
+						if (player.getCarriedItems().remove(new Item(item1.getCatalogId())) > -1
+								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
 							player.incExp(Skills.CRAFTING, 10, true);

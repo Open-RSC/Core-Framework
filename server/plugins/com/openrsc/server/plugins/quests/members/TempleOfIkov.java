@@ -177,7 +177,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 					playerTalk(p, n, "I have the 20 limpwurt roots, now transport me please");
 					npcTalk(p, n, "Oh marverlous",
 						"Brace yourself then");
-					p.getCarriedItems().getInventory().remove(ItemId.LIMPWURT_ROOT.id(), 20);
+					p.getCarriedItems().remove(ItemId.LIMPWURT_ROOT.id(), 20);
 					p.teleport(557, 3290);
 					sleep(650);
 					ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);

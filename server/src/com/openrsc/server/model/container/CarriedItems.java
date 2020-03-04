@@ -79,6 +79,14 @@ public class CarriedItems {
 
 	}
 
+	public int remove(int id, int amount) {
+		return remove(id, amount, true);
+	}
+
+	public int remove(Item item) {
+		return remove(item.getCatalogId(), item.getAmount(), true);
+	}
+
 	//TODO: Add parameter allowNoted
 	public int remove(int catalogID, int amount, boolean updateClient) {
 		int result = getInventory().remove(catalogID, amount, updateClient);

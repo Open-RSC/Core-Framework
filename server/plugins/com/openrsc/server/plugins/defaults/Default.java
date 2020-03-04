@@ -97,7 +97,7 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (fromInventory) {
-			if (p.getCarriedItems().getInventory().remove(i.getCatalogId(), i.getAmount()) < 0) {
+			if (p.getCarriedItems().remove(i.getCatalogId(), i.getAmount()) < 0) {
 				p.setStatus(Action.IDLE);
 				return;
 			}

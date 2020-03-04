@@ -25,7 +25,7 @@ public class BlackHoleHandler implements PacketHandler {
 			player.teleport(311, 3348);
 			player.message("you return to the dwarven mines");
 			if (player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
-				player.getCarriedItems().getInventory().remove(ItemId.DISK_OF_RETURNING.id(), 1);
+				player.getCarriedItems().remove(ItemId.DISK_OF_RETURNING.id(), 1);
 				player.message("consuming your disk of returning");
 			}
 			ActionSender.sendPlayerOnBlackHole(player);

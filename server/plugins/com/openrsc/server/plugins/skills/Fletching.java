@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
@@ -110,8 +109,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						}
 
 					}
-					if (getOwner().getCarriedItems().getInventory().remove(feathers.getCatalogId(), 1) > -1
-						&& getOwner().getCarriedItems().getInventory().remove(item.getCatalogId(), 1) > -1) {
+					if (getOwner().getCarriedItems().remove(feathers.getCatalogId(), 1) > -1
+						&& getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
 						getOwner().getCarriedItems().getInventory().add(new Item(itemID, 1));
 						getOwner().incExp(Skills.FLETCHING, exp, true);
 					} else {
@@ -170,8 +169,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						}
 
 					}
-					if (getOwner().getCarriedItems().getInventory().remove(headlessArrows.getCatalogId(), 1) > -1
-						&& getOwner().getCarriedItems().getInventory().remove(arrowHeads.getCatalogId(), 1) > -1) {
+					if (getOwner().getCarriedItems().remove(headlessArrows.getCatalogId(), 1) > -1
+						&& getOwner().getCarriedItems().remove(arrowHeads.getCatalogId(), 1) > -1) {
 						getOwner().getCarriedItems().getInventory().add(new Item(headDef.getArrowID(), 1));
 						getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
 					} else {
@@ -221,8 +220,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().getInventory().remove(bowString) > -1
-					&& getOwner().getCarriedItems().getInventory().remove(bow) > -1) {
+				if (getOwner().getCarriedItems().remove(bowString) > -1
+					&& getOwner().getCarriedItems().remove(bow) > -1) {
 					getOwner().message("You add a string to the bow");
 					getOwner().getCarriedItems().getInventory().add(new Item(stringDef.getBowID(), 1));
 					getOwner().incExp(Skills.FLETCHING, stringDef.getExp(), true);
@@ -306,7 +305,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().getInventory().remove(log) > -1) {
+				if (getOwner().getCarriedItems().remove(log) > -1) {
 					getOwner().message(cutMessages);
 					addItem(getOwner(), itemID, amt);
 					getOwner().incExp(Skills.FLETCHING, experience, true);
@@ -352,7 +351,7 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().getInventory().remove(pearlID, 1) > -1) {
+				if (getOwner().getCarriedItems().remove(pearlID, 1) > -1) {
 					getOwner().message("you chisel the pearls into small bolt tips");
 					addItem(getOwner(), com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 					getOwner().incExp(Skills.FLETCHING, exp, true);
@@ -405,8 +404,8 @@ public class Fletching implements InvUseOnItemExecutiveListener, InvUseOnItemLis
 						}
 
 					}
-					if (getOwner().getCarriedItems().getInventory().remove(bolt, 1) > -1
-						&& getOwner().getCarriedItems().getInventory().remove(tip, 1) > -1) {
+					if (getOwner().getCarriedItems().remove(bolt, 1) > -1
+						&& getOwner().getCarriedItems().remove(tip, 1) > -1) {
 						getOwner().getCarriedItems().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), 1));
 						getOwner().incExp(Skills.FLETCHING, 25, true);
 					} else interrupt();

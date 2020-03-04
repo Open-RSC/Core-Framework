@@ -99,7 +99,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				if (p.getCarriedItems().hasCatalogID(ItemId.ORANGE_GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "I have some orange armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getCarriedItems().getInventory().remove(ItemId.ORANGE_GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().remove(ItemId.ORANGE_GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "No I don't like that much");
 					npcTalk(p, otherGoblin, "It clashes with my skin colour");
 					npcTalk(p, n, "Try bringing us dark blue armour");
@@ -114,7 +114,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				if (p.getCarriedItems().hasCatalogID(ItemId.BLUE_GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "I have some dark blue armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getCarriedItems().getInventory().remove(ItemId.BLUE_GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().remove(ItemId.BLUE_GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "Doesn't seem quite right");
 					npcTalk(p, otherGoblin, "maybe if it was a bit lighter");
 					npcTalk(p, n, "Yeah try light blue");
@@ -131,7 +131,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener,
 				if (p.getCarriedItems().hasCatalogID(ItemId.GOBLIN_ARMOUR.id())) {
 					playerTalk(p, n, "Ok I've got light blue armour");
 					message(p, "You give some goblin armour to the goblins");
-					p.getCarriedItems().getInventory().remove(ItemId.GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().remove(ItemId.GOBLIN_ARMOUR.id(), 1);
 					npcTalk(p, n, "That is rather nice");
 					npcTalk(p, otherGoblin,
 						"Yes I could see myself wearing somethin' like that");

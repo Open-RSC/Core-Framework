@@ -199,7 +199,7 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
-				p.getCarriedItems().getInventory().remove(ItemId.KITTEN.id(), 1);
+				p.getCarriedItems().remove(ItemId.KITTEN.id(), 1);
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 			}
 			// kitten grows to cat - replace and reset counters

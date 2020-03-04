@@ -48,7 +48,7 @@ public class FireCannonEvent extends GameTickEvent {
 		int cannonBallDamage = DataConversions.random(0, max);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getOwner(), target, cannonBallDamage, 5));
 		getPlayerOwner().playSound("shoot");
-		getPlayerOwner().getCarriedItems().getInventory().remove(ItemId.MULTI_CANNON_BALL.id(), 1);
+		getPlayerOwner().getCarriedItems().remove(ItemId.MULTI_CANNON_BALL.id(), 1);
 
 		this.count += 1;
 		if (this.count >= 20) {

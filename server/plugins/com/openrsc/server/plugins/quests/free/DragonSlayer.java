@@ -517,14 +517,14 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 					&& p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					p.message("You hammer the plank over the hole");
 					p.message("You still need more planks to close the hole completely");
-					p.getCarriedItems().getInventory().remove(ItemId.NAILS.id(), 4);
-					p.getCarriedItems().getInventory().remove(ItemId.PLANK.id(), 1);
+					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
+					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
 					p.getCache().set("ship_repair", 1);
 				} else if (hasItem(p, ItemId.NAILS.id(), 4) && p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					int planks_added = p.getCache().getInt("ship_repair");
 					p.message("You hammer the plank over the hole");
-					p.getCarriedItems().getInventory().remove(ItemId.NAILS.id(), 4);
-					p.getCarriedItems().getInventory().remove(ItemId.PLANK.id(), 1);
+					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
+					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
 					if (planks_added + 1 == 3) {
 						p.getCache().remove("ship_repair");
 						p.getCache().store("ship_fixed", true);

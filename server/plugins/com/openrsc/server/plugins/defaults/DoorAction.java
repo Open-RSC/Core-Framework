@@ -960,7 +960,7 @@ public class DoorAction {
 			player.message("you go through the door");
 			if (remove) {
 				player.message("Your " + item.getDef(player.getWorld()).getName().toLowerCase() + " has gone!");
-				player.getCarriedItems().getInventory().remove(keyItem, 1);
+				player.getCarriedItems().remove(keyItem, 1);
 				if (obj.getID() == 52) {
 					player.getCache().store("melzar_unlocked", true);
 				}
@@ -1202,15 +1202,15 @@ public class DoorAction {
 								"There have been reports of a someone bringing a virus into Varrock");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
-							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.ETHENEA.id())) != -1) ;
+							while (player.getCarriedItems().remove(new Item(ItemId.ETHENEA.id())) != -1) ;
 							player.message("He takes the vial of ethenea from you");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.SULPHURIC_BROLINE.id(), Optional.of(false))) {
-							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.SULPHURIC_BROLINE.id())) != -1) ;
+							while (player.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id())) != -1) ;
 							player.message("He takes the vial of sulphuric broline from you");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
-							while (player.getCarriedItems().getInventory().remove(new Item(ItemId.LIQUID_HONEY.id())) != -1) ;
+							while (player.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id())) != -1) ;
 							player.message("He takes the vial of liquid honey from you");
 						}
 					}

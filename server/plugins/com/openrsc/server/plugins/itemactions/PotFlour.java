@@ -24,7 +24,7 @@ public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemE
 	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
 		if (myItem.getCatalogId() == ItemId.POT.id()) {
-			if (player.getCarriedItems().getInventory().remove(myItem) < 0)
+			if (player.getCarriedItems().remove(myItem) < 0)
 				return;
 			player.message("You put the flour in the pot");
 			player.getWorld().unregisterItem(item);

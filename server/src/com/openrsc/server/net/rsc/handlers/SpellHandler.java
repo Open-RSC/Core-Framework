@@ -99,7 +99,7 @@ public class SpellHandler implements PacketHandler {
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
-			player.getCarriedItems().getInventory().remove(e.getKey(), e.getValue());
+			player.getCarriedItems().remove(e.getKey(), e.getValue());
 		}
 		/*
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
@@ -541,7 +541,7 @@ public class SpellHandler implements PacketHandler {
 							jewelryType = RING;
 							break;
 					}
-					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().remove(affectedItem);
 					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
@@ -564,7 +564,7 @@ public class SpellHandler implements PacketHandler {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getCarriedItems().getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
+					if (player.getCarriedItems().remove(affectedItem.getCatalogId(), 1) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
 						player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
 					}
@@ -592,7 +592,7 @@ public class SpellHandler implements PacketHandler {
 						jewelryType = NECKLACE;
 						break;
 				}
-				player.getCarriedItems().getInventory().remove(affectedItem);
+				player.getCarriedItems().remove(affectedItem);
 				player.getCarriedItems().getInventory().add(new Item(itemID));
 				finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 			} else
@@ -631,10 +631,10 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				Item bar = new Item(smeltingDef.getBarId());
-				if (player.getCarriedItems().getInventory().remove(affectedItem) > -1) {
+				if (player.getCarriedItems().remove(affectedItem) > -1) {
 					for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 						for (int i = 0; i < reqOre.getAmount(); i++) {
-							player.getCarriedItems().getInventory().remove(new Item(reqOre.getId()));
+							player.getCarriedItems().remove(new Item(reqOre.getId()));
 						}
 					}
 					player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
@@ -663,7 +663,7 @@ public class SpellHandler implements PacketHandler {
 							jewelryType = NECKLACE;
 							break;
 					}
-					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().remove(affectedItem);
 					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
@@ -686,7 +686,7 @@ public class SpellHandler implements PacketHandler {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getCarriedItems().getInventory().remove(affectedItem.getCatalogId(), 1) > -1) {
+					if (player.getCarriedItems().remove(affectedItem.getCatalogId(), 1) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
 						player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
 					}
@@ -713,7 +713,7 @@ public class SpellHandler implements PacketHandler {
 							jewelryType = NECKLACE;
 							break;
 					}
-					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().remove(affectedItem);
 					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
@@ -735,7 +735,7 @@ public class SpellHandler implements PacketHandler {
 					if (!checkAndRemoveRunes(player, spell)) {
 						return;
 					}
-					player.getCarriedItems().getInventory().remove(affectedItem);
+					player.getCarriedItems().remove(affectedItem);
 					player.getCarriedItems().getInventory().add(new Item(itemID));
 					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 				} else
@@ -1238,14 +1238,14 @@ public class SpellHandler implements PacketHandler {
 		}
 		if (player.getLocation().inKaramja() || player.getLocation().inBrimhaven()) {
 			while (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()) > 0) {
-				player.getCarriedItems().getInventory().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
+				player.getCarriedItems().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
 			}
 		}
 		if (player.getCarriedItems().hasCatalogID(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
 			while (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				player.getCarriedItems().getInventory().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
+				player.getCarriedItems().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {

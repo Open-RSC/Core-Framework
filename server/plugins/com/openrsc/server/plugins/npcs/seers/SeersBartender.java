@@ -38,7 +38,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						if (hasItem(p, ItemId.COINS.id(), 2)) {
 							p.message("You buy a pint of beer");
 							addItem(p, ItemId.BEER.id(), 1);
-							p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
+							p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -53,7 +53,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						if (hasItem(p, ItemId.COINS.id(), 16)) {
 							p.message("You buy a nice hot meat pie");
 							addItem(p, ItemId.MEAT_PIE.id(), 1);
-							p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 16);
+							p.getCarriedItems().remove(ItemId.COINS.id(), 16);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -69,7 +69,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						if (hasItem(p, ItemId.COINS.id(), 20)) {
 							p.message("You buy a bowl of home made stew");
 							addItem(p, ItemId.STEW.id(), 1);
-							p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 20);
+							p.getCarriedItems().remove(ItemId.COINS.id(), 20);
 						} else {
 							playerTalk(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -94,7 +94,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 				if (hasItem(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of beer");
 					addItem(p, ItemId.BEER.id(), 1);
-					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 				} else {
 					playerTalk(p, n,
 						"Oh dear. I don't seem to have enough money");
@@ -113,7 +113,7 @@ public final class SeersBartender implements TalkToNpcExecutiveListener,
 						"Now which of these was the barrels contained the liverbane ale?",
 						"That'll be 18 coins please");
 					if (hasItem(p, ItemId.COINS.id(), 18)) {
-						p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 18);
+						p.getCarriedItems().remove(ItemId.COINS.id(), 18);
 						message(p,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",

@@ -303,6 +303,7 @@ public class Inventory {
 				LOGGER.error(ex.getMessage());
 			}
 		}
+		return -1;
 	}
 
 	public int remove(int id, int amount) {

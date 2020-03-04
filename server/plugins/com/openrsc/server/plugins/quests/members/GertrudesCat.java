@@ -196,7 +196,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 100) {
 								playerTalk(p, n, "thanks");
 								message(p, "gertrude gives you another kitten");
-								p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 100);
+								p.getCarriedItems().remove(ItemId.COINS.id(), 100);
 								p.getCarriedItems().getInventory().add(new Item(ItemId.KITTEN.id()));
 							} else {
 								playerTalk(p, n,
@@ -267,7 +267,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 									"well, you'll have to find a broken fence to get in",
 									"i'm sure you can manage that");
 								message(p, "you give the lad 100 coins");
-								p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 100);
+								p.getCarriedItems().remove(ItemId.COINS.id(), 100);
 
 								p.updateQuestStage(getQuestId(), 2);
 							} else {
@@ -387,7 +387,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 			message(p, "you give the cat some milk", "she really enjoys it",
 				"but she now seems to be hungry");
 			p.getCache().store("cat_milk", true);
-			p.getCarriedItems().getInventory().remove(ItemId.MILK.id(), 1);
+			p.getCarriedItems().remove(ItemId.MILK.id(), 1);
 
 		}
 		else if (myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
@@ -396,7 +396,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 					"the cat gobbles it up",
 					"she still seems scared of leaving");
 				p.getCache().store("cat_sardine", true);
-				p.getCarriedItems().getInventory().remove(ItemId.SEASONED_SARDINE.id(), 1);
+				p.getCarriedItems().remove(ItemId.SEASONED_SARDINE.id(), 1);
 
 			}
 		}
@@ -421,7 +421,7 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	public void onInvUseOnItem(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
 			message(p, "you rub the doogle leaves over the sardine");
-			p.getCarriedItems().getInventory().remove(ItemId.DOOGLE_LEAVES.id(), 1);
+			p.getCarriedItems().remove(ItemId.DOOGLE_LEAVES.id(), 1);
 			p.getCarriedItems().getInventory().replace(ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id());
 		}
 	}

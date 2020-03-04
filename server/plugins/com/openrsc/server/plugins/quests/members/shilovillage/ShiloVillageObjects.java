@@ -545,7 +545,7 @@ public class ShiloVillageObjects implements ObjectActionListener, ObjectActionEx
 			if (!hasItem(p, ItemId.BONES.id(), 3)) {
 				p.message("You do not have enough bones for all the recesses.");
 			} else {
-				p.getCarriedItems().getInventory().remove(ItemId.BONES.id(), 3);
+				p.getCarriedItems().remove(ItemId.BONES.id(), 3);
 				message(p, "You fit the bones into the reccesses of the door.",
 					"The door seems to change slightly.",
 					"Two depictions of skeletal warriors turn their heads towards you.",

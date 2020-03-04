@@ -51,7 +51,7 @@ public class SilkTrader implements TalkToNpcListener,
 				);
 				if (option3 == 0) {
 					p.message("You buy some silk for 2 coins");
-					if (p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 2) > -1) {
+					if (p.getCarriedItems().remove(ItemId.COINS.id(), 2) > -1) {
 						addItem(p, ItemId.SILK.id(), 1);
 					} else {
 						playerTalk(p, n, "Oh dear. I don't have enough money");
@@ -61,7 +61,7 @@ public class SilkTrader implements TalkToNpcListener,
 				}
 
 			} else if (option2 == 1) {
-				if (p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 3) > -1) {
+				if (p.getCarriedItems().remove(ItemId.COINS.id(), 3) > -1) {
 					addItem(p, ItemId.SILK.id(), 1);
 					p.message("You buy some silk for 3 coins");
 				} else {

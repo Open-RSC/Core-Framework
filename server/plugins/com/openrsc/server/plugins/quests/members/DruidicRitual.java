@@ -339,25 +339,25 @@ public class DruidicRitual implements QuestInterface, TalkToNpcListener,
 
 			if (item.getCatalogId() == ItemId.RAW_CHICKEN.id()) {
 				message(p, "You dip the chicken in the cauldron");
-				p.getCarriedItems().getInventory().remove(ItemId.RAW_CHICKEN.id(), 1);
+				p.getCarriedItems().remove(ItemId.RAW_CHICKEN.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id()) {
 				message(p, "You dip the bear meat in the cauldron");
-				p.getCarriedItems().getInventory().remove(ItemId.RAW_BEAR_MEAT.id(), 1);
+				p.getCarriedItems().remove(ItemId.RAW_BEAR_MEAT.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
 				message(p, "You dip the rat meat in the cauldron");
-				p.getCarriedItems().getInventory().remove(ItemId.RAW_RAT_MEAT.id(), 1);
+				p.getCarriedItems().remove(ItemId.RAW_RAT_MEAT.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_BEEF.id()) {
 				message(p, "You dip the beef in the cauldron");
-				p.getCarriedItems().getInventory().remove(ItemId.RAW_BEEF.id(), 1);
+				p.getCarriedItems().remove(ItemId.RAW_BEEF.id(), 1);
 
 				addItem(p, ItemId.ENCHANTED_BEEF.id(), 1);
 			}

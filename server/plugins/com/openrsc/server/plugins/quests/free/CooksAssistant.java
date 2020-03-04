@@ -78,9 +78,9 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener,
 							"Milk, flour, and an egg!");
 						npcTalk(p, n, "I am saved thankyou!");
 						message(p, "You give some milk, an egg and some flour to the cook");
-						p.getCarriedItems().getInventory().remove(ItemId.EGG.id(), 1);
-						p.getCarriedItems().getInventory().remove(ItemId.POT_OF_FLOUR.id(), 1);
-						p.getCarriedItems().getInventory().remove(ItemId.MILK.id(), 1);
+						p.getCarriedItems().remove(ItemId.EGG.id(), 1);
+						p.getCarriedItems().remove(ItemId.POT_OF_FLOUR.id(), 1);
+						p.getCarriedItems().remove(ItemId.MILK.id(), 1);
 						p.sendQuestComplete(Quests.COOKS_ASSISTANT);
 						p.updateQuestStage(getQuestId(), -1);
 

@@ -1444,7 +1444,7 @@ public class Functions {
 		}
 		p.getWorld().getServer().getGameEventHandler().submit(() -> {
 			for (Item ir : items) {
-				p.getCarriedItems().getInventory().remove(ir);
+				p.getCarriedItems().remove(ir);
 			}
 		}, "Remove Multi Ground Item");
 		return true;

@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.npcs.draynor;
 
-import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -118,7 +117,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					p.message("You hand Ned 15 coins");
 					npcTalk(p, n, "There you go, finest rope in Runescape");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 15);
+					p.getCarriedItems().remove(ItemId.COINS.id(), 15);
 					p.message("Ned gives you a coil of rope");
 				}
 			} else if (choice == 1) {
@@ -135,7 +134,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 					playerTalk(p, n, "I have some balls of wool. could you make me some Rope?");
 					npcTalk(p, n, "Sure I can.");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					p.getCarriedItems().getInventory().remove(ItemId.BALL_OF_WOOL.id(), 4);
+					p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 4);
 				}
 			}
 		} else if (option == 2) { // Prince Ali's Rescue
@@ -162,7 +161,7 @@ public final class Ned implements TalkToNpcExecutiveListener, TalkToNpcListener 
 						message(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
-						p.getCarriedItems().getInventory().remove(ItemId.BALL_OF_WOOL.id(), 3);
+						p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 3);
 						npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
 						p.message("Ned gives you a pretty good wig");
 						addItem(p, ItemId.WOOL_WIG.id(), 1);

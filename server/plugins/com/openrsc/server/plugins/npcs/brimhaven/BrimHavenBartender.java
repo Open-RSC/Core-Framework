@@ -37,7 +37,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "One grog coming right up", "That'll be 3 gold");
 			if (hasItem(p, ItemId.COINS.id(), 3)) {
 				p.message("You buy a pint of Grog");
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 3);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 3);
 				addItem(p, ItemId.GROG.id(), 1);
 			} else {
 				playerTalk(p, n,
@@ -47,7 +47,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "That'll be 27 gold");
 			if (hasItem(p, ItemId.COINS.id(), 27)) {
 				p.message("You buy a bottle of rum");
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 27);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 27);
 				addItem(p, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
 				playerTalk(p, n,
@@ -57,7 +57,7 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			npcTalk(p, n, "Haha time to be breaking out the old supergrog",
 				"That'll be 15 coins please");
 			if (hasItem(p, ItemId.COINS.id(), 15)) {
-				p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 15);
+				p.getCarriedItems().remove(ItemId.COINS.id(), 15);
 				message(p,
 					"The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");

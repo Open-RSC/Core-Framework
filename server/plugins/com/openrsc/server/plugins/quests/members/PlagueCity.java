@@ -438,7 +438,7 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 						message(p, "you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
 							"she then smears the paste over a strange mask");
-						p.getCarriedItems().getInventory().remove(ItemId.DWELLBERRIES.id(), 1);
+						p.getCarriedItems().remove(ItemId.DWELLBERRIES.id(), 1);
 						addItem(p, ItemId.GASMASK.id(), 1);
 
 						npcTalk(p,

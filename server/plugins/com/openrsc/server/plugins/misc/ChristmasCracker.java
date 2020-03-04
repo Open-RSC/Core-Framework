@@ -80,7 +80,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				otherPlayer.getCarriedItems().getInventory().add(prize);
 			}
 
-			player.getCarriedItems().getInventory().remove(item);
+			player.getCarriedItems().remove(item);
 
 			player.setBusy(false);
 			//otherPlayer.setBusy(false);

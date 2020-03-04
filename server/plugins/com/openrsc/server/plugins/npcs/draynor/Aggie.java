@@ -206,7 +206,7 @@ public final class Aggie implements TalkToNpcListener,
 					} else {
 						playerTalk(p, n, "Okay, make me some yellow dye please");
 						message(p, "You hand the onions and payment to Aggie");
-						p.getCarriedItems().getInventory().remove(ItemId.ONION.id(), 2);
+						p.getCarriedItems().remove(ItemId.ONION.id(), 2);
 						removeItem(p, ItemId.COINS.id(), 5);
 						message(p, "she takes a yellow bottle from nowhere and hands it to you");
 						addItem(p, ItemId.YELLOWDYE.id(), 1);
@@ -233,7 +233,7 @@ public final class Aggie implements TalkToNpcListener,
 					} else {
 						playerTalk(p, n, "Okay, make me some red dye please");
 						message(p, "You hand the berries and payment to Aggie");
-						p.getCarriedItems().getInventory().remove(ItemId.REDBERRIES.id(), 3);
+						p.getCarriedItems().remove(ItemId.REDBERRIES.id(), 3);
 						removeItem(p, ItemId.COINS.id(), 5);
 						message(p, "she takes a red bottle from nowhere and hands it to you");
 						addItem(p, ItemId.REDDYE.id(), 1);
@@ -260,7 +260,7 @@ public final class Aggie implements TalkToNpcListener,
 					} else {
 						playerTalk(p, n, "Okay, make me some blue dye please");
 						message(p, "You hand the woad leaves and payment to Aggie");
-						p.getCarriedItems().getInventory().remove(ItemId.WOAD_LEAF.id(), 2);
+						p.getCarriedItems().remove(ItemId.WOAD_LEAF.id(), 2);
 						removeItem(p, ItemId.COINS.id(), 5);
 						message(p,
 							"she takes a blue bottle from nowhere and hands it to you");

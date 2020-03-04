@@ -26,7 +26,7 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 			if (player.cantConsume())
 				return;
 
-			if (player.getCarriedItems().getInventory().remove(item) == -1)
+			if (player.getCarriedItems().remove(item) == -1)
 				return;
 
 			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting

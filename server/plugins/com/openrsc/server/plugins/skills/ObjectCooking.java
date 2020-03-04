@@ -168,7 +168,7 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 					}
 					showBubble(getOwner(), item);
 					getOwner().playSound("cooking");
-					if (getOwner().getCarriedItems().getInventory().remove(item) > -1) {
+					if (getOwner().getCarriedItems().remove(item) > -1) {
 						if (!Formulae.burnFood(getOwner(), item.getCatalogId(), getOwner().getSkills().getLevel(Skills.COOKING))
 								|| item.getCatalogId() == ItemId.RAW_LAVA_EEL.id()
 								|| (item.getCatalogId() == ItemId.UNCOOKED_PITTA_BREAD.id() && getOwner().getSkills().getLevel(Skills.COOKING) >= 58)) {

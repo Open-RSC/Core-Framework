@@ -313,7 +313,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 				removeNpc(rat);
 				message(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
-				p.getCarriedItems().getInventory().remove(ItemId.MAGNET.id(), 1);
+				p.getCarriedItems().remove(ItemId.MAGNET.id(), 1);
 				p.updateQuestStage(getQuestId(), 2);
 			}
 		}

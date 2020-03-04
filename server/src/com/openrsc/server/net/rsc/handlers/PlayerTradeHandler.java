@@ -174,8 +174,8 @@ public class PlayerTradeHandler implements PacketHandler {
 							if (affectedItem.isWielded()) {
 								player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
-							player.getCarriedItems().getInventory().remove(item);
-							player.getWorld().getServer().getDatabase().purgeItemID();
+							player.getCarriedItems().remove(item);
+
 						}
 						for (Item item : theirOffer) {
 							Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
@@ -187,7 +187,7 @@ public class PlayerTradeHandler implements PacketHandler {
 							if (affectedItem.isWielded()) {
 								affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 							}
-							affectedPlayer.getCarriedItems().getInventory().remove(item);
+							affectedPlayer.getCarriedItems().remove(item);
 						}
 
 						for (Item item : myOffer) {

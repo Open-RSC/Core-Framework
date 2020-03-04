@@ -6,7 +6,6 @@ import com.openrsc.server.model.container.ItemContainer;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -175,7 +174,7 @@ public class Duel implements ContainerListener {
 						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
 					continue;
 				} else {
-					player.getCarriedItems().getInventory().remove(item);
+					player.getCarriedItems().remove(item);
 					log.addDroppedItem(item);
 					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 				}

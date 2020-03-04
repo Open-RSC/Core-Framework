@@ -39,7 +39,7 @@ InvUseOnObjectExecutiveListener {
 			.add(new ShortEvent(player.getWorld(), player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
-						if (getOwner().getCarriedItems().getInventory().remove(s, 1) > -1) {
+						if (getOwner().getCarriedItems().remove(s, 1) > -1) {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								getOwner().message("You make a mistake and fail to fill your waterskin.");

@@ -287,7 +287,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 					playerTalk(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
 					message(p, "You hand two more beers to the guard");
-					p.getCarriedItems().getInventory().remove(ItemId.BEER.id(), 2);
+					p.getCarriedItems().remove(ItemId.BEER.id(), 2);
 					message(p, "he takes a sip of one, and then he drinks them both");
 					npcTalk(p,
 						n,

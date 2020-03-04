@@ -75,7 +75,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 						"the crate is already full");
 					return;
 				}
-				if (p.getCarriedItems().getInventory().remove(item) > -1) {
+				if (p.getCarriedItems().remove(item) > -1) {
 					p.message(
 						"you put a banana in the crate");
 
@@ -88,7 +88,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 		} else if (item.getCatalogId() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
 			&& p.getQuestStage(this) > 0) {
 			if (p.getCache().hasKey("bananas")) {
-				if (p.getCarriedItems().getInventory().remove(item) > -1) {
+				if (p.getCarriedItems().remove(item) > -1) {
 					p.message(
 						"You stash the rum in the crate");
 					if (!p.getCache().hasKey("rum_in_crate")) {
@@ -147,7 +147,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 					return;
 				}
 				playerTalk(p, n, "Yes I've got some");
-				p.getCarriedItems().getInventory().remove(ItemId.KARAMJA_RUM.id(), 1);
+				p.getCarriedItems().remove(ItemId.KARAMJA_RUM.id(), 1);
 
 				message(p, "Frank happily takes the rum");
 				npcTalk(p,

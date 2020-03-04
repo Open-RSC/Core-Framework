@@ -118,7 +118,7 @@ public class Thordur implements TalkToNpcExecutiveListener, TalkToNpcListener {
 					playerTalk(p, n,
 						"Oh dear I don't actually seem to have enough money");
 				} else {
-					p.getCarriedItems().getInventory().remove(ItemId.COINS.id(), 10);
+					p.getCarriedItems().remove(ItemId.COINS.id(), 10);
 					addItem(p, ItemId.DISK_OF_RETURNING.id(), 1);
 					p.message("Thordur hands you a special disk");
 					sleep(1200);

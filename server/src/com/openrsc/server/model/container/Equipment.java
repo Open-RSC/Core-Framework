@@ -268,7 +268,7 @@ public class Equipment {
 					return false;
 
 				//Attempt to remove the item from their inventory
-				if (player.getCarriedItems().getInventory().remove(request.item) == -1)
+				if (player.getCarriedItems().remove(request.item) == -1)
 					return false;
 
 				add(request.item);

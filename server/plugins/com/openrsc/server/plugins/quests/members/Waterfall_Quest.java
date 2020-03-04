@@ -698,7 +698,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 				p.message("the rune stone crumbles into dust");
 				p.getCache().store(
 					"waterfall_" + obj.getID() + "_" + item.getCatalogId(), true);
-				p.getCarriedItems().getInventory().remove(item.getCatalogId(), 1);
+				p.getCarriedItems().remove(item.getCatalogId(), 1);
 
 			} else {
 				p.message("you have already placed " + article(item.getDef(p.getWorld()).getName()) + item.getDef(p.getWorld()).getName()
