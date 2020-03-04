@@ -28,26 +28,18 @@ public class BankPreset {
 	 */
 	private Player player;
 
-	/**
-	 * Flag if the preset has been changed and not saved
-	 */
-	private boolean changed = false;
-
 	public BankPreset(Player player) {
 		this.player = player;
 		this.inventory = new Item[Inventory.MAX_SIZE];
 		this.equipment = new Item[Equipment.SLOT_COUNT];
 
-		Arrays.fill(inventory, new Item(ItemId.NOTHING.id(), 0));
-		Arrays.fill(equipment, new Item(ItemId.NOTHING.id(), 0));
-	}
+		for (int i = 0; i < inventory.length; ++i) {
+			inventory[i] = new Item(ItemId.NOTHING.id());
+		}
 
-	public boolean hasChanged() {
-		return this.changed;
-	}
-
-	public void setChanged(boolean value) {
-		this.changed = value;
+		for (int i = 0; i < equipment.length; ++i) {
+			equipment[i] = new Item(ItemId.NOTHING.id());
+		}
 	}
 
 	public Item[] getInventory() { return this.inventory; }

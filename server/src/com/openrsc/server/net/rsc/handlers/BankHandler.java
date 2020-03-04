@@ -116,7 +116,6 @@ public final class BankHandler implements PacketHandler {
 					else
 						player.getBank().getBankPreset(presetSlot).getEquipment()[k] = new Item(ItemId.NOTHING.id(),0);
 				}
-				player.getBank().getBankPreset(presetSlot).setChanged(true);
 				break;
 			default:
 				return;

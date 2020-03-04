@@ -7,6 +7,7 @@ import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemStatus;
 import com.openrsc.server.model.entity.player.Player;
@@ -734,7 +735,16 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerBankPresets(int playerId, PlayerBankPreset[] bankPreset) throws GameDatabaseException {
 		try {
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
-				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddBankPreset);) {
+				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankPresetRemove)) {
+					for (int i = 0; i < BankPreset.PRESET_COUNT; ++i) {
+						statement.setInt(1, playerId);
+						statement.setInt(2, i);
+						statement.addBatch();;
+					}
+					statement.executeBatch();
+				}
+
+				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankPresetAdd)) {
 					for (PlayerBankPreset playerBankPreset : bankPreset) {
 						statement.setInt(1, playerId);
 						statement.setInt(2, playerBankPreset.slot);

@@ -11,7 +11,7 @@ public class MySqlQueries {
 	public final String playerExists, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
 	public final String save_ItemCreate, save_ItemUpdate, save_ItemPurge; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
-	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_AddBankPreset;
+	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_BankPresetAdd, save_BankPresetRemove;
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
 	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, userToId, initializeOnlineUsers;
@@ -79,7 +79,8 @@ public class MySqlQueries {
 		save_ItemUpdate = "UPDATE `" + PREFIX + "itemstatuses` SET `amount`=?, `noted`=?, `durability`=? WHERE `itemID`=?";
 		save_BankAdd = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `itemID`, `slot`) VALUES(?, ?, ?)";
 		save_BankRemove = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=? AND `itemID`=?";
-		save_AddBankPreset = "INSERT INTO `" + PREFIX + "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
+		save_BankPresetRemove = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
+		save_BankPresetAdd = "INSERT INTO `" + PREFIX + "bankpresets`(`playerID`, `slot`, `inventory`, `equipment`) VALUES(?, ?, ?, ?)";
 		save_DeleteInv = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=?";
 		save_InventoryAdd = "INSERT INTO `" + PREFIX + "invitems`(`playerID`, `itemID`, `wielded`, `slot`) VALUES(?, ?, ?, ?)";
 		save_InventoryRemove = "DELETE FROM `" + PREFIX + "invitems` WHERE `playerID`=? AND `itemID`=?";

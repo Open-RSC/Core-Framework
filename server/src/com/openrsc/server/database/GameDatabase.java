@@ -634,43 +634,39 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 				final ArrayList<PlayerBankPreset> list = new ArrayList<>();
 
 				for (int k = 0; k < BankPreset.PRESET_COUNT; k++) {
-					if (player.getBank().getBankPreset(k).hasChanged()) {
-						ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
-						DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
-						for (final Item inventoryItem : player.getBank().getBankPreset(k).getInventory()) {
-							if (inventoryItem.getCatalogId() == -1)
-								inventoryWriter.writeByte(-1);
-							else {
-								inventoryWriter.writeShort(inventoryItem.getCatalogId());
-								if (inventoryItem.getDef(player.getWorld()) != null && inventoryItem.getDef(player.getWorld()).isStackable())
-									inventoryWriter.writeInt(inventoryItem.getAmount());
-							}
-
+					ByteArrayOutputStream inventoryBuffer = new ByteArrayOutputStream();
+					DataOutputStream inventoryWriter = new DataOutputStream(inventoryBuffer);
+					for (final Item inventoryItem : player.getBank().getBankPreset(k).getInventory()) {
+						if (inventoryItem.getCatalogId() == -1)
+							inventoryWriter.writeByte(-1);
+						else {
+							inventoryWriter.writeShort(inventoryItem.getCatalogId());
+							if (inventoryItem.getDef(player.getWorld()) != null && inventoryItem.getDef(player.getWorld()).isStackable())
+								inventoryWriter.writeInt(inventoryItem.getAmount());
 						}
-						inventoryWriter.close();
 
-						final ByteArrayOutputStream equipmentBuffer = new ByteArrayOutputStream();
-						final DataOutputStream equipmentWriter = new DataOutputStream(equipmentBuffer);
-						for (Item equipmentItem : player.getBank().getBankPreset(k).getEquipment()) {
-							if (equipmentItem.getCatalogId() == -1)
-								equipmentWriter.writeByte(-1);
-							else {
-								equipmentWriter.writeShort(equipmentItem.getCatalogId());
-								if (equipmentItem.getDef(player.getWorld()) != null && equipmentItem.getDef(player.getWorld()).isStackable())
-									equipmentWriter.writeInt(equipmentItem.getAmount());
-							}
-
-						}
-						equipmentWriter.close();
-
-						final PlayerBankPreset preset = new PlayerBankPreset();
-						preset.inventory = inventoryBuffer.toByteArray();
-						preset.equipment = equipmentBuffer.toByteArray();
-						preset.slot = k;
-						list.add(preset);
-
-						player.getBank().getBankPreset(k).setChanged(false);
 					}
+					inventoryWriter.close();
+
+					final ByteArrayOutputStream equipmentBuffer = new ByteArrayOutputStream();
+					final DataOutputStream equipmentWriter = new DataOutputStream(equipmentBuffer);
+					for (Item equipmentItem : player.getBank().getBankPreset(k).getEquipment()) {
+						if (equipmentItem.getCatalogId() == -1)
+							equipmentWriter.writeByte(-1);
+						else {
+							equipmentWriter.writeShort(equipmentItem.getCatalogId());
+							if (equipmentItem.getDef(player.getWorld()) != null && equipmentItem.getDef(player.getWorld()).isStackable())
+								equipmentWriter.writeInt(equipmentItem.getAmount());
+						}
+
+					}
+					equipmentWriter.close();
+
+					final PlayerBankPreset preset = new PlayerBankPreset();
+					preset.inventory = inventoryBuffer.toByteArray();
+					preset.equipment = equipmentBuffer.toByteArray();
+					preset.slot = k;
+					list.add(preset);
 				}
 
 				final PlayerBankPreset[] presets = list.toArray(new PlayerBankPreset[list.size()]);
