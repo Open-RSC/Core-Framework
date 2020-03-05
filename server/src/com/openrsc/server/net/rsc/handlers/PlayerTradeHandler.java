@@ -25,11 +25,11 @@ public class PlayerTradeHandler implements PacketHandler {
 
 		/**
 		 * Opcodes covered by this handler
-		 * PLAYER_TRADE
-		 * TRADE_ACCEPTED
-		 * TRADE_DECLINED
-		 * TRADE_OFFER
-		 * TRADE_CONFIRM_ACCEPTED
+		 * PLAYER_INIT_TRADE_REQUEST
+		 * PLAYER_ACCEPTED_INIT_TRADE_REQUEST
+		 * PLAYER_DECLINED_TRADE
+		 * PLAYER_ADDED_ITEMS_TO_TRADE_OFFER
+		 * PLAYER_ACCEPTED_TRADE
 		 */
 
 		Player affectedPlayer = null;
@@ -247,9 +247,15 @@ public class PlayerTradeHandler implements PacketHandler {
 								if (affectedItem.isWielded()) {
 									player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 								}
-								player.getCarriedItems().remove(item);
 
+								Item removed = affectedItem.split(player.getWorld().getServer().getDatabase(), item.getAmount());
+								if (removed.getAmount() == affectedItem.getAmount())
+									player.getCarriedItems().remove(removed);
+
+								item.getItemStatus().setAmount(removed.getAmount());
+								item.setItemId(removed.getItemId());
 							}
+
 							for (Item item : theirOffer) {
 								Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
 								if (affectedItem == null) {
@@ -260,7 +266,14 @@ public class PlayerTradeHandler implements PacketHandler {
 								if (affectedItem.isWielded()) {
 									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 								}
-								affectedPlayer.getCarriedItems().remove(item);
+
+								Item removed = affectedItem.split(affectedPlayer.getWorld().getServer().getDatabase(), item.getAmount());
+
+								if (removed.getAmount() == affectedItem.getAmount())
+									affectedPlayer.getCarriedItems().remove(removed);
+
+								item.getItemStatus().setAmount(removed.getAmount());
+								item.setItemId(removed.getItemId());
 							}
 
 							for (Item item : myOffer) {
