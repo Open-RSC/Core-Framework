@@ -93,14 +93,17 @@ public final class LostOnDeathInterface {
 				movedAtFlag = i;
 			}
 
-			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-				curX, curY, 48, 32, def.getPictureMask(), 0,
-				def.getBlueMask(), false, 0, 1);
-			if (def.getNotedFormOf() >= 0) {
-				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
-					curX, curY, 48, 32, originalDef.getPictureMask(), 0,
-					originalDef.getBlueMask(),false, 0, 1);
+			if (def.getNotedForm() != -1) {
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
+					curX, curY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+					EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+					curX, curY, 48, 32, def.getPictureMask(), 0,
+					def.getBlueMask(),false, 0, 1);
+			} else {
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+					curX, curY, 48, 32, def.getPictureMask(), 0,
+					def.getBlueMask(), false, 0, 1);
 			}
 
 			if (def.isStackable()) {
@@ -123,7 +126,10 @@ public final class LostOnDeathInterface {
 	}
 
 	private void populateOnDeathItems() {
-		int[] invyItems = mc.getInventoryItems();
+		int[] invyItems = new int[mc.getInventory().length];
+		for (int i = 0; i < invyItems.length; ++ i) {
+			invyItems[i] = mc.getInventoryItemID(i);
+		}
 		Object[] equipmentItems = mc.getEquipmentItems();
 		if (Config.S_WANT_EQUIPMENT_TAB && equipmentItems != null) {
 			int[] temp = invyItems;
@@ -136,8 +142,8 @@ public final class LostOnDeathInterface {
 				ItemDef def = EntityHandler.getItemDef(invyItems[i]);
 				int stackCount = 1;
 				if (def.isStackable()) {
-					if (Config.S_WANT_EQUIPMENT_TAB && i >= mc.getInventoryItems().length)
-						stackCount = ((int[])equipmentItems[1])[i - mc.getInventoryItems().length];
+					if (Config.S_WANT_EQUIPMENT_TAB && i >= mc.getInventory().length)
+						stackCount = ((int[])equipmentItems[1])[i - mc.getInventory().length];
 					else
 						stackCount = mc.getInventoryItemsCount()[i];
 					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), stackCount, false));

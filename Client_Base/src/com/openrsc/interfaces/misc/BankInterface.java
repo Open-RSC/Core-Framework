@@ -2,6 +2,7 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.instances.Item;
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
@@ -9,6 +10,7 @@ import orsc.graphics.gui.Panel;
 import orsc.mudclient;
 import orsc.util.BankUtil;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 
 public class BankInterface {
@@ -318,19 +320,25 @@ public class BankInterface {
 				// Draw Item Sprite From Bank
 				if (inventorySlot < currentBankIDs.size() && currentBankIDs.get(inventorySlot) != -1
 					&& (currentBankCounts.get(inventorySlot) > 0 || mc.getInventoryCount(currentBankIDs.get(inventorySlot)) > 0)) {
-
-					ItemDef def = EntityHandler.getItemDef(currentBankIDs.get(inventorySlot));
-					mc.getSurface().drawSpriteClipping(
-						mc.spriteSelect(def),
-						slotX, slotY, 48, 32,
-						def.getPictureMask(),
-						0, def.getBlueMask(),
-						false, 0, 1);
-					if (def.getNotedFormOf() >= 0) { // Noted items
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
-							slotX + 7, slotY + 5, 29, 19, originalDef.getPictureMask(), 0, originalDef.getBlueMask(),false,
+					Item item = mc.getInventoryItem(currentBankIDs.get(inventorySlot));
+					ItemDef def = item.getItemDef();
+					if (item.getNoted()) { // Noted items
+						mc.getSurface().drawSpriteClipping(
+							mc.spriteSelect(EntityHandler.noteDef),
+							slotX, slotY, 48, 32,
+							EntityHandler.noteDef.getPictureMask(),
+							0, EntityHandler.noteDef.getBlueMask(),
+							false, 0, 1);
+						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+							slotX + 7, slotY + 5, 29, 19, def.getPictureMask(), 0, def.getBlueMask(),false,
 							0, 1);
+					} else {
+						mc.getSurface().drawSpriteClipping(
+							mc.spriteSelect(def),
+							slotX, slotY, 48, 32,
+							def.getPictureMask(),
+							0, def.getBlueMask(),
+							false, 0, 1);
 					}
 
 					drawString("" + currentBankCounts.get(inventorySlot), slotX + 1, slotY + 10, 1, 0x00ff00); // Amount in bank (green)

@@ -178,27 +178,12 @@ public class ItemDef extends EntityDef {
 	}
 
 	@Deprecated
-	public int getNoteItem() {
-		return -1;
-	}
-
-	@Deprecated
 	public int getNotedFormOf() {
 		return this.isNotedFormOf;
 	}
 
 	@Deprecated
-	private void setNotedFormOf(int notedFormOf) {
-		this.isNotedFormOf = notedFormOf;
-	}
-
-	@Deprecated
 	public int getNotedForm() {
 		return this.notedFormID;
-	}
-
-	@Deprecated
-	public void setNotedForm(int id) {
-		this.notedFormID = id;
 	}
 }

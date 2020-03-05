@@ -27,7 +27,7 @@ public class EntityHandler {
 	private static ArrayList<ElevationDef> elevation = new ArrayList<>();
 	private static ArrayList<GameObjectDef> objects = new ArrayList<>();
 	private static ArrayList<String> models = new ArrayList<>();
-
+	public static ItemDef noteDef;
 
 	private static int invPictureCount = 0;
 
@@ -2224,6 +2224,9 @@ public class EntityHandler {
 	}
 
 	private static void loadItemDefinitions() {
+		//Setup the note definition
+		noteDef = new ItemDef("", "", "", 0, 438, "items:438", true, false, 0, 0, false, false, 0);
+
 		items.add(new ItemDef("Iron Mace", "A spiky mace", "", 63, 0, "items:0", false, true, 16, 15654365, false, false, 0));
 		items.add(new ItemDef("Iron Short Sword", "A razor sharp sword", "", 91, 1, "items:1", false, true, 16, 15654365, false, false, 1));
 		items.add(new ItemDef("Iron Kite Shield", "A large metal shield", "", 238, 2, "items:2", false, true, 8, 15654365, false, false, 2));

@@ -4,7 +4,7 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 
 public class Item {
-	public final static int ID_NOTHING = 0;
+	public final static int ID_NOTHING = -1;
 	//<editor-fold desc="Class Members">
 	/**
 	 * Reference to the ItemDef

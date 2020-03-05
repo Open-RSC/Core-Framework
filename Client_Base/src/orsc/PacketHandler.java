@@ -2,6 +2,7 @@ package orsc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.instances.Item;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.interfaces.misc.CustomBankInterface;
 import org.json.JSONObject;
@@ -1353,9 +1354,12 @@ public class PacketHandler {
 	private void updateInventoryItems() {
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
 		{
-			mc.setInventoryItemID(i, 0);
-			mc.setInventoryItemEquipped(i, 0);
-			mc.setInventoryItemSize(i, 0);
+			Item item = mc.getInventoryItem(i);
+			item.setItemDef(null);
+			item.setAmount(0);
+			item.setEquipped(false);
+			item.setCharges(0);
+			item.setDurability(0);
 		}
 		mc.setInventoryItemCount(packetsIncoming.getUnsignedByte());
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
@@ -1364,13 +1368,13 @@ public class PacketHandler {
 			System.out.println(jsonString);
 			JSONObject itemInfo = new JSONObject(jsonString);
 			int itemID = (int)itemInfo.get("id");
+			mc.setInventoryItemID(i, itemID);
 			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
 			//int itemID = packetsIncoming.getShort();
 			if (isNote.orElse(false)) {
-				mc.setInventoryItemID(i, itemID);
-				//mc.setInventoryItemID(i, (itemID + 1) * -1);
+				mc.getInventoryItem(i).setNoted(true);
 			} else {
-				mc.setInventoryItemID(i, itemID);
+				mc.getInventoryItem(i).setNoted(false);
 			}
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
 			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, isNote).isStackable()) {
