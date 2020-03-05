@@ -1099,7 +1099,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Merlin", "An old wizard", "", 20, 15, 3, 10, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thrantax", "A freshly summoned demon", "", 90, 90, 90, 90, false, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 429};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 429};
+		} else {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Hickton", "The owner of the archery store", "", 0, 0, 3, 0, false, sprites, 8409136, 14483456, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Black Demon", "A big scary jet black demon", "", 155, 157, 157, 158, true, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));
