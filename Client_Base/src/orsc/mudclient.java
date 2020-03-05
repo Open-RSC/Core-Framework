@@ -8,6 +8,7 @@ import com.openrsc.client.entityhandling.defs.NPCDef;
 import com.openrsc.client.entityhandling.defs.SpellDef;
 import com.openrsc.client.entityhandling.defs.SpriteDef;
 import com.openrsc.client.entityhandling.defs.extras.AnimationDef;
+import com.openrsc.client.entityhandling.instances.Item;
 import com.openrsc.client.model.Sprite;
 import com.openrsc.data.DataFileDecrypter;
 import com.openrsc.data.DataOperations;
@@ -101,7 +102,8 @@ public final class mudclient implements Runnable {
 	private final int[] groundItemID = new int[5000];
 	private final int[] groundItemX = new int[5000];
 	private final int[] groundItemZ = new int[5000];
-	private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
+	private final Item[] inventory = new Item[S_PLAYER_INVENTORY_SLOTS];
+	//private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
 	private final int[] inventoryItemID = new int[S_PLAYER_INVENTORY_SLOTS];
 	private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
 	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
@@ -634,6 +636,11 @@ public final class mudclient implements Runnable {
 	public mudclient(ClientPort handler) {
 		clientPort = handler;
 		F_CACHE_DIR = clientPort.getCacheLocation();
+
+		for (int i = 0; i < S_PLAYER_INVENTORY_SLOTS; ++i) {
+			inventory[i] = new Item();
+		}
+
 		initConfig();
 	}
 
@@ -2772,13 +2779,13 @@ public final class mudclient implements Runnable {
 					}
 				} else {
 					for (int invIdx = 0; this.inventoryItemCount > invIdx; ++invIdx) {
-						if (itemID == this.inventoryItemID[invIdx]) {
+						if (itemID == getInventoryItemID(invIdx)) {
 							if (firstItemIndex < 0) {
 								firstItemIndex = invIdx;
 							}
 
 							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = this.inventoryItemSize[invIdx];
+								itemCount = getInventoryItemSize(invIdx);
 								break;
 							}
 
@@ -2930,7 +2937,7 @@ public final class mudclient implements Runnable {
 									}
 								} else {
 									if (this.inventoryItemCount > invIndex) {
-										int itemID = this.inventoryItemID[invIndex];
+										int itemID = getInventoryItemID(invIndex);
 										this.menuDuel_Visible = true;
 										this.menuDuel.recalculateSize(0);
 										this.menuDuel.addCharacterItem_WithID(itemID,
@@ -3107,7 +3114,7 @@ public final class mudclient implements Runnable {
 							item.getBlueMask(), false,
 							0, 1);
 						if (item.isStackable()) {
-							this.getSurface().drawString("" + this.inventoryItemSize[count], xI + 1,
+							this.getSurface().drawString("" + getInventoryItemSize(count), xI + 1,
 								10 + yI, 0xFFFF00, 1);
 						}
 						count++;
@@ -3117,20 +3124,20 @@ public final class mudclient implements Runnable {
 						int xI = 217 + xr + (itm % 5) * 49;
 						int yI = yr + 31 + (itm / 5) * 34;
 						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[itm])), xI,
-							yI, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[itm]).getPictureMask(), 0,
-							EntityHandler.getItemDef(this.inventoryItemID[itm]).getBlueMask(), false,
+							spriteSelect(EntityHandler.getItemDef(getInventoryItemID(itm))), xI,
+							yI, 48, 32, EntityHandler.getItemDef(getInventoryItemID(itm)).getPictureMask(), 0,
+							EntityHandler.getItemDef(getInventoryItemID(itm)).getBlueMask(), false,
 							0, 1);
 
-						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[itm]);
+						ItemDef def = EntityHandler.getItemDef(getInventoryItemID(itm));
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
 								33, 23, originalDef.getPictureMask(), 0,
 								originalDef.getBlueMask(), false, 0, 1);
 						}
-						if (EntityHandler.getItemDef(this.inventoryItemID[itm]).isStackable()) {
-							this.getSurface().drawString("" + this.inventoryItemSize[itm], xI + 1,
+						if (EntityHandler.getItemDef(getInventoryItemID(itm)).isStackable()) {
+							this.getSurface().drawString("" + getInventoryItemSize(itm), xI + 1,
 								10 + yI, 0xFFFF00, 1);
 						}
 					}
@@ -3851,7 +3858,7 @@ public final class mudclient implements Runnable {
 
 								int slot = (mouseLY - 31) / 34 * 5 + (mouseLX - 217) / 49;
 								if (slot >= 0 && this.inventoryItemCount > slot) {
-									int id = this.inventoryItemID[slot];
+									int id = getInventoryItemID(slot);
 									this.menuTrade_Visible = true;
 									this.menuTrade.recalculateSize(0);
 									this.menuTrade.addCharacterItem_WithID(id,
@@ -3961,13 +3968,13 @@ public final class mudclient implements Runnable {
 				int itemCount = 0;
 				if (act == MenuItemAction.TRADE_OFFER) {
 					for (int invIdx = 0; invIdx < this.inventoryItemCount; ++invIdx) {
-						if (this.inventoryItemID[invIdx] == itemID) {
+						if (getInventoryItemID(invIdx) == itemID) {
 							if (firstSlot < 0) {
 								firstSlot = invIdx;
 							}
 
 							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = this.inventoryItemSize[invIdx];
+								itemCount = getInventoryItemSize(invIdx);
 								break;
 							}
 
@@ -4079,12 +4086,12 @@ public final class mudclient implements Runnable {
 					int sX = xr + 217 + slot % 5 * 49;
 					int sY = 31 + yr + slot / 5 * 34;
 					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[slot])), sX,
-						sY, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[slot]).getPictureMask(), 0,
-						EntityHandler.getItemDef(this.inventoryItemID[slot]).getBlueMask(), false,
+						spriteSelect(EntityHandler.getItemDef(getInventoryItemID(slot))), sX,
+						sY, 48, 32, EntityHandler.getItemDef(getInventoryItemID(slot)).getPictureMask(), 0,
+						EntityHandler.getItemDef(getInventoryItemID(slot)).getBlueMask(), false,
 						0, 1);
 
-					ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[slot]);
+					ItemDef def = EntityHandler.getItemDef(getInventoryItemID(slot));
 					if (def.getNotedFormOf() >= 0) {
 						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 						getSurface().drawSpriteClipping(spriteSelect(originalDef), sX + 7, sY + 4,
@@ -4092,8 +4099,8 @@ public final class mudclient implements Runnable {
 							originalDef.getBlueMask(), false, 0, 1);
 					}
 
-					if (EntityHandler.getItemDef(this.inventoryItemID[slot]).isStackable()) {
-						this.getSurface().drawString("" + this.inventoryItemSize[slot], 1 + sX,
+					if (EntityHandler.getItemDef(getInventoryItemID(slot)).isStackable()) {
+						this.getSurface().drawString("" + getInventoryItemSize(slot), 1 + sX,
 							10 + sY, 0xFFFF00, 1);
 					}
 				}
@@ -7324,7 +7331,7 @@ public final class mudclient implements Runnable {
 				for (var4 = 0; this.m_cl > var4; ++var4) {
 					var5 = var3 + var4 % 5 * 49;
 					id = var4 / 5 * 34 + yOffset;
-					if (!S_WANT_EQUIPMENT_TAB && this.inventoryItemCount > var4 && this.inventoryItemEquipped[var4] == 1) {
+					if (!S_WANT_EQUIPMENT_TAB && this.inventoryItemCount > var4 && getInventoryItemEquippedID(var4) == 1) {
 						this.getSurface().drawBoxAlpha(var5, id, 49, 34, 0xFF0000, 128);
 					} else {
 						this.getSurface().drawBoxAlpha(var5, id, 49, 34, GenUtil.buildColor(181, 181, 181), 128);
@@ -7332,19 +7339,19 @@ public final class mudclient implements Runnable {
 
 					if (var4 < this.inventoryItemCount) {
 						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.getItemDef(this.inventoryItemID[var4])),
-							var5, id, 48, 32, EntityHandler.getItemDef(this.inventoryItemID[var4]).getPictureMask(), 0,
-							EntityHandler.getItemDef(this.inventoryItemID[var4]).getBlueMask(), false, 0, var1 ^ -15251);
+							spriteSelect(EntityHandler.getItemDef(getInventoryItemID(var4))),
+							var5, id, 48, 32, EntityHandler.getItemDef(getInventoryItemID(var4)).getPictureMask(), 0,
+							EntityHandler.getItemDef(getInventoryItemID(var4)).getBlueMask(), false, 0, var1 ^ -15251);
 
-						ItemDef def = EntityHandler.getItemDef(this.inventoryItemID[var4]);
+						ItemDef def = EntityHandler.getItemDef(getInventoryItemID(var4));
 						if (def.getNotedFormOf() >= 0) {
 							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
 							getSurface().drawSpriteClipping(spriteSelect(originalDef), var5 + 7,
 								id + 4, 33, 23, originalDef.getPictureMask(), 0,
 								originalDef.getBlueMask(), false, 0, 1);
 						}
-						if (EntityHandler.getItemDef(this.inventoryItemID[var4]).isStackable()) {
-							this.getSurface().drawString("" + this.inventoryItemSize[var4], 1 + var5,
+						if (EntityHandler.getItemDef(getInventoryItemID(var4)).isStackable()) {
+							this.getSurface().drawString("" + getInventoryItemSize(var4), 1 + var5,
 								id + 10, 0xFFFF00, 1);
 						}
 					}
@@ -7363,7 +7370,7 @@ public final class mudclient implements Runnable {
 					if (var3 >= 0 && var4 >= 0 && var3 < 248 && this.m_cl / 5 * 34 > var4) {
 						var5 = var4 / 34 * 5 + var3 / 49;
 						if (this.inventoryItemCount > var5) {
-							id = this.inventoryItemID[var5];
+							id = getInventoryItemID(var5);
 							if (this.selectedSpell >= 0) {
 								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
 									this.menuCommon.addCharacterItem_WithID(var5,
@@ -7373,7 +7380,7 @@ public final class mudclient implements Runnable {
 										this.selectedSpell);
 								}
 							} else if (this.selectedItemInventoryIndex < 0) {
-								if (this.inventoryItemEquipped[var5] == 1 && !S_WANT_EQUIPMENT_TAB) {
+								if (getInventoryItemEquippedID(var5) == 1 && !S_WANT_EQUIPMENT_TAB) {
 									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_UNEQUIP_FROM_INVENTORY, "Remove",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
@@ -10092,8 +10099,8 @@ public final class mudclient implements Runnable {
 				if (andStakeInvIndex >= itemIdArray.length)
 					return;
 			} else {
-				itemIdArray = this.inventoryItemID;
-				itemAmountArray = this.inventoryItemSize;
+				itemIdArray = getInventoryItems();
+				itemAmountArray = getInventoryItemsCount();
 
 			}
 			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
@@ -10293,9 +10300,9 @@ public final class mudclient implements Runnable {
 			int count = 0;
 
 			for (int index = 0; this.inventoryItemCount > index; ++index) {
-				if (this.inventoryItemID[index] == id) {
-					if (EntityHandler.getItemDef(inventoryItemID[index]).isStackable()) {
-						count += this.inventoryItemSize[index];
+				if (getInventoryItemID(index) == id) {
+					if (EntityHandler.getItemDef(getInventoryItemID(index)).isStackable()) {
+						count += getInventoryItemSize(index);
 					} else {
 						++count;
 					}
@@ -11835,7 +11842,7 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case ITEM_COMMAND_ALL: {
-					int commandQuantity = getInventoryCount(inventoryItemID[indexOrX]);
+					int commandQuantity = getInventoryCount(getInventoryItemID(indexOrX));
 					this.packetHandler.getClientStream().newPacket(90);
 					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
 					this.packetHandler.getClientStream().bufferBits.putInt(commandQuantity);
@@ -11859,7 +11866,7 @@ public final class mudclient implements Runnable {
 						if (!C_CUSTOM_UI)
 							this.showUiTab = 0;
 					}
-					this.m_ig = EntityHandler.getItemDef(this.inventoryItemID[this.selectedItemInventoryIndex]).getName();
+					this.m_ig = EntityHandler.getItemDef(getInventoryItemID(this.selectedItemInventoryIndex)).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
@@ -11873,7 +11880,7 @@ public final class mudclient implements Runnable {
 				case ITEM_DROP: {
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().bufferBits.putShort(indexOrX);
-					int amount = this.inventoryItemSize[indexOrX];
+					int amount = getInventoryItemSize(indexOrX);
 					this.packetHandler.getClientStream().bufferBits.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
 					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
@@ -11882,7 +11889,7 @@ public final class mudclient implements Runnable {
 					}
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, null,
-						"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
+						"Dropping " + EntityHandler.getItemDef(getInventoryItemID(indexOrX)).getName(),
 						MessageType.INVENTORY, 0, null);
 					break;
 				}
@@ -11893,7 +11900,7 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_DROP_ALL: {
 					dropInventorySlot = indexOrX;
-					int dropQuantity = getInventoryCount(inventoryItemID[dropInventorySlot]);
+					int dropQuantity = getInventoryCount(getInventoryItemID(dropInventorySlot));
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().bufferBits.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().bufferBits.putInt(dropQuantity);
@@ -11905,7 +11912,7 @@ public final class mudclient implements Runnable {
 					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
 					if (dropQuantity == 1)
 						this.showMessage(false, null,
-							"Dropping " + EntityHandler.getItemDef(this.inventoryItemID[indexOrX]).getName(),
+							"Dropping " + EntityHandler.getItemDef(getInventoryItemID(indexOrX)).getName(),
 							MessageType.INVENTORY, 0, null);
 					break;
 				}
@@ -12878,7 +12885,7 @@ public final class mudclient implements Runnable {
 				}
 			} else {
 				for (int i = 0; this.inventoryItemCount > i; ++i) {
-					if (id == this.inventoryItemID[i] && this.inventoryItemEquipped[i] == 1) {
+					if (id == getInventoryItemID(i) && getInventoryItemEquippedID(i) == 1) {
 						return true;
 					}
 				}
@@ -14557,23 +14564,26 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setInventoryItemID(int i, int n) {
-		this.inventoryItemID[i] = n;
+		this.inventory[i].setItemDef(n);
 	}
 
 	public int getInventoryItemID(int i) {
-		return this.inventoryItemID[i];
+		if (this.inventory[i].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.inventory[i].getItemDef().id;
 	}
 
 	public void setInventoryItemEquipped(int i, int n) {
-		this.inventoryItemEquipped[i] = n;
+		inventory[i].setEquipped(n == 1);
 	}
 
 	public void setInventoryItemSize(int i, int n) {
-		this.inventoryItemSize[i] = n;
+		inventory[i].setAmount(n);
 	}
 
 	public int getInventoryItemSize(int i) {
-		return this.inventoryItemSize[i];
+		return inventory[i].getAmount();
 	}
 
 	public int getNpcCount() {
@@ -15616,22 +15626,22 @@ public final class mudclient implements Runnable {
 
 			boolean offerSuccess = false;
 			int offered = 0;
-			int id = this.inventoryItemID[slot];
+			int id = getInventoryItemID(slot);
 
 			for (int tSlot = 0; this.tradeItemCount > tSlot; ++tSlot) {
 				if (id == this.tradeItemID[tSlot]) {
 					if (EntityHandler.getItemDef(id).isStackable()) {
 						if (count >= 0) {
 							this.tradeItemSize[tSlot] += count;
-							if (this.tradeItemSize[tSlot] > this.inventoryItemSize[slot]) {
-								this.tradeItemSize[tSlot] = this.inventoryItemSize[slot];
+							if (this.tradeItemSize[tSlot] > getInventoryItemSize(slot)) {
+								this.tradeItemSize[tSlot] = getInventoryItemSize(slot);
 							}
 
 							offerSuccess = true;
 						} else {
 							for (int j = 0; j < this.mouseButtonItemCountIncrement; ++j) {
 								offerSuccess = true;
-								if (this.inventoryItemSize[slot] > this.tradeItemSize[tSlot]) {
+								if (this.getInventoryItemSize(slot) > this.tradeItemSize[tSlot]) {
 									++this.tradeItemSize[tSlot];
 								}
 							}
@@ -15669,8 +15679,8 @@ public final class mudclient implements Runnable {
 						++offered;
 						++this.tradeItemCount;
 						if (l == 0 && EntityHandler.getItemDef(id).isStackable()) {
-							this.tradeItemSize[this.tradeItemCount - 1] = count <= this.inventoryItemSize[slot] ? count
-								: this.inventoryItemSize[slot];
+							this.tradeItemSize[this.tradeItemCount - 1] = count <= getInventoryItemSize(slot) ? count
+								: getInventoryItemSize(slot);
 							break;
 						}
 					}
@@ -16100,12 +16110,8 @@ public final class mudclient implements Runnable {
 		this.inventoryItemCount = i;
 	}
 
-	public int[] getInventoryItemEquipped() {
-		return inventoryItemEquipped;
-	}
-
 	public int getInventoryItemEquippedID(int i) {
-		return inventoryItemEquipped[i];
+		return inventory[i].getEquipped() ? 1 : 0;
 	}
 
 	public int[] getInventoryItems() {

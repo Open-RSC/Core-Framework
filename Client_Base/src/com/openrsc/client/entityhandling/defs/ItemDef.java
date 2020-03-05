@@ -12,7 +12,6 @@ public class ItemDef extends EntityDef {
 	private int blueMask;
 	public boolean quest;
 	public boolean membersItem;
-	public boolean notedItem;
 	public boolean hasNoteType;
 
 	@Deprecated
@@ -111,7 +110,6 @@ public class ItemDef extends EntityDef {
 		if (this.command.length == 1 && this.command[0] == "")
 			this.command = null;
 
-		this.notedItem = false;
 		this.hasNoteType = calcHasNoteType();
 	}
 
