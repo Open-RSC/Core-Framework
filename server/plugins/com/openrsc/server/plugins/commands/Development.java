@@ -410,9 +410,5 @@ public final class Development implements CommandListener, CommandExecutiveListe
 		else if (cmd.equalsIgnoreCase("serverstats")) {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
 		}
-		else if (cmd.equalsIgnoreCase("poisonme")) {
-			player.setPoisonDamage(38);
-			player.startPoisonEvent();
-		}
 	}
 }
