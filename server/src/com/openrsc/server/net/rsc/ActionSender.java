@@ -7,7 +7,6 @@ import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.content.party.PartyPlayer;
-import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.Equipment;
@@ -367,26 +366,16 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 20, "Send Friends List") {
-			int currentFriend = 0;
-
-			@Override
-			public void run() {
-				if (currentFriend == player.getSocial().getFriendListEntry().size() + 1) {
-					stop();
-					return;
+		for (int currentFriend = 0; currentFriend < player.getSocial().getFriendListEntry().size() + 1; ++currentFriend) {
+			int iteratorIndex = 0;
+			for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
+				if (iteratorIndex == currentFriend) {
+					sendFriendUpdate(player, entry.getKey());
+					break;
 				}
-				int iteratorindex = 0;
-				for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
-					if (iteratorindex == currentFriend) {
-						sendFriendUpdate(player, entry.getKey());
-						break;
-					}
-					iteratorindex++;
-				}
-				currentFriend++;
+				iteratorIndex++;
 			}
-		});
+		}
 	}
 
 	/**
