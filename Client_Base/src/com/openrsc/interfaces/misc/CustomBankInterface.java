@@ -2,6 +2,7 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.instances.Item;
 import com.openrsc.client.model.Sprite;
 import orsc.Config;
 import orsc.enumerations.InputXAction;
@@ -1166,10 +1167,10 @@ public final class CustomBankInterface extends BankInterface {
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
 		{
 			if (inventoryItems[i] != null) {
-				presets[id].inventory[i].setID(inventoryItems[i].getID());
+				presets[id].inventory[i].setItemDef(inventoryItems[i].getItemDef());
 				presets[id].inventory[i].setAmount(inventoryItems[i].getAmount());
 			} else {
-				presets[id].inventory[i].setID(-1);
+				presets[id].inventory[i].setItemDef(null);
 				presets[id].inventory[i].setAmount(0);
 			}
 		}
@@ -1177,10 +1178,10 @@ public final class CustomBankInterface extends BankInterface {
 		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++)
 		{
 			if (equipmentItems[i] != null) {
-				presets[id].equipment[i].setID(equipmentItems[i].getID());
+				presets[id].equipment[i].setItemDef(equipmentItems[i].getItemDef());
 				presets[id].equipment[i].setAmount(equipmentItems[i].getAmount());
 			} else {
-				presets[id].equipment[i].setID(-1);
+				presets[id].equipment[i].setItemDef(null);
 				presets[id].equipment[i].setAmount(0);
 			}
 		}
@@ -1191,13 +1192,15 @@ public final class CustomBankInterface extends BankInterface {
 		Item[] equipmentItems = new Item[S_PLAYER_SLOT_COUNT];
 		for (int i = 0; i < S_PLAYER_INVENTORY_SLOTS; i++) {
 			if (i < mc.getInventoryItemCount())
-				inventoryItems[i] = new Item(mc.getInventoryItemID(i), mc.getInventoryItemSize(i));
+				inventoryItems[i] = mc.getInventoryItem(i);
 			else
-				inventoryItems[i] = new Item(-1, 0);
+				inventoryItems[i] = new Item();
 		}
 		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
 			if (mc.equippedItems[i] != null) {
-				equipmentItems[i] = new Item(mc.equippedItems[i].id, mc.equippedItemAmount[i]);
+				equipmentItems[i] = new Item();
+				equipmentItems[i].setItemDef(mc.equippedItems[i].id);
+				equipmentItems[i].setAmount(mc.equippedItemAmount[i]);
 			}
 		}
 		updatePreset(slot, inventoryItems, equipmentItems);
@@ -1263,20 +1266,25 @@ public final class CustomBankInterface extends BankInterface {
 		int row = 0, col = 0;
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++) {
 			mc.getSurface().drawBoxAlpha(inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1, 48, 33, GenUtil.buildColor(181, 181, 181), 128);
-			ItemDef def = presets[selectedPresetSlot].inventory[i].getDef();
+			Item item = presets[selectedPresetSlot].inventory[i];
+			ItemDef def = item.getItemDef();
 			if (def != null) {
-				mc.getSurface().drawSpriteClipping(
-					mc.spriteSelect(def),
-					inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
-					48, 32, def.getPictureMask(), 0,
-					def.getBlueMask(), false, 0, 0);
-
-				if (def.getNotedFormOf() >= 0) {
-					ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-					mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
+				if (item.getNoted()) {
+					mc.getSurface().drawSpriteClipping(
+						mc.spriteSelect(EntityHandler.noteDef),
+						inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+						48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+						EntityHandler.noteDef.getBlueMask(), false, 0, 0);
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1, 33, 23,
-						originalDef.getPictureMask(), 0,
-						originalDef.getBlueMask(), false, 0, 1);
+						def.getPictureMask(), 0,
+						def.getBlueMask(), false, 0, 1);
+				} else {
+					mc.getSurface().drawSpriteClipping(
+						mc.spriteSelect(def),
+						inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+						48, 32, def.getPictureMask(), 0,
+						def.getBlueMask(), false, 0, 0);
 				}
 				if (def.isStackable()) {
 					mc.getSurface().drawString("" + presets[selectedPresetSlot].inventory[i].getAmount(),
@@ -1295,7 +1303,8 @@ public final class CustomBankInterface extends BankInterface {
 		ItemDef equipDef;
 		Sprite todraw;
 		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++) {
-			equipDef = presets[selectedPresetSlot].equipment[i].getDef();
+			Item item = presets[selectedPresetSlot].equipment[i];
+			equipDef = item.getItemDef();
 			if (equipDef == null) {
 				todraw = mc.spriteSelect(EntityHandler.GUIparts.get(EntityHandler.GUIPARTS.EQUIPSLOT_HELM.id() + i));
 				mc.getSurface().drawSpriteClipping(todraw
@@ -1311,42 +1320,21 @@ public final class CustomBankInterface extends BankInterface {
 					y + 21 + mc.equipIconYLocations[i],
 					todraw.getWidth(), todraw.getHeight(),
 					0, 0, 0, false, 0, 0, 0xC0FFFFFF);
-				todraw = mc.spriteSelect(presets[selectedPresetSlot].equipment[i].getDef());
+				todraw = mc.spriteSelect(equipDef);
 				mc.getSurface().drawSpriteClipping(
 					todraw,
 					x + mc.equipIconXLocations[i],
 					y + 21 + mc.equipIconYLocations[i],
 					todraw.getSomething1(), todraw.getSomething2(),
-					presets[selectedPresetSlot].equipment[i].getDef().getPictureMask(), 0,
-					presets[selectedPresetSlot].equipment[i].getDef().getBlueMask(),false, 0, 0 ^ -15251);
-				if (presets[selectedPresetSlot].equipment[i].getDef().isStackable())
+					equipDef.getPictureMask(), 0,
+					equipDef.getBlueMask(),false, 0, 0 ^ -15251);
+				if (equipDef.isStackable())
 					mc.getSurface().drawString("" + presets[selectedPresetSlot].equipment[i].getAmount(),
 						x + mc.equipIconXLocations[i] + 2,
 						y + 21 + mc.equipIconYLocations[i] + 11, 0xFFFF00, 1);
 			}
 		}
 
-	}
-
-	public static class Item{
-		private int id;
-		private int amount;
-
-		public Item() {
-			this.id = -1;
-			this.amount = 0;
-		}
-
-		public Item(int id, int amount) {
-			this.id = id;
-			this.amount = amount;
-		}
-
-		public ItemDef getDef() { return EntityHandler.getItemDef(id); }
-		public void setAmount(int amount) { this.amount = amount; }
-		public void setID(int id) { this.id = id; }
-		public int getAmount() { return this.amount; }
-		public int getID() { return this.id; }
 	}
 
 	public static class Preset{

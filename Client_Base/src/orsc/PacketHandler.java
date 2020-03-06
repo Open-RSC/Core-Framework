@@ -2494,8 +2494,8 @@ public class PacketHandler {
 		int slot = packetsIncoming.getShort();
 		int itemID, amount;
 		ItemDef item;
-		CustomBankInterface.Item[] inventoryItems = new CustomBankInterface.Item[Config.S_PLAYER_INVENTORY_SLOTS];
-		CustomBankInterface.Item[] equipmentItems = new CustomBankInterface.Item[Config.S_PLAYER_SLOT_COUNT];
+		Item[] inventoryItems = new Item[Config.S_PLAYER_INVENTORY_SLOTS];
+		Item[] equipmentItems = new Item[Config.S_PLAYER_SLOT_COUNT];
 		byte[] itemBytes = new byte[2];
 		for (int i = 0; i < inventoryItems.length; i++) {
 			itemBytes[0] = packetsIncoming.getByte();
@@ -2509,7 +2509,9 @@ public class PacketHandler {
 					amount = packetsIncoming.get32();
 				else
 					amount = 1;
-				inventoryItems[i] = new CustomBankInterface.Item(itemID,amount);
+				inventoryItems[i] = new Item();
+				inventoryItems[i].setItemDef(itemID);
+				inventoryItems[i].setAmount(amount);
 			}
 		}
 		//The server uses 2 more slots than the client
@@ -2534,7 +2536,9 @@ public class PacketHandler {
 					equipslot = 2;
 				else if (equipslot > 7)
 					equipslot -= 3;
-				equipmentItems[equipslot] = new CustomBankInterface.Item(itemID,amount);
+				equipmentItems[equipslot] = new Item();
+				equipmentItems[equipslot].setItemDef(itemID);
+				equipmentItems[equipslot].setAmount(amount);
 			}
 		}
 		mc.getBank().updatePreset(slot, inventoryItems, equipmentItems);
