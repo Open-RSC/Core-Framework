@@ -176,8 +176,8 @@ public final class CustomBankInterface extends BankInterface {
 			mc.getSurface().drawBoxBorder(tabX + 1, tabWidth - 1, tabY + 1, tabHeight - 2, 0x706452);
 			int first_item = -1;
 			for (BankItem bankItem : bankItems) {
-				if (bankItem.itemID > 0) {
-					first_item = bankItems.get(bankItemSelector[tabs]).itemID;
+				if (bankItem.getItem().getCatalogID() > 0) {
+					first_item = bankItems.get(bankItemSelector[tabs]).getItem().getCatalogID();
 					break;
 				}
 			}
@@ -273,7 +273,7 @@ public final class CustomBankInterface extends BankInterface {
 		String searchItem = bank.getControlText(bankSearch);
 		ArrayList<BankItem> searchList = new ArrayList<BankItem>();
 		for (BankItem item : bankItems) {
-			ItemDef def = EntityHandler.getItemDef(item.itemID);
+			ItemDef def = item.getItem().getItemDef();
 			if (searchItem.length() > 0) {
 				if (def.getName().toLowerCase().contains(searchItem)) {
 					searchList.add(item);
@@ -311,7 +311,7 @@ public final class CustomBankInterface extends BankInterface {
 					bankItem = searchList.get(bankSlotStart);
 				}
 				if (bankItem != null)
-					bankDef = EntityHandler.getItemDef(bankItem.itemID);
+					bankDef = bankItem.getItem().getItemDef();
 
 				int drawX = x + 6 + horizonalSlots * 49;
 				int drawY = y + 57 + verticalSlots * 34;
@@ -328,33 +328,40 @@ public final class CustomBankInterface extends BankInterface {
 
 					// Dragging items
 					if (draggingBankSlot != -1 && bank.getControlText(bankSearch).isEmpty()) {
-						ItemDef def = EntityHandler.getItemDef(bankItems.get(draggingBankSlot).itemID);
-						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-							mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
-						if (def.getNotedFormOf() >= 0) {
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
+						ItemDef def = bankItems.get(draggingBankSlot).getItem().getItemDef();
+						if (bankItems.get(draggingBankSlot).getItem().getNoted()) {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
+								mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 								mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
-								originalDef.getPictureMask(), 0,
-								originalDef.getBlueMask(),false, 0, 1);
+								def.getPictureMask(), 0,
+								def.getBlueMask(),false, 0, 1);
+						} else {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+								mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
 						}
-						drawString(mudclient.formatStackAmount(bankItems.get(draggingBankSlot).amount), mc.getMouseX(), mc.getMouseY(), 1, 65280);
+						drawString(mudclient.formatStackAmount(bankItems.get(draggingBankSlot).getItem().getAmount()), mc.getMouseX(), mc.getMouseY(), 1, 65280);
 					}
 
 					// Noted Items
-					if (bankSlotStart < bankItems.size() && bankItems.get(bankSlotStart).itemID != -1) {
-						ItemDef def = EntityHandler.getItemDef(bankItem.itemID);
+					if (bankSlotStart < bankItems.size() && bankItems.get(bankSlotStart).getItem().getCatalogID() != -1) {
+						ItemDef def = bankItem.getItem().getItemDef();
 						if (draggingBankSlot != bankSlotStart) {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
 								def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
-							if (def.getNotedFormOf() >= 0) {
-								ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-								mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), drawX + 7,
-									drawY + 8, 29, 19, originalDef.getPictureMask(), 0,
-									originalDef.getBlueMask(), false, 0, 1);
+							if (bankItem.getItem().getNoted()) {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
+									EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX + 7,
+									drawY + 8, 29, 19, def.getPictureMask(), 0,
+									def.getBlueMask(), false, 0, 1);
+							} else {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
+									def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
 							}
-							drawString(mudclient.formatStackAmount(bankItem.amount), drawX + 1, drawY + 10, 1, (equipmentMode && !def.isWieldable()) ? 0x404040 : 65280);
+							drawString(mudclient.formatStackAmount(bankItem.getItem().getAmount()), drawX + 1, drawY + 10, 1, (equipmentMode && !def.isWieldable()) ? 0x404040 : 65280);
 						}
 					}
 
@@ -364,16 +371,16 @@ public final class CustomBankInterface extends BankInterface {
 						if (organizeMode > 0 && !rightClickMenu && bank.getControlText(bankSearch).isEmpty()) {
 							if (mc.getMouseButtonDownTime() > 0 && mc.getMouseButtonDown() == 1) {
 								if (mc.getMouseButtonDownTime() < 2 && bankSlotStart < bankItems.size()
-									&& bankItems.get(bankSlotStart).itemID != -1) {
+									&& bankItems.get(bankSlotStart).getItem().getCatalogID() != -1) {
 									draggingBankSlot = bankItem.bankID;
 								}
-							} else if (draggingBankSlot > -1 && bankItems.get(bankSlotStart).itemID != -1) {
+							} else if (draggingBankSlot > -1 && bankItems.get(bankSlotStart).getItem().getCatalogID() != -1) {
 								sendItemSwap(draggingBankSlot, bankItem.bankID);
 								draggingBankSlot = -1;
 							}
 						} else if (mc.getMouseClick() == 1 && !rightClickMenu && mc.inputX_Action == InputXAction.ACT_0) {
 							selectedBankSlot = bankItem.bankID;
-							if (equipmentMode && EntityHandler.getItemDef(bankItem.itemID).isWieldable()) {
+							if (equipmentMode && bankItem.getItem().getItemDef().isWieldable()) {
 								mc.packetHandler.getClientStream().newPacket(172);
 								mc.packetHandler.getClientStream().bufferBits.putShort(selectedBankSlot);
 								mc.packetHandler.getClientStream().finishPacket();
@@ -388,10 +395,10 @@ public final class CustomBankInterface extends BankInterface {
 					// Right click menu
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY
 						&& mc.getMouseY() < drawY + 34 && bankSlotStart < bankItems.size()
-						&& bankItems.get(bankSlotStart).itemID != -1 && mc.inputX_Action == InputXAction.ACT_0) {
+						&& bankItems.get(bankSlotStart).getItem().getCatalogID() != -1 && mc.inputX_Action == InputXAction.ACT_0) {
 						if (mc.getMouseClick() == 2) {
 							selectedBankSlot = bankItem.bankID;
-							if (!equipmentMode || (equipmentMode && EntityHandler.getItemDef(bankItem.itemID).isWieldable())) {
+							if (!equipmentMode || (equipmentMode && bankItem.getItem().getItemDef().isWieldable())) {
 								rightClickMenuX = mc.getMouseX();
 								rightClickMenuY = mc.getMouseY();
 								rightClickMenu = true;
@@ -402,8 +409,8 @@ public final class CustomBankInterface extends BankInterface {
 
 					// Drawing item name
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY && mc.getMouseY() < drawY + 34) {
-						if (bankItems.get(bankItem.bankID).itemID != -1) {
-							drawString(EntityHandler.getItemDef(bankItems.get(bankItem.bankID).itemID).getName(), x + 7, y + 15, 1, 0xFFFFFF);
+						if (bankItems.get(bankItem.bankID).getItem().getCatalogID() != -1) {
+							drawString(bankItems.get(bankItem.bankID).getItem().getItemDef().getName(), x + 7, y + 15, 1, 0xFFFFFF);
 						}
 
 					} else if (mc.getMouseX() <= x + 6 || mc.getMouseX() >= x + 496 || mc.getMouseY() <= y + 57 ||
@@ -578,31 +585,39 @@ public final class CustomBankInterface extends BankInterface {
 					if (draggingInventoryID != -1
 						&& (mc.getInventoryItemsCount()[draggingInventoryID]) != -1) {
 						ItemDef def = mc.getInventoryItem(selectedInventorySlot).getItemDef();
-						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-							mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
-						if (def.getNotedFormOf() >= 0) {
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
+						if (mc.getInventoryItem(selectedInventorySlot).getNoted()) {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
+								mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 								mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
-								originalDef.getPictureMask(), 0,
-								originalDef.getBlueMask(),false, 0, 1);
+								def.getPictureMask(), 0,
+								def.getBlueMask(),false, 0, 1);
+						} else {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+								mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
 						}
 					}
 
 					// Draw inventory-only items
 					if (inventorySlot < mc.getInventoryItemCount() && mc.getInventoryItemID(inventorySlot) != -1) {
-						ItemDef def = EntityHandler.getItemDef(mc.getInventoryItemID(inventorySlot));
-						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
-							def.getPictureMask(), 0,
-							def.getBlueMask(),false, 0, 1);
+						ItemDef def = mc.getInventoryItem(inventorySlot).getItemDef();
 
-						if (def.getNotedFormOf() >= 0) { // Noted items
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef),
-								drawX + 7, drawY + 8, 29, 19, originalDef.getPictureMask(), 0,
-								originalDef.getBlueMask(),false,
+						if (mc.getInventoryItem(inventorySlot).getNoted()) { // Noted items
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
+								EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(),false, 0, 1);
+
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+								drawX + 7, drawY + 8, 29, 19, def.getPictureMask(), 0,
+								def.getBlueMask(),false,
 								0, 1);
+						} else {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
+								def.getPictureMask(), 0,
+								def.getBlueMask(),false, 0, 1);
 						}
 						if (def.isStackable()) { // Stack items
 							drawString(mudclient.formatStackAmount(mc.getInventoryItemsCount()[inventorySlot]),
@@ -680,7 +695,7 @@ public final class CustomBankInterface extends BankInterface {
 			if (equipmentMode)
 				menuHeight = fontSizeHeight + 5;
 			if (selectedBankSlot > -1 && selectedBankSlot < bankItems.size()) {
-				int checkMenuWidth = mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName()) + 8;
+				int checkMenuWidth = mc.getSurface().stringWidth(fontSize, bankItems.get(selectedBankSlot).getItem().getItemDef().getName()) + 8;
 				if (menuWidth < checkMenuWidth) {
 					menuWidth = checkMenuWidth;
 				}
@@ -697,15 +712,15 @@ public final class CustomBankInterface extends BankInterface {
 					&& mc.getMouseY() >= rightClickMenuY - 5
 					&& mc.getMouseY() <= rightClickMenuY + menuHeight + 20) {
 
-					if (10 + mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName()) > menuWidth) {
-						menuWidth = 10 + mc.getSurface().stringWidth(fontSize, EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName());
+					if (10 + mc.getSurface().stringWidth(fontSize, bankItems.get(selectedBankSlot).getItem().getItemDef().getName()) > menuWidth) {
+						menuWidth = 10 + mc.getSurface().stringWidth(fontSize, bankItems.get(selectedBankSlot).getItem().getItemDef().getName());
 					}
 
 					mc.getSurface().drawBoxAlpha(rightClickMenuX, rightClickMenuY, menuWidth + 2, menuHeight + 20, 0x5C5548, 255);
 					mc.getSurface().drawBoxAlpha(rightClickMenuX + 1, rightClickMenuY + 1, menuWidth, fontSize + 18, 0x000000, 255);
 					mc.getSurface().drawBoxBorder(rightClickMenuX + 1, menuWidth, rightClickMenuY + 18, menuHeight + 1, 0x000000);
 
-					drawString(EntityHandler.getItemDef(bankItems.get(selectedBankSlot).itemID).getName(), rightClickMenuX + 4, rightClickMenuY + fontSize + 15, fontSize, 0xFFFFFF);
+					drawString(bankItems.get(selectedBankSlot).getItem().getItemDef().getName(), rightClickMenuX + 4, rightClickMenuY + fontSize + 15, fontSize, 0xFFFFFF);
 
 					int i = 0xffffff;
 
@@ -797,7 +812,7 @@ public final class CustomBankInterface extends BankInterface {
 								i8 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
-									sendWithdraw(bankItems.get(selectedBankSlot).amount - 1);
+									sendWithdraw(bankItems.get(selectedBankSlot).getItem().getAmount() - 1);
 								}
 							}
 						} else {
@@ -816,7 +831,7 @@ public final class CustomBankInterface extends BankInterface {
 								i6 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
-									sendWithdraw(bankItems.get(selectedBankSlot).amount - 1);
+									sendWithdraw(bankItems.get(selectedBankSlot).getItem().getAmount() - 1);
 								}
 							}
 							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 6 + 21
@@ -1095,9 +1110,9 @@ public final class CustomBankInterface extends BankInterface {
 	public void sendWithdraw(int i) {
 		if (Config.S_WANT_CUSTOM_BANKS) {
 			mc.packetHandler.getClientStream().newPacket(22);
-			mc.packetHandler.getClientStream().bufferBits.putShort(bankItems.get(selectedBankSlot).itemID);
-			if (i > bankItems.get(selectedBankSlot).amount) {
-				i = bankItems.get(selectedBankSlot).amount;
+			mc.packetHandler.getClientStream().bufferBits.putShort(bankItems.get(selectedBankSlot).getItem().getCatalogID());
+			if (i > bankItems.get(selectedBankSlot).getItem().getAmount()) {
+				i = bankItems.get(selectedBankSlot).getItem().getAmount();
 			}
 			mc.packetHandler.getClientStream().bufferBits.putInt(i);
 

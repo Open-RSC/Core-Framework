@@ -53,8 +53,8 @@ public class BankInterface {
 		currentBankIDs = new ArrayList<>();
 		currentBankCounts = new ArrayList<>();
 		for (BankItem bankItem : bankItems) {
-			currentBankIDs.add(bankItem.itemID);
-			currentBankCounts.add(bankItem.amount);
+			currentBankIDs.add(bankItem.getItem().getItemDef().id);
+			currentBankCounts.add(bankItem.getItem().getAmount());
 		}
 		for (int i = 0; i < mc.getInventoryItemCount(); i++) {
 			if (currentBankIDs.contains(mc.getInventoryItemID(i))) continue;
@@ -561,8 +561,8 @@ public class BankInterface {
 		}
 		if (bankItems.get(slot) != null) {
 			bankItems.get(slot).bankID = slot;
-			bankItems.get(slot).itemID = itemID;
-			bankItems.get(slot).amount = amount;
+			bankItems.get(slot).getItem().setItemDef(itemID);
+			bankItems.get(slot).getItem().setAmount(amount);
 		}
 	}
 
@@ -575,12 +575,20 @@ public class BankInterface {
 
 	class BankItem {
 
-		int bankID, itemID, amount;
+		int bankID;
+		Item item;
 
 		BankItem(int bankID, int itemID, int amount) {
+			this.item = new Item();
+			this.item.setItemDef(itemID);
+			this.item.setAmount(amount);
+			this.item.setDurability(100);
+			this.item.setCharges(0);
+			this.item.setEquipped(false);
+			this.item.setNoted(false);
 			this.bankID = bankID;
-			this.itemID = itemID;
-			this.amount = amount;
 		}
+
+		public Item getItem() { return this.item; }
 	}
 }

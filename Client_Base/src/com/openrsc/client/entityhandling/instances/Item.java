@@ -109,5 +109,11 @@ public class Item {
 		this.charges = charges;
 	}
 
+	public int getCatalogID() {
+		if (this.itemDef == null)
+			return ID_NOTHING;
+		else
+			return this.itemDef.id;
+	}
 	//</editor-fold>
 }
