@@ -30,7 +30,7 @@ public class GnomeSlice implements UseInvTrigger {
 	public void onUseInv(Player p, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.ORANGE.id())) {
 			p.message("you can slice or dice the orange");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"slice orange",
 				"dice orange");
 			if (menu == 0) {
@@ -43,7 +43,7 @@ public class GnomeSlice implements UseInvTrigger {
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LIME.id())) {
 			p.message("you can slice or dice the lime");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"slice lime",
 				"dice lime");
 			if (menu == 0) {
@@ -63,13 +63,13 @@ public class GnomeSlice implements UseInvTrigger {
 				pineappleId = ItemId.FRESH_PINEAPPLE.id();
 			}
 			p.message("you can slice or dice the pineapple");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"slice pineapple",
 				"dice pineapple");
 			if (menu == 0) {
 				p.message("you slice the pineapple into rings");
 				p.getCarriedItems().getInventory().replace(pineappleId, ItemId.PINEAPPLE_RING.id());
-				addItem(p, ItemId.PINEAPPLE_RING.id(), 3);
+				give(p, ItemId.PINEAPPLE_RING.id(), 3);
 			} else if (menu == 1) {
 				p.message("you cut the pineapple into chunks");
 				p.getCarriedItems().getInventory().replace(pineappleId, ItemId.PINEAPPLE_CHUNKS.id());
@@ -77,7 +77,7 @@ public class GnomeSlice implements UseInvTrigger {
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LEMON.id())) {
 			p.message("you can slice or dice the lemon");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"slice lemon",
 				"dice lemon");
 			if (menu == 0) {
@@ -90,7 +90,7 @@ public class GnomeSlice implements UseInvTrigger {
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.GRAPEFRUIT.id())) {
 			p.message("you can slice or dice the grapefruit");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"slice grapefruit",
 				"dice grapefruit");
 			if (menu == 0) {

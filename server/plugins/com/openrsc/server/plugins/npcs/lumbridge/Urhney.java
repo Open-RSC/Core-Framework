@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -18,20 +19,20 @@ public class Urhney implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
-		npcTalk(p, n, "Go away, I'm meditating");
+		npcsay(p, n, "Go away, I'm meditating");
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1 && !p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_GHOSTSPEAK.id(), Optional.empty())) {
 			defaultMenu.addOption(new Option(
 				"Father Aereck sent me to talk to you") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "I suppose I'd better talk to you then",
+					npcsay(p, n, "I suppose I'd better talk to you then",
 						"What problems has he got himself into this time?");
 					new Menu().addOptions(
 						new Option(
 							"He's got a ghost haunting his graveyard") {
 							@Override
 							public void action() {
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Oh the silly fool",
 									"I leave town for just five months",
@@ -42,10 +43,10 @@ public class Urhney implements TalkNpcTrigger {
 									"Until I had done a full two years of prayer and meditation",
 									"Tell you what I can do though",
 									"Take this amulet");
-								message(p,
+								Functions.mes(p,
 									"Father Urhney hands you an amulet");
-								addItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
-								npcTalk(p,
+								give(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
+								npcsay(p,
 									n,
 									"It is an amulet of Ghostspeak",
 									"So called because when you wear it you can speak to ghosts",
@@ -55,7 +56,7 @@ public class Urhney implements TalkNpcTrigger {
 									"You can get rid of the ghost",
 									"I'm not making any guarantees mind you",
 									"But it is the best I can do right now");
-								playerTalk(p, n,
+								say(p, n,
 									"Thank you, I'll give it a try");
 								p.updateQuestStage(Quests.THE_RESTLESS_GHOST,
 									2);
@@ -65,15 +66,15 @@ public class Urhney implements TalkNpcTrigger {
 							"You mean he gets himself into lots of problems?") {
 							@Override
 							public void action() {
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Yeah. For example when we were trainee priests",
 									"He kept on getting stuck up bell ropes",
 									"Anyway I don't have time for chitchat",
 									"What's his problem this time?");
-								playerTalk(p, n,
+								say(p, n,
 									"He's got a ghost haunting his graveyard");
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Oh the silly fool",
 									"I leave town for just five months",
@@ -84,10 +85,10 @@ public class Urhney implements TalkNpcTrigger {
 									"Until I had done a full two years of prayer and meditation",
 									"Tell you what I can do though",
 									"Take this amulet");
-								message(p,
+								Functions.mes(p,
 									"Father Urhney hands you an amulet");
-								addItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
-								npcTalk(p,
+								give(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
+								npcsay(p,
 									n,
 									"It is an amulet of Ghostspeak",
 									"So called because when you wear it you can speak to ghosts",
@@ -97,7 +98,7 @@ public class Urhney implements TalkNpcTrigger {
 									"You can get rid of the ghost",
 									"I'm not making any guarantees mind you",
 									"But it is the best I can do right now");
-								playerTalk(p, n,
+								say(p, n,
 									"Thank you, I'll give it a try");
 								p.updateQuestStage(Quests.THE_RESTLESS_GHOST,
 									2);
@@ -111,38 +112,38 @@ public class Urhney implements TalkNpcTrigger {
 				"I've lost the amulet") {
 				@Override
 				public void action() {
-					message(p, "Father Urhney sighs");
-					npcTalk(p, n, "How careless can you get",
+					Functions.mes(p, "Father Urhney sighs");
+					npcsay(p, n, "How careless can you get",
 						"Those things aren't easy to come by you know",
 						"It's a good job I've got a spare");
-					addItem(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1);
-					message(p, "Father Urhney hands you an amulet");
-					npcTalk(p, n, "Be more careful this time");
-					playerTalk(p, n, "Ok I'll try to be");
+					give(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1);
+					Functions.mes(p, "Father Urhney hands you an amulet");
+					npcsay(p, n, "Be more careful this time");
+					say(p, n, "Ok I'll try to be");
 				}
 			});
 		}
 		defaultMenu.addOption(new Option("Well that's friendly") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "I said go away!");
-				playerTalk(p, n, "Ok, ok");
+				npcsay(p, n, "I said go away!");
+				say(p, n, "Ok, ok");
 			}
 		});
 		defaultMenu.addOption(new Option("I've come to repossess your house") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "Under what grounds?");
+				npcsay(p, n, "Under what grounds?");
 				new Menu().addOptions(new Option("Repeated failure on mortgage payments") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "I don't have a mortgage", "I built this house myself");
-						playerTalk(p, n, "Sorry I must have got the wrong address", "All the houses look the same around here");
+						npcsay(p, n, "I don't have a mortgage", "I built this house myself");
+						say(p, n, "Sorry I must have got the wrong address", "All the houses look the same around here");
 					}
 				}, new Option("I don't know, I just wanted this house") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "Oh go away and stop wasting my time");
+						npcsay(p, n, "Oh go away and stop wasting my time");
 					}
 				}).showMenu(p);
 			}

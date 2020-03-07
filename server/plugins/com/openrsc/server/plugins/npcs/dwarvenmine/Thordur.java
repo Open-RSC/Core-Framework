@@ -13,10 +13,10 @@ public class Thordur implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		playerTalk(p, n, "Hello");
-		npcTalk(p, n, "Hello adventurer",
+		say(p, n, "Hello");
+		npcsay(p, n, "Hello adventurer",
 				"What brings you to this place?");
-		int opts = showMenu(p, n, "I just wanted to come by and say Hi",
+		int opts = multi(p, n, "I just wanted to come by and say Hi",
 				"Who are you?", "Do you like it here?");
 		if (opts == 0) {
 			thordurDialogue(p, n, WANTED_SAY_HI);
@@ -32,11 +32,11 @@ public class Thordur implements TalkNpcTrigger {
 	private void thordurDialogue(Player p, Npc n, int cID) {
 		switch (cID) {
 		case WANTED_SAY_HI:
-			npcTalk(p, n, "Well hello there");
+			npcsay(p, n, "Well hello there");
 			break;
 		case WHO_ARE_YOU:
-			npcTalk(p, n, "I am Thordur though names don't mean much");
-			int opts = showMenu(p, n, "So what do you do",
+			npcsay(p, n, "I am Thordur though names don't mean much");
+			int opts = multi(p, n, "So what do you do",
 					"Do you like it here?",
 					"Nice to meet you");
 			if (opts == 0) {
@@ -48,10 +48,10 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case LIKE_IT_HERE:
-			npcTalk(p, n, "Yes, its nice and quiet",
+			npcsay(p, n, "Yes, its nice and quiet",
 					"I get visitors once in a while",
 					"this place is home to me");
-			int opts1 = showMenu(p, n, "Visitors? what do you do?",
+			int opts1 = multi(p, n, "Visitors? what do you do?",
 					"Nice to meet you");
 			if (opts1 == 0) {
 				thordurDialogue(p, n, WHAT_DO_YOU_DO);
@@ -60,12 +60,12 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case WHAT_DO_YOU_DO:
-			npcTalk(p, n, "I run a tourist attraction called the Black Hole");
-			int opts2 = showMenu(p, n, "Oooh fancy, tell me more",
+			npcsay(p, n, "I run a tourist attraction called the Black Hole");
+			int opts2 = multi(p, n, "Oooh fancy, tell me more",
 					"You mean like the prison where bad players are sent?",
 					"Sounds good, how can I visit it?");
 			if (opts2 == 0) {
-				npcTalk(p, n, "Well back in the day players tried",
+				npcsay(p, n, "Well back in the day players tried",
 						"to play unfairly and get advantage over other",
 						"players, so moderators would trap them in the void space,",
 						"often refered as the Black Hole");
@@ -77,15 +77,15 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case NICE_TO_MEET_YOU:
-			npcTalk(p, n, "Nice to meet you too");
+			npcsay(p, n, "Nice to meet you too");
 			break;
 		case PRISON_BAD_PLAYERS:
-			npcTalk(p, n, "The prison used to be an old style of prisoning players",
+			npcsay(p, n, "The prison used to be an old style of prisoning players",
 					"who abused the rules",
 					"Nowadays they use other methods",
 					"My place allows players experience the void, allowing them",
 					"to make it back here");
-			int opts3 = showMenu(p, n, "I see, so can I visit the Black Hole",
+			int opts3 = multi(p, n, "I see, so can I visit the Black Hole",
 					"I have to go");
 			if (opts3 == 0) {
 				thordurDialogue(p, n, CAN_I_VISIT);
@@ -94,9 +94,9 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case CAN_I_VISIT:
-			npcTalk(p, n, "You will need a special disk that allows you to get there",
+			npcsay(p, n, "You will need a special disk that allows you to get there",
 					"and when you want to come back just spin it");
-			int opts4 = showMenu(p, n, "So about this disk, can I buy it?",
+			int opts4 = multi(p, n, "So about this disk, can I buy it?",
 					"I'll be right back");
 			if (opts4 == 0) {
 				thordurDialogue(p, n, CAN_I_BUY_IT);
@@ -105,24 +105,24 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case HAVE_TO_GO:
-			npcTalk(p, n, "Ok, have a nice day");
+			npcsay(p, n, "Ok, have a nice day");
 			break;
 		case CAN_I_BUY_IT:
-			npcTalk(p, n, "I sell the disks for 10 coins",
+			npcsay(p, n, "I sell the disks for 10 coins",
 					"Would you like to buy one?");
-			int opts5 = showMenu(p, n, "Yes please",
+			int opts5 = multi(p, n, "Yes please",
 					"No thankyou");
 			if (opts5 == 0) {
-				if (!hasItem(p, ItemId.COINS.id(), 10)) {
-					playerTalk(p, n,
+				if (!ifheld(p, ItemId.COINS.id(), 10)) {
+					say(p, n,
 						"Oh dear I don't actually seem to have enough money");
 				} else {
 					p.getCarriedItems().remove(ItemId.COINS.id(), 10);
-					addItem(p, ItemId.DISK_OF_RETURNING.id(), 1);
+					give(p, ItemId.DISK_OF_RETURNING.id(), 1);
 					p.message("Thordur hands you a special disk");
-					sleep(1200);
-					playerTalk(p, n, "Thank you");
-					npcTalk(p, n, "If you ever happen to lose the disk whilst being in the Black Hole,",
+					delay(1200);
+					say(p, n, "Thank you");
+					npcsay(p, n, "If you ever happen to lose the disk whilst being in the Black Hole,",
 							"the magical pool on the other side will allow you",
 							"to safely return here");
 				}
@@ -131,7 +131,7 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case BE_RIGHT_BACK:
-			npcTalk(p, n, "Ok");
+			npcsay(p, n, "Ok");
 			break;
 		}
 	}

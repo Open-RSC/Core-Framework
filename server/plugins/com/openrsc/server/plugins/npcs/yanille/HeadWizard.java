@@ -7,7 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
 public class HeadWizard implements TalkNpcTrigger {
 
@@ -15,10 +15,10 @@ public class HeadWizard implements TalkNpcTrigger {
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id()) {
 			if (getCurrentLevel(p, Skills.MAGIC) < 66) {
-				npcTalk(p, n, "Hello, you need a magic level of 66 to get in here",
+				npcsay(p, n, "Hello, you need a magic level of 66 to get in here",
 						"The magical energy in here is unsafe for those below that level");
 			} else {
-				npcTalk(p, n, "Hello welcome to the wizard's guild",
+				npcsay(p, n, "Hello welcome to the wizard's guild",
 						"Only accomplished wizards are allowed in here",
 						"Feel free to use any of our facilities");
 			}

@@ -12,7 +12,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.thinkbubble;
 
 public class GemMining implements OpLocTrigger {
 
@@ -75,7 +75,7 @@ public class GemMining implements OpLocTrigger {
 			p.playSound("prospect");
 			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			p.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			Functions.sleep(1920);
+			Functions.delay(1920);
 			if (obj.getID() == GEM_ROCK) {
 				p.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 				return;
@@ -88,7 +88,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (axeId < 0 || reqlvl > mineLvl) {
-			Functions.message(p, "You need a pickaxe to mine this rock",
+			Functions.mes(p, "You need a pickaxe to mine this rock",
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
@@ -102,7 +102,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		p.playSound("mine");
-		showBubble(p, new Item(ItemId.IRON_PICKAXE.id()));
+		Functions.thinkbubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Gem Mining", p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000, true) {
 			@Override
@@ -145,7 +145,7 @@ public class GemMining implements OpLocTrigger {
 					}
 				}
 				if (!isCompleted()) {
-					showBubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
+					Functions.thinkbubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
 					getOwner().playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 				}
 			}

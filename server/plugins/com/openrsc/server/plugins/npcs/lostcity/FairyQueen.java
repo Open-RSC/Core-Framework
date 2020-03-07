@@ -18,14 +18,14 @@ public class FairyQueen implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.FAIRY_QUEEN.id()) {
-			int menu = showMenu(p, n, "How do crops and such survive down here?",
+			int menu = multi(p, n, "How do crops and such survive down here?",
 				"What's so good about this place?");
 			if (menu == 0) {
-				playerTalk(p, n, "Surely they need a bit of sunlight?");
-				npcTalk(p, n, "Clearly you come from a plane dependant on sunlight",
+				say(p, n, "Surely they need a bit of sunlight?");
+				npcsay(p, n, "Clearly you come from a plane dependant on sunlight",
 					"Down here the plants grow in the aura of faerie");
 			} else if (menu == 1) {
-				npcTalk(p, n, "Zanaris is a meeting point of cultures",
+				npcsay(p, n, "Zanaris is a meeting point of cultures",
 					"those from many worlds converge here to exchange knowledge and goods");
 			}
 		}

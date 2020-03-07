@@ -68,7 +68,7 @@ public class Menu {
 			if (player.getInteractingNpc() != null)
 				player.getInteractingNpc().setBusyTimer(3000);
 
-			Functions.sleep(1);
+			Functions.delay(1);
 		}
 
 		doReply(player);
@@ -83,7 +83,7 @@ public class Menu {
 		if(i >= 0 && i <= options.size()) {
 			Option option = options.get(i);
 			if (option != null) {
-				Functions.playerTalk(player, player.getInteractingNpc(), option.getOption());
+				Functions.say(player, player.getInteractingNpc(), option.getOption());
 				option.action();
 			}
 		}

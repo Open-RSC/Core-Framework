@@ -6,11 +6,12 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.give;
 import static com.openrsc.server.plugins.Functions.random;
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.thinkbubble;
 
 public class Sheep implements UseNpcTrigger {
 
@@ -25,7 +26,7 @@ public class Sheep implements UseNpcTrigger {
 
 		npc.face(player);
 		player.face(npc);
-		showBubble(player, item);
+		Functions.thinkbubble(player, item);
 		player.message("You attempt to shear the sheep");
 		npc.setBusyTimer(1600);
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Crafting Shear Wool", player.getCarriedItems().getInventory().getFreeSlots(), true) {
@@ -35,7 +36,7 @@ public class Sheep implements UseNpcTrigger {
 				npc.setBusyTimer(1600);
 				if (random(0, 4) != 0) {
 					player.message("You get some wool");
-					addItem(player, ItemId.WOOL.id(), 1);
+					give(player, ItemId.WOOL.id(), 1);
 				} else {
 					player.message("The sheep manages to get away from you!");
 					npc.setBusyTimer(0);

@@ -7,7 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
 public class MasterFisher implements TalkNpcTrigger {
 
@@ -20,10 +20,10 @@ public class MasterFisher implements TalkNpcTrigger {
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.MASTER_FISHER.id()) {
 			if (getCurrentLevel(p, Skills.FISHING) < 68) {
-				npcTalk(p, n, "Hello only the top fishers are allowed in here");
+				npcsay(p, n, "Hello only the top fishers are allowed in here");
 				p.message("You need a fishing level of 68 to enter");
 			} else {
-				npcTalk(p, n, "Hello, welcome to the fishing guild",
+				npcsay(p, n, "Hello, welcome to the fishing guild",
 					"Please feel free to make use of any of our facilities");
 			}
 		}

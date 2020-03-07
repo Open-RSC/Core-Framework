@@ -39,12 +39,12 @@ public class CandleMakerShop implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (p.getCache().hasKey("candlemaker")) {
-			npcTalk(p, n, "Have you got any wax yet?");
+			npcsay(p, n, "Have you got any wax yet?");
 			if (p.getCarriedItems().hasCatalogID(ItemId.WAX_BUCKET.id())) {
-				playerTalk(p, n, "Yes I have some now");
-				removeItem(p, ItemId.WAX_BUCKET.id(), 1);
+				say(p, n, "Yes I have some now");
+				remove(p, ItemId.WAX_BUCKET.id(), 1);
 				p.message("You exchange the wax with the candle maker for a black candle");
-				addItem(p, ItemId.UNLIT_BLACK_CANDLE.id(), 1);
+				give(p, ItemId.UNLIT_BLACK_CANDLE.id(), 1);
 				p.getCache().remove("candlemaker");
 			} else {
 				//NOTHING HAPPENS
@@ -52,15 +52,15 @@ public class CandleMakerShop implements ShopInterface,
 			return;
 		}
 		Menu defaultMenu = new Menu();
-		npcTalk(p, n, "Hi would you be interested in some of my fine candles");
+		npcsay(p, n, "Hi would you be interested in some of my fine candles");
 		if (p.getQuestStage(Quests.MERLINS_CRYSTAL) == 3) {
 			defaultMenu.addOption(new Option("Have you got any black candles?") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "Black candles hmm?",
+					npcsay(p, n, "Black candles hmm?",
 						"It's very bad luck to make black candles");
-					playerTalk(p, n, "I can pay well for one");
-					npcTalk(p, n, "I still dunno",
+					say(p, n, "I can pay well for one");
+					npcsay(p, n, "I still dunno",
 						"Tell you what, I'll supply with you with a black candle",
 						"If you can bring me a bucket full of wax");
 					p.getCache().store("candlemaker", true);

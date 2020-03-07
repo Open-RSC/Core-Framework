@@ -54,11 +54,11 @@ public class PkBotBehavior extends NpcBehavior {
 				final Point byDoor4 = Point.location(102, 510);
 				final GameObject object = npc.getViewArea().getGameObject(objectLocation);
 				if (npc.getHeals() < 5 && npc.getLocation().equals(byDoor) || npc.getLocation().equals(byDoor2) && object.getID() == 64) {
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
+					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
 					npc.walkToEntityAStar(103, 510, 200);
 				}
 				if (npc.getHeals() > 17 && npc.getLocation().equals(byDoor3) || npc.getLocation().equals(byDoor4) && object.getID() == 64) {
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
+					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 63, object.getDirection(), object.getType(), null));
 					npc.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(npc.getWorld(), ((Player) null), 1500, "Npc walk back to wild2") {
 						public void run() {
 							npc.walkToEntityAStar(108, 425, 200);
@@ -404,7 +404,7 @@ public class PkBotBehavior extends NpcBehavior {
 			return;
 		}
 		lastTackleAttempt = System.currentTimeMillis();
-		showBubble(p, new Item(ItemId.GNOME_BALL.id()));
+		thinkbubble(p, new Item(ItemId.GNOME_BALL.id()));
 		p.message("the gnome trys to tackle you");
 		if (DataConversions.random(0, 1) == 0) {
 			//successful avoiding tackles gives agility xp
@@ -417,11 +417,11 @@ public class PkBotBehavior extends NpcBehavior {
 				return;
 			}
 			p.setAttribute("gnomeball_npc", npc.getID());
-			removeItem(p, ItemId.GNOME_BALL.id(), 1);
+			remove(p, ItemId.GNOME_BALL.id(), 1);
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
 			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITS) * 0.05)));
-			playerTalk(p, null, "ouch");
+			say(p, null, "ouch");
 			npcYell(p, npc, "yeah");
 		}
 	}

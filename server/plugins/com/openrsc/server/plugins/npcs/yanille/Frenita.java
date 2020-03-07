@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class Frenita implements ShopInterface,
 	TalkNpcTrigger {
@@ -25,9 +26,9 @@ public final class Frenita implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy some cooking equipment");
+		npcsay(p, n, "Would you like to buy some cooking equipment");
 
-		int option = showMenu(p, n, "Yes please", "No thankyou");
+		int option = Functions.multi(p, n, "Yes please", "No thankyou");
 		switch (option) {
 
 			case 0:

@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -42,40 +43,40 @@ public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "What am I to do?");
-					int choice = showMenu(p, n, "What's wrong?",
+					npcsay(p, n, "What am I to do?");
+					int choice = multi(p, n, "What's wrong?",
 						"Well you could give me all your money",
 						"You don't look very happy", "Nice hat");
 					if (choice == 0) {
 						cookDialogue(p, n, Cook.TERRIBLE_MESS);
 					} else if (choice == 1) {
-						npcTalk(p, n, "HaHa very funny");
+						npcsay(p, n, "HaHa very funny");
 					} else if (choice == 2) {
-						npcTalk(p, n, "No, i'm not");
-						int choice2 = showMenu(p, n,
+						npcsay(p, n, "No, i'm not");
+						int choice2 = multi(p, n,
 							"What's wrong?",
 							"I'd take the rest of the day off if I were you");
 						if (choice2 == 0) {
 							cookDialogue(p, n, Cook.TERRIBLE_MESS);
 						} else if (choice2 == 1) {
-							npcTalk(p, n, "No, that's the worst thing I could do - I'd get in terrible trouble");
-							playerTalk(p, n, "What's wrong?");
+							npcsay(p, n, "No, that's the worst thing I could do - I'd get in terrible trouble");
+							say(p, n, "What's wrong?");
 							cookDialogue(p, n, Cook.TERRIBLE_MESS);
 						}
 					} else if (choice == 3) {
-						npcTalk(p, n, "Err thank you -it's a pretty ordinary cooks hat really");
+						npcsay(p, n, "Err thank you -it's a pretty ordinary cooks hat really");
 					}
 					break;
 				case 1:
-					npcTalk(p, n, "How are you getting on with finding the ingredients?");
+					npcsay(p, n, "How are you getting on with finding the ingredients?");
 					if (p.getCarriedItems().hasCatalogID(ItemId.EGG.id())
 						&& p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())
 						&& p.getCarriedItems().hasCatalogID(ItemId.MILK.id())) {
-						playerTalk(p, n,
+						say(p, n,
 							"I now have everything you need for your cake",
 							"Milk, flour, and an egg!");
-						npcTalk(p, n, "I am saved thankyou!");
-						message(p, "You give some milk, an egg and some flour to the cook");
+						npcsay(p, n, "I am saved thankyou!");
+						Functions.mes(p, "You give some milk, an egg and some flour to the cook");
 						p.getCarriedItems().remove(ItemId.EGG.id(), 1);
 						p.getCarriedItems().remove(ItemId.POT_OF_FLOUR.id(), 1);
 						p.getCarriedItems().remove(ItemId.MILK.id(), 1);
@@ -86,53 +87,53 @@ public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 						|| p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())
 						|| p.getCarriedItems().hasCatalogID(ItemId.MILK.id())) {
 
-						playerTalk(p, n, "I have found some of the things you asked for:");
+						say(p, n, "I have found some of the things you asked for:");
 						if (p.getCarriedItems().hasCatalogID(ItemId.MILK.id()))
-							playerTalk(p, n, "I have some milk");
+							say(p, n, "I have some milk");
 						if (p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id()))
-							playerTalk(p, n, "I have some flour");
+							say(p, n, "I have some flour");
 						if (p.getCarriedItems().hasCatalogID(ItemId.EGG.id()))
-							playerTalk(p, n, "I have an egg");
+							say(p, n, "I have an egg");
 
-						npcTalk(p, n, "Great, but can you get the other ingredients as well?",
+						npcsay(p, n, "Great, but can you get the other ingredients as well?",
 								"You still need to find");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.MILK.id()))
-							npcTalk(p, n, "Some milk");
+							npcsay(p, n, "Some milk");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id()))
-							npcTalk(p, n, "Some flour");
+							npcsay(p, n, "Some flour");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.EGG.id()))
-							npcTalk(p, n, "An egg");
+							npcsay(p, n, "An egg");
 
-						playerTalk(p, n, "OK I'll try and find that for you");
+						say(p, n, "OK I'll try and find that for you");
 
 					} else {
-						playerTalk(p, n, "I'm afraid I don't have any yet!");
-						npcTalk(p, n, "Oh dear oh dear!",
+						say(p, n, "I'm afraid I don't have any yet!");
+						npcsay(p, n, "Oh dear oh dear!",
 							"I need flour, eggs, and milk",
 							"Without them I am doomed!");
 					}
 					break;
 				case -1:
-					npcTalk(p, n, "Hello friend, how is the adventuring going?");
-					int choice4 = showMenu(p, n,
+					npcsay(p, n, "Hello friend, how is the adventuring going?");
+					int choice4 = multi(p, n,
 						"I am getting strong and mighty", "I keep on dying",
 						"Nice hat", "Can I use your range?");
 					if (choice4 == 0) {
-						npcTalk(p, n, "Glad to hear it");
+						npcsay(p, n, "Glad to hear it");
 					} else if (choice4 == 1) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Ah well at least you keep coming back to life!");
 					} else if (choice4 == 2) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Err thank you -it's a pretty ordinary cooks hat really");
 					} else if (choice4 == 3) {
-						npcTalk(p, n, "Go ahead", "It's a very good range",
+						npcsay(p, n, "Go ahead", "It's a very good range",
 							"It's easier to use than most other ranges");
 					}
 					break;
 			}
 		} else if (cID == Cook.TERRIBLE_MESS) {
-			npcTalk(p,
+			npcsay(p,
 				n,
 				"Ooh dear I'm in a terrible mess",
 				"It's the duke's birthday today",
@@ -140,15 +141,15 @@ public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 				"Unfortunately, I've forgotten to buy some of the ingredients",
 				"I'll never get them in time now",
 				"I don't suppose you could help me?");
-			int choice = showMenu(p, n, "Yes, I'll help you",
+			int choice = multi(p, n, "Yes, I'll help you",
 				"No, I don't feel like it. Maybe later");
 			if (choice == 0) {
-				npcTalk(p, n, "Oh thank you, thank you",
+				npcsay(p, n, "Oh thank you, thank you",
 					"I need milk, eggs and flour",
 					"I'd be very grateful if you can get them to me");
 				p.updateQuestStage(getQuestId(), 1);
 			} else if (choice == 1) {
-				npcTalk(p, n, "OK, suit yourself");
+				npcsay(p, n, "OK, suit yourself");
 			}
 		}
 	}

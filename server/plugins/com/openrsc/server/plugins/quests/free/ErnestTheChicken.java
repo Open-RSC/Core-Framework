@@ -59,32 +59,32 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
-			message(p, "You pour the poisoned fish food into the fountain",
+			Functions.mes(p, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas drop dead and float to the surface");
-			removeItem(p, ItemId.POISONED_FISH_FOOD.id(), 1);
+			remove(p, ItemId.POISONED_FISH_FOOD.id(), 1);
 			if (!p.getCache().hasKey("poisoned_fountain")) {
 				p.getCache().store("poisoned_fountain", true);
 			}
 		} else if (obj.getID() == QuestObjects.FOUNTAIN
 			&& item.getCatalogId() == ItemId.FISH_FOOD.id()) {
-			message(p, "You pour the fish food into the fountain",
+			Functions.mes(p, "You pour the fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas seem hungrier than ever");
-			removeItem(p, ItemId.FISH_FOOD.id(), 1);
+			remove(p, ItemId.FISH_FOOD.id(), 1);
 		}
 		//nothing happens every other item
 		else if (obj.getID() == QuestObjects.FOUNTAIN) {
-			message(p, "Nothing interesting happens");
+			Functions.mes(p, "Nothing interesting happens");
 		}
 		if (obj.getID() == QuestObjects.COMPOST
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.CLOSET_KEY.id(), Optional.empty()) && p.getQuestStage(this) > 0) {
-				message(p, "You dig through the compost heap",
+				Functions.mes(p, "You dig through the compost heap",
 					"You find a small key");
-				addItem(p, ItemId.CLOSET_KEY.id(), 1);
+				give(p, ItemId.CLOSET_KEY.id(), 1);
 			} else {
-				message(p, "You dig through the compost heap",
+				Functions.mes(p, "You dig through the compost heap",
 					"You find nothing of interest");
 			}
 		}
@@ -136,16 +136,16 @@ public class ErnestTheChicken implements QuestInterface,
 			case QuestObjects.FOUNTAIN:
 				if (p.getCache().hasKey("poisoned_fountain")) {
 					if (!p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id(), Optional.empty())) {
-						playerTalk(p, null,
+						say(p, null,
 							"There seems to be a pressure gauge in here",
 							"There are also some dead fish");
 						p.message("you get the pressure gauge from the fountain");
-						addItem(p, ItemId.PRESSURE_GAUGE.id(), 1);
+						give(p, ItemId.PRESSURE_GAUGE.id(), 1);
 					} else {
 						p.message("It's full of dead fish");
 					}
 				} else {
-					playerTalk(p, null,
+					say(p, null,
 						"There seems to be a pressure gauge in here",
 						"There are a lot of Pirhanas in there though",
 						"I can't get the gauge out");
@@ -240,42 +240,42 @@ public class ErnestTheChicken implements QuestInterface,
 			switch (p.getQuestStage(this)) {
 				case -1:
 				case 0:
-					npcTalk(p, n, "Be careful in here",
+					npcsay(p, n, "Be careful in here",
 						"Lots of dangerous equipment in here");
-					int choice = showMenu(p, n, false, //do not send over
+					int choice = multi(p, n, false, //do not send over
 						"What does this machine do?", "Is this your house?");
 					if (choice == 0) {
-						playerTalk(p, n, "What does this machine do?");
+						say(p, n, "What does this machine do?");
 						oddensteinDialogue(p, n, Oddenstein.MACHINE);
 					} else if (choice == 1) {
-						playerTalk(p, n, "Is this your house?");
+						say(p, n, "Is this your house?");
 						oddensteinDialogue(p, n, Oddenstein.HOUSE);
 					}
 					break;
 				case 1:
-					int s1Menu = showMenu(p, n, false, //do not send over
+					int s1Menu = multi(p, n, false, //do not send over
 						"I'm looking for a guy called Ernest",
 						"What do this machine do?", "Is this your house?");
 					if (s1Menu == 0) {
-						playerTalk(p, n, "I'm looking for a guy called Ernest");
+						say(p, n, "I'm looking for a guy called Ernest");
 						oddensteinDialogue(p, n, Oddenstein.LOOKING_FOR_ERNEST);
 					} else if (s1Menu == 1) {
-						playerTalk(p, n, "What does this machine do?");
+						say(p, n, "What does this machine do?");
 						oddensteinDialogue(p, n, Oddenstein.MACHINE);
 					} else if (s1Menu == 2) {
-						playerTalk(p, n, "Is this your house?");
+						say(p, n, "Is this your house?");
 						oddensteinDialogue(p, n, Oddenstein.HOUSE);
 					}
 					break;
 				case 2:
-					npcTalk(p, n, "Have you found anything yet?");
+					npcsay(p, n, "Have you found anything yet?");
 
 					// no items
 					if (!p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id(), Optional.of(false))
 						&& !p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id(), Optional.of(false))
 						&& !p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
-						playerTalk(p, n, "I'm afraid I don't have any yet!");
-						npcTalk(p, n,
+						say(p, n, "I'm afraid I don't have any yet!");
+						npcsay(p, n,
 							"I need a rubber tube, a pressure gauge and a can of oil",
 							"Then your friend can stop being a chicken");
 					}
@@ -283,48 +283,48 @@ public class ErnestTheChicken implements QuestInterface,
 					else if (p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
-						playerTalk(p, n, "I have everything");
-						npcTalk(p, n, "Give em here then");
-						message(p,
+						say(p, n, "I have everything");
+						npcsay(p, n, "Give em here then");
+						Functions.mes(p,
 							"You give a rubber tube, a pressure gauge and a can of oil to the Professer",
 							"Oddenstein starts up the machine",
 							"The machine hums and shakes",
 							"Suddenly a ray shoots out of the machine at the chicken");
-						Npc chicken = getNearestNpc(p, NpcId.ERNEST_CHICKEN.id(), 20);
+						Npc chicken = ifnearvisnpc(p, NpcId.ERNEST_CHICKEN.id(), 20);
 						if (chicken != null) {
-							removeItem(p, ItemId.RUBBER_TUBE.id(), 1);
-							removeItem(p, ItemId.PRESSURE_GAUGE.id(), 1);
-							removeItem(p, ItemId.OIL_CAN.id(), 1);
-							Npc ernest = transform(chicken, NpcId.ERNEST.id(), false);
-							npcTalk(p, ernest, "Thank you sir",
+							remove(p, ItemId.RUBBER_TUBE.id(), 1);
+							remove(p, ItemId.PRESSURE_GAUGE.id(), 1);
+							remove(p, ItemId.OIL_CAN.id(), 1);
+							Npc ernest = changenpc(chicken, NpcId.ERNEST.id(), false);
+							npcsay(p, ernest, "Thank you sir",
 								"It was dreadfully irritating being a chicken",
 								"How can I ever thank you?");
-							playerTalk(p, ernest,
+							say(p, ernest,
 								"Well a cash reward is always nice");
-							npcTalk(p, ernest, "Of course, of course");
+							npcsay(p, ernest, "Of course, of course");
 
-							message(p, "Ernest hands you 300 coins");
+							Functions.mes(p, "Ernest hands you 300 coins");
 							ernest.remove();
 							p.sendQuestComplete(getQuestId());
 						}
 					}
 					// some items
 					else {
-						playerTalk(p, n, "I have found some of the things you need:");
+						say(p, n, "I have found some of the things you need:");
 						if (p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id()))
-							playerTalk(p, n, "I have a can of oil");
+							say(p, n, "I have a can of oil");
 						if (p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id()))
-							playerTalk(p, n, "I have a pressure gauge");
+							say(p, n, "I have a pressure gauge");
 						if (p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id()))
-							playerTalk(p, n, "I have a rubber tube");
+							say(p, n, "I have a rubber tube");
 
-						npcTalk(p, n, "Well that's a start", "You still need to find");
+						npcsay(p, n, "Well that's a start", "You still need to find");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id()))
-							npcTalk(p, n, "A can of oil");
+							npcsay(p, n, "A can of oil");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.RUBBER_TUBE.id()))
-							npcTalk(p, n, "A rubber tube");
+							npcsay(p, n, "A rubber tube");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id()))
-							npcTalk(p, n, "A Pressure Gauge");
+							npcsay(p, n, "A Pressure Gauge");
 					}
 					break;
 			}
@@ -332,52 +332,52 @@ public class ErnestTheChicken implements QuestInterface,
 		}
 		switch (cID) {
 			case Oddenstein.HOUSE:
-				npcTalk(p, n, "No, I'm just one of the tenants",
+				npcsay(p, n, "No, I'm just one of the tenants",
 					"It belongs to the count", "Who lives in the basement");
 				break;
 			case Oddenstein.MACHINE:
-				npcTalk(p, n, "Nothing at the moment", "As it's broken",
+				npcsay(p, n, "Nothing at the moment", "As it's broken",
 					"It's meant to be a transmutation machine",
 					"It has also spent time as a time travel machine",
 					"And a dramatic lightning generator",
 					"And a thing for generating monsters");
 				break;
 			case Oddenstein.LOOKING_FOR_ERNEST:
-				npcTalk(p, n, "Ah Ernest, top notch bloke",
+				npcsay(p, n, "Ah Ernest, top notch bloke",
 					"He's helping me with my experiments");
-				playerTalk(p, n, "So you know where he is then?");
-				npcTalk(p, n, "He's that chicken over there");
-				playerTalk(p, n, "Ernest is a chicken?", "Are you sure?");
-				npcTalk(p,
+				say(p, n, "So you know where he is then?");
+				npcsay(p, n, "He's that chicken over there");
+				say(p, n, "Ernest is a chicken?", "Are you sure?");
+				npcsay(p,
 					n,
 					"Oh he isn't normally a chicken",
 					"Or at least he wasn't",
 					"Until he helped me test my pouletmorph machine",
 					"It was originally going to be called a transmutation machine",
 					"But after testing Pouletmorph seems more appropriate");
-				int choices = showMenu(
+				int choices = multi(
 					p,
 					n,
 					"I'm glad Veronica didn't actually get engaged to a chicken",
 					"Change him back this instant");
 				if (choices == 0) {
-					npcTalk(p, n, "Who's Veronica?");
-					playerTalk(p, n, "Ernest's fiancee",
+					npcsay(p, n, "Who's Veronica?");
+					say(p, n, "Ernest's fiancee",
 						"She probably doesn't want to marry a chicken");
-					npcTalk(p, n, "Ooh I dunno",
+					npcsay(p, n, "Ooh I dunno",
 						"She could have free eggs for breakfast");
-					playerTalk(p, n, "I think you'd better change him back");
+					say(p, n, "I think you'd better change him back");
 					oddensteinDialogue(p, n, Oddenstein.CHANGEBACK);
 				} else if (choices == 1) {
 					oddensteinDialogue(p, n, Oddenstein.CHANGEBACK);
 				}
 				break;
 			case Oddenstein.CHANGEBACK:
-				npcTalk(p, n, "Um it's not so easy", "My machine is broken",
+				npcsay(p, n, "Um it's not so easy", "My machine is broken",
 					"And the house gremlins",
 					"Have run off with some vital bits");
-				playerTalk(p, n, "Well I can look out for them");
-				npcTalk(p, n,
+				say(p, n, "Well I can look out for them");
+				npcsay(p, n,
 					"That would be a help",
 					"They'll be somewhere in the manor house or its grounds",
 					"The gremlins never go further than the entrance gate",
@@ -393,51 +393,51 @@ public class ErnestTheChicken implements QuestInterface,
 		if (i == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "Can you please help me?",
+					npcsay(p, n, "Can you please help me?",
 						"I'm in a terrible spot of trouble");
-					int choice = showMenu(p, n, false, //do not send over
+					int choice = multi(p, n, false, //do not send over
 						"Aha, sounds like a quest. I'll help",
 						"No, I'm looking for something to kill");
 					if (choice == 0) {
-						playerTalk(p, n, "Aha, sounds like a quest", "I'll help");
-						npcTalk(p, n, "Yes yes I suppose it is a quest",
+						say(p, n, "Aha, sounds like a quest", "I'll help");
+						npcsay(p, n, "Yes yes I suppose it is a quest",
 							"My fiance Ernest and I came upon this house here",
 							"Seeing as we were a little lost",
 							"Ernest decided to go in and ask for directions",
 							"That was an hour ago",
 							"That house looks very spooky",
 							"Can you go and see if you can find him for me?");
-						playerTalk(p, n, "Ok, I'll see what I can do");
-						npcTalk(p, n, "Thank you, thank you", "I'm very grateful");
+						say(p, n, "Ok, I'll see what I can do");
+						npcsay(p, n, "Thank you, thank you", "I'm very grateful");
 						p.updateQuestStage(this, 1);
 					} else if (choice == 1) {
-						playerTalk(p, n, "No, I'm looking for something to kill");
-						npcTalk(p, n, "Oooh you violent person you");
+						say(p, n, "No, I'm looking for something to kill");
+						npcsay(p, n, "Oooh you violent person you");
 					}
 					break;
 				case 1:
-					npcTalk(p, n, "Have you found my sweetheart yet?");
-					playerTalk(p, n, "No, not yet");
+					npcsay(p, n, "Have you found my sweetheart yet?");
+					say(p, n, "No, not yet");
 					break;
 				case 2:
-					npcTalk(p, n, "Have you found my sweetheart yet?");
-					playerTalk(p, n, "Yes, he's a chicken");
-					npcTalk(p, n, "I know he's not exactly brave",
+					npcsay(p, n, "Have you found my sweetheart yet?");
+					say(p, n, "Yes, he's a chicken");
+					npcsay(p, n, "I know he's not exactly brave",
 						"But I think you're being a little harsh");
-					playerTalk(p, n,
+					say(p, n,
 						"No no he's been turned into an actual chicken",
 						"By a mad scientist");
-					message(p, "Veronica lets out an ear piecing shreek");
-					npcTalk(p, n, "Eeeeek", "My poor darling",
+					Functions.mes(p, "Veronica lets out an ear piecing shreek");
+					npcsay(p, n, "Eeeeek", "My poor darling",
 						"Why must these things happen to us?");
-					playerTalk(p, n, "Well I'm doing my best to turn him back");
-					npcTalk(p, n, "Well be quick",
+					say(p, n, "Well I'm doing my best to turn him back");
+					npcsay(p, n, "Well be quick",
 						"I'm sure being a chicken can't be good for him");
 					break;
 				case -1:
-					npcTalk(p, n, "Thank you for rescuing Ernest");
-					playerTalk(p, n, "Where is he now?");
-					npcTalk(p, n, "Oh he went off to talk to some green warty guy",
+					npcsay(p, n, "Thank you for rescuing Ernest");
+					say(p, n, "Where is he now?");
+					npcsay(p, n, "Oh he went off to talk to some green warty guy",
 						"I'm sure he'll be back soon");
 					break;
 			}
@@ -475,7 +475,7 @@ public class ErnestTheChicken implements QuestInterface,
 			case 36:
 				if (p.getY() >= 553) {
 					doDoor(obj, p);
-					sleep(3000);
+					delay(3000);
 					p.message("The door slams behind you!");
 				} else {
 					p.message("The door won't open");
@@ -630,9 +630,9 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public void onUseInv(Player player, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
-			removeItem(player, ItemId.FISH_FOOD.id(), 1);
-			removeItem(player, ItemId.POISON.id(), 1);
-			addItem(player, ItemId.POISONED_FISH_FOOD.id(), 1);
+			remove(player, ItemId.FISH_FOOD.id(), 1);
+			remove(player, ItemId.POISON.id(), 1);
+			give(player, ItemId.POISONED_FISH_FOOD.id(), 1);
 			player.message("You poison the fish food");
 		}
 	}
@@ -649,7 +649,7 @@ public class ErnestTheChicken implements QuestInterface,
 			doDoor(obj, player);
 			player.message("You unlock the door");
 			player.message("You go through the door");
-			showBubble(player, item);
+			thinkbubble(player, item);
 		}
 	}
 

@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
@@ -45,9 +46,9 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 		// 450 coins
 		// Gold ring
 		// Emerald
-		addItem(p, ItemId.GOLD_RING.id(), 1);
-		addItem(p, ItemId.EMERALD.id(), 1);
-		addItem(p, ItemId.COINS.id(), 450);
+		give(p, ItemId.GOLD_RING.id(), 1);
+		give(p, ItemId.EMERALD.id(), 1);
+		give(p, ItemId.COINS.id(), 450);
 		p.message("Well done you have completed the pirate treasure quest");
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PIRATES_TREASURE), true);
 		p.message("@gre@You haved gained 2 quest points!");
@@ -97,10 +98,10 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				new GameObject(obj.getWorld(), obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
 					obj.getType()));
 			p.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
-			removeItem(p, ItemId.CHEST_KEY.id(), 1);
-			message(p, "All that is in the chest is a message");
-			message(p, "You take the message from the chest");
-			message(p, "It says dig just behind the south bench in the park");
+			remove(p, ItemId.CHEST_KEY.id(), 1);
+			Functions.mes(p, "All that is in the chest is a message");
+			Functions.mes(p, "You take the message from the chest");
+			Functions.mes(p, "It says dig just behind the south bench in the park");
 			p.updateQuestStage(this, 3);
 		}
 	}
@@ -113,39 +114,39 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	public void frankDialogue(Player p, Npc n, int cID) {
 		switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "Arrrh Matey");
-				int choice = showMenu(p, n,
+				npcsay(p, n, "Arrrh Matey");
+				int choice = multi(p, n,
 					"I'm in search of treasure", "Arrrh",
 					"Do you want to trade?");
 				if (choice == 0) {
-					npcTalk(p, n, "Arrrh treasure you be after eh?",
+					npcsay(p, n, "Arrrh treasure you be after eh?",
 						"Well I might be able to tell you where to find some.",
 						"For a price");
-					playerTalk(p, n, "What sort of price?");
-					npcTalk(p, n,
+					say(p, n, "What sort of price?");
+					npcsay(p, n,
 						"Well for example if you can get me a bottle of rum",
 						"Not just any rum mind",
 						"I'd like some rum brewed on Karamja island",
 						"There's no rum like Karamja rum");
 					p.updateQuestStage(this, 1);
 				} else if (choice == 1) {
-					npcTalk(p, n, "Arrrh");
+					npcsay(p, n, "Arrrh");
 				} else if (choice == 2) {
-					npcTalk(p, n, "No, I've got nothing to trade");
+					npcsay(p, n, "No, I've got nothing to trade");
 				}
 				break;
 			case 1:
-				npcTalk(p, n, "Arrrh Matey",
+				npcsay(p, n, "Arrrh Matey",
 					"Have Ye brought some rum for yer old mate Frank");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id())) {
-					playerTalk(p, n, "No not yet");
+					say(p, n, "No not yet");
 					return;
 				}
-				playerTalk(p, n, "Yes I've got some");
+				say(p, n, "Yes I've got some");
 				p.getCarriedItems().remove(ItemId.KARAMJA_RUM.id(), 1);
 
-				message(p, "Frank happily takes the rum");
-				npcTalk(p,
+				Functions.mes(p, "Frank happily takes the rum");
+				npcsay(p,
 					n,
 					"Now a deals a deal, I'll tell ye about the treasure",
 					"I used to serve under a pirate captain called One Eyed Hector",
@@ -153,48 +154,48 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 					"but about a year ago we were boarded by the Royal Asgarnian Navy",
 					"Hector was killed along with many of the crew",
 					"I was one of the few to escape", "And I escaped with this");
-				message(p, "Frank hands you a key");
-				addItem(p, ItemId.CHEST_KEY.id(), 1);
+				Functions.mes(p, "Frank hands you a key");
+				give(p, ItemId.CHEST_KEY.id(), 1);
 				p.updateQuestStage(this, 2);
-				npcTalk(p, n, "This is Hector's key",
+				npcsay(p, n, "This is Hector's key",
 					"I believe it opens his chest",
 					"In his old room in the blue moon inn in Varrock",
 					"With any luck his treasure will be in there");
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"Ok thanks, I'll go and get it",
 					"So why didn't you ever get it?");
 				if (menu == 1) {
-					npcTalk(p, n, "I'm not allowed in the blue moon inn",
+					npcsay(p, n, "I'm not allowed in the blue moon inn",
 						"Apparently I'm a drunken trouble maker");
 				}
 				break;
 			case 2:
-				npcTalk(p, n, "Arrrh Matey");
+				npcsay(p, n, "Arrrh Matey");
 				if (p.getCarriedItems().hasCatalogID(ItemId.CHEST_KEY.id(), Optional.empty()) || p.getBank().hasItemId(ItemId.CHEST_KEY.id())) {
-					npcTalk(p, n, "Arrrh Matey");
-					int menu1 = showMenu(p, n, "Arrrh",
+					npcsay(p, n, "Arrrh Matey");
+					int menu1 = multi(p, n, "Arrrh",
 						"Do you want to trade?");
 					if (menu1 == 0) {
-						npcTalk(p, n, "Arrrh");
+						npcsay(p, n, "Arrrh");
 					} else if (menu1 == 1) {
-						npcTalk(p, n, "No I've got nothing to trade");
+						npcsay(p, n, "No I've got nothing to trade");
 					}
 				} else {
-					playerTalk(p, n, "I seem to have lost my chest key");
-					npcTalk(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
-					message(p, "Frank hands you a chest key");
-					addItem(p, ItemId.CHEST_KEY.id(), 1);
+					say(p, n, "I seem to have lost my chest key");
+					npcsay(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
+					Functions.mes(p, "Frank hands you a chest key");
+					give(p, ItemId.CHEST_KEY.id(), 1);
 				}
 				break;
 			case 3:
 			case -1:
-				npcTalk(p, n, "Arrrh Matey");
-				int menu2 = showMenu(p, n, "Arrrh",
+				npcsay(p, n, "Arrrh Matey");
+				int menu2 = multi(p, n, "Arrrh",
 					"Do you want to trade?");
 				if (menu2 == 0) {
-					npcTalk(p, n, "Arrrh");
+					npcsay(p, n, "Arrrh");
 				} else if (menu2 == 1) {
-					npcTalk(p, n, "No I've got nothing to trade");
+					npcsay(p, n, "No I've got nothing to trade");
 				}
 				break;
 		}
@@ -203,13 +204,13 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	public void luthasDialogue(Player p, Npc n, int cID) {
 		if (cID == -1) {
 			if (!p.getCache().hasKey("bananas")) {
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Hello I'm Luthas, I run the banana plantation here");
-				int choice = showMenu(p, n,
+				int choice = multi(p, n,
 					"Could you offer me employment on your plantation?",
 					"That customs officer is annoying isn't she?");
 				if (choice == 0) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"Yes, I can sort something out",
 						"Yes there's a crate outside ready for loading up on the ship",
@@ -221,8 +222,8 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				}
 			} else {
 				if (p.getCache().getInt("bananas") >= 10) {
-					playerTalk(p, n, "I've filled a crate with bananas");
-					npcTalk(p, n, "Well done here is your payment");
+					say(p, n, "I've filled a crate with bananas");
+					npcsay(p, n, "Well done here is your payment");
 					p.message("Luthas hands you 30 coins");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 30));
 					if (p.getCache().hasKey("bananas")) {
@@ -234,7 +235,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 					if (!p.getCache().hasKey("rum_delivered")) {
 						p.getCache().store("rum_delivered", true);
 					}
-					int choice = showMenu(
+					int choice = multi(
 						p,
 						n,
 						"Will you pay me for another crate full?",
@@ -243,38 +244,38 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 						"That customs officer is annoying isn't she?");
 					if (choice == 0) {
 						p.getCache().set("bananas", 0);
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"Yes certainly",
 							"If you go outside you should see the old crate has been loaded on to the ship",
 							"and there is another empty crate in it's place");
 					} else if (choice == 2) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"I sell them to Wydin who runs a grocery store in Port Sarim");
 					} else if (choice == 3) {
 						luthasDialogue(p, n, Luthas.ANNOYING);
 					}
 					return;
 				}
-				npcTalk(p, n, "Have you completed your task yet?");
-				int choice = showMenu(p, n,
+				npcsay(p, n, "Have you completed your task yet?");
+				int choice = multi(p, n,
 					"What did I have to do again?",
 					"No, the crate isn't full yet");
 				if (choice == 0) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"There's a crate outside ready for loading up on the ship",
 						"If you could fill it up with bananas",
 						"I'll pay you 30 gold");
 				} else if (choice == 1) {
-					npcTalk(p, n, "Well come back when it is");
+					npcsay(p, n, "Well come back when it is");
 				}
 			}
 
 		}
 		switch (cID) {
 			case Luthas.ANNOYING:
-				npcTalk(p, n, "Well I know her pretty well",
+				npcsay(p, n, "Well I know her pretty well",
 					"She doesn't cause me any trouble any more",
 					"She doesn't even search my export crates any more",
 					"She knows they only contain bananas");
@@ -318,13 +319,13 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				break;
 			case 185:
 				if (p.getCache().hasKey("rum_delivered") && p.getCache().getBoolean("rum_delivered")) {
-					message(p, "There are a lot of bananas in the crate",
+					Functions.mes(p, "There are a lot of bananas in the crate",
 							"You find your bottle of rum in amoungst the bananas");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
 					p.getCache().remove("rum_delivered");
 				}
-				message(p, "Do you want to take a banana?");
-				int wantabanana = showMenu(p, "Yes", "No");
+				Functions.mes(p, "Do you want to take a banana?");
+				int wantabanana = multi(p, "Yes", "No");
 				if (wantabanana == 0) {
 					p.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));
 					p.playerServerMessage(MessageType.QUEST, "you take a banana");
@@ -361,11 +362,11 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 		if ((p.getY() == 548 && p.getX() >= 287 && p.getX() <= 291)
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (p.getX() == 290 || p.getX() == 289) {
-				Npc wyson = getNearestNpc(p, NpcId.WYSON_THE_GARDENER.id(), 20);
+				Npc wyson = ifnearvisnpc(p, NpcId.WYSON_THE_GARDENER.id(), 20);
 				boolean dig = false;
 				if (wyson != null) {
 					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
-					sleep(1000);
+					delay(1000);
 					wyson.setChasing(p);
 					long start = System.currentTimeMillis();
 					while (!p.inCombat()) {
@@ -373,13 +374,13 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 							dig = true;
 							break;
 						}
-						sleep(50);
+						delay(50);
 					}
 				} else {
 					dig = true;
 				}
 				if (dig) {
-					message(p, "You dig a hole in the ground",
+					Functions.mes(p, "You dig a hole in the ground",
 						"You find a little bag of treasure");
 					p.sendQuestComplete(this.getQuestId());
 				}

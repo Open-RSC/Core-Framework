@@ -1,5 +1,7 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -7,9 +9,6 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 
@@ -21,37 +20,37 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	private void cartRide(Player p, Npc n) {
-		npcTalk(p, n, "I am offering a cart ride to Brimhaven if you're interested!",
+		npcsay(p, n, "I am offering a cart ride to Brimhaven if you're interested!",
 			"It will cost 500 Gold");
-		int menu = showMenu(p, n, false, //do not send over
+		int menu = multi(p, n, false, //do not send over
 			"Yes, that sounds great!",
 			"No thanks.");
 		if (menu == 0) {
-			playerTalk(p, n, "Yes please, I'd like to go to Brimhaven!");
-			if (hasItem(p, ItemId.COINS.id(), 500)) {
-				npcTalk(p, n, "Great!",
+			say(p, n, "Yes please, I'd like to go to Brimhaven!");
+			if (ifheld(p, ItemId.COINS.id(), 500)) {
+				npcsay(p, n, "Great!",
 					"Just hop into the cart then and we'll go!");
-				removeItem(p, ItemId.COINS.id(), 500);
-				message(p, 1000, "You Hop into the cart and the driver urges the horses on.");
+				remove(p, ItemId.COINS.id(), 500);
+				mes(p, 1000, "You Hop into the cart and the driver urges the horses on.");
 				p.teleport(468, 662);
-				message(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");
-				message(p, 1200, "You feel fatigued from the journey, but at least");
-				message(p, 1200, "you didn't have to walk all that distance.");
+				mes(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");
+				mes(p, 1200, "You feel fatigued from the journey, but at least");
+				mes(p, 1200, "you didn't have to walk all that distance.");
 			} else {
-				npcTalk(p, n, "Sorry, but it looks as if you don't have enough money.",
+				npcsay(p, n, "Sorry, but it looks as if you don't have enough money.",
 					"Come back and see me when you have enough for the ride.");
 			}
 		} else if (menu == 1) {
-			playerTalk(p, n, "No thanks.");
-			npcTalk(p, n, "Ok Bwana, let me know if you change your mind.");
+			say(p, n, "No thanks.");
+			npcsay(p, n, "Ok Bwana, let me know if you change your mind.");
 		}
 	}
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CART_DRIVER_SHILO.id()) {
-			playerTalk(p, n, "Hello!");
-			npcTalk(p, n, "Hello Bwana!");
+			say(p, n, "Hello!");
+			npcsay(p, n, "Hello Bwana!");
 			cartRide(p, n);
 		}
 	}
@@ -66,10 +65,10 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 		if (obj.getID() == TRAVEL_CART) {
 			if (command.equalsIgnoreCase("Board")) {
 				p.message("This looks like a sturdy travelling cart.");
-				Npc driver = getNearestNpc(p, NpcId.CART_DRIVER_SHILO.id(), 10);
+				Npc driver = ifnearvisnpc(p, NpcId.CART_DRIVER_SHILO.id(), 10);
 				if (driver != null) {
 					driver.teleport(p.getX(), p.getY());
-					sleep(600); // 1 tick.
+					delay(600); // 1 tick.
 					npcWalkFromPlayer(p, driver);
 					p.message("A nearby man walks over to you.");
 					cartRide(p, driver);

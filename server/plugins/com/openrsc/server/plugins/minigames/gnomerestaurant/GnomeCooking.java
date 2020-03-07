@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -33,10 +34,10 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 		}
 		// NOTE: THERE ARE NO REQUIREMENT TO COOK THE DOUGH ONLY TO MOULD IT.
 		p.setBusy(true);
-		showBubble(p, item);
+		thinkbubble(p, item);
 		p.playSound("cooking");
 		if (p.getCarriedItems().remove(item) > -1) {
-			message(p, 3000, gc.messages[0]);
+			mes(p, 3000, gc.messages[0]);
 			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
 				if (inArray(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),
 						ItemId.GNOMECRUNCHIE_DOUGH.id())) {
@@ -54,7 +55,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 						&& p.getCache().hasKey("toadlegs_on_batta")) { // Makes toad batta
 						p.message(gc.messages[1]);
 						p.incExp(Skills.COOKING, gc.experience, true);
-						addItem(p, ItemId.TOAD_BATTA.id(), 1);
+						give(p, ItemId.TOAD_BATTA.id(), 1);
 						resetGnomeCooking(p);
 						return;
 					} else if (p.getCache().hasKey("gnomespice_on_worm")
@@ -96,7 +97,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 						&& p.getCache().hasKey("dwell_on_bowl")
 						&& p.getCache().hasKey("gnomespice_on_bowl") && p.getCache().getInt("gnomespice_on_bowl") >= 2) { // tangled toads legs
 						p.incExp(Skills.COOKING, gc.experience, true);
-						addItem(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
+						give(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
 						resetGnomeCooking(p);
 						return;
 					}
@@ -109,7 +110,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					p.message(gc.messages[1]);
 					p.incExp(Skills.COOKING, gc.experience, true);
 				}
-				addItem(p, gc.cookedID, 1);
+				give(p, gc.cookedID, 1);
 			} else {
 				p.getCarriedItems().getInventory().add(new Item(gc.burntID));
 				p.message(gc.messages[2]);
@@ -125,12 +126,12 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA.id(), Optional.of(false))
 			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
 			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
-			message(p, "you need to finish, eat or drop the unfinished dish you hold");
+			Functions.mes(p, "you need to finish, eat or drop the unfinished dish you hold");
 			p.message("before you can make another - giannes rules");
 			return false;
 		}
 		p.message("which shape would you like to mould");
-		int menu = showMenu(p,
+		int menu = multi(p,
 			"gnomebatta",
 			"gnomebowl",
 			"gnomecrunchie");
@@ -143,8 +144,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					p.setBusy(false);
 					return false;
 				}
-				showBubble(p, item);
-				message(p, 3000, "you attempt to mould the dough into a gnomebatta");
+				thinkbubble(p, item);
+				mes(p, 3000, "you attempt to mould the dough into a gnomebatta");
 				p.message("You manage to make some gnome batta dough");
 				p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GNOMEBATTA_DOUGH.id());
 			} else if (menu == 1) {
@@ -153,8 +154,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					p.setBusy(false);
 					return false;
 				}
-				showBubble(p, item);
-				message(p, 3000, "you attempt to mould the dough into a gnome bowl");
+				thinkbubble(p, item);
+				mes(p, 3000, "you attempt to mould the dough into a gnome bowl");
 				p.message("You manage to make some gnome bowl dough");
 				p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GNOMEBOWL_DOUGH.id());
 			} else if (menu == 2) {
@@ -163,8 +164,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					p.setBusy(false);
 					return false;
 				}
-				showBubble(p, item);
-				message(p, 3000, "you attempt to mould the dough into gnome crunchies");
+				thinkbubble(p, item);
+				mes(p, 3000, "you attempt to mould the dough into gnome crunchies");
 				p.message("You manage to make some gnome crunchies dough");
 				p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GNOMECRUNCHIE_DOUGH.id());
 				if (!p.getCache().hasKey("gnomecrunchie_dough")) {

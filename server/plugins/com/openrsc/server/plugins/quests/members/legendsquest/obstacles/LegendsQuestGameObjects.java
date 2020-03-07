@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
@@ -76,21 +77,21 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == ECHNED_ZEKIN_ROCK) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8) {
-				message(p, 1300, "The rock moves quite easily.");
+				mes(p, 1300, "The rock moves quite easily.");
 				p.message("And the spirit of Echned Zekin seems to have disapeared.");
-				replaceObjectDelayed(obj, 10000, SHALLOW_WATER);
+				Functions.changeloc(obj, 10000, SHALLOW_WATER);
 				return;
 			}
 			p.setBusy(true);
-			Npc echned = getNearestNpc(p, NpcId.ECHNED_ZEKIN.id(), 2);
+			Npc echned = ifnearvisnpc(p, NpcId.ECHNED_ZEKIN.id(), 2);
 			if (echned == null) {
-				message(p, 1300, "A thick, green mist seems to emanate from the water...",
+				mes(p, 1300, "A thick, green mist seems to emanate from the water...",
 					"It slowly congeals into the shape of a body...");
-				echned = spawnNpcWithRadius(p, NpcId.ECHNED_ZEKIN.id(), p.getX(), p.getY(), 0, 60000 * 3);
+				echned = Functions.addnpc(p, NpcId.ECHNED_ZEKIN.id(), p.getX(), p.getY(), 0, 60000 * 3);
 				if (echned != null) {
 					p.setBusyTimer(3000);
-					sleep(1300);
-					message(p, echned, 1300, "Which slowly floats towards you.");
+					delay(1300);
+					Functions.mes(p, echned, 1300, "Which slowly floats towards you.");
 					echned.initializeTalkScript(p);
 				}
 				return;
@@ -107,38 +108,38 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					p.teleport(395, 3725);
 				} else {
 					if (p.getCache().hasKey("cavernous_opening") || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-						message(p, 1300, "You walk carefully into the darkness of the cavern..");
+						mes(p, 1300, "You walk carefully into the darkness of the cavern..");
 						p.teleport(395, 3733);
 					} else {
-						message(p, 1300, "You walk into an invisible barrier...");
-						message(p, 600, "Somekind of magical force will not allow you to pass into the cavern.");
+						mes(p, 1300, "You walk into an invisible barrier...");
+						mes(p, 600, "Somekind of magical force will not allow you to pass into the cavern.");
 					}
 				}
 			} else if (command.equalsIgnoreCase("search")) {
 				if (p.getCache().hasKey("cavernous_opening")) {
-					message(p, 1300, "You can see a glowing crystal shape in the wall.",
+					mes(p, 1300, "You can see a glowing crystal shape in the wall.",
 						"It looks like the Crystal is magical, ",
 						"it allows access to the cavern.");
 				} else {
-					message(p, 1300, "You see a heart shaped depression in the wall next to the cavern.",
+					mes(p, 1300, "You see a heart shaped depression in the wall next to the cavern.",
 						"And a message reads...",
 						"@gre@All ye who stand 'ere the dragons teeth,");
-					message(p, 600, "@gre@Place your full true heart and proceed...");
+					mes(p, 600, "@gre@Place your full true heart and proceed...");
 				}
 			}
 		}
 		else if (obj.getID() == ANCIENT_LAVA_FURNACE) {
 			if (command.equalsIgnoreCase("look")) {
-				message(p, 600, "This is an ancient looking furnace.");
+				mes(p, 600, "This is an ancient looking furnace.");
 			} else if (command.equalsIgnoreCase("search")) {
-				message(p, 1300, "You search the lava furnace.",
+				mes(p, 1300, "You search the lava furnace.",
 					"You find a small compartment that you may be able to use.",
 					"Strangely, it looks as if it is designed for a specific purpose...");
-				message(p, 600, "to fuse things together at very high temperatures...");
+				mes(p, 600, "to fuse things together at very high temperatures...");
 			}
 		}
 		else if (obj.getID() == RED_EYE_ROCK) {
-			message(p, 600, "These rocks look somehow manufactured..");
+			mes(p, 600, "These rocks look somehow manufactured..");
 		}
 		else if (obj.getID() == ROPE_UP) {
 			p.message("You climb the rope back out again.");
@@ -146,31 +147,31 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == WOODEN_BEAM + 1) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || blockDescendBeamPostQuest(p)) {
-				message(p, 1300, "The rope snaps as you're about to climb down it.",
+				mes(p, 1300, "The rope snaps as you're about to climb down it.",
 					"Perhaps you need a new rope.");
 				return;
 			}
-			message(p, 1300, "This rope climb looks pretty dangerous,",
+			mes(p, 1300, "This rope climb looks pretty dangerous,",
 				"Are you sure you want to go down?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes,I'll go down the rope...",
 				"No way do I want to go down there.");
 			if (menu == 0) {
-				message(p, 1300, "You prepare to climb down the rope...");
-				playerTalk(p, null, "! Gulp !");
-				sleep(1100);
+				mes(p, 1300, "You prepare to climb down the rope...");
+				say(p, null, "! Gulp !");
+				delay(1100);
 				if ((p.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && !p.getCache().hasKey("gujuo_potion")) || blockDescendBeamPostQuest(p)) {
-					message(p, 1300, "...but a terrible fear grips you...");
+					mes(p, 1300, "...but a terrible fear grips you...");
 					p.message("And you can go no further.");
 				} else {
 					int rnd = DataConversions.random(0, 4);
 					if (rnd == 0) {
-						message(p, 1300, "but fear stabs at your heart...",
+						mes(p, 1300, "but fear stabs at your heart...",
 								"and you lose concentration,");
 						p.damage(DataConversions.random(10, 15));
 					}
 					else {
-						message(p, 1300, "And although fear stabs at your heart...",
+						mes(p, 1300, "And although fear stabs at your heart...",
 								"You shimmey down the rope...");
 					}
 					p.teleport(426, 3707);
@@ -183,16 +184,16 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			p.message("You search the wooden beam...");
 			if (p.getCache().hasKey("legends_wooden_beam")) {
 				p.message("You search the wooden beam and find the rope you attached.");
-				replaceObjectDelayed(obj, 5000, WOODEN_BEAM + 1);
+				Functions.changeloc(obj, 5000, WOODEN_BEAM + 1);
 			} else {
-				message(p, 1300, "You see nothing special about this...");
+				mes(p, 1300, "You see nothing special about this...");
 				p.message("Perhaps if you had a rope, it might be more functional.");
 			}
 		}
 		else if (obj.getID() == CARVED_ROCK) {
-			message(p, 1300, "You see a delicate inscription on the rock, it says,");
-			message(p, 1900, "@gre@'Once there were crystals to make the pool shine,'");
-			message(p, 0, "@gre@'Ordered in stature to retrieve what's mine.'");
+			mes(p, 1300, "You see a delicate inscription on the rock, it says,");
+			mes(p, 1900, "@gre@'Once there were crystals to make the pool shine,'");
+			mes(p, 0, "@gre@'Ordered in stature to retrieve what's mine.'");
 			String gem = "";
 			boolean attached = false;
 			// opal
@@ -232,23 +233,23 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 
 			if (!gem.equals("") && attached) {
-				message(p, 1300, "A barely visible " + gem + " becomes clear again, spinning above the rock.",
+				mes(p, 1300, "A barely visible " + gem + " becomes clear again, spinning above the rock.",
 						"And then fades again...");
 			}
 		}
 		else if (obj.getID() == HALF_BURIED_REMAINS) {
-			message(p, "It looks as if some poor unfortunate soul died here.");
+			Functions.mes(p, "It looks as if some poor unfortunate soul died here.");
 		}
 		else if (obj.getID() == HEAVY_METAL_GATE) {
 			if (command.equalsIgnoreCase("look")) {
-				message(p, 1300, "This huge metal gate bars the way further...",
+				mes(p, 1300, "This huge metal gate bars the way further...",
 					"There is an intense and unpleasant feeling from this place.");
 				p.message("And you can see why, shadowy flying creatures seem to hover in the still dark air.");
 			} else if (command.equalsIgnoreCase("push")) {
-				message(p, 1300, "You push the gates...they're very stiff...",
+				mes(p, 1300, "You push the gates...they're very stiff...",
 					"They won't budge with a normal push.",
 					"Do you want to try to force them open with brute strength?");
-				int menu = showMenu(p,
+				int menu = multi(p,
 					"Yes, I'm very strong, I'll force them open.",
 					"No, I'm having second thoughts.");
 				if (menu == 0) {
@@ -256,25 +257,25 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						p.message("You need a Strength of at least 50 to affect these gates.");
 						return;
 					}
-					message(p, 1300, "You ripple your muscles...preparing too exert yourself...");
-					playerTalk(p, null, "Hup!");
-					message(p, 1300, "You brace yourself against the doors...");
-					playerTalk(p, null, "Urghhhhh!");
-					message(p, 1300, "You start to force against the gate..");
-					playerTalk(p, null, "Arghhhhhhh!");
-					message(p, 1300, "You push and push,");
-					playerTalk(p, null, "Shhhhhhhshshehshsh");
+					mes(p, 1300, "You ripple your muscles...preparing too exert yourself...");
+					say(p, null, "Hup!");
+					mes(p, 1300, "You brace yourself against the doors...");
+					say(p, null, "Urghhhhh!");
+					mes(p, 1300, "You start to force against the gate..");
+					say(p, null, "Arghhhhhhh!");
+					mes(p, 1300, "You push and push,");
+					say(p, null, "Shhhhhhhshshehshsh");
 					if (Formulae.failCalculation(p, Skills.STRENGTH, 50)) {
-						message(p, 1300, "You just manage to force the gates open slightly, ",
+						mes(p, 1300, "You just manage to force the gates open slightly, ",
 							"just enough to force yourself through.");
-						replaceObjectDelayed(obj, 2000, 181);
+						Functions.changeloc(obj, 2000, 181);
 						if (p.getY() <= 3717) {
 							p.teleport(441, 3719);
 						} else {
 							p.teleport(441, 3717);
 						}
 					} else {
-						message(p, 1300, "but run out of steam before you're able to force the gates open.");
+						mes(p, 1300, "but run out of steam before you're able to force the gates open.");
 						p.message("The effort of trying to force the gates reduces your strength temporarily");
 						p.getSkills().decrementLevel(Skills.STRENGTH);
 					}
@@ -290,8 +291,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					return;
 				}
 				if (Formulae.failCalculation(p, Skills.MINING, 50)) {
-					message(p, 1300, "You take a good swing at the rock with your pick...");
-					replaceObjectDelayed(obj, 2000, 1143);
+					mes(p, 1300, "You take a good swing at the rock with your pick...");
+					Functions.changeloc(obj, 2000, 1143);
 					if (obj.getID() == SMASH_BOULDERS[0] && p.getY() <= 3704) {
 						p.teleport(441, 3707);
 					} else if (obj.getID() == SMASH_BOULDERS[0] && p.getY() >= 3707) {
@@ -305,7 +306,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					} else if (obj.getID() == SMASH_BOULDERS[2] && p.getY() >= 3715) {
 						p.teleport(441, 3712);
 					}
-					message(p, 1900, "...and smash it into smaller pieces.");
+					mes(p, 1900, "...and smash it into smaller pieces.");
 					p.message("Another large rock falls down replacing the one that you smashed.");
 				} else {
 					p.message("You fail to make a mark on the rocks.");
@@ -314,28 +315,28 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					p.getSkills().decrementLevel(Skills.MINING);
 				}
 			} else {
-				message(p, "You'll need a pickaxe to smash your way through these boulders.");
+				Functions.mes(p, "You'll need a pickaxe to smash your way through these boulders.");
 			}
 		}
 		else if (obj.getID() == CAVE_ANCIENT_WOODEN_DOORS) {
 			if (command.equalsIgnoreCase("open")) {
 				if (p.getY() >= 3703) {
-					message(p, 1300, "You push the doors open and walk through.");
-					replaceObjectDelayed(obj, 2000, 497);
+					mes(p, 1300, "You push the doors open and walk through.");
+					Functions.changeloc(obj, 2000, 497);
 					p.teleport(442, 3701);
-					sleep(2000);
+					delay(2000);
 					p.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
-					message(p, 1300, "You push on the doors...they're really shut..",
+					mes(p, 1300, "You push on the doors...they're really shut..",
 						"It looks as if they have a huge lock on it...");
 					p.message("Although ancient, it looks very sophisticated...");
 				}
 			} else if (command.equalsIgnoreCase("pick lock")) {
 				if (p.getY() >= 3703) {
-					message(p, 1300, "You see a lever which you pull on to open the door.");
-					replaceObjectDelayed(obj, 2000, 497);
+					mes(p, 1300, "You see a lever which you pull on to open the door.");
+					Functions.changeloc(obj, 2000, 497);
 					p.teleport(442, 3701);
-					message(p, 1300, "You walk through the door.");
+					mes(p, 1300, "You walk through the door.");
 					p.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
 					if (getCurrentLevel(p, Skills.THIEVING) < 50) {
@@ -343,29 +344,29 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						return;
 					}
 					if (p.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false))) {
-						message(p, 1300, "You attempt to pick the lock..");
+						mes(p, 1300, "You attempt to pick the lock..");
 						p.message("It looks very sophisticated ...");
-						playerTalk(p, null, "Hmmm, interesting...");
-						sleep(1300);
+						say(p, null, "Hmmm, interesting...");
+						delay(1300);
 						p.message("You carefully insert your lockpick into the lock.");
-						playerTalk(p, null, "This will be a challenge...");
-						sleep(1300);
+						say(p, null, "This will be a challenge...");
+						delay(1300);
 						p.message("You feel for the pins and levers in the mechanism.");
-						playerTalk(p, null, "Easy does it....");
-						sleep(1300);
+						say(p, null, "Easy does it....");
+						delay(1300);
 						if (Thieving.succeedPickLockThieving(p, 50)) {
-							message(p, 1300, "@gre@'CLICK'");
-							playerTalk(p, null, "Easy as pie...");
-							sleep(1300);
-							message(p, 1300, "You tumble the lock mechanism and the door opens easily.");
+							mes(p, 1300, "@gre@'CLICK'");
+							say(p, null, "Easy as pie...");
+							delay(1300);
+							mes(p, 1300, "You tumble the lock mechanism and the door opens easily.");
 							p.incExp(Skills.THIEVING, 100, true);
-							replaceObjectDelayed(obj, 2000, 497);
+							Functions.changeloc(obj, 2000, 497);
 							p.teleport(441, 3703);
 						} else {
 							p.message("...but you don't manage to pick the lock.");
 						}
 					} else {
-						message(p, 1300, "The mechanism for this lock looks very sophisticated...");
+						mes(p, 1300, "The mechanism for this lock looks very sophisticated...");
 						p.message("you're unable to affect the lock without the proper tool..");
 					}
 				}
@@ -373,23 +374,23 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == CRUDE_DESK) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.SHAMANS_TOME.id(), Optional.empty())) {
-				message(p, 1300, "You search the desk ...");
+				mes(p, 1300, "You search the desk ...");
 				p.message("...but find nothing.");
 			} else {
-				message(p, 2500, "You search the desk ...");
-				addItem(p, ItemId.SHAMANS_TOME.id(), 1);
+				mes(p, 2500, "You search the desk ...");
+				give(p, ItemId.SHAMANS_TOME.id(), 1);
 				p.message("You find a book...it looks like an ancient tome...");
 			}
 		}
 		else if (obj.getID() == BOOKCASE) {
-			message(p, 1300, "You search the bookcase...",
+			mes(p, 1300, "You search the bookcase...",
 				"And find a large gaping hole at the back.");
 			p.message("Would you like to climb through the hole?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I'll climb through the hole.",
 				"No, I'll stay here.");
 			if (menu == 0) {
-				message(p, 1300, "You climb through the hole in the wall..",
+				mes(p, 1300, "You climb through the hole in the wall..",
 					"It's very narrow and you have to contort your body a lot.",
 					"After some time, you  manage to wriggle out of a small cavern...");
 				p.teleport(444, 3699);
@@ -402,9 +403,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (p.getCarriedItems().hasCatalogID(ItemId.SCRAWLED_NOTES.id(), Optional.empty())) {
 				p.message("You cannot find anything else in here.");
 			} else {
-				sleep(1300);
-				addItem(p, ItemId.SCRAWLED_NOTES.id(), 1);
-				message(p, 1300, "You find a scrap of paper with nonesense written on it.");
+				delay(1300);
+				give(p, ItemId.SCRAWLED_NOTES.id(), 1);
+				mes(p, 1300, "You find a scrap of paper with nonesense written on it.");
 			}
 		}
 		else if (obj.getID() == CRUDE_BED && command.equalsIgnoreCase("search")) {
@@ -412,9 +413,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (p.getCarriedItems().hasCatalogID(ItemId.SCATCHED_NOTES.id(), Optional.empty())) {
 				p.message("You cannot find anything else in here.");
 			} else {
-				sleep(1300);
-				addItem(p, ItemId.SCATCHED_NOTES.id(), 1);
-				message(p, 1300, "You find a scrap of paper with spidery writing on it.");
+				delay(1300);
+				give(p, ItemId.SCATCHED_NOTES.id(), 1);
+				mes(p, 1300, "You find a scrap of paper with spidery writing on it.");
 			}
 		}
 		else if (obj.getID() == CRATE) {
@@ -422,16 +423,16 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (p.getCarriedItems().hasCatalogID(ItemId.SCRIBBLED_NOTES.id(), Optional.empty())) {
 				p.message("You cannot find anything else in here.");
 			} else {
-				sleep(1300);
-				addItem(p, ItemId.SCRIBBLED_NOTES.id(), 1);
-				message(p, 1300, "After some time you find a scrumpled up piece of paper.");
+				delay(1300);
+				give(p, ItemId.SCRIBBLED_NOTES.id(), 1);
+				mes(p, 1300, "After some time you find a scrumpled up piece of paper.");
 				p.message("It looks like rubbish...");
 			}
 		}
 		else if (obj.getID() == CAVE_ENTRANCE_FROM_BOULDERS) {
-			message(p, 1300, "You see a small cave entrance.",
+			mes(p, 1300, "You see a small cave entrance.",
 				"Would you like to climb into it?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I'll climb into it.",
 				"No, I'll stay where I am.");
 			if (menu == 0) {
@@ -442,7 +443,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == CAVE_ENTRANCE_LEAVE_DUNGEON) {
-			message(p, 1300, "You crawl back out from the cavern...");
+			mes(p, 1300, "You crawl back out from the cavern...");
 			p.teleport(452, 874);
 		}
 		else if (obj.getID() == SHALLOW_WATER) {
@@ -454,22 +455,22 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("A disgusting sess pit of filth and stench...");
 				return;
 			}
-			message(p, 0, "A bubbling brook with effervescent water...");
+			mes(p, 0, "A bubbling brook with effervescent water...");
 		}
 		else if (obj.getID() == TALL_REEDS) {
-			message(p, 1300, "These tall reeds look nice and long, ");
-			message(p, 1300, "with a long tube for a stem.");
-			message(p, 0, "They reach all the way down to the water.");
+			mes(p, 1300, "These tall reeds look nice and long, ");
+			mes(p, 1300, "with a long tube for a stem.");
+			mes(p, 0, "They reach all the way down to the water.");
 		}
 		else if (obj.getID() == ROCK) {
 			if (p.getCache().hasKey("legends_cavern") || p.getQuestStage(Quests.LEGENDS_QUEST) >= 2 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				if (p.getQuestStage(Quests.LEGENDS_QUEST) == 1) {
-					message(p, 1200, "You see nothing significant...",
+					mes(p, 1200, "You see nothing significant...",
 						"At first....");
 				}
-				message(p, 1200, "You see that there is a small crevice that you may be able to crawl though.?",
+				mes(p, 1200, "You see that there is a small crevice that you may be able to crawl though.?",
 					"Would you like to try to crawl through, it looks quite an enclosed area.");
-				int menu = showMenu(p,
+				int menu = multi(p,
 					"Yes, I'll crawl through, I'm very athletic.",
 					"No, I'm pretty scared of enclosed areas.");
 				if (menu == 0) {
@@ -478,10 +479,10 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						p.setBusy(false);
 						return;
 					}
-					message(p, 1300, "You try to crawl through...",
+					mes(p, 1300, "You try to crawl through...",
 						"You contort your body to fit the crevice.");
 					if (Formulae.failCalculation(p, Skills.AGILITY, 50)) {
-						message(p, 1300, "You adroitely squeeze serpent like into the crevice.",
+						mes(p, 1300, "You adroitely squeeze serpent like into the crevice.",
 							"You find a small narrow tunnel that goes for some distance.",
 							"After some time, you find a small cave opening...and walk through.");
 						p.teleport(461, 3700);
@@ -490,15 +491,15 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 							p.updateQuestStage(Quests.LEGENDS_QUEST, 2);
 						}
 					} else {
-						message(p, 3200, "You get cramped into a tiny space and start to suffocate.",
+						mes(p, 3200, "You get cramped into a tiny space and start to suffocate.",
 							"You wriggle and wriggle but you cannot get out..");
-						message(p, 1300, "Eventually you manage to break free.",
+						mes(p, 1300, "Eventually you manage to break free.",
 							"But you scrape yourself very badly as your force your way out.",
 							"And you're totally exhausted from the experience.");
 						p.damage(5);
 					}
 				} else if (menu == 1) {
-					message(p, 1200, "You decide against forcing yourself into the tiny crevice..",
+					mes(p, 1200, "You decide against forcing yourself into the tiny crevice..",
 						"And realise that you have much better things to do..",
 						"Like visit Inn's and mine ore...");
 				}
@@ -508,8 +509,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == TOTEM_POLE) { // BLACK
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-				replaceObjectDelayed(obj, 10000, 1170);
-				message(p, 1300, "This totem pole is truly awe inspiring.",
+				Functions.changeloc(obj, 10000, 1170);
+				mes(p, 1300, "This totem pole is truly awe inspiring.",
 					"It depicts powerful Karamja jungle animals.",
 					"It is very well carved and brings a sense of power ",
 					"and spiritual fullfilment to anyone who looks at it.");
@@ -519,14 +520,14 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				replaceTotemPole(p, obj, false);
 				return;
 			}
-			message(p, 1300, "This totem pole looks very corrupted,",
+			mes(p, 1300, "This totem pole looks very corrupted,",
 				"there is a darkness about it that seems quite unnatural.",
 				"You don't like to look at it for too long.");
 
 		}
 		else if (obj.getID() == TOTEM_POLE + 1) { // RED
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-				message(p, 1300, "This totem pole is truly awe inspiring.",
+				mes(p, 1300, "This totem pole is truly awe inspiring.",
 					"It depicts powerful Karamja jungle animals.",
 					"It is very well carved and brings a sense of power ",
 					"and spiritual fullfilment to anyone who looks at it.");
@@ -536,15 +537,15 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				replaceTotemPole(p, obj, false);
 				return;
 			}
-			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TOTEM_POLE, obj.getDirection(), obj.getType()));
-			message(p, 1300, "This totem pole looks very corrupted,",
+			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), TOTEM_POLE, obj.getDirection(), obj.getType()));
+			mes(p, 1300, "This totem pole looks very corrupted,",
 				"there is a darkness about it that seems quite unnatural.",
 				"You don't like to look at it for too long.");
 
 		}
 		else if (obj.getID() == GRAND_VIZIERS_DESK) {
 			p.message("You rap loudly on the desk.");
-			Npc radimus = getNearestNpc(p, NpcId.SIR_RADIMUS_ERKLE_HOUSE.id(), 6);
+			Npc radimus = ifnearvisnpc(p, NpcId.SIR_RADIMUS_ERKLE_HOUSE.id(), 6);
 			if (radimus != null) {
 				radimus.teleport(517, 545);
 				npcWalkFromPlayer(p, radimus);
@@ -558,9 +559,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				if (p.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
 					p.message("The cupboard is empty.");
 				} else {
-					message(p, 1200, "You open the cupboard and find a machette.",
+					mes(p, 1200, "You open the cupboard and find a machette.",
 						"You take it out and add it to your inventory.");
-					addItem(p, ItemId.MACHETTE.id(), 1);
+					give(p, ItemId.MACHETTE.id(), 1);
 				}
 			} else {
 				p.message("@gre@Sir Radimus Erkle: You're not authorised to open that cupboard.");
@@ -568,9 +569,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == CRAFTED_TOTEM_POLE) {
 			if (obj.getOwner().equals(p.getUsername())) {
-				message(p, 1300, "This totem pole looks very heavy...");
-				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
-				addItem(p, ItemId.TOTEM_POLE.id(), 1);
+				mes(p, 1300, "This totem pole looks very heavy...");
+				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+				give(p, ItemId.TOTEM_POLE.id(), 1);
 				if (!p.getCache().hasKey("crafted_totem_pole")) {
 					p.getCache().store("crafted_totem_pole", true);
 				}
@@ -601,7 +602,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOTEM_POLE && item.getCatalogId() == ItemId.TOTEM_POLE.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-				message(p, "You have already replaced the evil totem pole with your own.",
+				Functions.mes(p, "You have already replaced the evil totem pole with your own.",
 						"You feel a great sense of accomplishment");
 				return;
 			}
@@ -613,7 +614,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				if (p.getCache().hasKey("killed_viyeldi") && !p.getCache().hasKey("viyeldi_companions")) {
 					p.getCache().set("viyeldi_companions", 1);
 				}
-				message(p, "You attempt to replace the evil totem pole.",
+				Functions.mes(p, "You attempt to replace the evil totem pole.",
 					"A black cloud emanates from the evil totem pole.");
 				p.message("It slowly forms into the dread demon Nezikchened...");
 				LegendsQuestNezikchened.demonFight(p);
@@ -623,8 +624,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
-				message(p, 1300, "You craft a totem pole out of the Yommi tree.");
-				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
+				mes(p, 1300, "You craft a totem pole out of the Yommi tree.");
+				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), p.getUsername()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legends Quest Craft Totem Pole") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
@@ -641,9 +642,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
-				message(p, 1300, "You professionally wield your Rune Axe...",
+				mes(p, 1300, "You professionally wield your Rune Axe...",
 					"As you trim the branches from the Yommi tree.");
-				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legend Quest Trim Yommi Tree") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
@@ -660,8 +661,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (obj.getOwner().equals(p.getUsername())) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
-				message(p, 1300, "You wield the Rune Axe and prepare to chop the Yommi tree.");
-				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+				mes(p, 1300, "You wield the Rune Axe and prepare to chop the Yommi tree.");
+				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legend Quest Chop Yommi Tree") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
@@ -670,26 +671,26 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						}
 					}
 				});
-				message(p, 1300, "You chop the Yommi tree down.",
+				mes(p, 1300, "You chop the Yommi tree down.",
 					"Perhaps you should trim those branches ?");
 			} else {
 				p.message("This is not your Yommi Tree.");
 			}
 		}
 		else if ((obj.getID() == DEAD_YOMMI_TREE || obj.getID() == ROTTEN_YOMMI_TREE) && item.getCatalogId() == ItemId.RUNE_AXE.id()) {
-			message(p, 0, "You chop the dead Yommi Tree down.");
-			message(p, 1300, "You gain some logs..");
-			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
-			addItem(p, ItemId.LOGS.id(), 1);
+			mes(p, 0, "You chop the dead Yommi Tree down.");
+			mes(p, 1300, "You gain some logs..");
+			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
+			give(p, ItemId.LOGS.id(), 1);
 		}
 		else if (obj.getID() == YOMMI_TREE && item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
 			int objectX = obj.getX();
 			int objectY = obj.getY();
 			p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
 			displayTeleportBubble(p, obj.getX(), obj.getY(), true);
-			message(p, 1300, "You water the Yommi tree from the golden bowl...",
+			mes(p, 1300, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
-			replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
+			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), p.getUsername()));
 			obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 15000, "Legend Quest Water Yommi Tree") {
 				public void action() {
 					GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
@@ -698,11 +699,11 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						if (p.isLoggedIn()) {
 							p.message("The Yommi tree is past it's prime and dies .");
 						}
-						delayedSpawnObject(obj.getWorld(), obj.getLoc(), 60000);
+						Functions.addloc(obj.getWorld(), obj.getLoc(), 60000);
 					}
 				}
 			});
-			message(p, 1300, "Soon the tree stops growing...",
+			mes(p, 1300, "Soon the tree stops growing...",
 				"It looks tall enough now to make a good totem pole.");
 		}
 		else if (obj.getID() == FERTILE_EARTH && item.getCatalogId() == ItemId.YOMMI_TREE_SEED.id()) {
@@ -731,14 +732,14 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 			// 1112, 1107
 			// 1172
-			removeItem(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
+			remove(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
 			if (DataConversions.random(0, 1) != 1) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
-				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), BABY_YOMMI_TREE, obj.getDirection(), obj.getType()));
-				message(p, 1300, "You bury the Germinated Yommi tree seed in the fertile earth...",
+				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), BABY_YOMMI_TREE, obj.getDirection(), obj.getType()));
+				mes(p, 1300, "You bury the Germinated Yommi tree seed in the fertile earth...",
 					"You start to see something growing.");
-				replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
+				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 15000, "Legends Quest Grow Yommi Tree") {
 					public void action() {
 						GameObject whatObject = p.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
@@ -747,7 +748,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 							if (p.isLoggedIn()) {
 								p.message("The Sapling dies.");
 							}
-							delayedSpawnObject(obj.getWorld(), obj.getLoc(), 60000);
+							Functions.addloc(obj.getWorld(), obj.getLoc(), 60000);
 						}
 					}
 				});
@@ -758,16 +759,16 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == CAVERNOUS_OPENING && item.getCatalogId() == ItemId.A_GLOWING_RED_CRYSTAL.id()) {
-			message(p, 1300, "You carefully place the glowing heart shaped crystal into ",
+			mes(p, 1300, "You carefully place the glowing heart shaped crystal into ",
 				"the depression, it slots in perfectly and glows even brighter.",
 				"You hear a snapping sound coming from in front of the cave.");
-			removeItem(p, item.getCatalogId(), 1);
+			remove(p, item.getCatalogId(), 1);
 			if (!p.getCache().hasKey("cavernous_opening")) {
 				p.getCache().store("cavernous_opening", true);
 			}
 		}
 		else if (obj.getID() == RED_EYE_ROCK && item.getCatalogId() == ItemId.A_RED_CRYSTAL.id()) {
-			message(p, 1300, "You carefully place the Dragon Crystal on the rock.",
+			mes(p, 1300, "You carefully place the Dragon Crystal on the rock.",
 				"The rocks seem to vibrate and hum and the crystal starts to glow.");
 			p.message("The vibration in the area diminishes, but the crystal continues to glow.");
 			p.getCarriedItems().getInventory().replace(ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id());
@@ -784,12 +785,12 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					}
 					if (!p.getCache().hasKey(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"))) {
 						p.getCache().store(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"), true);
-						removeItem(p, item.getCatalogId(), 1);
-						message(p, 1300, "You carefully place the piece of crystal into ",
+						remove(p, item.getCatalogId(), 1);
+						mes(p, 1300, "You carefully place the piece of crystal into ",
 							"a specially shaped compartment in the furnace.");
 					}
 					if (p.getCache().hasKey("a_chunk_of_crystal") && p.getCache().hasKey("a_lump_of_crystal") && p.getCache().hasKey("a_hunk_of_crystal")) {
-						message(p, 1300, "You place the final segment of the crystal together into the ",
+						mes(p, 1300, "You place the final segment of the crystal together into the ",
 							"strangely shaped compartment, all the pieces seem to fit...",
 							"You use your crafting skill to control the furnace.",
 							"The heat in the furnace slowly rises and soon fuses the parts together...",
@@ -799,10 +800,10 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						p.getCache().remove("a_chunk_of_crystal");
 						p.getCache().remove("a_lump_of_crystal");
 						p.getCache().remove("a_hunk_of_crystal");
-						addItem(p, ItemId.A_RED_CRYSTAL.id(), 1);
+						give(p, ItemId.A_RED_CRYSTAL.id(), 1);
 					} else {
-						message(p, 1300, "The compartment in the furnace isn't full yet.");
-						message(p, 600, "It looks like you need more pieces of crystal.");
+						mes(p, 1300, "The compartment in the furnace isn't full yet.");
+						mes(p, 600, "It looks like you need more pieces of crystal.");
 					}
 					break;
 				default:
@@ -812,8 +813,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == WOODEN_BEAM && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("You throw one end of the rope around the beam.");
-			removeItem(p, ItemId.ROPE.id(), 1);
-			replaceObjectDelayed(obj, 5000, WOODEN_BEAM + 1);
+			remove(p, ItemId.ROPE.id(), 1);
+			Functions.changeloc(obj, 5000, WOODEN_BEAM + 1);
 			if (!p.getCache().hasKey("legends_wooden_beam")) {
 				p.getCache().store("legends_wooden_beam", true);
 			}
@@ -851,11 +852,11 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					if (alreadyAttached) {
 						p.message("You have already placed an " + item.getDef(p.getWorld()).getName() + " above this rock.");
 						createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, p), 5000);
-						message(p, 1300, "A barely visible " + item.getDef(p.getWorld()).getName() + " becomes clear again, spinning above the rock.");
+						mes(p, 1300, "A barely visible " + item.getDef(p.getWorld()).getName() + " becomes clear again, spinning above the rock.");
 						p.message("And then fades again...");
 					} else {
 						if (attachmentMode != -1 && !p.getCarriedItems().hasCatalogID(ItemId.BOOKING_OF_BINDING.id(), Optional.empty())) {
-							removeItem(p, item.getCatalogId(), 1);
+							remove(p, item.getCatalogId(), 1);
 							p.message("You carefully move the gem closer to the rock.");
 							p.message("The " + item.getDef(p.getWorld()).getName() + " glows and starts spinning as it hovers above the rock.");
 							createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, p), 5000);
@@ -869,13 +870,13 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 								&& p.getCache().hasKey("legends_attach_5")
 								&& p.getCache().hasKey("legends_attach_6")
 								&& p.getCache().hasKey("legends_attach_7")) {
-								message(p, 1300, "Suddenly all the crystals begin to glow very brightly.",
+								mes(p, 1300, "Suddenly all the crystals begin to glow very brightly.",
 									"The room is lit up with the bright light...",
 									"Soon, the light from all the crystals converges into a point.",
 									"And you see a strange book appear where the light is focused.",
 									"You pick the book up and place it in your inventory.",
 									"All the crystals disapear...and the light fades...");
-								addItem(p, ItemId.BOOKING_OF_BINDING.id(), 1);
+								give(p, ItemId.BOOKING_OF_BINDING.id(), 1);
 								for (int i = 0; i < 8; i++) {
 									if (p.getCache().hasKey("legends_attach_" + i)) {
 										p.getCache().remove("legends_attach_" + i);
@@ -894,8 +895,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (item.getCatalogId() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS) {
-			addItem(p, ItemId.CUT_REED_PLANT.id(), 1);
-			message(p, 1300, "You use your machette to cut down a tall reed.",
+			give(p, ItemId.CUT_REED_PLANT.id(), 1);
+			mes(p, 1300, "You use your machette to cut down a tall reed.",
 				"You cut it into a length of pipe.");
 		}
 		else if (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
@@ -904,12 +905,12 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 				return;
 			}
-			message(p, 1300, "The water is awkward to get to...",
+			mes(p, 1300, "The water is awkward to get to...",
 				"The gap to the water is too narrow.");
 		}
 		else if (item.getCatalogId() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER) {
 			if (atQuestStages(p, Quests.LEGENDS_QUEST, 5, 6, 7)) {
-				message(p, 1300, "It looks as if this pool has dried up...",
+				mes(p, 1300, "It looks as if this pool has dried up...",
 					"A thick black sludge has replaced the sparkling pure water...",
 					"There is a disgusting stench of death that emanates from this area...",
 					"Maybe Gujuo knows what's happened...");
@@ -920,7 +921,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 			if((p.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1)
 					&& !p.getWorld().getServer().getConfig().LOOSE_SHALLOW_WATER_CHECK) {
-				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.",
+				mes(p, 1300, "You use the cut reed plant to syphon some water from the pool.",
 						"You take a refreshing drink from the pool.",
 						"The cut reed is soaked through with water and is now all soggy.");
 				return;
@@ -936,24 +937,24 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				}
 			}
 			if (emptyID != ItemId.NOTHING.id()) {
-				message(p, 1300, "You use the cut reed plant to syphon some water from the pool.");
+				mes(p, 1300, "You use the cut reed plant to syphon some water from the pool.");
 				if (emptyID == ItemId.GOLDEN_BOWL.id()) {
-					message(p, 1300, "into your gold bowl.");
+					mes(p, 1300, "into your gold bowl.");
 					p.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id());
-					message(p, 1300, "The water doesn't seem to sparkle as much as it did in the pool.");
+					mes(p, 1300, "The water doesn't seem to sparkle as much as it did in the pool.");
 				} else if (emptyID == ItemId.BLESSED_GOLDEN_BOWL.id()) {
-					message(p, 1300, "into your blessed gold bowl.");
+					mes(p, 1300, "into your blessed gold bowl.");
 					p.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
-					message(p, 1300, "The water seems to bubble and sparkle as if alive.");
+					mes(p, 1300, "The water seems to bubble and sparkle as if alive.");
 				} else {
-					message(p, 1300, "You put some water in the " + p.getWorld().getServer().getEntityHandler().getItemDef(emptyID).getName().toLowerCase() + ".");
+					mes(p, 1300, "You put some water in the " + p.getWorld().getServer().getEntityHandler().getItemDef(emptyID).getName().toLowerCase() + ".");
 					p.getCarriedItems().getInventory().replace(emptyID, refilledID);
 				}
-				removeItem(p, ItemId.CUT_REED_PLANT.id(), 1);
-				message(p, 0, "The cut reed is soaked through with water and is now all soggy.");
+				remove(p, ItemId.CUT_REED_PLANT.id(), 1);
+				mes(p, 0, "The cut reed is soaked through with water and is now all soggy.");
 			} else {
-				message(p, 1300, "You start to syphon some water up the tube...");
-				message(p, 0, "But you have nothing to put the water in.");
+				mes(p, 1300, "You start to syphon some water up the tube...");
+				mes(p, 0, "But you have nothing to put the water in.");
 			}
 		}
 	}
@@ -963,15 +964,15 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
 				p.updateQuestStage(Quests.LEGENDS_QUEST, 10);
 			}
-			replaceObjectDelayed(obj, 10000, 1170);
-			removeItem(p, ItemId.TOTEM_POLE.id(), 1);
-			message(p, "You remove the evil totem pole.",
+			Functions.changeloc(obj, 10000, 1170);
+			remove(p, ItemId.TOTEM_POLE.id(), 1);
+			Functions.mes(p, "You remove the evil totem pole.",
 				"And replace it with the one you carved yourself.",
 				"As you do so, you feel a lightness in the air,");
 			p.message("almost as if the Kharazi jungle were sighing.");
 			p.message("Perhaps Gujuo would like to see the totem pole.");
 			if (calledGujuo) {
-				Npc gujuo = spawnNpc(obj.getWorld(), NpcId.GUJUO.id(), p.getX(), p.getY(), 60000 * 3);
+				Npc gujuo = addnpc(obj.getWorld(), NpcId.GUJUO.id(), p.getX(), p.getY(), 60000 * 3);
 				if (gujuo != null) {
 					gujuo.initializeTalkScript(p);
 				}

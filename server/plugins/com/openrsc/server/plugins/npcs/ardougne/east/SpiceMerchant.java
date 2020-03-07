@@ -22,32 +22,32 @@ public class SpiceMerchant implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("spiceStolen") && Instant.now().getEpochSecond() < p.getCache().getLong("spiceStolen") + 1200) {
-			npcTalk(p, n, "Do you really think I'm going to buy something",
+			npcsay(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, NpcId.HERO.id(), 5); // Hero first
+			Npc attacker = ifnearvisnpc(p, NpcId.HERO.id(), 5); // Hero first
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.PALADIN.id(), 5); // Paladin second
+				attacker = ifnearvisnpc(p, NpcId.PALADIN.id(), 5); // Paladin second
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight third
+				attacker = ifnearvisnpc(p, NpcId.KNIGHT.id(), 5); // Knight third
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
+				attacker = ifnearvisnpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
 
 			if (attacker != null)
 				attacker.setChasing(p);
 
 		} else {
-			npcTalk(p, n, "Get your exotic spices here",
+			npcsay(p, n, "Get your exotic spices here",
 				"rare very valuable spices here");
 			//from wiki
-			int menu = showMenu(p, n, false, "Lets have a look them then", "No thank you I'm not interested");
+			int menu = multi(p, n, false, "Lets have a look them then", "No thank you I'm not interested");
 			if (menu == 0) {
-				playerTalk(p, n, "Lets have a look then");
+				say(p, n, "Lets have a look then");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (menu == 1) {
-				playerTalk(p, n, "No thank you");
+				say(p, n, "No thank you");
 			}
 		}
 	}

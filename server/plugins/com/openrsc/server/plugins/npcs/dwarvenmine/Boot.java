@@ -8,19 +8,19 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
 public class Boot implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello tall person");
+		npcsay(p, n, "Hello tall person");
 		Menu defaultMenu = new Menu();
 		if (p.getQuestStage(Quests.FAMILY_CREST) == 5) {
 			defaultMenu.addOption(new Option("Hello I'm in search of very high quality gold") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "Hmm well the best gold I know of",
+					npcsay(p, n, "Hmm well the best gold I know of",
 						"is east of the great city of Ardougne",
 						"In some certain rocks underground there",
 						"Its not the easiest of rocks to get to though I've heard");
@@ -38,7 +38,7 @@ public class Boot implements TalkNpcTrigger {
 		defaultMenu.addOption(new Option("Why are you called boot?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "Because when I was a very young dwarf",
+				npcsay(p, n, "Because when I was a very young dwarf",
 					"I used to sleep in a large boot");
 			}
 		});

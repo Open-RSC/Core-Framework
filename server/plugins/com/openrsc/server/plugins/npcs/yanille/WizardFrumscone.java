@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -18,7 +18,7 @@ public class WizardFrumscone implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WIZARD_FRUMSCONE.id()) {
-			npcTalk(p, n, "Do you like my magic zombies",
+			npcsay(p, n, "Do you like my magic zombies",
 				"Feel free to kill them",
 				"Theres plenty more where these came from");
 		}

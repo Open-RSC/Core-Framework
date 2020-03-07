@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -47,7 +48,7 @@ public class Smithing implements UseLocTrigger {
 						return;
 					}
 					if (player.getCarriedItems().remove(ItemId.DRAGON_BAR.id(), 1) > -1) {
-						addItem(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
+						give(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
 						player.incExp(Skills.SMITHING, 1000, true);
 					}
 				} else
@@ -148,7 +149,7 @@ public class Smithing implements UseLocTrigger {
 				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			message(player, 1200, "You set to work trying to fix the ancient shield.",
+			mes(player, 1200, "You set to work trying to fix the ancient shield.",
 					"You hammer long and hard and use all of your skill.",
 					"Eventually, it is ready...",
 					"You have repaired the Dragon Square Shield.");
@@ -160,12 +161,12 @@ public class Smithing implements UseLocTrigger {
 	}
 
 	private void handleGoldSmithing(Player player) {
-		int goldOption = showMenu(player, "Golden bowl.", "Cancel");
+		int goldOption = multi(player, "Golden bowl.", "Cancel");
 		if (player.isBusy()) {
 			return;
 		}
 		if (goldOption == 0) {
-			message(player, "You hammer the metal...");
+			Functions.mes(player, "You hammer the metal...");
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
@@ -246,7 +247,7 @@ public class Smithing implements UseLocTrigger {
 					getOwner().getCarriedItems().remove(new Item(item.getCatalogId(), 1));
 				}
 
-				showBubble(getOwner(), item);
+				thinkbubble(getOwner(), item);
 				if (getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You hammer the metal and make " + def.getAmount() + " "
 						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
@@ -269,7 +270,7 @@ public class Smithing implements UseLocTrigger {
 
 		// Steel Bar
 		if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
-			option = showMenu(player, "Make Weapon", "Make Armour",
+			option = multi(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Steel Nails", "Cancel");
 
 			// Cancel
@@ -280,7 +281,7 @@ public class Smithing implements UseLocTrigger {
 
 		// Bronze Bar
 		if (item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
-			option = showMenu(player, "Make Weapon", "Make Armour",
+			option = multi(player, "Make Weapon", "Make Armour",
 				"Make Missile Heads", "Make Craft Item", "Cancel");
 
 			// Cancel
@@ -290,7 +291,7 @@ public class Smithing implements UseLocTrigger {
 		}
 
 		// Any other bar.
-		option = showMenu(player, "Make Weapon", "Make Armour",
+		option = multi(player, "Make Weapon", "Make Armour",
 			"Make Missile Heads", "Cancel");
 
 		if (option == 3) return -1;
@@ -305,7 +306,7 @@ public class Smithing implements UseLocTrigger {
 		// Weapon
 		if (firstType == 0) {
 			player.message("Choose a type of weapon to make");
-			return showMenu(player, "Dagger", "Throwing Knife", "Sword", "Axe", "Mace");
+			return multi(player, "Dagger", "Throwing Knife", "Sword", "Axe", "Mace");
 		}
 
 		offset += 5;
@@ -313,7 +314,7 @@ public class Smithing implements UseLocTrigger {
 		// Armour
 		if (firstType == 1) {
 			player.message("Choose a type of armour to make");
-			int option = showMenu(player, "Helmet", "Shield", "Armour");
+			int option = multi(player, "Helmet", "Shield", "Armour");
 			// Cancel
 			if (option < 0) return -1;
 
@@ -333,7 +334,7 @@ public class Smithing implements UseLocTrigger {
 			// During or after Tourist Trap
 			if (player.getQuestStage(Quests.TOURIST_TRAP) >= 8
 				|| player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
-				option = showMenu(player, "Make Arrow Heads.", "Forge Dart Tips.", "Cancel.");
+				option = multi(player, "Make Arrow Heads.", "Forge Dart Tips.", "Cancel.");
 
 				// Cancel
 				if (option == 2) return -1;
@@ -341,7 +342,7 @@ public class Smithing implements UseLocTrigger {
 
 			// Before Tourist Trap
 			else {
-				option = showMenu(player, "Make Arrow Heads.", "Cancel.");
+				option = multi(player, "Make Arrow Heads.", "Cancel.");
 
 				// Cancel
 				if (option == 2) return -1;
@@ -378,7 +379,7 @@ public class Smithing implements UseLocTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You need 1 bar of metal to make this item");
 			return;
 		}
-		showBubble(player, item);
+		thinkbubble(player, item);
 		player.getCarriedItems().remove(ItemId.STEEL_BAR.id(), 1);
 		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.NAILS.id(), 2));
@@ -387,7 +388,7 @@ public class Smithing implements UseLocTrigger {
 
 	private void makeWire(Item item, Player player) {
 		player.message("What sort of craft item do you want to make?");
-		int bronzeWireOption = showMenu(player, "Bronze Wire(1 bar)", "Cancel");
+		int bronzeWireOption = multi(player, "Bronze Wire(1 bar)", "Cancel");
 		if (player.isBusy()) {
 			return;
 		}
@@ -400,7 +401,7 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 		if (bronzeWireOption == 0) {
-			showBubble(player, item);
+			thinkbubble(player, item);
 			player.getCarriedItems().remove(ItemId.BRONZE_BAR.id(), 1);
 			player.playerServerMessage(MessageType.QUEST, "You hammer the Bronze Bar and make some bronze wire");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
@@ -453,7 +454,7 @@ public class Smithing implements UseLocTrigger {
 
 	private int swordChoice(Player player) {
 		player.message("What sort of sword do you want to make?");
-		int option = showMenu(player, "Short Sword",
+		int option = multi(player, "Short Sword",
 			"Long Sword (2 bars)", "Scimitar (2 bars)",
 			"2-handed Sword (3 bars)");
 		if (option == 0) return 2; // Short Sword
@@ -465,7 +466,7 @@ public class Smithing implements UseLocTrigger {
 
 	private int axeChoice(Player player) {
 		player.message("What sort of axe do you want to make?");
-		int option = showMenu(player, "Hatchet", "Battle Axe (3 bars)");
+		int option = multi(player, "Hatchet", "Battle Axe (3 bars)");
 		if (option == 0) return 6; // Hatchet
 		else if (option == 1) return 8; // Battle Axe
 		return -1;
@@ -473,7 +474,7 @@ public class Smithing implements UseLocTrigger {
 
 	private int helmetChoice(Player player) {
 		player.message("What sort of helmet do you want to make?");
-		int option = showMenu(player, "Medium Helmet",
+		int option = multi(player, "Medium Helmet",
 			"Large Helmet (2 bars)");
 		if (option == 0) return 10; // Medium Helmet
 		else if (option == 1) return 11; // Large Helmet
@@ -482,7 +483,7 @@ public class Smithing implements UseLocTrigger {
 
 	private int shieldChoice(Player player) {
 		player.message("What sort of shield do you want to make?");
-		int option = showMenu(player, "Square Shield (2 bars)",
+		int option = multi(player, "Square Shield (2 bars)",
 			"Kite Shield (3 bars)");
 		if (option == 0) return 12; // Square Shield
 		else if (option == 1) return 13; // Kite Shield
@@ -491,7 +492,7 @@ public class Smithing implements UseLocTrigger {
 
 	private int armourChoice(Player player) {
 		player.message("What sort of armour do you want to make?");
-		int option = showMenu(player, "Chain Mail Body (3 bars)",
+		int option = multi(player, "Chain Mail Body (3 bars)",
 			"Plate Mail Body (5 bars)",
 			"Plate Mail Legs (3 bars)", "Plated Skirt (3 bars)");
 		if (option == 0) return 14; // Chain Mail Body
@@ -511,7 +512,7 @@ public class Smithing implements UseLocTrigger {
 				"Make All"
 			};
 
-			count = showMenu(player, options);
+			count = multi(player, options);
 
 			if (count == -1) {
 				return -1;

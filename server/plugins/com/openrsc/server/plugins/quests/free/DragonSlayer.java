@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -85,8 +86,8 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 2:
-					npcTalk(p, n, "So how is thy quest going?");
-					int map = showMenu(p, n,
+					npcsay(p, n, "So how is thy quest going?");
+					int map = multi(p, n,
 						"So where can I find this dragon?",
 						"Where can I get an antidragon shield?");
 					if (map == 0) {
@@ -96,17 +97,17 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					}
 					break;
 				case 1:
-					npcTalk(p, n, "Aye tiz a fair day my friend");
-					int menu = showMenu(p, n,
+					npcsay(p, n, "Aye tiz a fair day my friend");
+					int menu = multi(p, n,
 						"Can you sell me some rune plate mail?",
 						"I'm not your friend", "Yes it's a very nice day");
 					if (menu == 0) {
-						npcTalk(p, n, "Soo how does thee know I 'ave some?");
-						int sub_menu = showMenu(p, n,
+						npcsay(p, n, "Soo how does thee know I 'ave some?");
+						int sub_menu = multi(p, n,
 							"The guildmaster of the champion guild told me",
 							"I am a master detective");
 						if (sub_menu == 0) {
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"Well if you're worthy of his advise",
 								"You must have something going for you",
@@ -115,25 +116,25 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 								"Jus cos they have a large amount of cash");
 							oziachDialogue(p, n, Oziach.HERO);
 						} else if (sub_menu == 1) {
-							npcTalk(p, n, "well however you found out about it");
+							npcsay(p, n, "well however you found out about it");
 							oziachDialogue(p, n, Oziach.HERO);
 						}
 					} else if (menu == 1) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"I'd be suprised if your anyone's friend with that sort of manners");
 					} else if (menu == 2) {
-						npcTalk(p, n, "Aye may the Gods walk by your side");
+						npcsay(p, n, "Aye may the Gods walk by your side");
 					}
 					break;
 				case 0:
-					npcTalk(p, n, "Aye tiz a fair day my friend");
-					int menu2 = showMenu(p, n,
+					npcsay(p, n, "Aye tiz a fair day my friend");
+					int menu2 = multi(p, n,
 						"I'm not your friend", "Yes it's a very nice day");
 					if (menu2 == 0) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"I'd be suprised if your anyone's friend with that sort of manners");
 					} else if (menu2 == 1) {
-						npcTalk(p, n, "Aye may the Gods walk by your side");
+						npcsay(p, n, "Aye may the Gods walk by your side");
 					}
 					break;
 			}
@@ -141,29 +142,29 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 		}
 		switch (cID) {
 			case Oziach.ANTIDRAGON_SHIELD:
-				npcTalk(p, n,
+				npcsay(p, n,
 					"I believe the Duke of Lumbridge Castle may have one in his armoury");
-				int sub_menu4 = showMenu(p, n, "So where can I find this dragon?",
+				int sub_menu4 = multi(p, n, "So where can I find this dragon?",
 					"Ok I'll try and get everything together");
 				if (sub_menu4 == 0) {
 					oziachDialogue(p, n, Oziach.FIND_DRAGON);
 				}
 				if (sub_menu4 == 1) {
-					npcTalk(p, n, "Fare ye well");
+					npcsay(p, n, "Fare ye well");
 				}
 				break;
 			case Oziach.DRAGON_FUN:
-				npcTalk(p, n, "Elvarg really is one of the most powerful dragons");
-				npcTalk(p, n,
+				npcsay(p, n, "Elvarg really is one of the most powerful dragons");
+				npcsay(p, n,
 					"I really wouldn't recommend charging in without special equipment");
-				npcTalk(p, n, "Her breath is the main thing to watch out for");
-				npcTalk(p, n, "You can get fried very fast");
-				npcTalk(p, n,
+				npcsay(p, n, "Her breath is the main thing to watch out for");
+				npcsay(p, n, "You can get fried very fast");
+				npcsay(p, n,
 					"Unless you have a special flameproof antidragon shield");
-				npcTalk(p, n, "It won't totally protect you");
-				npcTalk(p, n, "but it should prevent some of the damage to you");
+				npcsay(p, n, "It won't totally protect you");
+				npcsay(p, n, "but it should prevent some of the damage to you");
 				p.updateQuestStage(this, 2);
-				int funmenu = showMenu(p, n, "So where can I find this dragon?",
+				int funmenu = multi(p, n, "So where can I find this dragon?",
 					"Where can I get an antidragon shield?");
 				if (funmenu == 0) {
 					oziachDialogue(p, n, Oziach.FIND_DRAGON);
@@ -173,33 +174,33 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				}
 				break;
 			case Oziach.HERO:
-				npcTalk(p, n, "This is armour fit for a hero to be sure",
+				npcsay(p, n, "This is armour fit for a hero to be sure",
 					"So you'll need to prove to me that you're a hero before you can buy some");
-				int sub_menu2 = showMenu(p, n, "So how am I meant to prove that?",
+				int sub_menu2 = multi(p, n, "So how am I meant to prove that?",
 					"That's a pity, I'm not a hero");
 				if (sub_menu2 == 0)
 					oziachDialogue(p, n, Oziach.PROVE_THAT);
 				break;
 			case Oziach.PROVE_THAT:
-				npcTalk(p, n, "Well if you want to prove yourself",
+				npcsay(p, n, "Well if you want to prove yourself",
 					"You could try and defeat Elvarg the dragon of the Isle of Crandor");
-				int sub_menu3 = showMenu(p, n, false, "A dragon, that sounds like fun",
+				int sub_menu3 = multi(p, n, false, "A dragon, that sounds like fun",
 					"And will i need anything to defeat this dragon",
 					"I may be a champion, but I don't think I'm up to dragon killing yet");
 				if (sub_menu3 == 0) {
-					playerTalk(p, n, "A dragon, that sounds like fun");
+					say(p, n, "A dragon, that sounds like fun");
 					oziachDialogue(p, n, Oziach.DRAGON_FUN);
 				} else if (sub_menu3 == 1) {
-					playerTalk(p, n, "And will I need anything to defeat this dragon?");
-					npcTalk(p, n, "It's funny you shoud say that");
+					say(p, n, "And will I need anything to defeat this dragon?");
+					npcsay(p, n, "It's funny you shoud say that");
 					oziachDialogue(p, n, Oziach.DRAGON_FUN);
 				} else if (sub_menu3 == 2) {
-					playerTalk(p, n, "I may be a champion, but I don't think I'm up to dragon killing yet");
-					npcTalk(p, n, "Yes I can understand that");
+					say(p, n, "I may be a champion, but I don't think I'm up to dragon killing yet");
+					npcsay(p, n, "Yes I can understand that");
 				}
 				break;
 			case Oziach.FIND_DRAGON:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"That is a problem too yes",
 					"No one knows where the Isle of Crandor is located",
@@ -207,7 +208,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					"But it was torn up into three pieces",
 					"Which are now scattered across Asgarnia",
 					"You'll also struggle to find someone bold enough to take a ship to Crandor Island");
-				int map = showMenu(p, n, "Where is the first piece of map?",
+				int map = multi(p, n, "Where is the first piece of map?",
 					"Where is the second piece of map?",
 					"Where is the third piece of map?",
 					"Where can I get an antidragon shield?");
@@ -223,16 +224,16 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 
 				break;
 			case Oziach.FIRST_PIECE:
-				npcTalk(p, n, "deep in a strange building known as Melzar's maze");
-				npcTalk(p, n, "Located north west of Rimmington");
+				npcsay(p, n, "deep in a strange building known as Melzar's maze");
+				npcsay(p, n, "Located north west of Rimmington");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.MAZE_KEY.id(), Optional.of(false))) {
-					npcTalk(p, n, "You will need this to get in");
-					npcTalk(p, n,
+					npcsay(p, n, "You will need this to get in");
+					npcsay(p, n,
 						"This is the key to the front entrance to the maze");
-					message(p, "Oziach hands you a key");
-					addItem(p, ItemId.MAZE_KEY.id(), 1);
+					Functions.mes(p, "Oziach hands you a key");
+					give(p, ItemId.MAZE_KEY.id(), 1);
 				}
-				int menu = showMenu(p, n, "Where can I get an antidragon shield?",
+				int menu = multi(p, n, "Where can I get an antidragon shield?",
 					"Where is the second piece of map?",
 					"Where is the third piece of map?",
 					"Ok I'll try and get everything together");
@@ -243,13 +244,13 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				} else if (menu == 2) {
 					oziachDialogue(p, n, Oziach.THIRD_PIECE);
 				} else if (menu == 3) {
-					npcTalk(p, n, "Fare ye well");
+					npcsay(p, n, "Fare ye well");
 				}
 				break;
 			case Oziach.SECOND_PIECE:
-				npcTalk(p, n,
+				npcsay(p, n,
 					"You will need to talk to the oracle on the ice mountain");
-				int menu2 = showMenu(p, n, "Where can I get an antidragon shield?",
+				int menu2 = multi(p, n, "Where can I get an antidragon shield?",
 					"Where is the first piece of map?",
 					"Where is the third piece of map?",
 					"Ok I'll try and get everything together");
@@ -260,13 +261,13 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				} else if (menu2 == 1) {
 					oziachDialogue(p, n, Oziach.THIRD_PIECE);
 				} else if (menu2 == 1) {
-					npcTalk(p, n, "Fare ye well");
+					npcsay(p, n, "Fare ye well");
 				}
 				break;
 			case Oziach.THIRD_PIECE:
-				npcTalk(p, n,
+				npcsay(p, n,
 					"That was stolen by one of the goblins from the goblin village");
-				int menu3 = showMenu(p, n, "Where can I get an antidragon shield?",
+				int menu3 = multi(p, n, "Where can I get an antidragon shield?",
 					"Where is the first piece of map?",
 					"Where is the second piece of map?",
 					"Ok I'll try and get everything together");
@@ -277,7 +278,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				} else if (menu3 == 1) {
 					oziachDialogue(p, n, Oziach.SECOND_PIECE);
 				} else if (menu3 == 1) {
-					npcTalk(p, n, "Fare ye well");
+					npcsay(p, n, "Fare ye well");
 				}
 				break;
 
@@ -307,7 +308,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
 					if (!p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.empty()) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
 						&& p.getCache().hasKey("dwarven_unlocked")) {
-						addItem(p, ItemId.MAP_PIECE_3.id(), 1);
+						give(p, ItemId.MAP_PIECE_3.id(), 1);
 						p.message("You find a piece of map in the chest");
 						p.getCache().remove("dwarven_unlocked");
 					} else {
@@ -325,7 +326,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
 					if (!p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.empty()) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
 						&& p.getCache().hasKey("melzar_unlocked")) {
-						addItem(p, ItemId.MAP_PIECE_2.id(), 1);
+						give(p, ItemId.MAP_PIECE_2.id(), 1);
 						p.message("You find a piece of map in the chest");
 						p.getCache().remove("melzar_unlocked");
 					} else {
@@ -354,7 +355,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 						p.teleport(281, 3493, false);
 					}
 				} else {
-					Npc klarense = getNearestNpc(p, NpcId.KLARENSE.id(), 15);
+					Npc klarense = ifnearvisnpc(p, NpcId.KLARENSE.id(), 15);
 					if (klarense != null) {
 						klarense.initializeTalkScript(p);
 					} else {
@@ -439,10 +440,10 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
 				if (!p.getLocation().equals(location)) {
-					removeItem(p, ItemId.WIZARDS_MIND_BOMB.id(), 1);
-					removeItem(p, ItemId.SILK.id(), 1);
-					removeItem(p, ItemId.LOBSTER_POT.id(), 1);
-					removeItem(p, ItemId.UNFIRED_BOWL.id(), 1);
+					remove(p, ItemId.WIZARDS_MIND_BOMB.id(), 1);
+					remove(p, ItemId.SILK.id(), 1);
+					remove(p, ItemId.LOBSTER_POT.id(), 1);
+					remove(p, ItemId.UNFIRED_BOWL.id(), 1);
 					p.getCache().store("dwarven_unlocked", true);
 				}
 			} else if (p.getX() <= 258) {
@@ -493,10 +494,10 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 			if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
 				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
 				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
-				removeItem(p, ItemId.MAP_PIECE_1.id(), 1);
-				removeItem(p, ItemId.MAP_PIECE_2.id(), 1);
-				removeItem(p, ItemId.MAP_PIECE_3.id(), 1);
-				addItem(p, ItemId.MAP.id(), 1);
+				remove(p, ItemId.MAP_PIECE_1.id(), 1);
+				remove(p, ItemId.MAP_PIECE_2.id(), 1);
+				remove(p, ItemId.MAP_PIECE_3.id(), 1);
+				give(p, ItemId.MAP.id(), 1);
 			}
 		}
 	}
@@ -516,14 +517,14 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				if (p.getCache().hasKey("crandor_shortcut")) {
 					p.message("You don't need to mess about with broken ships");
 					p.message("Now you have found that secret passage from Karamja");
-				} else if (!p.getCache().hasKey("ship_repair") && hasItem(p, ItemId.NAILS.id(), 4)
+				} else if (!p.getCache().hasKey("ship_repair") && ifheld(p, ItemId.NAILS.id(), 4)
 					&& p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					p.message("You hammer the plank over the hole");
 					p.message("You still need more planks to close the hole completely");
 					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
 					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
 					p.getCache().set("ship_repair", 1);
-				} else if (hasItem(p, ItemId.NAILS.id(), 4) && p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
+				} else if (ifheld(p, ItemId.NAILS.id(), 4) && p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					int planks_added = p.getCache().getInt("ship_repair");
 					p.message("You hammer the plank over the hole");
 					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
@@ -537,7 +538,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 						p.getCache().set("ship_repair", planks_added + 1);
 						p.message("You still need more planks to close the hole completely");
 					}
-				} else if (!hasItem(p, ItemId.NAILS.id(), 4)) {
+				} else if (!ifheld(p, ItemId.NAILS.id(), 4)) {
 					p.message("You need 4 steel nails to attach the plank with");
 				} else if (!p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
 					p.message("You need a hammer to hammer the nails in with");

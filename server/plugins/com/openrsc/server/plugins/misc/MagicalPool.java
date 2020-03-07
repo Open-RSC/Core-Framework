@@ -62,17 +62,17 @@ public class MagicalPool implements OpLocTrigger {
 			} else if(option == 10) {
 			*/
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
-				movePlayer(player, 471, 3385);
+				teleport(player, 471, 3385);
 				player.message("you are teleported further under ground");
 			} else {
-				message(player, 1200, "you step into the pool");
-				message(player, 1200, "you wet your boots");
+				mes(player, 1200, "you step into the pool");
+				mes(player, 1200, "you wet your boots");
 			}
 		}
 		if (obj.getID() == 1166) {
-			message(player, 1200, "you step into the sparkling water");
-			message(player, 1200, "you feel energy rush through your veins");
-			movePlayer(player, 447, 3373);
+			mes(player, 1200, "you step into the sparkling water");
+			mes(player, 1200, "you feel energy rush through your veins");
+			teleport(player, 447, 3373);
 			player.message("you are teleported to kolodions cave");
 		}
 	}

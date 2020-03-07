@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -76,7 +77,7 @@ public class InvCooking implements UseInvTrigger {
 			int waterContainer = isWaterItem(item1) ? item1.getCatalogId() : item2.getCatalogId();
 
 			player.message("What would you like to make?");
-			int option = showMenu(player, "Bread dough", "Pastry dough", "Pizza dough", "Pitta dough");
+			int option = multi(player, "Bread dough", "Pastry dough", "Pizza dough", "Pitta dough");
 			if (player.isBusy() || option < 0 || option > 3) {
 				return;
 			}
@@ -90,7 +91,7 @@ public class InvCooking implements UseInvTrigger {
 			} else if (option == 3) {
 				productID = ItemId.UNCOOKED_PITTA_BREAD.id();
 			}
-			if (removeItem(player, new Item(waterContainer), new Item(ItemId.POT_OF_FLOUR.id())) && productID > -1) {
+			if (remove(player, new Item(waterContainer), new Item(ItemId.POT_OF_FLOUR.id())) && productID > -1) {
 				int emptyContainer = 0;
 
 				if (waterContainer == ItemId.BUCKET_OF_WATER.id())
@@ -98,9 +99,9 @@ public class InvCooking implements UseInvTrigger {
 				else if (waterContainer == ItemId.JUG_OF_WATER.id())
 					emptyContainer = ItemId.JUG.id();
 
-				addItem(player, ItemId.POT.id(), 1);
-				addItem(player, emptyContainer, 1);
-				addItem(player, productID, 1);
+				give(player, ItemId.POT.id(), 1);
+				give(player, emptyContainer, 1);
+				give(player, productID, 1);
 
 				player.playerServerMessage(MessageType.QUEST, "You mix the water and flour to make some " + new Item(productID, 1).getDef(player.getWorld()).getName().toLowerCase());
 			}
@@ -136,21 +137,21 @@ public class InvCooking implements UseInvTrigger {
 			}
 		}
 
-		if (removeItem(p, combine.itemID, 1) && removeItem(p, combine.itemIDOther, 1)) {
+		if (remove(p, combine.itemID, 1) && remove(p, combine.itemIDOther, 1)) {
 
 			// Check for tasty kebab failure
 			if (combine.resultItem == ItemId.TASTY_UGTHANKI_KEBAB.id() && DataConversions.random(0, 31) < 1) {
-				addItem(p, ItemId.UGTHANKI_KEBAB.id(), 1);
+				give(p, ItemId.UGTHANKI_KEBAB.id(), 1);
 				p.playerServerMessage(MessageType.QUEST, "You make a dodgy looking ugthanki kebab");
 				return;
 			}
 
 			if (combine.messages.length > 1)
-				message(p, combine.messages[0]);
+				Functions.mes(p, combine.messages[0]);
 			else
 				p.message(combine.messages[0]);
 
-			addItem(p, combine.resultItem, 1);
+			give(p, combine.resultItem, 1);
 			p.incExp(Skills.COOKING, combine.experience, true);
 
 			if (combine.messages.length > 1)

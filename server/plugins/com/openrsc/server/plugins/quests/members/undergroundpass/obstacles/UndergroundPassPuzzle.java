@@ -4,6 +4,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -42,7 +43,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 			p.walkToEntity(689, 3452);
 		}
 		else if (obj.getID() == LEVER) {
-			message(p, "you pull on the lever",
+			Functions.mes(p, "you pull on the lever",
 				"you hear a loud mechanical churning");
 			GameObject cage_closed = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
 			GameObject cage_open = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
@@ -55,11 +56,11 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 	}
 
 	private void trap(Player p, GameObject obj) {
-		message(p, "you step onto the metal grill");
+		Functions.mes(p, "you step onto the metal grill");
 		p.message("it's a trap");
 		p.teleport(711, 3464);
-		sleep(1600);
-		message(p, "you fall onto a pit of spikes");
+		delay(1600);
+		Functions.mes(p, "you fall onto a pit of spikes");
 		p.teleport(679, 3448);
 		p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
 		p.message("you crawl out of the pit");
@@ -67,7 +68,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
 				.getType()));
 		p.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
-		sleep(1600);
+		delay(1600);
 		p.message("and off the metal grill");
 	}
 

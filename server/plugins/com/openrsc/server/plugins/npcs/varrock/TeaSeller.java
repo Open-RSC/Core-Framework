@@ -9,12 +9,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class TeaSeller implements ShopInterface,
 	TalkNpcTrigger,
@@ -51,7 +52,7 @@ public final class TeaSeller implements ShopInterface,
 				return;
 			}
 			n.face(p);
-			npcTalk(p, n, "Hey ! get your hands off that tea !",
+			npcsay(p, n, "Hey ! get your hands off that tea !",
 				"That's for display purposes only",
 				"Im not running a charity here !");
 		}
@@ -59,23 +60,23 @@ public final class TeaSeller implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Greetings!",
+		npcsay(p, n, "Greetings!",
 			"Are you in need of refreshment ?");
 
 		final String[] options = new String[]{"Yes please", "No thanks",
 			"What are you selling ?"};
-		int option = showMenu(p, n, options);
+		int option = Functions.multi(p, n, options);
 		switch (option) {
 			case 0:
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;
 			case 1:
-				npcTalk(p, n, "Well, if you're sure",
+				npcsay(p, n, "Well, if you're sure",
 					"You know where to come if you do !");
 				break;
 			case 2:
-				npcTalk(p, n, "Only the most delicious infusion",
+				npcsay(p, n, "Only the most delicious infusion",
 					"Of the leaves of the tea plant",
 					"Grown in the exotic regions of this world...",
 					"Buy yourself a cup !");

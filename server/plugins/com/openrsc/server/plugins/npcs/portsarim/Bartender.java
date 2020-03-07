@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -24,12 +25,12 @@ public class Bartender implements TalkNpcTrigger {
 		defaultMenu.addOption(new Option("Could i buy a beer please?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "Sure that will be 2 gold coins please");
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
-					playerTalk(p, n, "Ok here you go thanks");
+				npcsay(p, n, "Sure that will be 2 gold coins please");
+				if (ifheld(p, ItemId.COINS.id(), 2)) {
+					say(p, n, "Ok here you go thanks");
 					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 					p.message("you buy a pint of beer");
-					addItem(p, ItemId.BEER.id(), 1);
+					give(p, ItemId.BEER.id(), 1);
 				} else {
 					p.message("You dont have enough coins for the beer");
 				}
@@ -40,7 +41,7 @@ public class Bartender implements TalkNpcTrigger {
 				"Not very busy in here today is it?") {
 				@Override
 				public void action() {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"No it was earlier",
 						"There was a guy in here saying the goblins up by the mountain are arguing again",
@@ -48,7 +49,7 @@ public class Bartender implements TalkNpcTrigger {
 						"Knowing the goblins, it could easily turn into a full blown war",
 						"Which wouldn't be good",
 						"Goblin wars make such a mess of the countryside");
-					playerTalk(p, n,
+					say(p, n,
 						"Well if I have time I'll see if I can go and knock some sense into them");
 					p.updateQuestStage(Quests.GOBLIN_DIPLOMACY, 1); // remember
 					// quest
@@ -62,7 +63,7 @@ public class Bartender implements TalkNpcTrigger {
 				"Have you heard any more rumours in here?") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "No it hasn't been very busy lately");
+					npcsay(p, n, "No it hasn't been very busy lately");
 				}
 			});
 		}
@@ -71,21 +72,21 @@ public class Bartender implements TalkNpcTrigger {
 				"I'm doing Alfred Grimhand's barcrawl") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "Are you sure you look a bit skinny for that");
-					playerTalk(p, n,
+					npcsay(p, n, "Are you sure you look a bit skinny for that");
+					say(p, n,
 						"Just give me whatever drink I need to drink here");
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Ok one black skull ale coming up, 8 coins please");
-					if (hasItem(p, ItemId.COINS.id(), 8)) {
+					if (ifheld(p, ItemId.COINS.id(), 8)) {
 						p.getCarriedItems().remove(ItemId.COINS.id(), 8);
-						message(p, "You buy a black skull ale",
+						Functions.mes(p, "You buy a black skull ale",
 							"You drink your black skull ale",
 							"Your vision blurs",
 							"The bartender signs your card");
 						p.getCache().store("barsix", true);
-						playerTalk(p, n, "hiccup", "hiccup");
+						say(p, n, "hiccup", "hiccup");
 					} else {
-						playerTalk(p, n, "I don't have 8 coins with me");
+						say(p, n, "I don't have 8 coins with me");
 					}
 				}
 			});

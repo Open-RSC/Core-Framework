@@ -9,11 +9,12 @@ import com.openrsc.server.external.ItemDartTipDef;
 import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class Fletching implements UseInvTrigger {
 
@@ -246,7 +247,7 @@ public class Fletching implements UseInvTrigger {
 		String[] options = log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
 				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
 
-		int type = showMenu(player, options);
+		int type = Functions.multi(player, options);
 		if (player.isBusy() || type < 0 || type > options.length) {
 			return;
 		}
@@ -306,7 +307,7 @@ public class Fletching implements UseInvTrigger {
 				}
 				if (getOwner().getCarriedItems().remove(log) > -1) {
 					getOwner().message(cutMessages);
-					addItem(getOwner(), itemID, amt);
+					give(getOwner(), itemID, amt);
 					getOwner().incExp(Skills.FLETCHING, experience, true);
 				} else
 					interrupt();
@@ -352,7 +353,7 @@ public class Fletching implements UseInvTrigger {
 				}
 				if (getOwner().getCarriedItems().remove(pearlID, 1) > -1) {
 					getOwner().message("you chisel the pearls into small bolt tips");
-					addItem(getOwner(), com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
+					give(getOwner(), com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 					getOwner().incExp(Skills.FLETCHING, exp, true);
 				} else interrupt();
 			}

@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -27,11 +28,11 @@ public class CutWeb implements UseBoundTrigger,
 				p.message("Nothing interesting happens");
 				return;
 			}
-			message(p, "You try to destroy the web...");
+			Functions.mes(p, "You try to destroy the web...");
 			if (Formulae.cutWeb()) {
 				p.message("You slice through the web");
-				removeObject(obj);
-				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 30000);
+				delloc(obj);
+				Functions.addloc(obj.getWorld(), obj.getLoc(), 30000);
 			} else {
 				p.message("You fail to cut through it");
 			}
@@ -73,11 +74,11 @@ public class CutWeb implements UseBoundTrigger,
 		}
 
 		if (canCut) {
-			message(player, "You try to destroy the web...");
+			Functions.mes(player, "You try to destroy the web...");
 			if (Formulae.cutWeb()) {
 				player.message("You slice through the web");
-				removeObject(obj);
-				delayedSpawnObject(obj.getWorld(), obj.getLoc(), 30000);
+				delloc(obj);
+				Functions.addloc(obj.getWorld(), obj.getLoc(), 30000);
 			} else {
 				player.message("You fail to cut through it");
 			}

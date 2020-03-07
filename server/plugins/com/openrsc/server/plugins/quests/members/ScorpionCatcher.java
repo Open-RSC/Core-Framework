@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
@@ -62,19 +63,19 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 					seerDialogue(p, n, SEER_NPC.PRIMARY_DIALOGUE);
 					break;
 				case 1:
-					npcTalk(p, n, "Many greetings");
-					int first = showMenu(p, n,
+					npcsay(p, n, "Many greetings");
+					int first = multi(p, n,
 						"I need to locate some scorpions",
 						"Your friend Thormac sent me to speak to you",
 						"I seek knowledge and power");
 					if (first == 0) {
 						seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
 					} else if (first == 1) {
-						npcTalk(p, n, "What does the old fellow want");
-						playerTalk(p, n, "He's lost his valuable lesser kharid scorpions");
+						npcsay(p, n, "What does the old fellow want");
+						say(p, n, "He's lost his valuable lesser kharid scorpions");
 						seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
 					} else if (first == 2) {
-						npcTalk(p, n, "Knowledge comes from experience, power comes from battleaxes");
+						npcsay(p, n, "Knowledge comes from experience, power comes from battleaxes");
 					}
 					break;
 				case 2:
@@ -85,16 +86,16 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false)) &&
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_THREE.id(), Optional.of(false))) {
 						if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_NONE.id(), Optional.of(false))) {
-							playerTalk(p, n, "I need to locate some scorpions");
+							say(p, n, "I need to locate some scorpions");
 							seerDialogue(p, n, SEER_NPC.LOCATE_SCORPIONS);
 						} else {
-							npcTalk(p, n, "Many greetings");
-							playerTalk(p, n, "Where did you say that scorpion was again?");
-							npcTalk(p, n, "Let me look into my looking glass");
-							message(p, "The seer produces a small mirror",
+							npcsay(p, n, "Many greetings");
+							say(p, n, "Where did you say that scorpion was again?");
+							npcsay(p, n, "Let me look into my looking glass");
+							Functions.mes(p, "The seer produces a small mirror",
 								"The seer gazes into the mirror",
 								"The seer smoothes his hair with his hand");
-							npcTalk(p, n,
+							npcsay(p, n,
 								"I can see a scorpion that you seek",
 								"It would appear to be near some  nasty looking spiders",
 								"I can see two coffins there as well",
@@ -110,8 +111,8 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO.id(), Optional.of(false)) &&
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_TWO_THREE.id(), Optional.of(false)) &&
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) {
-						playerTalk(p, n, "Hi I have retrieved the scorpion from near the spiders");
-						npcTalk(p, n, "Well I've checked my looking glass",
+						say(p, n, "Hi I have retrieved the scorpion from near the spiders");
+						npcsay(p, n, "Well I've checked my looking glass",
 							"There seems to be a kharid scorpion in a village full of  axe wielding warriors",
 							"One of the warriors there, dressed mainly in black has picked it up",
 							"That's all I can tell you about that scorpion");
@@ -122,9 +123,9 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_THREE.id(), Optional.of(false)) &&
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_TWO_THREE.id(), Optional.of(false)) &&
 						!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) {
-						npcTalk(p, n, "Many greetings");
-						playerTalk(p, n, "I have retrieved a second scorpion");
-						npcTalk(p, n,
+						npcsay(p, n, "Many greetings");
+						say(p, n, "I have retrieved a second scorpion");
+						npcsay(p, n,
 							"That's lucky because I've got some information on the last scorpion for you",
 							"It seems to be in some sort of upstairs room",
 							"There seems to be some sort of brown clothing lying on the floor");
@@ -135,17 +136,17 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 		}
 		switch (cID) {
 			case SEER_NPC.LOCATE_SCORPIONS:
-				npcTalk(p, n, "Well you have come to the right place",
+				npcsay(p, n, "Well you have come to the right place",
 					"I am a master of animal detection",
 					"Do you need to locate any particular scorpion",
 					"Scorpions are a creature somewhat in abundance");
-				playerTalk(p, n, "I'm looking for some lesser kharid scorpions",
+				say(p, n, "I'm looking for some lesser kharid scorpions",
 					"They belong to Thormac the sorceror");
-				npcTalk(p, n, "Let me look into my looking glass");
-				message(p, "The seer produces a small mirror",
+				npcsay(p, n, "Let me look into my looking glass");
+				Functions.mes(p, "The seer produces a small mirror",
 					"The seer gazes into the mirror",
 					"The seer smoothes his hair with his hand");
-				npcTalk(p, n,
+				npcsay(p, n,
 					"I can see a scorpion that you seek",
 					"It would appear to be near some  nasty looking spiders",
 					"I can see two coffins there as well",
@@ -159,10 +160,10 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				break;
 
 			case SEER_NPC.PRIMARY_DIALOGUE:
-				npcTalk(p, n, "Many greetings");
-				int menu = showMenu(p, n, "Many greetings", "I seek knowledge and power");
+				npcsay(p, n, "Many greetings");
+				int menu = multi(p, n, "Many greetings", "I seek knowledge and power");
 				if (menu == 1) {
-					npcTalk(p, n, "Knowledge comes from experience, power comes from battleaxes");
+					npcsay(p, n, "Knowledge comes from experience, power comes from battleaxes");
 				}
 				break;
 		}
@@ -171,14 +172,14 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 	public void velrakDialogue(Player p, Npc n, int choice) {
 		if (choice == -1) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.DUSTY_KEY.id(), Optional.of(false))) {
-				playerTalk(p, n, "Are you still here?");
-				npcTalk(p, n, "Yes, I'm still plucking up courage",
+				say(p, n, "Are you still here?");
+				npcsay(p, n, "Yes, I'm still plucking up courage",
 					"To run out past those black knights");
 				return;
 			}
-			npcTalk(p, n, "Thankyou for rescuing me",
+			npcsay(p, n, "Thankyou for rescuing me",
 				"It isn't comfy in this cell");
-			choice = showMenu(p, n,
+			choice = multi(p, n,
 				"So do you know anywhere good to explore?",
 				"Do I get a reward?");
 
@@ -186,23 +187,23 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				velrakDialogue(p, n, choice);
 
 		} else if (choice == 0) {
-			npcTalk(p, n, "Well this dungeon was quite good to explore",
+			npcsay(p, n, "Well this dungeon was quite good to explore",
 				"Till I got captured",
 				"I got given a key to an inner part of this dungeon",
 				"By a mysterious cloaked stranger",
 				"It's rather to tough for me to get that far though",
 				"I keep getting captured",
 				"Would you like to give it a go");
-			choice = showMenu(p, n, "Yes please",
+			choice = multi(p, n, "Yes please",
 				"No it's too dangerous for me");
 			if (choice == 0) {
-				message(p,
+				Functions.mes(p,
 					"Velrak reaches inside his boot and passes you a key");
-				addItem(p, ItemId.DUSTY_KEY.id(), 1);
+				give(p, ItemId.DUSTY_KEY.id(), 1);
 			}
 
 		} else if (choice == 1) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"Well not really the black knights took all my stuff before throwing me in here");
 		}
 	}
@@ -211,9 +212,9 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 		if (choice == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "Hello I am Thormac the sorceror",
+					npcsay(p, n, "Hello I am Thormac the sorceror",
 						"I don't suppose you could be of assistance to me?");
-					int first = showMenu(p, n,
+					int first = multi(p, n,
 						"What do you need assistance with?",
 						"I'm a little busy");
 					if (first == 0) {
@@ -222,91 +223,91 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 					break;
 				case 1:
 				case 2:
-					npcTalk(p, n, "How goes your quest?");
+					npcsay(p, n, "How goes your quest?");
 					if (!p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_NONE.id(), Optional.of(false))
 						&& !p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) { // No empty cage, no full cage
-						int menu = showMenu(p, n,
+						int menu = multi(p, n,
 							"I've lost my cage",
 							"I've not caught all the scorpions yet");
 						if (menu == 0) {
-							npcTalk(p, n, "Ok here is another cage",
+							npcsay(p, n, "Ok here is another cage",
 								"You're almost as bad at loosing things as me");
-							addItem(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
+							give(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
 						} else if (menu == 1) {
-							npcTalk(p, n, "Well remember, go speak to the seers north of here if you need any help");
+							npcsay(p, n, "Well remember, go speak to the seers north of here if you need any help");
 						}
 					} else if (p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) { // full cage
-						playerTalk(p, n, "I have retrieved all your scorpions");
-						npcTalk(p, n, "aha my little scorpions home at last");
-						removeItem(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), 1);
+						say(p, n, "I have retrieved all your scorpions");
+						npcsay(p, n, "aha my little scorpions home at last");
+						remove(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), 1);
 						p.sendQuestComplete(Quests.SCORPION_CATCHER);
 					} else {
-						playerTalk(p, n, "I've not caught all the scorpions yet");
-						npcTalk(p, n, "Well remember, go speak to the seers north of here if you need any help");
+						say(p, n, "I've not caught all the scorpions yet");
+						npcsay(p, n, "Well remember, go speak to the seers north of here if you need any help");
 					}
 					break;
 				case -1:
-					npcTalk(p, n, "Thankyou for rescuing my scorpions");
-					int four = showMenu(p, n, "That's ok",
+					npcsay(p, n, "Thankyou for rescuing my scorpions");
+					int four = multi(p, n, "That's ok",
 						"You said you'd enchant my battlestaff for me");
 					if (four == 1) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Yes it'll cost you 40000 coins for the materials needed mind you",
 							"Which sort of staff did you want enchanting?");
-						int five = showMenu(p, n,
+						int five = multi(p, n,
 							"battlestaff of fire", "battlestaff of water",
 							"battlestaff of air", "battlestaff of earth",
 							"I won't bother yet actually");
 						if (five == 0) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_FIRE.id(), Optional.of(false))) {
-								playerTalk(p, n, "I don't have a battlestaff of fire yet though");
+								say(p, n, "I don't have a battlestaff of fire yet though");
 								return;
 							}
-							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
-								playerTalk(p, n, "I'll just get the money for you");
+							if (!ifheld(p, ItemId.COINS.id(), 40000)) {
+								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_FIRE.id(), 1))) {
-								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id(), 1);
+							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_FIRE.id(), 1))) {
+								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 1) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_WATER.id(), Optional.of(false))) {
-								playerTalk(p, n, "I don't have a battlestaff of water yet though");
+								say(p, n, "I don't have a battlestaff of water yet though");
 								return;
 							}
-							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
-								playerTalk(p, n, "I'll just get the money for you");
+							if (!ifheld(p, ItemId.COINS.id(), 40000)) {
+								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_WATER.id(), 1))) {
-								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id(), 1);
+							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_WATER.id(), 1))) {
+								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 2) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_AIR.id(), Optional.of(false))) {
-								playerTalk(p, n, "I don't have a battlestaff of air yet though");
+								say(p, n, "I don't have a battlestaff of air yet though");
 								return;
 							}
-							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
-								playerTalk(p, n, "I'll just get the money for you");
+							if (!ifheld(p, ItemId.COINS.id(), 40000)) {
+								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_AIR.id(), 1))) {
-								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id(), 1);
+							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_AIR.id(), 1))) {
+								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						} else if (five == 3) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_EARTH.id(), Optional.of(false))) {
-								playerTalk(p, n, "I don't have a battlestaff of earth yet though");
+								say(p, n, "I don't have a battlestaff of earth yet though");
 								return;
 							}
-							if (!hasItem(p, ItemId.COINS.id(), 40000)) {
-								playerTalk(p, n, "I'll just get the money for you");
+							if (!ifheld(p, ItemId.COINS.id(), 40000)) {
+								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (removeItem(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_EARTH.id(), 1))) {
-								addItem(p, ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id(), 1);
+							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_EARTH.id(), 1))) {
+								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
 						}
@@ -317,36 +318,36 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 
 		// What do you need assistance with?
 		else if (choice == 0) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"I've lost my pet scorpions",
 				"They're lesser kharid scorpions, a very rare breed",
 				"I left there cage door open",
 				"now I don't know where they have gone",
 				"There's 3 of them and they're quick little beasties",
 				"They're all over runescape");
-			choice = showMenu(p, n,
+			choice = multi(p, n,
 				"So how would I go about catching them then?",
 				"What's in it for me?", "I'm not interested then");
 			if (choice == 0) thormacDialogue(p, n, 1);
 			else if (choice == 1) thormacDialogue(p, n, 2);
 			else if (choice == 2) {
-				npcTalk(p, n, "Blast, I suppose I will have to have find someone else then");
+				npcsay(p, n, "Blast, I suppose I will have to have find someone else then");
 			}
 		}
 
 		// So how would I go about catching them then?
 		else if (choice == 1) {
-			npcTalk(p, n, "Well I have a scorpion cage here",
+			npcsay(p, n, "Well I have a scorpion cage here",
 				"Which you can use to catch them in");
-			addItem(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
-			message(p, "Thormac gives you a cage");
-			npcTalk(p, n,
+			give(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
+			Functions.mes(p, "Thormac gives you a cage");
+			npcsay(p, n,
 				"If you go up to the village of seers to the north of here",
 				"One of them will be able to tell you where the scorpions are now");
 
 			p.updateQuestStage(getQuestId(), 1); // STARTED QUEST
 
-			choice = showMenu(p, n,
+			choice = multi(p, n,
 				"What's in it for me?",
 				"Ok I will do it then");
 
@@ -356,12 +357,12 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 
 		// What's in it for me?
 		else if (choice == 2) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"Well I suppose I can aid you with my skills as a staff sorcerer",
 				"Most the battlestaffs around here are pretty puny",
 				"I can beef them up for you a bit");
 
-			choice = showMenu(p, n,
+			choice = multi(p, n,
 				"So how would I go about catching them then?",
 				"Ok I will do it then");
 
@@ -500,9 +501,9 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 
 			p.message("You catch a scorpion");
 
-			if (toRemove > -1) removeItem(p, toRemove, 1);
-			if (toAdd > -1) addItem(p, toAdd, 1);
-			temporaryRemoveNpc(n);
+			if (toRemove > -1) remove(p, toRemove, 1);
+			if (toAdd > -1) give(p, toAdd, 1);
+			delnpc(n, true);
 		} else
 			p.message("Talk to Seer before you attempt catching this scorpion");
 	}
@@ -521,7 +522,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 		 * Velrak cell door
 		 */
 		if (obj.getID() == 83 && obj.getY() == 3428 && item.getCatalogId() == ItemId.JAIL_KEYS.id()) {
-			showBubble(player, item);
+			thinkbubble(player, item);
 			doDoor(obj, player);
 		}
 		/*
@@ -529,14 +530,14 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 		 * anything important at all - replicated it anyway.
 		 */
 		if (obj.getID() == 83 && obj.getY() == 3425 && item.getCatalogId() == ItemId.JAIL_KEYS.id()) {
-			showBubble(player, item);
+			thinkbubble(player, item);
 			doDoor(obj, player);
 		}
 		/*
 		 * Dusty key door into blue dragons lair in Taverly dungeon
 		 */
 		if (obj.getID() == 84 && obj.getY() == 3353 && item.getCatalogId() == ItemId.DUSTY_KEY.id()) {
-			showBubble(player, item);
+			thinkbubble(player, item);
 			doDoor(obj, player);
 		}
 	}

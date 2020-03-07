@@ -24,30 +24,30 @@ public class GemMerchant implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("gemStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("gemStolen") + 1200)) {
-			npcTalk(p, n, "Do you really think I'm going to buy something",
+			npcsay(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, NpcId.HERO.id(), 5); // Hero first
+			Npc attacker = ifnearvisnpc(p, NpcId.HERO.id(), 5); // Hero first
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.PALADIN.id(), 5); // Paladin second
+				attacker = ifnearvisnpc(p, NpcId.PALADIN.id(), 5); // Paladin second
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight third
+				attacker = ifnearvisnpc(p, NpcId.KNIGHT.id(), 5); // Knight third
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
+				attacker = ifnearvisnpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
 
 			if (attacker != null)
 				attacker.setChasing(p);
 
 		} else {
-			npcTalk(p, n, "Here, look at my lovely gems");
-			int menu = showMenu(p, n, false, "Ok show them to me", "I'm not interested thankyou");
+			npcsay(p, n, "Here, look at my lovely gems");
+			int menu = multi(p, n, false, "Ok show them to me", "I'm not interested thankyou");
 			if (menu == 0) {
-				playerTalk(p, n, "Ok show them to me");
+				say(p, n, "Ok show them to me");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (menu == 1) {
-				playerTalk(p, n, "I'm not intersted thankyou");
+				say(p, n, "I'm not intersted thankyou");
 			}
 		}
 	}

@@ -37,20 +37,20 @@ public final class NurmofPickaxe implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "greetings welcome to my pickaxe shop",
+		npcsay(p, n, "greetings welcome to my pickaxe shop",
 			"Do you want to buy my premium quality pickaxes");
 
-		int option = showMenu(p, n, false, //do not send over
+		int option = multi(p, n, false, //do not send over
 				"Yes please", "No thankyou", "Are your pickaxes better than other pickaxes then?");
 		if (option == 0) {
-			playerTalk(p, n, "Yes please");
+			say(p, n, "Yes please");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
-			playerTalk(p, n, "No thankyou\"");
+			say(p, n, "No thankyou\"");
 		} else if (option == 2) {
-			playerTalk(p, n, "Are your pickaxes better than other pickaxes then?");
-			npcTalk(p, n, "Of course they are",
+			say(p, n, "Are your pickaxes better than other pickaxes then?");
+			npcsay(p, n, "Of course they are",
 				"My pickaxes are made of higher grade metal than your ordinary bronze pickaxes",
 				"Allowing you to have multiple swings at a rock until you get the ore from it");
 		}

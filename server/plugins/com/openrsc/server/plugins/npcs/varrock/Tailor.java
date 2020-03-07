@@ -41,16 +41,16 @@ public final class Tailor implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Now you look like someone who goes to a lot of fancy dress parties");
-		playerTalk(p, n, "Errr... what are you saying exactly?");
-		npcTalk(p, n, "I'm just saying that perhaps you would like to peruse my selection of garments");
-		int opt = showMenu(p, n, false, //do not send over
+		npcsay(p, n, "Now you look like someone who goes to a lot of fancy dress parties");
+		say(p, n, "Errr... what are you saying exactly?");
+		npcsay(p, n, "I'm just saying that perhaps you would like to peruse my selection of garments");
+		int opt = multi(p, n, false, //do not send over
 			"I think I might just leave the perusing for now thanks",
 			"OK,lets see what you've got then");
 		if (opt == 0) {
-			playerTalk(p, n, "I think I might just leave the perusing for now thanks");
+			say(p, n, "I think I might just leave the perusing for now thanks");
 		} else if (opt == 1) {
-			playerTalk(p, n, "OK,let's see what you've got then");
+			say(p, n, "OK,let's see what you've got then");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}

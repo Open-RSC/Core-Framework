@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class Noterazzo implements ShopInterface, TalkNpcTrigger {
 
@@ -30,15 +31,15 @@ public class Noterazzo implements ShopInterface, TalkNpcTrigger {
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NOTERAZZO.id()) {
 
-			npcTalk(p, n, "Hey wanna trade?, I'll give the best deals you can find");
-			int menu = showMenu(p, n, "Yes please", "No thankyou", "How can you afford to give such good deals?");
+			npcsay(p, n, "Hey wanna trade?, I'll give the best deals you can find");
+			int menu = Functions.multi(p, n, "Yes please", "No thankyou", "How can you afford to give such good deals?");
 			if (menu == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (menu == 1) {
 				//NOTHING
 			} else if (menu == 2) {
-				npcTalk(p, n, "The general stores in Asgarnia and Misthalin are heavily taxed",
+				npcsay(p, n, "The general stores in Asgarnia and Misthalin are heavily taxed",
 					"It really makes it hard for them to run an effective buisness",
 					"For some reason taxmen don't visit my store");
 				p.message("Noterazzo winks at you");

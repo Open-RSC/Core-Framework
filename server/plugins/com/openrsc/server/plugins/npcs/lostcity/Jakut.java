@@ -21,19 +21,19 @@ public final class Jakut implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		npcTalk(p, n, "Dragon swords, get your Dragon swords",
+		npcsay(p, n, "Dragon swords, get your Dragon swords",
 			"Straight from the plane of frenaskrae");
 
-		int option = showMenu(p, n, false, //do not send over
+		int option = multi(p, n, false, //do not send over
 			"Yes please", "No thankyou, I'm just browsing the marketplace");
 		switch (option) {
 			case 0:
-				playerTalk(p, n, "Yes Please");
+				say(p, n, "Yes Please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;
 			case 1:
-				playerTalk(p, n, "No thankyou, I'm just browsing the marketplace");
+				say(p, n, "No thankyou, I'm just browsing the marketplace");
 				break;
 		}
 	}

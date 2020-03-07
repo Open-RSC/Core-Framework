@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public final class DukeOfLumbridge implements
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Greetings welcome to my castle");
+		npcsay(p, n, "Greetings welcome to my castle");
 
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("Have you any quests for me?");
@@ -30,11 +31,11 @@ public final class DukeOfLumbridge implements
 				&& !p.getCarriedItems().hasCatalogID(ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), Optional.empty())) {
 			menu.add(0,"I seek a shield that will protect me from dragon breath");
 
-			int choice = showMenu(p, n, false, menu.toArray(new String[menu.size()]));
+			int choice = multi(p, n, false, menu.toArray(new String[menu.size()]));
 			if (choice > -1)
 				handleResponse(p, n, choice);
 		} else {
-			int choice = showMenu(p, n, false, menu.toArray(new String[menu.size()]));
+			int choice = multi(p, n, false, menu.toArray(new String[menu.size()]));
 			if (choice > -1)
 				handleResponse(p, n, choice + 1);
 		}
@@ -42,18 +43,18 @@ public final class DukeOfLumbridge implements
 
 	public void handleResponse(Player p, Npc n, int option) {
 		if (option == 0) { // Dragon Slayer
-			playerTalk(p, n, "I seek a shield that will protect me from dragon's breath");
-			npcTalk(p, n, "A knight going on a dragon quest hmm?",
+			say(p, n, "I seek a shield that will protect me from dragon's breath");
+			npcsay(p, n, "A knight going on a dragon quest hmm?",
 				"A most worthy cause",
 				"Guard this well my friend"
 			);
-			message(p, "The duke hands you a shield");
-			addItem(p, ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), 1);
+			Functions.mes(p, "The duke hands you a shield");
+			give(p, ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), 1);
 		} else if (option == 1) {
-			playerTalk(p, n, "Have you any quests for me?");
+			say(p, n, "Have you any quests for me?");
 
 			if (!p.getWorld().getServer().getConfig().WANT_RUNECRAFTING) {
-				npcTalk(p, n, "All is well for me");
+				npcsay(p, n, "All is well for me");
 				return;
 			}
 
@@ -61,9 +62,9 @@ public final class DukeOfLumbridge implements
 
 		}
 		else if (option == 2) {
-			playerTalk(p, n, "Where can I find money?");
-			npcTalk(p, n, "I've heard the blacksmiths are prosperous amoung the peasantry");
-			npcTalk(p, n, "Maybe you could try your hand at that");
+			say(p, n, "Where can I find money?");
+			npcsay(p, n, "I've heard the blacksmiths are prosperous amoung the peasantry");
+			npcsay(p, n, "Maybe you could try your hand at that");
 		}
 		else if (option == 3) {
 			com.openrsc.server.plugins.quests.members.RuneMysteries.dukeDialog(p.getQuestStage(Quests.RUNE_MYSTERIES), p, n);

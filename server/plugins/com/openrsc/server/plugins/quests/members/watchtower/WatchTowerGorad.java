@@ -28,7 +28,7 @@ public class WatchTowerGorad implements TalkNpcTrigger,
 			n.killedBy(p);
 			p.message("Gorad has gone");
 			p.message("He's dropped a tooth, I'll keep that!");
-			addItem(p, ItemId.OGRE_TOOTH.id(), 1);
+			give(p, ItemId.OGRE_TOOTH.id(), 1);
 		}
 	}
 
@@ -41,24 +41,24 @@ public class WatchTowerGorad implements TalkNpcTrigger,
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GORAD.id()) {
 			if (p.getCache().hasKey("ogre_grew")) {
-				playerTalk(p, n, "I've come to knock your teeth out!");
-				npcTalk(p, n, "How dare you utter that foul language in my prescence!",
+				say(p, n, "I've come to knock your teeth out!");
+				npcsay(p, n, "How dare you utter that foul language in my prescence!",
 					"You shall die quickly vermin");
 				n.startCombat(p);
 			} else if (p.getCache().hasKey("ogre_grew_p1") || p.getQuestStage(Quests.WATCHTOWER) > 0) {
-				playerTalk(p, n, "Hello");
-				npcTalk(p, n, "Do you know who you are talking to ?");
-				int menu = showMenu(p, n,
+				say(p, n, "Hello");
+				npcsay(p, n, "Do you know who you are talking to ?");
+				int menu = multi(p, n,
 					"A big ugly brown creature...",
 					"I don't know who you are");
 				if (menu == 0) {
-					npcTalk(p, n, "The impudence! take that...");
+					npcsay(p, n, "The impudence! take that...");
 					p.damage(16);
-					playerTalk(p, n, "Ouch!");
+					say(p, n, "Ouch!");
 					p.message("The ogre punched you hard in the face!");
 
 				} else if (menu == 1) {
-					npcTalk(p, n, "I am Gorad - who you are dosen't matter",
+					npcsay(p, n, "I am Gorad - who you are dosen't matter",
 						"Go now and you may live another day!");
 				}
 			} else {
@@ -75,7 +75,7 @@ public class WatchTowerGorad implements TalkNpcTrigger,
 	@Override
 	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.GORAD.id()) {
-			npcTalk(p, affectedmob, "Ho Ho! why would I want to fight a worm ?",
+			npcsay(p, affectedmob, "Ho Ho! why would I want to fight a worm ?",
 				"Get lost!");
 		}
 	}

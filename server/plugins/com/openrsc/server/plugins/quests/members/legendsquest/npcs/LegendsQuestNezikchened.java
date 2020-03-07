@@ -4,18 +4,19 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 
 import static com.openrsc.server.plugins.Functions.atQuestStages;
-import static com.openrsc.server.plugins.Functions.createGroundItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.addobject;
+import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
+import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.npcsay;
 import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
-import static com.openrsc.server.plugins.Functions.transform;
+import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.addnpc;
+import static com.openrsc.server.plugins.Functions.changenpc;
 
 public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigger, KillNpcTrigger, PlayerRangeNpcTrigger, AttackNpcTrigger {
 
@@ -25,47 +26,47 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	private static void summonViyeldiCompanions(Player p) {
 		Npc COMPANION = null;
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 1) {
-			COMPANION = spawnNpc(NpcId.SAN_TOJALON.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = Functions.addnpc(NpcId.SAN_TOJALON.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 2) {
-			COMPANION = spawnNpc(NpcId.IRVIG_SENAY.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = Functions.addnpc(NpcId.IRVIG_SENAY.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 3) {
-			COMPANION = spawnNpc(NpcId.RANALPH_DEVERE.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = Functions.addnpc(NpcId.RANALPH_DEVERE.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 4) {
-			COMPANION = spawnNpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = Functions.addnpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (COMPANION != null) {
-			npcTalk(p, COMPANION, "Corrupted are we now that Viyeldi is slain..");
+			npcsay(p, COMPANION, "Corrupted are we now that Viyeldi is slain..");
 			COMPANION.startCombat(p);
-			npcTalk(p, COMPANION, "Bent to this demons will and forced to bring you pain...");
+			npcsay(p, COMPANION, "Bent to this demons will and forced to bring you pain...");
 		}
 	}
 
 	public static void demonFight(Player p) {
-		Npc third_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
+		Npc third_nezikchened = Functions.addnpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
 		if (third_nezikchened != null) {
-			sleep(600);
-			npcTalk(p, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
+			delay(600);
+			npcsay(p, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
 			if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") <= 3) {
-				npcTalk(p, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
-				message(p, third_nezikchened, 1300, "The Demon starts chanting...",
+				npcsay(p, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
+				Functions.mes(p, third_nezikchened, 1300, "The Demon starts chanting...",
 					"@yel@Nezikchened: Protectors of source, alive in death,",
 					"@yel@Nezikchened: do not rest while this Vacu draws breath!");
 				if (third_nezikchened != null) {
 					third_nezikchened.remove();
-					message(p, 1300, "The demon is summoning the dead hero's from the Viyeldi caves !");
+					Functions.mes(p, 1300, "The demon is summoning the dead hero's from the Viyeldi caves !");
 					summonViyeldiCompanions(p);
 				}
 			} else if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 4) {
-				message(p, third_nezikchened, 1300, "The Demon screams in rage...");
-				npcTalk(p, third_nezikchened, "Raarrrrghhhh!",
+				Functions.mes(p, third_nezikchened, 1300, "The Demon screams in rage...");
+				npcsay(p, third_nezikchened, "Raarrrrghhhh!",
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(p);
 				p.message("You feel a great sense of loss...");
 				p.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 4));
-				npcTalk(p, third_nezikchened, "Your faith will help you little here.");
+				npcsay(p, third_nezikchened, "Your faith will help you little here.");
 			} else {
 				third_nezikchened.startCombat(p);
 			}
@@ -95,9 +96,9 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 3:
-					npcTalk(p, n, "Run like the coward you are, I will return stronger than before.");
+					npcsay(p, n, "Run like the coward you are, I will return stronger than before.");
 					n.teleport(453, 3707);
-					npcTalk(p, n, "Next time we meet, your end will you greet!");
+					npcsay(p, n, "Next time we meet, your end will you greet!");
 					n.remove();
 					break;
 				case 7:
@@ -105,16 +106,16 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 						p.getCache().store("ran_from_2nd_nezi", true);
 					}
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Run for your life coward...", p));
-					sleep(1900);
+					delay(1900);
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "The next time you come, I will be ready for you!", p));
-					sleep(1900);
-					n = transform(n, NpcId.ECHNED_ZEKIN.id(), true);
+					delay(1900);
+					n = changenpc(n, NpcId.ECHNED_ZEKIN.id(), true);
 					if (n != null)
-						sleep(1300);
+						delay(1300);
 					n.remove();
 					break;
 				case 8:
-					npcTalk(p, n, "Ha, ha ha!",
+					npcsay(p, n, "Ha, ha ha!",
 						"Yes, see how fast the little Vacu runs...!",
 						"Trouble me not, or I will crush you like the worm you are.");
 					n.remove();
@@ -135,21 +136,21 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 3 && p.getLocation().isInsideFlameWall()) {
 				p.setBusy(true);
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", p));
-				sleep(1900);
+				delay(1900);
 				npcWalkFromPlayer(p, n);
-				message(p, 600, "Your opponent is retreating");
+				Functions.mes(p, 600, "Your opponent is retreating");
 				if (n != null) {
 					n.remove();
 				}
-				message(p, 1300, "The demon starts an incantation...",
+				Functions.mes(p, 1300, "The demon starts an incantation...",
 					"@yel@Nezikchened : But I will leave you with a taste of my power...",
 					"As he finishes the incantation a powerful bolt of energy strikes you.");
 				p.damage(7);
-				message(p, 1300, "@yel@Nezikchened : Haha hah ha ha ha ha....",
+				Functions.mes(p, 1300, "@yel@Nezikchened : Haha hah ha ha ha ha....",
 					"The demon explodes in a powerful burst of flame that scorches you.");
 				p.updateQuestStage(Quests.LEGENDS_QUEST, 4);
 				p.setBusy(false);
-				Npc ungadulu = getNearestNpc(p, NpcId.UNGADULU.id(), 8);
+				Npc ungadulu = ifnearvisnpc(p, NpcId.UNGADULU.id(), 8);
 				if (ungadulu != null) {
 					ungadulu.initializeTalkScript(p);
 				}
@@ -158,12 +159,12 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 			else if (p.getQuestStage(Quests.LEGENDS_QUEST) == 7 && p.getLocation().isAroundBoulderRock()) {
 				p.setBusy(true);
 				p.updateQuestStage(Quests.LEGENDS_QUEST, 8);
-				npcTalk(p, n, "Arrrgghhhhh, foul Vacu!");
+				npcsay(p, n, "Arrrgghhhhh, foul Vacu!");
 				n.resetCombatEvent();
-				message(p, "Your opponent is retreating");
-				npcTalk(p, n, "You would bite the hand that feeds you!",
+				mes(p, "Your opponent is retreating");
+				npcsay(p, n, "You would bite the hand that feeds you!",
 					"Very well, I will ready myself for our next encounter...");
-				message(p, 1300, "The Demon seems very angry now...",
+				Functions.mes(p, 1300, "The Demon seems very angry now...",
 					"You deliver a final devastating blow to the demon, ",
 					"and it's unearthly frame crumbles into dust.");
 				if (n != null) {
@@ -177,13 +178,13 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				if (n != null) {
 					n.remove();
 				}
-				message(p, 1300, "You deliver the final killing blow to the foul demon.",
+				Functions.mes(p, 1300, "You deliver the final killing blow to the foul demon.",
 					"The Demon crumbles into a pile of ash.");
-				createGroundItem(ItemId.ASHES.id(), 1, p.getX(), p.getY(), p);
-				message(p, 1300, "@yel@Nezikchened: Arrrghhhh.",
+				addobject(ItemId.ASHES.id(), 1, p.getX(), p.getY(), p);
+				Functions.mes(p, 1300, "@yel@Nezikchened: Arrrghhhh.",
 					"@yel@Nezikchened: I am beaten by a mere mortal.",
 					"@yel@Nezikchened: I will revenge myself upon you...");
-				playerTalk(p, null, "Yeah, yeah, yeah ! ",
+				Functions.say(p, null, "Yeah, yeah, yeah ! ",
 					"Heard it all before !");
 			}
 			// ??
@@ -212,8 +213,8 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((affectedmob.getAttribute("spawnedFor", null) != null && !affectedmob.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Quests.LEGENDS_QUEST, 3, 7, 8)) {
-				message(p, 1300, "Your attack glides straight through the Demon.");
-				message(p, 600, "as if it wasn't really there.");
+				Functions.mes(p, 1300, "Your attack glides straight through the Demon.");
+				Functions.mes(p, 600, "as if it wasn't really there.");
 				if (affectedmob != null)
 					affectedmob.remove();
 			}

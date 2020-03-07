@@ -6,6 +6,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -63,15 +64,15 @@ public class Eating implements OpInvTrigger {
 				player.message("it tastes quite good");
 			} else if (id == ItemId.WORM_HOLE.id() || id == ItemId.GNOME_WAITER_WORM_HOLE.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
-				playerTalk(player, null, "yuck");
+				say(player, null, "yuck");
 				player.message("that was awful");
 			} else if (id == ItemId.TANGLED_TOADS_LEGS.id() || id == ItemId.GNOME_WAITER_TANGLED_TOADS_LEGS.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the tangled toads legs");
 				player.message("it tastes.....slimey");
 			} else if (id == ItemId.ROCK_CAKE.id()) {
 				// authentic does not send message to quest tab
-				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
-				playerTalk(player, null, "Ow! I nearly broke a tooth!");
+				Functions.mes(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
+				say(player, null, "Ow! I nearly broke a tooth!");
 				player.message("You feel strangely heavier and more tired");
 			} else if (id == ItemId.EQUA_LEAVES.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the leaves..chewy but tasty");
@@ -182,8 +183,8 @@ public class Eating implements OpInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, message);
 			} else if (id == ItemId.ROTTEN_APPLES.id()) {
 				// authentic does not give message to quest tab
-				message(player, "you eat an apple");
-				playerTalk(player, null, "yuck");
+				Functions.mes(player, "you eat an apple");
+				say(player, null, "yuck");
 				player.message("it's rotten, you spit it out");
 			} else
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
@@ -196,7 +197,7 @@ public class Eating implements OpInvTrigger {
 				}
 				player.getSkills().setLevel(Skills.HITS, newHp);
 			}
-			sleep(325);
+			delay(325);
 			if (heals && !isKebabVariant) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
@@ -265,13 +266,13 @@ public class Eating implements OpInvTrigger {
 		player.getSkills().setLevel(Skills.HITS, newStat);
 		switch(DataConversions.random(0,2)) {
 			case 0:
-				playerTalk(player, null, "Yummmmm!");
+				say(player, null, "Yummmmm!");
 				break;
 			case 1:
-				playerTalk(player, null, "Oh, so nice!!!");
+				say(player, null, "Oh, so nice!!!");
 				break;
 			case 2:
-				playerTalk(player, null, "Lovely!");
+				say(player, null, "Lovely!");
 				break;
 		}
 	}

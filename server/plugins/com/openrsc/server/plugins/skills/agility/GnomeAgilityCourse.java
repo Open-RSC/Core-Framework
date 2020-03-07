@@ -47,44 +47,44 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 		switch (obj.getID()) {
 			case BALANCE_LOG:
 				p.message("you stand on the slippery log");
-				movePlayer(p, 692, 494);
-				Functions.sleep(640);
-				movePlayer(p, 692, 495);
-				Functions.sleep(640);
-				movePlayer(p, 692, 496);
-				Functions.sleep(640);
-				movePlayer(p, 692, 497);
-				Functions.sleep(640);
-				movePlayer(p, 692, 498);
-				Functions.sleep(640);
-				movePlayer(p, 692, 499);
-				Functions.sleep(640);
+				teleport(p, 692, 494);
+				Functions.delay(640);
+				teleport(p, 692, 495);
+				Functions.delay(640);
+				teleport(p, 692, 496);
+				Functions.delay(640);
+				teleport(p, 692, 497);
+				Functions.delay(640);
+				teleport(p, 692, 498);
+				Functions.delay(640);
+				teleport(p, 692, 499);
+				Functions.delay(640);
 				p.message("and walk across");
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
 				p.setBusy(false);
 				return;
 			case NET:
-				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_STARTINGNET.id(), 10);
+				gnomeTrainer = ifnearvisnpc(p, NpcId.GNOME_TRAINER_STARTINGNET.id(), 10);
 				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, NET, obstacles)) {
-					npcTalk(p, gnomeTrainer, "move it, move it, move it");
+					npcsay(p, gnomeTrainer, "move it, move it, move it");
 				}
 				p.message("you climb the net");
-				Functions.sleep(1920);
-				movePlayer(p, 692, 1448);
+				Functions.delay(1920);
+				teleport(p, 692, 1448);
 				p.message("and pull yourself onto the platform");
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
 				p.setBusy(false);
 				return;
 			case WATCH_TOWER:
-				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_PLATFORM.id(), 10);
+				gnomeTrainer = ifnearvisnpc(p, NpcId.GNOME_TRAINER_PLATFORM.id(), 10);
 				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, WATCH_TOWER, obstacles)) {
-					npcTalk(p, gnomeTrainer, "that's it, straight up, no messing around");
+					npcsay(p, gnomeTrainer, "that's it, straight up, no messing around");
 				}
 				p.message("you pull yourself up the tree");
-				Functions.sleep(1280);
-				movePlayer(p, 693, 2394);
+				Functions.delay(1280);
+				teleport(p, 693, 2394);
 				p.message("to the platform above");
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
@@ -92,10 +92,10 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				return;
 			case ROPE_SWING:
 				p.message("you reach out and grab the rope swing");
-				Functions.sleep(1280);
+				Functions.delay(1280);
 				p.message("you hold on tight");
-				Functions.sleep(2560);
-				movePlayer(p, 685, 2396);
+				Functions.delay(2560);
+				teleport(p, 685, 2396);
 				p.message("and swing to the oppisite platform");
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
@@ -103,35 +103,35 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				return;
 			case LANDING:
 				p.message("you hang down from the tower");
-				Functions.sleep(1280);
-				movePlayer(p, 683, 506);
+				Functions.delay(1280);
+				teleport(p, 683, 506);
 				p.message("and drop to the floor");
-				playerTalk(p, null, "ooof");
+				say(p, null, "ooof");
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
 				p.setBusy(false);
 				return;
 			case SECOND_NET:
-				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENDINGNET.id(), 10);
+				gnomeTrainer = ifnearvisnpc(p, NpcId.GNOME_TRAINER_ENDINGNET.id(), 10);
 				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, SECOND_NET, obstacles)) {
-					npcTalk(p, gnomeTrainer, "my granny can move faster than you");
+					npcsay(p, gnomeTrainer, "my granny can move faster than you");
 				}
 				p.message("you take a few steps back");
-				Functions.sleep(640);
-				movePlayer(p, 683, 505);
+				Functions.delay(640);
+				teleport(p, 683, 505);
 				p.message("and run towards the net");
-				Functions.sleep(640);
-				movePlayer(p, 683, 501);
+				Functions.delay(640);
+				teleport(p, 683, 501);
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
 				p.setBusy(false);
 				return;
 			case PIPE:
-				message(p, "you squeeze into the pipe", "and shuffle down into it");
-				movePlayer(p, 683, 494);
-				gnomeTrainer = getNearestNpc(p, NpcId.GNOME_TRAINER_ENTRANCE.id(), 10);
+				Functions.mes(p, "you squeeze into the pipe", "and shuffle down into it");
+				teleport(p, 683, 494);
+				gnomeTrainer = ifnearvisnpc(p, NpcId.GNOME_TRAINER_ENTRANCE.id(), 10);
 				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(p, PIPE, obstacles)) {
-					npcTalk(p, gnomeTrainer, "that's the way, well done");
+					npcsay(p, gnomeTrainer, "that's the way, well done");
 				}
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);

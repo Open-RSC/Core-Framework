@@ -6,6 +6,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -19,7 +20,7 @@ public final class Ned implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Why hello there, me friends call me Ned",
+		npcsay(p, n, "Why hello there, me friends call me Ned",
 			"I was a man of the sea, but its past me now",
 			"Could I be making or selling you some Rope?"
 		);
@@ -35,7 +36,7 @@ public final class Ned implements TalkNpcTrigger {
 					"Ned, could you make other things from wool?",
 					"No thanks Ned, I don't need any"
 				};
-				int choice = showMenu(p, n, menu);
+				int choice = multi(p, n, menu);
 				makeChoice(p, n, choice);
 			} else {
 				menu = new String[]{ // Dragon Slayer
@@ -43,7 +44,7 @@ public final class Ned implements TalkNpcTrigger {
 					"Yes, I would like some Rope",
 					"No thanks Ned, I don't need any"
 				};
-				int choice = showMenu(p, n, menu);
+				int choice = multi(p, n, menu);
 				if (choice >= 2)
 					makeChoice(p, n, 3);
 				else
@@ -55,12 +56,12 @@ public final class Ned implements TalkNpcTrigger {
 				"Ned, could you make other things from wool?",
 				"No thanks Ned, I don't need any"
 			};
-			int choice = showMenu(p, n, menu);
+			int choice = multi(p, n, menu);
 			if (choice >= 0) {
 				makeChoice(p, n, choice + 1);
 			}
 		} else {
-			int choice = showMenu(p, n, menu);
+			int choice = multi(p, n, menu);
 			if (choice == 0)
 				makeChoice(p, n, 1);
 			else if (choice == 1)
@@ -70,39 +71,39 @@ public final class Ned implements TalkNpcTrigger {
 
 	public void makeChoice(Player p, Npc n, int option) {
 		if (option == 0) { // Dragon Slayer
-			npcTalk(p, n, "Well I was a sailor",
+			npcsay(p, n, "Well I was a sailor",
 				"I've not been able to get work at sea these days though",
 				"They say I am too old"
 			);
-			message(p, "There is a wistfull look in Ned's eyes");
-			npcTalk(p, n, "I miss those days",
+			Functions.mes(p, "There is a wistfull look in Ned's eyes");
+			npcsay(p, n, "I miss those days",
 				"If you could get me a ship I would take you anywhere"
 			);
 			if (p.getCache().hasKey("ship_fixed")) {
-				playerTalk(p, n, "As it happens I do have a ship ready to sail");
-				npcTalk(p, n, "That'd be grand, where is it");
-				playerTalk(p, n, "It's called the Lumbridge Lady and it's docked in Port Sarim");
-				npcTalk(p, n, "I'll go right over there and check her out then",
+				say(p, n, "As it happens I do have a ship ready to sail");
+				npcsay(p, n, "That'd be grand, where is it");
+				say(p, n, "It's called the Lumbridge Lady and it's docked in Port Sarim");
+				npcsay(p, n, "I'll go right over there and check her out then",
 					"See you over there"
 				);
 				p.getCache().store("ned_hired", true);
 			} else {
-				playerTalk(p, n, "I will work on finding a sea worthy ship then");
+				say(p, n, "I will work on finding a sea worthy ship then");
 			}
 		} else if (option == 1) { // Buy Rope
-			npcTalk(p, n, "Well, I can sell you some rope for 15 coins",
+			npcsay(p, n, "Well, I can sell you some rope for 15 coins",
 				"Or I can be making you some if you gets me 4 balls of wool",
 				"I strands them together I does, makes em strong"
 			);
 			int choice;
-			if (!hasItem(p, ItemId.BALL_OF_WOOL.id(), 4)) {
-				choice = showMenu(p, n, false, //do not send over
+			if (!ifheld(p, ItemId.BALL_OF_WOOL.id(), 4)) {
+				choice = multi(p, n, false, //do not send over
 					"Okay, please sell me some Rope",
 					"Thats a little more than I want to pay",
 					"I will go and get some wool"
 				);
 			} else {
-				choice = showMenu(p, n, false, //do not send over
+				choice = multi(p, n, false, //do not send over
 					"Okay, please sell me some Rope",
 					"Thats a little more than I want to pay",
 					"I have some balls of wool. could you make me some Rope?"
@@ -112,76 +113,76 @@ public final class Ned implements TalkNpcTrigger {
 				if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 15) {
 					p.message("You Don't have enough coins to buy any rope!");
 				} else {
-					playerTalk(p, n, "Okay, please sell me some Rope");
+					say(p, n, "Okay, please sell me some Rope");
 					p.message("You hand Ned 15 coins");
-					npcTalk(p, n, "There you go, finest rope in Runescape");
+					npcsay(p, n, "There you go, finest rope in Runescape");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
 					p.getCarriedItems().remove(ItemId.COINS.id(), 15);
 					p.message("Ned gives you a coil of rope");
 				}
 			} else if (choice == 1) {
-				playerTalk(p, n, "Thats a little more than I want to pay");
-				npcTalk(p, n, "Well, if you ever need rope. thats the price. sorry",
+				say(p, n, "Thats a little more than I want to pay");
+				npcsay(p, n, "Well, if you ever need rope. thats the price. sorry",
 					"An old sailor needs money for a little drop o rum."
 				);
 			} else if (choice == 2) {
-				if (!hasItem(p, ItemId.BALL_OF_WOOL.id(), 4)) {
-					playerTalk(p, n, "I will go and get some wool");
-					npcTalk(p, n, "Aye, you do that",
+				if (!ifheld(p, ItemId.BALL_OF_WOOL.id(), 4)) {
+					say(p, n, "I will go and get some wool");
+					npcsay(p, n, "Aye, you do that",
 						"Remember, it takes 4 balls of wool to make strong rope");
 				} else {
-					playerTalk(p, n, "I have some balls of wool. could you make me some Rope?");
-					npcTalk(p, n, "Sure I can.");
+					say(p, n, "I have some balls of wool. could you make me some Rope?");
+					npcsay(p, n, "Sure I can.");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
 					p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 4);
 				}
 			}
 		} else if (option == 2) { // Prince Ali's Rescue
-			npcTalk(p, n, "I am sure I can. What are you thinking of?");
-			int wool_menu = showMenu(p, n, "Could you knit me a sweater?",
+			npcsay(p, n, "I am sure I can. What are you thinking of?");
+			int wool_menu = multi(p, n, "Could you knit me a sweater?",
 				"How about some sort of a wig?",
 				"Could you repair the arrow holes in the back of my shirt?");
 			if (wool_menu == 0) {
-				npcTalk(p, n, "Do I look like a member of a sewing circle?",
+				npcsay(p, n, "Do I look like a member of a sewing circle?",
 					"Be off wi' you, I have fought monsters that would turn your hair blue",
 					"I don't need to be laughed at just 'cos I am getting a bit old");
 			} else if (wool_menu == 1) {
-				npcTalk(p, n, "Well... Thats an interesting thought",
+				npcsay(p, n, "Well... Thats an interesting thought",
 					"yes, I think I could do something",
 					"Give me 3 balls of wool and I might be able to do it"
 				);
 				if (p.getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id()) >= 3) {
-					int choice = showMenu(p, n,
+					int choice = multi(p, n,
 						"I have that now. Please, make me a wig",
 						"I will come back when I need you to make me one"
 					);
 					if (choice == 0) {
-						npcTalk(p, n, "Okay, I will have a go.");
-						message(p, "You hand Ned 3 balls of wool",
+						npcsay(p, n, "Okay, I will have a go.");
+						Functions.mes(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
 						p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 3);
-						npcTalk(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
+						npcsay(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
 						p.message("Ned gives you a pretty good wig");
-						addItem(p, ItemId.WOOL_WIG.id(), 1);
-						playerTalk(p, n, "Thanks Ned, theres more to you than meets the eye");
+						give(p, ItemId.WOOL_WIG.id(), 1);
+						say(p, n, "Thanks Ned, theres more to you than meets the eye");
 					} else if (choice == 1) {
-						npcTalk(p, n, "Well, it sounds like a challenge",
+						npcsay(p, n, "Well, it sounds like a challenge",
 							"come to me if you need one"
 						);
 					}
 				} else {
-					playerTalk(p, n, "great, I will get some. I think a wig would be useful");
+					say(p, n, "great, I will get some. I think a wig would be useful");
 				}
 			} else if (wool_menu == 2) {
-				npcTalk(p, n, "Ah yes, its a tough world these days",
+				npcsay(p, n, "Ah yes, its a tough world these days",
 					"Theres a few brave enough to attack from 10 metres away");
 				p.message("Ned pulls out a needle and attacks your shirt");
-				npcTalk(p, n, "There you go, good as new");
-				playerTalk(p, n, "Thanks Ned, maybe next time they will attack me face to face");
+				npcsay(p, n, "There you go, good as new");
+				say(p, n, "Thanks Ned, maybe next time they will attack me face to face");
 			}
 		} else if (option == 3) { // No thanks
-			npcTalk(p, n, "Well, old Neddy is always here if you do",
+			npcsay(p, n, "Well, old Neddy is always here if you do",
 				"Tell your friends, I can always be using the business"
 			);
 		}

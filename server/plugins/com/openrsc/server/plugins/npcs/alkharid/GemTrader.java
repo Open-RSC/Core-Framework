@@ -46,7 +46,7 @@ public final class GemTrader implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.GEM_TRADER.id()) {
-			npcTalk(p, n, "good day to you " + ((p.isMale()) ? "sir"
+			npcsay(p, n, "good day to you " + ((p.isMale()) ? "sir"
 				: "madam"), "Would you be interested in buying some gems?");
 
 			final String[] options;
@@ -62,17 +62,17 @@ public final class GemTrader implements ShopInterface,
 					"I'm in search of a man named adam fitzharmon"
 				};
 			}
-			int option = showMenu(p, n, false, options);
+			int option = multi(p, n, false, options);
 
 			if (option == 0) {
-				playerTalk(p, n, "Yes please");
+				say(p, n, "Yes please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (option == 1) {
-				playerTalk(p, n, "No thankyou");
+				say(p, n, "No thankyou");
 			} else if (option == 2) {
-				playerTalk(p, n, "I'm in search of a man named Adam Fitzharmon");
-				npcTalk(p,
+				say(p, n, "I'm in search of a man named Adam Fitzharmon");
+				npcsay(p,
 					n,
 					"Fitzharmon eh?",
 					"Thats the name of a Varrocian noble family if I'm not mistaken",

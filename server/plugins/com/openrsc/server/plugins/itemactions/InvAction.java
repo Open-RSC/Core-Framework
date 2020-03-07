@@ -224,22 +224,22 @@ public class InvAction extends Functions implements OpInvTrigger {
 			return;
 
 		}
-		message(player, "The official Alfred Grimhand barcrawl");
+		mes(player, "The official Alfred Grimhand barcrawl");
 		player.message(!player.getCache().hasKey("barone") ?
 			"The jolly boar inn - not completed" : "The jolly boar inn - completed");
-		sleep(800);
+		delay(800);
 		player.message(!player.getCache().hasKey("bartwo") ?
 			"The blue moon inn - not completed" : "The blue moon inn - completed");
-		sleep(800);
+		delay(800);
 		player.message(!player.getCache().hasKey("barthree") ?
 			"The rising sun - not completed" : "The rising sun - completed");
-		sleep(800);
+		delay(800);
 		player.message(!player.getCache().hasKey("barfour") ?
 			"The dead man's chest - not completed" : "The dead man's chest - completed");
-		sleep(800);
+		delay(800);
 		player.message(!player.getCache().hasKey("barfive") ?
 			"The forester's arms - not completed" : "The forester's arms - completed");
-		sleep(800);
+		delay(800);
 		player.message(!player.getCache().hasKey("barsix") ?
 			"The rusty anchor - not completed" : "The rusty anchor - completed");
 	}
@@ -247,9 +247,9 @@ public class InvAction extends Functions implements OpInvTrigger {
 	private void handleInstructionManual(Player player) {
 		String[] options;
 		options = new String[]{"Constructing the cannon", "Making ammo", "firing the cannon", "warrenty"};
-		message(player, "the manual has four pages");
+		mes(player, "the manual has four pages");
 
-		int option = showMenu(player, options);
+		int option = multi(player, options);
 
 		if (player.isBusy()) {
 			return;
@@ -291,7 +291,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleTreeGnomeTranslation(Player player) {
-		message(player, "the book contains the alphabet...",
+		mes(player, "the book contains the alphabet...",
 			"translated into the old gnome tounge");
 		// http://i.imgur.com/XmSmukw.png
 		ActionSender.sendBox(player,
@@ -308,7 +308,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 
 	private void handleGloughsJournal(Player player) {
 		player.message("the book contains several hurried notes");
-		int menu = showMenu(player, "the migration failed", "they must be stopped", "gaining support");
+		int menu = multi(player, "the migration failed", "they must be stopped", "gaining support");
 		if (menu == 0) {
 			ActionSender.sendBox(player, "@red@The migration failed" + " %" + " %"
 				+ "After spending half a century hiding underground you would think that the great migration would have improved life on runescape for tree gnomes. However, rather than the great liberation promised to us by king Healthorg at the end of the last age, we have been forced to live in hiding ,up trees or in the gnome maze, laughed at and mocked by man. Living in constant fear of human aggression, we are in a no better situation now then when we lived in the caves% %"
@@ -325,7 +325,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleInvoice(Player player) {
-		message(player, "you open the invoice");
+		mes(player, "you open the invoice");
 		ActionSender.sendBox(player,
 			"@red@Order"
 				+ " %" + " %" +
@@ -338,7 +338,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleGloughsNotes(Player player) {
-		message(player, "the notes contain sketched maps and diagrams", "the text reads");
+		mes(player, "the notes contain sketched maps and diagrams", "the text reads");
 		ActionSender.sendBox(player,
 			"@red@invasion"
 				+ " %" + " %" +
@@ -355,13 +355,13 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleWarShip(Player player) {
-		message(player, "you pretend to sail the ship across the floor",
+		mes(player, "you pretend to sail the ship across the floor",
 			"you soon become very bored",
 			"and realise you look quite silly");
 	}
 
 	private void handleDiary(Player player) {
-		message(player, "Pentember the 3rd",
+		mes(player, "Pentember the 3rd",
 			"The experiment is going well - moved it to the wooden shed in the garden",
 			"It does too much damage in the house",
 			"Pentember the 6th",
@@ -383,8 +383,8 @@ public class InvAction extends Functions implements OpInvTrigger {
 			player.message("the sticks smoke momentarily then die out");
 			return;
 		}
-		message(player, "The sticks catch alight");
-		if (removeItem(player, ItemId.UNLIT_TORCH.id(), 1)) {
+		mes(player, "The sticks catch alight");
+		if (remove(player, ItemId.UNLIT_TORCH.id(), 1)) {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_TORCH.id()));
@@ -398,7 +398,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleScruffyNote(Player player) {
-		message(player, "The handwriting on this note is very scruffy",
+		mes(player, "The handwriting on this note is very scruffy",
 			"as far as you can make out it says",
 			"Got a bncket of nnlk",
 			"Tlen qrind sorne lhoculate",
@@ -410,14 +410,14 @@ public class InvAction extends Functions implements OpInvTrigger {
 
 	private void handleMagicScroll(Player player) {
 		if (player.getCache().hasKey("ardougne_scroll") && player.getQuestStage(Quests.PLAGUE_CITY) == -1) {
-			message(player, "The scroll crumbles to dust");
+			mes(player, "The scroll crumbles to dust");
 		} else {
-			message(player, "You memorise what is written on the scroll",
+			mes(player, "You memorise what is written on the scroll",
 				"You can now cast the Ardougne teleport spell",
 				"Provided you have the required runes and magic level",
 				"The scroll crumbles to dust");
 		}
-		removeItem(player, ItemId.MAGIC_SCROLL.id(), 1);
+		remove(player, ItemId.MAGIC_SCROLL.id(), 1);
 		if (!player.getCache().hasKey("ardougne_scroll")) {
 			player.getCache().store("ardougne_scroll", true);
 		}
@@ -425,33 +425,33 @@ public class InvAction extends Functions implements OpInvTrigger {
 
 	private void handleSpellScroll(Player player) {
 		if (player.getCache().hasKey("watchtower_scroll") && player.getQuestStage(Quests.WATCHTOWER) == -1) {
-			message(player, "The scroll crumbles to dust");
+			mes(player, "The scroll crumbles to dust");
 		} else {
-			message(player, "You memorise what is written on the scroll",
+			mes(player, "You memorise what is written on the scroll",
 				"You can now cast the Watchtower teleport spell",
 				"Provided you have the required runes and magic level",
 				"The scroll crumbles to dust");
 		}
-		removeItem(player, ItemId.SPELL_SCROLL.id(), 1);
+		remove(player, ItemId.SPELL_SCROLL.id(), 1);
 		if (!player.getCache().hasKey("watchtower_scroll")) {
 			player.getCache().store("watchtower_scroll", true);
 		}
 	}
 
 	private void handleTouristGuide(Player player) {
-		message(player, "You read the guide");
-		playerTalk(player, null, "This book is your guide to the vibrant city of Ardougne",
+		mes(player, "You read the guide");
+		say(player, null, "This book is your guide to the vibrant city of Ardougne",
 			"Ardougne is an exciting modern city",
 			"Located on the sunny south coast of Kandarin");
-		message(player, "Pick a chapter to read");
-		int chapter = showMenu(player,
+		mes(player, "Pick a chapter to read");
+		int chapter = multi(player,
 			"Ardougne city of shopping",
 			"Ardougne city of history",
 			"Ardougne city of fun",
 			"The area surrounding Ardougne",
 			"I don't want to read this rubbish");
 		if (chapter == 0) {
-			message(player, "Ardougne city of shopping",
+			mes(player, "Ardougne city of shopping",
 				"Come sample the delights of the Ardougne market",
 				"The biggest in the known world",
 				"From spices to silk",
@@ -459,7 +459,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 				"Other popular shops in the area include Zeneshas the armourer",
 				"And the adventurers supply store");
 		} else if (chapter == 1) {
-			message(player, "Ardougne, city of history",
+			mes(player, "Ardougne, city of history",
 				"Ardougne is an important historical city",
 				"One historic building is the magnificent Handelmort mansion",
 				"Currently owned by Lord Franis Bradley Handelmort",
@@ -468,13 +468,13 @@ public class InvAction extends Functions implements OpInvTrigger {
 				"and members of the holy order of ardougne paladins",
 				"Still wander the streets");
 		} else if (chapter == 2) {
-			message(player, "Ardougne city of fun",
+			mes(player, "Ardougne city of fun",
 				"If you're looking for entertainment in Ardougne",
 				"Why not pay a visit to Ardougne city zoo",
 				"Or relax for a drink in the flying horse inn",
 				"Or slaughter rats in Ardougne sewers");
 		} else if (chapter == 3) {
-			message(player, "The area surrounding Ardougne",
+			mes(player, "The area surrounding Ardougne",
 				"If you want to go further afield",
 				"Why not have a look at the pillars of Zanash",
 				"The mysterious marble pillars west of the city",
@@ -482,7 +482,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 				"Is only a short boat ride away",
 				"Ships leaving regularily from Ardougne harbour");
 		} else if (chapter == 4) {
-			playerTalk(player, null, "I don't want to read this rubbish");
+			say(player, null, "I don't want to read this rubbish");
 		}
 	}
 
@@ -492,7 +492,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 		if ((player.getCache().hasKey("bird_feed")
 			|| player.getQuestStage(Quests.BIOHAZARD) == 3)
 				&& player.getLocation().inBounds(617, 582, 622, 590)) {
-			message(player, "the pigeons fly towards the watch tower",
+			mes(player, "the pigeons fly towards the watch tower",
 				"they begin pecking at the bird feed",
 				"the mourners are frantically trying to scare the pigeons away");
 			if (player.getQuestStage(Quests.BIOHAZARD) == 2) {
@@ -508,8 +508,8 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleJangerberries(Player player) {
-		message(player, "You eat the Jangerberries");
-		removeItem(player, ItemId.JANGERBERRIES.id(), 1);
+		mes(player, "You eat the Jangerberries");
+		remove(player, ItemId.JANGERBERRIES.id(), 1);
 		int Attack = player.getSkills().getMaxStat(Skills.ATTACK) + 2;
 		int Strength = player.getSkills().getMaxStat(Skills.STRENGTH) + 1;
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
@@ -543,20 +543,20 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleTechnicalPlans(Player player) {
-		message(player, "The plans look very technical!",
+		mes(player, "The plans look very technical!",
 			"But you can see that this item will require ",
 			"a bronze bar and at least 10 feathers.");
 	}
 
 	private void handleAnaInABarrel(Player player) {
-		message(player, "Ana looks pretty angry, she starts shouting at you.",
+		mes(player, "Ana looks pretty angry, she starts shouting at you.",
 			"@gre@Ana: Get me out of here!",
 			"@gre@Ana: Do you hear me!",
 			"@gre@Ana: Get me out of here I say!");
 	}
 
 	private void handleRandassJournal(Player player) {
-		message(player, "the journal is old and worn");
+		mes(player, "the journal is old and worn");
 		player.message("it reads...");
 		ActionSender.sendBox(player,
 			"@red@I came to cleanse these mountain passes of the dark forces%"
@@ -577,32 +577,32 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleADollOfIban(Player player) {
-		message(player, "you carefully search the doll");
+		mes(player, "you carefully search the doll");
 		if (player.getCache().hasKey("poison_on_doll")) {
-			message(player, "Blood has been smeared onto the doll");
+			mes(player, "Blood has been smeared onto the doll");
 		}
 		if (player.getCache().hasKey("cons_on_doll")) {
-			message(player, "Crushed bones have been smeared onto the doll");
+			mes(player, "Crushed bones have been smeared onto the doll");
 		}
 		if (player.getCache().hasKey("ash_on_doll")) {
-			message(player, "Burnt ash has been smeared onto the doll");
+			mes(player, "Burnt ash has been smeared onto the doll");
 		}
 		if (player.getCache().hasKey("shadow_on_doll")) {
-			message(player, "A dark liquid has been poured over the doll");
+			mes(player, "A dark liquid has been poured over the doll");
 		}
 		player.message("the doll is made from old wood and cloth");
 	}
 
 	private void handleStaffOfIban(Player player) {
-		message(player, "the staff is broken",
+		mes(player, "the staff is broken",
 			"you must have a dark mage repair it");
 		player.message("before it can be used");
 	}
 
 	private void handleNightshade(Player player) {
 		player.message("You eat the nightshade...");
-		removeItem(player, ItemId.NIGHTSHADE.id(), 1);
-		playerTalk(player, null, "Ahhhh! what have I done !");
+		remove(player, ItemId.NIGHTSHADE.id(), 1);
+		say(player, null, "Ahhhh! what have I done !");
 		player.damage((int) ((getCurrentLevel(player, Skills.HITS) * 0.2D) + 10));
 		player.message("The nightshade was highly poisonous");
 	}
@@ -611,15 +611,15 @@ public class InvAction extends Functions implements OpInvTrigger {
 		if (player.getQuestStage(Quests.WATCHTOWER) == 8 || player.getQuestStage(Quests.WATCHTOWER) == 9) {
 			player.message("You search the robe");
 			if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL3.id(), Optional.empty())) {
-				message(player, "You find nothing");
+				mes(player, "You find nothing");
 			} else if (player.getBank().hasItemId(ItemId.POWERING_CRYSTAL3.id())) {
-				playerTalk(player, null, "I already have this in my bank");
+				say(player, null, "I already have this in my bank");
 			} else {
-				message(player, "You find a crystal wrapped in the folds of the material");
-				addItem(player, ItemId.POWERING_CRYSTAL3.id(), 1);
+				mes(player, "You find a crystal wrapped in the folds of the material");
+				give(player, ItemId.POWERING_CRYSTAL3.id(), 1);
 			}
 		} else {
-			message(player, "You search the robe",
+			mes(player, "You search the robe",
 				"You find nothing");
 		}
 	}
@@ -644,27 +644,27 @@ public class InvAction extends Functions implements OpInvTrigger {
 	}
 
 	private void handleLevelOneCertificate(Player player) {
-		playerTalk(player, null, "It says:",
+		say(player, null, "It says:",
 			"The holder of this certificate has passed the level 1 exam in earth sciences");
 	}
 
 	private void handleLevelTwoCertificate(Player player) {
-		playerTalk(player, null, "It says:",
+		say(player, null, "It says:",
 			"The holder of this certificate has passed the level 2 exam in earth sciences");
 	}
 
 	private void handleLevelThreeCertificate(Player player) {
-		playerTalk(player, null, "It says:",
+		say(player, null, "It says:",
 			"The holder of this certificate has passed the level 3 exam in earth sciences");
 	}
 
 	private void handleDigsiteScroll(Player player) {
-		playerTalk(player, null, "It says 'I give permission for the bearer to use the mineshafts on site",
+		say(player, null, "It says 'I give permission for the bearer to use the mineshafts on site",
 			"Signed Terrance Balando, Archaeological expert, City of Varrock");
 	}
 
 	private void handleStoneTablet(Player player) {
-		playerTalk(player, null, "It says:",
+		say(player, null, "It says:",
 			"Tremble mortal, before the altar of our dread lord zaros");
 	}
 
@@ -686,9 +686,9 @@ public class InvAction extends Functions implements OpInvTrigger {
 			+ "One all items are prepared, seek out Wayne in Falador", true);
 	}
 	private void handleOldJournal(Player player) {
-		message(player, "the journal is old and covered in dust",
+		mes(player, "the journal is old and covered in dust",
 			"inside are several chapters...");
-		int chapter = showMenu(player, "intro", "iban", "the ressurection", "the four elements");
+		int chapter = multi(player, "intro", "iban", "the ressurection", "the four elements");
 		int offset;
 		if (chapter == 0) {
 			readJournalChapter(player, 0);
@@ -697,9 +697,9 @@ public class InvAction extends Functions implements OpInvTrigger {
 		} else if (chapter == 2) {
 			readJournalChapter(player, 2);
 		} else if (chapter == 3) {
-			message(player, "you turn to the page titled 'the four elements'",
+			mes(player, "you turn to the page titled 'the four elements'",
 				"there are four more chapters");
-			offset = showMenu(player, "flesh", "blood", "shadow", "conscience");
+			offset = multi(player, "flesh", "blood", "shadow", "conscience");
 			if (offset >= 0 && offset <= 3) {
 				readJournalChapter(player, offset + 3);
 			}
@@ -721,7 +721,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 			ActionSender.sendBox(player, "@red@Iban was a Black Knight who had learned to fight under the%" +
 				"@red@great Darkquerius himself. Together they had taken on the @red@might of the White Knights, and the blood of a hundred @red@soldiers had been wiped from Iban's sword.% %" +
 				"@red@In many respects Iban was not so different from the White @red@Knights that he so mercilessly slaughtered: noble and @red@educated@red@ with a taste for the finer things in life. But there @red@was something that made him different: ambition. No, not @red@the simple desire to succeed or lead one's fellow @red@man. @red@This was an ambition that hungered for something beyond @red@the @red@mortal @red@realm", true);
-			int cont = showMenu(player, "continue reading", "close book");
+			int cont = multi(player, "continue reading", "close book");
 			if (cont == 0) {
 				ActionSender.sendBox(player, "%@red@..that was almost godlike in its insatiability.% %" +
 					"@red@But therein lay the essence of his darkness. @red@At its most @red@base level, Iban's fundamental impulse@red@ was a desire to @red@control the hearts and minds of his fellow man.@red@ To take @red@them beyond the @red@pale of mere allegiance,@red@ and corrupt @red@them into a pure force for evil.% %" +
@@ -764,8 +764,8 @@ public class InvAction extends Functions implements OpInvTrigger {
 		}
 
 		if (chapter >= 3 && chapter <= 6) {
-			message(player, "there are four more chapters");
-			int chapterOpt = showMenu(player, "flesh", "blood", "shadow", "conscience");
+			mes(player, "there are four more chapters");
+			int chapterOpt = multi(player, "flesh", "blood", "shadow", "conscience");
 			if (chapterOpt >= 0)
 				readJournalChapter(player, chapterOpt + 3);
 		}

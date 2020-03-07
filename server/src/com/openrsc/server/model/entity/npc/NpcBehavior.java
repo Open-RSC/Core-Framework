@@ -216,7 +216,7 @@ public class NpcBehavior {
 			return;
 		}
 		lastTackleAttempt = System.currentTimeMillis();
-		showBubble(p, new Item(ItemId.GNOME_BALL.id()));
+		thinkbubble(p, new Item(ItemId.GNOME_BALL.id()));
 		p.message("the gnome trys to tackle you");
 		if (DataConversions.random(0, 1) == 0) {
 			//successful avoiding tackles gives agility xp
@@ -229,11 +229,11 @@ public class NpcBehavior {
 				return;
 			}
 			p.setAttribute("gnomeball_npc", npc.getID());
-			removeItem(p, ItemId.GNOME_BALL.id(), 1);
+			remove(p, ItemId.GNOME_BALL.id(), 1);
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
 			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITS) * 0.05)));
-			playerTalk(p, null, "ouch");
+			say(p, null, "ouch");
 			npcYell(p, npc, "yeah");
 		}
 	}

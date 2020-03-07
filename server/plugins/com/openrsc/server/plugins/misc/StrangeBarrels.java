@@ -8,6 +8,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -111,15 +112,15 @@ public class StrangeBarrels implements OpLocTrigger {
 			int action = DataConversions.random(0, 4);
 			if (action != 0) {
 				p.message("You smash the barrel open.");
-				removeObject(obj);
+				delloc(obj);
 				p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 40000, "Smash Strange Barrel") { // 40 seconds
 					public void action() {
 						int newObjectX = DataConversions.random(467, 476);
 						int newObjectY = DataConversions.random(3699, 3714);
 						if (p.getWorld().getRegionManager().getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY)) != null) {
-							registerObject(new GameObject(obj.getWorld(), obj.getLoc()));
+							addloc(new GameObject(obj.getWorld(), obj.getLoc()));
 						} else {
-							registerObject(new GameObject(obj.getWorld(), Point.location(newObjectX, newObjectY), 1178, 0, 0));
+							addloc(new GameObject(obj.getWorld(), Point.location(newObjectX, newObjectY), 1178, 0, 0));
 						}
 					}
 				});
@@ -157,12 +158,12 @@ public class StrangeBarrels implements OpLocTrigger {
 				 */
 				if (DataConversions.random(0, 1) != 1) {
 					p.message("You smash the barrel open.");
-					removeObject(obj);
-					delayedSpawnObject(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
+					delloc(obj);
+					Functions.addloc(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
 						p.message("You were unable to smash this barrel open.");
-						message(p, 1300, "You hit the barrel at the wrong angle.",
+						mes(p, 1300, "You hit the barrel at the wrong angle.",
 							"You're heavily jarred from the vibrations of the blow.");
 						int reduceAttack = DataConversions.random(1, 3);
 						p.message("Your attack is reduced by " + reduceAttack + ".");
@@ -178,8 +179,8 @@ public class StrangeBarrels implements OpLocTrigger {
 	private void spawnMonster(Player p, int x, int y) {
 		int randomizeMonster = DataConversions.random(0, (MONSTER.length - 1));
 		int selectedMonster = MONSTER[randomizeMonster];
-		Npc monster = spawnNpc(p.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
-		sleep(600);
+		Npc monster = addnpc(p.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
+		delay(600);
 		if (monster != null) {
 			monster.startCombat(p);
 		}
@@ -204,9 +205,9 @@ public class StrangeBarrels implements OpLocTrigger {
 		int randomizeItem = DataConversions.random(0, (selectItemArray.length - 1));
 		int selectedItem = selectItemArray[randomizeItem];
 		if (selectedItem == 10) {
-			createGroundItem(selectedItem, 100, x, y, p);
+			addobject(selectedItem, 100, x, y, p);
 		} else {
-			createGroundItem(selectedItem, 1, x, y, p);
+			addobject(selectedItem, 1, x, y, p);
 		}
 	}
 }

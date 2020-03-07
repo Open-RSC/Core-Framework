@@ -29,7 +29,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	@Override
 	public void onUseInv(Player player, Item item1, Item item2) {
 		// simple random for the moment
-		message(player, 0, "You pour some of the sacred water into the enchanted vial.",
+		mes(player, 0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
 		player.getCarriedItems().getInventory().replace(ItemId.ENCHANTED_VIAL.id(), ItemId.HOLY_WATER_VIAL.id());
 		if(!player.getCache().hasKey("remaining_blessed_bowl")) {
@@ -59,13 +59,13 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 			player.message("You need to equip this item to throw it.");
 		}
 		else {
-			Npc ungadulu = getNearestNpc(player, NpcId.UNGADULU.id(), 4);
+			Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 4);
 			if (ungadulu == null || player.getQuestStage(Quests.LEGENDS_QUEST) > 3) {
 				player.message("You see no one suitable to throw it at.");
 			}
 			else {
 				player.message("You throw the holy watervial at Ungadulu.");
-				removeItem(player, item.getCatalogId(), 1);
+				remove(player, item.getCatalogId(), 1);
 				player.playSound("projectile");
 				player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, ungadulu, 1) {
 					@Override
@@ -105,10 +105,10 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 				} else {
 					playerEvent.reset();
 				}
-				ungadulu = transform(ungadulu, NpcId.EVIL_UNGADULU.id(), true);
-				npcTalk(player, ungadulu, "Vile serpent...you will pay for that...");
-				ungadulu = transform(ungadulu, NpcId.UNGADULU.id(), true);
-				npcTalk(player, ungadulu, "What...what happened...why am I all wet?");
+				ungadulu = changenpc(ungadulu, NpcId.EVIL_UNGADULU.id(), true);
+				npcsay(player, ungadulu, "Vile serpent...you will pay for that...");
+				ungadulu = changenpc(ungadulu, NpcId.UNGADULU.id(), true);
+				npcsay(player, ungadulu, "What...what happened...why am I all wet?");
 			}
 		}
 	}

@@ -2,10 +2,11 @@ package com.openrsc.server.plugins.npcs.lumbridge;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -18,15 +19,15 @@ public class Hans implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello what are you doing here?");
-		int option = showMenu(p, n, "I'm looking for whoever is in charge of this place",
+		npcsay(p, n, "Hello what are you doing here?");
+		int option = Functions.multi(p, n, "I'm looking for whoever is in charge of this place",
 			"I have come to kill everyone in this castle", "I don't know. I'm lost. Where am I?");
 		if (option == 0)
-			npcTalk(p, n, "Sorry, I don't know where he is right now");
+			npcsay(p, n, "Sorry, I don't know where he is right now");
 		else if (option == 1)
-			npcTalk(p, n, "HELP HELP!");
+			npcsay(p, n, "HELP HELP!");
 		else if (option == 2)
-			npcTalk(p, n, "You are in Lumbridge Castle");
+			npcsay(p, n, "You are in Lumbridge Castle");
 
 	}
 

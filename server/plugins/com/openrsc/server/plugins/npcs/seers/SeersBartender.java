@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -21,25 +22,25 @@ public final class SeersBartender implements
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Good morning, what would you like?");
+		npcsay(p, n, "Good morning, what would you like?");
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("What do you have?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "Well we have beer",
+				npcsay(p, n, "Well we have beer",
 					"Or if you want some food, we have our home made stew and meat pies");
 				Menu def = new Menu();
 				def.addOption(new Option("Beer please") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "one beer coming up",
+						npcsay(p, n, "one beer coming up",
 							"Ok, that'll be two coins");
-						if (hasItem(p, ItemId.COINS.id(), 2)) {
+						if (ifheld(p, ItemId.COINS.id(), 2)) {
 							p.message("You buy a pint of beer");
-							addItem(p, ItemId.BEER.id(), 1);
+							give(p, ItemId.BEER.id(), 1);
 							p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 						} else {
-							playerTalk(p, n,
+							say(p, n,
 								"Oh dear. I don't seem to have enough money");
 						}
 
@@ -48,13 +49,13 @@ public final class SeersBartender implements
 				def.addOption(new Option("I'll try the meat pie") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "Ok, that'll be 16 gold");
-						if (hasItem(p, ItemId.COINS.id(), 16)) {
+						npcsay(p, n, "Ok, that'll be 16 gold");
+						if (ifheld(p, ItemId.COINS.id(), 16)) {
 							p.message("You buy a nice hot meat pie");
-							addItem(p, ItemId.MEAT_PIE.id(), 1);
+							give(p, ItemId.MEAT_PIE.id(), 1);
 							p.getCarriedItems().remove(ItemId.COINS.id(), 16);
 						} else {
-							playerTalk(p, n,
+							say(p, n,
 								"Oh dear. I don't seem to have enough money");
 						}
 
@@ -63,14 +64,14 @@ public final class SeersBartender implements
 				def.addOption(new Option("Could I have some stew please") {
 					@Override
 					public void action() {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"A bowl of stew, that'll be 20 gold please");
-						if (hasItem(p, ItemId.COINS.id(), 20)) {
+						if (ifheld(p, ItemId.COINS.id(), 20)) {
 							p.message("You buy a bowl of home made stew");
-							addItem(p, ItemId.STEW.id(), 1);
+							give(p, ItemId.STEW.id(), 1);
 							p.getCarriedItems().remove(ItemId.COINS.id(), 20);
 						} else {
-							playerTalk(p, n,
+							say(p, n,
 								"Oh dear. I don't seem to have enough money");
 						}
 
@@ -88,14 +89,14 @@ public final class SeersBartender implements
 		defaultMenu.addOption(new Option("Beer please") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "one beer coming up",
+				npcsay(p, n, "one beer coming up",
 					"Ok, that'll be two coins");
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
+				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of beer");
-					addItem(p, ItemId.BEER.id(), 1);
+					give(p, ItemId.BEER.id(), 1);
 					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 				} else {
-					playerTalk(p, n,
+					say(p, n,
 						"Oh dear. I don't seem to have enough money");
 				}
 			}
@@ -106,22 +107,22 @@ public final class SeersBartender implements
 				"I'm doing Alfred Grimhand's barcrawl") {
 				@Override
 				public void action() {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"Oh you're a barbarian then",
 						"Now which of these was the barrels contained the liverbane ale?",
 						"That'll be 18 coins please");
-					if (hasItem(p, ItemId.COINS.id(), 18)) {
+					if (ifheld(p, ItemId.COINS.id(), 18)) {
 						p.getCarriedItems().remove(ItemId.COINS.id(), 18);
-						message(p,
+						Functions.mes(p,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",
 							"The room seems to be swaying");
 						drinkAle(p);
-						message(p, "The bartender scrawls his signiture on your card");
+						Functions.mes(p, "The bartender scrawls his signiture on your card");
 						p.getCache().store("barfive", true);
 					} else {
-						playerTalk(p, n, "Sorry I don't have 18 coins");
+						say(p, n, "Sorry I don't have 18 coins");
 					}
 				}
 			});

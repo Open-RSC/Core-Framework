@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -24,15 +25,15 @@ public class AlfonseTheWaiter implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ALFONSE_THE_WAITER.id()) {
-			npcTalk(p, n, "Welcome to the shrimp and parrot",
+			npcsay(p, n, "Welcome to the shrimp and parrot",
 				"Would you like to order sir?");
 			int menu;
 			if (isBlackArmGang(p) || (p.getQuestStage(Quests.HEROS_QUEST) != 1 && p.getQuestStage(Quests.HEROS_QUEST) != 2 && !p.getCache().hasKey("pheonix_mission") && !p.getCache().hasKey("pheonix_alf"))) {
-				menu = showMenu(p, n,
+				menu = multi(p, n,
 					"Yes please",
 					"No thankyou");
 			} else {
-				menu = showMenu(p, n,
+				menu = multi(p, n,
 					"Yes please",
 					"No thankyou",
 					"Do you sell Gherkins?");
@@ -41,9 +42,9 @@ public class AlfonseTheWaiter implements ShopInterface, TalkNpcTrigger {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (menu == 2) {
-				npcTalk(p, n, "Hmm ask Charlie the cook round the back",
+				npcsay(p, n, "Hmm ask Charlie the cook round the back",
 					"He may have some Gherkins for you");
-				message(p, "Alfonse winks");
+				Functions.mes(p, "Alfonse winks");
 				p.getCache().store("talked_alf", true);
 				p.getCache().remove("pheonix_alf");
 			}

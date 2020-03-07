@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -53,18 +54,18 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 		if (cID == -1) {
 			switch (p.getQuestStage(Quests.FAMILY_CREST)) {
 				case 0:
-					npcTalk(p, n, "Hello, my name is Dimintheis",
+					npcsay(p, n, "Hello, my name is Dimintheis",
 						"Of the noble family of Fitzharmon");
 					//do not send over
-					int menu = showMenu(p, n, false,
+					int menu = multi(p, n, false,
 						"Why would a nobleman live in a little hut like this?",
 						"You're rich then?, can I have some money?",
 						"Hi, I am bold adventurer");
 					if (menu == 0) {
-						playerTalk(p, n, "Why would a nobleman live in a little hut like this?");
-						npcTalk(p, n, "The king has taken my estate from me",
+						say(p, n, "Why would a nobleman live in a little hut like this?");
+						npcsay(p, n, "The king has taken my estate from me",
 							"Until I can show him my family crest");
-						int first = showMenu(p, n, "Why would he do that?",
+						int first = multi(p, n, "Why would he do that?",
 							"So where is this crest?");
 						if (first == 0) {
 							dimintheisDialogue(p, n, Dimintheis.TRADITION);
@@ -72,17 +73,17 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							dimintheisDialogue(p, n, Dimintheis.THREE_SONS);
 						}
 					} else if (menu == 1) {
-						playerTalk(p, n, "You're rich then?", "Can I have some money?");
-						npcTalk(p, n, "Lousy beggar",
+						say(p, n, "You're rich then?", "Can I have some money?");
+						npcsay(p, n, "Lousy beggar",
 							"There's to many of your sort about these days",
 							"If I gave money to each of you who asked",
 							"I'd be living on the streets myself");
 					} else if (menu == 2) {
-						playerTalk(p, n, "Hi, I am a bold adventurer");
-						npcTalk(p, n, "An adventurer hmm?",
+						say(p, n, "Hi, I am a bold adventurer");
+						npcsay(p, n, "An adventurer hmm?",
 							"I may have an adventure for you",
 							"I desperatly need my family crest returning to me");
-						int menu2 = showMenu(p, n,
+						int menu2 = multi(p, n,
 							"Why are you so desperate for it?",
 							"So where is this crest?",
 							"I'm not interested in that adventure right now");
@@ -94,8 +95,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					}
 					break;
 				case 1:
-					playerTalk(p, n, "Where did you say I could find Caleb?");
-					npcTalk(p,
+					say(p, n, "Where did you say I could find Caleb?");
+					npcsay(p,
 						n,
 						"I heard word that my son Caleb is alive trying to earn his fortune",
 						"As a great chef, far away in the lands beyond white wolf mountain");
@@ -109,37 +110,37 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				case 8:
 					boolean gave_crest = false;
 					if (p.getCarriedItems().hasCatalogID(ItemId.FAMILY_CREST.id(), Optional.of(false))) {
-						playerTalk(p, n, "I have retrieved your crest");
+						say(p, n, "I have retrieved your crest");
 						p.message("You give the crest to Dimintheis");
-						removeItem(p, ItemId.FAMILY_CREST.id(), 1);
+						remove(p, ItemId.FAMILY_CREST.id(), 1);
 						gave_crest = true;
 					} else if (p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_THREE.id(), Optional.of(false))) {
-						playerTalk(p, n, "I have retrieved your crest");
+						say(p, n, "I have retrieved your crest");
 						p.message("You give the parts of the crest to Dimintheis");
-						removeItem(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
-						removeItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
-						removeItem(p, ItemId.CREST_FRAGMENT_THREE.id(), 1);
+						remove(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
+						remove(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
+						remove(p, ItemId.CREST_FRAGMENT_THREE.id(), 1);
 						gave_crest = true;
 					}
 					if (gave_crest) {
 						p.getCache().remove("north_leverA");
 						p.getCache().remove("south_lever");
 						p.getCache().remove("north_leverB");
-						npcTalk(p, n, "Thankyou for your kindness",
+						npcsay(p, n, "Thankyou for your kindness",
 							"I cannot express my gratitude enough",
 							"You truly are a great hero");
 						p.sendQuestComplete(Quests.FAMILY_CREST);
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"How can I reward you I wonder?",
 							"I suppose these gauntlets would make a good reward",
 							"If you die you will always retain these gauntlets");
 						p.message("Dimintheis gives you a pair of gauntlets");
-						addItem(p, ItemId.STEEL_GAUNTLETS.id(), 1);
+						give(p, ItemId.STEEL_GAUNTLETS.id(), 1);
 						p.getCache().set("famcrest_gauntlets", Gauntlets.STEEL.id());
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"These gautlets can be granted extra powers",
 							"Take them to one of my boys, they can each do something to them",
@@ -147,18 +148,18 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 
 						return;
 					}
-					npcTalk(p, n, "How are you doing finding the crest");
-					playerTalk(p, n, "I don't have it yet");
+					npcsay(p, n, "How are you doing finding the crest");
+					say(p, n, "I don't have it yet");
 					break;
 				case -1:
-					npcTalk(p, n, "Thankyou for saving our family honour",
+					npcsay(p, n, "Thankyou for saving our family honour",
 						"We will never forget you");
 					break;
 			}
 		}
 		switch (cID) {
 			case Dimintheis.THREE_SONS:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Well my 3 sons took it with them many years ago",
 					"When they rode out to fight in the war",
@@ -167,16 +168,16 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					"However recently I heard word that my son Caleb is alive",
 					"trying to earn his fortune",
 					"As a great chef, far away in the lands beyond white wolf mountain");
-				int menu3 = showMenu(p, n, "Ok I will help you",
+				int menu3 = multi(p, n, "Ok I will help you",
 					"I'm not interested in that adventure right now");
 				if (menu3 == 0) {
-					npcTalk(p, n, "I thank you greatly",
+					npcsay(p, n, "I thank you greatly",
 						"If you find Caleb send him my love");
 					p.updateQuestStage(Quests.FAMILY_CREST, 1); // QUEST STARTED.
 				}
 				break;
 			case Dimintheis.TRADITION:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"We have this tradition in the Varrocian arostocracy",
 					"Each noble family has an ancient crest",
@@ -185,7 +186,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					"until the crest is returned",
 					"In times past when there was much infighting between the various families",
 					"Capturing a family's crest meant you captured their land");
-				playerTalk(p, n, "so where is this crest?");
+				say(p, n, "so where is this crest?");
 				dimintheisDialogue(p, n, Dimintheis.THREE_SONS);
 				break;
 		}
@@ -204,29 +205,29 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 		else if (n.getID() == NpcId.AVAN.id()) {
 			switch (p.getQuestStage(this)) {
 				case -1:
-					npcTalk(p, n, "I have heard word from my father",
+					npcsay(p, n, "I have heard word from my father",
 						"Thankyou for helping to restore our family honour");
 					if (p.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false))
 						&& getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
-						playerTalk(p, n,
+						say(p, n,
 							"Your father said that you could improve these Gauntlets in some way for me");
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"Indeed I can",
 							"In my quest to find the perfect gold I learned a lot",
 							"I can make it so when you're wearing these");
-						npcTalk(p, n, "You gain more experience when smithing gold");
-						int menu = showMenu(p, n,
+						npcsay(p, n, "You gain more experience when smithing gold");
+						int menu = multi(p, n,
 							"That sounds good, improve them for me",
 							"I think I'll check my other options with your brothers");
 						if (menu == 0) {
-							message(p, "Avan takes out a little hammer",
+							Functions.mes(p, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
 							p.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
 							p.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
-							npcTalk(p, n,
+							npcsay(p, n,
 								"Ok if you insist on getting help from the likes of them");
 						}
 					}
@@ -235,22 +236,22 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				case 1:
 				case 2:
 				case 3:
-					npcTalk(p, n, "Can't you see I'm busy?");
+					npcsay(p, n, "Can't you see I'm busy?");
 					break;
 				case 4:
-					int menu = showMenu(p, n,
+					int menu = multi(p, n,
 						"Why are you hanging around in a scorpion pit?",
 						"I'm looking for a man named Avan");
 					if (menu == 0) {
-						npcTalk(p, n, "It's a good place to find gold");
+						npcsay(p, n, "It's a good place to find gold");
 					} else if (menu == 1) {
-						npcTalk(p, n, "I'm called Avan yes");
-						playerTalk(p, n, "You have part of a crest",
+						npcsay(p, n, "I'm called Avan yes");
+						say(p, n, "You have part of a crest",
 							"I have been sent to fetch it");
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Is one of my good for nothing brothers after it again?");
-						playerTalk(p, n, "no your father would like it back");
-						npcTalk(p,
+						say(p, n, "no your father would like it back");
+						npcsay(p,
 							n,
 							"Oh Dad wants it this time",
 							"Well I'll tell you what I'll do",
@@ -261,35 +262,35 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							"Not just any gold mind you",
 							"The gold in these rocks doesn't seem to be of the best quality",
 							"I want as good a quality as you can get");
-						playerTalk(p, n, "Any ideas where I can find that?");
-						npcTalk(p,
+						say(p, n, "Any ideas where I can find that?");
+						npcsay(p,
 							n,
 							"Well I have been looking for such gold for a while",
 							"My latest lead was a dwarf named Boot",
 							"Though he has gone back to his home in the mountain now");
-						playerTalk(p, n, "Ok I will try to get what you are after");
+						say(p, n, "Ok I will try to get what you are after");
 						p.updateQuestStage(this, 5);
 					}
 					break;
 				case 5:
-					npcTalk(p, n, "So how are you doing getting the jewellry?");
-					playerTalk(p, n, "I'm still after that perfect gold");
-					npcTalk(p, n,
+					npcsay(p, n, "So how are you doing getting the jewellry?");
+					say(p, n, "I'm still after that perfect gold");
+					npcsay(p, n,
 						"Well I have been looking for such gold for a while",
 						"My latest lead was a dwarf named Boot",
 						"Though he has gone back to his home in the mountain now");
 					break;
 				case 6:
-					npcTalk(p, n, "So how are you doing getting the jewellry?");
+					npcsay(p, n, "So how are you doing getting the jewellry?");
 					if (p.getCarriedItems().hasCatalogID(ItemId.RUBY_RING_FAMILYCREST.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), Optional.of(false))) {
-						playerTalk(p, n, "I have it");
-						npcTalk(p, n, "These are brilliant");
+						say(p, n, "I have it");
+						npcsay(p, n, "These are brilliant");
 						p.message("You exchange the jewellry for a piece of crest");
-						removeItem(p, ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-						removeItem(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
-						addItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
-						npcTalk(p,
+						remove(p, ItemId.RUBY_RING_FAMILYCREST.id(), 1);
+						remove(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+						give(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
+						npcsay(p,
 							n,
 							"These are a fine piece of work",
 							"Such marvelous gold to",
@@ -301,18 +302,18 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							"on the edge of the wilderness");
 						p.updateQuestStage(this, 7);
 					} else {
-						playerTalk(p, n,
+						say(p, n,
 							"I have spoken to boot about the perfect gold",
 							"I haven't bought you your jewellry yet though");
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Remember I want a gold ring with a red stone in",
 							"And a necklace to match");
 					}
 					break;
 				case 7:
-					playerTalk(p, n,
+					say(p, n,
 						"Where did you say I could find Johnathon again?");
-					npcTalk(p, n,
+					npcsay(p, n,
 						"I heard my brother Johnathon is now a young mage",
 						"He is hunting some demon in the wilderness",
 						"But he's not doing a very good job of it",
@@ -320,39 +321,39 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 						"on the edge of the wilderness");
 					break;
 				case 8:
-					npcTalk(p, n, "How are you doing getting the rest of the crest?");
+					npcsay(p, n, "How are you doing getting the rest of the crest?");
 					if (!p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))) {
-						int menu2 = showMenu(p, n,
+						int menu2 = multi(p, n,
 							"I am still working on it",
 							"I have lost the piece you gave me");
 						if (menu2 == 0) {
-							npcTalk(p, n, "Well good luck in your quest");
+							npcsay(p, n, "Well good luck in your quest");
 						} else if (menu2 == 1) {
-							npcTalk(p, n, "Ah well here is another one");
-							addItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
+							npcsay(p, n, "Ah well here is another one");
+							give(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
 						}
 					} else {
-						playerTalk(p, n, "I am still working on it");
-						npcTalk(p, n, "Well good luck in your quest");
+						say(p, n, "I am still working on it");
+						npcsay(p, n, "Well good luck in your quest");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.JOHNATHON.id()) {
 			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 7) {
-				npcTalk(p, n, "I am so very tired, leave me to rest");
+				npcsay(p, n, "I am so very tired, leave me to rest");
 			} else if (p.getQuestStage(this) == 7) {
-				playerTalk(p, n, "Greetings, are you Johnathon Fitzharmon?");
-				npcTalk(p, n, "That is I");
-				playerTalk(p, n,
+				say(p, n, "Greetings, are you Johnathon Fitzharmon?");
+				npcsay(p, n, "That is I");
+				say(p, n,
 					"I seek your fragment of the Fitzharmon family quest");
-				npcTalk(p, n, "The poison it is too much",
+				npcsay(p, n, "The poison it is too much",
 					"arrgh my head is all of a spin");
 				p.message("Sweat is pouring down Johnathon's face");
 			} else if (p.getQuestStage(this) == 8) {
-				npcTalk(p, n,
+				npcsay(p, n,
 					"I'm trying to kill the demon chronozon  that you mentioned");
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"So is this Chronozon hard to defeat?",
 					"Where can I find Chronozon?", "Wish me luck");
 				if (menu == 0) {
@@ -360,32 +361,32 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				} else if (menu == 1) {
 					FIND(p, n);
 				} else if (menu == 2) {
-					npcTalk(p, n, "Good luck");
+					npcsay(p, n, "Good luck");
 				}
 			} else if (p.getQuestStage(this) == -1) {
-				npcTalk(p, n, "Hello again");
+				npcsay(p, n, "Hello again");
 				if (p.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
-					playerTalk(p, n,
+					say(p, n,
 						"Your father tells me, you can improve these gauntlets a bit");
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"He would be right",
 						"Though I didn't get good enough at the death spells to defeat chronozon",
 						"I am pretty good at the chaos spells",
 						"I can enchant your gauntlets so that your bolt spells are more effective");
-					int menu = showMenu(p, n, "That sounds good to me",
+					int menu = multi(p, n, "That sounds good to me",
 						"I shall see what options your brothers can offer me first");
 					if (menu == 0) {
-						message(p, "Johnathon waves his staff",
+						Functions.mes(p, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
 						p.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
 						p.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
 					} else if (menu == 0) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Boring crafting and cooking enhacements knowing them");
 					}
 				} else {
-					npcTalk(p, n, "My family now considers you a hero");
+					npcsay(p, n, "My family now considers you a hero");
 				}
 			}
 		}
@@ -567,20 +568,20 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (p.getQuestStage(this) == 7) {
-				message(p, "You feed your potion to Johnathon");
-				removeItem(p, ItemId.FULL_CURE_POISON_POTION.id(), 1);
+				Functions.mes(p, "You feed your potion to Johnathon");
+				remove(p, ItemId.FULL_CURE_POISON_POTION.id(), 1);
 				p.updateQuestStage(this, 8);
-				npcTalk(p, n, "Wow I'm feeling a lot better now",
+				npcsay(p, n, "Wow I'm feeling a lot better now",
 					"Thankyou, what can I do for you?");
-				playerTalk(p, n,
+				say(p, n,
 					"I'm after your part of the fitzharmon family crest");
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Ooh I don't think I have that anymore",
 					"I have been trying to slay chronozon the blood demon",
 					"and I think I dropped a lot of my things near him when he drove me away",
 					"He will have it now");
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"So is this Chronozon hard to defeat?",
 					"Where can I find Chronozon?",
 					"So how did you end up getting poisoned");
@@ -598,11 +599,11 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void DEFEAT(Player p, Npc n) {
-		npcTalk(p, n, "Well you will need to be a good mage",
+		npcsay(p, n, "Well you will need to be a good mage",
 			"And I don't seem to be able to manage it",
 			"He will need to be hit by the 4 elemental spells of death",
 			"Before he can be defeated");
-		int menu = showMenu(p, n, "Where can I find Chronozon?",
+		int menu = multi(p, n, "Where can I find Chronozon?",
 			"So how did you end up getting poisoned",
 			"I will be on my way now");
 		if (menu == 0) {
@@ -613,10 +614,10 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void POISONED(Player p, Npc n) {
-		npcTalk(p, n,
+		npcsay(p, n,
 			"There are spiders towards the entrance to Chronozon's cave",
 			"I must have taken a nip from one of them");
-		int menu2 = showMenu(p, n, "So is this Chronozon hard to defeat?",
+		int menu2 = multi(p, n, "So is this Chronozon hard to defeat?",
 			"Where can I find Chronozon?", "I will be on my way now");
 		if (menu2 == 0) {
 			DEFEAT(p, n);
@@ -626,9 +627,9 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void FIND(Player p, Npc n) {
-		npcTalk(p, n,
+		npcsay(p, n,
 			"He is in the wilderness, somewhere below the obelisk of air");
-		int menu = showMenu(p, n, "So is this Chronozon hard to defeat?",
+		int menu = multi(p, n, "So is this Chronozon hard to defeat?",
 			"So how did you end up getting poisoned",
 			"I will be on my way now");
 		if (menu == 0) {

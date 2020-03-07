@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -55,18 +56,18 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SKAVID_FINALQUIZ.id()) {
 			if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-				npcTalk(p, n, "What, you gots the crystal...");
-				int lastMenu = showMenu(p, n, "But I've lost it!", "Oh okay then");
+				npcsay(p, n, "What, you gots the crystal...");
+				int lastMenu = multi(p, n, "But I've lost it!", "Oh okay then");
 				if (lastMenu == 0) {
 					if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL2.id(), Optional.empty()) || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-						npcTalk(p, n, "I have no more for you!");
+						npcsay(p, n, "I have no more for you!");
 					} else {
-						npcTalk(p, n, "All right, take this one then...");
+						npcsay(p, n, "All right, take this one then...");
 						p.message("The skavid gives you a crystal");
-						addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
+						give(p, ItemId.POWERING_CRYSTAL2.id(), 1);
 					}
 				} else if (lastMenu == 1) {
-					npcTalk(p, n, "I'll be on my way then");
+					npcsay(p, n, "I'll be on my way then");
 				}
 			} else if (p.getCache().hasKey("language_cur")
 				&& p.getCache().hasKey("language_ar")
@@ -74,8 +75,8 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				&& p.getCache().hasKey("language_nod")) {
 				String[] sayChat = {"Cur tanath...", "Ar cur...", "Bidith Ig...", "Gor nod..."};
 				int randomizeChat = DataConversions.random(0, sayChat.length - 1);
-				npcTalk(p, n, sayChat[randomizeChat]);
-				int menu = showMenu(p, n, "Cur", "Ar", "Bidith", "Tanath", "Gor");
+				npcsay(p, n, sayChat[randomizeChat]);
+				int menu = multi(p, n, "Cur", "Ar", "Bidith", "Tanath", "Gor");
 				boolean correctAnswer = false;
 				if (menu == 0) {
 					if (randomizeChat == 2)
@@ -92,10 +93,10 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				}
 				if (menu != -1) {
 					if (correctAnswer) {
-						npcTalk(p, n, "Heh-heh! So you speak a little skavid eh?",
+						npcsay(p, n, "Heh-heh! So you speak a little skavid eh?",
 							"I'm impressed, here take this prize...");
 						p.message("The skavid gives you a large crystal");
-						addItem(p, ItemId.POWERING_CRYSTAL2.id(), 1);
+						give(p, ItemId.POWERING_CRYSTAL2.id(), 1);
 						if (p.getCache().hasKey("language_cur")
 							&& p.getCache().hasKey("language_ar")
 							&& p.getCache().hasKey("language_ig")
@@ -108,16 +109,16 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 							p.getCache().store("skavid_completed_language", true);
 						}
 					} else if (menu == 1) {
-						npcTalk(p, n, "Grrr!");
+						npcsay(p, n, "Grrr!");
 						p.message("It seems your response has upset the skavid");
 					} else {
-						npcTalk(p, n, "???");
+						npcsay(p, n, "???");
 						p.message("The response was wrong");
 					}
 				}
 			} else {
-				npcTalk(p, n, "Tanath Gor Ar Bidith ?");
-				playerTalk(p, n, "???");
+				npcsay(p, n, "Tanath Gor Ar Bidith ?");
+				say(p, n, "???");
 				p.message("You cannot communicate with the skavid");
 				p.message("It seems you haven't learned enough of thier language yet...");
 			}
@@ -125,61 +126,61 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 		else if (inArray(n.getID(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id())) {
 			if (n.getID() == NpcId.SKAVID_IG.id()) {
 				if (p.getCache().hasKey("language_ig") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-					npcTalk(p, n, "Bidith Ig...");
+					npcsay(p, n, "Bidith Ig...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
-				npcTalk(p, n, "Cur bidith...");
+				npcsay(p, n, "Cur bidith...");
 			} else if (n.getID() == NpcId.SKAVID_AR.id()) {
 				if (p.getCache().hasKey("language_ar") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-					npcTalk(p, n, "Ar cur...");
+					npcsay(p, n, "Ar cur...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
-				npcTalk(p, n, "Gor cur...");
+				npcsay(p, n, "Gor cur...");
 			} else if (n.getID() == NpcId.SKAVID_CUR.id()) {
 				if (p.getCache().hasKey("language_cur") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-					npcTalk(p, n, "Cur tanath...");
+					npcsay(p, n, "Cur tanath...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
-				npcTalk(p, n, "Bidith tanath...");
+				npcsay(p, n, "Bidith tanath...");
 			} else if (n.getID() == NpcId.SKAVID_NOD.id()) {
 				if (p.getCache().hasKey("language_nod") || p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
-					npcTalk(p, n, "Gor nod...");
+					npcsay(p, n, "Gor nod...");
 					p.message("You have already talked to this skavid");
 					return;
 				}
-				npcTalk(p, n, "Tanath gor...");
+				npcsay(p, n, "Tanath gor...");
 			}
 			if (p.getCache().hasKey("skavid_started_language")) {
 				p.message("The skavid is trying to communicate...");
 				boolean correctWord = false;
-				int learnMenu = showMenu(p, n, "Cur", "Ar", "Ig", "Nod", "Gor");
+				int learnMenu = multi(p, n, "Cur", "Ar", "Ig", "Nod", "Gor");
 				if (learnMenu == 0) {
 					if (n.getID() == NpcId.SKAVID_CUR.id()) {
-						npcTalk(p, n, "Cur",
+						npcsay(p, n, "Cur",
 							"Cur tanath");
 						p.getCache().store("language_cur", true);
 						correctWord = true;
 					}
 				} else if (learnMenu == 1) {
 					if (n.getID() == NpcId.SKAVID_AR.id()) {
-						npcTalk(p, n, "Ar",
+						npcsay(p, n, "Ar",
 							"Ar cur");
 						p.getCache().store("language_ar", true);
 						correctWord = true;
 					}
 				} else if (learnMenu == 2) {
 					if (n.getID() == NpcId.SKAVID_IG.id()) {
-						npcTalk(p, n, "Ig",
+						npcsay(p, n, "Ig",
 							"Bidith Ig");
 						p.getCache().store("language_ig", true);
 						correctWord = true;
 					}
 				} else if (learnMenu == 3) {
 					if (n.getID() == NpcId.SKAVID_NOD.id()) {
-						npcTalk(p, n, "Nod",
+						npcsay(p, n, "Nod",
 							"Gor nod");
 						p.getCache().store("language_nod", true);
 						correctWord = true;
@@ -190,12 +191,12 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 					if (correctWord) {
 						p.message("It seems the skavid understood you");
 					} else {
-						npcTalk(p, n, "???");
-						message(p, "It seems that was the wrong reply");
+						npcsay(p, n, "???");
+						Functions.mes(p, "It seems that was the wrong reply");
 					}
 				}
 			} else {
-				playerTalk(p, n, "???");
+				say(p, n, "???");
 				p.message("The skavid is trying to communicate...");
 				p.message("You don't know any skavid words yet!");
 			}
@@ -203,7 +204,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 
 		else if (n.getID() == NpcId.SKAVID_INITIAL.id()) {
 			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
-				npcTalk(p, n, "Ah master...",
+				npcsay(p, n, "Ah master...",
 					"You did well to master our language...");
 				return;
 			}
@@ -211,36 +212,36 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				&& p.getCache().hasKey("language_ar")
 				&& p.getCache().hasKey("language_ig")
 				&& p.getCache().hasKey("language_nod")) || p.getCache().hasKey("skavid_completed_language")) {
-				npcTalk(p, n, "Master, my kinsmen tell me you have learned skavid",
+				npcsay(p, n, "Master, my kinsmen tell me you have learned skavid",
 					"You should speak to the mad ones in their cave...");
 				return;
 			} else if (p.getCache().hasKey("skavid_started_language")) {
-				npcTalk(p, n, "Master, how are you doing learning our language ?");
-				playerTalk(p, n, "I am studying the speech of your kind...");
+				npcsay(p, n, "Master, how are you doing learning our language ?");
+				say(p, n, "I am studying the speech of your kind...");
 			} else {
-				npcTalk(p, n, "Tanath cur, tanath cur");
-				playerTalk(p, n, "???");
-				npcTalk(p, n, "Don't hurt me, don't hurt me!");
-				playerTalk(p, n, "Stop moaning creature",
+				npcsay(p, n, "Tanath cur, tanath cur");
+				say(p, n, "???");
+				npcsay(p, n, "Don't hurt me, don't hurt me!");
+				say(p, n, "Stop moaning creature",
 					"I know about you skavids",
 					"You serve those monsters the ogres");
-				npcTalk(p, n, "Please dont touch me!");
-				playerTalk(p, n, "You have something that belongs to me...");
-				npcTalk(p, n, "I don't have anything, please believe me!");
-				playerTalk(p, n, "Somehow I find your words hard to believe");
-				npcTalk(p, n, "I'm begging your kindness, I don't have it!");
-				int menu = showMenu(p, n, false, //do not send over
+				npcsay(p, n, "Please dont touch me!");
+				say(p, n, "You have something that belongs to me...");
+				npcsay(p, n, "I don't have anything, please believe me!");
+				say(p, n, "Somehow I find your words hard to believe");
+				npcsay(p, n, "I'm begging your kindness, I don't have it!");
+				int menu = multi(p, n, false, //do not send over
 					"I don't believe you hand it over!",
 					"Okay okay i'm not going to hurt you");
 				if (menu == 0) {
-					playerTalk(p, n, "I don't believe you, hand it over!");
-					npcTalk(p, n, "Ahhhhh, help!");
+					say(p, n, "I don't believe you, hand it over!");
+					npcsay(p, n, "Ahhhhh, help!");
 					p.message("The skavid runs away...");
-					temporaryRemoveNpc(n);
-					playerTalk(p, n, "Oh great...I've scared it off!");
+					delnpc(n, true);
+					say(p, n, "Oh great...I've scared it off!");
 				} else if (menu == 1) {
-					playerTalk(p, n, "Okay, okay i'm not going to hurt you");
-					npcTalk(p, n, "Thank you kind " + (p.isMale() ? "sir" : "madam"),
+					say(p, n, "Okay, okay i'm not going to hurt you");
+					npcsay(p, n, "Thank you kind " + (p.isMale() ? "sir" : "madam"),
 						"I'll tells you where that things you wants is...",
 						"The mad skavids have it in their cave in the city",
 						"You will have to learn skavid",
@@ -263,24 +264,24 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 			watchtowerWizardDialogue(p, n, -1);
 		}
 		else if (n.getID() == NpcId.OGRE_CITIZEN.id()) {
-			npcTalk(p, n, "Uh ? what are you doing here ?");
+			npcsay(p, n, "Uh ? what are you doing here ?");
 		}
 		else if (n.getID() == NpcId.OGRE_TRADER_FOOD.id()) {
-			npcTalk(p, n, "Grrr, little animal.. I shall destroy you!");
+			npcsay(p, n, "Grrr, little animal.. I shall destroy you!");
 			n.startCombat(p);
 		}
 		else if (n.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id()) {
 			if (p.getQuestStage(Quests.WATCHTOWER) != -1) {
-				npcTalk(p, n, "What do you want ?");
-				int menu = showMenu(p, n,
+				npcsay(p, n, "What do you want ?");
+				int menu = multi(p, n,
 					"I want to go in there",
 					"I want to rid the world of ogres");
 				if (menu == 0) {
-					npcTalk(p, n, "Oh you do, do you ?",
+					npcsay(p, n, "Oh you do, do you ?",
 						"How about no ?");
 					n.startCombat(p);
 				} else if (menu == 1) {
-					npcTalk(p, n, "You dare mock me creature!!!");
+					npcsay(p, n, "You dare mock me creature!!!");
 					n.startCombat(p);
 				}
 			} else {
@@ -288,48 +289,48 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 			}
 		}
 		else if (n.getID() == NpcId.OGRE_TRADER_ROCKCAKE.id()) {
-			npcTalk(p, n, "Arr, small thing wants my food does it ?",
+			npcsay(p, n, "Arr, small thing wants my food does it ?",
 				"I'll teach you to deal with ogres!");
 			n.startCombat(p);
 		}
 		else if (n.getID() == NpcId.CITY_GUARD.id()) {
 			if (p.getCache().hasKey("city_guard_riddle")) {
-				npcTalk(p, n, "What is it ?");
-				int menu = showMenu(p, n,
+				npcsay(p, n, "What is it ?");
+				int menu = multi(p, n,
 					"Do you have any other riddles for me ?",
 					"I have lost the map you gave me");
 				if (menu == 0) {
-					npcTalk(p, n, "Yes, what looks good on a plate with salad ?");
-					int subMenu = showMenu(p, n,
+					npcsay(p, n, "Yes, what looks good on a plate with salad ?");
+					int subMenu = multi(p, n,
 						"I don't know...",
 						"A nice pizza ?");
 					if (subMenu == 0) {
-						npcTalk(p, n, "You!!!",
+						npcsay(p, n, "You!!!",
 							"Now go and bother me no more...");
 					} else if (subMenu == 1) {
-						npcTalk(p, n, "Grr.. think you are a comedian eh ?",
+						npcsay(p, n, "Grr.. think you are a comedian eh ?",
 							"Get lost!");
 					}
 				} else if (menu == 1) {
 					if (p.getCarriedItems().hasCatalogID(ItemId.SKAVID_MAP.id(), Optional.of(false))) {
-						npcTalk(p, n, "Are you blind ? what is that you are carrying ?");
-						playerTalk(p, n, "Oh, that map....");
+						npcsay(p, n, "Are you blind ? what is that you are carrying ?");
+						say(p, n, "Oh, that map....");
 					} else {
-						npcTalk(p, n, "What's the point ? take this copy and bother me no more!");
-						addItem(p, ItemId.SKAVID_MAP.id(), 1);
+						npcsay(p, n, "What's the point ? take this copy and bother me no more!");
+						give(p, ItemId.SKAVID_MAP.id(), 1);
 					}
 				}
 			} else {
-				npcTalk(p, n, "Grrrr, what business have you here ?");
-				playerTalk(p, n, "I am on an errand...");
-				npcTalk(p, n, "So what do you want with me ?");
-				int menu = showMenu(p, n, "I am an ogre killer come to destroy you!",
+				npcsay(p, n, "Grrrr, what business have you here ?");
+				say(p, n, "I am on an errand...");
+				npcsay(p, n, "So what do you want with me ?");
+				int menu = multi(p, n, "I am an ogre killer come to destroy you!",
 					"I seek passage into the skavid caves");
 				if (menu == 0) {
-					npcTalk(p, n, "I would like to see you try!");
+					npcsay(p, n, "I would like to see you try!");
 					n.startCombat(p);
 				} else if (menu == 1) {
-					npcTalk(p, n, "Is that so...",
+					npcsay(p, n, "Is that so...",
 						"You humour me small thing, answer this riddle and I will help you...",
 						"I want you to bring me an item",
 						"I will give you all the letters of this item, you work out what it is...",
@@ -366,76 +367,76 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				case 8:
 				case 9:
 					if (p.getCache().hasKey("ogre_grew_p1")) {
-						npcTalk(p, n, "What are you doing here morsel ?");
-						int menu = showMenu(p, n,
+						npcsay(p, n, "What are you doing here morsel ?");
+						int menu = multi(p, n,
 							"Can I do anything else for you ?",
 							"I've lost the relic part you gave me",
 							"I've lost the crystal you gave me");
 						if (menu == 0) {
-							npcTalk(p, n, "I have nothing left for you but the cooking pot!");
+							npcsay(p, n, "I have nothing left for you but the cooking pot!");
 						} else if (menu == 1) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC_PART_BASE.id(), Optional.empty())) {
-								npcTalk(p, n, "Stupid morsel, I have another",
+								npcsay(p, n, "Stupid morsel, I have another",
 									"Take it and go now before I lose my temper");
-								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
+								give(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
 							} else {
-								npcTalk(p, n, "You lie to me morsel!");
+								npcsay(p, n, "You lie to me morsel!");
 							}
 						} else if (menu == 2) {
 							if (p.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL1.id(), Optional.empty())) {
-								npcTalk(p, n, "I suppose you want another ?",
+								npcsay(p, n, "I suppose you want another ?",
 									"I suppose just this once I could give you my copy...");
-								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
+								give(p, ItemId.POWERING_CRYSTAL1.id(), 1);
 							} else {
-								npcTalk(p, n, "How dare you lie to me Morsel!",
+								npcsay(p, n, "How dare you lie to me Morsel!",
 									"I will finish you now!");
 							}
 						}
 					} else {
 						if (p.getCache().hasKey("ogre_grew")) {
-							npcTalk(p, n, "The morsel is back",
+							npcsay(p, n, "The morsel is back",
 								"Does it have our tooth for us ?");
 							if (p.getCarriedItems().hasCatalogID(ItemId.OGRE_TOOTH.id(), Optional.of(false))) {
-								playerTalk(p, n, "I have it");
-								npcTalk(p, n, "It's got it, good good",
+								say(p, n, "I have it");
+								npcsay(p, n, "It's got it, good good",
 									"That should annoy gorad wonderfully",
 									"Heheheheh!");
-								removeItem(p, ItemId.OGRE_TOOTH.id(), 1);
-								npcTalk(p, n, "Heres a token of my gratitude");
-								addItem(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
-								npcTalk(p, n, "Some old gem I stole from Gorad...",
+								remove(p, ItemId.OGRE_TOOTH.id(), 1);
+								npcsay(p, n, "Heres a token of my gratitude");
+								give(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
+								npcsay(p, n, "Some old gem I stole from Gorad...",
 									"And an old part of a statue",
 									"Heheheheh!");
 								p.message("The ogre hands you a large crystal");
 								p.message("The ogre gives you part of a statue");
-								addItem(p, ItemId.POWERING_CRYSTAL1.id(), 1);
+								give(p, ItemId.POWERING_CRYSTAL1.id(), 1);
 								p.getCache().remove("ogre_grew");
 								p.getCache().store("ogre_grew_p1", true);
 							} else {
-								playerTalk(p, n, "Err, I don't have it");
-								npcTalk(p, n, "Morsel, you dare to return without the tooth!",
+								say(p, n, "Err, I don't have it");
+								npcsay(p, n, "Morsel, you dare to return without the tooth!",
 									"Either you are a fool, or want to be eaten!");
 							}
 						} else {
-							npcTalk(p, n, "What do you want tiny morsel ?",
+							npcsay(p, n, "What do you want tiny morsel ?",
 								"You would look good on my plate");
-							playerTalk(p, n, "I want to enter the city of ogres");
-							npcTalk(p, n, "Perhaps I should eat you instead ?");
-							int menu = showMenu(p, n,
+							say(p, n, "I want to enter the city of ogres");
+							npcsay(p, n, "Perhaps I should eat you instead ?");
+							int menu = multi(p, n,
 								"Don't eat me, I can help you",
 								"You will have to kill me first");
 							if (menu == 0) {
-								npcTalk(p, n, "What can a morsel like you do for me ?");
-								playerTalk(p, n, "I am a mighty adventurer",
+								npcsay(p, n, "What can a morsel like you do for me ?");
+								say(p, n, "I am a mighty adventurer",
 									"Slayer of monsters and user of magic powers");
-								npcTalk(p, n, "Well well, perhaps the morsel can help after all...",
+								npcsay(p, n, "Well well, perhaps the morsel can help after all...",
 									"If you think you're tough",
 									"Find Gorad my enemy in the south east settlement",
 									"And knock one of his teeth out!",
 									"Heheheheh!");
 								p.getCache().store("ogre_grew", true);
 							} else if (menu == 1) {
-								npcTalk(p, n, "That can be arranged - guards!!");
+								npcsay(p, n, "That can be arranged - guards!!");
 								ogreSpawnAndAttack(p, n);
 							}
 						}
@@ -461,76 +462,76 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				case 8:
 				case 9:
 					if (p.getCache().hasKey("ogre_relic_part_3")) {
-						npcTalk(p, n, "It's the little rat again");
-						int menu = showMenu(p, n,
+						npcsay(p, n, "It's the little rat again");
+						int menu = multi(p, n,
 							"Do you have any other tasks for me ?",
 							"I have lost the relic part you gave me");
 						if (menu == 0) {
-							npcTalk(p, n, "No, I have no more tasks for you, now go away");
+							npcsay(p, n, "No, I have no more tasks for you, now go away");
 						} else if (menu == 1) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC_PART_HEAD.id(), Optional.empty())) {
-								npcTalk(p, n, "Grrr, why do I bother ?",
+								npcsay(p, n, "Grrr, why do I bother ?",
 									"It's a good job I have another part!");
-								addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
+								give(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
 							} else {
-								npcTalk(p, n, "Are you blind! I can see you have it even from here!");
+								npcsay(p, n, "Are you blind! I can see you have it even from here!");
 							}
 						}
 					} else {
 						if (p.getCache().hasKey("ogre_og")) {
-							npcTalk(p, n, "Where is my gold from that traitor toban?");
-							int subMenu = showMenu(p, n,
+							npcsay(p, n, "Where is my gold from that traitor toban?");
+							int subMenu = multi(p, n,
 								"I have your gold",
 								"I haven't got it yet",
 								"I have lost the key!");
 							if (subMenu == 0) {
 								if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.of(false))) {
-									npcTalk(p, n, "Well well, the little rat has got it!",
+									npcsay(p, n, "Well well, the little rat has got it!",
 										"take this to show the little rat is a friend to the ogres",
 										"Hahahahaha!");
-									removeItem(p, ItemId.STOLEN_GOLD.id(), 1);
+									remove(p, ItemId.STOLEN_GOLD.id(), 1);
 									p.message("The ogre gives you part of a horrible statue");
-									addItem(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
+									give(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
 									p.getCache().remove("ogre_og");
 									/** Very strange setup of quest tbh, but that's what it is **/
 									p.getCache().store("ogre_relic_part_3", true);
 								} else {
-									npcTalk(p, n, "That is not what I want rat!",
+									npcsay(p, n, "That is not what I want rat!",
 										"If you want to impress me",
 										"Then get the gold I asked for!");
 								}
 							} else if (subMenu == 1) {
-								npcTalk(p, n, "Don't come back until you have it",
+								npcsay(p, n, "Don't come back until you have it",
 									"Unless you want to be on tonight's menu!");
 							} else if (subMenu == 2) {
 								if (p.getCarriedItems().hasCatalogID(ItemId.KEY.id(), Optional.of(false))) {
-									npcTalk(p, n, "Oh yeah! what's that then ?");
+									npcsay(p, n, "Oh yeah! what's that then ?");
 									p.message("It seems you still have the key...");
 								} else {
-									npcTalk(p, n, "Idiot! take another and don't lose it!");
-									addItem(p, ItemId.KEY.id(), 1);
+									npcsay(p, n, "Idiot! take another and don't lose it!");
+									give(p, ItemId.KEY.id(), 1);
 								}
 							}
 						} else {
-							npcTalk(p, n, "Why are you here little rat ?");
-							int menu = showMenu(p, n,
+							npcsay(p, n, "Why are you here little rat ?");
+							int menu = multi(p, n,
 								"I seek entrance to the city of ogres",
 								"I have come to kill you");
 							if (menu == 0) {
-								npcTalk(p, n, "You have no business there!",
+								npcsay(p, n, "You have no business there!",
 									"Just a minute...maybe if you did something for me I might help you get in...");
-								playerTalk(p, n, "What can I do to help an ogre ?");
-								npcTalk(p, n, "South East of here there is another settlement",
+								say(p, n, "What can I do to help an ogre ?");
+								npcsay(p, n, "South East of here there is another settlement",
 									"The name of the chieftan is Toban",
 									"He stole some gold from me",
 									"And I want it back!",
 									"Here is a key to the chest it's in",
 									"If you bring it here",
 									"I may reward you...");
-								addItem(p, ItemId.KEY.id(), 1);
+								give(p, ItemId.KEY.id(), 1);
 								p.getCache().store("ogre_og", true);
 							} else if (menu == 1) {
-								npcTalk(p, n, "Kill me eh ?",
+								npcsay(p, n, "Kill me eh ?",
 									"you shall be crushed like the vermin you are!",
 									"Guards!!");
 								ogreSpawnAndAttack(p, n);
@@ -558,65 +559,65 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				case 8:
 				case 9:
 					if (p.getCache().hasKey("ogre_relic_part_1")) {
-						npcTalk(p, n, "The small thing returns, what do you want now ?");
-						int subMenu = showMenu(p, n,
+						npcsay(p, n, "The small thing returns, what do you want now ?");
+						int subMenu = multi(p, n,
 							"I seek another task",
 							"I can't find the relic part you gave me");
 						if (subMenu == 0) {
-							npcTalk(p, n, "Have you arrived for dinner ?",
+							npcsay(p, n, "Have you arrived for dinner ?",
 								"Ha ha ha! begone small thing!");
 						} else if (subMenu == 1) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC_PART_BODY.id(), Optional.empty())) {
-								npcTalk(p, n, "Small thing, how could you be so careless ?",
+								npcsay(p, n, "Small thing, how could you be so careless ?",
 									"Here, take this one");
-								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
+								give(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
 							} else {
-								npcTalk(p, n, "Small thing, you lie to me!",
+								npcsay(p, n, "Small thing, you lie to me!",
 									"I always says that small things are big trouble...");
 							}
 						}
 					} else {
 						if (p.getCache().hasKey("ogre_toban")) {
-							npcTalk(p, n, "Ha ha ha! small thing returns",
+							npcsay(p, n, "Ha ha ha! small thing returns",
 								"Did you bring the dragon bone ?");
 							if (p.getCarriedItems().hasCatalogID(ItemId.DRAGON_BONES.id(), Optional.of(false))) {
-								playerTalk(p, n, "When I say I will get something I get it!");
-								removeItem(p, ItemId.DRAGON_BONES.id(), 1);
-								npcTalk(p, n, "Ha ha ha! small thing has done it",
+								say(p, n, "When I say I will get something I get it!");
+								remove(p, ItemId.DRAGON_BONES.id(), 1);
+								npcsay(p, n, "Ha ha ha! small thing has done it",
 									"Toban is glad, take this...");
 								p.message("The ogre gives you part of a statue");
-								addItem(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
+								give(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
 								p.getCache().remove("ogre_toban");
 								p.getCache().store("ogre_relic_part_1", true);
 							} else {
-								playerTalk(p, n, "I have nothing for you");
-								npcTalk(p, n, "Then you shall get nothing from me!");
+								say(p, n, "I have nothing for you");
+								npcsay(p, n, "Then you shall get nothing from me!");
 							}
 						} else {
-							npcTalk(p, n, "What do you want small thing ?");
-							int menu = showMenu(p, n,
+							npcsay(p, n, "What do you want small thing ?");
+							int menu = multi(p, n,
 								"I seek entrance to the city of ogres",
 								"Die creature");
 							if (menu == 0) {
-								npcTalk(p, n, "Ha ha ha! you'll never get in there");
-								playerTalk(p, n, "I fear not for that city");
-								npcTalk(p, n, "Bold words for a thing so small");
-								int subMenu = showMenu(p, n,
+								npcsay(p, n, "Ha ha ha! you'll never get in there");
+								say(p, n, "I fear not for that city");
+								npcsay(p, n, "Bold words for a thing so small");
+								int subMenu = multi(p, n,
 									"I could do something for you...",
 									"Die creature");
 								if (subMenu == 0) {
-									npcTalk(p, n, "Ha ha ha! this creature thinks it can help me!",
+									npcsay(p, n, "Ha ha ha! this creature thinks it can help me!",
 										"I would eat you now, but for your puny size",
 										"Prove to me your might",
 										"Bring me the bones of a dragon to chew on",
 										"And I may spare you from a painful death");
 									p.getCache().store("ogre_toban", true);
 								} else if (subMenu == 1) {
-									npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
+									npcsay(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
 									n.startCombat(p);
 								}
 							} else if (menu == 1) {
-								npcTalk(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
+								npcsay(p, n, "Ha ha ha! it thinks it's a match for toban does it ?");
 								n.startCombat(p);
 							}
 						}
@@ -632,81 +633,81 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				switch (p.getQuestStage(this)) {
 					case -1:
 						if (p.getCache().hasKey("watchtower_scroll")) {
-							npcTalk(p, n, "Greetings friend",
+							npcsay(p, n, "Greetings friend",
 								"I trust all is well with you ?",
 								"Yanilee is safe at last!");
 						} else {
-							npcTalk(p, n, "Hello again adventurer",
+							npcsay(p, n, "Hello again adventurer",
 								"Thanks again for your help in keeping us safe");
-							int finish = showMenu(p, n,
+							int finish = multi(p, n,
 								"I lost the scroll you gave me",
 								"That's okay");
 							if (finish == 0) {
 								if (!p.getBank().hasItemId(ItemId.SPELL_SCROLL.id()) && !p.getCarriedItems().hasCatalogID(ItemId.SPELL_SCROLL.id())) {
-									npcTalk(p, n, "Never mind, have another...");
-									addItem(p, ItemId.SPELL_SCROLL.id(), 1);
+									npcsay(p, n, "Never mind, have another...");
+									give(p, ItemId.SPELL_SCROLL.id(), 1);
 								} else if (p.getBank().hasItemId(ItemId.SPELL_SCROLL.id())) {
 									//maybe non-kosher message though it was also bank restricted
-									npcTalk(p, n, "Ho ho ho! a comedian to the finish!",
+									npcsay(p, n, "Ho ho ho! a comedian to the finish!",
 										"There it is, in your bank!");
 								} else {
-									npcTalk(p, n, "Ho ho ho! a comedian to the finish!",
+									npcsay(p, n, "Ho ho ho! a comedian to the finish!",
 										"There it is, in your backpack!");
 								}
 							} else if (finish == 1) {
-								npcTalk(p, n, "We are always in your debt...");
+								npcsay(p, n, "We are always in your debt...");
 							}
 						}
 						break;
 					case 0:
-						npcTalk(p, n, "Oh my Oh my!");
-						int menu = showMenu(p, n,
+						npcsay(p, n, "Oh my Oh my!");
+						int menu = multi(p, n,
 							"What's the matter ?",
 							"You wizards are always complaining");
 						if (menu == 0) {
-							npcTalk(p, n, "Oh dear oh dear",
+							npcsay(p, n, "Oh dear oh dear",
 								"Darn and drat",
 								"We try hard to keep this town protected",
 								"But how can we do that when the watchtower isn't working ?");
-							playerTalk(p, n, "What do you mean it isn't working ?");
-							npcTalk(p, n, "The watchtower here works by the power of a magical device",
+							say(p, n, "What do you mean it isn't working ?");
+							npcsay(p, n, "The watchtower here works by the power of a magical device",
 								"An ancient spell designed to ward off ogres",
 								"That has been in place here for many moons",
 								"The exact knowledge of the spell is lost to us now",
 								"But the essence of the spell",
 								"Has been infused into 4 powering crystals",
 								"To keep the tower protected from the hordes in the mendips...");
-							int menu2 = showMenu(p, n,
+							int menu2 = multi(p, n,
 								"So how come the spell dosen't work ?",
 								"I'm not interested in the rantings of an old wizard");
 							if (menu2 == 0) {
-								npcTalk(p, n, "The crystals! the crystals!",
+								npcsay(p, n, "The crystals! the crystals!",
 									"They have been taken!");
-								playerTalk(p, n, "Taken...");
-								npcTalk(p, n, "Stolen!");
-								playerTalk(p, n, "Stolen...");
-								npcTalk(p, n, "Yes, yes! do I have to repeat myself ?");
+								say(p, n, "Taken...");
+								npcsay(p, n, "Stolen!");
+								say(p, n, "Stolen...");
+								npcsay(p, n, "Yes, yes! do I have to repeat myself ?");
 								p.message("The wizard seems very stressed...");
-								int menu3 = showMenu(p, n,
+								int menu3 = multi(p, n,
 									"Can I be of help ?",
 									"I'm not sure I can help",
 									"I'm not interested");
 								if (menu3 == 0) {
-									npcTalk(p, n, "Help ?",
+									npcsay(p, n, "Help ?",
 										"Oh wonderful dear traveller",
 										"Yes I could do with an extra pair of eyes here");
-									playerTalk(p, n, "???");
-									npcTalk(p, n, "There must be some evidence of what has happened somewhere",
+									say(p, n, "???");
+									npcsay(p, n, "There must be some evidence of what has happened somewhere",
 										"Perhaps you could assist me in searching for clues");
-									playerTalk(p, n, "I would be happy to");
-									npcTalk(p, n, "Try searching the surrounding area");
+									say(p, n, "I would be happy to");
+									npcsay(p, n, "Try searching the surrounding area");
 									/** QUEST START - STAGE 1 **/
 									p.updateQuestStage(this, 1);
 								} else if (menu3 == 1) {
-									npcTalk(p, n, "Oh dear what am I to do ?",
+									npcsay(p, n, "Oh dear what am I to do ?",
 										"The safety of this whole area is in jeopardy!");
 								} else if (menu3 == 2) {
-									npcTalk(p, n, "That's typical nowadays",
+									npcsay(p, n, "That's typical nowadays",
 										"Its left to us wizards to do all the work...");
 									p.message("The wizard is not impressed");
 								}
@@ -714,7 +715,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 								p.message("The wizard gives you a suspicious look");
 							}
 						} else if (menu == 1) {
-							npcTalk(p, n, "Complaining ?.... complaining !",
+							npcsay(p, n, "Complaining ?.... complaining !",
 								"What folks these days don't realize",
 								"Is that if it wasn't for us wizards",
 								"This entire world would be overrun",
@@ -723,23 +724,23 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						}
 						break;
 					case 1:
-						npcTalk(p, n, "Hello again",
+						npcsay(p, n, "Hello again",
 							"Did you find anything of interest ?");
 						if (p.getCarriedItems().hasCatalogID(ItemId.FINGERNAILS.id(), Optional.of(false))) {
-							playerTalk(p, n, "Have a look at these");
-							removeItem(p, ItemId.FINGERNAILS.id(), 1);
-							npcTalk(p, n, "Interesting, very interesting",
+							say(p, n, "Have a look at these");
+							remove(p, ItemId.FINGERNAILS.id(), 1);
+							npcsay(p, n, "Interesting, very interesting",
 								"Long nails...grey in colour",
 								"Well chewed...",
 								"Of course, they belong to a skavid");
-							playerTalk(p, n, "A skavid ?");
-							npcTalk(p, n, "A servant race to the ogres",
+							say(p, n, "A skavid ?");
+							npcsay(p, n, "A servant race to the ogres",
 								"Gray depressed looking creatures",
 								"Always loosing nails, teeth and hair",
 								"They inhabit the caves in the mendip hills",
 								"They normally keep to themselves though",
 								"It's unusual for them to venture from their caves");
-							int m = showMenu(p, n,
+							int m = multi(p, n,
 								"What do you suggest that I do ?",
 								"Shall I search the caves ?");
 							if (m == 0) {
@@ -756,102 +757,102 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 							|| p.getCarriedItems().hasCatalogID(ItemId.IRON_DAGGER.id(), Optional.of(false))
 							|| p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_ROBE.id(), Optional.of(false))) {
 							if (p.getCarriedItems().hasCatalogID(ItemId.EYE_PATCH.id(), Optional.of(false))) {
-								playerTalk(p, n, "I found this eye patch");
+								say(p, n, "I found this eye patch");
 							} else if (p.getCarriedItems().hasCatalogID(ItemId.GOBLIN_ARMOUR.id(), Optional.of(false))) {
-								playerTalk(p, n, "Have a look at this goblin armour");
+								say(p, n, "Have a look at this goblin armour");
 							} else if (p.getCarriedItems().hasCatalogID(ItemId.IRON_DAGGER.id(), Optional.of(false))) {
-								playerTalk(p, n, "I found a dagger");
+								say(p, n, "I found a dagger");
 							} else if (p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_ROBE.id(), Optional.of(false))) {
-								playerTalk(p, n, "I have this robe");
+								say(p, n, "I have this robe");
 							}
-							npcTalk(p, n, "Let me see...",
+							npcsay(p, n, "Let me see...",
 								"No, sorry this is not evidence",
 								"You need to keep searching im afraid");
 						} else {
-							playerTalk(p, n, "No nothing yet");
-							npcTalk(p, n, "Oh dear oh dear",
+							say(p, n, "No nothing yet");
+							npcsay(p, n, "Oh dear oh dear",
 								"There must be something somewhere");
 						}
 						break;
 					case 2:
-						npcTalk(p, n, "How's it going ?");
-						int newM = showMenu(p, n,
+						npcsay(p, n, "How's it going ?");
+						int newM = multi(p, n,
 							"I am having difficulty with the tribes",
 							"I have everything under control",
 							"I have lost something the ogres gave to me");
 						if (newM == 0) {
-							npcTalk(p, n, "Talk to them face to face",
+							npcsay(p, n, "Talk to them face to face",
 								"And don't show any fear",
 								"Make sure you are rested and well-fed",
 								"And fight the good fight!");
 						} else if (newM == 1) {
-							npcTalk(p, n, "Good, good! I will expect the crystals back shortly then...");
+							npcsay(p, n, "Good, good! I will expect the crystals back shortly then...");
 						} else if (newM == 2) {
-							npcTalk(p, n, "Oh deary me!",
+							npcsay(p, n, "Oh deary me!",
 								"Well there's nothing I can do about it",
 								"You will have to go back to them i'm afraid");
 						}
 						break;
 					case 3:
-						npcTalk(p, n, "Ah the warrior returns",
+						npcsay(p, n, "Ah the warrior returns",
 							"Have you found a way into Gu'Tanoth yet ?");
-						playerTalk(p, n, "I can't get past the guards");
-						npcTalk(p, n, "Well, ogres dislike others apart from their kind",
+						say(p, n, "I can't get past the guards");
+						npcsay(p, n, "Well, ogres dislike others apart from their kind",
 							"What you need is some form of proof of friendship",
 							"Something to trick them into believing you are their friend",
 							"...Which shouldn't be too hard considering their intelligence!");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC.id(), Optional.empty())) {
-							int lostRelicMenu = showMenu(p, n,
+							int lostRelicMenu = multi(p, n,
 								"I have lost the relic you gave me",
 								"I will find my way in, no problem");
 							if (lostRelicMenu == 0) {
-								npcTalk(p, n, "What! lost the relic ? How careless!",
+								npcsay(p, n, "What! lost the relic ? How careless!",
 									"It's a good job I copied that design then...",
 									"You can take this copy instead, its just as good");
-								addItem(p, ItemId.OGRE_RELIC.id(), 1);
+								give(p, ItemId.OGRE_RELIC.id(), 1);
 							} else if (lostRelicMenu == 1) {
-								npcTalk(p, n, "Yes, I'm sure you will...good luck");
+								npcsay(p, n, "Yes, I'm sure you will...good luck");
 							}
 						}
 						break;
 					case 4:
-						npcTalk(p, n, "How is the quest going ?");
-						playerTalk(p, n, "I have worked out the guard's puzzle");
-						npcTalk(p, n, "My my! a wordsmith as well as a hero!");
-						int mymyMenu = showMenu(p, n,
+						npcsay(p, n, "How is the quest going ?");
+						say(p, n, "I have worked out the guard's puzzle");
+						npcsay(p, n, "My my! a wordsmith as well as a hero!");
+						int mymyMenu = multi(p, n,
 							"I am still trying to navigate the skavid caves",
 							"I am trying to get into the shaman's cave",
 							"It is going well");
 						if (mymyMenu == 0) {
-							npcTalk(p, n, "Take some illumination with you or else it will be dark!");
+							npcsay(p, n, "Take some illumination with you or else it will be dark!");
 						} else if (mymyMenu == 1) {
-							npcTalk(p, n, "Yes it will be well-guarded",
+							npcsay(p, n, "Yes it will be well-guarded",
 								"Hmmm, let me see...",
 								"Ah yes, I gather some ogres are allergic to certain herbs...",
 								"Now what was it ?",
 								"It had white berries and blue leaves.... I remember that!",
 								"You should try looking through some of the caves...");
 						} else if (mymyMenu == 2) {
-							npcTalk(p, n, "Thats good to hear",
+							npcsay(p, n, "Thats good to hear",
 								"We are much closer to fixing the tower now");
 						}
 						break;
 					case 5:
-						npcTalk(p, n, "Hello again, how do you fare?");
-						int questMenu5 = showMenu(p, n, false, //do not send over
+						npcsay(p, n, "Hello again, how do you fare?");
+						int questMenu5 = multi(p, n, false, //do not send over
 							"It goes well, I can now navigate the skavid caves",
 							"I had a crystal but I lost it",
 							"I am now ready for the shaman");
 						if (questMenu5 == 0) {
-							playerTalk(p, n, "It goes well, I can now navigate the skavid caves");
-							npcTalk(p, n, "That is good news",
+							say(p, n, "It goes well, I can now navigate the skavid caves");
+							npcsay(p, n, "That is good news",
 								"Let me know if you find anything of interest...");
 						} else if (questMenu5 == 1) {
-							playerTalk(p, n, "I had a crystal, but I lost it");
-							npcTalk(p, n, "Oh no, well you had better go back there again then!");
+							say(p, n, "I had a crystal, but I lost it");
+							npcsay(p, n, "Oh no, well you had better go back there again then!");
 						} else if (questMenu5 == 2) {
-							playerTalk(p, n, "I am now ready for the shaman");
-							npcTalk(p, n, "Remember all I told you, you must distract the guard somehow",
+							say(p, n, "I am now ready for the shaman");
+							npcsay(p, n, "Remember all I told you, you must distract the guard somehow",
 								"The herbs with blue leaves and berries is what you are looking for",
 								"This herb is very poisonous however, handle it carefully",
 								"Also, be on your guard in that cave",
@@ -859,9 +860,9 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						}
 						break;
 					case 6:
-						playerTalk(p, n, "I have found the cave of ogre shaman",
+						say(p, n, "I have found the cave of ogre shaman",
 							"But I cannot touch them!");
-						npcTalk(p, n, "That is because of their magical powers",
+						npcsay(p, n, "That is because of their magical powers",
 							"We must fight them with their own methods",
 							"Do not speak to them!",
 							"I suggest a potion...",
@@ -878,90 +879,90 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						p.updateQuestStage(this, 7);
 						break;
 					case 7:
-						npcTalk(p, n, "Any more news ?");
+						npcsay(p, n, "Any more news ?");
 						if (p.getCarriedItems().hasCatalogID(ItemId.OGRE_POTION.id(), Optional.of(false))) {
-							playerTalk(p, n, "Yes I have made the potion");
-							npcTalk(p, n, "That's great news, let me infuse it with magic...");
+							say(p, n, "Yes I have made the potion");
+							npcsay(p, n, "That's great news, let me infuse it with magic...");
 							p.message("The wizard mutters strange words over the liquid");
-							removeItem(p, ItemId.OGRE_POTION.id(), 1);
-							addItem(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
+							remove(p, ItemId.OGRE_POTION.id(), 1);
+							give(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
 							if (p.getQuestStage(Quests.WATCHTOWER) == 7) {
 								p.updateQuestStage(Quests.WATCHTOWER, 8);
 							}
-							npcTalk(p, n, "Here it is, a dangerous substance",
+							npcsay(p, n, "Here it is, a dangerous substance",
 								"I must remind you that this potion can only be used",
 								"If your magic ability is high enough");
 						} else {
-							playerTalk(p, n, "Can you tell me again what I need for the potion ?");
-							npcTalk(p, n, "Yes indeed, you need some guam leaves,",
+							say(p, n, "Can you tell me again what I need for the potion ?");
+							npcsay(p, n, "Yes indeed, you need some guam leaves,",
 								"Jangerberries and ground bat bones",
 								"Then the potion can be powered with magic",
 								"And the ogre shaman can be destroyed");
 						}
 						break;
 					case 8:
-						npcTalk(p, n, "Hello again",
+						npcsay(p, n, "Hello again",
 							"Did the potion work ?");
-						playerTalk(p, n, "I am still working to rid us of these shaman...");
-						npcTalk(p, n, "May you have sucess in your task");
-						int qMenu = showMenu(p, n,
+						say(p, n, "I am still working to rid us of these shaman...");
+						npcsay(p, n, "May you have sucess in your task");
+						int qMenu = multi(p, n,
 							"I had another crystal but I lost it",
 							"I am looking for another crystal",
 							"I have found another crystal!");
 						if (qMenu == 0) {
-							npcTalk(p, n, "Oh really ?",
+							npcsay(p, n, "Oh really ?",
 								"It's probably been dropped in the shaman cave",
 								"Go and have a good search that area again");
 						} else if (qMenu == 1) {
-							npcTalk(p, n, "I am sure the cave holds the final one",
+							npcsay(p, n, "I am sure the cave holds the final one",
 								"Look for the source of the shaman power...");
-							playerTalk(p, n, "Okay I will go and have a look");
+							say(p, n, "Okay I will go and have a look");
 						} else if (qMenu == 2) {
-							npcTalk(p, n, "Good, let's have it here...");
+							npcsay(p, n, "Good, let's have it here...");
 						}
 						break;
 					case 9:
-						npcTalk(p, n, "Hello again",
+						npcsay(p, n, "Hello again",
 							"Did the potion work ?");
-						playerTalk(p, n, "Indeed it did!",
+						say(p, n, "Indeed it did!",
 							"I wiped out those ogre shaman!",
 							"I am looking for another crystal");
-						npcTalk(p, n, "I am sure the cave holds the final one",
+						npcsay(p, n, "I am sure the cave holds the final one",
 							"Look for the source of the shaman power...");
-						playerTalk(p, n, "Okay I will go and have a look");
+						say(p, n, "Okay I will go and have a look");
 						break;
 				}
 			}
 			switch (cID) {
 				case WatchTowerWizard.SEARCHINGTHECAVES:
-					npcTalk(p, n, "It's no good searching the caves",
+					npcsay(p, n, "It's no good searching the caves",
 						"Well, not yet anyway");
-					playerTalk(p, n, "Why not ?");
-					npcTalk(p, n, "They are deep and complex",
+					say(p, n, "Why not ?");
+					npcsay(p, n, "They are deep and complex",
 						"The only way you will navigate the caves is to have a map or something",
 						"It may be that the ogres have one");
-					playerTalk(p, n, "And how do you know that ?");
-					npcTalk(p, n, "Well... I don't");
-					int m2 = showMenu(p, n, false, //do not send over
+					say(p, n, "And how do you know that ?");
+					npcsay(p, n, "Well... I don't");
+					int m2 = multi(p, n, false, //do not send over
 						"So what do I do ?",
 						"I wont bother then");
 					if (m2 == 0) {
-						playerTalk(p, n, "So what do I do ?");
-						npcTalk(p, n, "You need to be fearless",
+						say(p, n, "So what do I do ?");
+						npcsay(p, n, "You need to be fearless",
 							"And gain entrance to Gu'Tanoth the city of ogres",
 							"And find out how to navigate the caves");
-						playerTalk(p, n, "That sounds scary");
-						npcTalk(p, n, "Ogres are nasty creatures yes",
+						say(p, n, "That sounds scary");
+						npcsay(p, n, "Ogres are nasty creatures yes",
 							"Only a strong warrior, and a clever one at that",
 							"Can get the better of the ogres...");
-						playerTalk(p, n, "What do I need to do to get into the city");
-						npcTalk(p, n, "Well the guards need to be dealt with",
+						say(p, n, "What do I need to do to get into the city");
+						npcsay(p, n, "Well the guards need to be dealt with",
 							"You could start by checking out the ogre settlements around here",
 							"Tribal ogres often hate their neighbours...");
 						p.updateQuestStage(this, 2);
 					} else if (m2 == 1) {
-						playerTalk(p, n, "I won't bother then");
-						npcTalk(p, n, "Won't bother, won't bother ?",
+						say(p, n, "I won't bother then");
+						npcsay(p, n, "Won't bother, won't bother ?",
 							"...Perhaps this quest is too hard for you");
 						p.message("The wizard walks away");
 					}
@@ -971,9 +972,9 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 	}
 
 	private void ogreSpawnAndAttack(Player p, Npc n) {
-		spawnNpc(p.getWorld(), NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
-		sleep(1600);
-		Npc ogre = getNearestNpc(p, NpcId.OGRE_GENERAL.id(), 4);
+		addnpc(p.getWorld(), NpcId.OGRE_GENERAL.id(), p.getX(), p.getY(), 60000 * 3);
+		delay(1600);
+		Npc ogre = ifnearvisnpc(p, NpcId.OGRE_GENERAL.id(), 4);
 		if (ogre != null) {
 			ogre.startCombat(p);
 		}

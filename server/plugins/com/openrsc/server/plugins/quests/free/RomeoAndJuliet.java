@@ -40,71 +40,71 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 	private void romeoDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "Juliet, Juliet, Juliet!  Wherefore Art thou?",
+				npcsay(p, n, "Juliet, Juliet, Juliet!  Wherefore Art thou?",
 					"Kind friend, Have you seen Juliet?",
 					"Her and her Father seem to have disappeared");
-				int choice = showMenu(p, n, "Yes, I have seen her",
+				int choice = multi(p, n, "Yes, I have seen her",
 					"No, but that's girls for you",
 					"Can I help find her for you?");
 				if (choice == 0) {
-					playerTalk(p, n, "I think it was her. Blond, stressed");
-					npcTalk(p, n, "Yes, that sounds like her",
+					say(p, n, "I think it was her. Blond, stressed");
+					npcsay(p, n, "Yes, that sounds like her",
 						"Please tell her I long to be with her");
-					int choice2 = showMenu(p, n, false, //do not send over
+					int choice2 = multi(p, n, false, //do not send over
 						"Yes, I will tell her",
 						"Sorry, I am too busy. Maybe later?");
 					if (choice2 == 0) {
-						playerTalk(p, n, "Yes, I will tell her how you feel");
-						npcTalk(p, n, "You are the saviour of my heart, thank you.");
-						playerTalk(p, n, "err, yes. Ok. Thats.... nice.");
+						say(p, n, "Yes, I will tell her how you feel");
+						npcsay(p, n, "You are the saviour of my heart, thank you.");
+						say(p, n, "err, yes. Ok. Thats.... nice.");
 						p.updateQuestStage(this, 1);
 					} else if (choice2 == 1) {
-						playerTalk(p, n, "Sorry, I am too busy. Maybe later?");
-						npcTalk(p, n,
+						say(p, n, "Sorry, I am too busy. Maybe later?");
+						npcsay(p, n,
 							"Well if you do find her, I would be most grateful");
 					}
 				} else if (choice == 1) {
-					npcTalk(p, n, "Not my dear Juliet. She is different",
+					npcsay(p, n, "Not my dear Juliet. She is different",
 						"Could you find her for me?",
 						"Please tell her I long to be with her");
-					int choice3 = showMenu(p, n,
+					int choice3 = multi(p, n,
 						"Yes, I will tell her how you feel",
 						"I can't, it sounds like work to me");
 					if (choice3 == 0) {
-						npcTalk(p, n, "You are the saviour of my heart, thank you.");
-						playerTalk(p, n, "err, yes. Ok. Thats.... nice.");
+						npcsay(p, n, "You are the saviour of my heart, thank you.");
+						say(p, n, "err, yes. Ok. Thats.... nice.");
 						p.updateQuestStage(this, 1);
 					} else if (choice3 == 1) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Well, I guess you are not the romantic type",
 							"Goodbye");
 					}
 				} else if (choice == 2) {
-					npcTalk(p, n, "Oh would you? That would be wonderful!",
+					npcsay(p, n, "Oh would you? That would be wonderful!",
 						"Please tell her I long to be with her");
-					playerTalk(p, n, "Yes, I will tell her how you feel");
-					npcTalk(p, n, "You are the saviour of my heart, thank you.");
-					playerTalk(p, n, "err, yes. Ok. Thats.... nice.");
+					say(p, n, "Yes, I will tell her how you feel");
+					npcsay(p, n, "You are the saviour of my heart, thank you.");
+					say(p, n, "err, yes. Ok. Thats.... nice.");
 					p.updateQuestStage(this, 1);
 				}
 				break;
 			case 1:
-				npcTalk(p, n, "Please find my Juliet. I am so, so sad");
+				npcsay(p, n, "Please find my Juliet. I am so, so sad");
 				break;
 			case 2:
 				int count = messageCount(p);
 				if (count < 2) {
-					playerTalk(p, n, "Romeo, I have a message from Juliet");
+					say(p, n, "Romeo, I have a message from Juliet");
 				} else if (count < 3) {
-					playerTalk(p, n, "Romeo, I have a message from Juliet",
+					say(p, n, "Romeo, I have a message from Juliet",
 						"Except that I seem to have lost it");
 				} else {
-					npcTalk(p, n, "Ah, it seems that you can deliver a message after all",
+					npcsay(p, n, "Ah, it seems that you can deliver a message after all",
 						"My faith in you is restored!");
 				}
 				p.message("You pass Juliet's message to Romeo");
 				p.getCarriedItems().remove(ItemId.MESSAGE.id(), 1);
-				npcTalk(p, n, "Tragic news. Her father is opposing our marriage",
+				npcsay(p, n, "Tragic news. Her father is opposing our marriage",
 					"If her father sees me, he will kill me",
 					"I dare not go near his lands",
 					"She says Father Lawrence can help us",
@@ -113,41 +113,41 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 				p.getCache().remove("romeo_juliet_msgs");
 				break;
 			case 3:
-				npcTalk(p, n, "Please friend, how goes our quest?",
+				npcsay(p, n, "Please friend, how goes our quest?",
 					"Father Lawrence must be told. only he can help");
 				break;
 			case 4:
-				npcTalk(p, n, "Did you find the Father? What did he suggest?");
-				int menu = showMenu(p, n, "He sent me to the apothecary",
+				npcsay(p, n, "Did you find the Father? What did he suggest?");
+				int menu = multi(p, n, "He sent me to the apothecary",
 					"He seems keen for you to marry Juliet");
 				if (menu == 0) {
-					npcTalk(p, n, "I know him. He lives near the town square",
+					npcsay(p, n, "I know him. He lives near the town square",
 						"the small house behind the sloped building",
 						"Good luck");
 				} else if (menu == 1) {
-					npcTalk(p, n, "I think he wants some peace. He was our messenger",
+					npcsay(p, n, "I think he wants some peace. He was our messenger",
 						"before you were kind enough to help us");
 				}
 				break;
 			case 5:
-				npcTalk(p, n, "I hope the potion is near ready",
+				npcsay(p, n, "I hope the potion is near ready",
 					"It is the last step for the great plan",
 					"I hope I will be with my dear one soon");
 				break;
 			case 6:
-				npcTalk(p, n, "Ah, you have the potion. I was told what to do by the good Father",
+				npcsay(p, n, "Ah, you have the potion. I was told what to do by the good Father",
 					"Better get it to Juliet. She knows what is happening");
 				break;
 			case 7:
-				playerTalk(p, n, "Romeo, its all set. Juliet has the potion");
-				npcTalk(p, n, "Ah right", "What potion would that be then?");
-				playerTalk(p, n, "The one to get her to the crypt.");
-				npcTalk(p, n, "Ah right", "So she is dead then. Ah thats a shame",
+				say(p, n, "Romeo, its all set. Juliet has the potion");
+				npcsay(p, n, "Ah right", "What potion would that be then?");
+				say(p, n, "The one to get her to the crypt.");
+				npcsay(p, n, "Ah right", "So she is dead then. Ah thats a shame",
 					"Thanks for your help anyway.");
 				p.sendQuestComplete(Quests.ROMEO_N_JULIET);
 				break;
 			case -1:
-				npcTalk(p, n, "I heard Juliet had died. Terrible business",
+				npcsay(p, n, "I heard Juliet had died. Terrible business",
 					"Her cousin and I are getting on well though",
 					"Thanks for your help");
 				break;
@@ -157,75 +157,75 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 	private void julietDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "Romeo, Romeo, wherefore art thou Romeo?",
+				npcsay(p, n, "Romeo, Romeo, wherefore art thou Romeo?",
 					"Bold adventurer, have you seen Romeo on your travels?",
 					"Skinny guy, a bit wishy washy, head full of poetry");
-				int choice = showMenu(p, n, false, //do not send over
+				int choice = multi(p, n, false, //do not send over
 					"Yes I have met him",
 					"No, I think I would have remembered if I had",
 					"I guess I could find him", "I think you could do better");
 				if (choice == 0) {
-					playerTalk(p, n, "I did see Romeo somewhere.",
+					say(p, n, "I did see Romeo somewhere.",
 						"He seemed a bit depressed.");
-					npcTalk(p, n, "Yes, that would be him.",
+					npcsay(p, n, "Yes, that would be him.",
 						"Could you please deliver a messge to him?");
-					int sub_choice = showMenu(p, n, false, //do not send over
+					int sub_choice = multi(p, n, false, //do not send over
 						"Certainly, I will do so straight away",
 						"No, he was a little too weird for me");
 					if (sub_choice == 0) {
-						playerTalk(p, n, "Certinly, I will deliver your message straight away");
-						npcTalk(p, n, "It may be our only hope");
+						say(p, n, "Certinly, I will deliver your message straight away");
+						npcsay(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
 						p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
-						playerTalk(p, n, "No");
-						npcTalk(p, n, "Oh dear, that will be the ruin of our love",
+						say(p, n, "No");
+						npcsay(p, n, "Oh dear, that will be the ruin of our love",
 							"Well, I will just stay here and worry",
 							"You unromantic soul.");
 					}
 				} else if (choice == 1) {
-					playerTalk(p, n, "No, I think I would have remembered");
-					npcTalk(p, n, "Could you please deliver a message to him?");
-					int sub_choice = showMenu(p, n, false, //do not send over
+					say(p, n, "No, I think I would have remembered");
+					npcsay(p, n, "Could you please deliver a message to him?");
+					int sub_choice = multi(p, n, false, //do not send over
 						"Certinly, I will do so straight away",
 						"No, I have better things to do");
 					if (sub_choice == 0) {
-						playerTalk(p, n, "Certinly, I will deliver your message straight away");
-						npcTalk(p, n, "It may be our only hope");
+						say(p, n, "Certinly, I will deliver your message straight away");
+						npcsay(p, n, "It may be our only hope");
 						p.message("Juliet gives you a message");
 						p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 1);
 						p.updateQuestStage(getQuestId(), 2);
 					} else if (sub_choice == 1) {
-						playerTalk(p, n, "No, I have better things to do");
-						npcTalk(p, n, "I will not keep you from them. Goodbye");
+						say(p, n, "No, I have better things to do");
+						npcsay(p, n, "I will not keep you from them. Goodbye");
 					}
 				} else if (choice == 2) {
-					playerTalk(p, n, "I guess I could find him");
-					npcTalk(p, n, "That is most kind of you",
+					say(p, n, "I guess I could find him");
+					npcsay(p, n, "That is most kind of you",
 						"Could you please deliver a message to him?");
-					playerTalk(p, n,
+					say(p, n,
 						"Certinly, I will deliver your message straight away");
-					npcTalk(p, n, "It may be our only hope");
+					npcsay(p, n, "It may be our only hope");
 					p.message("Juliet gives you a message");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 					p.getCache().set("romeo_juliet_msgs", 1);
 					p.updateQuestStage(getQuestId(), 2);
 				} else if (choice == 3) {
-					playerTalk(p, n, "I think you could do better");
-					npcTalk(p, n, "He has his good points",
+					say(p, n, "I think you could do better");
+					npcsay(p, n, "He has his good points",
 						"He doesn't spend all day on the internet, at least");
 				}
 				break;
 			case 1:
-				playerTalk(p, n, "Juliet, I come from Romeo",
+				say(p, n, "Juliet, I come from Romeo",
 					"He begs me tell you he cares still");
-				npcTalk(p, n, "Please, Take this message to him");
-				playerTalk(p, n,
+				npcsay(p, n, "Please, Take this message to him");
+				say(p, n,
 					"Certinly, I will deliver your message straight away");
-				npcTalk(p, n, "It may be our only hope");
+				npcsay(p, n, "It may be our only hope");
 				p.message("Juliet gives you a message");
 				p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 				p.getCache().set("romeo_juliet_msgs", 1);
@@ -234,49 +234,49 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 			case 2:
 				int count = messageCount(p);
 				if (count <= 2 && p.getCarriedItems().hasCatalogID(ItemId.MESSAGE.id(), Optional.of(false)))
-					npcTalk(p, n, "Please, deliver the message to Romeo with all speed");
+					npcsay(p, n, "Please, deliver the message to Romeo with all speed");
 				else {
 					if (count < 2) {
-						npcTalk(p, n, "How could you lose this most important message?",
+						npcsay(p, n, "How could you lose this most important message?",
 							"Please, take this message to him, and please don't lose it");
 						p.message("Juliet gives you another message");
 						p.getCarriedItems().getInventory().add(new Item(ItemId.MESSAGE.id()));
 						p.getCache().set("romeo_juliet_msgs", 2);
 					} else if (count < 3) {
-						npcTalk(p, n, "It seems I cannot trust you with a simple message",
+						npcsay(p, n, "It seems I cannot trust you with a simple message",
 							"I am sorry, I need a more reliable messenger");
 						//doesn't give another msg, just for dialogue purposes
 						p.getCache().set("romeo_juliet_msgs", 3);
 					} else {
-						npcTalk(p, n, "I am sorry, I do need a more reliable messenger",
+						npcsay(p, n, "I am sorry, I do need a more reliable messenger",
 							"Can you send any friends my way?",
 							"Preferably tall, dark and handsome");
 					}
 				}
 				break;
 			case 3:
-				playerTalk(p, n, "I have passed on your message",
+				say(p, n, "I have passed on your message",
 					"Now I go to Father Lawrence for help");
-				npcTalk(p, n, "Yes, he knows many things that can be done",
+				npcsay(p, n, "Yes, he knows many things that can be done",
 					"I hope you find him soon");
 				break;
 			case 4:
-				playerTalk(p, n, "I found the Father. Now I seek the apothecary");
-				npcTalk(p, n,
+				say(p, n, "I found the Father. Now I seek the apothecary");
+				npcsay(p, n,
 					"I do not know where he lives",
 					"but please, make haste. My father is close");
 				break;
 			case 5:
-				playerTalk(p, n, "I have to get a potion made for you",
+				say(p, n, "I have to get a potion made for you",
 					"Not done that bit yet though. Still trying");
-				npcTalk(p, n, "Fair luck to you, the end is close");
+				npcsay(p, n, "Fair luck to you, the end is close");
 				break;
 			case 6:
-				playerTalk(p, n, "I have a potion from Father Lawrence",
+				say(p, n, "I have a potion from Father Lawrence",
 					"it should make you seem dead, and get you away from this place");
 				p.message("You pass the potion to Juliet");
 				p.getCarriedItems().remove(ItemId.CADAVA.id(), 1);
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Wonderful. I just hope Romeo can remember to get me from the Crypt",
 					"Many thanks kind friend",
 					"Please go to Romeo, make sure he understands",
@@ -284,12 +284,12 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 				p.updateQuestStage(getQuestId(), 7);
 				break;
 			case 7:
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Have you seen Romeo? He will reward you for your help",
 					"He is the wealth in this story", "I am just the glamour");
 				break;
 			case -1:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"I sat in that cold crypt for ages waiting for Romeo",
 					"That useless fool never showed up",
@@ -314,37 +314,37 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 			case 2:
 				int count = messageCount(p);
 				if (p.getQuestStage(this) < 2 || count < 3) {
-					npcTalk(p, n, "Hello adventurer, do you seek a quest?");
-					int choice = showMenu(p, n,
+					npcsay(p, n, "Hello adventurer, do you seek a quest?");
+					int choice = multi(p, n,
 						"I am always looking for a quest",
 						"No, I prefer just to kill things",
 						"Can you recommend a good bar?");
 					if (choice == 0) {
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"Well, I see poor Romeo wandering around the square. I think he may need help",
 							"I was helping him and Juliet to meet, but it became impossible",
 							"I am sure he can use some help");
 					} else if (choice == 1) {
-						npcTalk(p, n, "That's a fine career in these lands",
+						npcsay(p, n, "That's a fine career in these lands",
 							"There is more that needs killing every day");
 					} else if (choice == 2) {
-						npcTalk(p, n, "Drinking will be the death of you",
+						npcsay(p, n, "Drinking will be the death of you",
 							"But the Blue Moon in the city is cheap enough",
 							"And providing you buy one drink an hour they let you stay all night");
 					}
 				} else {
-					npcTalk(p, n, "Oh to be a father in the times of whiskey",
+					npcsay(p, n, "Oh to be a father in the times of whiskey",
 						"I sing and I drink and I wake up in gutters",
 						"To err is human, to forgive, quite difficult");
 				}
 				break;
 			case 3:
-				playerTalk(p, n, "Romeo sent me. He says you can help");
-				npcTalk(p, n,
+				say(p, n, "Romeo sent me. He says you can help");
+				npcsay(p, n,
 					"Ah Romeo, yes. A fine lad, but a little bit confused");
-				playerTalk(p, n, "Juliet must be rescued from her fathers control");
-				npcTalk(p, n,
+				say(p, n, "Juliet must be rescued from her fathers control");
+				npcsay(p, n,
 					"I know just the thing. A potion to make her appear dead",
 					"Then Romeo can collect her from the crypt",
 					"Go to the Apothecary, tell him I sent you",
@@ -352,39 +352,39 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 				p.updateQuestStage(getQuestId(), 4);
 				break;
 			case 4:
-				npcTalk(p, n, "Ah, have you found the Apothecary yet?",
+				npcsay(p, n, "Ah, have you found the Apothecary yet?",
 					"Remember, Cadava potion, for Father Lawrence");
 				break;
 			case 5:
 				if (p.getCarriedItems().hasCatalogID(ItemId.MESSAGE.id(), Optional.of(false))) {
-					npcTalk(p, n, "Did you find the Apothecary?");
-					playerTalk(p, n, "I am on my way back to him with the ingredients");
-					npcTalk(p, n, "Good work. Get the potion to Juliet when you have it",
+					npcsay(p, n, "Did you find the Apothecary?");
+					say(p, n, "I am on my way back to him with the ingredients");
+					npcsay(p, n, "Good work. Get the potion to Juliet when you have it",
 						"I will tell Romeo to be ready");
 				} else {
-					npcTalk(p, n, "Did you find the Apothecary?");
-					playerTalk(p, n, "Yes, I must find some berries");
-					npcTalk(p, n, "Well, take care. They are poisonous to the touch",
+					npcsay(p, n, "Did you find the Apothecary?");
+					say(p, n, "Yes, I must find some berries");
+					npcsay(p, n, "Well, take care. They are poisonous to the touch",
 						"You will need gloves");
 				}
 				break;
 			case 6:
-				npcTalk(p, n, "Did you find the Apothecary?");
-				playerTalk(p, n, "Yes, I must find some berries");
-				npcTalk(p, n, "Well, take care. They are poisonous to the touch",
+				npcsay(p, n, "Did you find the Apothecary?");
+				say(p, n, "Yes, I must find some berries");
+				npcsay(p, n, "Well, take care. They are poisonous to the touch",
 					"You will need gloves");
-				playerTalk(p, n, "I am on my way back to him with the ingredients");
-				npcTalk(p, n, "Good work. Get the potion to Juliet when you have it",
+				say(p, n, "I am on my way back to him with the ingredients");
+				npcsay(p, n, "Good work. Get the potion to Juliet when you have it",
 					"I will tell Romeo to be ready");
 				break;
 			case 7:
-				npcTalk(p, n, "Oh to be a father in the times of whiskey",
+				npcsay(p, n, "Oh to be a father in the times of whiskey",
 					"I sing and I drink and I wake up in gutters",
 					"Top of the morning to you",
 					"To err is human, to forgive, quite difficult");
 				break;
 			case -1:
-				npcTalk(p, n, "Oh to be a father in the times of whiskey",
+				npcsay(p, n, "Oh to be a father in the times of whiskey",
 					"I sing and I drink and I wake up in gutters",
 					"I need a think I drink");
 				break;

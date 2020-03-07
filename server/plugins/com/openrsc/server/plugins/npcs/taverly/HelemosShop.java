@@ -35,17 +35,17 @@ public class HelemosShop implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome to the hero's guild");
-		final int option = showMenu(p, n, false, //do not send over
+		npcsay(p, n, "Welcome to the hero's guild");
+		final int option = multi(p, n, false, //do not send over
 			"So do you sell anything here?", "So what can I do here?");
 		if (option == 0) {
-			playerTalk(p, n, "So do you sell anything here?");
-			npcTalk(p, n, "Why yes we do run an exclusive shop for our members");
+			say(p, n, "So do you sell anything here?");
+			npcsay(p, n, "Why yes we do run an exclusive shop for our members");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
-			playerTalk(p, n, "so what can I do here?");
-			npcTalk(p, n, "Look around there are all sorts of things to keep our members entertained");
+			say(p, n, "so what can I do here?");
+			npcsay(p, n, "Look around there are all sorts of things to keep our members entertained");
 		}
 	}
 }

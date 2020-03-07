@@ -8,8 +8,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.delay;
 
 public class Prayer implements OpLocTrigger {
 
@@ -28,8 +28,8 @@ public class Prayer implements OpLocTrigger {
 
 			}
 			if (object.getID() == 625 && object.getY() == 3573) {
-				sleep(650);
-				message(player, "Suddenly a trapdoor opens beneath you");
+				delay(650);
+				mes(player, "Suddenly a trapdoor opens beneath you");
 				player.teleport(608, 3525);
 			}
 		}

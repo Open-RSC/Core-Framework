@@ -7,7 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.addItem;
+import static com.openrsc.server.plugins.Functions.give;
 
 public final class Pick implements
 	OpLocTrigger {
@@ -31,7 +31,7 @@ public final class Pick implements
 			@Override
 			public void action() {
 				getOwner().playerServerMessage(MessageType.QUEST, pickMessage);
-				addItem(getOwner(), objID, 1);
+				give(getOwner(), objID, 1);
 				getOwner().playSound("potato");
 				if (getOwner().getCarriedItems().getInventory().full())
 					interrupt();

@@ -10,7 +10,7 @@ public class Silicius implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.SILICIUS.id()) {
-			Functions.npcTalk(p,n,
+			Functions.npcsay(p,n,
 				"The monks of Entrana are always in need of vials",
 				"You can help us by making vials in this very room",
 				"If you do, I will automatically trade you bank notes for them");

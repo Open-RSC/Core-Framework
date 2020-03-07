@@ -26,28 +26,28 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, final Npc npc) {
-		npcTalk(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
+		npcsay(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
 
 		int menu;
 
 		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && player.getWorld().getServer().getConfig().WANT_BANK_PINS)
-			menu = showMenu(player, npc,
+			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to talk about bank pin",
 				"I'd like to collect my items from auction");
 		else if (player.getWorld().getServer().getConfig().WANT_BANK_PINS)
-			menu = showMenu(player, npc,
+			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to talk about bank pin");
 		else if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS)
-			menu = showMenu(player, npc,
+			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to collect my items from auction");
 		else
-			menu = showMenu(player, npc,
+			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?");
 
@@ -57,34 +57,34 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 				return;
 			}
 
-			if(validateBankPin(player)) {
-				npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+			if(validatebankpin(player)) {
+				npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}
 		} else if (menu == 1) {
-			npcTalk(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
-			int branchMenu = showMenu(player, npc, "And what do you do?",
+			npcsay(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
+			int branchMenu = multi(player, npc, "And what do you do?",
 				"Didn't you used to be called the bank of Varrock");
 			if (branchMenu == 0) {
-				npcTalk(player, npc, "We will look after your items and money for you",
+				npcsay(player, npc, "We will look after your items and money for you",
 					"So leave your valuables with us if you want to keep them safe");
 			} else if (branchMenu == 1) {
-				npcTalk(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
+				npcsay(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
 					"And telling us our signs were wrong",
 					"As if we didn't know what town we were in or something!");
 			}
 		} else if (menu == 2 && player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-			int bankPinMenu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
-				setBankPin(player);
+				setbankpin(player);
 			} else if (bankPinMenu == 1) {
-				changeBankPin(player);
+				changebankpin(player);
 			} else if (bankPinMenu == 2) {
-				removeBankPin(player);
+				removebankpin(player);
 			}
 		} else if ((menu == 2 || menu == 3) && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
-			if(validateBankPin(player)) {
+			if(validatebankpin(player)) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			}
 		}
@@ -118,7 +118,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 			return;
 		}
 
-		if(validateBankPin(player)) {
+		if(validatebankpin(player)) {
 			if (auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {

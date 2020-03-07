@@ -46,10 +46,10 @@ public class IronManInvUseOnPlayer implements UsePlayerTrigger {
 			}
 			player.resetPath();
 			otherPlayer.resetPath();
-			removeItem(player, item.getCatalogId(), 1);
-			addItem(otherPlayer, item.getCatalogId(), 1);
-			message(player, 0, "You give the " + item.getDef(player.getWorld()).getName() + " to " + otherPlayer.getUsername());
-			message(otherPlayer, 0, player.getUsername() + " has given you a " + item.getDef(player.getWorld()).getName());
+			remove(player, item.getCatalogId(), 1);
+			give(otherPlayer, item.getCatalogId(), 1);
+			mes(player, 0, "You give the " + item.getDef(player.getWorld()).getName() + " to " + otherPlayer.getUsername());
+			mes(otherPlayer, 0, player.getUsername() + " has given you a " + item.getDef(player.getWorld()).getName());
 		}
 	}
 }

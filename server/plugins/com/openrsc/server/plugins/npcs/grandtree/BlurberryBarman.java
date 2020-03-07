@@ -19,17 +19,17 @@ public final class BlurberryBarman implements ShopInterface, TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		npcTalk(p, n, "good day to you", "can i get you drink?");
-		int opt = showMenu(p, n, false, //do not send over
+		npcsay(p, n, "good day to you", "can i get you drink?");
+		int opt = multi(p, n, false, //do not send over
 			"what do you have?", "no thanks");
 		if (opt == 0) {
-			playerTalk(p, n, "what do you have");
-			npcTalk(p, n, "take a look");
+			say(p, n, "what do you have");
+			npcsay(p, n, "take a look");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (opt == 1) {
-			playerTalk(p, n, "no thanks");
-			npcTalk(p, n, "ok, take it easy");
+			say(p, n, "no thanks");
+			npcsay(p, n, "ok, take it easy");
 		}
 	}
 

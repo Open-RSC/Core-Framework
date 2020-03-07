@@ -39,9 +39,9 @@ public final class CassieShields implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.CASSIE.id()) {
-			playerTalk(p, n, "What wares are you selling?");
-			npcTalk(p, n, "I buy and sell shields", "Do you want to trade?");
-			int option = showMenu(p, n, "Yes please", "No thank you");
+			say(p, n, "What wares are you selling?");
+			npcsay(p, n, "I buy and sell shields", "Do you want to trade?");
+			int option = multi(p, n, "Yes please", "No thank you");
 			if (option == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);

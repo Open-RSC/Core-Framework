@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -71,47 +72,47 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		if (n.getID() == NpcId.BOY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					playerTalk(p, n, "Hello young man");
-					message(p, "The boy sobs");
-					int first = showMenu(p, n, "What's the matter?",
+					say(p, n, "Hello young man");
+					Functions.mes(p, "The boy sobs");
+					int first = multi(p, n, "What's the matter?",
 						"Well if you're not going to answer, I'll go");
 					if (first == 0) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"I've kicked my ball over that wall, into that garden",
 							"The old lady who lives there is scary",
 							"She's locked the ball in her wooden shed",
 							"Can you get my ball back for me please");
-						int second = showMenu(p, n, "Ok, I'll see what I can do",
+						int second = multi(p, n, "Ok, I'll see what I can do",
 							"Get it back yourself");
 						if (second == 0) {
-							npcTalk(p, n, "Thankyou");
+							npcsay(p, n, "Thankyou");
 							p.updateQuestStage(getQuestId(), 1);
 						} else if (second == 1) {
 							// NOTHING
 						}
 					} else if (first == 1) {
-						message(p, "The boy sniffs slightly");
+						Functions.mes(p, "The boy sniffs slightly");
 					}
 					break;
 				case 1:
 				case 2:
 				case 3:
 					if (p.getCarriedItems().hasCatalogID(ItemId.BALL.id(), Optional.of(false))) {
-						playerTalk(p, n, "Hi I have got your ball back",
+						say(p, n, "Hi I have got your ball back",
 							"It was harder than I thought it would be");
-						npcTalk(p, n, "Thankyou very much");
-						removeItem(p, ItemId.BALL.id(), 1);
+						npcsay(p, n, "Thankyou very much");
+						remove(p, ItemId.BALL.id(), 1);
 						if (p.getQuestStage(Quests.WITCHS_HOUSE) == 3) {
 							p.sendQuestComplete(Quests.WITCHS_HOUSE);
 						}
 					} else {
-						npcTalk(p, n, "Have you got my ball back yet?");
-						playerTalk(p, n, "Not yet");
-						npcTalk(p, n, "Well it's in the shed in that garden");
+						npcsay(p, n, "Have you got my ball back yet?");
+						say(p, n, "Not yet");
+						npcsay(p, n, "Well it's in the shed in that garden");
 					}
 					break;
 				case -1:
-					npcTalk(p, n, "Thankyou for getting my ball back");
+					npcsay(p, n, "Thankyou for getting my ball back");
 					break;
 			}
 		}
@@ -138,12 +139,12 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				if (witch != null) {
 					witch.teleport(355, 494);
 
-					npcTalk(p, witch, "Oi what are you doing in my garden?");
-					npcTalk(p, witch, "Get out you pesky intruder");
-					message(p, "Nora begins to cast a spell");
+					npcsay(p, witch, "Oi what are you doing in my garden?");
+					npcsay(p, witch, "Get out you pesky intruder");
+					Functions.mes(p, "Nora begins to cast a spell");
 
 					p.teleport(347, 616, true);
-					removeNpc(witch);
+					Functions.delnpc(witch, false);
 
 					p.getCache().remove("witch_spawned");
 					p.updateQuestStage(this, 1);
@@ -165,21 +166,21 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			if (!p.getCache().hasKey("witch_spawned")) {
-				message(p, "As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
-				spawnNpc(p.getWorld(), NpcId.NORA_T_HAG.id(), 356, 494, 60000);
+				Functions.mes(p, "As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
+				addnpc(p.getWorld(), NpcId.NORA_T_HAG.id(), 356, 494, 60000);
 				p.getCache().store("witch_spawned", true);
 			} else {
-				message(p, "The shed door is locked");
+				Functions.mes(p, "The shed door is locked");
 				if (witch == null) {
 					return;
 				}
 				witch.teleport(355, 494);
-				npcTalk(p, witch, "Oi what are you doing in my garden?");
-				npcTalk(p, witch, "Get out you pesky intruder");
-				message(p, "Nora begins to cast a spell");
+				npcsay(p, witch, "Oi what are you doing in my garden?");
+				npcsay(p, witch, "Get out you pesky intruder");
+				Functions.mes(p, "Nora begins to cast a spell");
 
 				p.teleport(347, 616, true);
-				removeNpc(witch);
+				Functions.delnpc(witch, false);
 				p.updateQuestStage(this, 1);
 				p.getCache().remove("found_magnet");
 			}
@@ -190,23 +191,23 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				if (p.getCache().hasKey("witch_spawned")) {
 					Npc witch = p.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 					witch.setBusy(true);
-					sleep(2000);
+					delay(2000);
 					p.message("Through a crack in the door, you see a witch enter the garden");
 					witch.teleport(353, 492);
-					sleep(2500);
+					delay(2500);
 					witch.teleport(351, 491);
 					p.message("The witch disappears into the shed");
-					npcTalk(p, witch, "How are you tonight my pretty?",
+					npcsay(p, witch, "How are you tonight my pretty?",
 						"Would you like some food?",
 						"Just wait there while I get some");
 					witch.teleport(353, 492);
 					witch.setLocation(Point.location(353, 492), true);
-					message(p,
+					Functions.mes(p,
 						"The witch passes  back through the garden again",
 						"Leaving the shed door unlocked");
-					sleep(2500);
+					delay(2500);
 
-					removeNpc(witch);
+					Functions.delnpc(witch, false);
 					p.getCache().remove("witch_spawned");
 
 					p.updateQuestStage(this, 3);
@@ -229,7 +230,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 255) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.FRONT_DOOR_KEY.id(), Optional.of(false))) {
 				p.message("You find a key under the mat");
-				addItem(p, ItemId.FRONT_DOOR_KEY.id(), 1);
+				give(p, ItemId.FRONT_DOOR_KEY.id(), 1);
 			} else {
 				p.message("You find nothing interesting");
 			}
@@ -263,7 +264,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			} else {
 				if (!p.getCarriedItems().hasCatalogID(ItemId.MAGNET.id(), Optional.of(false))) {
 					p.message("You find a magnet in the cupboard");
-					addItem(p, ItemId.MAGNET.id(), 1);
+					give(p, ItemId.MAGNET.id(), 1);
 					if (p.getQuestStage(this) > 0) {
 						p.getCache().store("found_magnet", true);
 					}
@@ -285,11 +286,11 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496)) {
 			if (p.getQuestStage(this) == -1) {
-				playerTalk(p, null, "I would rather eat it to be honest");
+				say(p, null, "I would rather eat it to be honest");
 				return;
 			}
-			message(p, "A rat appears from a hole and eats the cheese");
-			spawnNpc(p.getWorld(), NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
+			Functions.mes(p, "A rat appears from a hole and eats the cheese");
+			addnpc(p.getWorld(), NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
 		}
 	}
 
@@ -309,8 +310,8 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			} else {
 				p.message("You put the magnet on the rat");
 				Npc rat = p.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
-				removeNpc(rat);
-				message(p, "The rat runs back into his hole",
+				Functions.delnpc(rat, false);
+				Functions.mes(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
 				p.getCarriedItems().remove(ItemId.MAGNET.id(), 1);
 				p.updateQuestStage(getQuestId(), 2);
@@ -337,7 +338,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			return;
 		}
 		n.killedBy(p);
-		Npc nextShape = spawnNpc(p.getWorld(), n.getID() + 1, n.getX(), n.getY(), 300000);
+		Npc nextShape = addnpc(p.getWorld(), n.getID() + 1, n.getX(), n.getY(), 300000);
 
 		p.message("The shapeshifer turns into a "
 			+ npcMessage(nextShape.getID()) + "!");
@@ -386,13 +387,13 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTakeObj(Player p, GroundItem i) {
 		if (!p.getCache().hasKey("shapeshifter")) {
-			Npc shapeshifter = getNearestNpc(p, NpcId.SHAPESHIFTER_HUMAN.id(), 20);
+			Npc shapeshifter = ifnearvisnpc(p, NpcId.SHAPESHIFTER_HUMAN.id(), 20);
 			if (shapeshifter != null) {
 				shapeshifter.startCombat(p);
 				if (DataConversions.random(0, 3) == 0) weakenPlayer(p);
 			}
 		} else if (p.getQuestStage(getQuestId()) == -1) {
-			playerTalk(p, null, "I'd better not take it, its not mine");
+			say(p, null, "I'd better not take it, its not mine");
 		}
 
 	}

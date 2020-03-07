@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.delay;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -27,7 +27,7 @@ public class SalarinTheTwistedMageAI implements SpellNpcTrigger {
 			if (!p.withinRange(n, 5))
 				return;
 			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Amshalaraz Nithcosh dimarilo", p));
-			sleep(600);
+			delay(600);
 			p.message("You suddenly feel much weaker");
 			p.getSkills().setLevel(Skills.ATTACK, 0);
 			p.getSkills().setLevel(Skills.STRENGTH, 0);

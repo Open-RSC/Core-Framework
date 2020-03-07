@@ -1,15 +1,11 @@
 package com.openrsc.server.plugins;
 
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.login.BankPinChangeRequest;
 import com.openrsc.server.login.BankPinVerifyRequest;
 import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Path;
-import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,21 +14,492 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
-import com.openrsc.server.model.entity.update.BubbleNpc;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class Functions {
 
-	private static String getBankPinInput(Player player) {
+	/**
+	 * Displays item bubble above players head.
+	 *
+	 * @param player
+	 * @param item
+	 */
+	public static void thinkbubble(final Player player, final Item item) {
+		final Bubble bubble = new Bubble(player, item.getCatalogId());
+		player.getUpdateFlags().setActionBubble(bubble);
+	}
+
+	/**
+	 * Displays item bubble above players head.
+	 *
+	 * @param player
+	 * @param item
+	 */
+	public static void thinkbubble(final Player player, final GroundItem item) {
+		final Bubble bubble = new Bubble(player, item.getID());
+		player.getUpdateFlags().setActionBubble(bubble);
+	}
+
+	public static void delay(final int delayMs) {
+		final PluginTask pluginTask = PluginTask.getContextPluginTask();
+		if (pluginTask == null)
+			return;
+		// System.out.println("Sleeping on " + Thread.currentThread().getName());
+		final int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getWorld().getServer().getConfig().GAME_TICK);
+		pluginTask.pause(ticks);
+	}
+
+	/**
+	 * Displays server message(s) with 2.2 second delay.
+	 *
+	 * @param player
+	 * @param messages
+	 */
+	public static void mes(final Player player, int delay, final String... messages) {
+		mes(player, null, delay, messages);
+	}
+
+	public static void mes(final Player player, final Npc npc, int delay, final String... messages) {
+		for (final String message : messages) {
+			if (!message.equalsIgnoreCase("null")) {
+				if (npc != null) {
+					if (npc.isRemoved()) {
+						player.setBusy(false);
+						return;
+					}
+					npc.setBusyTimer(delay);
+				}
+				player.setBusy(true);
+				player.message(message);
+			}
+			delay(delay);
+		}
+		player.setBusy(false);
+	}
+
+	/**
+	 * Displays server message(s) with 2.2 second delay.
+	 *
+	 * @param player
+	 * @param messages
+	 */
+	public static void mes(final Player player, final String... messages) {
+		for (final String message : messages) {
+			if (!message.equalsIgnoreCase("null")) {
+				if (player.getInteractingNpc() != null) {
+					player.getInteractingNpc().setBusyTimer(1900);
+				}
+				player.message("@que@" + message);
+				player.setBusyTimer(1900);
+			}
+			delay(1900);
+		}
+		player.setBusyTimer(0);
+	}
+
+	/**
+	 * Player message(s), each message has 2.2s delay between.
+	 *
+	 * @param player
+	 * @param npc
+	 * @param messages
+	 */
+	public static void say(final Player player, final Npc npc, final String... messages) {
+		for (final String message : messages) {
+			if (!message.equalsIgnoreCase("null")) {
+				if (npc != null) {
+					if (npc.isRemoved()) {
+						player.setBusy(false);
+						return;
+					}
+				}
+				if (npc != null) {
+					npc.resetPath();
+					npc.setBusyTimer(2500);
+				}
+				if (!player.inCombat()) {
+					if (npc != null) {
+						npc.face(player);
+						player.face(npc);
+					}
+					player.setBusyTimer(2500);
+					player.resetPath();
+				}
+				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
+			}
+			delay(1900);
+		}
+	}
+
+	public static void say(final Player player, final String message) {
+		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
+	}
+
+	public static int multi(final Player player, final String... options) {
+		return multi(player, null, true, options);
+	}
+
+	public static int multi(final Player player, final Npc npc, final String... options) {
+		return multi(player, npc, true, options);
+	}
+
+	public static int multi(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
+		final long start = System.currentTimeMillis();
+		if (npc != null) {
+			if (npc.isRemoved()) {
+				player.resetMenuHandler();
+				player.setBusy(false);
+				return -1;
+			}
+			npc.setBusy(true);
+		}
+		player.setMenuHandler(new MenuOptionListener(options));
+		ActionSender.sendMenu(player, options);
+
+		synchronized (player.getMenuHandler()) {
+			while (!player.checkUnderAttack()) {
+				if (player.getOption() != -1) {
+					if (npc != null && options[player.getOption()] != null) {
+						npc.setBusy(false);
+						if (sendToClient)
+							say(player, npc, options[player.getOption()]);
+					}
+					return player.getOption();
+				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+					player.resetMenuHandler();
+					if (npc != null) {
+						npc.setBusy(false);
+						player.setBusyTimer(0);
+					}
+					return -1;
+				}
+				delay(1);
+			}
+			player.releaseUnderAttack();
+			player.notify();
+			//player got busy (combat), free npc if any
+			if (npc != null) {
+				npc.setBusy(false);
+			}
+			return -1;
+		}
+	}
+
+	public static void advancestat(Player p, int skillId, int baseXp, int expPerLvl) {
+		p.incExp(skillId, p.getSkills().getMaxStat(skillId) * expPerLvl + baseXp, true);
+	}
+
+	/**
+	 * Creates a new ground item
+	 *
+	 * @param id
+	 * @param amount
+	 * @param x
+	 * @param y
+	 * @param owner
+	 */
+	public static void addobject(int id, int amount, int x, int y, Player owner) {
+		owner.getWorld().registerItem(new GroundItem(owner.getWorld(), id, x, y, amount, owner));
+	}
+
+	/**
+	 * Creates a new ground item
+	 *
+	 * @param id
+	 * @param amount
+	 * @param x
+	 * @param y
+	 */
+	public static void addobject(World world, int id, int amount, int x, int y) {
+		world.registerItem(new GroundItem(world, id, x, y, amount, (Player) null));
+	}
+
+	public static Npc addnpc(int id, int x, int y, final int time, final Player spawnedFor) {
+		final Npc npc = new Npc(spawnedFor.getWorld(), id, x, y);
+		npc.setShouldRespawn(false);
+		npc.setAttribute("spawnedFor", spawnedFor);
+		spawnedFor.getWorld().registerNpc(npc);
+		spawnedFor.getWorld().getServer().getGameEventHandler().add(new SingleEvent(spawnedFor.getWorld(), null, time, "Spawn Pet NPC Timed") {
+			public void action() {
+				npc.remove();
+			}
+		});
+		return npc;
+	}
+
+	public static Npc addnpc(World world, int id, int x, int y) {
+		final Npc npc = new Npc(world, id, x, y);
+		npc.setShouldRespawn(false);
+		world.registerNpc(npc);
+		return npc;
+	}
+
+	public static Npc addnpc(Player p, int id, int x, int y, int radius, final int time) {
+		final Npc npc = new Npc(p.getWorld(), id, x, y, radius);
+		npc.setShouldRespawn(false);
+		p.getWorld().registerNpc(npc);
+		p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, time, "Spawn Radius NPC Timed") {
+			public void action() {
+				npc.remove();
+			}
+		});
+		return npc;
+	}
+
+	public static Npc addnpc(World world, int id, int x, int y, final int time) {
+		final Npc npc = new Npc(world, id, x, y);
+		npc.setShouldRespawn(false);
+		world.registerNpc(npc);
+		world.getServer().getGameEventHandler().add(new SingleEvent(world, null, time, "Spawn NPC Timed") {
+			public void action() {
+				npc.remove();
+			}
+		});
+		return npc;
+	}
+
+	public static void addloc(final GameObject o) {
+		o.getWorld().registerGameObject(o);
+	}
+
+	public static void addloc(final World world, final GameObjectLoc loc, final int time) {
+		world.getServer().getGameEventHandler().submit(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
+	}
+
+	public static void teleport(Player p, int x, int y) {
+		p.teleport(x, y);
+	}
+
+	/**
+	 * Adds an item to players inventory.
+	 */
+	public static void give(final Player p, final int item, final int amt) {
+		final Item items = new Item(item, amt);
+		if (!items.getDef(p.getWorld()).isStackable() && amt > 1) {
+			for (int i = 0; i < amt; i++) {
+				p.getCarriedItems().getInventory().add(new Item(item, 1));
+			}
+		} else {
+			p.getCarriedItems().getInventory().add(items);
+		}
+	}
+
+	/**
+	 * Removes an item from players inventory.
+	 *
+	 * @param p
+	 * @param id
+	 * @param amt
+	 */
+	public static boolean remove(final Player p, final int id, final int amt) {
+		if (!ifheld(p, id, amt)) {
+			return false;
+		}
+
+		final Item item = new Item(id, 1);
+		if (!item.getDef(p.getWorld()).isStackable()) {
+			p.getCarriedItems().remove(id, 1, true);
+		} else {
+			p.getCarriedItems().remove(id, amt, true);
+		}
+		return true;
+	}
+
+	/**
+	 * Removes an item from players inventory.
+	 *
+	 * @param p
+	 * @param items
+	 * @return
+	 */
+	public static boolean remove(final Player p, final Item... items) {
+		for (Item i : items) {
+			if (!p.getCarriedItems().getInventory().contains(i)) {
+				return false;
+			}
+		}
+
+		for (Item ir : items) {
+			p.getCarriedItems().remove(ir);
+		}
+		return true;
+	}
+
+	/**
+	 * Checks if player has an item, and returns true/false.
+	 *
+	 * @param p
+	 * @param item
+	 * @return
+	 */
+	public static boolean ifheld(final Player p, final int item) {
+		boolean retval = p.getCarriedItems().hasCatalogID(item);
+
+		return retval;
+	}
+
+	/**
+	 * Checks if player has item and returns true/false
+	 *
+	 * @param p
+	 * @param id
+	 * @param amt
+	 * @return
+	 */
+	public static boolean ifheld(final Player p, final int id, final int amt) {
+		int amount = p.getCarriedItems().getInventory().countId(id);
+		int equipslot = -1;
+		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if ((equipslot = p.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
+				amount += p.getCarriedItems().getEquipment().get(equipslot).getAmount();
+			}
+		}
+		return amount >= amt;
+	}
+
+	public static void changeloc(final GameObject o, final GameObject newObject) {
+		o.getWorld().replaceGameObject(o, newObject);
+	}
+
+	public static void changeloc(GameObject obj, int delay, int replaceID) {
+		final GameObject replaceObj = new GameObject(obj.getWorld(), obj.getLocation(), replaceID, obj.getDirection(), obj.getType());
+		delloc(obj);
+		addloc(replaceObj.getWorld(), replaceObj.getLoc(), delay);
+	}
+
+	public static void delloc(final GameObject o) {
+		o.getWorld().unregisterGameObject(o);
+	}
+
+	/**
+	 * Gets closest npc within players area.
+	 *
+	 * @param npcId
+	 * @param radius
+	 * @return
+	 */
+	public static Npc ifnearvisnpc(Player p, final int npcId, final int radius) {
+		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
+		Npc closestNpc = null;
+		for (int next = 0; next < radius; next++) {
+			for (final Npc n : npcsInView) {
+				if (n.getID() == npcId) {
+
+				}
+				if (n.getID() == npcId && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
+					closestNpc = n;
+				}
+			}
+		}
+		return closestNpc;
+	}
+
+	public static Npc ifnearvisnpc(Player p, final int radius, final int... npcId) {
+		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
+		Npc closestNpc = null;
+		for (int next = 0; next < radius; next++) {
+			for (final Npc n : npcsInView) {
+				for (final int na : npcId) {
+					if (n.getID() == na && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
+						closestNpc = n;
+					}
+				}
+			}
+		}
+		return closestNpc;
+	}
+
+	/**
+	 * Npc chat method
+	 *
+	 * @param player
+	 * @param npc
+	 * @param messages - String array of npc dialogue lines.
+	 */
+	public static void npcsay(final Player player, final Npc npc, final int delay, final String... messages) {
+		for (final String message : messages) {
+			if (!message.equalsIgnoreCase("null")) {
+				if (npc.isRemoved()) {
+					player.setBusy(false);
+					return;
+				}
+				npc.setBusy(true);
+				player.setBusy(true);
+				npc.resetPath();
+				player.resetPath();
+
+				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
+
+				npc.face(player);
+				if (!player.inCombat()) {
+					player.face(npc);
+				}
+			}
+
+			delay(delay);
+
+		}
+		npc.setBusy(false);
+		player.setBusy(false);
+	}
+
+	public static void npcsay(final Player player, final Npc npc, final String... messages) {
+		npcsay(player, npc, 1900, messages);
+	}
+
+	public static void npcattack(Npc npc, Player p) {
+		npc.setChasing(p);
+	}
+
+	public static void npcattack(Npc npc, Npc npc2) {
+		npc.setChasing(npc2);
+	}
+
+	public static void delnpc(final Npc n, boolean shouldRespawn) {
+		n.setShouldRespawn(shouldRespawn);
+		n.remove();
+	}
+
+	/**
+	 * Transforms npc into another please note that you will need to unregister
+	 * the transformed npc after using this method.
+	 *
+	 * @param n
+	 * @param newID
+	 * @return
+	 */
+	public static Npc changenpc(final Npc n, final int newID, boolean onlyShift) {
+		final Npc newNpc = new Npc(n.getWorld(), newID, n.getX(), n.getY());
+		newNpc.setShouldRespawn(false);
+		n.getWorld().registerNpc(newNpc);
+		if (onlyShift) {
+			n.setShouldRespawn(false);
+		}
+		n.remove();
+		return newNpc;
+	}
+
+	/**
+	 * Checks if player has an item in bank, and returns true/false.
+	 *
+	 * @param p
+	 * @param item
+	 * @return
+	 */
+	public static boolean ifbank(final Player p, final int item) {
+		return p.getBank().hasItemId(item);
+	}
+
+	public static boolean ifbankorheld(Player p, int id) {
+		return ifbank(p, id) || ifheld(p, id);
+	}
+
+	private static String showbankpin(Player player) {
 		ActionSender.sendBankPinInterface(player);
 		player.setAttribute("bank_pin_entered", "");
 		String enteredPin = null;
@@ -41,7 +508,7 @@ public class Functions {
 			if (enteredPin != "") {
 				break;
 			}
-			Functions.sleep(640);
+			Functions.delay(640);
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
@@ -50,7 +517,7 @@ public class Functions {
 		return enteredPin;
 	}
 
-	public static boolean removeBankPin(final Player player) {
+	public static boolean removebankpin(final Player player) {
 		BankPinChangeRequest request;
 		String oldPin;
 
@@ -59,7 +526,7 @@ public class Functions {
 			return false;
 		}
 
-		oldPin = getBankPinInput(player);
+		oldPin = showbankpin(player);
 
 		if(oldPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled removing your bank pin");
@@ -70,13 +537,13 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.sleep(640);
+			Functions.delay(640);
 		}
 
 		return true;
 	}
 
-	public static boolean setBankPin(final Player player) {
+	public static boolean setbankpin(final Player player) {
 		BankPinChangeRequest request;
 		String newPin;
 
@@ -85,7 +552,7 @@ public class Functions {
 			return false;
 		}
 
-		newPin = getBankPinInput(player);
+		newPin = showbankpin(player);
 
 		if(newPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled creating your bank pin");
@@ -96,13 +563,13 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.sleep(640);
+			Functions.delay(640);
 		}
 
 		return true;
 	}
 
-	public static boolean changeBankPin(final Player player) {
+	public static boolean changebankpin(final Player player) {
 		BankPinChangeRequest request;
 		String newPin;
 		String oldPin;
@@ -112,14 +579,14 @@ public class Functions {
 			return false;
 		}
 
-		oldPin = getBankPinInput(player);
+		oldPin = showbankpin(player);
 
 		if(oldPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
 			return false;
 		}
 
-		newPin = getBankPinInput(player);
+		newPin = showbankpin(player);
 
 		if(newPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
@@ -130,13 +597,13 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.sleep(640);
+			Functions.delay(640);
 		}
 
 		return true;
 	}
 
-	public static boolean validateBankPin(final Player player) {
+	public static boolean validatebankpin(final Player player) {
 		BankPinVerifyRequest request;
 		String pin;
 
@@ -153,66 +620,16 @@ public class Functions {
 			return true;
 		}
 
-		pin = getBankPinInput(player);
+		pin = showbankpin(player);
 
 		request = new BankPinVerifyRequest(player.getWorld().getServer(), player, pin);
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.sleep(640);
+			Functions.delay(640);
 		}
 
 		return player.getAttribute("bankpin", false);
-	}
-
-	public static int getWoodcutAxe(Player p) {
-		int axeId = -1;
-
-		for (final int a : Formulae.woodcuttingAxeIDs) {
-			if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-				if (p.getCarriedItems().getEquipment().searchEquipmentForItem(a) != -1) {
-					axeId = a;
-					break;
-				}
-			}
-
-			if (p.getCarriedItems().getInventory().countId(a) > 0) {
-				axeId = a;
-				break;
-			}
-		}
-		return axeId;
-	}
-
-	public static void teleport(Mob n, int x, int y) {
-		n.getWorld().getServer().getGameEventHandler().submit(() -> {
-			n.resetPath();
-			n.setLocation(new Point(x, y), true);
-		}, "Teleport");
-	}
-
-	public static void walkMob(Mob n, Point... waypoints) {
-		n.getWorld().getServer().getGameEventHandler().submit(() -> {
-			n.resetPath();
-			Path path = new Path(n, PathType.WALK_TO_POINT);
-			for (Point p : waypoints) {
-				path.addStep(p.getX(), p.getY());
-			}
-			path.finish();
-			n.getWalkingQueue().setPath(path);
-		}, "Walk Mob");
-	}
-
-	public static void walkThenTeleport(final Player player, final int x1, final int y1, final int x2, final int y2, final boolean bubble) {
-		player.walk(x1, y1);
-		while (!player.getWalkingQueue().finished()) {
-			sleep(1);
-		}
-		player.teleport(x2, y2, bubble);
-	}
-
-	public static boolean hasItemAtAll(Player p, int id) {
-		return p.getBank().contains(new Item(id)) || p.getCarriedItems().getInventory().contains(new Item(id));
 	}
 
 	public static boolean inArray(Object o, Object... oArray) {
@@ -238,16 +655,32 @@ public class Functions {
 		return vowels.indexOf(Character.toLowerCase(testString.charAt(0))) != -1;
 	}
 
-	public static void kill(Npc mob, Player killedBy) {
-		mob.killedBy(killedBy);
-	}
-
 	/**
 	 * Determines if the id of item1 is idA and the id of item2 is idB
 	 * and does the check the other way around as well
 	 */
 	public static boolean compareItemsIds(Item item1, Item item2, int idA, int idB) {
 		return item1.getCatalogId() == idA && item2.getCatalogId() == idB || item1.getCatalogId() == idB && item2.getCatalogId() == idA;
+	}
+
+	/**
+	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
+	 *
+	 * @param p         - the player
+	 * @param questData - the data, if skill id is < 0 means no exp is applied
+	 * @param applyQP   - apply the quest point increase
+	 */
+	public static void incQuestReward(Player p, int[] questData, boolean applyQP) {
+		int qp = questData[0];
+		int skillId = questData[1];
+		int baseXP = questData[2];
+		int varXP = questData[3];
+		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
+			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
+		}
+		if (applyQP) {
+			p.incQuestPoints(qp);
+		}
 	}
 
 	/**
@@ -286,12 +719,23 @@ public class Functions {
 		return flag;
 	}
 
-	public static void attack(Npc npc, Player p) {
-		npc.setChasing(p);
+	/**
+	 * Checks if players quest stage for this quest is @param stage
+	 *
+	 * @param p
+	 * @param qID
+	 * @param stage
+	 * @return
+	 */
+	public static boolean atQuestStage(Player p, int qID, int stage) {
+		return getQuestStage(p, qID) == stage;
 	}
 
-	public static void attack(Npc npc, Npc npc2) {
-		npc.setChasing(npc2);
+	/**
+	 * Checks if players quest stage for this quest is @param stage
+	 */
+	public static boolean atQuestStage(Player p, QuestInterface quest, int stage) {
+		return getQuestStage(p, quest) == stage;
 	}
 
 	public static int getCurrentLevel(Player p, int i) {
@@ -311,46 +755,10 @@ public class Functions {
 		ActionSender.sendStat(p, skill);
 	}
 
-	/**
-	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
-	 *
-	 * @param p         - the player
-	 * @param questData - the data, if skill id is < 0 means no exp is applied
-	 * @param applyQP   - apply the quest point increase
-	 */
-	public static void incQuestReward(Player p, int[] questData, boolean applyQP) {
-		int qp = questData[0];
-		int skillId = questData[1];
-		int baseXP = questData[2];
-		int varXP = questData[3];
-		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
-			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
-		}
-		if (applyQP) {
-			p.incQuestPoints(qp);
-		}
-	}
-
-	public static void movePlayer(Player p, int x, int y) {
-		movePlayer(p, x, y, false);
-
-	}
-
-	public static void movePlayer(Player p, int x, int y, boolean worldInfo) {
-		if (worldInfo)
-			p.teleport(x, y, false);
-		else
-			p.teleport(x, y);
-
-	}
-
 	public static void displayTeleportBubble(Player p, int x, int y, boolean teleGrab) {
 		for (Object o : p.getViewArea().getPlayersInView()) {
 			Player pt = ((Player) o);
-			if (teleGrab)
-				ActionSender.sendTeleBubble(pt, x, y, true);
-			else
-				ActionSender.sendTeleBubble(pt, x, y, false);
+			ActionSender.sendTeleBubble(pt, x, y, teleGrab);
 		}
 	}
 
@@ -452,60 +860,6 @@ public class Functions {
 		}
 	}
 
-	public static Npc spawnNpc(int id, int x, int y, final int time, final Player spawnedFor) {
-		final Npc npc = new Npc(spawnedFor.getWorld(), id, x, y);
-		spawnedFor.getWorld().getServer().getGameEventHandler().submit(() -> {
-			npc.setShouldRespawn(false);
-			npc.setAttribute("spawnedFor", spawnedFor);
-			spawnedFor.getWorld().registerNpc(npc);
-			spawnedFor.getWorld().getServer().getGameEventHandler().add(new SingleEvent(spawnedFor.getWorld(), null, time, "Spawn Pet NPC Timed") {
-				public void action() {
-					npc.remove();
-				}
-			});
-		}, "Spawn Pet NPC Delayed");
-		return npc;
-	}
-
-	public static Npc spawnNpc(World world, int id, int x, int y) {
-		final Npc npc = new Npc(world, id, x, y);
-		world.getServer().getGameEventHandler().submit(() -> {
-			npc.setShouldRespawn(false);
-			world.registerNpc(npc);
-		}, "Spawn Permanent NPC Delayed");
-		return npc;
-	}
-
-	public static Npc spawnNpcWithRadius(Player p, int id, int x, int y, int radius, final int time) {
-
-		final Npc npc = new Npc(p.getWorld(), id, x, y, radius);
-		p.getWorld().getServer().getGameEventHandler().submit(() -> {
-			npc.setShouldRespawn(false);
-			p.getWorld().registerNpc(npc);
-			p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, time, "Spawn Radius NPC Timed") {
-				public void action() {
-					npc.remove();
-				}
-			});
-		}, "Spawn Radius NPC Delayed");
-		return npc;
-	}
-
-	public static Npc spawnNpc(World world, int id, int x, int y, final int time) {
-
-		final Npc npc = new Npc(world, id, x, y);
-		world.getServer().getGameEventHandler().submit(() -> {
-			npc.setShouldRespawn(false);
-			world.registerNpc(npc);
-			world.getServer().getGameEventHandler().add(new SingleEvent(world, null, time, "Spawn NPC Timed") {
-				public void action() {
-					npc.remove();
-				}
-			});
-		}, "Spawn NPC Delayed");
-		return npc;
-	}
-
 	public static void completeQuest(Player p, QuestInterface quest) {
 		p.sendQuestComplete(quest.getQuestId());
 	}
@@ -514,47 +868,14 @@ public class Functions {
 		return DataConversions.random(low, high);
 	}
 
-	/**
-	 * Creates a new ground item
-	 *
-	 * @param id
-	 * @param amount
-	 * @param x
-	 * @param y
-	 * @param owner
-	 */
-
-
-	public static void createGroundItem(int id, int amount, int x, int y, Player owner) {
-		owner.getWorld().registerItem(new GroundItem(owner.getWorld(), id, x, y, amount, owner));
-	}
-
-	/**
-	 * Creates a new ground item
-	 *
-	 * @param id
-	 * @param amount
-	 * @param x
-	 * @param y
-	 */
-	public static void createGroundItem(World world, int id, int amount, int x, int y) {
-		world.registerItem(new GroundItem(world, id, x, y, amount, (Player) null));
-	}
-
 	public static void createGroundItemDelayedRemove(final GroundItem i, int time) {
-		i.getWorld().getServer().getGameEventHandler().submit(() -> {
-			if (i.getLoc() == null) {
-				i.getWorld().getServer().getGameEventHandler().add(new SingleEvent(i.getWorld(), null, time, "Spawn Ground Item Timed") {
-					public void action() {
-						i.getWorld().unregisterItem(i);
-					}
-				});
-			}
-		}, "Spawn Ground Item Timed");
-	}
-
-	public static void removeNpc(final Npc npc) {
-		npc.getWorld().getServer().getGameEventHandler().submit(() -> npc.setUnregistering(true), "Remove NPC");
+		if (i.getLoc() == null) {
+			i.getWorld().getServer().getGameEventHandler().add(new SingleEvent(i.getWorld(), null, time, "Spawn Ground Item Timed") {
+				public void action() {
+					i.getWorld().unregisterItem(i);
+				}
+			});
+		}
 	}
 
 	/**
@@ -566,25 +887,6 @@ public class Functions {
 	 */
 	public static boolean isObject(GameObject obj, int i) {
 		return obj.getID() == i;
-	}
-
-	/**
-	 * Checks if players quest stage for this quest is @param stage
-	 *
-	 * @param p
-	 * @param qID
-	 * @param stage
-	 * @return
-	 */
-	public static boolean atQuestStage(Player p, int qID, int stage) {
-		return getQuestStage(p, qID) == stage;
-	}
-
-	/**
-	 * Checks if players quest stage for this quest is @param stage
-	 */
-	public static boolean atQuestStage(Player p, QuestInterface quest, int stage) {
-		return getQuestStage(p, quest) == stage;
 	}
 
 	/**
@@ -606,17 +908,6 @@ public class Functions {
 	}
 
 	/**
-	 * Sets Quest with ID @param questID's stage to @parma stage
-	 *
-	 * @param p
-	 * @param questID
-	 * @param stage
-	 */
-	public static void setQuestStage(final Player p, final int questID, final int stage) {
-		p.getWorld().getServer().getGameEventHandler().submit(() -> p.updateQuestStage(questID, stage), "Set Quest Stage");
-	}
-
-	/**
 	 * Sets @param quest 's stage to @param stage
 	 *
 	 * @param p
@@ -629,15 +920,8 @@ public class Functions {
 
 	public static void openChest(GameObject obj, int delay, int chestID) {
 		GameObject chest = new GameObject(obj.getWorld(), obj.getLocation(), chestID, obj.getDirection(), obj.getType());
-		replaceObject(obj, chest);
-		delayedSpawnObject(obj.getWorld(), obj.getLoc(), delay);
-
-	}
-
-	public static void replaceObjectDelayed(GameObject obj, int delay, int replaceID) {
-		GameObject replaceObj = new GameObject(obj.getWorld(), obj.getLocation(), replaceID, obj.getDirection(), obj.getType());
-		replaceObject(obj, replaceObj);
-		delayedSpawnObject(obj.getWorld(), obj.getLoc(), delay);
+		changeloc(obj, chest);
+		addloc(obj.getWorld(), obj.getLoc(), delay);
 	}
 
 	public static void openChest(GameObject obj, int delay) {
@@ -649,109 +933,62 @@ public class Functions {
 	}
 
 	public static void closeCupboard(GameObject obj, Player p, int cupboardID) {
-		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
+		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
 		p.message("You close the cupboard");
 	}
 
 	public static void openCupboard(GameObject obj, Player p, int cupboardID) {
-		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
+		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
 		p.message("You open the cupboard");
 	}
 
 	public static void closeGenericObject(GameObject obj, Player p, int objectID, String... messages) {
-		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
+		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
 		for (String message : messages) {
 			p.message(message);
 		}
 	}
 
 	public static void openGenericObject(GameObject obj, Player p, int objectID, String... messages) {
-		replaceObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
+		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
 		for (String message : messages) {
 			p.message(message);
 		}
-	}
-
-	public static int[] coordModifier(Player player, boolean up, GameObject object) {
-		if (object.getGameObjectDef().getHeight() <= 1) {
-			return new int[]{player.getX(), Formulae.getNewY(player.getY(), up)};
-		}
-		int[] coords = {object.getX(), Formulae.getNewY(object.getY(), up)};
-		switch (object.getDirection()) {
-			case 0:
-				coords[1] -= (up ? -object.getGameObjectDef().getHeight() : 1);
-				break;
-			case 2:
-				coords[0] -= (up ? -object.getGameObjectDef().getHeight() : 1);
-				break;
-			case 4:
-				coords[1] += (up ? -1 : object.getGameObjectDef().getHeight());
-				break;
-			case 6:
-				coords[0] += (up ? -1 : object.getGameObjectDef().getHeight());
-				break;
-		}
-		return coords;
-	}
-
-	/**
-	 * Adds an item to players inventory.
-	 */
-	public static void addItem(final Player p, final int item, final int amt) {
-
-		p.getWorld().getServer().getGameEventHandler().submit(() -> {
-			final Item items = new Item(item, amt);
-			if (!items.getDef(p.getWorld()).isStackable() && amt > 1) {
-				for (int i = 0; i < amt; i++) {
-					p.getCarriedItems().getInventory().add(new Item(item, 1));
-				}
-			} else {
-				p.getCarriedItems().getInventory().add(items);
-			}
-		}, "Add Item");
-	}
-
-	/**
-	 * Opens a door object for the player and walks through it. Works for any
-	 * regular door in any direction.
-	 */
-	public static void doDoor(final GameObject object, final Player p) {
-		doDoor(object, p, 11);
 	}
 
 	public static void doTentDoor(final GameObject object, final Player p) {
 		p.setBusyTimer(650);
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 1) {
 			if (object.getLocation().equals(p.getLocation())) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 2) {
 			// DIAGONAL
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			}
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX() + 1, object.getY() + 1);
+				teleport(p, object.getX() + 1, object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX() - 1, object.getY() - 1);
+				teleport(p, object.getX() - 1, object.getY() - 1);
 			}
 		}
 		if (object.getDirection() == 3) {
@@ -759,16 +996,16 @@ public class Functions {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
 
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			}
 
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			}
 
 		}
@@ -784,69 +1021,76 @@ public class Functions {
 				return;
 			}
 			if (replaceID == -1) {
-				removeObject(object);
+				delloc(object);
 			} else {
-				replaceObject(object, newObject);
+				changeloc(object, newObject);
 			}
-			delayedSpawnObject(object.getWorld(), object.getLoc(), delay);
+			addloc(object.getWorld(), object.getLoc(), delay);
 		}
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 1) {
 			if (object.getLocation().equals(p.getLocation())) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 2) {
 			// DIAGONAL
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			}
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX() + 1, object.getY() + 1);
+				teleport(p, object.getX() + 1, object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX() - 1, object.getY() - 1);
+				teleport(p, object.getX() - 1, object.getY() - 1);
 			}
 		}
 		if (object.getDirection() == 3) {
 
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			}
 
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX() - 1, object.getY() + 1);
+				teleport(p, object.getX() - 1, object.getY() + 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX() + 1, object.getY() - 1);
+				teleport(p, object.getX() + 1, object.getY() - 1);
 			}
 		}
 	}
 
-	public static void doDoor(final GameObject object, final Player p, int replaceID) {
+	/**
+	 * Opens a door object for the player and walks through it. Works for any
+	 * regular door in any direction.
+	 */
+	public static void doDoor(final GameObject object, final Player p) {
+		doDoor(object, p, 11);
+	}
 
+	public static void doDoor(final GameObject object, final Player p, int replaceID) {
 		p.setBusyTimer(650);
 		/* For the odd looking walls. */
 		GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
@@ -855,41 +1099,41 @@ public class Functions {
 			return;
 		}
 		if (replaceID == -1) {
-			removeObject(object);
+			delloc(object);
 		} else {
 			p.playSound("opendoor");
-			replaceObject(object, newObject);
+			changeloc(object, newObject);
 		}
-		delayedSpawnObject(object.getWorld(), object.getLoc(), 3000);
+		addloc(object.getWorld(), object.getLoc(), 3000);
 
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 1) {
 			if (object.getLocation().equals(p.getLocation())) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 2) {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
 
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			}
 
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			}
 		}
 		if (object.getDirection() == 3) {
@@ -897,16 +1141,16 @@ public class Functions {
 			// front
 			if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
 
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			}
 
 			// back
 			else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			}
 
 		}
@@ -945,153 +1189,8 @@ public class Functions {
 		// }
 	}
 
-	public static void doLedge(final GameObject object, final Player p, int damage) {
-		p.setBusyTimer(650);
-		p.message("you climb the ledge");
-		boolean failLedge = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
-		if (object != null && !failLedge) {
-			if (object.getDirection() == 2 || object.getDirection() == 6) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					if (object.getID() == 753) {
-						p.message("and drop down to the cave floor");
-						movePlayer(p, object.getX() - 2, object.getY());
-					} else {
-						p.message("and drop down to the cave floor");
-						movePlayer(p, object.getX() - 1, object.getY());
-					}
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					if (object.getID() == 753) {
-						p.message("and drop down to the cave floor");
-						movePlayer(p, object.getX() + 2, object.getY());
-					} else {
-						p.message("and drop down to the cave floor");
-						movePlayer(p, object.getX() + 1, object.getY());
-					}
-				}
-			}
-			if (object.getDirection() == 4 || object.getDirection() == 0) {
-				if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // X
-					movePlayer(p, object.getX(), object.getY() + 1);
-					p.message("and drop down to the cave floor");
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // Y
-					movePlayer(p, object.getX(), object.getY() - 1);
-				}
-			}
-		} else {
-			p.message("but you slip");
-			p.damage(damage);
-			playerTalk(p, null, "aargh");
-		}
-	}
-
-	public static void doRock(final GameObject object, final Player p, int damage, boolean eventMessage,
-							  int spikeLocation) {
-		p.setBusyTimer(650);
-		p.message("you climb onto the rock");
-		boolean failRock = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
-		if (object != null && !failRock) {
-			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
-				|| object.getDirection() == 3) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					movePlayer(p, object.getX() - 1, object.getY());
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					movePlayer(p, object.getX() + 1, object.getY());
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
-					// side
-					if (object.getID() == 749) {
-						movePlayer(p, object.getX(), object.getY() + 1);
-					} else {
-						movePlayer(p, object.getX() + 1, object.getY());
-					}
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
-					// side.
-					if (object.getID() == 749) {
-						movePlayer(p, object.getX(), object.getY() - 1);
-					} else {
-						movePlayer(p, object.getX() + 1, object.getY());
-					}
-				}
-			}
-			if (object.getDirection() == 6) {
-				if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
-					// side
-					movePlayer(p, object.getX(), object.getY() + 1);
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
-					// side.
-					movePlayer(p, object.getX(), object.getY() - 1);
-				} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-					movePlayer(p, object.getX() + 1, object.getY() + 1);
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-					movePlayer(p, object.getX(), object.getY() + 1);
-				}
-			}
-			if (object.getDirection() == 0) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					movePlayer(p, object.getX() - 1, object.getY());
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					movePlayer(p, object.getX() + 1, object.getY());
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
-					// side
-					movePlayer(p, object.getX(), object.getY() + 1);
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
-					// side.
-					movePlayer(p, object.getX(), object.getY() - 1);
-				}
-			}
-			if (object.getDirection() == 7) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					movePlayer(p, object.getX() - 1, object.getY() - 1);
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					movePlayer(p, object.getX() + 1, object.getY());
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
-					// side
-					movePlayer(p, object.getX(), object.getY() + 1);
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
-					// side.
-					movePlayer(p, object.getX() + 1, object.getY());
-				}
-			}
-			p.message("and step down the other side");
-		} else {
-			p.message("but you slip");
-			p.damage(damage);
-			if (spikeLocation == 1) {
-				p.teleport(743, 3475);
-			} else if (spikeLocation == 2) {
-				p.teleport(748, 3482);
-			} else if (spikeLocation == 3) {
-				p.teleport(738, 3483);
-			} else if (spikeLocation == 4) {
-				p.teleport(736, 3475);
-			} else if (spikeLocation == 5) {
-				p.teleport(730, 3478);
-			}
-			playerTalk(p, null, "aargh");
-		}
-		if (eventMessage) {
-			p.getWorld().getServer().getGameEventHandler()
-				.add(new UndergroundPassMessages(p.getWorld(), p, DataConversions.random(2000, 10000)));
-		}
-	}
-
 	public static void doGate(final Player p, final GameObject object) {
 		doGate(p, object, 181);
-	}
-
-	public static void removeObject(final GameObject o) {
-		o.getWorld().getServer().getGameEventHandler().submit(() -> o.getWorld().unregisterGameObject(o), "Remove Game Object");
-	}
-
-	public static void registerObject(final GameObject o) {
-		o.getWorld().getServer().getGameEventHandler().submit(() -> o.getWorld().registerGameObject(o), "Add Game Object");
-	}
-
-	public static void replaceObject(final GameObject o, final GameObject newObject) {
-		o.getWorld().getServer().getGameEventHandler().submit(() -> o.getWorld().replaceGameObject(o, newObject), "Replace Game Object");
-	}
-
-	public static void delayedSpawnObject(final World world, final GameObjectLoc loc, final int time) {
-		world.getServer().getGameEventHandler().submit(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
 	}
 
 	public static void doGate(final Player p, final GameObject object, int replaceID) {
@@ -1110,245 +1209,41 @@ public class Functions {
 		// 7 - Diagonal N-W
 		// 8 - N->S
 		p.playSound("opendoor");
-		removeObject(object);
-		registerObject(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
+		delloc(object);
+		addloc(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
 
 		int dir = object.getDirection();
 		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
-			movePlayer(p, destination.getX(), destination.getY());
+			teleport(p, destination.getX(), destination.getY());
 		} else if (dir == 0) {
 			if (p.getX() >= object.getX()) {
-				movePlayer(p, object.getX() - 1, object.getY());
+				teleport(p, object.getX() - 1, object.getY());
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		} else if (dir == 2) {
 			if (p.getY() <= object.getY()) {
-				movePlayer(p, object.getX(), object.getY() + 1);
+				teleport(p, object.getX(), object.getY() + 1);
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		} else if (dir == 4) {
 			if (p.getX() > object.getX()) {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			} else {
-				movePlayer(p, object.getX() + 1, object.getY());
+				teleport(p, object.getX() + 1, object.getY());
 			}
 		} else if (dir == 6) {
 			if (p.getY() >= object.getY()) {
-				movePlayer(p, object.getX(), object.getY() - 1);
+				teleport(p, object.getX(), object.getY() - 1);
 			} else {
-				movePlayer(p, object.getX(), object.getY());
+				teleport(p, object.getX(), object.getY());
 			}
 		} else {
 			p.message("Failure - Contact an administrator");
 		}
-		sleep(1000);
-		registerObject(new GameObject(object.getWorld(), object.getLoc()));
-	}
-
-	/**
-	 * Gets closest npc within players area.
-	 *
-	 * @param npcId
-	 * @param radius
-	 * @return
-	 */
-	public static Npc getNearestNpc(Player p, final int npcId, final int radius) {
-		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
-		Npc closestNpc = null;
-		for (int next = 0; next < radius; next++) {
-			for (final Npc n : npcsInView) {
-				if (n.getID() == npcId) {
-
-				}
-				if (n.getID() == npcId && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
-					closestNpc = n;
-				}
-			}
-		}
-		return closestNpc;
-	}
-
-	public static Npc getMultipleNpcsInArea(Player p, final int radius, final int... npcId) {
-		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
-		Npc closestNpc = null;
-		for (int next = 0; next < radius; next++) {
-			for (final Npc n : npcsInView) {
-				for (final int na : npcId) {
-					if (n.getID() == na && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
-						closestNpc = n;
-					}
-				}
-			}
-		}
-		return closestNpc;
-	}
-
-	public static Collection<Npc> getNpcsInArea(Player p, final int radius, final int... npcId) {
-		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
-		final Collection<Npc> npcsList = new ArrayList<Npc>();
-		for (int next = 0; next < radius; next++) {
-			for (final Npc n : npcsInView) {
-				for (final int na : npcId) {
-					if (n.getID() == na && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
-						npcsList.add(n);
-					}
-				}
-			}
-		}
-		return npcsList;
-	}
-
-	public static boolean isNpcNearby(Player p, int id) {
-		for (Npc npc : p.getViewArea().getNpcsInView()) {
-			if (npc.getID() == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if player has an item, and returns true/false.
-	 *
-	 * @param p
-	 * @param item
-	 * @return
-	 */
-	public static boolean hasItem(final Player p, final int item) {
-		boolean retval = p.getCarriedItems().hasCatalogID(item);
-
-		return retval;
-	}
-
-	/**
-	 * Checks if player has item and returns true/false
-	 *
-	 * @param p
-	 * @param id
-	 * @param amt
-	 * @return
-	 */
-	public static boolean hasItem(final Player p, final int id, final int amt) {
-		int amount = p.getCarriedItems().getInventory().countId(id);
-		int equipslot = -1;
-		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if ((equipslot = p.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
-				amount += p.getCarriedItems().getEquipment().get(equipslot).getAmount();
-			}
-		}
-		return amount >= amt;
-	}
-
-	/**
-	 * Checks if player has an item in bank, and returns true/false.
-	 *
-	 * @param p
-	 * @param item
-	 * @return
-	 */
-	public static boolean hasItemInBank(final Player p, final int item) {
-		return p.getBank().hasItemId(item);
-	}
-
-	/**
-	 * Checks if player has an item including bank, and returns true/false.
-	 *
-	 * @param p
-	 * @param item
-	 * @return
-	 */
-	public static boolean hasItemInclBank(final Player p, final int item) {
-		return hasItem(p, item) || hasItemInBank(p, item);
-	}
-
-	/**
-	 * Displays server message(s) with 2.2 second delay.
-	 *
-	 * @param player
-	 * @param messages
-	 */
-	public static void message(final Player player, int delay, final String... messages) {
-		message(player, null, delay, messages);
-	}
-
-	public static void message(final Player player, final Npc npc, int delay, final String... messages) {
-		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				if (npc != null) {
-					if (npc.isRemoved()) {
-						player.setBusy(false);
-						return;
-					}
-					npc.setBusyTimer(delay);
-				}
-				player.setBusy(true);
-				player.getWorld().getServer().getGameEventHandler().submit(() -> player.message(message), "Message Player");
-			}
-			sleep(delay);
-		}
-		player.setBusy(false);
-	}
-
-	/**
-	 * Displays server message(s) with 2.2 second delay.
-	 *
-	 * @param player
-	 * @param messages
-	 */
-	public static void message(final Player player, final String... messages) {
-		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				if (player.getInteractingNpc() != null) {
-					player.getInteractingNpc().setBusyTimer(1900);
-				}
-				player.getWorld().getServer().getGameEventHandler().submit(() -> player.message("@que@" + message), "Multi Message Player");
-				player.setBusyTimer(1900);
-			}
-			sleep(1900);
-		}
-		player.setBusyTimer(0);
-	}
-
-	/**
-	 * Npc chat method
-	 *
-	 * @param player
-	 * @param npc
-	 * @param messages - String array of npc dialogue lines.
-	 */
-	public static void npcTalk(final Player player, final Npc npc, final int delay, final String... messages) {
-		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				if (npc.isRemoved()) {
-					player.setBusy(false);
-					return;
-				}
-				npc.setBusy(true);
-				player.setBusy(true);
-				player.getWorld().getServer().getGameEventHandler().submit(() -> {
-					npc.resetPath();
-					player.resetPath();
-
-					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
-
-					npc.face(player);
-					if (!player.inCombat()) {
-						player.face(npc);
-					}
-				}, "NPC Talk");
-			}
-
-			sleep(delay);
-
-		}
-		npc.setBusy(false);
-		player.setBusy(false);
-	}
-
-	public static void npcTalk(final Player player, final Npc npc, final String... messages) {
-		npcTalk(player, npc, 1900, messages);
+		delay(1000);
+		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
 	/**
@@ -1363,175 +1258,6 @@ public class Functions {
 			if (!message.equalsIgnoreCase("null")) {
 				player.getWorld().getServer().getGameEventHandler().submit(() -> npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player)), "NPC Yell");
 			}
-		}
-	}
-
-	/**
-	 * Player message(s), each message has 2.2s delay between.
-	 *
-	 * @param player
-	 * @param npc
-	 * @param messages
-	 */
-	public static void playerTalk(final Player player, final Npc npc, final String... messages) {
-		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				if (npc != null) {
-					if (npc.isRemoved()) {
-						player.setBusy(false);
-						return;
-					}
-				}
-				player.getWorld().getServer().getGameEventHandler().submit(() -> {
-					if (npc != null) {
-						npc.resetPath();
-						npc.setBusyTimer(2500);
-					}
-					if (!player.inCombat()) {
-						if (npc != null) {
-							npc.face(player);
-							player.face(npc);
-						}
-						player.setBusyTimer(2500);
-						player.resetPath();
-					}
-					player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
-				}, "Talk as Player");
-			}
-			sleep(1900);
-		}
-	}
-
-	public static void playerTalk(final Player player, final String message) {
-		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
-	}
-
-	/**
-	 * Removes an item from players inventory.
-	 *
-	 * @param p
-	 * @param id
-	 * @param amt
-	 */
-	public static boolean removeItem(final Player p, final int id, final int amt) {
-
-		if (!hasItem(p, id, amt)) {
-			return false;
-		}
-		p.getWorld().getServer().getGameEventHandler().submit(() -> {
-			final Item item = new Item(id, 1);
-			if (!item.getDef(p.getWorld()).isStackable()) {
-				p.getCarriedItems().remove(id, 1, true);
-			} else {
-				p.getCarriedItems().remove(id, amt, true);
-			}
-		}, "Remove Ground Item");
-		return true;
-	}
-
-	/**
-	 * Removes an item from players inventory.
-	 *
-	 * @param p
-	 * @param items
-	 * @return
-	 */
-	public static boolean removeItem(final Player p, final Item... items) {
-		for (Item i : items) {
-			if (!p.getCarriedItems().getInventory().contains(i)) {
-				return false;
-			}
-		}
-		p.getWorld().getServer().getGameEventHandler().submit(() -> {
-			for (Item ir : items) {
-				p.getCarriedItems().remove(ir);
-			}
-		}, "Remove Multi Ground Item");
-		return true;
-	}
-
-	/**
-	 * Displays item bubble above players head.
-	 *
-	 * @param player
-	 * @param item
-	 */
-	public static void showBubble(final Player player, final Item item) {
-		final Bubble bubble = new Bubble(player, item.getCatalogId());
-		player.getUpdateFlags().setActionBubble(bubble);
-	}
-
-	public static void showBubble2(final Npc npc, final Item item) {
-		final BubbleNpc bubble = new BubbleNpc(npc, item.getCatalogId());
-		npc.getUpdateFlags().setActionBubbleNpc(bubble);
-	}
-
-	/**
-	 * Displays item bubble above players head.
-	 *
-	 * @param player
-	 * @param item
-	 */
-	public static void showBubble(final Player player, final GroundItem item) {
-		final Bubble bubble = new Bubble(player, item.getID());
-		player.getUpdateFlags().setActionBubble(bubble);
-	}
-
-	public static void showPlayerMenu(final Player player, final Npc npc, final String... options) {
-		player.resetMenuHandler();
-		player.setOption(-5);
-		player.setMenuHandler(new MenuOptionListener(options));
-		ActionSender.sendMenu(player, options);
-	}
-
-
-	public static int showMenu(final Player player, final String... options) {
-		return showMenu(player, null, true, options);
-	}
-
-	public static int showMenu(final Player player, final Npc npc, final String... options) {
-		return showMenu(player, npc, true, options);
-	}
-
-	public static int showMenu(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
-		final long start = System.currentTimeMillis();
-		if (npc != null) {
-			if (npc.isRemoved()) {
-				player.resetMenuHandler();
-				player.setBusy(false);
-				return -1;
-			}
-			npc.setBusy(true);
-		}
-		player.setMenuHandler(new MenuOptionListener(options));
-		ActionSender.sendMenu(player, options);
-
-		synchronized (player.getMenuHandler()) {
-			while (!player.checkUnderAttack()) {
-				if (player.getOption() != -1) {
-					if (npc != null && options[player.getOption()] != null) {
-						npc.setBusy(false);
-						if (sendToClient)
-							playerTalk(player, npc, options[player.getOption()]);
-					}
-					return player.getOption();
-				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-					player.resetMenuHandler();
-					if (npc != null) {
-						npc.setBusy(false);
-						player.setBusyTimer(0);
-					}
-					return -1;
-				}
-				sleep(1);
-			}
-			player.releaseUnderAttack();
-			player.notify();
-			//player got busy (combat), free npc if any
-			if (npc != null) {
-				npc.setBusy(false);
-			}
-			return -1;
 		}
 	}
 
@@ -1576,43 +1302,4 @@ public class Functions {
 		}
 		return false;
 	}
-
-	public static void sleep(final int delayMs) {
-		final PluginTask pluginTask = PluginTask.getContextPluginTask();
-		if (pluginTask == null)
-			return;
-		// System.out.println("Sleeping on " + Thread.currentThread().getName());
-		final int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getWorld().getServer().getConfig().GAME_TICK);
-		pluginTask.pause(ticks);
-	}
-
-	/**
-	 * Transforms npc into another please note that you will need to unregister
-	 * the transformed npc after using this method.
-	 *
-	 * @param n
-	 * @param newID
-	 * @return
-	 */
-	public static Npc transform(final Npc n, final int newID, boolean onlyShift) {
-		final Npc newNpc = new Npc(n.getWorld(), newID, n.getX(), n.getY());
-		n.getWorld().getServer().getGameEventHandler().submit(() -> {
-			newNpc.setShouldRespawn(false);
-			n.getWorld().registerNpc(newNpc);
-			if (onlyShift) {
-				n.setShouldRespawn(false);
-			}
-			n.remove();
-		}, "Transform NPC to NPC");
-		return newNpc;
-	}
-
-	public static void temporaryRemoveNpc(final Npc n) {
-		n.getWorld().getServer().getGameEventHandler().submit(() -> {
-			n.setShouldRespawn(true);
-			n.remove();
-		}, "Temporary Remove NPC");
-	}
-
-
 }

@@ -191,7 +191,7 @@ public class Crafting implements UseInvTrigger,
 				"Necklace",
 				"Amulet"
 		};
-		int type = showMenu(player, options);
+		int type = multi(player, options);
 		if (player.isBusy() || type < 0 || type > 2) {
 			return;
 		}
@@ -248,7 +248,7 @@ public class Crafting implements UseInvTrigger,
 		}
 		player.message("What type of " + reply.get() + " would you like to make?");
 
-		int gem = showMenu(player, options);
+		int gem = multi(player, options);
 
 		if (player.isBusy() || gem < 0 || gem > (player.getWorld().getServer().getConfig().MEMBER_WORLD ? 5 + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
 			return;
@@ -307,7 +307,7 @@ public class Crafting implements UseInvTrigger,
 					}
 				}
 				if (getOwner().getCarriedItems().remove(item) > -1 && (gem == 0 || getOwner().getCarriedItems().remove(gems[gem], 1) > -1)) {
-					showBubble(getOwner(), item);
+					thinkbubble(getOwner(), item);
 					Item result;
 					if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
 						result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
@@ -335,7 +335,7 @@ public class Crafting implements UseInvTrigger,
 				"Holy Symbol of Saradomin",
 				"Unholy symbol of Zamorak"
 		};
-		int type = showMenu(player, options);
+		int type = multi(player, options);
 		if (player.isBusy() || type < 0 || type > 1) {
 			return;
 		}
@@ -371,7 +371,7 @@ public class Crafting implements UseInvTrigger,
 					}
 				}
 				if (getOwner().getCarriedItems().remove(item) > -1) {
-					showBubble(getOwner(), item);
+					thinkbubble(getOwner(), item);
 					Item result = new Item(results[type]);
 					getOwner().playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
 					getOwner().getCarriedItems().getInventory().add(result);
@@ -385,7 +385,7 @@ public class Crafting implements UseInvTrigger,
 
 	private void doPotteryMolding(final Item item, final Player player) {
 		String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
-		int type = showMenu(player, options);
+		int type = multi(player, options);
 		if (player.isBusy() || type < 0 || type > 2) {
 			return;
 		}
@@ -435,7 +435,7 @@ public class Crafting implements UseInvTrigger,
 					}
 				}
 				if (getOwner().getCarriedItems().remove(item) > -1) {
-					showBubble(getOwner(), item);
+					thinkbubble(getOwner(), item);
 					getOwner().playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(getWorld()).getName()));
 					getOwner().getCarriedItems().getInventory().add(result);
 					getOwner().incExp(Skills.CRAFTING, exp, true);
@@ -477,7 +477,7 @@ public class Crafting implements UseInvTrigger,
 
 		final int exp = xp;
 
-		showBubble(player, item);
+		thinkbubble(player, item);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
@@ -496,7 +496,7 @@ public class Crafting implements UseInvTrigger,
 						return;
 					}
 				}
-				showBubble(getOwner(), item);
+				thinkbubble(getOwner(), item);
 				if (getOwner().getCarriedItems().remove(item) > -1) {
 					if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING))) {
 						getOwner().playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
@@ -528,7 +528,7 @@ public class Crafting implements UseInvTrigger,
 		int repeatTimes = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 		repeatTimes = player.getCarriedItems().getInventory().countId(otherItem) < repeatTimes ? player.getCarriedItems().getInventory().countId(otherItem) : repeatTimes;
 
-		showBubble(player, item);
+		thinkbubble(player, item);
 		player.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
 			public void action() {
@@ -556,7 +556,7 @@ public class Crafting implements UseInvTrigger,
 				}
 
 				if (!isCompleted()) {
-					showBubble(getOwner(), item);
+					thinkbubble(getOwner(), item);
 					getOwner().playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
 				}
 			}
@@ -573,7 +573,7 @@ public class Crafting implements UseInvTrigger,
 				}
 				if (player.getCarriedItems().remove(ItemId.KING_BLACK_DRAGON_SCALE.id(),1) > -1) {
 					player.message("You chip the massive scale into 5 pieces");
-					addItem(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
+					give(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
 					player.incExp(Skills.CRAFTING,1300,true);
 				}
 			} else
@@ -642,7 +642,7 @@ public class Crafting implements UseInvTrigger,
 				"Beer glass"
 		};
 
-		int type = showMenu(player, options);
+		int type = multi(player, options);
 		if (player.isBusy() || type < 0 || type > 2) {
 			return;
 		}
@@ -759,7 +759,7 @@ public class Crafting implements UseInvTrigger,
 				"Cancel"
 		};
 
-		int type = showMenu(player, options);
+		int type = multi(player, options);
 		if (player.isBusy() || type < 0 || type > 3) {
 			return;
 		}
@@ -886,7 +886,7 @@ public class Crafting implements UseInvTrigger,
 		if (item.getCatalogId() == ItemId.CLAY.id() && water.getCatalogId() != ItemId.BOWL_OF_WATER.id()) {
 			if (player.getCarriedItems().remove(water) > -1
 				&& player.getCarriedItems().remove(item) > -1) {
-				message(player, 1200, "You mix the clay and water");
+				mes(player, 1200, "You mix the clay and water");
 				player.message("You now have some soft workable clay");
 				player.getCarriedItems().getInventory().add(new Item(jugID, 1));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id(), 1));

@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class VarrockSwords implements ShopInterface,
 	TalkNpcTrigger {
@@ -45,19 +46,19 @@ public final class VarrockSwords implements ShopInterface,
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id()
 			&& p.getLocation().inBounds(133, 522, 138, 527)) {
-			npcTalk(p, n, "Hello bold adventurer",
+			npcsay(p, n, "Hello bold adventurer",
 				"Can I interest you in some swords?");
 
 			final String[] options = new String[]{"Yes please",
 				"No, I'm OK for swords right now"};
-			int option = showMenu(p, n, options);
+			int option = Functions.multi(p, n, options);
 			switch (option) {
 				case 0:
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 					break;
 				case 1:
-					npcTalk(p, n, "Come back if you need any");
+					npcsay(p, n, "Come back if you need any");
 					break;
 			}
 		}

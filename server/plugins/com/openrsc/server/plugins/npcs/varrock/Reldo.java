@@ -25,33 +25,33 @@ public final class Reldo implements TalkNpcTrigger {
 		Menu defaultMenu = new Menu();
 		if (p.getCache().hasKey("read_arrav")
 			&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
-			playerTalk(p, n, "OK I've read the book",
+			say(p, n, "OK I've read the book",
 				"Do you know where I can find the Phoenix Gang");
-			npcTalk(p, n, "No I don't",
+			npcsay(p, n, "No I don't",
 				"I think I know someone who will though",
 				"Talk to Baraek, the fur trader in the market place",
 				"I've heard he has connections with the Phoenix Gang");
-			playerTalk(p, n, "Thanks, I'll try that");
+			say(p, n, "Thanks, I'll try that");
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
 				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
 			}
 			return;
 		}
-		playerTalk(p, n, "Hello");
-		npcTalk(p, n, "Hello stranger");
+		say(p, n, "Hello");
+		npcsay(p, n, "Hello stranger");
 		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
 			defaultMenu.addOption(new Option("I'm in search of a quest") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "I don't think there's any here");
-					sleep(600);
-					npcTalk(p, n, "Let me think actually",
+					npcsay(p, n, "I don't think there's any here");
+					delay(600);
+					npcsay(p, n, "Let me think actually",
 						"If you look in a book",
 						"called the shield of Arrav",
 						"You'll find a quest in there",
 						"I'm not sure where the book is mind you",
 						"I'm sure it's somewhere in here");
-					playerTalk(p, n, "Thankyou");
+					say(p, n, "Thankyou");
 					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
 				}
 			});
@@ -59,16 +59,16 @@ public final class Reldo implements TalkNpcTrigger {
 		defaultMenu.addOption(new Option("Do you have anything to trade?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "No, sorry. I'm not the trading type");
-				playerTalk(p, n, "ah well");
+				npcsay(p, n, "No, sorry. I'm not the trading type");
+				say(p, n, "ah well");
 			}
 		});
 		defaultMenu.addOption(new Option("What do you do?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "I'm the palace librarian");
-				playerTalk(p, n, "Ah that's why you're in the library then");
-				npcTalk(p, n, "Yes",
+				npcsay(p, n, "I'm the palace librarian");
+				say(p, n, "Ah that's why you're in the library then");
+				npcsay(p, n, "Yes",
 					"Though I might be in here even if I didn't work here",
 					"I like reading");
 			}
@@ -78,7 +78,7 @@ public final class Reldo implements TalkNpcTrigger {
 				"What do you know about the Imcando dwarves?") {
 				@Override
 				public void action() {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"The Imcando Dwarves, you say?",
 						"They were the world's most skilled smiths about a hundred years ago",
@@ -86,8 +86,8 @@ public final class Reldo implements TalkNpcTrigger {
 						"Which they passed down from generation to generation",
 						"Unfortunatly about a century ago the once thriving race",
 						"Was wiped out during the barbarian invasions of that time");
-					playerTalk(p, n, "So are there any Imcando left at all?");
-					npcTalk(p,
+					say(p, n, "So are there any Imcando left at all?");
+					npcsay(p,
 						n,
 						"A few of them survived",
 						"But with the bulk of their population destroyed",

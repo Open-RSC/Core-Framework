@@ -7,7 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.mes;
 
 public class DrinkHeating implements UseLocTrigger {
 
@@ -26,7 +26,7 @@ public class DrinkHeating implements UseLocTrigger {
 	@Override
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
-			message(p, "you briefly place the drink in the oven");
+			mes(p, "you briefly place the drink in the oven");
 			p.message("you remove the warm drink");
 			if (p.getCache().hasKey("drunk_dragon_base") && p.getCache().hasKey("diced_pa_to_drink") && p.getCache().hasKey("cream_into_drink")) {
 				p.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.DRUNK_DRAGON.id());
@@ -42,7 +42,7 @@ public class DrinkHeating implements UseLocTrigger {
 		}
 		if ((item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id())
 			&& obj.getID() == 119) {
-			message(p, "you briefly place the drink in the oven");
+			mes(p, "you briefly place the drink in the oven");
 			p.message("you remove the warm drink");
 		}
 	}

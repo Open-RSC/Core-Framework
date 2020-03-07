@@ -9,6 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -22,12 +23,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class ObjectCooking implements UseLocTrigger {
 	@Override
 	public void onUseLoc(GameObject object, Item item, Player owner) {
-		Npc cook = getNearestNpc(owner, 7, 20);
+		Npc cook = ifnearvisnpc(owner, 7, 20);
 		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
 			&& object.getID() == 119) {
 			cook.face(owner);
 			owner.face(cook);
-			npcTalk(owner, cook, "Hey! Who said you could use that?");
+			npcsay(owner, cook, "Hey! Who said you could use that?");
 		} else
 			handleCooking(item, owner, object);
 	}
@@ -39,20 +40,20 @@ public class ObjectCooking implements UseLocTrigger {
 		if(object.getID() == 491) {
 			if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
 				p.setBusy(true);
-				showBubble(p, item);
+				thinkbubble(p, item);
 				p.playSound("cooking");
 				p.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
 				if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
 					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
-					message(p, "sometimes you will burn food",
+					Functions.mes(p, "sometimes you will burn food",
 							"As your cooking level increases this will happen less",
 							"Now speak to the cooking instructor again");
 					p.getCache().set("tutorial", 30);
 				} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
 					final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
 					p.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
-					message(p, "Now speak to the cooking instructor again");
+					Functions.mes(p, "Now speak to the cooking instructor again");
 					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					p.getCache().set("tutorial", 31);
 					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
@@ -72,21 +73,21 @@ public class ObjectCooking implements UseLocTrigger {
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274)
-				message(p, 1200, "You cook the meat on the fire...");
+				mes(p, 1200, "You cook the meat on the fire...");
 			else
-				message(p, 1200, "You cook the meat on the stove...");
-			removeItem(p, ItemId.RAW_OOMLIE_MEAT.id(), 1);
-			addItem(p, ItemId.BURNTMEAT.id(), 1);
-			message(p, 1200, "This meat is too delicate to cook like this.");
-			message(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
+				mes(p, 1200, "You cook the meat on the stove...");
+			remove(p, ItemId.RAW_OOMLIE_MEAT.id(), 1);
+			give(p, ItemId.BURNTMEAT.id(), 1);
+			mes(p, 1200, "This meat is too delicate to cook like this.");
+			mes(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
 		}
 
 		// Poison (Hazeel Cult)
 		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if (p.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
-				message(p, "you poor the poison into the hot pot",
+				Functions.mes(p, "you poor the poison into the hot pot",
 					"the poison desolves into the soup");
-				removeItem(p, ItemId.POISON.id(), 1);
+				remove(p, ItemId.POISON.id(), 1);
 				p.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
 			} else {
 				p.message("nothing interesting happens");
@@ -98,10 +99,10 @@ public class ObjectCooking implements UseLocTrigger {
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
 		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
 			if (p.getQuestStage(Quests.WITCHS_POTION) != -1) {
-				showBubble(p, item);
-				message(p, 1800, cookingOnMessage(p, item, object, false));
-				removeItem(p, ItemId.COOKEDMEAT.id(), 1);
-				addItem(p, ItemId.BURNTMEAT.id(), 1);
+				thinkbubble(p, item);
+				mes(p, 1800, cookingOnMessage(p, item, object, false));
+				remove(p, ItemId.COOKEDMEAT.id(), 1);
+				give(p, ItemId.BURNTMEAT.id(), 1);
 				p.playerServerMessage(MessageType.QUEST, "you burn the meat");
 			} else {
 				p.message("Nothing interesting happens");
@@ -144,7 +145,7 @@ public class ObjectCooking implements UseLocTrigger {
 				p.message("You prepare to cook the Oomlie meat parcel.");
 			else
 				p.message(cookingOnMessage(p, item, object, needOven));
-			showBubble(p, item);
+			thinkbubble(p, item);
 			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 				@Override
 				public void action() {
@@ -165,7 +166,7 @@ public class ObjectCooking implements UseLocTrigger {
 							return;
 						}
 					}
-					showBubble(getOwner(), item);
+					thinkbubble(getOwner(), item);
 					getOwner().playSound("cooking");
 					if (getOwner().getCarriedItems().remove(item) > -1) {
 						if (!Formulae.burnFood(getOwner(), item.getCatalogId(), getOwner().getSkills().getLevel(Skills.COOKING))
@@ -214,11 +215,11 @@ public class ObjectCooking implements UseLocTrigger {
 			public void action() {
 				if (p.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
 					if (hasBubble)
-						showBubble(p, new Item(itemID));
+						thinkbubble(p, new Item(itemID));
 					p.playSound("cooking");
-					message(p, messages);
-					removeItem(p, itemID, 1);
-					addItem(p, product, 1);
+					Functions.mes(p, messages);
+					remove(p, itemID, 1);
+					give(p, product, 1);
 				} else {
 					p.message("You don't have all the ingredients");
 					interrupt();

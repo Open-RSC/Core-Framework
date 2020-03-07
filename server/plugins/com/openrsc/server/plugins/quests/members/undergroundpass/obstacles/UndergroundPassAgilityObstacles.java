@@ -7,6 +7,7 @@ import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -31,7 +32,7 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), LEDGES)) {
-			message(p, "you climb the ledge");
+			Functions.mes(p, "you climb the ledge");
 			if (succeed(p, 1)) {
 				switch (obj.getID()) {
 					case 862:
@@ -57,25 +58,25 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 			} else {
 				p.message("but you loose your footing");
 				p.damage(2);
-				playerTalk(p, null, "aargh");
+				say(p, null, "aargh");
 			}
 		}
 		else if (obj.getID() == NORTH_STONE_STEP) {
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
-				message(p, "you walk down the stone steps");
+				Functions.mes(p, "you walk down the stone steps");
 				p.teleport(766, 585);
 
 			}
 		}
 		else if (obj.getID() == SOUTH_STONE_STEP) {
-			message(p, "you walk down the steps",
+			Functions.mes(p, "you walk down the steps",
 				"they lead to a ladder, you climb down");
 			p.teleport(739, 667);
 		}
 		else if (obj.getID() == FIRST_REMAINING_BRIDGE) {
-			message(p, "you attempt to walk over the remaining bridge..");
+			Functions.mes(p, "you attempt to walk over the remaining bridge..");
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
@@ -93,9 +94,9 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 		}
 		else if (inArray(obj.getID(), STONE_REMAINING_BRIDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 			if (inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
-				message(p, "you attempt to jump across the gap..");
+				Functions.mes(p, "you attempt to jump across the gap..");
 			} else {
-				message(p, "you attempt to walk over the remaining bridge..");
+				Functions.mes(p, "you attempt to walk over the remaining bridge..");
 			}
 			if (succeed(p, 1)) {
 				if (obj.getX() == p.getX() + 1) {
@@ -124,30 +125,30 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 		p.message("..but you slip and tumble into the darkness");
 		fallTeleportLocation(p, obj);
 		p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
-		playerTalk(p, null, "ouch!");
+		say(p, null, "ouch!");
 		if (p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				p.updateQuestStage(Quests.UNDERGROUND_PASS, 5);
 			}
 			//only on "first-time" fail at stages 5, 8
-			Npc koftik = getNearestNpc(p, NpcId.KOFTIK_RECOVERED.id(), 10);
+			Npc koftik = ifnearvisnpc(p, NpcId.KOFTIK_RECOVERED.id(), 10);
 			if (koftik != null &&
 					(!p.getCache().hasKey("advised_koftik") || !p.getCache().getBoolean("advised_koftik")) ) {
-				npcTalk(p, koftik, "traveller is that you?.. my friend on a mission");
-				playerTalk(p, koftik, "koftik, you're still here, you should leave");
-				npcTalk(p, koftik, "leave?...leave?..this is my home now",
+				npcsay(p, koftik, "traveller is that you?.. my friend on a mission");
+				say(p, koftik, "koftik, you're still here, you should leave");
+				npcsay(p, koftik, "leave?...leave?..this is my home now",
 					"home with my lord, he talks to me, he's my friend");
 				p.message("koftik seems to be in a weak state of mind");
-				playerTalk(p, koftik, "koftik you really should leave these caverns");
-				npcTalk(p, koftik, "not now, we're all the same down here",
+				say(p, koftik, "koftik you really should leave these caverns");
+				npcsay(p, koftik, "not now, we're all the same down here",
 					"now there's just you and those dwarfs to be converted");
-				playerTalk(p, koftik, "dwarfs?");
-				npcTalk(p, koftik, "foolish dwarfs, still believing that they can resist",
+				say(p, koftik, "dwarfs?");
+				npcsay(p, koftik, "foolish dwarfs, still believing that they can resist",
 					"no one resists iban, go traveller",
 					"the dwarfs to the south, they're not safe in the south",
 					"we'll show them, go slay them m'lord",
 					"he'll be so proud, that's all i want");
-				playerTalk(p, koftik, "i'll pray for you");
+				say(p, koftik, "i'll pray for you");
 				p.getCache().store("advised_koftik", true);
 			}
 		}

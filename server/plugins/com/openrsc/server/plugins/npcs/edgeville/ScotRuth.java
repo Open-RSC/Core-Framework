@@ -15,25 +15,25 @@ public class ScotRuth implements
 			p.message("Thanks for yer business. The tunnel's just over there");
 		} else {
 			int tick = p.getWorld().getServer().getConfig().GAME_TICK;
-			Functions.npcTalk(p, n, "Hey, " + p.getUsername() + "!",
+			Functions.npcsay(p, n, "Hey, " + p.getUsername() + "!",
 				"You like savin' time? I can help",
 				"Took me a while, but I just finished this here tunnel",
 				"If yer lookin to reach the chaos altar, there's no better way",
 				"For a small 200,000gp investment, I'll let ye use it forever",
 				"What do ya say? Do we have a deal?"
 				);
-			int choice = Functions.showMenu(p, n, "Yes", "No, 200,000gp is a rip-off");
+			int choice = Functions.multi(p, n, "Yes", "No, 200,000gp is a rip-off");
 			if (choice == 0) {
-				if (Functions.hasItem(p, ItemId.COINS.id(), 200000)) {
-					Functions.npcTalk(p, n, "Excellent. Keep in mind ye'll appear in the deep wilderness",
+				if (Functions.ifheld(p, ItemId.COINS.id(), 200000)) {
+					Functions.npcsay(p, n, "Excellent. Keep in mind ye'll appear in the deep wilderness",
 						"and ye can't use this tunnel te come back");
-					Functions.removeItem(p, ItemId.COINS.id(), 200000);
+					Functions.remove(p, ItemId.COINS.id(), 200000);
 					p.getCache().store("scotruth_to_chaos_altar", true);
 				} else {
-					Functions.npcTalk(p, n, "Come back with the money and you've a deal, lad");
+					Functions.npcsay(p, n, "Come back with the money and you've a deal, lad");
 				}
 			} else if (choice == 1) {
-				Functions.npcTalk(p, n, "Suit yerself.");
+				Functions.npcsay(p, n, "Suit yerself.");
 			}
 		}
 	}

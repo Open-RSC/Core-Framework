@@ -23,13 +23,13 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 
 	private void necromancerFightSpawnMethod(Player p, Npc necromancer) {
 		if (necromancer.getID() == NpcId.NECROMANCER.id()) {
-			Npc zombie = getNearestNpc(p, NpcId.ZOMBIE_INVOKED.id(), 10);
+			Npc zombie = ifnearvisnpc(p, NpcId.ZOMBIE_INVOKED.id(), 10);
 			if (!p.getCache().hasKey("necroSpawn") || (p.getCache().hasKey("necroSpawn") && p.getCache().getInt("necroSpawn") < 7) || (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0 && zombie == null)) {
-				npcTalk(p, necromancer, "I summon the undead to smite you down");
+				npcsay(p, necromancer, "I summon the undead to smite you down");
 				p.setBusyTimer(3000);
 				zombie = p.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
 				zombie.setShouldRespawn(false);
-				sleep(1600);
+				delay(1600);
 				if (!p.inCombat()) {
 					zombie.startCombat(p);
 				}
@@ -45,7 +45,7 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 					p.getCache().set("killedZomb", 7);
 				}
 			} else if (p.getCache().getInt("necroSpawn") > 6 && p.getCache().hasKey("necroSpawn") && zombie != null && p.getCache().getInt("killedZomb") != 0) {
-				npcTalk(p, zombie, "Raargh");
+				npcsay(p, zombie, "Raargh");
 				p.setBusyTimer(3000);
 				zombie.startCombat(p);
 			} else if (p.getCache().getInt("killedZomb") == 0 && p.getCache().hasKey("killedZomb")) {

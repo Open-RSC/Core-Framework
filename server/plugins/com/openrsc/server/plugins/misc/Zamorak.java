@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -19,7 +20,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	@Override
 	public void onTakeObj(Player owner, GroundItem item) {
 		if (item.getID() == ItemId.WINE_OF_ZAMORAK.id() && item.getX() == 333 && item.getY() == 434) {
-			Npc zam = getMultipleNpcsInArea(owner, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
+			Npc zam = Functions.ifnearvisnpc(owner, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			if (zam != null && !zam.inCombat()) {
 				owner.face(zam);
 				zam.face(owner);
@@ -31,7 +32,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	@Override
 	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.WINE_OF_ZAMORAK.id()) {
-			Npc zam = getMultipleNpcsInArea(p, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
+			Npc zam = Functions.ifnearvisnpc(p, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			return zam != null && !zam.inCombat();
 		}
 		return false;
@@ -76,7 +77,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	private void applyCurse(Player owner, Npc zam) {
 		owner.setBusy(true);
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", owner));
-		sleep(2200);
+		delay(2200);
 		owner.message("You feel slightly weakened");
 		int dmg = (int) Math.ceil(((owner.getSkills().getMaxStat(Skills.HITS) + 20) * 0.05));
 		owner.damage(dmg);
@@ -88,7 +89,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 			final int newStat = Math.max(0, owner.getSkills().getLevel(affectedStat) - lowerBy);
 			owner.getSkills().setLevel(affectedStat, newStat);
 		}
-		sleep(500);
+		delay(500);
 		zam.setChasing(owner);
 		owner.setBusy(false);
 	}
@@ -102,9 +103,9 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
 			if (n.getID() == NpcId.MONK_OF_ZAMORAK.id()) {
-				npcTalk(p, n, "Save your speech for the altar");
+				npcsay(p, n, "Save your speech for the altar");
 			} else {
-				npcTalk(p, n, "Who are you to dare speak to the servants of Zamorak ?");
+				npcsay(p, n, "Who are you to dare speak to the servants of Zamorak ?");
 			}
 			n.setChasing(p);
 		}

@@ -6,8 +6,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
+import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.changeloc;
 
 public class BananaTree implements
 	OpLocTrigger {
@@ -24,11 +24,11 @@ public class BananaTree implements
 						bananaCount = p.getCache().getInt("banana_pick") + 1;
 
 					p.getCache().set("banana_pick",bananaCount);
-					addItem(p, ItemId.BANANA.id(), 1);
+					give(p, ItemId.BANANA.id(), 1);
 
 					if (bananaCount >= 5) {
 						p.message("you pick the last banana");
-						replaceObjectDelayed(obj, 60000 * 8, 184); // 8 minutes respawn time.
+						changeloc(obj, 60000 * 8, 184); // 8 minutes respawn time.
 						p.getCache().remove("banana_pick");
 						interrupt();
 					} else {

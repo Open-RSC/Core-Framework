@@ -43,21 +43,21 @@ public final class ChampionsGuild implements ShopInterface,
 	public void onTalkNpc(final Player p, final Npc n) {
 		switch (NpcId.getById(n.getID())) {
 			case SCAVVO:
-				npcTalk(p, n, "Ello matey", "Want to buy some exciting new toys?");
-				int options = showMenu(p, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
+				npcsay(p, n, "Ello matey", "Want to buy some exciting new toys?");
+				int options = multi(p, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
 				if (options == 1 || options == 2) {
 					p.setAccessingShop(scavvosShop);
 					ActionSender.showShop(p, scavvosShop);
 				}
 				break;
 			case VALAINE:
-				npcTalk(p, n, "Hello there.",
+				npcsay(p, n, "Hello there.",
 					"Want to have a look at what we're selling today?");
 
-				int opt = showMenu(p, n, false, //do not send over
+				int opt = multi(p, n, false, //do not send over
 						"Yes please", "No thank you");
 				if (opt == 0) {
-					playerTalk(p, n, "Yes please.");
+					say(p, n, "Yes please.");
 					p.setAccessingShop(valsShop);
 					ActionSender.showShop(p, valsShop);
 				}

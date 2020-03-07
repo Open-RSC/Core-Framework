@@ -51,10 +51,10 @@ public class Thieving extends Functions
 			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some cake from the " + objectName);
 		else if (stall.equals(Stall.TEA_STALL)) {
 			int chance_player_caught = 60;
-			Npc teaseller = Functions.getNearestNpc(player, stall.getOwnerID(), 8);
+			Npc teaseller = Functions.ifnearvisnpc(player, stall.getOwnerID(), 8);
 			boolean caught = (chance_player_caught > DataConversions.random(0, 100)) && !teaseller.isBusy();
 			if (caught) {
-				npcTalk(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
+				npcsay(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
 				player.setBusy(false);
 				return;
 			} else
@@ -76,16 +76,16 @@ public class Thieving extends Functions
 					return;
 				}
 
-				Npc shopkeeper = Functions.getNearestNpc(getPlayerOwner(), stall.getOwnerID(), 8);
+				Npc shopkeeper = Functions.ifnearvisnpc(getPlayerOwner(), stall.getOwnerID(), 8);
 				Npc guard = null;
 				if (stall.equals(Stall.BAKERS_STALL)) {
-					guard = getMultipleNpcsInArea(getPlayerOwner(), 5, NpcId.GUARD_ARDOUGNE.id());
+					guard = Thieving.ifnearvisnpc(getPlayerOwner(), 5, NpcId.GUARD_ARDOUGNE.id());
 				} else if (stall.equals(Stall.SILK_STALL) || stall.equals(Stall.FUR_STALL)) {
-					guard = getMultipleNpcsInArea(getPlayerOwner(), 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 				} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL)) {
-					guard = getMultipleNpcsInArea(getPlayerOwner(), 5, NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 				} else if (stall.equals(Stall.GEMS_STALL)) {
-					guard = getMultipleNpcsInArea(getPlayerOwner(), 5, NpcId.HERO.id(), NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.HERO.id(), NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 				}
 
 				if (shopkeeper != null) {
@@ -239,16 +239,16 @@ public class Thieving extends Functions
 		player.message("You find a trap on the chest");
 		if (!makeChestStuck) {
 			tempChest.set(new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
-			replaceObject(obj, tempChest.get());
+			changeloc(obj, tempChest.get());
 		}
-		Functions.sleep(1280);
+		Functions.delay(1280);
 		player.message("You disable the trap");
 
-		message(player, "You open the chest");
+		mes(player, "You open the chest");
 		if (!makeChestStuck && tempChest.get() != null) {
 			openChest(tempChest.get());
 		} else {
-			replaceObjectDelayed(obj, respawnTime, 339);
+			changeloc(obj, respawnTime, 339);
 		}
 		int random = DataConversions.random(1, 100);
 		Collections.sort(loot);
@@ -258,12 +258,12 @@ public class Thieving extends Functions
 			}
 		}
 		player.incExp(Skills.THIEVING, xp, true);
-		message(player, "You find treasure inside!");
+		mes(player, "You find treasure inside!");
 		if (!makeChestStuck) {
-			replaceObjectDelayed(obj, respawnTime, 340);
+			changeloc(obj, respawnTime, 340);
 		}
 		if (teleLoc != null) {
-			message(player, "suddenly a second magical trap triggers");
+			mes(player, "suddenly a second magical trap triggers");
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
 		}
 		player.setBusy(false);
@@ -472,13 +472,13 @@ public class Thieving extends Functions
 				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 
 				openChest(obj);
-				message(player, "You open the chest");
+				mes(player, "You open the chest");
 
-				message(player, "You find a treasure inside!");
+				mes(player, "You find a treasure inside!");
 
 				player.incExp(Skills.THIEVING, 600, true);
-				addItem(player, ItemId.COINS.id(), 20);
-				addItem(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
+				give(player, ItemId.COINS.id(), 20);
+				give(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
 				player.getWorld().replaceGameObject(obj,
 					new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));

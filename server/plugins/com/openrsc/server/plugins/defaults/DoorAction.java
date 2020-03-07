@@ -9,6 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -176,13 +177,13 @@ public class DoorAction {
 				break;
 
 			case 154: // Grand Tree: main door (outside)
-				message(p, 1900, "you open the door");
+				mes(p, 1900, "you open the door");
 				p.teleport(703, 455);
 				p.message("and walk through");
 				break;
 
 			case 153: // Grand Tree: main door (inside)
-				message(p, 1900, "you open the door");
+				mes(p, 1900, "you open the door");
 				p.teleport(416, 165);
 				p.message("and walk through");
 				break;
@@ -203,48 +204,48 @@ public class DoorAction {
 				if (p.getQuestStage(Quests.HEROS_QUEST) == -1) {
 					doDoor(obj, p);
 				} else {
-					Npc achetties = getNearestNpc(p, NpcId.ACHETTIES.id(), 10);
+					Npc achetties = ifnearvisnpc(p, NpcId.ACHETTIES.id(), 10);
 					switch (p.getQuestStage(Quests.HEROS_QUEST)) {
 						case 0:
 							achetties.initializeTalkScript(p);
 							break;
 						case 1:
 						case 2:
-							npcTalk(p, achetties,
+							npcsay(p, achetties,
 								"Greetings welcome to the hero's guild",
 								"How goes thy quest?");
 							if (p.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))
 								&& p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.of(false))
 								&& p.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))) {
-								playerTalk(p, achetties, "I have all the things needed");
+								say(p, achetties, "I have all the things needed");
 								p.sendQuestComplete(Quests.HEROS_QUEST);
 							} else {
-								playerTalk(p, achetties,
+								say(p, achetties,
 									"It's tough, I've not done it yet");
-								npcTalk(p,
+								npcsay(p,
 									achetties,
 									"Remember you need the feather of an Entrana firebird",
 									"A master thief armband",
 									"And a cooked lava eel");
-								int opt2 = showMenu(p, achetties, false, //do not send over
+								int opt2 = multi(p, achetties, false, //do not send over
 									"Any hints on getting the armband?",
 									"Any hints on getting the feather?",
 									"Any hints on getting the eel?",
 									"I'll start looking for all those things then");
 								if (opt2 == 0) {
-									playerTalk(p, achetties, "Any hints on getting the thieves armband?");
-									npcTalk(p, achetties,
+									say(p, achetties, "Any hints on getting the thieves armband?");
+									npcsay(p, achetties,
 										"I'm sure you have relevant contacts to find out about that");
 								} else if (opt2 == 1) {
-									playerTalk(p, achetties, "Any hints on getting the feather?");
-									npcTalk(p, achetties,
+									say(p, achetties, "Any hints on getting the feather?");
+									npcsay(p, achetties,
 										"Not really - Entrana firebirds live on Entrana");
 								} else if (opt2 == 2) {
-									playerTalk(p, achetties, "Any hints on getting the eel?");
-									npcTalk(p, achetties,
+									say(p, achetties, "Any hints on getting the eel?");
+									npcsay(p, achetties,
 										"Maybe go and find someone who knows a lot about fishing?");
 								} else if (opt2 == 3) {
-									playerTalk(p, achetties, "I'll start looking for all those things then");
+									say(p, achetties, "I'll start looking for all those things then");
 								}
 							}
 							break;
@@ -277,7 +278,7 @@ public class DoorAction {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
-					message(p, "The door doesn't open",
+					Functions.mes(p, "The door doesn't open",
 						"No one seems to be in");
 				}
 				break;
@@ -287,7 +288,7 @@ public class DoorAction {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
-					message(p, "The fire warrior's eyes glow",
+					Functions.mes(p, "The fire warrior's eyes glow",
 						"The fire warrior glares at the door",
 						"The door handle is too hot to handle");
 				}
@@ -316,7 +317,7 @@ public class DoorAction {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
-					message(p, "As you reach to open the door",
+					Functions.mes(p, "As you reach to open the door",
 						"A great terror comes over you",
 						"You decide you'll not open this door today");
 				}
@@ -329,9 +330,9 @@ public class DoorAction {
 				} else {
 					p.message("Your weight is too much for the bridge to hold");
 					p.teleport(544, 3330);
-					sleep(650);
+					delay(650);
 					p.message("You fall through the bridge");
-					sleep(1000);
+					delay(1000);
 					p.message("The lava singes you");
 					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITS) / 5));
 				}
@@ -357,10 +358,10 @@ public class DoorAction {
 					&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 					doDoor(obj, p);
 				} else if (obj.getX() == 603 && p.getX() < obj.getX()) {
-					guard = getNearestNpc(p, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 8);
+					guard = ifnearvisnpc(p, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 8);
 					stop = true;
 				} else if (obj.getY() == 699 && p.getY() < obj.getY()) {
-					guard = getNearestNpc(p, NpcId.GUARD_KHAZARD_BRIBABLE.id(), 8);
+					guard = ifnearvisnpc(p, NpcId.GUARD_KHAZARD_BRIBABLE.id(), 8);
 					stop = true;
 				} else {
 					//inside building does not matter to exit
@@ -368,15 +369,15 @@ public class DoorAction {
 				}
 				if (stop && guard != null) {
 					if (p.getQuestStage(Quests.FIGHT_ARENA) == 0) {
-						npcTalk(p, guard, "you there! halt!",
+						npcsay(p, guard, "you there! halt!",
 								"this is General Khazard's private lodgings",
 								"what's your business here?");
-						playerTalk(p, guard, "I'm looking for the 'Servil' prisoners");
-						npcTalk(p, guard, "wait until tomorrow, then you can",
+						say(p, guard, "I'm looking for the 'Servil' prisoners");
+						npcsay(p, guard, "wait until tomorrow, then you can",
 								"see them butchered in the arena haha",
 								"Now OUT and don't come back!");
 					} else {
-						npcTalk(p, guard, "you there! halt!",
+						npcsay(p, guard, "you there! halt!",
 								"this is General Khazard's private lodgings",
 								"now leave and don't return!");
 					}
@@ -390,9 +391,9 @@ public class DoorAction {
 					doDoor(obj, p);
 					return;
 				}
-				Npc guardArenaEntrance = getNearestNpc(p, NpcId.GUARD_KHAZARD_ARENA_ENTRANCE.id(), 8);
+				Npc guardArenaEntrance = ifnearvisnpc(p, NpcId.GUARD_KHAZARD_ARENA_ENTRANCE.id(), 8);
 				if (guardArenaEntrance != null) {
-					npcTalk(p, guardArenaEntrance, "and where do you think you're going?",
+					npcsay(p, guardArenaEntrance, "and where do you think you're going?",
 						"only General Khazard decides who fights in the arena",
 						"so get out of here");
 				}
@@ -400,11 +401,11 @@ public class DoorAction {
 
 			case 120: // Plague city / Biohazard - unsure the purpose of this door
 				if (p.getX() > 624) {
-					Npc mourner = getNearestNpc(p, NpcId.MOURNER_WESTARDOUGNE.id(), 8);
+					Npc mourner = ifnearvisnpc(p, NpcId.MOURNER_WESTARDOUGNE.id(), 8);
 					p.message("The door won't open");
 					p.message("You notice a black cross on the door");
 					if (mourner != null) {
-						npcTalk(p, mourner, "I'd stand away from there",
+						npcsay(p, mourner, "I'd stand away from there",
 							"That black cross means that house has been touched by the plague");
 					}
 				}
@@ -422,15 +423,15 @@ public class DoorAction {
 					}
 					return;
 				}
-				Npc ted = getNearestNpc(p, NpcId.TED_REHNISON.id(), 8);
+				Npc ted = ifnearvisnpc(p, NpcId.TED_REHNISON.id(), 8);
 				if (ted != null) {
 					p.message("The door won't open");
-					npcTalk(p, ted, "Go away we don't want any");
+					npcsay(p, ted, "Go away we don't want any");
 					if (p.getY() >= 569) {
-						if (removeItem(p, ItemId.PLAGUE_CITY_BOOK.id(), 1)) {
-							playerTalk(p, ted,
+						if (remove(p, ItemId.PLAGUE_CITY_BOOK.id(), 1)) {
+							say(p, ted,
 								"I have come to return a book from Jethick");
-							npcTalk(p, ted, "Ok I guess you can come in then");
+							npcsay(p, ted, "Ok I guess you can come in then");
 							doDoor(obj, p);
 							p.updateQuestStage(Quests.PLAGUE_CITY, 6);
 						}
@@ -439,7 +440,7 @@ public class DoorAction {
 				break;
 
 			case 123: // Plague City
-				Npc mourner = getNearestNpc(p, NpcId.MOURNER_WESTARDOUGNE.id(), 8);
+				Npc mourner = ifnearvisnpc(p, NpcId.MOURNER_WESTARDOUGNE.id(), 8);
 				if (p.getQuestStage(Quests.PLAGUE_CITY) == 11
 					|| p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 					doDoor(obj, p);
@@ -449,36 +450,36 @@ public class DoorAction {
 					p.message("The door won't open");
 					p.message("You notice a black cross on the door");
 					if (mourner != null) {
-						npcTalk(p, mourner, "I'd stand away from there",
+						npcsay(p, mourner, "I'd stand away from there",
 							"That black cross means that house has been touched by the plague");
 						if (p.getCarriedItems().hasCatalogID(ItemId.WARRANT.id(), Optional.of(false))) {
-							playerTalk(p, mourner,
+							say(p, mourner,
 								"I have a warrant from Bravek to enter here");
-							npcTalk(p, mourner, "this is highly irregular",
+							npcsay(p, mourner, "this is highly irregular",
 								"Please wait while I speak to the head mourner");
 							p.message("You wait until the mourner's back is turned and sneak into the building");
 							doDoor(obj, p);
 							return;
 						}
 						if (p.getQuestStage(Quests.PLAGUE_CITY) == 7) {
-							int menu = showMenu(p, mourner, false, //do not send over
+							int menu = multi(p, mourner, false, //do not send over
 								"but I think a kidnap victim is in here",
 								"I fear not a mere plague",
 								"thanks for the warning");
 							if (menu == 0) {
-								playerTalk(p, mourner, "But I think a kidnap victim is in here");
-								npcTalk(p, mourner, "Sounds unlikely",
+								say(p, mourner, "But I think a kidnap victim is in here");
+								npcsay(p, mourner, "Sounds unlikely",
 									"Even kidnappers wouldn't go in there",
 									"even if someone is in there",
 									"They're probably dead by now");
-								int menu2 = showMenu(p, mourner, "Good point",
+								int menu2 = multi(p, mourner, "Good point",
 									"I want to check anyway");
 								if (menu2 == 0) {
 									// NOTHING
 								} else if (menu2 == 1) {
-									npcTalk(p, mourner, "You don't have clearance to go in there");
-									playerTalk(p, mourner, "How do I get clearance?");
-									npcTalk(p,
+									npcsay(p, mourner, "You don't have clearance to go in there");
+									say(p, mourner, "How do I get clearance?");
+									npcsay(p,
 										mourner,
 										"Well you'd need to apply to the head mourner",
 										"Or I suppose Bravek the city warder",
@@ -486,11 +487,11 @@ public class DoorAction {
 									p.updateQuestStage(Quests.PLAGUE_CITY, 8);
 								}
 							} else if (menu == 1) {
-								playerTalk(p, mourner, "I fear not a mere plague");
-								npcTalk(p, mourner, "that's irrelevant",
+								say(p, mourner, "I fear not a mere plague");
+								npcsay(p, mourner, "that's irrelevant",
 									"You don't have clearance to go in there");
-								playerTalk(p, mourner, "How do I get clearance?");
-								npcTalk(p,
+								say(p, mourner, "How do I get clearance?");
+								npcsay(p,
 									mourner,
 									"Well you'd need to apply to the head mourner",
 									"Or I suppose Bravek the city warder",
@@ -498,7 +499,7 @@ public class DoorAction {
 								p.updateQuestStage(Quests.PLAGUE_CITY, 8);
 
 							} else if (menu == 2) {
-								playerTalk(p, mourner, "thanks for the warning");
+								say(p, mourner, "thanks for the warning");
 							}
 						}
 					}
@@ -508,7 +509,7 @@ public class DoorAction {
 				break;
 
 			case 121: // Plague City
-				Npc Bravek = getNearestNpc(p, NpcId.BRAVEK.id(), 8);
+				Npc Bravek = ifnearvisnpc(p, NpcId.BRAVEK.id(), 8);
 				if (p.getQuestStage(Quests.PLAGUE_CITY) >= 9
 					|| p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 					doDoor(obj, p);
@@ -516,7 +517,7 @@ public class DoorAction {
 				}
 				if (p.getX() >= 648) {
 					if (Bravek != null) {
-						npcTalk(p, Bravek, "Go away,I'm busy", "I'm", "um",
+						npcsay(p, Bravek, "Go away,I'm busy", "I'm", "um",
 								"In a meeting");
 					}
 					p.message("The door won't open");
@@ -540,7 +541,7 @@ public class DoorAction {
 						Npc masterFisher = p.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
 							524, 527);
 						if (masterFisher != null) {
-							npcTalk(p, masterFisher, "Hello only the top fishers are allowed in here");
+							npcsay(p, masterFisher, "Hello only the top fishers are allowed in here");
 						}
 						p.getWorld().getServer().getGameEventHandler().add(
 							new ShortEvent(p.getWorld(), p, "Fishing Guild Door") {
@@ -565,9 +566,9 @@ public class DoorAction {
 				if (getCurrentLevel(p, Skills.MINING) < 60) {
 					Npc dwarf = p.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 265, 270, 3379, 3380);
 					if (dwarf != null) {
-						npcTalk(p, dwarf, "Sorry only the top miners are allowed in there");
+						npcsay(p, dwarf, "Sorry only the top miners are allowed in there");
 					}
-					sleep(600);
+					delay(600);
 					p.message("You need a mining of level 60 to enter");
 				} else {
 					doDoor(obj, p);
@@ -582,15 +583,15 @@ public class DoorAction {
 					p.setBusy(true);
 					Npc master = p.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
-						npcTalk(p, master, "Sorry only experienced craftsmen are allowed in here");
+						npcsay(p, master, "Sorry only experienced craftsmen are allowed in here");
 					}
-					sleep(600);
+					delay(600);
 					p.setBusy(false);
 					p.message("You need a crafting level of 40 to enter the guild");
 				} else if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())) {
 					Npc master = p.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
-						npcTalk(p, master, "Where's your brown apron?",
+						npcsay(p, master, "Where's your brown apron?",
 							"You can't come in here unless you're wearing a brown apron");
 					}
 				} else {
@@ -605,14 +606,14 @@ public class DoorAction {
 				if (getCurrentLevel(p, Skills.COOKING) < 32) {
 					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
-						npcTalk(p, chef, "Sorry. Only the finest chefs are allowed in here");
+						npcsay(p, chef, "Sorry. Only the finest chefs are allowed in here");
 					}
-					sleep(600);
+					delay(600);
 					p.message("You need a cooking level of 32 to enter");
 				} else if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
 					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
-						npcTalk(p, chef, "Where's your chef's hat",
+						npcsay(p, chef, "Where's your chef's hat",
 							"You can't come in here unless you're wearing a chef's hat");
 					}
 				} else {
@@ -627,7 +628,7 @@ public class DoorAction {
 				if (getCurrentLevel(p, Skills.MAGIC) < 66) {
 					Npc wizard = p.getWorld().getNpc(NpcId.HEAD_WIZARD.id(), 596, 597, 755, 758);
 					if (wizard != null) {
-						npcTalk(p, wizard, "You need a magic level of 66 to get in here",
+						npcsay(p, wizard, "You need a magic level of 66 to get in here",
 							"The magical energy in here is unsafe for those below that level");
 					}
 				} else {
@@ -684,11 +685,11 @@ public class DoorAction {
 					return;
 				}
 				if (p.getQuestPoints() < 32) {
-					final Npc champy = getNearestNpc(p, NpcId.GUILDMASTER.id(), 20);
+					final Npc champy = ifnearvisnpc(p, NpcId.GUILDMASTER.id(), 20);
 					if (champy != null) {
-						npcTalk(p, champy,
+						npcsay(p, champy,
 							"You have not proven yourself worthy to enter here yet");
-						message(p,
+						Functions.mes(p,
 							"The door won't open - you need at least 32 quest points");
 					}
 					return;
@@ -700,23 +701,23 @@ public class DoorAction {
 				if (p.getLocation().getX() == 115 || p.getLocation().getY() == 3539) {
 					Npc n = p.getWorld().getNpc(NpcId.DOORMAN.id(), 105, 116, 3536, 3547);
 					if (n != null) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"You cannot go through this door without paying the trading tax");
-						playerTalk(p, n, "What do I need to pay?");
-						npcTalk(p, n, "One diamond");
-						int m = showMenu(p, n, "Okay", "A diamond, are you crazy?",
+						say(p, n, "What do I need to pay?");
+						npcsay(p, n, "One diamond");
+						int m = multi(p, n, "Okay", "A diamond, are you crazy?",
 							"I haven't brought my diamonds with me");
 						if (m == 0) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id(), Optional.of(false))) {
-								playerTalk(p, n,
+								say(p, n,
 									"I haven't brought my diamonds with me");
 							} else {
 								p.message("You give the doorman a diamond");
-								removeItem(p, ItemId.DIAMOND.id(), 1);
+								remove(p, ItemId.DIAMOND.id(), 1);
 								doDoor(obj, p);
 							}
 						} else if (m == 1) {
-							npcTalk(p, n, "Nope those are the rules");
+							npcsay(p, n, "Nope those are the rules");
 						}
 					}
 					break;
@@ -725,23 +726,23 @@ public class DoorAction {
 					Npc n = p.getWorld().getNpc(NpcId.DOORMAN.id(), 117, 125, 3531, 3538);
 
 					if (n != null) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"You cannot go through this door without paying the trading tax");
-						playerTalk(p, n, "What do I need to pay?");
-						npcTalk(p, n, "One diamond");
-						int m = showMenu(p, n, "Okay", "A diamond, are you crazy?",
+						say(p, n, "What do I need to pay?");
+						npcsay(p, n, "One diamond");
+						int m = multi(p, n, "Okay", "A diamond, are you crazy?",
 							"I haven't brought my diamonds with me");
 						if (m == 0) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id(), Optional.of(false))) {
-								playerTalk(p, n,
+								say(p, n,
 									"I haven't brought my diamonds with me");
 							} else {
 								p.message("You give the doorman a diamond");
-								removeItem(p, ItemId.DIAMOND.id(), 1);
+								remove(p, ItemId.DIAMOND.id(), 1);
 								doDoor(obj, p);
 							}
 						} else if (m == 1) {
-							npcTalk(p, n, "Nope those are the rules");
+							npcsay(p, n, "Nope those are the rules");
 						}
 					}
 				}
@@ -753,7 +754,7 @@ public class DoorAction {
 
 			case 138: // Biohazard
 				if (!p.getCache().hasKey("rotten_apples") && p.getQuestStage(Quests.BIOHAZARD) == 4) {
-					message(p, "the door is locked",
+					Functions.mes(p, "the door is locked",
 						"inside you can hear the mourners eating",
 						"you need to distract them from their stew");
 				} else if (p.getCache().hasKey("rotten_apples") || p.getQuestStage(Quests.BIOHAZARD) == 5) {
@@ -763,16 +764,16 @@ public class DoorAction {
 						p.playerServerMessage(MessageType.QUEST, "You go through the door");
 						return;
 					}
-					Npc DOOR_MOURNER = getNearestNpc(p, NpcId.MOURNER_DOOR.id(), 10);
+					Npc DOOR_MOURNER = ifnearvisnpc(p, NpcId.MOURNER_DOOR.id(), 10);
 					if (DOOR_MOURNER != null) {
 						if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.DOCTORS_GOWN.id())) {
-							npcTalk(p, DOOR_MOURNER, "in you go doc");
+							npcsay(p, DOOR_MOURNER, "in you go doc");
 							doDoor(obj, p);
 							p.playerServerMessage(MessageType.QUEST, "You go through the door");
 						} else {
-							npcTalk(p, DOOR_MOURNER, "keep away from there");
-							playerTalk(p, DOOR_MOURNER, "why?");
-							npcTalk(p, DOOR_MOURNER, "several mourners are ill with food poisoning",
+							npcsay(p, DOOR_MOURNER, "keep away from there");
+							say(p, DOOR_MOURNER, "why?");
+							npcsay(p, DOOR_MOURNER, "several mourners are ill with food poisoning",
 								"we're waiting for a doctor");
 						}
 					}
@@ -949,11 +950,11 @@ public class DoorAction {
 		}
 		if (player.getCarriedItems().hasCatalogID(keyItem) && item.getCatalogId() == keyItem) {
 			if (keyItem == ItemId.FRONT_DOOR_KEY.id() && player.getQuestStage(Quests.WITCHS_HOUSE) == 0) {
-				playerTalk(player, null, "It'd be rude to break into this house");
+				say(player, null, "It'd be rude to break into this house");
 				return;
 			}
 			if (showsBubble) {
-				showBubble(player, item);
+				thinkbubble(player, item);
 			}
 			player.message("you unlock the door");
 			doDoor(obj, player);
@@ -1088,7 +1089,7 @@ public class DoorAction {
 				}
 				player.message("you open the gate");
 				doGate(player, obj, 357);
-				sleep(1000);
+				delay(1000);
 				player.message("and walk through");
 				return;
 
@@ -1109,7 +1110,7 @@ public class DoorAction {
 							final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);
 							if (forester != null) {
-								npcTalk(player, forester, "Hello only the top woodcutters are allowed in here");
+								npcsay(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
 							player.getWorld().getServer().getGameEventHandler().add(
 								new ShortEvent(player.getWorld(), player, "Woodcutting Guild Door") {
@@ -1126,12 +1127,12 @@ public class DoorAction {
 						final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 							468, 472);
 						if (forester != null) {
-							npcTalk(player, forester, "Hey you can't come through here", "This is private land");
-							sleep(1200);
+							npcsay(player, forester, "Hey you can't come through here", "This is private land");
+							delay(1200);
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
 						} else {
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
-							sleep(1200);
+							delay(1200);
 							player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 						}
 					}
@@ -1143,7 +1144,7 @@ public class DoorAction {
 					return;
 				}
 				if (player.getX() >= 394) {
-					message(player, "The gate opens smoothly");
+					Functions.mes(player, "The gate opens smoothly");
 					player.teleport(381, 851);
 					player.message("You make your way out of Shilo Village.");
 				} else {
@@ -1161,26 +1162,26 @@ public class DoorAction {
 					player.message("the village.");
 					return;
 				}
-				message(player, "The gate feels very cold to your touch!");
+				Functions.mes(player, "The gate feels very cold to your touch!");
 				player.message("Are you sure you want to go through?");
-				int menu = showMenu(player,
+				int menu = multi(player,
 					"Yes, I am fearless!",
 					"No, actually, I have a bad feeling about this!");
 				if (menu == 0) {
-					replaceObjectDelayed(obj, 3000, 612);
+					Functions.changeloc(obj, 3000, 612);
 					if (player.getX() >= 388) {
-						message(player, "The gates open very slowly.");
+						Functions.mes(player, "The gates open very slowly.");
 						player.teleport(387, 852);
 						player.message("You manage to drag your battered body back through the gates.");
 					} else {
-						message(player, "The gates open very slowly...");
+						Functions.mes(player, "The gates open very slowly...");
 						player.teleport(389, 852);
-						message(player, "As soon as the gates open, the Zombies grab you and start dragging you inside!");
+						Functions.mes(player, "As soon as the gates open, the Zombies grab you and start dragging you inside!");
 						player.teleport(391, 852);
-						playerTalk(player, null, "Oh no, I'm done for!");
+						say(player, null, "Oh no, I'm done for!");
 					}
 				} else if (menu == 1) {
-					message(player, "You drag your quivering body  away from the gates.");
+					Functions.mes(player, "You drag your quivering body  away from the gates.");
 					player.message("You look around, but you don't think anyone saw you.");
 				}
 				return;
@@ -1196,9 +1197,9 @@ public class DoorAction {
 				}
 				if (player.getX() >= 94) {
 					if (player.getQuestStage(Quests.BIOHAZARD) == 7) {
-						Npc guard = getNearestNpc(player, NpcId.GUARD_VARROCKGATE.id(), 10);
+						Npc guard = ifnearvisnpc(player, NpcId.GUARD_VARROCKGATE.id(), 10);
 						if (guard != null) {
-							npcTalk(player, guard, "Halt. I need to conduct a search on you",
+							npcsay(player, guard, "Halt. I need to conduct a search on you",
 								"There have been reports of a someone bringing a virus into Varrock");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
@@ -1242,20 +1243,20 @@ public class DoorAction {
 				break;
 
 			case 563: // King Lathas Training Area (660, 551)
-				Npc lathasGuard = getNearestNpc(player, NpcId.GUARD_GATE_TRAINING_CAMP.id(), 10);
+				Npc lathasGuard = ifnearvisnpc(player, NpcId.GUARD_GATE_TRAINING_CAMP.id(), 10);
 				if (player.getQuestStage(Quests.BIOHAZARD) == -1) {
 					if (player.getY() <= 551) {
 						doGate(player, obj);
 					} else {
 						if (lathasGuard != null) {
-							npcTalk(player, lathasGuard, "the king has granted you access to this training area",
+							npcsay(player, lathasGuard, "the king has granted you access to this training area",
 								"make good use of it, soon all you strength will be needed");
 						}
 						doGate(player, obj);
 					}
 					player.message("you open the gate");
 				} else {
-					npcTalk(player, lathasGuard, "this is a restricted area",
+					npcsay(player, lathasGuard, "this is a restricted area",
 						"you can only enter under the authority of king lathas");
 				}
 				return;
@@ -1263,33 +1264,33 @@ public class DoorAction {
 			case 626: // Gnome Stronghold Gate (703, 531)
 				if (player.getY() <= 531 && player.getQuestStage(Quests.GRAND_TREE) == 8) {
 					boolean spawned = false;
-					Npc n = getNearestNpc(player, NpcId.GNOME_GUARD.id(), 15);
+					Npc n = ifnearvisnpc(player, NpcId.GNOME_GUARD.id(), 15);
 					if (n == null) {
-						n = spawnNpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
+						n = addnpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
 						spawned = true;
 					}
-					npcTalk(player, n, "halt human");
-					playerTalk(player, n, "what?, why?");
-					npcTalk(player, n, "from order of the head tree guardian...",
+					npcsay(player, n, "halt human");
+					say(player, n, "what?, why?");
+					npcsay(player, n, "from order of the head tree guardian...",
 						"..you cannot leave");
-					playerTalk(player, n, "that's crazy, why?");
-					npcTalk(player, n, "humans are planning to attack our stronghold",
+					say(player, n, "that's crazy, why?");
+					npcsay(player, n, "humans are planning to attack our stronghold",
 						"you could be a spy");
-					playerTalk(player, n, "that's ridiculous");
-					npcTalk(player, n, "maybe, but that's the orders, I'm sorry");
-					message(player, "the gnome refuses to open the gate");
+					say(player, n, "that's ridiculous");
+					npcsay(player, n, "maybe, but that's the orders, I'm sorry");
+					Functions.mes(player, "the gnome refuses to open the gate");
 					if (spawned) {
 						n.remove();
 					}
 					return;
 
 				} else if (player.getY() >= 532 && player.getQuestStage(Quests.GRAND_TREE) == 10) {
-					Npc n = getNearestNpc(player, NpcId.GNOME_GUARD.id(), 15);
-					npcTalk(player, n, "i'm afraid that we have orders not to let you in");
-					playerTalk(player, n, "orders from who?");
-					npcTalk(player, n, "the head tree guardian, he say's you're a spy");
-					playerTalk(player, n, "glough!");
-					npcTalk(player, n, "i'm sorry but you'll have to leave");
+					Npc n = ifnearvisnpc(player, NpcId.GNOME_GUARD.id(), 15);
+					npcsay(player, n, "i'm afraid that we have orders not to let you in");
+					say(player, n, "orders from who?");
+					npcsay(player, n, "the head tree guardian, he say's you're a spy");
+					say(player, n, "glough!");
+					npcsay(player, n, "i'm sorry but you'll have to leave");
 					return;
 				}
 				members = true;

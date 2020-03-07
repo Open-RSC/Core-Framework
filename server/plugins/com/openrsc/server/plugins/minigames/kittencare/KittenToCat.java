@@ -6,6 +6,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -48,9 +49,9 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTEN.id()) {
-			removeItem(p, ItemId.KITTEN.id(), 1);
-			message(p, 1200, "you drop the kitten");
-			message(p, 0, "it's upset and runs away");
+			remove(p, ItemId.KITTEN.id(), 1);
+			mes(p, 1200, "you drop the kitten");
+			mes(p, 0, "it's upset and runs away");
 		}
 
 		KittenState state = new KittenState();
@@ -65,9 +66,9 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
-			message(p, "you softly stroke the kitten",
+			Functions.mes(p, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
-			message(p, 600, "the kitten appreciates the attention");
+			mes(p, 600, "the kitten appreciates the attention");
 
 			reduceKittensLoneliness(p);
 		}
@@ -76,12 +77,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	public void entertainCat(Item item, Player p, boolean isGrown) {
 		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
-				message(p, "your kitten plays around with the ball of wool",
+				Functions.mes(p, "your kitten plays around with the ball of wool",
 						"it seems to love pouncing on it");
 
 				reduceKittensLoneliness(p);
 			} else {
-				message(p, "your cat plays around with the wool",
+				Functions.mes(p, "your cat plays around with the wool",
 						"it seems to be enjoying itself");
 			}
 		}
@@ -93,10 +94,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case MILK:
 			p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
 			if(!isGrown) {
-				message(p, "you give the kitten the milk",
+				Functions.mes(p, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
 			} else {
-				message(p, "you give the cat the milk",
+				Functions.mes(p, "you give the cat the milk",
 						"the kitten quickly laps it up then licks his paws");
 			}
 			feeded = true;
@@ -112,12 +113,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case RAW_SALMON:
 		case RAW_TUNA:
 		case TUNA:
-			removeItem(p, item.getCatalogId(), 1);
+			remove(p, item.getCatalogId(), 1);
 			if(!isGrown) {
-				message(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
+				Functions.mes(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
 			} else {
-				message(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
+				Functions.mes(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
 						"it quickly eat's them up and licks its paws");
 			}
 			feeded = true;
@@ -205,7 +206,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			else if (kittenEvents >= 32) {
 				p.getCarriedItems().getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
-				message(p, 1200, "you're kitten has grown into a healthy cat",
+				mes(p, 1200, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");
 			}
 
@@ -265,12 +266,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			p.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
 				n.face(p);
-				sleep(600);
+				delay(600);
 				n.remove();
 				p.setBusyTimer(1200);
-				sleep(1200);
+				delay(1200);
 				//possibly non kosher
-				message(p, 1800, "...and quickly gobbles it up",
+				mes(p, 1800, "...and quickly gobbles it up",
 						"it returns to your satchel licking it's paws");
 
 				reduceKittensLoneliness(p);
@@ -278,11 +279,11 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			p.message("the cat pounces on the rat...");
 			n.face(p);
-			sleep(600);
+			delay(600);
 			n.remove();
 			p.setBusyTimer(1200);
-			sleep(1200);
-			message(p, 1800, "...and quickly gobbles it up",
+			delay(1200);
+			mes(p, 1800, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");
 		}
 	}

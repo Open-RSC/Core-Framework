@@ -17,39 +17,39 @@ public final class BartenderDragonInn implements
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.BARTENDER_YANILLE.id()) {
-			npcTalk(p, n, "What can I get you?");
-			playerTalk(p, n, "What's on the menu?");
-			npcTalk(p, n, "Dragon bitter and Greenmans ale");
+			npcsay(p, n, "What can I get you?");
+			say(p, n, "What's on the menu?");
+			npcsay(p, n, "Dragon bitter and Greenmans ale");
 			Menu defaultMenu = new Menu();
 			defaultMenu.addOption(new Option("I'll give it a miss I think") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "Come back when you're a little thirstier");
+					npcsay(p, n, "Come back when you're a little thirstier");
 				}
 			});
 			defaultMenu.addOption(new Option("I'll try the dragon bitter") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "Ok, that'll be two coins");
-					if (hasItem(p, ItemId.COINS.id(), 2)) {
+					npcsay(p, n, "Ok, that'll be two coins");
+					if (ifheld(p, ItemId.COINS.id(), 2)) {
 						p.message("You buy a pint of dragon bitter");
-						addItem(p, ItemId.DRAGON_BITTER.id(), 1);
-						removeItem(p, ItemId.COINS.id(), 2);
+						give(p, ItemId.DRAGON_BITTER.id(), 1);
+						remove(p, ItemId.COINS.id(), 2);
 					} else {
-						playerTalk(p, n, "Oh dear. I don't seem to have enough money");
+						say(p, n, "Oh dear. I don't seem to have enough money");
 					}
 				}
 			});
 			defaultMenu.addOption(new Option("Can I have some greenmans ale?") {
 				@Override
 				public void action() {
-					npcTalk(p, n, "Ok, that'll be ten coins");
-					if (hasItem(p, ItemId.COINS.id(), 10)) {
+					npcsay(p, n, "Ok, that'll be ten coins");
+					if (ifheld(p, ItemId.COINS.id(), 10)) {
 						p.message("You buy a pint of ale");
-						addItem(p, ItemId.GREENMANS_ALE.id(), 1);
-						removeItem(p, ItemId.COINS.id(), 10);
+						give(p, ItemId.GREENMANS_ALE.id(), 1);
+						remove(p, ItemId.COINS.id(), 10);
 					} else {
-						playerTalk(p, n, "Oh dear. I don't seem to have enough money");
+						say(p, n, "Oh dear. I don't seem to have enough money");
 					}
 				}
 			});

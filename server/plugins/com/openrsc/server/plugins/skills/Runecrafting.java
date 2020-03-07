@@ -76,8 +76,8 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 					interrupt();
 					return;
 				}
-				removeItem(getOwner(), ItemId.RUNE_ESSENCE.id(), 1);
-				addItem(getOwner(), def.getRuneId(), getRuneMultiplier(getOwner(), def.getRuneId()));
+				remove(getOwner(), ItemId.RUNE_ESSENCE.id(), 1);
+				give(getOwner(), def.getRuneId(), getRuneMultiplier(getOwner(), def.getRuneId()));
 				getOwner().incExp(Skills.RUNECRAFTING, def.getExp(), true);
 			}
 		});
@@ -123,7 +123,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 			return;
 		}
 		p.message("You feel a powerful force take hold of you...");
-		sleep(500);
+		delay(500);
 
 		switch(ItemId.getById(item.getCatalogId()))
 		{

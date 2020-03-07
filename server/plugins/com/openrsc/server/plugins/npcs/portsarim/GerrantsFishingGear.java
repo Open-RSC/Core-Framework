@@ -44,7 +44,7 @@ public final class GerrantsFishingGear implements
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome you can buy any fishing equipment at my store",
+		npcsay(p, n, "Welcome you can buy any fishing equipment at my store",
 			"We'll also buy anything you catch off you");
 
 		String[] options;
@@ -56,16 +56,16 @@ public final class GerrantsFishingGear implements
 			options = new String[]{"Let's see what you've got then",
 				"Sorry, I'm not interested"};
 		}
-		int option = showMenu(p, n, false, options);
+		int option = multi(p, n, false, options);
 		if (option == 0) {
-			playerTalk(p, n, "Let's see what you've got then");
+			say(p, n, "Let's see what you've got then");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
-			playerTalk(p, n, "Sorry,I'm not interested");
+			say(p, n, "Sorry,I'm not interested");
 		} else if (option == 2) {
-			playerTalk(p, n, "I want to find out how to catch a lava eel");
-			npcTalk(p,
+			say(p, n, "I want to find out how to catch a lava eel");
+			npcsay(p,
 				n,
 				"Lava eels eh?",
 				"That's a tricky one that is",
@@ -78,13 +78,13 @@ public final class GerrantsFishingGear implements
 			if (!p.getCarriedItems().hasCatalogID(ItemId.BLAMISH_SNAIL_SLIME.id(), Optional.empty())
 				&& !p.getCarriedItems().hasCatalogID(ItemId.BLAMISH_OIL.id(), Optional.empty())
 				&& !p.getCarriedItems().hasCatalogID(ItemId.OILY_FISHING_ROD.id(), Optional.empty())) {
-				npcTalk(p, n, "Now I may have a jar of Blamish snail slime",
+				npcsay(p, n, "Now I may have a jar of Blamish snail slime",
 					"I wonder where I put it");
 				p.message("Gerrant searches about a bit");
-				npcTalk(p, n, "Aha here it is");
+				npcsay(p, n, "Aha here it is");
 				p.message("Gerrant passes you a small jar");
-				addItem(p, ItemId.BLAMISH_SNAIL_SLIME.id(), 1);
-				npcTalk(p, n,
+				give(p, ItemId.BLAMISH_SNAIL_SLIME.id(), 1);
+				npcsay(p, n,
 					"You'll need to mix this with some of the Harralander herb and water");
 			}
 		}

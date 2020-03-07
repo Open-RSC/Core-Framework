@@ -21,35 +21,35 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		if (p.getCache().hasKey("SV_DIG_ROPE")) {
 			p.message("You see that a rope is attached nearby");
 		}
-		int menu = showMenu(p,
+		int menu = multi(p,
 			"Yes, I'll give it a go!",
 			"No thanks, it looks a bit dark!");
 		if (menu == 0) {
 			p.message("You start to contort your body...");
-			message(p, "With some dificulty you manage to push your body",
+			Functions.mes(p, "With some dificulty you manage to push your body",
 					"through the small crack in the rock.");
 			if (!p.getCache().hasKey("SV_DIG_ROPE")) {
-				message(p, "As you squeeze out of the hole...");
+				Functions.mes(p, "As you squeeze out of the hole...");
 				p.message("you realise that there is a huge drop underneath you");
 				p.message("You begin falling....");
 				p.teleport(380, 3692);
-				sleep(500);
-				playerTalk(p, null, "Ahhhhh!");
+				delay(500);
+				say(p, null, "Ahhhhh!");
 				p.damage(1);
 				p.message("Your body is battered as you hit the cavern walls.");
-				playerTalk(p, null, "Ooooff!");
+				say(p, null, "Ooooff!");
 				p.damage(1);
-				sleep(500);
+				delay(500);
 				p.teleport(352, 3650);
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2 + 10));
-				message(p, "You hit the floor and it knocks the wind out of you!");
-				playerTalk(p, null, "Ugghhhh!!");
+				Functions.mes(p, "You hit the floor and it knocks the wind out of you!");
+				say(p, null, "Ugghhhh!!");
 			}
 			else {
-				message(p, "You squeeze through the fissure in the granite",
+				Functions.mes(p, "You squeeze through the fissure in the granite",
 						"And once through, you cleverly use the rope to slowly lower",
 						"yourself to the floor.");
-				playerTalk(p, null, "Yay!");
+				say(p, null, "Yay!");
 				p.teleport(352, 3650);
 			}
 			p.incExp(Skills.AGILITY, 30, true);
@@ -58,7 +58,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		} else if (menu == 1) {
 			p.message("You think better of attempting to squeeze your body into the fissure.");
-			playerTalk(p, null, "It looked very dangerous, and dark...",
+			say(p, null, "It looked very dangerous, and dark...",
 				"scarey!");
 		}
 	}
@@ -81,23 +81,23 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 
 	// Zadimus: 589
 	private void dropZadimusCorpse(Player p) {
-		message(p, "You feel an uneartly compunction to bury this corpse!");
+		Functions.mes(p, "You feel an uneartly compunction to bury this corpse!");
 		if (p.getLocation().inBounds(445, 749, 449, 753)) {
-			message(p, "You hear an unearthly moaning sound as you see",
+			Functions.mes(p, "You hear an unearthly moaning sound as you see",
 				"an apparition materialises right in front of you.");
-			Npc zadimus = spawnNpc(p.getWorld(), NpcId.ZADIMUS.id(), p.getX(), p.getY(), 60000);
-			sleep(500);
+			Npc zadimus = addnpc(p.getWorld(), NpcId.ZADIMUS.id(), p.getX(), p.getY(), 60000);
+			delay(500);
 			if (zadimus != null) {
-				npcTalk(p, zadimus, "You have released me from my torture, and now I shall aid you");
-				sleep(500);
-				npcTalk(p, zadimus, "You seek to dispell the one who tortured and killed me");
-				sleep(500);
-				npcTalk(p, zadimus, "Remember this...");
-				sleep(500);
-				npcTalk(p, zadimus, "'I am the key, but only kin may approach her.'");
-				message(p, "The apparition disapears into the ground where you buried the corpse.");
+				npcsay(p, zadimus, "You have released me from my torture, and now I shall aid you");
+				delay(500);
+				npcsay(p, zadimus, "You seek to dispell the one who tortured and killed me");
+				delay(500);
+				npcsay(p, zadimus, "Remember this...");
+				delay(500);
+				npcsay(p, zadimus, "'I am the key, but only kin may approach her.'");
+				Functions.mes(p, "The apparition disapears into the ground where you buried the corpse.");
 				zadimus.remove();
-				message(p, "You see the ground in front of you shake ",
+				Functions.mes(p, "You see the ground in front of you shake ",
 					"as a shard of bone forces its way to the surface.");
 				p.message("You take the bone shard and place it in your inventory.");
 				p.getCarriedItems().getInventory().replace(ItemId.ZADIMUS_CORPSE.id(), ItemId.BONE_SHARD.id());
@@ -106,7 +106,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				}
 			}
 		} else {
-			message(p, "You hear a ghostly wailing sound coming from the corpse",
+			Functions.mes(p, "You hear a ghostly wailing sound coming from the corpse",
 				"and a whispering voice says,");
 			p.message("'@yel@Zadimus: Let me rest in a sacred place and assist you I will'");
 		}
@@ -123,10 +123,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	@Override
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
-			message(p, "The remains of Rashiliyia look quite delicate.",
+			Functions.mes(p, "The remains of Rashiliyia look quite delicate.",
 				"You sense that a spirit needs to be put to rest.");
 			p.message("Are you sure that you want to drop the remains ?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I am sure.",
 				"No, I'll keep hold of the remains.");
 			if (menu == 0) {
@@ -139,13 +139,13 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				if (p.getCache().hasKey("dolmen_ghost")) {
 					p.getCache().remove("dolmen_ghost");
 				}
-				removeItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
-				message(p, "You drop Rashiliyias remains on the ground.",
+				remove(p, ItemId.RASHILIYA_CORPSE.id(), 1);
+				Functions.mes(p, "You drop Rashiliyias remains on the ground.",
 					"The bones turn to dust and forms into the shape of a human figure.");
-				Npc rash = spawnNpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 30000);
-				message(p, "The figure turns to you and you hear a cackling, croaky voice on the air.");
+				Npc rash = addnpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 30000);
+				Functions.mes(p, "The figure turns to you and you hear a cackling, croaky voice on the air.");
 				if (rash != null) {
-					npcTalk(p, rash, "Many thanks for releasing me!",
+					npcsay(p, rash, "Many thanks for releasing me!",
 						"Please excuse me, I must attend to my plans!");
 					rash.remove();
 				}
@@ -155,24 +155,24 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		}
 		else if (i.getCatalogId() == ItemId.BEADS_OF_THE_DEAD.id()) {
-			message(p, "Are you sure you want to drop the Beads of the Dead?");
+			Functions.mes(p, "Are you sure you want to drop the Beads of the Dead?");
 			p.message("It looks very rare and unique.");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I'm sure.",
 				"Nope, I've had second thoughts.");
 			if (menu == 0) {
-				message(p, "As the necklace hits the floor, it disintigrates",
+				Functions.mes(p, "As the necklace hits the floor, it disintigrates",
 					"into a puff of white powder.");
 				p.message("and you start to wonder if it ever really existed?");
-				removeItem(p, ItemId.BEADS_OF_THE_DEAD.id(), 1);
+				remove(p, ItemId.BEADS_OF_THE_DEAD.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide not to drop the Beads of the Dead.");
 			}
 		}
 		else if (i.getCatalogId() == ItemId.BONE_BEADS.id()) {
-			message(p, "As the beads hit the floor, they disintegrate into");
+			Functions.mes(p, "As the beads hit the floor, they disintegrate into");
 			p.message("puffs of white powder.");
-			removeItem(p, ItemId.BONE_BEADS.id(), 1);
+			remove(p, ItemId.BONE_BEADS.id(), 1);
 		}
 		else if (i.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
 			p.message("As you drop the delicate scrolls onto the floor, they");
@@ -180,28 +180,28 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			if (!p.getCache().hasKey("dropped_writing")) {
 				p.getCache().store("dropped_writing", true);
 			}
-			removeItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
+			remove(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 		}
 		else if (i.getCatalogId() == ItemId.LOCATING_CRYSTAL.id()) {
 			p.message("Are you sure you want to drop this crystal?");
 			p.message("It looks very delicate and it may break.");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I am sure.",
 				"No, I've reconsidered, I'll keep it!");
 			if (menu == 0) {
-				message(p, "As you drop the cystal, it hits a rock and explodes.");
+				Functions.mes(p, "As you drop the cystal, it hits a rock and explodes.");
 				p.message("You are lascerated by shards of glass.");
 				p.damage(10);
-				removeItem(p, ItemId.LOCATING_CRYSTAL.id(), 1);
+				remove(p, ItemId.LOCATING_CRYSTAL.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide to keep the Locating Crystal ");
 				p.message("tucked into your inventory safe and sound.");
 			}
 		}
 		else if (i.getCatalogId() == ItemId.SWORD_POMMEL.id()) {
-			message(p, "You drop the sword pommel on the floor.");
+			Functions.mes(p, "You drop the sword pommel on the floor.");
 			p.message("It turns to dust as soon as it hits the ground.");
-			removeItem(p, ItemId.SWORD_POMMEL.id(), 1);
+			remove(p, ItemId.SWORD_POMMEL.id(), 1);
 		}
 		else if (i.getCatalogId() == ItemId.BONE_KEY.id()) {
 			p.message("This looks quite valuable.");
@@ -217,27 +217,27 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		}
 		else if (i.getCatalogId() == ItemId.CRUMPLED_SCROLL.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I'm sure.",
 				"No, I think I'll keep it.");
 			if (menu == 0) {
 				p.message("As you drop the item, it gets carried off by the wind.");
 				p.message("never to be seen again.");
-				removeItem(p, ItemId.CRUMPLED_SCROLL.id(), 1);
+				remove(p, ItemId.CRUMPLED_SCROLL.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
 		}
 		else if (i.getCatalogId() == ItemId.TATTERED_SCROLL.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I'm sure.",
 				"No, I think I'll keep it.");
 			if (menu == 0) {
 				p.message("You decide to throw the item away.");
 				p.message("As you drop the item, it falls down a narrow crevice.");
 				p.message("never to be seen again.");
-				removeItem(p, ItemId.TATTERED_SCROLL.id(), 1);
+				remove(p, ItemId.TATTERED_SCROLL.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
@@ -247,13 +247,13 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		}
 		else if (i.getCatalogId() == ItemId.STONE_PLAQUE.id()) {
 			p.message("This looks quite important, are you sure you want to drop it?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, I'm sure.",
 				"No, I think I'll keep it.");
 			if (menu == 0) {
 				p.message("As you drop the item, it bounces into a stream.");
 				p.message("never to be seen again.");
-				removeItem(p, ItemId.STONE_PLAQUE.id(), 1);
+				remove(p, ItemId.STONE_PLAQUE.id(), 1);
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
@@ -275,15 +275,15 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			p.message("The key is intricately carved out of bone.");
 		}
 		else if (item.getCatalogId() == ItemId.LOCATING_CRYSTAL.id()) { // activate crystal
-			message(p, "You feel the crystal trying to draw upon your spiritual energy.");
+			Functions.mes(p, "You feel the crystal trying to draw upon your spiritual energy.");
 			p.message("Do you want to let it.");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes, that seems fine.",
 				"No, it sounds a bit dangerous.");
 			if (menu == 0) {
 				if (getCurrentLevel(p, Skills.PRAYER) < 10) {
 					p.message("You have no spiritual energy that the crystal can draw from.");
-					sleep(1200);
+					delay(1200);
 					p.message("You need to have at least 10 prayer points for it to work.");
 					return;
 				}
@@ -312,13 +312,13 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		else if (item.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) { // read tomb notes
 			p.setBusy(true);
 			p.message("This scroll is a collection of writings..");
-			sleep(1200);
+			delay(1200);
 			p.message("Some of them are just scraps of papyrus with what looks like random scribblings.");
-			sleep(1200);
+			delay(1200);
 			p.message("Which would you like to read?");
-			sleep(1200);
+			delay(1200);
 			p.setBusy(false);
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Tattered Yellow papyrus",
 				"Decayed White papyrus",
 				"Crusty Orange papyrus");
@@ -343,9 +343,9 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			dropZadimusCorpse(p);
 		}
 		else if (item.getCatalogId() == ItemId.CRUMPLED_SCROLL.id()) {
-			message(p, "This looks like part of a scroll about Rashiliyia",
+			Functions.mes(p, "This looks like part of a scroll about Rashiliyia",
 				"Would you like to read it?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes please!",
 				"No thanks.");
 			if (menu == 0) {
@@ -359,9 +359,9 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		}
 		else if (item.getCatalogId() == ItemId.TATTERED_SCROLL.id()) {
-			message(p, "This looks like part of a scroll about someone called Berverius..");
+			Functions.mes(p, "This looks like part of a scroll about someone called Berverius..");
 			p.message("Would you like to read it?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Yes please.",
 				"No thanks.");
 			if (menu == 0) {
@@ -380,7 +380,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		}
 		else if (item.getCatalogId() == ItemId.STONE_PLAQUE.id()) {
-			message(p, "The markings are very intricate. It's a very strange language.",
+			Functions.mes(p, "The markings are very intricate. It's a very strange language.",
 					"The meaning of it evades you though.");
 		}
 	}
@@ -400,9 +400,9 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				p.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
-			message(p, "You successfully craft the beads and Bronze Wire ");
+			Functions.mes(p, "You successfully craft the beads and Bronze Wire ");
 			p.message("into a necklace which you name, 'Beads of the dead'");
-			removeItem(p, ItemId.BRONZE_WIRE.id(), 1);
+			remove(p, ItemId.BRONZE_WIRE.id(), 1);
 			p.getCarriedItems().getInventory().replace(ItemId.BONE_BEADS.id(), ItemId.BEADS_OF_THE_DEAD.id());
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.BONE_SHARD.id())) {
@@ -415,13 +415,13 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 					p.message("You need a level of 20 Crafting to craft this.");
 					return;
 				}
-				message(p, "Remembering Zadimus' words and the strange bone lock,",
+				Functions.mes(p, "Remembering Zadimus' words and the strange bone lock,",
 					"you start to craft the bone.");
 				p.message("You succesfully make a key out of the bone shard.");
 				p.getCarriedItems().getInventory().replace(ItemId.BONE_SHARD.id(), ItemId.BONE_KEY.id());
 				p.incExp(Skills.CRAFTING, 35, true);
 			} else {
-				message(p, "You're not quite sure what to make with this.");
+				Functions.mes(p, "You're not quite sure what to make with this.");
 				p.message("Perhaps it will come to you as you discover more about Rashiliyia?");
 			}
 		}
@@ -430,7 +430,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				p.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
-			message(p, "You prepare the ivory pommel and the chisel to start crafting...",
+			Functions.mes(p, "You prepare the ivory pommel and the chisel to start crafting...",
 				"You successfully craft some of the ivory into beads.");
 			p.message("They may look good as part of a necklace.");
 			p.incExp(Skills.CRAFTING, 35, true);
@@ -448,19 +448,19 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		if (i.getID() == ItemId.COINS.id() && i.getX() == 358 && i.getY() == 3626) {
 			if (p.getCache().hasKey("coins_shilo_cave")) {
 				i.remove();
-				addItem(p, ItemId.COINS.id(), 10);
+				give(p, ItemId.COINS.id(), 10);
 				p.message("The coins turn to dust in your hand...");
 			} else {
-				message(p, "As soon as you touch the coins...",
+				Functions.mes(p, "As soon as you touch the coins...",
 					"You hear the grinding sound of bones");
 				p.message("against stone as you see skeletons and ");
-				sleep(1000);
+				delay(1000);
 				p.message("Zombies rising up out of the ground.");
-				spawnNpc(p.getWorld(), 40, p.getX() - 1, p.getY() + 1, 60000);
-				spawnNpc(p.getWorld(), 40, p.getX() - 1, p.getY() - 1, 60000);
+				addnpc(p.getWorld(), 40, p.getX() - 1, p.getY() + 1, 60000);
+				addnpc(p.getWorld(), 40, p.getX() - 1, p.getY() - 1, 60000);
 
-				spawnNpc(p.getWorld(), 542, p.getX() + 2, p.getY() + 1, 60000);
-				spawnNpc(p.getWorld(), 542, p.getX() + 1, p.getY() - 1, 60000);
+				addnpc(p.getWorld(), 542, p.getX() + 2, p.getY() + 1, 60000);
+				addnpc(p.getWorld(), 542, p.getX() + 1, p.getY() - 1, 60000);
 				p.message("The coins turn to dust in your hands.");
 				p.getCache().store("coins_shilo_cave", true);
 			}

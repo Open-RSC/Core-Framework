@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -72,54 +73,54 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			if (cID == -1) {
 				switch (p.getQuestStage(this)) {
 					case 0:
-						npcTalk(p, n, "I come here seeking a hero who can help me");
-						int menu = showMenu(p, n,
+						npcsay(p, n, "I come here seeking a hero who can help me");
+						int menu = multi(p, n,
 							"I am a hero",
 							"Yep lots of heroes about here");
 						if (menu == 0) {
-							npcTalk(p, n, "I need someone who can enter the tunnels under the deserted temple of Ikov",
+							npcsay(p, n, "I need someone who can enter the tunnels under the deserted temple of Ikov",
 								"Near Hemenster, to the north of here",
 								"Kill the fire warrior of Lesarkus",
 								"And retrieve the staff of Armardyl");
-							int newMenu = showMenu(p, n, false, //do not send over
+							int newMenu = multi(p, n, false, //do not send over
 								"Why can't you do it yourself?",
 								"That sounds like fun",
 								"That sounds too dangerous for me",
 								"How much will you pay me?");
 							if (newMenu == 0) {
-								playerTalk(p, n, "Why can't you do that yourself?");
-								npcTalk(p, n, "The guardians of the staff of Armardyl fear me",
+								say(p, n, "Why can't you do that yourself?");
+								npcsay(p, n, "The guardians of the staff of Armardyl fear me",
 									"They know my kind is powerful",
 									"So they have set up magical wards against are race");
-								int newMenu2 = showMenu(p, n, false, //do not send over
+								int newMenu2 = multi(p, n, false, //do not send over
 									"How much will you pay me?",
 									"That sounds like fun",
 									"Who are your kind?",
 									"That sounds too dangerous for me");
 								if (newMenu2 == 0) {
-									playerTalk(p, n, "How much will you pay me");
+									say(p, n, "How much will you pay me");
 									lucienDialogue(p, n, Lucien.PAYME);
 								} else if (newMenu2 == 1) {
-									playerTalk(p, n, "That sounds like fun");
+									say(p, n, "That sounds like fun");
 									lucienDialogue(p, n, Lucien.SOUNDSFUN);
 								} else if (newMenu2 == 2) {
-									playerTalk(p, n, "Who are your kind?");
-									npcTalk(p, n, "An ancient and powerful race",
+									say(p, n, "Who are your kind?");
+									npcsay(p, n, "An ancient and powerful race",
 										"Back in the second age we held great influence in this world",
 										"There are few of us left now");
 								} else if (newMenu2 == 3) {
-									playerTalk(p, n, "That sounds too dangerous for me");
-									npcTalk(p, n, "Fortune favours the bold");
+									say(p, n, "That sounds too dangerous for me");
+									npcsay(p, n, "Fortune favours the bold");
 								}
 
 							} else if (newMenu == 1) {
-								playerTalk(p, n, "That sounds like fun");
+								say(p, n, "That sounds like fun");
 								lucienDialogue(p, n, Lucien.SOUNDSFUN);
 							} else if (newMenu == 2) {
-								playerTalk(p, n, "That sounds too dangerous for me");
-								npcTalk(p, n, "Fortune favours the bold");
+								say(p, n, "That sounds too dangerous for me");
+								npcsay(p, n, "Fortune favours the bold");
 							} else if (newMenu == 3) {
-								playerTalk(p, n, "How much will you pay me");
+								say(p, n, "How much will you pay me");
 								lucienDialogue(p, n, Lucien.PAYME);
 							}
 						}
@@ -128,18 +129,18 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					case 2:
 					case -1:
 					case -2:
-						npcTalk(p, n, "I thought I told you not to meet me here again");
+						npcsay(p, n, "I thought I told you not to meet me here again");
 						if (p.getCarriedItems().hasCatalogID(ItemId.PENDANT_OF_LUCIEN.id(), Optional.empty())) {
-							playerTalk(p, n, "Yes you did, sorry");
+							say(p, n, "Yes you did, sorry");
 						} else {
-							int lostAmuletMenu = showMenu(p, n,
+							int lostAmuletMenu = multi(p, n,
 								"I lost that pendant you gave me",
 								"Yes you did sorry");
 							if (lostAmuletMenu == 0) {
-								npcTalk(p, n, "Hmm",
+								npcsay(p, n, "Hmm",
 									"Imbecile");
 								p.message("Lucien gives you another pendant");
-								addItem(p, ItemId.PENDANT_OF_LUCIEN.id(), 1);
+								give(p, ItemId.PENDANT_OF_LUCIEN.id(), 1);
 							}
 						}
 						break;
@@ -147,23 +148,23 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			}
 			switch (cID) {
 				case Lucien.SOUNDSFUN:
-					npcTalk(p, n, "Well it's not that easy",
+					npcsay(p, n, "Well it's not that easy",
 						"The fire warrior can only be killed with a weapon of ice",
 						"And there are many other traps and hazards in those tunnels");
-					playerTalk(p, n, "Well I am brave I shall give it a go");
-					npcTalk(p, n, "Take this pendant you will need it to get through the chamber of fear");
-					addItem(p, ItemId.PENDANT_OF_LUCIEN.id(), 1);
-					npcTalk(p, n, "It is not safe for me to linger here much longer",
+					say(p, n, "Well I am brave I shall give it a go");
+					npcsay(p, n, "Take this pendant you will need it to get through the chamber of fear");
+					give(p, ItemId.PENDANT_OF_LUCIEN.id(), 1);
+					npcsay(p, n, "It is not safe for me to linger here much longer",
 						"When you have done meet me in the forest north of Varrock",
 						"I have a small holding up there");
 					p.updateQuestStage(this, 1);
 					break;
 				case Lucien.PAYME:
-					npcTalk(p, n, "Ah the mercenary type I see");
-					playerTalk(p, n, "It's a living");
-					npcTalk(p, n, "I shall adequately reward you",
+					npcsay(p, n, "Ah the mercenary type I see");
+					say(p, n, "It's a living");
+					npcsay(p, n, "I shall adequately reward you",
 						"With both money and power");
-					playerTalk(p, n, "Sounds rather too vague for me");
+					say(p, n, "Sounds rather too vague for me");
 					break;
 			}
 		}
@@ -172,23 +173,23 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	private void wineldaDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.WINELDA.id()) {
 			if (cID == -1) {
-				if (hasItem(p, ItemId.LIMPWURT_ROOT.id(), 20)) {
-					playerTalk(p, n, "I have the 20 limpwurt roots, now transport me please");
-					npcTalk(p, n, "Oh marverlous",
+				if (ifheld(p, ItemId.LIMPWURT_ROOT.id(), 20)) {
+					say(p, n, "I have the 20 limpwurt roots, now transport me please");
+					npcsay(p, n, "Oh marverlous",
 						"Brace yourself then");
 					p.getCarriedItems().remove(ItemId.LIMPWURT_ROOT.id(), 20);
 					p.teleport(557, 3290);
-					sleep(650);
+					delay(650);
 					ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
 				} else {
-					npcTalk(p, n, "Hehe in a bit of a pickle are we?",
+					npcsay(p, n, "Hehe in a bit of a pickle are we?",
 						"Want to be getting over the nasty lava stream do we?");
-					int menu = showMenu(p, n,
+					int menu = multi(p, n,
 						"Not really, no",
 						"Yes we do",
 						"Yes I do");
 					if (menu == 0) {
-						npcTalk(p, n, "Hehe ye'll come back later",
+						npcsay(p, n, "Hehe ye'll come back later",
 							"They always come back later");
 					} else if (menu == 1) {
 						wineldaDialogue(p, n, Winelda.YES);
@@ -199,11 +200,11 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			}
 			switch (cID) {
 				case Winelda.YES:
-					npcTalk(p, n, "Well keep it under your helmet",
+					npcsay(p, n, "Well keep it under your helmet",
 						"But I'm knowing some useful magic tricks",
 						"I could get you over there easy as that");
-					playerTalk(p, n, "Okay get me over there");
-					npcTalk(p, n, "Okay brace yourself",
+					say(p, n, "Okay get me over there");
+					npcsay(p, n, "Okay brace yourself",
 						"Actually no no",
 						"Why should I do it for free",
 						"Bring me a bite to eat and I'll be a touch more helpful",
@@ -221,7 +222,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					case 1:
 						if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_LUCIEN.id())
 							&& !p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
-							npcTalk(p, n, "Ahh tis a foul agent of Lucien",
+							npcsay(p, n, "Ahh tis a foul agent of Lucien",
 								"Get ye from our master's house");
 							if (n != null) {
 								n.startCombat(p);
@@ -229,75 +230,75 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 							return;
 						}
 						if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
-							npcTalk(p, n, "Stop",
+							npcsay(p, n, "Stop",
 								"You cannot take the staff of Armadyl");
 							n.setChasing(p);
 							return;
 						}
-						npcTalk(p, n, "Thou dost venture deep in the tunnels",
+						npcsay(p, n, "Thou dost venture deep in the tunnels",
 							"It has been many a year since someone has passed thus far");
-						int menu = showMenu(p, n,
+						int menu = multi(p, n,
 							"I seek the staff of Armadyl",
 							"Out of my way fool",
 							"Who are you?");
 						if (menu == 0) {
-							npcTalk(p, n, "We guard that here",
+							npcsay(p, n, "We guard that here",
 								"As did our fathers",
 								"And our father's fathers",
 								"Why dost thou seeketh it?");
-							int seekMenu = showMenu(p, n, false, //do not send over
+							int seekMenu = multi(p, n, false, //do not send over
 								"A guy named Lucien is paying me",
 								"Just give it to me",
 								"I am a collector of rare and powerful artifacts");
 							if (seekMenu == 0) {
-								playerTalk(p, n, "A guy named Lucien is paying me");
+								say(p, n, "A guy named Lucien is paying me");
 								guardianDialogue(p, n, Guardian.WORKINGFORLUCIEN);
 							} else if (seekMenu == 1) {
-								playerTalk(p, n, "Just give it to me");
-								npcTalk(p, n, "The staff is a sacred object",
+								say(p, n, "Just give it to me");
+								npcsay(p, n, "The staff is a sacred object",
 									"Not to be given away to anyone who asks");
 							} else if (seekMenu == 2) {
-								playerTalk(p, n, "I am a collector of rare and powerful objects");
-								npcTalk(p, n, "The staff is not yours to collect");
+								say(p, n, "I am a collector of rare and powerful objects");
+								npcsay(p, n, "The staff is not yours to collect");
 							}
 
 						} else if (menu == 1) {
-							npcTalk(p, n, "I may be a fool, but I will not step aside");
-							int foolMenu = showMenu(p, n,
+							npcsay(p, n, "I may be a fool, but I will not step aside");
+							int foolMenu = multi(p, n,
 								"Why not?",
 								"Then I must strike you down",
 								"Then I guess I will turn back");
 							if (foolMenu == 0) {
-								npcTalk(p, n, "Only members of our order are allowed further");
+								npcsay(p, n, "Only members of our order are allowed further");
 							} else if (foolMenu == 1) {
 								n.startCombat(p);
 							}
 						} else if (menu == 2) {
-							npcTalk(p, n, "I am a guardian of Armadyl",
+							npcsay(p, n, "I am a guardian of Armadyl",
 								"We have kept this place safe and holy",
 								"For many generations",
 								"Many evil souls would like to get their hands on what lies here",
 								"Especially the Mahjarrat");
-							int whoMenu = showMenu(p, n,
+							int whoMenu = multi(p, n,
 								"What is an Armadyl?",
 								"Who are the Mahjarrat?",
 								"Wow you must be old");
 							if (whoMenu == 0) {
-								npcTalk(p, n, "Armadyl is our God",
+								npcsay(p, n, "Armadyl is our God",
 									"We are his servants",
 									"Who have the honour to stay here",
 									"And guard his artifacts",
 									"Till he needs them to smite his enemies");
-								int bla = showMenu(p, n, false, //do not send over
+								int bla = multi(p, n, false, //do not send over
 									"Ok that's nice to know",
 									"Someone told me there were only three gods");
 								if (bla == 0) {
-									playerTalk(p, n, "I am a collector of rare and powerful objects");
-									npcTalk(p, n, "The staff is not yours to collect");
+									say(p, n, "I am a collector of rare and powerful objects");
+									npcsay(p, n, "The staff is not yours to collect");
 								} else if (bla == 1) {
-									playerTalk(p, n, "Someone told me there were only three gods",
+									say(p, n, "Someone told me there were only three gods",
 										"Saradomin, Zamorak and Guthix");
-									npcTalk(p, n, "Was that someone a Saradominist?",
+									npcsay(p, n, "Was that someone a Saradominist?",
 										"I hear Saradominism is the principle doctrine",
 										"Out in the world currently",
 										"They only Acknowledge those three gods",
@@ -306,7 +307,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 										"We are aware of at least twenty");
 								}
 							} else if (whoMenu == 1) {
-								npcTalk(p, n, "Ancient powerful beings",
+								npcsay(p, n, "Ancient powerful beings",
 									"They are very evil",
 									"They were said to once dominate this plane of existance",
 									"Zamorak was said to once have been of their stock",
@@ -314,73 +315,73 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 									"Some still have presence in this world in their liche forms",
 									"Mahjarrat such as Lucien and Azzanadra would become extremely powerful",
 									"If they got their hands on the staff of Armadyl");
-								int maj = showMenu(p, n, false, //do not send over
+								int maj = multi(p, n, false, //do not send over
 									"Did you say Lucien?",
 									"You had better guard it well then");
 								if (maj == 0) {
-									playerTalk(p, n, "Did you say Lucien?",
+									say(p, n, "Did you say Lucien?",
 										"He's the one who sent me to fetch the staff");
 									guardianDialogue(p, n, Guardian.WORKINGFORLUCIEN);
 								} else if (maj == 1) {
-									playerTalk(p, n, "You had better guard it well them");
-									npcTalk(p, n, "Don't fret, for we shall");
+									say(p, n, "You had better guard it well them");
+									npcsay(p, n, "Don't fret, for we shall");
 								}
 							} else if (whoMenu == 2) {
-								npcTalk(p, n, "No no, I have not guarded here for all those generations",
+								npcsay(p, n, "No no, I have not guarded here for all those generations",
 									"Many generations of my family have though");
 							}
 						}
 						break;
 					case 2:
-						npcTalk(p, n, "Any luck against Lucien?");
+						npcsay(p, n, "Any luck against Lucien?");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.PENDANT_OF_ARMADYL.id(), Optional.empty())) {
-							int option = showMenu(p, n, "Not yet", "No I've lost the pendant you gave me");
+							int option = multi(p, n, "Not yet", "No I've lost the pendant you gave me");
 							if (option == 0) {
-								npcTalk(p, n, "Well good luck on your quest");
+								npcsay(p, n, "Well good luck on your quest");
 							} else if (option == 1) {
-								npcTalk(p, n, "Thou art a careless buffoon",
+								npcsay(p, n, "Thou art a careless buffoon",
 									"Have another one");
 								p.message("The guardian gives you a pendant");
-								addItem(p, ItemId.PENDANT_OF_ARMADYL.id(), 1);
+								give(p, ItemId.PENDANT_OF_ARMADYL.id(), 1);
 							}
 						} else {
-							playerTalk(p, n, "Not yet");
-							npcTalk(p, n, "Well good luck on your quest");
+							say(p, n, "Not yet");
+							npcsay(p, n, "Well good luck on your quest");
 						}
 						break;
 					case -1:
-						playerTalk(p, n, "I have defeated Lucien");
-						npcTalk(p, n, "Well done",
+						say(p, n, "I have defeated Lucien");
+						npcsay(p, n, "Well done",
 							"We can only hope that will keep him quiet for a while");
 						break;
 					case -2:
-						npcTalk(p, n, "Get away from here", "Thou evil agent of Lucien");
+						npcsay(p, n, "Get away from here", "Thou evil agent of Lucien");
 						break;
 				}
 			}
 			switch (cID) {
 				case Guardian.WORKINGFORLUCIEN:
-					npcTalk(p, n, "Thou art working for him?",
+					npcsay(p, n, "Thou art working for him?",
 						"Thy fool",
 						"Quick you must be cleansed to save your soul");
-					int menu = showMenu(p, n, false, //do not send over
+					int menu = multi(p, n, false, //do not send over
 						"How dare you call me a fool?",
 						"Erm I think I'll be leaving now",
 						"Yes I could do with a bath");
 					if (menu == 0) {
-						playerTalk(p, n, "How dare you call me a fool",
+						say(p, n, "How dare you call me a fool",
 							"I will work for who I please");
-						npcTalk(p, n, "This one is too far gone",
+						npcsay(p, n, "This one is too far gone",
 							"He must be cut down to stop the spread of the blight");
 						n.startCombat(p);
 					} else if (menu == 1) {
-						playerTalk(p, n, "Erm, I think I'll be leaving now");
-						npcTalk(p, n, "We cannot allow an agent of Lucien to roam free");
+						say(p, n, "Erm, I think I'll be leaving now");
+						npcsay(p, n, "We cannot allow an agent of Lucien to roam free");
 						n.startCombat(p);
 					} else if (menu == 2) {
-						playerTalk(p, n, "Yes I could do with a bath");
+						say(p, n, "Yes I could do with a bath");
 						p.message("The guardian splashes holy water over you");
-						npcTalk(p, n, "That should do the trick",
+						npcsay(p, n, "That should do the trick",
 							"Now you say that Lucien sent you to retrieve the staff",
 							"He must not get a hold of it",
 							"He would become too powerful with the staff",
@@ -388,25 +389,25 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 							"Who raised an undead army against Varrock a few years past",
 							"That was Lucien",
 							"If thou knowest where to find him maybe you can help us against him");
-						int lastMenu = showMenu(p, n,
+						int lastMenu = multi(p, n,
 							"Ok I will help",
 							"No I shan't turn against my employer",
 							"I need time to consider this");
 						if (lastMenu == 0) {
-							npcTalk(p, n, "So you know where he lurks?");
-							playerTalk(p, n, "Yes");
-							npcTalk(p, n, "He must be growing in power again if he is after the staff",
+							npcsay(p, n, "So you know where he lurks?");
+							say(p, n, "Yes");
+							npcsay(p, n, "He must be growing in power again if he is after the staff",
 								"If you can defeat him, it may weaken him for a time",
 								"You will need to use this pendant to even be able to attack him");
 							p.message("The guardian gives you a pendant");
-							addItem(p, ItemId.PENDANT_OF_ARMADYL.id(), 1);
+							give(p, ItemId.PENDANT_OF_ARMADYL.id(), 1);
 							p.updateQuestStage(this, 2);
 						} else if (lastMenu == 1) {
-							npcTalk(p, n, "This one is too far gone",
+							npcsay(p, n, "This one is too far gone",
 								"He must be cut down to stop the spread of the blight");
 							n.startCombat(p);
 						} else if (lastMenu == 2) {
-							npcTalk(p, n, "Come back when you have made your choice");
+							npcsay(p, n, "Come back when you have made your choice");
 						}
 					}
 					break;
@@ -421,15 +422,15 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				p.message("You have already completed this quest");
 				return;
 			}
-			npcTalk(p, n, "Have you got the staff of Armadyl yet?");
+			npcsay(p, n, "Have you got the staff of Armadyl yet?");
 			if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_ARMADYL.id(), Optional.of(false))) {
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"Yes here it is",
 					"No not yet");
 				if (menu == 0) {
-					message(p, "You give the staff to Lucien");
-					removeItem(p, ItemId.STAFF_OF_ARMADYL.id(), 1);
-					npcTalk(p, n, "Muhahahaha",
+					Functions.mes(p, "You give the staff to Lucien");
+					remove(p, ItemId.STAFF_OF_ARMADYL.id(), 1);
+					npcsay(p, n, "Muhahahaha",
 						"Already I can feel the power of this staff running through my limbs",
 						"Soon I shall be exceedingly powerful",
 						"I suppose you would like a reward now",
@@ -437,13 +438,13 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					p.message("A glow eminates from Lucien's helmet");
 					p.sendQuestComplete(Quests.TEMPLE_OF_IKOV);
 					p.updateQuestStage(this, -2);
-					npcTalk(p, n, "I must be away now to make preparations for my conquest",
+					npcsay(p, n, "I must be away now to make preparations for my conquest",
 						"Muhahahaha");
 					n.remove();
 
 				}
 			} else {
-				playerTalk(p, n, "No not yet");
+				say(p, n, "No not yet");
 			}
 		}
 		else if (n.getID() == NpcId.LUCIEN.id()) {
@@ -474,7 +475,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			} else {
 				p.message("You cannot see any further into the room");
 				p.teleport(537, 3394);
-				sleep(1600);
+				delay(1600);
 				p.message("It is too dark");
 			}
 		}
@@ -487,7 +488,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					p.message("You have activated a trap on the lever");
 					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITS) / 5));
 				} else {
-					message(p, "You pull the lever",
+					Functions.mes(p, "You pull the lever",
 						"You hear a clunk",
 						"The trap on the lever resets");
 					if (p.getCache().hasKey("ikovLever")) {
@@ -503,7 +504,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}
-				message(p, "You find a trap on the lever",
+				Functions.mes(p, "You find a trap on the lever",
 					"You disable the trap");
 				if (!p.getCache().hasKey("ikovLever")) {
 					p.getCache().store("ikovLever", true);
@@ -511,7 +512,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (obj.getID() == COMPLETE_LEVER) {
-			message(p, "You pull the lever",
+			Functions.mes(p, "You pull the lever",
 				"You hear the door next to you make a clunking noise");
 			if (!p.getCache().hasKey("completeLever") && (p.getQuestStage(this) != -1 || p.getQuestStage(this) != -2)) {
 				p.getCache().store("completeLever", true);
@@ -525,7 +526,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			return true;
 		}
 		if (i.getID() == ItemId.STAFF_OF_ARMADYL.id()) {
-			Npc guardian = getMultipleNpcsInArea(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
+			Npc guardian = Functions.ifnearvisnpc(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
 			if (guardian == null)
 				return false;
 			else
@@ -538,14 +539,14 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ICE_ARROWS.id()) {
 			if (i.getX() == 560 && i.getY() == 3352 || i.getX() == 563 && i.getY() == 3354) {
-				addItem(p, ItemId.ICE_ARROWS.id(), 1);
+				give(p, ItemId.ICE_ARROWS.id(), 1);
 				p.teleport(538, 3348);
-				sleep(650);
+				delay(650);
 				ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
-				sleep(1000);
+				delay(1000);
 				p.message("Suddenly your surroundings change");
 			} else {
-				message(p, "You can only take ice arrows from the cave of ice spiders",
+				Functions.mes(p, "You can only take ice arrows from the cave of ice spiders",
 					"In the temple of Ikov");
 			}
 		}
@@ -558,9 +559,9 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				p.message("I already have one of those");
 				return;
 			}
-			Npc n = getMultipleNpcsInArea(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
+			Npc n = Functions.ifnearvisnpc(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
 			if (n != null) {
-				npcTalk(p, n, "That is not thine to take");
+				npcsay(p, n, "That is not thine to take");
 				n.setChasing(p);
 				return;
 			}
@@ -576,7 +577,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET) {
 			p.message("You fit the lever into the bracket");
-			removeItem(p, ItemId.LEVER.id(), 1);
+			remove(p, ItemId.LEVER.id(), 1);
 			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), COMPLETE_LEVER, obj.getDirection(), obj
 					.getType()));
@@ -620,7 +621,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));
-			npcTalk(p, n, "You may have defeated me for now",
+			npcsay(p, n, "You may have defeated me for now",
 				"But I will be back");
 			p.sendQuestComplete(Quests.TEMPLE_OF_IKOV);
 			n.displayNpcTeleportBubble(n.getX(), n.getY());
@@ -642,9 +643,9 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 					p.startCombat(n);
 				} else {
-					npcTalk(p, n, "I'm sure you don't want to attack me really",
+					npcsay(p, n, "I'm sure you don't want to attack me really",
 						"I am your friend");
-					message(p, "You decide you don't want to attack Lucien really",
+					Functions.mes(p, "You decide you don't want to attack Lucien really",
 						"He is your friend");
 				}
 			}
@@ -690,9 +691,9 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
-				npcTalk(p, n, "I'm sure you don't want to attack me really",
+				npcsay(p, n, "I'm sure you don't want to attack me really",
 					"I am your friend");
-				message(p, "You decide you don't want to attack Lucien really",
+				Functions.mes(p, "You decide you don't want to attack Lucien really",
 					"He is your friend");
 				return;
 			}

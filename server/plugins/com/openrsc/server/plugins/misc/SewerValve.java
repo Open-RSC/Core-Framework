@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.mes;
 
 public class SewerValve implements OpLocTrigger {
 
@@ -67,7 +67,7 @@ public class SewerValve implements OpLocTrigger {
 			}
 		}
 		if (obj.getID() == LOG_RAFT) {
-			message(p, "you carefully board the small raft");
+			mes(p, "you carefully board the small raft");
 			if (p.getCache().hasKey("VALVE_1_RIGHT") && p.getCache().hasKey("VALVE_2_LEFT") && p.getCache().hasKey("VALVE_3_RIGHT") && p.getCache().hasKey("VALVE_4_RIGHT") && p.getCache().hasKey("VALVE_5_LEFT")) {
 				p.teleport(587, 3411);
 				p.message("the raft washes up the sewer, the sewer passages end here");

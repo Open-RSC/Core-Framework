@@ -8,7 +8,7 @@ import com.openrsc.server.net.rsc.handlers.SpellHandler;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.SpellInvTrigger;
 
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.delay;
 
 public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
@@ -24,8 +24,8 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
 			p.message("What type of dragonstone ring would you like to make?");
-			sleep(600);
-			int choice = Functions.showMenu(p, "Ring of Wealth", "Ring of Avarice");
+			delay(600);
+			int choice = Functions.multi(p, "Ring of Wealth", "Ring of Avarice");
 			int item;
 			if (choice == 0) {
 				item = ItemId.RING_OF_WEALTH.id();

@@ -89,7 +89,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 								&& (player.getIronMan() == IronmanMode.Ultimate.id() || player.getIronMan() == IronmanMode.Hardcore.id())) {
 								if (player.getIronManRestriction() == 0) {
 									if (player.getCache().hasKey("bank_pin")) {
-										Npc npc = Functions.getMultipleNpcsInArea(player, 11, 799, 800, 801);
+										Npc npc = Functions.ifnearvisnpc(player, 11, 799, 800, 801);
 										if (npc != null) {
 											ActionSender.sendHideIronManInterface(player);
 											player.setAttribute("ironman_delete", true);
@@ -132,7 +132,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 								|| player.getIronMan() == IronmanMode.Hardcore.id())) {
 								if (player.getIronManRestriction() == 0) {
 									if (player.getCache().hasKey("bank_pin")) {
-										Npc npc = Functions.getMultipleNpcsInArea(player, 11, 799, 800, 801);
+										Npc npc = Functions.ifnearvisnpc(player, 11, 799, 800, 801);
 										if (npc != null) {
 											ActionSender.sendHideIronManInterface(player);
 											player.setAttribute("ironman_delete", true);
@@ -167,7 +167,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						}
 						if (setting == 0) {
 							if (!player.getCache().hasKey("bank_pin")) {
-								Npc npc = Functions.getMultipleNpcsInArea(player, 11, 799, 800, 801);
+								Npc npc = Functions.ifnearvisnpc(player, 11, 799, 800, 801);
 								if (npc != null) {
 									ActionSender.sendHideIronManInterface(player);
 									player.setAttribute("ironman_pin", true);

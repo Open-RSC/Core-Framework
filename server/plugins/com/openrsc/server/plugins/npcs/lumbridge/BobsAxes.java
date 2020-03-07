@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class BobsAxes implements ShopInterface,
 	TalkNpcTrigger {
@@ -38,15 +39,15 @@ public final class BobsAxes implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello. How can I help you?");
-		int option = showMenu(p, n, "Give me a quest!",
+		npcsay(p, n, "Hello. How can I help you?");
+		int option = Functions.multi(p, n, "Give me a quest!",
 			"Have you anything to sell?");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "Get yer own!");
+				npcsay(p, n, "Get yer own!");
 				break;
 			case 1:
-				npcTalk(p, n, "Yes, I buy and sell axes, take your pick! (or axe)");
+				npcsay(p, n, "Yes, I buy and sell axes, take your pick! (or axe)");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;

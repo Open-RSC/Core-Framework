@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -48,18 +49,18 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 	}
 
 	private void trufitusDialogue(Player p, Npc n) {
-		npcTalk(p, n, "My people are afraid to stay in the village.",
+		npcsay(p, n, "My people are afraid to stay in the village.",
 			"They have returned to the jungle",
 			"I need to commune with the gods",
 			"to see what fate befalls us",
 			"you could help me by collecting",
 			"some herbs that I need.");
-		int s_opt = showMenu(p, n, false, //do not send over
+		int s_opt = multi(p, n, false, //do not send over
 			"Me, how can I help?",
 			"I am very sorry, but I don't have time for that at the moment.");
 		if (s_opt == 0) {
-			playerTalk(p, n, "Me, how can I help?");
-			npcTalk(p, n, "I need to make a special brew",
+			say(p, n, "Me, how can I help?");
+			npcsay(p, n, "I need to make a special brew",
 				"A potion that helps me to commune with the gods.",
 				"For this potion, I need very",
 				"special herbs that are only found in", "deep jungle",
@@ -69,18 +70,18 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				"and bring it to me. I will give you",
 				"details of where to find the next herb. ",
 				"In return I will give you training in Herblaw");
-			int opts = showMenu(p, n, false, //do not send over
+			int opts = multi(p, n, false, //do not send over
 				"Hmm, sounds difficult, I don't know if I am ready for the challenge",
 				"It sounds like just the challenge for me!");
 			if (opts == 0) {
-				playerTalk(p, n, "Hmm, sounds difficult, I don't know if I am ready for the challenge");
-				npcTalk(p, n, "Very well then Bwana",
+				say(p, n, "Hmm, sounds difficult, I don't know if I am ready for the challenge");
+				npcsay(p, n, "Very well then Bwana",
 					"maybe you will return to me invigorated",
 					"and ready to take up the challenge one day ?");
 			} else if (opts == 1) {
-				playerTalk(p, n, "It sounds like just the challenge for me.",
+				say(p, n, "It sounds like just the challenge for me.",
 					"And it would make a nice break from killing things !");
-				npcTalk(p, n, "That is excellent then Bwana!",
+				npcsay(p, n, "That is excellent then Bwana!",
 					"The first herb you need to gather is called",
 					"'Snake Weed'",
 					"It grows near vines in an area to the south west",
@@ -89,8 +90,8 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				p.getCache().store("got_snake_weed", false);
 			}
 		} else if (s_opt == 1) {
-			playerTalk(p, n, "I am very sorry, but I don't have time for that.");
-			npcTalk(p, n, "Very well then Bwana",
+			say(p, n, "I am very sorry, but I don't have time for that.");
+			npcsay(p, n, "Very well then Bwana",
 				"may your journeys bring you much joy",
 				"maybe you will pass this way again and",
 				"you will then take up my proposal",
@@ -104,42 +105,42 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				/** TRUFITUS **/
 				switch (p.getQuestStage(this)) {
 					case 0:
-						npcTalk(p, n, "Greetings Bwana,",
+						npcsay(p, n, "Greetings Bwana,",
 							"I am Trufitus Shakaya of the",
 							"Taie Bwo Wannai Village. ",
 							"Welcome to our humble settlement.");
-						int opt = showMenu(p, n, false, //do not send over
+						int opt = multi(p, n, false, //do not send over
 							"What does Bwana mean?",
 							"Taie Bwo Wannai? What does that mean?",
 							"It's a nice village, where is everyone?");
 						if (opt == 0) {
-							playerTalk(p, n, "What does Bwana mean?");
-							npcTalk(p, n, "Gracious sir, it means 'friend'",
+							say(p, n, "What does Bwana mean?");
+							npcsay(p, n, "Gracious sir, it means 'friend'",
 								"And friends come in peace",
 								"I assume that you come in peace?");
-							int s = showMenu(p, n, false, //do not send over
+							int s = multi(p, n, false, //do not send over
 								"Yes, of course I do.",
 								"What does a warrior like me know about peace?");
 							if (s == 0) {
-								playerTalk(p, n, "Yes, of course I do!");
-								npcTalk(p, n, "Well, that is good news",
+								say(p, n, "Yes, of course I do!");
+								npcsay(p, n, "Well, that is good news",
 									"as I may have a proposition for you");
-								int s1 = showMenu(p, n,
+								int s1 = multi(p, n,
 									"A proposition eh, sounds interesting!",
 									"I am sorry, but I am very busy");
 								if (s1 == 0) {
-									npcTalk(p, n, "I hoped that you would think so.");
+									npcsay(p, n, "I hoped that you would think so.");
 									trufitusDialogue(p, n);
 								} else if (s1 == 1) {
-									npcTalk(p, n, "Very well then",
+									npcsay(p, n, "Very well then",
 										"may your journeys bring you much joy",
 										"maybe you will pass this way again",
 										"and you will then take up my proposal,",
 										"but for now", "fare thee well");
 								}
 							} else if (s == 1) {
-								playerTalk(p, n, "What does a warrior like me know about peace?");
-								npcTalk(p, n, "When you grow weary of violence",
+								say(p, n, "What does a warrior like me know about peace?");
+								npcsay(p, n, "When you grow weary of violence",
 									"and seek a more enlightened path",
 									"please pay me a visit",
 									"as I may have a proposal for you",
@@ -147,54 +148,54 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"of my people, please excuse me");
 							}
 						} else if (opt == 1) {
-							playerTalk(p, n, "Taie Bwo Wannai? What does that mean?");
-							npcTalk(p, n, "It means 'small clearing in the jungle'",
+							say(p, n, "Taie Bwo Wannai? What does that mean?");
+							npcsay(p, n, "It means 'small clearing in the jungle'",
 								"But now it is the name of our village.");
-							int ss = showMenu(p, n, false, //do not send over
+							int ss = multi(p, n, false, //do not send over
 								"It's a nice village, where is everyone?",
 								"I am sorry, but I am very busy");
 							if (ss == 0) {
-								playerTalk(p, n, "It seems like a nice village, where is everyone?");
+								say(p, n, "It seems like a nice village, where is everyone?");
 								trufitusDialogue(p, n);
 							} else if (ss == 1) {
-								playerTalk(p, n, "I am sorry, but I am very busy");
-								npcTalk(p, n, "Very well then",
+								say(p, n, "I am sorry, but I am very busy");
+								npcsay(p, n, "Very well then",
 									"may your journeys bring you much joy",
 									"maybe you will pass this way again",
 									"and you will then take up my proposal,",
 									"but for now", "fare thee well");
 							}
 						} else if (opt == 2) {
-							playerTalk(p, n, "It seems like a nice village, where is everyone?");
+							say(p, n, "It seems like a nice village, where is everyone?");
 							trufitusDialogue(p, n);
 						}
 						break;
 					case 1:
 						p.getCache().store("got_snake_weed", false);
-						npcTalk(p, n, "Hello Bwana, do you have the Snake Weed?");
-						int option = showMenu(p, n, false, //do not send over
+						npcsay(p, n, "Hello Bwana, do you have the Snake Weed?");
+						int option = multi(p, n, false, //do not send over
 							"Of course!", "Not yet, sorry, what's the clue again?");
 						if (option == 0) {
-							playerTalk(p, n, "Of Course!");
+							say(p, n, "Of Course!");
 							if (!p.getCarriedItems().hasCatalogID(ItemId.SNAKE_WEED.id(), Optional.of(false))) {
-								npcTalk(p, n, "Please don't try to deceive me!",
+								npcsay(p, n, "Please don't try to deceive me!",
 									"I really need that Snake Weed if I am to make this potion");
 							} else { // DONE
-								npcTalk(p, n, "Great, you have the 'Snake Weed'",
+								npcsay(p, n, "Great, you have the 'Snake Weed'",
 									"Ok, the next herb is called, 'Ardrigal'",
 									"it is related to the palm and grows",
 									"to the East in its brother's shady profusion.");
 								p.message("You give the Snake Weed to Trufitus");
-								removeItem(p, ItemId.SNAKE_WEED.id(), 1);
-								npcTalk(p, n, "Many thanks for the 'Snake Weed'");
+								remove(p, ItemId.SNAKE_WEED.id(), 1);
+								npcsay(p, n, "Many thanks for the 'Snake Weed'");
 								setQuestStage(p, this, 2);
 								p.getCache().store("got_ardigal", false);
 								//no longer needed
 								p.getCache().remove("got_snake_weed");
 							}
 						} else if (option == 1) {
-							playerTalk(p, n, "Not yet, sorry, what's the clue again?");
-							npcTalk(p,
+							say(p, n, "Not yet, sorry, what's the clue again?");
+							npcsay(p,
 								n,
 								"It is related to the palm and grows",
 								"well to the north in its brother's shady profusion.",
@@ -203,83 +204,83 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 						break;
 					case 2:
 						p.getCache().store("got_ardigal", false);
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Hello again, have you been able to get the Ardrigal ?");
-						int o = showMenu(p, n, false, //do not send over
+						int o = multi(p, n, false, //do not send over
 								"Of course!", "Not yet, sorry.");
 						if (o == 0) {
-							playerTalk(p, n, "Of Course!");
+							say(p, n, "Of Course!");
 							if (p.getCarriedItems().hasCatalogID(ItemId.ARDRIGAL.id(), Optional.of(false))) { // DONE
-								npcTalk(p, n,
+								npcsay(p, n,
 									"Ah, I see you have found the 'Ardrigal'",
 									"you are doing well Bwana, the next",
 									"herb is called, 'Sito Foil' and grows best",
 									"where the ground has been blackened",
 									"by the living flame.");
-								message(p, "You give the Ardrigal to Trufitus");
-								removeItem(p, ItemId.ARDRIGAL.id(), 1);
+								Functions.mes(p, "You give the Ardrigal to Trufitus");
+								remove(p, ItemId.ARDRIGAL.id(), 1);
 								setQuestStage(p, this, 3);
 								p.getCache().store("got_sito_foil", false);
 								//no longer needed
 								p.getCache().remove("got_ardigal");
 							} else {
-								npcTalk(p, n, "Please don't try to deceive me!",
+								npcsay(p, n, "Please don't try to deceive me!",
 									"I still require Ardrigal,",
 									"this potion will remain incomplete without it.");
 							}
 						} else if (o == 1) {
-							playerTalk(p, n, "Not yet, sorry.");
-							npcTalk(p, n, "I still require Ardrigal,",
+							say(p, n, "Not yet, sorry.");
+							npcsay(p, n, "I still require Ardrigal,",
 								"this potion will remain incomplete without it.");
 						}
 						break;
 					case 3:
 						p.getCache().store("got_sito_foil", false);
-						npcTalk(p, n, "Greetings Bwana",
+						npcsay(p, n, "Greetings Bwana",
 							"have you been successful in getting Sito Foil?");
-						int os = showMenu(p, n, false, //do not send over
+						int os = multi(p, n, false, //do not send over
 								"Of course!", "Not yet, sorry.");
 						if (os == 0) { // DONE
-							playerTalk(p, n, "Of Course!");
+							say(p, n, "Of Course!");
 							if (p.getCarriedItems().hasCatalogID(ItemId.SITO_FOIL.id(), Optional.of(false))) {
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Well done Bwana, just two more herbs",
 									"to collect. The next herb is called, 'Volencia Moss'",
 									"And it clings to rocks for it's existence",
 									"It is difficult to see, so you must search for it well.");
-								message(p, "You give the Sito Foil to Trufitus");
-								removeItem(p, ItemId.SITO_FOIL.id(), 1);
+								Functions.mes(p, "You give the Sito Foil to Trufitus");
+								remove(p, ItemId.SITO_FOIL.id(), 1);
 								setQuestStage(p, this, 4);
 								p.getCache().store("got_volencia_moss", false);
 								//no longer needed
 								p.getCache().remove("got_sito_foil");
 							} else {
-								npcTalk(p, n, "Please don't try to deceive me!",
+								npcsay(p, n, "Please don't try to deceive me!",
 									"I still require Sito Foil, every herb is vital.");
 							}
 						} else if (os == 1) {
-							playerTalk(p, n, "Not yet, sorry.");
-							npcTalk(p, n,
+							say(p, n, "Not yet, sorry.");
+							npcsay(p, n,
 								"I still require Sito Foil, every herb is vital.");
 						}
 						break;
 					case 4:
 						p.getCache().store("got_volencia_moss", false);
-						npcTalk(p, n, "Greetings Bwana",
+						npcsay(p, n, "Greetings Bwana",
 							"Do you have the 'Volencia Moss' ?");
-						int oo = showMenu(p, n, false, //do not send over
+						int oo = multi(p, n, false, //do not send over
 								"Of course!", "Not yet, sorry.");
 						if (oo == 0) {
-							playerTalk(p, n, "Of Course!");
+							say(p, n, "Of Course!");
 							if (!p.getCarriedItems().hasCatalogID(ItemId.VOLENCIA_MOSS.id(), Optional.of(false))) {
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Please don't try to deceive me!",
 									"I know it is difficult to find, but I do need Volencia Moss",
 									"After that herb, you only have one more to find.");
 							} else { // DONE
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Ah, Volencia Moss, beautiful!",
 									"One final herb and the potion will",
@@ -290,16 +291,16 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"A secret entrance to the caverns is set into",
 									"The Northern cliffs of this land",
 									"Take care Bwana as it may be very dangerous");
-								message(p, "You give the Volencia Moss to Trufitus");
-								removeItem(p, ItemId.VOLENCIA_MOSS.id(), 1);
+								Functions.mes(p, "You give the Volencia Moss to Trufitus");
+								remove(p, ItemId.VOLENCIA_MOSS.id(), 1);
 								setQuestStage(p, this, 5);
 								p.getCache().store("got_rogues_purse", false);
 								//no longer needed
 								p.getCache().remove("got_volencia_moss");
 							}
 						} else if (oo == 1) {
-							playerTalk(p, n, "Not yet, sorry.");
-							npcTalk(p,
+							say(p, n, "Not yet, sorry.");
+							npcsay(p,
 								n,
 								"I know it is difficult to find, but I do need Volencia Moss",
 								"After that herb, you only have one more to find.");
@@ -307,17 +308,17 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 						break;
 					case 5:
 						p.getCache().store("got_rogues_purse", false);
-						npcTalk(p, n, "Have you found 'Rogues Purse' ?");
-						int ol = showMenu(p, n, "Yes Sir, indeedy I do!",
+						npcsay(p, n, "Have you found 'Rogues Purse' ?");
+						int ol = multi(p, n, "Yes Sir, indeedy I do!",
 							"Not yet, sorry.");
 						if (ol == 0) {
 							if (!p.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))) {
-								npcTalk(p, n, "Please don't try to deceive me!",
+								npcsay(p, n, "Please don't try to deceive me!",
 									"Rogues Purse is the last herb",
 									"for the potion and possibly the most",
 									"difficult to find but I do need it.");
 							} else { // DONE
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"Most excellent Bwana!",
 									"You have returned all the herbs to me",
@@ -327,14 +328,14 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"please excuse me while I make",
 									"the arrangements");
 								p.message("You give the Rogues Purse to Trufitus");
-								removeItem(p, ItemId.ROGUES_PURSE.id(), 1);
+								remove(p, ItemId.ROGUES_PURSE.id(), 1);
 								p.message("Trufitus shows you some techniques in Herblaw");
 								completeQuest(p, this); // COMPLETED AND FULLY WORKING
 								//no longer needed
 								p.getCache().remove("got_rogues_purse");
 							}
 						} else if (ol == 1) {
-							npcTalk(p, n, "Rogues Purse is the last herb",
+							npcsay(p, n, "Rogues Purse is the last herb",
 								"for the potion and possibly the most",
 								"difficult to find but I do need it.");
 						}
@@ -342,7 +343,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 					case -1: // Two after completion dialogues (first dialogue with
 						// cache is used only once after Quest)
 						if (p.getCache().hasKey("jungle_completed")) {
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"My greatest respects Bwana",
 								"I have communed with the gods",
@@ -353,8 +354,8 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 							return;
 						}
 						if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
-							playerTalk(p, n, "Greetings");
-							npcTalk(p, n, "Hello Bwana.",
+							say(p, n, "Greetings");
+							npcsay(p, n, "Hello Bwana.",
 								"I conclude that you have been succesful.",
 								"Mosol sent word that the village is clearing of Zombies.",
 								"You have done us all a great dead!",
@@ -364,20 +365,20 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 							/*
 							 * Handle shilo village start.
 							 */
-							playerTalk(p, n, "Greetings.");
-							npcTalk(p, n, "Greetings Bwana!",
+							say(p, n, "Greetings.");
+							npcsay(p, n, "Greetings Bwana!",
 								"You look like you have some serious news...");
-							playerTalk(p, n, "Well, I think I may have.",
+							say(p, n, "Well, I think I may have.",
 								"I have just spoken to Mosol Rei and he says that ",
 								"Rashiliyia has returned...");
-							npcTalk(p, n, "Oh dear, it is more serious than I imagined.");
-							int menu = showMenu(p, n,
+							npcsay(p, n, "Oh dear, it is more serious than I imagined.");
+							int menu = multi(p, n,
 								"How are you anyway my friend?",
 								"What do you know about Rashiliyia?",
 								"What do you know about Mosol Rei?");
 							if (menu == 0) {
-								npcTalk(p, n, "I'm very well thanks.");
-								int sub_menu = showMenu(p, n,
+								npcsay(p, n, "I'm very well thanks.");
+								int sub_menu = multi(p, n,
 									"What do you know about Rashiliyia?",
 									"What do you know about Mosol Rei?");
 								if (sub_menu == 0) {
@@ -391,58 +392,58 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								trufitisChat(p, n, Trufitus.WHAT_DO_YOU_KNOW_ABOUT_MOSEL_REI);
 							}
 						} else if (atQuestStages(p, Quests.SHILO_VILLAGE, 3, 4, 5)) {
-							playerTalk(p, n, "Greetings...");
-							npcTalk(p, n, "Greetings Bwana, you have been away!",
+							say(p, n, "Greetings...");
+							npcsay(p, n, "Greetings Bwana, you have been away!",
 								"The situation with Rashiliyia is worsening!",
 								"I pray that you have some good news for me.");
-							playerTalk(p, n, "I think I found the temple of Ah Za Rhoon.");
+							say(p, n, "I think I found the temple of Ah Za Rhoon.");
 							int menu;
 							if (p.getQuestStage(Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Quests.SHILO_VILLAGE) == 5) {
-								menu = showMenu(p, n,
+								menu = multi(p, n,
 									"I have some items that I need help with.",
 									"I need some help with the Temple of Ah Za Rhoon.",
 									"I have just buried Zadimus's corpse.");
 							} else {
-								menu = showMenu(p, n,
+								menu = multi(p, n,
 									"I have some items that I need help with.",
 									"I need some help with the Temple of Ah Za Rhoon.");
 							}
 							if (menu == 0) {
-								npcTalk(p, n, "Well, just let me see the item and I'll help as much as I can.");
+								npcsay(p, n, "Well, just let me see the item and I'll help as much as I can.");
 								trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 							} else if (menu == 1) {
-								npcTalk(p, n, "If you have found the temple, you should search it",
+								npcsay(p, n, "If you have found the temple, you should search it",
 									"thoroughly and see if there are any clues about",
 									"Rashiliyia.");
 								trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 							} else if (menu == 2 && (p.getQuestStage(Quests.SHILO_VILLAGE) == 4 || p.getQuestStage(Quests.SHILO_VILLAGE) == 5)) {
-								npcTalk(p, n, "Something seems different about you. You look like ",
+								npcsay(p, n, "Something seems different about you. You look like ",
 									"you have seen a ghost?");
-								playerTalk(p, n, "It just so happens that I have!");
-								npcTalk(p, n, "Oh! So you managed to bury Zadimus's Corpse?");
-								playerTalk(p, n, "Yes, it was pretty grisly!");
-								int m = showMenu(p, n,
+								say(p, n, "It just so happens that I have!");
+								npcsay(p, n, "Oh! So you managed to bury Zadimus's Corpse?");
+								say(p, n, "Yes, it was pretty grisly!");
+								int m = multi(p, n,
 									"The spirit said something about keys and kin?",
 									"The spirit rambled on about some nonsense.");
 								if (m == 0) {
 									trufitisChat(p, n, Trufitus.KEYS_AND_KIN);
 								} else if (m == 1) {
-									npcTalk(p, n, "Oh, so it most likely was not very important then?");
+									npcsay(p, n, "Oh, so it most likely was not very important then?");
 								}
 							}
 						} else if (p.getQuestStage(Quests.SHILO_VILLAGE) == 6) {
-							playerTalk(p, n, "Greetings...");
-							npcTalk(p, n, "Greetings Bwana, did you find the tomb of Bervirius?");
-							int chat = showMenu(p, n,
+							say(p, n, "Greetings...");
+							npcsay(p, n, "Greetings Bwana, did you find the tomb of Bervirius?");
+							int chat = multi(p, n,
 								"Yes, I found his tomb.",
 								"No, I didn't find a thing.",
 								"I actually need help with something else.");
 							if (chat == 0) {
-								npcTalk(p, n, "That is truly great news Bwana!",
+								npcsay(p, n, "That is truly great news Bwana!",
 									"You are certainly very resourceful.",
 									"If you have found any items that you need help with",
 									"please let me see them and I will help as much as I can.");
-								int ex5 = showMenu(p, n,
+								int ex5 = multi(p, n,
 									"I actually need help with something else.",
 									"I didn't find anything in the tomb.");
 								if (ex5 == 0) {
@@ -451,18 +452,18 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									trufitisChat(p, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
 								}
 							} else if (chat == 1) {
-								npcTalk(p, n, "That is a shame Bwana, we really do need to act against",
+								npcsay(p, n, "That is a shame Bwana, we really do need to act against",
 									"Rashiliyia soon if we are ever to stand a chance of defeating her.");
-								int chat2 = showMenu(p, n,
+								int chat2 = multi(p, n,
 									"Actually I did find the tomb, I was just joking.",
 									"I actually need help with something else.",
 									"I didn't find anything in the tomb.");
 								if (chat2 == 0) {
-									npcTalk(p, n, "Well, Bwana, this is no laughing matter.",
+									npcsay(p, n, "Well, Bwana, this is no laughing matter.",
 										"We need to take this very seriously and act now!",
 										"If you have found any items at the tomb that you need help ",
 										"with please let me see them and I will help as much as I can.");
-									int ex4 = showMenu(p, n,
+									int ex4 = multi(p, n,
 										"I didn't find anything in the tomb.",
 										"I actually need help with something else.");
 									if (ex4 == 0) {
@@ -479,28 +480,28 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								trufitisChat(p, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
 							}
 						} else if (p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
-							npcTalk(p, n, "You may want to start looking for Rashiliyia's Tomb.",
+							npcsay(p, n, "You may want to start looking for Rashiliyia's Tomb.",
 								"Do you need extra help with locating it?");
-							int off = showMenu(p, n,
+							int off = multi(p, n,
 								"Yes please.",
 								"No thanks, I've got a good idea where it is.",
 								"I actually need help with something else.");
 							if (off == 0) {
-								npcTalk(p, n, "You may like to start checking North of Ah Za Rhoon.",
+								npcsay(p, n, "You may like to start checking North of Ah Za Rhoon.",
 									"There must be some clue as to what to look for when locating",
 									"the tomb. Was there anything else at the tomb of Bervirius?");
-								int off2 = showMenu(p, n,
+								int off2 = multi(p, n,
 									"Just a Dolmen with some symbols on it.",
 									"Nothing that was significant.");
 								if (off2 == 0) {
-									npcTalk(p, n, "Well, what symbols were they, perhaps that will",
+									npcsay(p, n, "Well, what symbols were they, perhaps that will",
 										"give a clue to the location?");
 								} else if (off2 == 1) {
-									npcTalk(p, n, "Oh, perhaps you should take another look at them?",
+									npcsay(p, n, "Oh, perhaps you should take another look at them?",
 										"Any scrap of information might be useful.");
 								}
 							} else if (off == 1) {
-								npcTalk(p, n, "Well, that is very good Bwana,",
+								npcsay(p, n, "Well, that is very good Bwana,",
 									"perhaps you should locate it already?");
 							} else if (off == 2) {
 								trufitisChat(p, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
@@ -509,17 +510,17 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 							if (p.getCache().hasKey("dolmen_zombie")
 								&& p.getCache().hasKey("dolmen_skeleton")
 								&& p.getCache().hasKey("dolmen_ghost")) {
-								playerTalk(p, n, "Hello");
-								npcTalk(p, n, "Greetings again Bwana.",
+								say(p, n, "Hello");
+								npcsay(p, n, "Greetings again Bwana.",
 									"I hope that you have managed to locate Rashiliyias Tomb.",
 									"Again, if you found any interesting items, please show",
 									"them to me.");
-								int newMenu2 = showMenu(p, n,
+								int newMenu2 = multi(p, n,
 									"What should I do now?",
 									"Thanks!");
 								if (newMenu2 == 0) {
 									p.message("Trufitus scratches his head.");
-									npcTalk(p, n, "Well Bwana, if you have Rashiliyias remains,",
+									npcsay(p, n, "Well Bwana, if you have Rashiliyias remains,",
 										"you need to find a way to put her spirit to rest.",
 										"Perhaps there was a clue with one of the artifacts",
 										"that you have?",
@@ -528,45 +529,45 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 										"If you do not have her remains, ",
 										"you will need to find them.");
 								} else if (newMenu2 == 1) {
-									npcTalk(p, n, "You're more than welcome Bwana!",
+									npcsay(p, n, "You're more than welcome Bwana!",
 										"Good luck for the rest of your quest.");
 								}
 								return;
 							}
-							playerTalk(p, n, "Hello again..");
-							npcTalk(p, n, "And greetings to you Bwana!",
+							say(p, n, "Hello again..");
+							npcsay(p, n, "And greetings to you Bwana!",
 								"Have you found anything new Bwana?");
-							int tomb = showMenu(p, n,
+							int tomb = multi(p, n,
 								"Nope, I haven't found anything.",
 								"Yes, I've found Rashiliyia's Tomb!",
 								"I get choked when I go into Rashiliyias Tomb.");
 							if (tomb == 0) {
-								npcTalk(p, n, "Well, that is a pity? Perhaps you should keep on looking?");
+								npcsay(p, n, "Well, that is a pity? Perhaps you should keep on looking?");
 							} else if (tomb == 1) {
-								npcTalk(p, n, "Very good Bwana, this is very good!",
+								npcsay(p, n, "Very good Bwana, this is very good!",
 									"Did you find her remains?");
-								int newMenu = showMenu(p, n, false, //do not send over
+								int newMenu = multi(p, n, false, //do not send over
 									"Yes, In fact I did!",
 									"Nope, I haven't found them yet.");
 								if (newMenu == 0) {
-									playerTalk(p, n, "Yes, In fact I did!");
-									npcTalk(p, n, "This is truly great Bwana.",
+									say(p, n, "Yes, In fact I did!");
+									npcsay(p, n, "This is truly great Bwana.",
 										"If you need help with the remains, ",
 										"please show them to me.");
 								} else if (newMenu == 1) {
-									playerTalk(p, n, "No, I haven't found them yet.");
-									npcTalk(p, n, "You really need to find the remains before we",
+									say(p, n, "No, I haven't found them yet.");
+									npcsay(p, n, "You really need to find the remains before we",
 										"can hope to defeat her and remove her influence from",
 										"Shilo village.");
 								}
 							} else if (tomb == 2) {
-								npcTalk(p, n, "Maybe you have missed something, a special clue?",
+								npcsay(p, n, "Maybe you have missed something, a special clue?",
 									"It might be worth searching the temple of Ah Za Rhoon again.",
 									"Or go back to Bervirius Tomb",
 									"for a more thorough search.");
 							}
 						} else {
-							npcTalk(p, n, "Greetings once again Bwana,",
+							npcsay(p, n, "Greetings once again Bwana,",
 								"I have no more news since we last spoke.");
 						}
 						break;
@@ -575,9 +576,9 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 		}
 		switch (cID) {
 			case Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB:
-				npcTalk(p, n, "Maybe you need to look around a little more.",
+				npcsay(p, n, "Maybe you need to look around a little more.",
 					"There must be some small detail at least that can help us");
-				int chat3 = showMenu(p, n,
+				int chat3 = multi(p, n,
 					"I have some items that I need some help with.",
 					"I actually need help with something else.");
 				if (chat3 == 0) {
@@ -587,21 +588,21 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.HELP_WITH_ZADIMUS:
-				npcTalk(p, n, "All I know is that Zadimus was a high priest of Zamorak,",
+				npcsay(p, n, "All I know is that Zadimus was a high priest of Zamorak,",
 					"Rashiliyia loved him but he did not return her affections.",
 					"When she become a more powerful sorceress, she attacked the",
 					"Ah Za Rhoon temple to Zamorak that Zadimus built and ",
 					"reduced it to rubble. What his fate was, I do not know. ",
 					"If you find anything relating to him at the temple of ",
 					"Ah Za Rhoon, please let me see it.");
-				int ex = showMenu(p, n,
+				int ex = multi(p, n,
 					"Is there any sacred ground around here?",
 					"I need help with Bervirius.",
 					"I need help with Rashliyia.",
 					"I need some help with the Temple of Ah Za Rhoon.",
 					"Ok, thanks!");
 				if (ex == 0) {
-					npcTalk(p, n, "The ground in the centre of the village is very sacred to us",
+					npcsay(p, n, "The ground in the centre of the village is very sacred to us",
 						"Maybe you could try there ?");
 				} else if (ex == 1) {
 					trufitisChat(p, n, Trufitus.HELP_WITH_BERVIRIUS);
@@ -610,41 +611,41 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				} else if (ex == 3) {
 					trufitisChat(p, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
 				} else if (ex == 4) {
-					npcTalk(p, n, "You're quite welcome Bwana.");
+					npcsay(p, n, "You're quite welcome Bwana.");
 				}
 				break;
 			case Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE:
-				npcTalk(p, n, "If you have found the temple, you should search it",
+				npcsay(p, n, "If you have found the temple, you should search it",
 					"thoroughly and see if there are any clues about",
 					"Rashiliyia.");
-				int ex3 = showMenu(p, n, false, //do not send over
+				int ex3 = multi(p, n, false, //do not send over
 					"I need help with Rashlilia.",
 					"I need help with Zadimus.",
 					"I have some items that I need help with.",
 					"I need help with Bervirius.",
 					"Ok, thanks!");
 				if (ex3 == 0) {
-					playerTalk(p, n, "I need help with Rashliyia.");
+					say(p, n, "I need help with Rashliyia.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_RASH);
 				} else if (ex3 == 1) {
-					playerTalk(p, n, "I need help with Zadimus.");
+					say(p, n, "I need help with Zadimus.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_ZADIMUS);
 				} else if (ex3 == 2) {
-					playerTalk(p, n, "I have some items that I need help with.");
+					say(p, n, "I have some items that I need help with.");
 					trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 				} else if (ex3 == 3) {
-					playerTalk(p, n, "I need help with Bervirius.");
+					say(p, n, "I need help with Bervirius.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_BERVIRIUS);
 				} else if (ex3 == 4) {
-					playerTalk(p, n, "Ok, thanks!");
-					npcTalk(p, n, "You're quite welcome Bwana.");
+					say(p, n, "Ok, thanks!");
+					npcsay(p, n, "You're quite welcome Bwana.");
 				}
 				break;
 			case Trufitus.HELP_WITH_BERVIRIUS:
-				npcTalk(p, n, "Bervirius is the Son of Rashiliyia.",
+				npcsay(p, n, "Bervirius is the Son of Rashiliyia.",
 					"His tomb may hold some clues as to how",
 					"Rashiliyia may be defeated.");
-				int ex2 = showMenu(p, n,
+				int ex2 = multi(p, n,
 					"I need help with Zadimus.",
 					"I have some items that I need help with.",
 					"I need help with Rashliyia.",
@@ -659,15 +660,15 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				} else if (ex2 == 3) {
 					trufitisChat(p, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
 				} else if (ex2 == 4) {
-					npcTalk(p, n, "You're quite welcome Bwana.");
+					npcsay(p, n, "You're quite welcome Bwana.");
 				}
 				break;
 			case Trufitus.HELP_WITH_RASH:
-				npcTalk(p, n, "We need to find Rashiliyia's resting place ",
+				npcsay(p, n, "We need to find Rashiliyia's resting place ",
 					"and learn how to put her spirit to rest. ",
 					"You may find some clues to her resting place",
 					"in Ah Za Rhoon or Bervirius Tomb.");
-				int b = showMenu(p, n,
+				int b = multi(p, n,
 					"I need help with Zadimus.",
 					"I have some items that I need help with.",
 					"I need help with Bervirius.",
@@ -682,46 +683,46 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				} else if (b == 3) {
 					trufitisChat(p, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
 				} else if (b == 4) {
-					npcTalk(p, n, "You're quite welcome Bwana.");
+					npcsay(p, n, "You're quite welcome Bwana.");
 				}
 				break;
 			case Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE:
-				npcTalk(p, n, "What could I possibly help you with Bwana?");
-				int c = showMenu(p, n, false, //do not send over
+				npcsay(p, n, "What could I possibly help you with Bwana?");
+				int c = multi(p, n, false, //do not send over
 					"I need help with Rashiliyia.",
 					"I need help with Zadimus.",
 					"I have some items that I need help with.",
 					"I need help with Bervirius.",
 					"Ok, thanks!");
 				if (c == 0) {
-					playerTalk(p, n, "I need help with Rashliyia.");
+					say(p, n, "I need help with Rashliyia.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_RASH);
 				} else if (c == 1) {
-					playerTalk(p, n, "I need help with Zadimus.");
+					say(p, n, "I need help with Zadimus.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_ZADIMUS);
 				} else if (c == 2) {
-					playerTalk(p, n, "I have some items that I need help with.");
+					say(p, n, "I have some items that I need help with.");
 					trufitisChat(p, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 				} else if (c == 3) {
-					playerTalk(p, n, "I need help with Bervirius.");
+					say(p, n, "I need help with Bervirius.");
 					trufitisChat(p, n, Trufitus.HELP_WITH_BERVIRIUS);
 				} else if (c == 4) {
-					playerTalk(p, n, "Ok, thanks!");
-					npcTalk(p, n, "You're quite welcome Bwana.");
+					say(p, n, "Ok, thanks!");
+					npcsay(p, n, "You're quite welcome Bwana.");
 				}
 				break;
 			case Trufitus.WHAT_DO_YOU_KNOW_ABOUT_MOSEL_REI:
-				npcTalk(p, n, "I know he is a brave warrior, he lives in a village south of here.",
+				npcsay(p, n, "I know he is a brave warrior, he lives in a village south of here.",
 					"Your journeys have taken you far!");
-				int opt = showMenu(p, n,
+				int opt = multi(p, n,
 					"What do you know about Rashiliyia?",
 					"Do you trust him?");
 				if (opt == 0) {
 					trufitisChat(p, n, Trufitus.WHAT_DO_YOU_KNOW_ABOUT_RASHILIYIA);
 				} else if (opt == 1) {
-					npcTalk(p, n, "He is a little headstrong, but for the right reasons.",
+					npcsay(p, n, "He is a little headstrong, but for the right reasons.",
 						"I think he is generally to be trusted.");
-					int opt2 = showMenu(p, n, "What do you know about Rashiliyia?",
+					int opt2 = multi(p, n, "What do you know about Rashiliyia?",
 						"Mosol Rei said something about a legend?");
 					if (opt2 == 0) {
 						trufitisChat(p, n, Trufitus.WHAT_DO_YOU_KNOW_ABOUT_RASHILIYIA);
@@ -731,18 +732,18 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.WHAT_DO_YOU_KNOW_ABOUT_RASHILIYIA:
-				npcTalk(p, n, "Hmmm, it's been a long time since I heard that name.",
+				npcsay(p, n, "Hmmm, it's been a long time since I heard that name.",
 					"She is the Queen of the Undead.",
 					"and a more fearsome enemy you will be unlikely to find.",
 					"I fear that you bring me news that she has returned to plague us once again?",
 					"Alas I know of no weakness that she has.");
-				int opt3 = showMenu(p, n,
+				int opt3 = multi(p, n,
 					"So there is nothing we can do?",
 					"Should I start to evacuate the island?",
 					"Mosol Rei said something about a legend?");
 				if (opt3 == 0) {
-					npcTalk(p, n, "Not that I can think of");
-					int opt8 = showMenu(p, n,
+					npcsay(p, n, "Not that I can think of");
+					int opt8 = multi(p, n,
 						"Oh, ok!",
 						"Should I start to evacuate the Island?");
 					if (opt8 == 0) {
@@ -757,11 +758,11 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.SOMETHING_ABOUT_A_LEGEND:
-				npcTalk(p, n, "Ah, yes, there is a legend, but it is lost in the midst of antiquity...",
+				npcsay(p, n, "Ah, yes, there is a legend, but it is lost in the midst of antiquity...",
 					"The last place to hold any details regarding this mystery",
 					"was in the temple of Ah-Za_Rhoon",
 					"And that has long since vanished, it crumbled into dust.");
-				int opt4 = showMenu(p, n,
+				int opt4 = multi(p, n,
 					"Why was it called Ah Za Rhoon?",
 					"Do you know anything more about the temple?");
 				if (opt4 == 0) {
@@ -771,39 +772,39 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.MORE_ABOUT_THE_TEMPLE:
-				npcTalk(p, n, "Not much",
+				npcsay(p, n, "Not much",
 					"I would say that is about it...",
 					"Even the great priest Zadimus who built the temple did not survive.",
 					"Some say that Rashiliyia caused the temple to colapse.",
 					"She was angry at Zadimus for not returning her affections.",
 					"She was a great sorceress even before they met.");
-				int opt6 = showMenu(p, n,
+				int opt6 = multi(p, n,
 					"Tell me more",
 					"Are there any traps there?");
 				if (opt6 == 0) {
-					npcTalk(p, n, "I don't know anymore.",
+					npcsay(p, n, "I don't know anymore.",
 						"You're very demanding aren't you!");
 				} else if (opt6 == 1) {
-					npcTalk(p, n, "How am I supposed to know?",
+					npcsay(p, n, "How am I supposed to know?",
 						"Alot of what I know is most probably wrong",
 						"But some of it seems right to me.",
 						"Excuse me but I must get back to my studies.");
 				}
 				break;
 			case Trufitus.EVACUATE_ISLAND:
-				npcTalk(p, n, "Yes, that may be a good idea",
+				npcsay(p, n, "Yes, that may be a good idea",
 					"Many people could die!",
 					"If only there was a way to defeat her!");
-				int opt7 = showMenu(p, n,
+				int opt7 = multi(p, n,
 					"Mosol Rei said something about a legend?",
 					"Will you pack your things now?");
 				if (opt7 == 0) {
 					trufitisChat(p, n, Trufitus.SOMETHING_ABOUT_A_LEGEND);
 				} else if (opt7 == 1) {
-					npcTalk(p, n, "I will wait and see what will happen.",
+					npcsay(p, n, "I will wait and see what will happen.",
 						"Maybe she does not have the power to strike too far from her resting place?",
 						"But there are many things that I need to do now");
-					int opt9 = showMenu(p, n,
+					int opt9 = multi(p, n,
 						"Is her resting place important?",
 						"Oh, ok!");
 					if (opt9 == 0) {
@@ -814,12 +815,12 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.THANKS_FOR_THE_INFORMATION:
-				npcTalk(p, n, "What information?");
-				message(p, "Trufitus looks at you blankly, then wanders off.");
-				npcTalk(p, n, "Hmmm, well, you are welcome bwana.");
+				npcsay(p, n, "What information?");
+				Functions.mes(p, "Trufitus looks at you blankly, then wanders off.");
+				npcsay(p, n, "Hmmm, well, you are welcome bwana.");
 				break;
 			case Trufitus.AH_ZA_RHOON:
-				npcTalk(p, n, "It is from an ancient language.",
+				npcsay(p, n, "It is from an ancient language.",
 					"The direct translation is...",
 					"'Magnificence floating on water'",
 					"But my research makes me believe that the temple was built on land",
@@ -829,7 +830,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 1) {
 					p.updateQuestStage(Quests.SHILO_VILLAGE, 2);
 				}
-				int opt5 = showMenu(p, n,
+				int opt5 = multi(p, n,
 					"Thanks for the information!",
 					"Do you know anything more about the temple?");
 				if (opt5 == 0) {
@@ -839,16 +840,16 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.OH_OK:
-				npcTalk(p, n, "Yes, it's a bit sad really, I liked that village.");
-				message(p, "Trufitus seems deeply touched...");
-				npcTalk(p, n, "Well, I hope you will excuse me, but I need to get back to my studies.");
+				npcsay(p, n, "Yes, it's a bit sad really, I liked that village.");
+				Functions.mes(p, "Trufitus seems deeply touched...");
+				npcsay(p, n, "Well, I hope you will excuse me, but I need to get back to my studies.");
 				break;
 			case Trufitus.WEAKNESS:
-				npcTalk(p, n, "I am not sure, but the legend about her certainly is long",
+				npcsay(p, n, "I am not sure, but the legend about her certainly is long",
 					"It's a pity that the temple of Ah Za Rhoon has crumbled",
 					"as there my be some clues that could help us to defeat her.",
 					"Usually, the largest problem is locating her resting place.");
-				int opt12 = showMenu(p, n,
+				int opt12 = multi(p, n,
 					"Why was it called Ah Za Rhoon?",
 					"Is her resting place important?");
 				if (opt12 == 0) {
@@ -858,20 +859,20 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.RESTING_PLACE:
-				npcTalk(p, n, "Only a few people ever reported seeing a ghost like wraith",
+				npcsay(p, n, "Only a few people ever reported seeing a ghost like wraith",
 					"It only ever appeared in the place where her bones were laid to rest",
 					"Of course, she only has to get one of her minions to move the bones",
 					"And she has a new land to unleash her undead plague.");
-				int opt10 = showMenu(p, n,
+				int opt10 = multi(p, n,
 					"What are minions?",
 					"What are onions?");
 				if (opt10 == 0) {
-					npcTalk(p, n, "Minions are the fiendish undead creatures that she controls.",
+					npcsay(p, n, "Minions are the fiendish undead creatures that she controls.",
 						"She has very few living worshippers, but they need to be dealt with at some point",
 						"Usually a strong creature of some sort will be guarding her remains",
 						"And of course, she is a very powerful spell caster herself ",
 						"Not to be tackled lightly");
-					int opt13 = showMenu(p, n,
+					int opt13 = multi(p, n,
 						"Thanks for the information!",
 						"Does she have any weaknesses?");
 					if (opt13 == 0) {
@@ -880,15 +881,15 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 						trufitisChat(p, n, Trufitus.WEAKNESS);
 					}
 				} else if (opt10 == 1) {
-					message(p, "Trufitus looks at you blankly");
-					npcTalk(p, n, "Surely you mean Minions?");
-					playerTalk(p, n, "Yes of course, I mean Minions, what made you think I said Onions?");
-					message(p, "Trufitus frowns at you but continues about...minions...");
-					npcTalk(p, n, "Minions are the fiendish undead creatures that Rashiliyia controls.",
+					Functions.mes(p, "Trufitus looks at you blankly");
+					npcsay(p, n, "Surely you mean Minions?");
+					say(p, n, "Yes of course, I mean Minions, what made you think I said Onions?");
+					Functions.mes(p, "Trufitus frowns at you but continues about...minions...");
+					npcsay(p, n, "Minions are the fiendish undead creatures that Rashiliyia controls.",
 						"She has very few living worshippers, but they need to be dealt with at some point",
 						"Usually a strong creature of some sort will be guarding the bones",
 						"And it is not to be tackled lightly");
-					int opt11 = showMenu(p, n,
+					int opt11 = multi(p, n,
 						"Thanks for the information!",
 						"Does she have any weaknesses?");
 					if (opt11 == 0) {
@@ -899,9 +900,9 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.SHOW_ME_TEMPLE_ITEMS:
-				npcTalk(p, n, "Well, just let me see the item and I'll help as much as I can.");
+				npcsay(p, n, "Well, just let me see the item and I'll help as much as I can.");
 				if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 6) {
-					int optTemp = showMenu(p, n, "I need help with Zadimus.",
+					int optTemp = multi(p, n, "I need help with Zadimus.",
 							"I need help with Bervirius.",
 							"I need help with Rashliyia.",
 							"I need some help with the Temple of Ah Za Rhoon.",
@@ -913,28 +914,28 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 					} else if (optTemp == 2) {
 						trufitisChat(p, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
 					} else if (optTemp == 3) {
-						npcTalk(p, n, "You're quite welcome Bwana.");
+						npcsay(p, n, "You're quite welcome Bwana.");
 					}
 					return;
 				}
 				//no stone-plaque in bank or inventory
 				if(!p.getBank().hasItemId(ItemId.STONE_PLAQUE.id()) && !p.getCarriedItems().hasCatalogID(ItemId.STONE_PLAQUE.id())) {
-					npcTalk(p, n, "Look for something that can identify the place.",
+					npcsay(p, n, "Look for something that can identify the place.",
 							"Leave no stone unturned.");
 				}
 				else {
-					npcTalk(p, n, "We need to identify that the place you have found",
+					npcsay(p, n, "We need to identify that the place you have found",
 							"is indeed Ah Za Rhoon.");
 				}
 				//player has not explored inner Ah Za Rhoon
 				if(!p.getCache().hasKey("obtained_shilo_info")) {
-					npcTalk(p, n, "Look for details of Rashiliyias Kin, these may be well hidden.",
+					npcsay(p, n, "Look for details of Rashiliyias Kin, these may be well hidden.",
 							"There is a legend about Rashiliyia, look for it in the temple.",
 							"Look for something relating to Zadimus at the temple.",
 							"And best of luck!");
 				}
 				else {
-					npcTalk(p, n, "Any scrolls or information about Rashiliyias Kin would be helpful",
+					npcsay(p, n, "Any scrolls or information about Rashiliyias Kin would be helpful",
 							"Have you got any items concerning Rashiliyia?",
 							"If so, please show me them.",
 							"There must be something relating to Zadimus at the temple",
@@ -943,7 +944,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				}
 				break;
 			case Trufitus.KEYS_AND_KIN:
-				npcTalk(p, n, "Hmmm, maybe it's a clue of some kind?",
+				npcsay(p, n, "Hmmm, maybe it's a clue of some kind?",
 					"Well, Rashiliyias only kin, Bervirius, is entombed",
 					"on a small island which lies to the South West.",
 					"I will do some research into this as well.",
@@ -990,8 +991,8 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), Optional.of(false))
 				&& !p.getCarriedItems().hasCatalogID(ItemId.SNAKE_WEED.id(), Optional.of(false)) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 						(!hasCacheKeySetTrue(p, "got_snake_weed") && atQuestStage(p, this, 1)) )) {
-				message(p, "Small amounts of a herb are growing near this vine");
-				createGroundItem(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
+				Functions.mes(p, "Small amounts of a herb are growing near this vine");
+				addobject(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
 					.getY(), p);
 				if(atQuestStage(p, this, 1)) {
 					p.getCache().store("got_snake_weed", true);
@@ -1011,8 +1012,8 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_ARDRIGAL.id(), Optional.of(false))
 				&& !p.getCarriedItems().hasCatalogID(ItemId.ARDRIGAL.id(), Optional.of(false)) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 					(!hasCacheKeySetTrue(p, "got_ardigal") && atQuestStage(p, this, 2)) )) {
-				message(p, "You find a herb plant growing at the base of the palm");
-				createGroundItem(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), p);
+				Functions.mes(p, "You find a herb plant growing at the base of the palm");
+				addobject(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), p);
 				if(atQuestStage(p, this, 2)) {
 					p.getCache().store("got_ardigal", true);
 				}
@@ -1024,9 +1025,9 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !p.getCarriedItems().hasCatalogID(ItemId.SITO_FOIL.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_sito_foil")
 				&& atQuestStage(p, this, 3)) {
-				message(p,
+				Functions.mes(p,
 					"A small herb plant is growing in the scorched soil.");
-				createGroundItem(ItemId.UNIDENTIFIED_SITO_FOIL.id(), 1, obj.getX(), obj
+				addobject(ItemId.UNIDENTIFIED_SITO_FOIL.id(), 1, obj.getX(), obj
 					.getY(), p);
 				p.getCache().store("got_sito_foil", true);
 			} else {
@@ -1037,9 +1038,9 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !p.getCarriedItems().hasCatalogID(ItemId.VOLENCIA_MOSS.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_volencia_moss")
 				&& atQuestStage(p, this, 4)) {
-				message(p,
+				Functions.mes(p,
 					"Small amounts of herb moss are growing at the base of this rock");
-				createGroundItem(ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(), 1, obj.getX(), obj
+				addobject(ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(), 1, obj.getX(), obj
 					.getY(), p);
 				p.getCache().store("got_volencia_moss", true);
 			} else {
@@ -1061,9 +1062,9 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !p.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_rogues_purse")
 				&& atQuestStage(p, this, 5)) {
-				message(p,
+				Functions.mes(p,
 					"Small amounts of herb fungus are growing at the base of this cavern wall");
-				createGroundItem(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), 1, p.getX(),
+				addobject(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), 1, p.getX(),
 					p.getY(), p);
 				p.getCache().store("got_rogues_purse", true);
 			} else

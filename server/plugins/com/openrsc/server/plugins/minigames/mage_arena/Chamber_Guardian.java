@@ -25,58 +25,58 @@ public class Chamber_Guardian implements ShopInterface,
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("mage_arena")
 			&& p.getCache().getInt("mage_arena") == 2) {
-			playerTalk(p, n, "hello my friend, kolodion sent me down");
-			npcTalk(p, n,
+			say(p, n, "hello my friend, kolodion sent me down");
+			npcsay(p, n,
 				"sssshhh...the gods are talking..i can hear their whispers",
 				"..can you hear them adventurer...they're calling you");
-			playerTalk(p, n, "erm...ok!");
-			npcTalk(p, n,
+			say(p, n, "erm...ok!");
+			npcsay(p, n,
 				"go and chant to the the sacred stone of your chosen god",
 				"you will be rewarded");
-			playerTalk(p, n, "ok?");
-			npcTalk(p, n, "once you're done come back to me...",
+			say(p, n, "ok?");
+			npcsay(p, n, "once you're done come back to me...",
 				"...and i'll supply you with a mage staff ready for battle");
 			p.getCache().set("mage_arena", 3);
 		} else if ((p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 3) &&
 			(p.getCarriedItems().hasCatalogID(ItemId.ZAMORAK_CAPE.id(), Optional.of(false))
 				|| p.getCarriedItems().hasCatalogID(ItemId.SARADOMIN_CAPE.id(), Optional.of(false))
 				|| p.getCarriedItems().hasCatalogID(ItemId.GUTHIX_CAPE.id(), Optional.of(false)))) {
-			npcTalk(p, n, "hello adventurer, have you made your choice?");
-			playerTalk(p, n, "i have");
-			npcTalk(p, n, "good, good .. i hope you chose well",
+			npcsay(p, n, "hello adventurer, have you made your choice?");
+			say(p, n, "i have");
+			npcsay(p, n, "good, good .. i hope you chose well",
 				"you will have been rewarded with a magic cape",
 				"now i will give you a magic staff",
 				"these are all the weapons and armour you'll need here");
 			p.message("the mage guardian gives you a magic staff");
 			if (p.getCarriedItems().hasCatalogID(ItemId.ZAMORAK_CAPE.id(), Optional.of(false))) {
-				addItem(p, ItemId.STAFF_OF_ZAMORAK.id(), 1);
+				give(p, ItemId.STAFF_OF_ZAMORAK.id(), 1);
 			} else if (p.getCarriedItems().hasCatalogID(ItemId.SARADOMIN_CAPE.id(), Optional.of(false))) {
-				addItem(p, ItemId.STAFF_OF_SARADOMIN.id(), 1);
+				give(p, ItemId.STAFF_OF_SARADOMIN.id(), 1);
 			} else if (p.getCarriedItems().hasCatalogID(ItemId.GUTHIX_CAPE.id(), Optional.of(false))) {
-				addItem(p, ItemId.STAFF_OF_GUTHIX.id(), 1);
+				give(p, ItemId.STAFF_OF_GUTHIX.id(), 1);
 			}
 			p.getCache().set("mage_arena", 4);
 		} else if (p.getCache().hasKey("mage_arena") && p.getCache().getInt("mage_arena") == 4) {
-			playerTalk(p, n, "hello again");
-			npcTalk(p, n, "hello adventurer, are you looking for another staff?");
-			int choice = showMenu(p, n, "what do you have to offer?", "no thanks", "tell me what you know about the charge spell?");
+			say(p, n, "hello again");
+			npcsay(p, n, "hello adventurer, are you looking for another staff?");
+			int choice = multi(p, n, "what do you have to offer?", "no thanks", "tell me what you know about the charge spell?");
 			if (choice == 0) {
-				npcTalk(p, n, "take a look");
+				npcsay(p, n, "take a look");
 				ActionSender.showShop(p, shop);
 			} else if (choice == 1) {
-				npcTalk(p, n, "well, let me know if you need one");
+				npcsay(p, n, "well, let me know if you need one");
 			} else if (choice == 2) {
-				npcTalk(p, n, "we believe the spells are gifts from the gods",
+				npcsay(p, n, "we believe the spells are gifts from the gods",
 					"the charge spell draws even more power from the cosmos",
 					"while wearing a matching cape and staff",
 					"it will double the damage caused by ...",
 					"battle mage spells for several minutes");
-				playerTalk(p, n, "good stuff");
+				say(p, n, "good stuff");
 			}
 		} else {
-			npcTalk(p, n, "hello adventurer, have you made your choice?");
-			playerTalk(p, n, "no, not yet.");
-			npcTalk(p, n, "once you're done come back to me...",
+			npcsay(p, n, "hello adventurer, have you made your choice?");
+			say(p, n, "no, not yet.");
+			npcsay(p, n, "once you're done come back to me...",
 				"...and i'll supply you with a mage staff ready for battle");
 		}
 	}

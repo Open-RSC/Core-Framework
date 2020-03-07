@@ -13,6 +13,7 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -49,72 +50,72 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
-			playerTalk(p, n, "hello there", "what is this place?");
-			npcTalk(p, n, "do not waste my time with trivial questions!",
+			say(p, n, "hello there", "what is this place?");
+			npcsay(p, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
-			playerTalk(p, n, "can i enter?");
-			npcTalk(p, n, "hah, a wizard of your level..don't be absurd");
+			say(p, n, "can i enter?");
+			npcsay(p, n, "hah, a wizard of your level..don't be absurd");
 		} else if (p.getCache().hasKey("mage_arena")) {
 			int stage = p.getCache().getInt("mage_arena");
 			/* Started but failed. */
 			if (stage == 1) {
-				playerTalk(p, n, "hi");
-				npcTalk(p, n, "you return young conjurer..", "..you obviously have a taste for the darkside of magic",
+				say(p, n, "hi");
+				npcsay(p, n, "you return young conjurer..", "..you obviously have a taste for the darkside of magic",
 					"let us continue with the battle...now");
 				if (cantGo(p)) {
-					message(p, "You cannot enter the arena...", "...while carrying weapons or armour");
+					Functions.mes(p, "You cannot enter the arena...", "...while carrying weapons or armour");
 					return;
 				}
-				movePlayer(p, 229, 130);
+				teleport(p, 229, 130);
 				setCurrentLevel(p, 0, 0);
 				setCurrentLevel(p, 2, 0);
 				spawnKolodion(p, p.getCache().getInt("kolodion_stage"));
 				startKolodionEvent(p);
 
 			} else if (stage >= 2) {
-				playerTalk(p, n, "hello kolodion");
-				npcTalk(p, n, "hey there, how are you?, enjoying the bloodshed?");
-				playerTalk(p, n, "it's not bad, i've seen worse");
-				int menu = showMenu(p, n,
+				say(p, n, "hello kolodion");
+				npcsay(p, n, "hey there, how are you?, enjoying the bloodshed?");
+				say(p, n, "it's not bad, i've seen worse");
+				int menu = multi(p, n,
 					"i think i've had enough for now",
 					"how can i use my new spells outside of the arena?");
 				if (menu == 0) {
-					npcTalk(p, n, "shame , you're a good battle mage",
+					npcsay(p, n, "shame , you're a good battle mage",
 						"hope to see you soon");
 				} else if (menu == 1) {
-					npcTalk(p, n, "experience my friend, experience",
+					npcsay(p, n, "experience my friend, experience",
 						"once you've used the spell enough times in the arena...",
 						"...you'll be able to use them in the rest of runescape");
-					playerTalk(p, n, "good stuff");
-					npcTalk(p, n, "not so good for the citizens, they won't stand a chance");
-					playerTalk(p, n, "how am i doing so far?");
+					say(p, n, "good stuff");
+					npcsay(p, n, "not so good for the citizens, they won't stand a chance");
+					say(p, n, "how am i doing so far?");
 					if (p.getCache().hasKey("Saradomin strike_casts") && p.getCache().getInt("Saradomin strike_casts") >= 100) {
-						npcTalk(p, n, "you're fully trained to use the strike spell anywhere");
+						npcsay(p, n, "you're fully trained to use the strike spell anywhere");
 					} else {
-						npcTalk(p, n, "you still need to train with the strike spell...",
+						npcsay(p, n, "you still need to train with the strike spell...",
 							"...inside the arena before you can use it outside");
 					}
 					if (p.getCache().hasKey("Claws of Guthix_casts") && p.getCache().getInt("Claws of Guthix_casts") >= 100) {
-						npcTalk(p, n, "you're fully trained to use the claw spell anywhere");
+						npcsay(p, n, "you're fully trained to use the claw spell anywhere");
 					} else {
-						npcTalk(p, n, "you still need to train with the claw spell...",
+						npcsay(p, n, "you still need to train with the claw spell...",
 							"...inside the arena before you can use it outside");
 					}
 					if (p.getCache().hasKey("Flames of Zamorak_casts") && p.getCache().getInt("Flames of Zamorak_casts") >= 100) {
-						npcTalk(p, n, "you're fully trained to use the flame spell anywhere");
+						npcsay(p, n, "you're fully trained to use the flame spell anywhere");
 					} else {
-						npcTalk(p, n, "you still need to train with the flame spell...",
+						npcsay(p, n, "you still need to train with the flame spell...",
 							"...inside the arena before you can use it outside");
 					}
 				}
 			}
 		} else {
-			playerTalk(p, n, "hello there",
+			say(p, n, "hello there",
 				"what is this place?");
-			npcTalk(p, n, "i am the great kolodion, master of battle magic ...",
+			npcsay(p, n, "i am the great kolodion, master of battle magic ...",
 				"... and this is my battle arena",
 				"top wizards travel from all over to fight here");
-			int choice = showMenu(p, n, "can i fight here?", "what's the point of that?", "that's barbaric");
+			int choice = multi(p, n, "can i fight here?", "what's the point of that?", "that's barbaric");
 			if (choice == 0) {
 				canifight(p, n);
 			} else if (choice == 1) {
@@ -126,23 +127,23 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	public void canifight(Player p, Npc n) {
-		npcTalk(p, n, "my arena is open to any high level wizard",
+		npcsay(p, n, "my arena is open to any high level wizard",
 				"but this is no game traveller, wizards fall in this arena..",
 				"..never to rise again, the strongest of mage's have been destroyed",
 				"but if you're sure you want in?");
-		int choice = showMenu(p, n, "yes indeedy", "no, i don't");
+		int choice = multi(p, n, "yes indeedy", "no, i don't");
 		if (choice == 0) {
 			joinfight(p, n);
 		} else if (choice == 1) {
-			npcTalk(p, n, "your loss");
+			npcsay(p, n, "your loss");
 		}
 	}
 
 	public void whatsthepoint(Player p, Npc n) {
-		npcTalk(p, n, "we learn how to use our magic to it fullest...",
+		npcsay(p, n, "we learn how to use our magic to it fullest...",
 			"..,how to channel forces of the cosmos into our world..",
 			"..,but mainly I just like blasting people into dust");
-		int choice = showMenu(p, n, "can i fight here?", "that's barbaric");
+		int choice = multi(p, n, "can i fight here?", "that's barbaric");
 		if (choice == 0) {
 			canifight(p, n);
 		} else if (choice == 1) {
@@ -151,32 +152,32 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	public void barbaric(Player p, Npc n) {
-		npcTalk(p, n, "nope, it's magic, but I know what you mean",
+		npcsay(p, n, "nope, it's magic, but I know what you mean",
 				"so do you want to join us?");
-		int choice = showMenu(p, n, "yes indeedy", "no, i don't");
+		int choice = multi(p, n, "yes indeedy", "no, i don't");
 		if (choice == 0) {
 			joinfight(p, n);
 		} else if (choice == 1) {
-			npcTalk(p, n, "your loss");
+			npcsay(p, n, "your loss");
 		}
 	}
 
 	public void joinfight(Player p, Npc n) {
-		npcTalk(p, n, "good..good, you have a healthy sense of competition",
+		npcsay(p, n, "good..good, you have a healthy sense of competition",
 			"remember traveller in my arena hand to hand combat is useless",
 			"your strength will diminish as you enter the arena",
 			"but the spells you can learn are amongst the most powerful in runescape",
 			"before i can accept you in, we must duel",
 			"you may not take armour or weapons into the arena");
 		if (cantGo(p)) {
-			message(p, "You cannot enter the arena...", "...while carrying weapons or armour");
+			Functions.mes(p, "You cannot enter the arena...", "...while carrying weapons or armour");
 		}
 		else {
-			int choice = showMenu(p, n, "ok let's fight", "no thanks");
+			int choice = multi(p, n, "ok let's fight", "no thanks");
 			if (choice == 0) {
-				npcTalk(p, n, "I must check that you're up to scratch");
-				playerTalk(p, n, "you don't need to worry about that");
-				npcTalk(p, n, "not just any magician can enter traveller",
+				npcsay(p, n, "I must check that you're up to scratch");
+				say(p, n, "you don't need to worry about that");
+				npcsay(p, n, "not just any magician can enter traveller",
 						"only the most powerful, the most feared",
 						"before you use the power of this arena",
 						"you must prove yourself against me",
@@ -184,15 +185,15 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				if (!p.getCache().hasKey("mage_arena")) {
 					p.getCache().set("mage_arena", 1);
 				}
-				movePlayer(p, 229, 130);
+				teleport(p, 229, 130);
 				setCurrentLevel(p, Skills.ATTACK, 0);
 				setCurrentLevel(p, Skills.STRENGTH, 0);
 
 				startKolodionEvent(p);
 				spawnKolodion(p, NpcId.KOLODION_HUMAN.id());
-				sleep(650);
+				delay(650);
 			} else if (choice == 1) {
-				npcTalk(p, n, "your loss");
+				npcsay(p, n, "your loss");
 			}
 		}
 	}
@@ -218,9 +219,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					getOwner().getSkills().setLevel(Skills.ATTACK, 0);
 					getOwner().getSkills().setLevel(Skills.STRENGTH, 0);
 				}
-				Npc Guthix = getNearestNpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
-				Npc Zamorak = getNearestNpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
-				Npc Saradomin = getNearestNpc(p, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
+				Npc Guthix = ifnearvisnpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
+				Npc Zamorak = ifnearvisnpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
+				Npc Saradomin = ifnearvisnpc(p, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
 				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 33);
@@ -325,7 +326,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	public void spawnKolodion(Player player, int id) {
-		player.setAttribute("spawned_kolodion", spawnNpc(id, 227, 130, 300000, player));
+		player.setAttribute("spawned_kolodion", addnpc(id, 227, 130, 300000, player));
 		player.getCache().set("kolodion_stage", id);
 		player.message("kolodion blasts you " + (id == NpcId.KOLODION_HUMAN.id() ? "with his staff" : "again"));
 		player.damage(random(7, 15));
@@ -369,45 +370,45 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			n.remove();
 
 			if (n.getID() == NpcId.KOLODION_HUMAN.id()) {
-				message(p, "kolodion slumps to the floor..");
-				message(p, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
+				Functions.mes(p, "kolodion slumps to the floor..");
+				Functions.mes(p, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
 				spawnKolodion(p, NpcId.KOLODION_OGRE.id());
 			} else if (n.getID() == NpcId.KOLODION_OGRE.id()) {
-				message(p, "kolodion slumps to the floor once more..",
+				Functions.mes(p, "kolodion slumps to the floor once more..",
 					"..but again his body begins to grow and he changes form", "He becomes an enormous spider");
 				spawnKolodion(p, NpcId.KOLODION_SPIDER.id());
 			} else if (n.getID() == NpcId.KOLODION_SPIDER.id()) {
-				message(p, "kolodion again slumps to the floor..",
+				Functions.mes(p, "kolodion again slumps to the floor..",
 					"..but again his body begins to grow as he changes form", "He becomes an ethereal being");
 				spawnKolodion(p, NpcId.KOLODION_SOULESS.id());
 			} else if (n.getID() == NpcId.KOLODION_SOULESS.id()) {
-				message(p, "kolodion again slumps to the floor..motionless",
+				Functions.mes(p, "kolodion again slumps to the floor..motionless",
 					"..but again his body begins to grow as he changes form", "...larger this time",
 					"He becomes a vicious demon");
 				spawnKolodion(p, NpcId.KOLODION_DEMON.id());
 			} else if (n.getID() == NpcId.KOLODION_DEMON.id()) {
-				message(p, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
-				message(p, "@yel@Kolodion: \"well done young adventurer\"",
+				Functions.mes(p, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
+				Functions.mes(p, "@yel@Kolodion: \"well done young adventurer\"",
 					"@yel@Kolodion: \"you truly are a worthy battle mage\"");
 				p.message("kolodion teleports you to his cave");
 				p.teleport(446, 3370);
-				Npc kolodion = getNearestNpc(p, NpcId.KOLODION.id(), 5);
+				Npc kolodion = ifnearvisnpc(p, NpcId.KOLODION.id(), 5);
 				if (kolodion == null) {
 					p.message("kolodion is currently busy");
 					return;
 				}
-				playerTalk(p, kolodion, "what now kolodion? how can i learn some of those spells?");
-				npcTalk(p, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
+				say(p, kolodion, "what now kolodion? how can i learn some of those spells?");
+				npcsay(p, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
 					"...you will represent in the mage arena");
-				playerTalk(p, kolodion, "cool");
-				npcTalk(p, kolodion, "step into the magic pool, it will carry you to the chamber");
-				playerTalk(p, kolodion, "the chamber?");
+				say(p, kolodion, "cool");
+				npcsay(p, kolodion, "step into the magic pool, it will carry you to the chamber");
+				say(p, kolodion, "the chamber?");
 
-				npcTalk(p, kolodion, "there you must decide your loyalty");
-				playerTalk(p, kolodion, "ok kolodion , thanks for the battle");
-				npcTalk(p, kolodion, "remember young mage, you must use the spells...",
+				npcsay(p, kolodion, "there you must decide your loyalty");
+				say(p, kolodion, "ok kolodion , thanks for the battle");
+				npcsay(p, kolodion, "remember young mage, you must use the spells...",
 					"...many times in the arena before you can use them outside");
-				playerTalk(p, kolodion, "no problem");
+				say(p, kolodion, "no problem");
 				p.getCache().set("mage_arena", 2);
 				p.getCache().remove("kolodion_stage");
 			}
@@ -479,18 +480,18 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		} else if (obj.getID() == 1027) {
 			if (player.getY() >= 120) {
 				player.message("you pass through the mystical barrier");
-				movePlayer(player, 228, 118);
+				teleport(player, 228, 118);
 				Npc kolodion = player.getAttribute("spawned_kolodion", null);
 				if (kolodion != null) {
 					kolodion.remove();
 				}
 			} else {
 				if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 4) {
-					message(player, "the barrier is checking your person for weapons");
+					Functions.mes(player, "the barrier is checking your person for weapons");
 					if (!cantGo(player)) {
-						movePlayer(player, 228, 120);
+						teleport(player, 228, 120);
 					} else {
-						message(player, "You cannot enter the arena...", "...while carrying weapons or armour");
+						Functions.mes(player, "You cannot enter the arena...", "...while carrying weapons or armour");
 					}
 				} else {
 					player.message("you cannot enter without the permission of kolodion");
@@ -498,61 +499,61 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			}
 		} else if (obj.getID() == SARADOMIN_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
-				message(player, "you kneel and chant to saradomin");
+				Functions.mes(player, "you kneel and chant to saradomin");
 				if (!alreadyHasCape(player)) {
-					message(player, "you feel a rush of energy charge through your veins",
+					Functions.mes(player, "you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
-					addItem(player, ItemId.SARADOMIN_CAPE.id(), 1);
+					give(player, ItemId.SARADOMIN_CAPE.id(), 1);
 				} else {
-					message(player, "but there is no response");
+					Functions.mes(player, "but there is no response");
 				}
 			}
 			// first time
 			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
-				message(player, "you kneel and begin to chant to saradomin",
+				Functions.mes(player, "you kneel and begin to chant to saradomin",
 						"you feel a rush of energy charge through your veins");
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
-				addItem(player, ItemId.SARADOMIN_CAPE.id(), 1);
+				give(player, ItemId.SARADOMIN_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
 				firstTimeEnchant = true;
 			}
 		} else if (obj.getID() == GUTHIX_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
-				message(player, "you kneel and chant to guthix");
+				Functions.mes(player, "you kneel and chant to guthix");
 				if (!alreadyHasCape(player)) {
-					message(player, "you feel a rush of energy charge through your veins",
+					Functions.mes(player, "you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
-					addItem(player, ItemId.GUTHIX_CAPE.id(), 1);
+					give(player, ItemId.GUTHIX_CAPE.id(), 1);
 				} else {
-					message(player, "but there is no response");
+					Functions.mes(player, "but there is no response");
 				}
 			}
 			// first time
 			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
-				message(player, "you kneel and begin to chant to guthix",
+				Functions.mes(player, "you kneel and begin to chant to guthix",
 						"you feel a rush of energy charge through your veins");
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
-				addItem(player, ItemId.GUTHIX_CAPE.id(), 1);
+				give(player, ItemId.GUTHIX_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
 				firstTimeEnchant = true;
 			}
 		} else if (obj.getID() == ZAMORAK_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
-				message(player, "you kneel and chant to zamorak");
+				Functions.mes(player, "you kneel and chant to zamorak");
 				if (!alreadyHasCape(player)) {
-					message(player, "you feel a rush of energy charge through your veins",
+					Functions.mes(player, "you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
-					addItem(player, ItemId.ZAMORAK_CAPE.id(), 1);
+					give(player, ItemId.ZAMORAK_CAPE.id(), 1);
 				} else {
-					message(player, "but there is no response");
+					Functions.mes(player, "but there is no response");
 				}
 			}
 			// first time
 			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
-				message(player, "you kneel and begin to chant to zamorak",
+				Functions.mes(player, "you kneel and begin to chant to zamorak",
 						"you feel a rush of energy charge through your veins");
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
-				addItem(player, ItemId.ZAMORAK_CAPE.id(), 1);
+				give(player, ItemId.ZAMORAK_CAPE.id(), 1);
 				player.getCache().set("mage_arena", 3);
 				firstTimeEnchant = true;
 			}

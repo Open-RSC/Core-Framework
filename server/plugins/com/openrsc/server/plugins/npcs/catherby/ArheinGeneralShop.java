@@ -39,15 +39,15 @@ public class ArheinGeneralShop implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello would you like to trade");
-		int option = showMenu(p, n, "Yes ok",
+		npcsay(p, n, "Hello would you like to trade");
+		int option = multi(p, n, "Yes ok",
 			"No thankyou",
 			"Is that your ship?");
 		if (option == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 2) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"Yes I use it to make deliver my goods up and down the coast",
 				"These crates here are all ready for my next trip");
 
@@ -57,10 +57,10 @@ public class ArheinGeneralShop implements ShopInterface,
 						"Where do you deliver too?",
 						"Are you rich then?"};
 
-				option = showMenu(p, n, false, menuOptions);
+				option = multi(p, n, false, menuOptions);
 				shipBranchDialogue(p, n, option);
 			} else {
-				option = showMenu(p, n, false, menuOptions);
+				option = multi(p, n, false, menuOptions);
 				if (option >= 0)
 					shipBranchDialogue(p, n, option + 1);
 			}
@@ -69,51 +69,51 @@ public class ArheinGeneralShop implements ShopInterface,
 
 	public void shipBranchDialogue(final Player p, final Npc n, int option) {
 		if (option == 0) {
-			playerTalk(p, n, "Do you deliver to the fort just down the coast?");
-			npcTalk(p, n,
+			say(p, n, "Do you deliver to the fort just down the coast?");
+			npcsay(p, n,
 				"Yes I do have orders to deliver there from time to time",
 				"I think I may have some bits and pieces for them",
 				"when I leave here next actually"
 			);
 
-			option = showMenu(p, n, false, //do not send over
+			option = multi(p, n, false, //do not send over
 				"Can you drop me off on the way down please",
 				"Aren't you worried about supplying evil knights?");
 
 			if (option == 0) {
-				playerTalk(p, n, "can you drop me off on the way down please");
-				npcTalk(p, n,
+				say(p, n, "can you drop me off on the way down please");
+				npcsay(p, n,
 					"I don't think Sir Mordred would like that",
 					"He wants as few outsiders visiting as possible",
 					"I wouldn't want to lose his buisness"
 				);
 			} else if (option == 1) {
-				playerTalk(p, n, "Aren't you worried about supplying evil knights");
-				npcTalk(p, n,
+				say(p, n, "Aren't you worried about supplying evil knights");
+				npcsay(p, n,
 					"Hey you gotta take business where you can find it these days",
 					"Besides if I didn't supply them, someone else would"
 				);
 			}
 		} else if (option == 1) {
-			playerTalk(p, n, "Where do you deliver to?");
-			npcTalk(p, n,
+			say(p, n, "Where do you deliver to?");
+			npcsay(p, n,
 				"Oh various places up and down the coast",
 				"Mostly Karamja and Port Sarim"
 			);
 
-			option = showMenu(p, n, false, //do not send over
+			option = multi(p, n, false, //do not send over
 				"I don't suppose I could get a lift anywhere?",
 				"Well good luck with the buisness");
 
 			if (option == 0) {
-				playerTalk(p, n, "I don't suppose I could get a lift anywhere?");
-				npcTalk(p, n, "I'm not quite ready to sail yet");
+				say(p, n, "I don't suppose I could get a lift anywhere?");
+				npcsay(p, n, "I'm not quite ready to sail yet");
 			} else if (option == 1) {
-				playerTalk(p, n, "Well good luck with your business");
+				say(p, n, "Well good luck with your business");
 			}
 		} else if (option == 2) {
-			playerTalk(p, n, "Are you rich then?");
-			npcTalk(p, n,
+			say(p, n, "Are you rich then?");
+			npcsay(p, n,
 				"Business is going reasonably well",
 				"I wouldn't say I was the richest of merchants ever",
 				"But I'm doing reasonably well"

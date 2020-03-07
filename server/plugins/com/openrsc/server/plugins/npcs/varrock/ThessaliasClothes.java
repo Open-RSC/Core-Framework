@@ -41,8 +41,8 @@ public final class ThessaliasClothes implements TakeObjTrigger,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		playerTalk(p, n, "Hello");
-		npcTalk(p, n, "Do you want to buy any fine clothes?");
+		say(p, n, "Hello");
+		npcsay(p, n, "Do you want to buy any fine clothes?");
 
 		String[] options;
 		int extraOptions = 0;
@@ -76,7 +76,7 @@ public final class ThessaliasClothes implements TakeObjTrigger,
 				"No, thank you"
 			};
 		}
-		int option = showMenu(p, n, options);
+		int option = multi(p, n, options);
 		if (extraOptions > 0) {
 			int item = 0;
 			switch (extraOptions) {
@@ -95,13 +95,13 @@ public final class ThessaliasClothes implements TakeObjTrigger,
 
 			}
 			if (item == 1) {
-				npcTalk(p, n, "Ohh you poor dear, I have some more here");
+				npcsay(p, n, "Ohh you poor dear, I have some more here");
 				p.message("Thessalia gives you some new bunny ears");
-				addItem(p, ItemId.BUNNY_EARS.id(), 1);
+				give(p, ItemId.BUNNY_EARS.id(), 1);
 			} else if (item == 2) {
-				npcTalk(p, n, "Ohh you poor dear, I have another here");
+				npcsay(p, n, "Ohh you poor dear, I have another here");
 				p.message("Thessalia gives you a new scythe");
-				addItem(p, ItemId.SCYTHE.id(), 1);
+				give(p, ItemId.SCYTHE.id(), 1);
 			}
 
 		} else {

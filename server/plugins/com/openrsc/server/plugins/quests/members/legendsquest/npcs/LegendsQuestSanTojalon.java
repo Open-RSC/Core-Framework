@@ -28,9 +28,9 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 
 	private void attackMessage(Player p, Npc n) {
 		if (n.getID() == NpcId.SAN_TOJALON.id() && !p.getCarriedItems().hasCatalogID(ItemId.A_CHUNK_OF_CRYSTAL.id(), Optional.of(false)) && !p.getCache().hasKey("cavernous_opening")) {
-			npcTalk(p, n, "You have entered the Viyeldi caves and  your bravery must be tested.");
+			npcsay(p, n, "You have entered the Viyeldi caves and  your bravery must be tested.");
 			n.setChasing(p);
-			npcTalk(p, n, "Prepare yourself...San Tojalon will test your mettle.");
+			npcsay(p, n, "Prepare yourself...San Tojalon will test your mettle.");
 		}
 	}
 
@@ -47,29 +47,29 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 			if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 1) {
 				p.getCache().set("viyeldi_companions", 2);
 			}
-			message(p, 1300, "A nerve tingling scream echoes around you as you slay the dead Hero.",
+			mes(p, 1300, "A nerve tingling scream echoes around you as you slay the dead Hero.",
 				"@yel@San Tojalon: Ahhhggggh",
 				"@yel@San Tojalon: Forever must I live in this torment till this beast is slain...");
-			sleep(650);
+			delay(650);
 			LegendsQuestNezikchened.demonFight(p);
 		}
 		if (n.getID() == NpcId.SAN_TOJALON.id() && !p.getCache().hasKey("cavernous_opening")) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.A_CHUNK_OF_CRYSTAL.id(), Optional.of(false))
 				|| p.getCarriedItems().hasCatalogID(ItemId.A_RED_CRYSTAL.id(), Optional.of(false))
 				|| p.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id(), Optional.of(false))) {
-				npcTalk(p, n, "A fearsome foe you are, and bettered me once have you done already.");
+				npcsay(p, n, "A fearsome foe you are, and bettered me once have you done already.");
 				p.message("Your opponent is retreating");
 				n.remove();
 			} else {
-				npcTalk(p, n, "You have proved yourself of the honour..");
+				npcsay(p, n, "You have proved yourself of the honour..");
 				p.resetCombatEvent();
 				n.resetCombatEvent();
 				p.message("Your opponent is retreating");
-				npcTalk(p, n, "");
+				npcsay(p, n, "");
 				n.remove();
-				message(p, 1300, "A piece of crystal forms in midair and falls to the floor.",
+				mes(p, 1300, "A piece of crystal forms in midair and falls to the floor.",
 					"You place the crystal in your inventory.");
-				addItem(p, ItemId.A_CHUNK_OF_CRYSTAL.id(), 1);
+				give(p, ItemId.A_CHUNK_OF_CRYSTAL.id(), 1);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 	public void onEscapeNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SAN_TOJALON.id() && p.getQuestStage(Quests.LEGENDS_QUEST) == 8 && p.getCache().hasKey("viyeldi_companions")) {
 			n.remove();
-			message(p, 1300, "As you try to make your escape,",
+			mes(p, 1300, "As you try to make your escape,",
 				"the Viyeldi fighter is recalled by the demon...",
 				"@yel@Nezikchened : Ha, ha ha!",
 				"@yel@Nezikchened : Run then fetid worm...and never touch my totem again...");

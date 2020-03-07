@@ -19,7 +19,7 @@ public class Bartender implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "What can I do yer for?");
+		npcsay(p, n, "What can I do yer for?");
 		String[] options = {};
 		if (p.getCache().hasKey("barcrawl") && !p.getCache().hasKey("bartwo")) {
 			options = new String[]{
@@ -33,70 +33,70 @@ public class Bartender implements TalkNpcTrigger {
 				"Can you recommend anywhere an adventurer might make his fortune?",
 				"Do you know where I can get some good equipment?"};
 		}
-		int reply = showMenu(p, n, options);
+		int reply = multi(p, n, options);
 		if (reply == 0) {
-			npcTalk(p, n, "No problemo", "That'll be 2 coins");
-			if (hasItem(p, ItemId.COINS.id(), 2)) {
+			npcsay(p, n, "No problemo", "That'll be 2 coins");
+			if (ifheld(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
-				addItem(p, ItemId.BEER.id(), 1);
+				give(p, ItemId.BEER.id(), 1);
 				p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 			} else
-				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
+				say(p, n, "Oh dear. I don't seem to have enough money");
 		} else if (reply == 1) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"Ooh I don't know if I should be giving away information",
 				"Makes the computer game too easy");
-			reply = showMenu(p, n, false, //do not send over
+			reply = multi(p, n, false, //do not send over
 					"Oh ah well",
 				"Computer game? What are you talking about?",
 				"Just a small clue?");
 			if (reply == 0) {
-				playerTalk(p, n, "Oh ah well");
+				say(p, n, "Oh ah well");
 			} else if (reply == 1) {
-				playerTalk(p, n, "Computer game?",
+				say(p, n, "Computer game?",
 					"What are you talking about?");
-				npcTalk(p, n, "This world around us..",
+				npcsay(p, n, "This world around us..",
 					"is all a computer game..", "called Runescape");
-				playerTalk(
+				say(
 					p,
 					n,
 					"Nope, still don't understand what you are talking about",
 					"What's a computer?");
-				npcTalk(p, n, "It's a sort of magic box thing,",
+				npcsay(p, n, "It's a sort of magic box thing,",
 					"which can do all sorts of different things");
-				playerTalk(p, n, "I give up",
+				say(p, n, "I give up",
 					"You're obviously completely mad!");
 
 			} else if (reply == 2) {
-				playerTalk(p, n, "Just a small clue?");
-				npcTalk(p, n,
+				say(p, n, "Just a small clue?");
+				npcsay(p, n,
 					"Go and talk to the bartender at the Jolly Boar Inn",
 					"He doesn't seem to mind giving away clues");
 			}
 		} else if (reply == 2) {
-			npcTalk(p, n, "Well, there's the sword shop across the road,",
+			npcsay(p, n, "Well, there's the sword shop across the road,",
 				"or there's also all sorts of shops up around the market");
 		} else if (reply == 3) {
-			npcTalk(p,
+			npcsay(p,
 				n,
 				"Oh no not another of you guys",
 				"These barbarian barcrawls cause too much damage to my bar",
 				"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
-			if (hasItem(p, ItemId.COINS.id(), 50)) {
+			if (ifheld(p, ItemId.COINS.id(), 50)) {
 				p.getCarriedItems().remove(ItemId.COINS.id(), 50);
 				p.message("You buy some gutrot");
-				sleep(800);
+				delay(800);
 				p.message("You drink the gutrot");
-				sleep(800);
+				delay(800);
 				p.message("your insides feel terrible");
 				drinkAle(p);
 				p.damage(DataConversions.getRandom().nextInt(2) + 1);
-				sleep(800);
+				delay(800);
 				p.message("The bartender signs your card");
 				p.getCache().store("bartwo", true);
-				playerTalk(p, n, "Blearrgh");
+				say(p, n, "Blearrgh");
 			} else
-				playerTalk(p, n, "I don't have 50 coins");
+				say(p, n, "I don't have 50 coins");
 		}
 	}
 

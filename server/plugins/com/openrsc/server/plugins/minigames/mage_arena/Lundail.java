@@ -22,15 +22,15 @@ public final class Lundail implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		playerTalk(p, n, "well hello sir");
-		npcTalk(p, n, "hello brave adventurer",
+		say(p, n, "well hello sir");
+		npcsay(p, n, "hello brave adventurer",
 			"how can i help you?");
 
-		int option = showMenu(p, n, "what are you selling?",
+		int option = multi(p, n, "what are you selling?",
 			"what's that big old building behind us?");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "why, i sell rune stones",
+				npcsay(p, n, "why, i sell rune stones",
 					"i've got some good stuff, real powerful little rocks",
 					"take a look");
 				p.setAccessingShop(shop);
@@ -38,11 +38,11 @@ public final class Lundail implements ShopInterface,
 				break;
 
 			case 1:
-				npcTalk(p, n, "why that my friend...",
+				npcsay(p, n, "why that my friend...",
 					"...is the mage battle arena",
 					"top mages come from all over to compete in the arena",
 					"few return back, most get fried...hence the smell");
-				npcTalk(p, n, "hmmm.. i did notice");
+				npcsay(p, n, "hmmm.. i did notice");
 				break;
 
 		}

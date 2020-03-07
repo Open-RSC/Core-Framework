@@ -12,16 +12,16 @@ import static com.openrsc.server.plugins.Functions.*;
 public class MakeOverMage implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		npcTalk(p, n, "Are you happy with your looks?",
+		npcsay(p, n, "Are you happy with your looks?",
 			"If not I can change them for the cheap cheap price",
 			"Of 3000 coins");
-		int opt = showMenu(p, n, "I'm happy with how I look thank you",
+		int opt = multi(p, n, "I'm happy with how I look thank you",
 			"Yes change my looks please");
 		if (opt == 1) {
-			if (!hasItem(p, ItemId.COINS.id(), 3000)) {
-				playerTalk(p, n, "I'll just go and get the cash");
+			if (!ifheld(p, ItemId.COINS.id(), 3000)) {
+				say(p, n, "I'll just go and get the cash");
 			} else {
-				removeItem(p, ItemId.COINS.id(), 3000);
+				remove(p, ItemId.COINS.id(), 3000);
 				p.setChangingAppearance(true);
 				ActionSender.sendAppearanceScreen(p);
 			}

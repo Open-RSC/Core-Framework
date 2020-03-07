@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -19,7 +20,7 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello I'm Thrander the smith",
+		npcsay(p, n, "Hello I'm Thrander the smith",
 			"I'm an expert in armour modification",
 			"Give me your armour designed for men",
 			"And I can convert it into something more comfortable for a women",
@@ -47,23 +48,23 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			String itemLower, changedItemLower;
 			itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
-			if (removeItem(player, item.getCatalogId(), 1)) {
+			if (remove(player, item.getCatalogId(), 1)) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
-					message(player, npc, 1300, "You give Thrander a " + itemLower,
+					Functions.mes(player, npc, 1300, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("skirt")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					message(player, npc, 1300, "You give Thrander a " + metal + " plated skirt",
+					Functions.mes(player, npc, 1300, "You give Thrander a " + metal + " plated skirt",
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you some " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("legs")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					message(player, npc, 1300, "You give Thrander some " + itemLower,
+					Functions.mes(player, npc, 1300, "You give Thrander some " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + metal + " plated skirt");
 				}
-				addItem(player, newID, 1);
+				give(player, newID, 1);
 			}
 		}
 	}

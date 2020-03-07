@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -80,73 +81,73 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void dutiesDialogue(Player p, Npc n) {
-		npcTalk(p, n, "You'll have various guard duty shifts",
+		npcsay(p, n, "You'll have various guard duty shifts",
 			"I may have specific tasks to give you as they come up",
 			"If anything happens to me you need to take over as head guard",
 			"You'll find Important keys to the treasure room and Pete's quarters",
 			"Inside my jacket");
-		int sub_menu2 = showMenu(p, n,
+		int sub_menu2 = multi(p, n,
 			"So can I guard the treasure room please",
 			"Well I'd better sort my new room out",
 			"Anything I can do now?");
 		if (sub_menu2 == 0) {
-			npcTalk(p, n, "Well I might post you outside it sometimes",
+			npcsay(p, n, "Well I might post you outside it sometimes",
 				"I prefer to be the only one allowed inside though",
 				"There's some pretty valuable stuff in there",
 				"Those keys stay only with the head guard and with Scarface Pete");
 		} else if (sub_menu2 == 1) {
-			npcTalk(p, n, "Yeah I'll give you time to settle in");
+			npcsay(p, n, "Yeah I'll give you time to settle in");
 		} else if (sub_menu2 == 2) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.MISCELLANEOUS_KEY.id(), Optional.empty()) ) {
-				npcTalk(p, n, "Hmm well you could find out what this key does",
+				npcsay(p, n, "Hmm well you could find out what this key does",
 					"Apparantly it's to something in this building",
 					"Though I don't for the life of me know what");
-				playerTalk(p, n, "Grip hands you a key");
-				addItem(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
+				say(p, n, "Grip hands you a key");
+				give(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
 			} else {
-				npcTalk(p, n, "Can't think of anything right now");
+				npcsay(p, n, "Can't think of anything right now");
 			}
 		}
 	}
 
 	private void treasureRoomDialogue(Player p, Npc n) {
-		npcTalk(p, n, "Well I might post you outside it sometimes",
+		npcsay(p, n, "Well I might post you outside it sometimes",
 			"I prefer to be the only one allowed inside though",
 			"There's some pretty valuable stuff in there",
 			"Those keys stay only with the head guard and with Scarface Pete");
-		int sub_menu = showMenu(p, n,
+		int sub_menu = multi(p, n,
 			"So what do my duties involve?",
 			"Well I'd better sort my new room out");
 		if (sub_menu == 0) {
-			npcTalk(p, n, "You'll have various guard duty shifts",
+			npcsay(p, n, "You'll have various guard duty shifts",
 				"I may have specific tasks to give you as they come up",
 				"If anything happens to me you need to take over as head guard",
 				"You'll find Important keys to the treasure room and Pete's quarters",
 				"Inside my jacket");
-			int sub_menu2 = showMenu(p, n,
+			int sub_menu2 = multi(p, n,
 				"So can I guard the treasure room please",
 				"Well I'd better sort my new room out",
 				"Anything I can do now?");
 			if (sub_menu2 == 0) {
-				npcTalk(p, n, "Well I might post you outside it sometimes",
+				npcsay(p, n, "Well I might post you outside it sometimes",
 					"I prefer to be the only one allowed inside though",
 					"There's some pretty valuable stuff in there",
 					"Those keys stay only with the head guard and with Scarface Pete");
 			} else if (sub_menu2 == 1) {
-				npcTalk(p, n, "Yeah I'll give you time to settle in");
+				npcsay(p, n, "Yeah I'll give you time to settle in");
 			} else if (sub_menu2 == 2) {
 				if (!p.getCarriedItems().hasCatalogID(ItemId.MISCELLANEOUS_KEY.id(), Optional.empty()) ) {
-					npcTalk(p, n, "Hmm well you could find out what this key does",
+					npcsay(p, n, "Hmm well you could find out what this key does",
 						"Apparantly it's to something in this building",
 						"Though I don't for the life of me know what");
-					playerTalk(p, n, "Grip hands you a key");
-					addItem(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
+					say(p, n, "Grip hands you a key");
+					give(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
 				} else {
-					npcTalk(p, n, "Can't think of anything right now");
+					npcsay(p, n, "Can't think of anything right now");
 				}
 			}
 		} else if (sub_menu == 1) {
-			npcTalk(p, n, "Yeah I'll give you time to settle in");
+			npcsay(p, n, "Yeah I'll give you time to settle in");
 		}
 	}
 
@@ -154,7 +155,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"So can I guard the treasure room please",
 					"So what do my duties involve?",
 					"Well I'd better sort my new room out");
@@ -163,25 +164,25 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				} else if (menu == 1) {
 					dutiesDialogue(p, n);
 				} else if (menu == 2) {
-					npcTalk(p, n, "Yeah I'll give you time to settle in");
+					npcsay(p, n, "Yeah I'll give you time to settle in");
 				}
 				return;
 			}
-			playerTalk(p, n, "Hi I am Hartigen",
+			say(p, n, "Hi I am Hartigen",
 				"I've come to take the job as your deputy");
-			npcTalk(p, n, "Ah good at last, you took you're time getting here",
+			npcsay(p, n, "Ah good at last, you took you're time getting here",
 				"Now let me see",
 				"Your quarters will be that room nearest the sink",
 				"I'll get your hours of duty sorted in a bit",
 				"Oh and have you got your I.D paper",
 				"Internal security is almost as important as external security for a guard");
 			if (!p.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
-				playerTalk(p, n, "Oh dear I don't have that with me any more");
+				say(p, n, "Oh dear I don't have that with me any more");
 			} else {
 				p.message("You hand your I.D paper to grip");
-				removeItem(p, ItemId.ID_PAPER.id(), 1);
+				remove(p, ItemId.ID_PAPER.id(), 1);
 				p.getCache().store("talked_grip", true);
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"So can I guard the treasure room please",
 					"So what do my duties involve?",
 					"Well I'd better sort my new room out");
@@ -190,7 +191,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				} else if (menu == 1) {
 					dutiesDialogue(p, n);
 				} else if (menu == 2) {
-					npcTalk(p, n, "Yeah I'll give you time to settle in");
+					npcsay(p, n, "Yeah I'll give you time to settle in");
 				}
 			}
 		}
@@ -202,23 +203,23 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				if (p.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.empty())) {
 					return;
 				} else {
-					playerTalk(p, n, "I have lost Hartigen's I.D paper");
-					npcTalk(p, n, "That was careless",
+					say(p, n, "I have lost Hartigen's I.D paper");
+					npcsay(p, n, "That was careless",
 						"He had a spare fortunatley",
 						"Here it is");
-					addItem(p, ItemId.ID_PAPER.id(), 1);
-					npcTalk(p, n, "Be more careful this time");
+					give(p, ItemId.ID_PAPER.id(), 1);
+					npcsay(p, n, "Be more careful this time");
 				}
 				return;
 			}
-			npcTalk(p, n, "Hi, welcome to our Brimhaven headquarters",
+			npcsay(p, n, "Hi, welcome to our Brimhaven headquarters",
 				"I'm Trobert and I'm in charge here");
-			int menu = showMenu(p, n, false, //do not send over
+			int menu = multi(p, n, false, //do not send over
 				"So can you help me get Scarface Pete's candlesticks?",
 				"pleased to meet you");
 			if (menu == 0) {
-				playerTalk(p, n, "So can you help me get Scarface Pete's candlesticks?");
-				npcTalk(p, n, "Well we have made some progress there",
+				say(p, n, "So can you help me get Scarface Pete's candlesticks?");
+				npcsay(p, n, "Well we have made some progress there",
 					"We know one of the keys to Pete's treasure room is carried by Grip the head guard",
 					"So we thought it might be good to get close to the head guard",
 					"Grip was taking on a new deputy called Hartigen",
@@ -227,29 +228,29 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					"We managed to waylay him on the way here",
 					"We now have his i.d paper",
 					"Next we need someone to impersonate the black knight");
-				int sec_menu = showMenu(p, n,
+				int sec_menu = multi(p, n,
 					"I volunteer to undertake that mission",
 					"Well good luck then");
 				if (sec_menu == 0) {
-					npcTalk(p, n, "Well here's the I.d");
-					addItem(p, ItemId.ID_PAPER.id(), 1);
+					npcsay(p, n, "Well here's the I.d");
+					give(p, ItemId.ID_PAPER.id(), 1);
 					p.getCache().store("hq_impersonate", true);
-					npcTalk(p, n, "Take that to the guard room at Scarface Pete's mansion");
+					npcsay(p, n, "Take that to the guard room at Scarface Pete's mansion");
 				}
 			} else if (menu == 1) {
-				playerTalk(p, n, "Pleased to meet you");
+				say(p, n, "Pleased to meet you");
 			}
 		}
 		else if (n.getID() == NpcId.GRUBOR.id()) {
-			playerTalk(p, n, "Hi");
-			npcTalk(p, n, "Hi, I'm a little busy right now");
+			say(p, n, "Hi");
+			npcsay(p, n, "Hi, I'm a little busy right now");
 		}
 		else if (n.getID() == NpcId.ACHETTIES.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "Greetings welcome to the hero's guild",
+					npcsay(p, n, "Greetings welcome to the hero's guild",
 						"Only the foremost hero's of the land can enter here");
-					int opt = showMenu(p, n,
+					int opt = multi(p, n,
 						"I'm a hero, may I apply to join?",
 						"Good for the foremost hero's of the land");
 					if (opt == 0) {
@@ -259,29 +260,29 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 							p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1 &&
 							p.getQuestStage(Quests.DRAGON_SLAYER) == -1)
 							&& p.getQuestPoints() >= 55) {
-							npcTalk(p, n, "Ok you may begin the tasks for joining the hero's guild",
+							npcsay(p, n, "Ok you may begin the tasks for joining the hero's guild",
 								"You need the feather of an Entrana firebird",
 								"A master thief armband",
 								"And a cooked lava eel");
 							p.updateQuestStage(this, 1);
-							int opt2 = showMenu(p, n, false, //do not send over
+							int opt2 = multi(p, n, false, //do not send over
 								"Any hints on getting the armband?",
 								"Any hints on getting the feather?",
 								"Any hints on getting the eel?",
 								"I'll start looking for all those things then");
 							if (opt2 == 0) {
-								playerTalk(p, n, "Any hints on getting the thieves armband?");
-								npcTalk(p, n, "I'm sure you have relevant contacts to find out about that");
+								say(p, n, "Any hints on getting the thieves armband?");
+								npcsay(p, n, "I'm sure you have relevant contacts to find out about that");
 							} else if (opt2 == 1) {
-								playerTalk(p, n, "Any hints on getting the feather?");
-								npcTalk(p, n, "Not really - Entrana firebirds live on Entrana");
+								say(p, n, "Any hints on getting the feather?");
+								npcsay(p, n, "Not really - Entrana firebirds live on Entrana");
 							} else if (opt2 == 2) {
-								playerTalk(p, n, "Any hints on getting the eel?");
-								npcTalk(p, n, "Maybe go and find someone who knows a lot about fishing?");
+								say(p, n, "Any hints on getting the eel?");
+								npcsay(p, n, "Maybe go and find someone who knows a lot about fishing?");
 							}
 						} else {
-							npcTalk(p, n, "You're a hero?, I've never heard of you");
-							message(p, "You need to have 55 quest points to file for an application",
+							npcsay(p, n, "You're a hero?, I've never heard of you");
+							Functions.mes(p, "You need to have 55 quest points to file for an application",
 								"You also need to have completed the following quests",
 								"The shield of arrav, the lost city",
 								"Merlin's crystal and dragon slayer\"");
@@ -290,40 +291,40 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					break;
 				case 1:
 				case 2:
-					npcTalk(p, n, "Greetings welcome to the hero's guild",
+					npcsay(p, n, "Greetings welcome to the hero's guild",
 						"How goes thy quest?");
 					if (p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))) {
-						playerTalk(p, n, "I have all the things needed");
-						removeItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
-						removeItem(p, ItemId.LAVA_EEL.id(), 1);
-						removeItem(p, ItemId.RED_FIREBIRD_FEATHER.id(), 1);
+						say(p, n, "I have all the things needed");
+						remove(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
+						remove(p, ItemId.LAVA_EEL.id(), 1);
+						remove(p, ItemId.RED_FIREBIRD_FEATHER.id(), 1);
 						p.sendQuestComplete(Quests.HEROS_QUEST);
 					} else {
-						playerTalk(p, n, "It's tough, I've not done it yet");
-						npcTalk(p, n, "Remember you need the feather of an Entrana firebird",
+						say(p, n, "It's tough, I've not done it yet");
+						npcsay(p, n, "Remember you need the feather of an Entrana firebird",
 							"A master thief armband",
 							"And a cooked lava eel");
-						int opt2 = showMenu(p, n, false, //do not send over
+						int opt2 = multi(p, n, false, //do not send over
 							"Any hints on getting the armband?",
 							"Any hints on getting the feather?",
 							"Any hints on getting the eel?",
 							"I'll start looking for all those things then");
 						if (opt2 == 0) {
-							playerTalk(p, n, "Any hints on getting the thieves armband?");
-							npcTalk(p, n, "I'm sure you have relevant contacts to find out about that");
+							say(p, n, "Any hints on getting the thieves armband?");
+							npcsay(p, n, "I'm sure you have relevant contacts to find out about that");
 						} else if (opt2 == 1) {
-							playerTalk(p, n, "Any hints on getting the feather?");
-							npcTalk(p, n, "Not really - Entrana firebirds live on Entrana");
+							say(p, n, "Any hints on getting the feather?");
+							npcsay(p, n, "Not really - Entrana firebirds live on Entrana");
 						} else if (opt2 == 2) {
-							playerTalk(p, n, "Any hints on getting the eel?");
-							npcTalk(p, n, "Maybe go and find someone who knows a lot about fishing?");
+							say(p, n, "Any hints on getting the eel?");
+							npcsay(p, n, "Maybe go and find someone who knows a lot about fishing?");
 						}
 					}
 					break;
 				case -1:
-					npcTalk(p, n, "Greetings welcome to the hero's guild");
+					npcsay(p, n, "Greetings welcome to the hero's guild");
 					break;
 
 			}
@@ -370,29 +371,29 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				p.message("You go through the door");
 				doDoor(obj, p);
 			} else {
-				Npc alf = getNearestNpc(p, NpcId.ALFONSE_THE_WAITER.id(), 10);
+				Npc alf = ifnearvisnpc(p, NpcId.ALFONSE_THE_WAITER.id(), 10);
 				if (alf != null) {
-					npcTalk(p, alf, "Hey you can't go through there, that's private");
+					npcsay(p, alf, "Hey you can't go through there, that's private");
 				}
 			}
 		}
 		else if (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694) {
-			Npc grubor = getNearestNpc(p, NpcId.GRUBOR.id(), 10);
+			Npc grubor = ifnearvisnpc(p, NpcId.GRUBOR.id(), 10);
 			if (p.getQuestStage(this) == -1) {
-				npcTalk(p, grubor, "Yes? what do you want?");
-				int mem = showMenu(p, grubor, false, //do not send over
+				npcsay(p, grubor, "Yes? what do you want?");
+				int mem = multi(p, grubor, false, //do not send over
 					"Would you like to have your windows refitting?",
 					"I want to come in",
 					"Do you want to trade?");
 				if (mem == 0) {
-					playerTalk(p, grubor, "Would you like to have your windows refitting?");
-					npcTalk(p, grubor, "Don't be daft, we don't have any windows");
+					say(p, grubor, "Would you like to have your windows refitting?");
+					npcsay(p, grubor, "Don't be daft, we don't have any windows");
 				} else if (mem == 1) {
-					playerTalk(p, grubor, "I want to come in");
-					npcTalk(p, grubor, "No, go away");
+					say(p, grubor, "I want to come in");
+					npcsay(p, grubor, "No, go away");
 				} else if (mem == 2) {
-					playerTalk(p, grubor, "Do you want to trade");
-					npcTalk(p, grubor, "No I'm busy");
+					say(p, grubor, "Do you want to trade");
+					npcsay(p, grubor, "No I'm busy");
 				}
 				return;
 			}
@@ -403,28 +404,28 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					doDoor(obj, p);
 				} else {
 					if (grubor != null) {
-						npcTalk(p, grubor, "Yes? what do you want?");
-						int menu = showMenu(p, grubor, false, //do not send over
+						npcsay(p, grubor, "Yes? what do you want?");
+						int menu = multi(p, grubor, false, //do not send over
 							"Rabbit's foot",
 							"four leaved clover",
 							"Lucky Horseshoe",
 							"Black cat");
 						if (menu == 1) {
-							playerTalk(p, grubor, "Four leaved clover");
-							npcTalk(p, grubor, "Oh you're one of the gang are you",
+							say(p, grubor, "Four leaved clover");
+							npcsay(p, grubor, "Oh you're one of the gang are you",
 								"Just a second I'll let you in");
 							p.message("You here the door being unbarred");
 							p.getCache().store("talked_grubor", true);
 							return;
 						}
 						if (menu == 0) {
-							playerTalk(p, grubor, "Rabbit's foot");
+							say(p, grubor, "Rabbit's foot");
 						} else if (menu == 2) {
-							playerTalk(p, grubor, "Lucky Horseshoe");
+							say(p, grubor, "Lucky Horseshoe");
 						} else if (menu == 3) {
-							playerTalk(p, grubor, "Black cat");
+							say(p, grubor, "Black cat");
 						}
-						npcTalk(p, grubor, "What are you on about",
+						npcsay(p, grubor, "What are you on about",
 							"Go away");
 						return;
 					}
@@ -434,7 +435,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681) {
-			Npc garv = getNearestNpc(p, NpcId.GARV.id(), 12);
+			Npc garv = ifnearvisnpc(p, NpcId.GARV.id(), 12);
 			if (p.getCache().hasKey("garv_door") || p.getQuestStage(this) == -1) {
 				p.message("you open the door");
 				p.message("You go through the door");
@@ -442,22 +443,22 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			if (garv != null) {
-				npcTalk(p, garv, "Where do you think you're going?");
+				npcsay(p, garv, "Where do you think you're going?");
 				if (isBlackArmGang(p)) {
-					playerTalk(p, garv, "Hi, I'm Hartigen",
+					say(p, garv, "Hi, I'm Hartigen",
 						"I've come to work here");
 					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
 							&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& p.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
-						npcTalk(p, garv, "So have you got your i.d paper?");
+						npcsay(p, garv, "So have you got your i.d paper?");
 						if (p.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
-							npcTalk(p, garv, "You had better come in then",
+							npcsay(p, garv, "You had better come in then",
 								"Grip will want to talk to you");
 							p.getCache().store("garv_door", true);
 						} else {
-							playerTalk(p, garv, "No I must have left it in my other suit of armour");
+							say(p, garv, "No I must have left it in my other suit of armour");
 						}
 					} else {
-						npcTalk(p, garv, "Hartigen the black knight?",
+						npcsay(p, garv, "Hartigen the black knight?",
 							"I don't think so - he doesn't dress like that");
 					}
 				}
@@ -465,7 +466,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) {
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
-				Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
+				Npc grip = ifnearvisnpc(p, NpcId.GRIP.id(), 15);
 				// grip exits if he is not in combat and player opens from inside the room
 				boolean moveGrip = (p.getY() <= 675 && grip != null && grip.getY() <= 675 && !grip.isChasing());
 				p.message("you open the door");
@@ -495,7 +496,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 80 && obj.getX() == 459 && obj.getY() == 674) {
 			p.message("The door is locked");
-			playerTalk(p, null, "This room isn't a lot of use on it's own",
+			say(p, null, "This room isn't a lot of use on it's own",
 				"Maybe I can get extra help from the inside somehow",
 				"I wonder if any of the other players have found a way in");
 		}
@@ -513,7 +514,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	public void onUseBound(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 80) {
 			if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
-				showBubble(p, item);
+				thinkbubble(p, item);
 				p.message("You unlock the door");
 				p.message("You go through the door");
 				doDoor(obj, p);
@@ -537,14 +538,14 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
-		Npc guard = getNearestNpc(p, NpcId.GUARD_PIRATE.id(), 10);
-		Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
+		Npc guard = ifnearvisnpc(p, NpcId.GUARD_PIRATE.id(), 10);
+		Npc grip = ifnearvisnpc(p, NpcId.GRIP.id(), 15);
 		if (obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open") || command.equalsIgnoreCase("search")) {
 				if (guard != null) {
-					npcTalk(p, guard, "I don't think Mr Grip will like you opening that up",
+					npcsay(p, guard, "I don't think Mr Grip will like you opening that up",
 						"That's his drinks cabinet");
-					int menu = showMenu(p, guard,
+					int menu = multi(p, guard,
 						"He won't notice me having a quick look",
 						"Ok I'll leave it");
 					if (menu == 0) {
@@ -564,14 +565,14 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 								});
 								p.getWorld().getServer().getGameEventHandler().add(gripReturnEvent.get());
 							}
-							npcTalk(p, grip, "Hey what are you doing there",
+							npcsay(p, grip, "Hey what are you doing there",
 								"That's my drinks cabinet get away from it");
 						} else {
 							if (command.equalsIgnoreCase("open")) {
 								openCupboard(obj, p, GRIPS_CUPBOARD_OPEN);
 							} else {
 								p.message("You find a bottle of whisky in the cupboard");
-								addItem(p, ItemId.DRAYNOR_WHISKY.id(), 1);
+								give(p, ItemId.DRAYNOR_WHISKY.id(), 1);
 							}
 						}
 					}
@@ -589,8 +590,8 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				closeGenericObject(obj, p, CANDLESTICK_CHEST_CLOSED, "You close the chest");
 			} else {
 				if (!p.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.empty())) {
-					addItem(p, ItemId.CANDLESTICK.id(), 2);
-					message(p, "You find two candlesticks in the chest",
+					give(p, ItemId.CANDLESTICK.id(), 2);
+					Functions.mes(p, "You find two candlesticks in the chest",
 						"So that will be one for you",
 						"And one to the person who killed grip for you");
 					if (p.getQuestStage(this) == 1) {
@@ -644,7 +645,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onSpellNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
-			playerTalk(p, null, "I can't attack the head guard here",
+			say(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
 					"I'd have the whole of Brimhaven after me",
 					"Besides if he dies I want to have the chance of being promoted");
@@ -655,7 +656,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onPlayerRangeNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
-			playerTalk(p, null, "I can't attack the head guard here",
+			say(p, null, "I can't attack the head guard here",
 				"There are too many witnesses to see me do it",
 				"I'd have the whole of Brimhaven after me",
 				"Besides if he dies I want to have the chance of being promoted");
@@ -667,7 +668,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	public void onAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			if (!p.getLocation().inHeroQuestRangeRoom()) {
-				playerTalk(p, null, "I can't attack the head guard here",
+				say(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
 					"I'd have the whole of Brimhaven after me",
 					"Besides if he dies I want to have the chance of being promoted");

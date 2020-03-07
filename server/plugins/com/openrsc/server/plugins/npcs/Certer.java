@@ -37,7 +37,7 @@ public class Certer implements TalkNpcTrigger {
 	}
 
 	private void beginCertExchange(CerterDef certerDef, Player p, Npc n) {
-		npcTalk(p, n, "Welcome to my " + certerDef.getType()
+		npcsay(p, n, "Welcome to my " + certerDef.getType()
 			+ " exchange stall");
 
 		String ending = (n.getID() == NpcId.MILES.id() || n.getID() == NpcId.CHUCK.id() || n.getID() == NpcId.WATTO.id() ? "s" : "");
@@ -46,10 +46,10 @@ public class Certer implements TalkNpcTrigger {
 		int firstType = firstMenu(certerDef, ending, p, n);
 		switch(firstType) {
 			case 0:
-				playerTalk(p, n, "I have some certificates to trade in");
+				say(p, n, "I have some certificates to trade in");
 				break;
 			case 1:
-				playerTalk(p, n, "I have some " + certerDef.getType() + ending + " to trade in");
+				say(p, n, "I have some " + certerDef.getType() + ending + " to trade in");
 				break;
 			//case 2 handled separately
 		}
@@ -77,7 +77,7 @@ public class Certer implements TalkNpcTrigger {
 	}
 
 	private int firstMenu(CerterDef certerDef, String ending, Player p, Npc n) {
-		return showMenu(p, n, false, "I have some certificates to trade in",
+		return multi(p, n, false, "I have some certificates to trade in",
 				"I have some " + certerDef.getType() + ending + " to trade in",
 				"What is a " + certerDef.getType() + " exchange stall?");
 	}
@@ -90,10 +90,10 @@ public class Certer implements TalkNpcTrigger {
 		switch(option) {
 			case 0:
 				p.message("what sort of certificate do you wish to trade in?");
-				return showMenu(p, n, false, names);
+				return multi(p, n, false, names);
 			case 1:
 				p.message("what sort of " + certerDef.getType() + ending + " do you wish to trade in?");
-				return showMenu(p, n, false, names);
+				return multi(p, n, false, names);
 			default:
 				return -1;
 		}
@@ -104,10 +104,10 @@ public class Certer implements TalkNpcTrigger {
 		p.message("How many certificates do you wish to trade in?");
 		int certAmount;
 		if (p.getWorld().getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
-			certAmount = showMenu(p, n, false, "One", "two", "Three", "four",
+			certAmount = multi(p, n, false, "One", "two", "Three", "four",
 				"five", "All to bank");
 		} else {
-			certAmount = showMenu(p, n, false, "One", "two", "Three", "four", "five");
+			certAmount = multi(p, n, false, "One", "two", "Three", "four", "five");
 		}
 		if (certAmount < 0)
 			return;
@@ -158,10 +158,10 @@ public class Certer implements TalkNpcTrigger {
 			+ " do you wish to trade in?");
 		int certAmount;
 		if (p.getWorld().getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
-			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
+			certAmount = multi(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
 					"All from bank");
 		} else {
-			certAmount = showMenu(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
+			certAmount = multi(p, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
 		}
 		if (certAmount < 0)
 			return;
@@ -224,8 +224,8 @@ public class Certer implements TalkNpcTrigger {
 				item = certerDef.getType();
 				break;
 		}
-		playerTalk(p, n, "What is a " + certerDef.getType() + " exchange store?");
-		npcTalk(p, n, "You may exchange your " + item + " here",
+		say(p, n, "What is a " + certerDef.getType() + " exchange store?");
+		npcsay(p, n, "You may exchange your " + item + " here",
 				"For certificates which are light and easy to carry",
 				"You can carry many of these certificates at once unlike " + item,
 				"5 " + item + " will give you one certificate",

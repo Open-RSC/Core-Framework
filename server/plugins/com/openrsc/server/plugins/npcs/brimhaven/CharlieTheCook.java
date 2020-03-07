@@ -2,10 +2,11 @@ package com.openrsc.server.plugins.npcs.brimhaven;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -14,8 +15,8 @@ public class CharlieTheCook implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CHARLIE_THE_COOK.id()) {
-			npcTalk(p, n, "Hey what are you doing round here");
-			int menu = showMenu(p, n,
+			npcsay(p, n, "Hey what are you doing round here");
+			int menu = Functions.multi(p, n,
 				"I'm looking for a gherkin",
 				"I'm a fellow member of the phoenix gang",
 				"Just exploring");
@@ -24,22 +25,22 @@ public class CharlieTheCook implements TalkNpcTrigger {
 			} else if (menu == 1) {
 				fellowPheonix(p, n);
 			} else if (menu == 2) {
-				npcTalk(p, n, "This kitchen isn't for exploring",
+				npcsay(p, n, "This kitchen isn't for exploring",
 					"It's a private establishment, now get out");
 			}
 		}
 	}
 
 	private void fellowPheonix(Player p, Npc n) {
-		npcTalk(p, n, "Aha a fellow phoenix",
+		npcsay(p, n, "Aha a fellow phoenix",
 			"What brings you to Brimhaven?");
-		int menu2 = showMenu(p, n,
+		int menu2 = Functions.multi(p, n,
 			"Sun, sand and the fresh sea air",
 			"I want to steal Scarface Pete's candlesticks");
 		if (menu2 == 0) {
-			npcTalk(p, n, "Well they are some things we have here yes");
+			npcsay(p, n, "Well they are some things we have here yes");
 		} else if (menu2 == 1) {
-			npcTalk(p, n, "Ah yes the candlesticks",
+			npcsay(p, n, "Ah yes the candlesticks",
 				"Our progress hasn't been amazing on that front",
 				"Though we can help you a bit",
 				"The setting up of this restaurant is the start of things",

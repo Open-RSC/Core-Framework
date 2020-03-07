@@ -48,9 +48,9 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 
 	private void sidneyCert(Player p, Npc n, int cID) {
 		if (cID == -1) {
-			npcTalk(p, n, "Hello, I'm Sidney Smith, the certification Clerk.",
+			npcsay(p, n, "Hello, I'm Sidney Smith, the certification Clerk.",
 				"How can I help you ?");
-			int menu = showMenu(p, n,
+			int menu = multi(p, n,
 				"I'd like to certificate some goods please.",
 				"I'd like to change some certificates for goods please.",
 				"What is certification ?",
@@ -67,14 +67,14 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 		}
 		switch (cID) {
 			case Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE:
-				npcTalk(p, n, "Well, I can certificate the following items.",
+				npcsay(p, n, "Well, I can certificate the following items.",
 					"Prayer Restore Potion,",
 					"Super Attack Potion,",
 					"Super Defense Potion,",
 					"Super Strength Potion,",
 					"Dragon Bones,",
 					"and Limpwurt Root.");
-				int SUB_MENU_ONE = showMenu(p, n,
+				int SUB_MENU_ONE = multi(p, n,
 					"How many items do you need to make a certificate.",
 					"I'd like to certificate some goods please.",
 					"I'd like to change some certificates for goods please.",
@@ -88,11 +88,11 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 				}
 				break;
 			case Sidney.WHAT_IS_CERTIFICATION:
-				npcTalk(p, n, "It's quite easy really..",
+				npcsay(p, n, "It's quite easy really..",
 					"You swap some goods for certificates which are easier to store.",
 					"I specialise in certificating very rare items.",
 					"The kinds of items only Legendary Runescape citizens will own.");
-				int SUB_MENU_TWO = showMenu(p, n,
+				int SUB_MENU_TWO = multi(p, n,
 					"I'd like to certificate some goods please.",
 					"I'd like to change some certificates for goods please.",
 					"Ok thanks.");
@@ -103,10 +103,10 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 				}
 				break;
 			case Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE:
-				npcTalk(p, n, "Well, you need at the least five items to make a certificate.",
+				npcsay(p, n, "Well, you need at the least five items to make a certificate.",
 					"We'll turn any five items into one certificate.",
 					"It makes storage and transportation much easier.");
-				int SUB_MENU_THREE = showMenu(p, n,
+				int SUB_MENU_THREE = multi(p, n,
 					"Which goods do you certificate?",
 					"Ok, thanks.");
 				if (SUB_MENU_THREE == 0) {
@@ -120,7 +120,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 					!p.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false)) &&
 					!p.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false)) &&
 					!p.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
-					npcTalk(p, n, "Sorry, but you don't have any certificates that I can change.",
+					npcsay(p, n, "Sorry, but you don't have any certificates that I can change.",
 						"I can only change the following certificates into goods.",
 						"Dragon Bone Certificates,",
 						"Limpwurt Root Certificates,",
@@ -129,20 +129,20 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 						"Super Defense Potion Certificates,",
 						"and Super Strength Potion Certificates.");
 				} else {
-					npcTalk(p, n, "Ok then, which certificates would you like to change?");
+					npcsay(p, n, "Ok then, which certificates would you like to change?");
 					certMenuOne(p, n);
 				}
 				break;
 			case Sidney.GOODS_TO_CERTIFICATE:
-				if (!hasItem(p, PRAYER_RESTORE_POT, 5) &&
-					!hasItem(p, SUPER_ATTACK_POT, 5) &&
-					!hasItem(p, SUPER_DEFENSE_POT, 5) &&
-					!hasItem(p, SUPER_STRENGTH_POT, 5) &&
-					!hasItem(p, DRAGON_BONES, 5) &&
-					!hasItem(p, LIMPWURT_ROOT, 5)) {
-					npcTalk(p, n, "Sorry, but you either don't have enough items for me to certificate.",
+				if (!ifheld(p, PRAYER_RESTORE_POT, 5) &&
+					!ifheld(p, SUPER_ATTACK_POT, 5) &&
+					!ifheld(p, SUPER_DEFENSE_POT, 5) &&
+					!ifheld(p, SUPER_STRENGTH_POT, 5) &&
+					!ifheld(p, DRAGON_BONES, 5) &&
+					!ifheld(p, LIMPWURT_ROOT, 5)) {
+					npcsay(p, n, "Sorry, but you either don't have enough items for me to certificate.",
 						"or you don't have the right type of items for me to certificate.");
-					int SUB_MENU_FOUR = showMenu(p, n,
+					int SUB_MENU_FOUR = multi(p, n,
 						"Which goods do you certificate?",
 						"How many items do you need to make a certificate.");
 					if (SUB_MENU_FOUR == 0) {
@@ -151,7 +151,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 						sidneyCert(p, n, Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE);
 					}
 				} else {
-					npcTalk(p, n, "Which goods would you like to certificate?");
+					npcsay(p, n, "Which goods would you like to certificate?");
 					goodsMenuOne(p, n);
 				}
 				break;
@@ -159,40 +159,40 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	private void goodsMenuOne(Player p, Npc n) {
-		int goods = showMenu(p,
+		int goods = multi(p,
 			"* Prayer Restore Potion * ",
 			"* Super Attack Potion *",
 			"* Super Defense Potion *",
 			"* Super Strength Potion *",
 			"-*- Menu 2 -*-");
 		if (goods == 0) {
-			if (hasItem(p, PRAYER_RESTORE_POT, 5)) {
+			if (ifheld(p, PRAYER_RESTORE_POT, 5)) {
 				calculateExchangeMenu(p, n, false, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
 			} else {
-				npcTalk(p, n, "You don't have any Prayer potions to certificate.",
+				npcsay(p, n, "You don't have any Prayer potions to certificate.",
 					"Which goods would you like to certificate?");
 				goodsMenuOne(p, n);
 			}
 		} else if (goods == 1) {
-			if (hasItem(p, SUPER_ATTACK_POT, 5)) {
+			if (ifheld(p, SUPER_ATTACK_POT, 5)) {
 				calculateExchangeMenu(p, n, false, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
 			} else {
-				npcTalk(p, n, "You don't have enough Super Attack potions to certificate.");
-				playerTalk(p, n, "Ok thanks.");
+				npcsay(p, n, "You don't have enough Super Attack potions to certificate.");
+				say(p, n, "Ok thanks.");
 			}
 		} else if (goods == 2) {
-			if (hasItem(p, SUPER_DEFENSE_POT, 5)) {
+			if (ifheld(p, SUPER_DEFENSE_POT, 5)) {
 				calculateExchangeMenu(p, n, false, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
 			} else {
-				npcTalk(p, n, "You don't have any Super Defense potions to certificate.",
+				npcsay(p, n, "You don't have any Super Defense potions to certificate.",
 					"Which goods would you like to certificate?");
 				goodsMenuOne(p, n);
 			}
 		} else if (goods == 3) {
-			if (hasItem(p, SUPER_STRENGTH_POT, 5)) {
+			if (ifheld(p, SUPER_STRENGTH_POT, 5)) {
 				calculateExchangeMenu(p, n, false, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
 			} else {
-				npcTalk(p, n, "You don't have any Super Strength potions to certificate.",
+				npcsay(p, n, "You don't have any Super Strength potions to certificate.",
 					"Which goods would you like to certificate?");
 				goodsMenuOne(p, n);
 			}
@@ -202,23 +202,23 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	private void goodsMenuTwo(Player p, Npc n) {
-		int goods = showMenu(p,
+		int goods = multi(p,
 			"* Dragon Bones *",
 			"* Limpwurt Root *",
 			"-*- Menu 1 -*-");
 		if (goods == 0) {
-			if (hasItem(p, DRAGON_BONES, 5)) {
+			if (ifheld(p, DRAGON_BONES, 5)) {
 				calculateExchangeMenu(p, n, false, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
 			} else {
-				npcTalk(p, n, "You don't have any Dragon Bones to certificate.",
+				npcsay(p, n, "You don't have any Dragon Bones to certificate.",
 					"Which goods would you like to certificate?");
 				goodsMenuOne(p, n);
 			}
 		} else if (goods == 1) {
-			if (hasItem(p, LIMPWURT_ROOT, 5)) {
+			if (ifheld(p, LIMPWURT_ROOT, 5)) {
 				calculateExchangeMenu(p, n, false, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
 			} else {
-				npcTalk(p, n, "You don't have any Limpwurt Roots to certificate.",
+				npcsay(p, n, "You don't have any Limpwurt Roots to certificate.",
 					"Which goods would you like to certificate?");
 				goodsMenuOne(p, n);
 			}
@@ -228,7 +228,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	private void certMenuOne(Player p, Npc n) {
-		int certs = showMenu(p,
+		int certs = multi(p,
 			"* Restore Prayer Potion Certificates * ",
 			"* Super Attack Potion Certificates *",
 			"* Super Defense Potion Certificates *",
@@ -238,28 +238,28 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 			if (p.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have any ",
+				npcsay(p, n, "Sorry, but you don't have any ",
 					"Prayer Restore Potion Certificates to change.");
 			}
 		} else if (certs == 1) {
 			if (p.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have any ",
+				npcsay(p, n, "Sorry, but you don't have any ",
 					"Super attack Potion Certificates to change.");
 			}
 		} else if (certs == 2) {
 			if (p.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have any ",
+				npcsay(p, n, "Sorry, but you don't have any ",
 					"Super Defense Potion Certificates to change.");
 			}
 		} else if (certs == 3) {
 			if (p.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have any ",
+				npcsay(p, n, "Sorry, but you don't have any ",
 					"Super Strength Potion Certificates to change.");
 			}
 		} else if (certs == 4) {
@@ -268,7 +268,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	private void certMenuTwo(Player p, Npc n) {
-		int menu = showMenu(p,
+		int menu = multi(p,
 			"* Dragon Bones Certificates *",
 			"* Limpwurt Root Certificates *",
 			"-*- Menu 1 -*-");
@@ -276,14 +276,14 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 			if (p.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have any ",
+				npcsay(p, n, "Sorry, but you don't have any ",
 					"Dragon Bone Certificates to change.");
 			}
 		} else if (menu == 1) {
 			if (p.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
 				calculateExchangeMenu(p, n, true, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have any ",
+				npcsay(p, n, "Sorry, but you don't have any ",
 					"Limpwurt Root Certificates to change.");
 			}
 		} else if (menu == 2) {
@@ -295,31 +295,31 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 		int count = p.getCarriedItems().getInventory().countId(useCertificate ? certificate.getCatalogId() : i.getCatalogId());
 		int mainMenu = -1;
 		if (useCertificate) {
-			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
+			npcsay(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
 			if (count == 1) {
-				int firstMenu = showMenu(p, "None thanks.", "One Certificate please");
+				int firstMenu = multi(p, "None thanks.", "One Certificate please");
 				if (firstMenu != -1) {
 					if (firstMenu == 0) {
-						npcTalk(p, n, "Ok, suit yourself.");
+						npcsay(p, n, "Ok, suit yourself.");
 						return;
 					} else if (firstMenu == 1) {
 						mainMenu = 0;
 					}
 				}
 			} else if (count == 2) {
-				mainMenu = showMenu(p, "One Certificate please", "Two Certificates Please");
+				mainMenu = multi(p, "One Certificate please", "Two Certificates Please");
 			} else if (count == 3) {
-				mainMenu = showMenu(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.");
+				mainMenu = multi(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.");
 			} else if (count == 4) {
-				mainMenu = showMenu(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please");
+				mainMenu = multi(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please");
 			} else if (count >= 5) {
-				mainMenu = showMenu(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please", "Five Certificates Please.");
+				mainMenu = multi(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please", "Five Certificates Please.");
 			}
 
 		} else {
-			npcTalk(p, n, "How many " + i.getDef(p.getWorld()).getName() + " would you like to certificate?");
+			npcsay(p, n, "How many " + i.getDef(p.getWorld()).getName() + " would you like to certificate?");
 			if (count >= 5 && count < 10) {
-				int firstMenu = showMenu(p, "None", "Five");
+				int firstMenu = multi(p, "None", "Five");
 				if (firstMenu != -1) {
 					if (firstMenu == 0) {
 						p.message("You decide not to change any items.");
@@ -329,22 +329,22 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 					}
 				}
 			} else if (count >= 10 && count < 15) {
-				mainMenu = showMenu(p, "Five", "Ten");
+				mainMenu = multi(p, "Five", "Ten");
 			} else if (count >= 15 && count < 20) {
-				mainMenu = showMenu(p, "Five", "Ten", "Fifteen");
+				mainMenu = multi(p, "Five", "Ten", "Fifteen");
 			} else if (count >= 20 && count < 25) {
-				mainMenu = showMenu(p, "Five", "Ten", "Fifteen", "Twenty");
+				mainMenu = multi(p, "Five", "Ten", "Fifteen", "Twenty");
 			} else if (count >= 25) {
-				mainMenu = showMenu(p, "Five", "Ten", "Fifteen", "Twenty", "Twenty Five");
+				mainMenu = multi(p, "Five", "Ten", "Fifteen", "Twenty", "Twenty Five");
 			} else {
-				npcTalk(p, n, "Sorry, but you don't have enough " + i.getDef(p.getWorld()).getName() + ".",
+				npcsay(p, n, "Sorry, but you don't have enough " + i.getDef(p.getWorld()).getName() + ".",
 					"You need at least five to make a certificate.");
 				return;
 			}
 		}
 		if (mainMenu != -1) {
 			if (useCertificate) {
-				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
+				npcsay(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				if (p.getCarriedItems().remove(certificate.getCatalogId(), mainMenu) > -1) {
@@ -352,16 +352,16 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 						p.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
 					}
 				}
-				playerTalk(p, n, "Ok thanks.");
+				say(p, n, "Ok thanks.");
 			} else {
-				npcTalk(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificated.");
+				npcsay(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificated.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
 					p.getCarriedItems().remove(i.getCatalogId(), 1);
 				}
 				p.getCarriedItems().getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
-				playerTalk(p, n, "Ok thanks.");
+				say(p, n, "Ok thanks.");
 			}
 		}
 	}

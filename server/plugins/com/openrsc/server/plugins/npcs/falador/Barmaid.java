@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -24,31 +25,31 @@ public final class Barmaid implements
 	public void onTalkNpc(Player p, final Npc n) {
 		if (p.getCache().hasKey("barcrawl")
 			&& !p.getCache().hasKey("barthree")) {
-			int barCrawlOpt = showMenu(p, n, false, //do not send over
+			int barCrawlOpt = multi(p, n, false, //do not send over
 				"Hi what ales are you serving",
 				"I'm doing Alfred Grimhand's barcrawl");
 			if (barCrawlOpt == 0) {
 				NORMAL_ALES(p, n);
 			} else if (barCrawlOpt == 1) {
-				playerTalk(p, n, "I'm doing Alfred Grimhand's barcrawl");
-				npcTalk(p,
+				say(p, n, "I'm doing Alfred Grimhand's barcrawl");
+				npcsay(p,
 					n,
 					"Hehe this'll be fun",
 					"You'll be after our off the menu hand of death cocktail then",
 					"Lots of expensive parts to the cocktail though",
 					"So it will cost you 70 coins");
-				if (hasItem(p, ItemId.COINS.id(), 70)) {
-					message(p, "You buy a hand of death cocktail");
+				if (ifheld(p, ItemId.COINS.id(), 70)) {
+					Functions.mes(p, "You buy a hand of death cocktail");
 					p.getCarriedItems().remove(ItemId.COINS.id(), 70);
-					message(p, "You drink the cocktail",
+					Functions.mes(p, "You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(p);
 					p.damage(DataConversions.getRandom().nextInt(2) + 1);
-					message(p, "The barmaid giggles",
+					Functions.mes(p, "The barmaid giggles",
 						"The barmaid signs your card");
 					p.getCache().store("barthree", true);
 				} else {
-					playerTalk(p, n, "I don't have that much money on me");
+					say(p, n, "I don't have that much money on me");
 				}
 			}
 		} else {
@@ -57,8 +58,8 @@ public final class Barmaid implements
 	}
 
 	private void NORMAL_ALES(Player p, Npc n) {
-		playerTalk(p, n, "Hi, what ales are you serving?");
-		npcTalk(p,
+		say(p, n, "Hi, what ales are you serving?");
+		npcsay(p,
 			n,
 			"Well you can either have a nice Asgarnian Ale or a Wizards Mind Bomb",
 			"Or a Dwarven Stout");
@@ -66,39 +67,39 @@ public final class Barmaid implements
 		String[] options = new String[]{"One Asgarnian Ale please",
 			"I'll try the mind bomb", "Can I have a Dwarven Stout?",
 			"I don't feel like any of those"};
-		int option = showMenu(p, n, options);
+		int option = multi(p, n, options);
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "That'll be two gold");
+				npcsay(p, n, "That'll be two gold");
 
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
+				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy an Asgarnian Ale");
 					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 					p.getCarriedItems().getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id(), 1));
 				} else {
-					playerTalk(p, n, notEnoughMoney);
+					say(p, n, notEnoughMoney);
 				}
 				break;
 			case 1:
-				npcTalk(p, n, "That'll be two gold");
+				npcsay(p, n, "That'll be two gold");
 
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
+				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of Wizard's Mind Bomb");
 					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
 					p.getCarriedItems().getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id(), 1));
 				} else {
-					playerTalk(p, n, notEnoughMoney);
+					say(p, n, notEnoughMoney);
 				}
 				break;
 			case 2:
-				npcTalk(p, n, "That'll be three gold");
+				npcsay(p, n, "That'll be three gold");
 
-				if (hasItem(p, ItemId.COINS.id(), 3)) {
+				if (ifheld(p, ItemId.COINS.id(), 3)) {
 					p.message("You buy a pint of Dwarven Stout");
 					p.getCarriedItems().remove(ItemId.COINS.id(), 3);
 					p.getCarriedItems().getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
 				} else {
-					playerTalk(p, n, notEnoughMoney);
+					say(p, n, notEnoughMoney);
 				}
 				break;
 			case 3:

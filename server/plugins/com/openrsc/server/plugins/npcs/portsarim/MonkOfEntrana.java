@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
@@ -62,7 +63,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id()) {
-			npcTalk(p, n, "Are you looking to take passage to our holy island?",
+			npcsay(p, n, "Are you looking to take passage to our holy island?",
 					"If so your weapons and armour must be left behind");
 				final Menu defaultMenu = new Menu();
 				defaultMenu.addOption(new Option("No I don't wish to go") {
@@ -73,14 +74,14 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
 					@Override
 					public void action() {
-						message(p, "The monk quickly searches you");
+						Functions.mes(p, "The monk quickly searches you");
 						if (CAN_GO(p)) {
-							npcTalk(p, n, "Sorry we cannow allow you on to our island",
+							npcsay(p, n, "Sorry we cannow allow you on to our island",
 								"Make sure you are not carrying weapons or armour please");
 						} else {
-							message(p, "You board the ship");
+							Functions.mes(p, "You board the ship");
 							p.teleport(418, 570, false);
-							sleep(2200);
+							delay(2200);
 							p.message("The ship arrives at Entrana");
 						}
 					}
@@ -88,7 +89,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				defaultMenu.showMenu(p);
 		}
 		else if (n.getID() == NpcId.MONK_OF_ENTRANA_UNRELEASED.id()) {
-			npcTalk(p, n, "Are you looking to take passage back to port sarim?");
+			npcsay(p, n, "Are you looking to take passage back to port sarim?");
 			final Menu defaultMenu = new Menu();
 			defaultMenu.addOption(new Option("No I don't wish to go") {
 				@Override
@@ -98,9 +99,9 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
 				@Override
 				public void action() {
-					message(p, "You board the ship");
+					Functions.mes(p, "You board the ship");
 					p.teleport(264, 660, false);
-					sleep(2200);
+					delay(2200);
 					p.message("The ship arrives at Port Sarim");
 				}
 			});
@@ -111,7 +112,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 	@Override
 	public void onOpLoc(GameObject arg0, String arg1, Player p) {
-		Npc monk = getNearestNpc(p, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
+		Npc monk = ifnearvisnpc(p, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
 		if (monk != null) {
 			monk.initializeTalkScript(p);
 		} else {

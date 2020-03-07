@@ -16,20 +16,20 @@ public final class KhazardBartender implements
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_BARTENDER.id()) {
-			playerTalk(p, n, "Hello");
-			npcTalk(p, n,
+			say(p, n, "Hello");
+			npcsay(p, n,
 				"Hello, what can i get you? we have all sorts of brew");
-			int bar = showMenu(p, n, "I'll have a beer please",
+			int bar = multi(p, n, "I'll have a beer please",
 				"I'd like a khali brew please", "Got any news?");
 			if (bar == 0) {
-				npcTalk(p, n, "There you go, that's one gold coin");
+				npcsay(p, n, "There you go, that's one gold coin");
 				p.getCarriedItems().getInventory().add(new Item(ItemId.BEER.id()));
 				p.getCarriedItems().remove(ItemId.COINS.id(), 1);
 			} else if (bar == 1) {
-				npcTalk(p, n, "There you go", "No charge");
-				addItem(p, ItemId.KHALI_BREW.id(), 1);
+				npcsay(p, n, "There you go", "No charge");
+				give(p, ItemId.KHALI_BREW.id(), 1);
 			} else if (bar == 2) {
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Well have you seen the famous khazard fight arena?",
 					"I've seen some grand battles in my time..",
 					"Ogres, goblins, even dragons, they all come to fight",

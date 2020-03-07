@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class FishingTrawlerGeneralStore implements ShopInterface,
 	TalkNpcTrigger {
@@ -26,13 +27,13 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
 
-		npcTalk(p, n, "Can I help you at all?");
+		npcsay(p, n, "Can I help you at all?");
 
-		int option = showMenu(p, n, "Yes please. What are you selling?",
+		int option = Functions.multi(p, n, "Yes please. What are you selling?",
 				"No thanks");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "Take a look");
+				npcsay(p, n, "Take a look");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;

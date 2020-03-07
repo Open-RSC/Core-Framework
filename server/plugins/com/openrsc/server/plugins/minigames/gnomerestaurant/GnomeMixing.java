@@ -43,7 +43,7 @@ public class GnomeMixing implements UseInvTrigger {
 		if (p.getCarriedItems().hasCatalogID(gm.itemIDOther, Optional.of(false))) {
 			p.setBusy(true);
 			if (gm.itemIDOther != ItemId.GNOME_SPICE.id())
-				removeItem(p, gm.itemIDOther, 1);
+				remove(p, gm.itemIDOther, 1);
 			if (p.getCache().hasKey("cheese_on_batta")
 				&& p.getCache().hasKey("tomato_on_batta")
 				&& p.getCache().hasKey("tomato_cheese_batta")
@@ -126,8 +126,8 @@ public class GnomeMixing implements UseInvTrigger {
 			}
 
 			if (p.getCache().hasKey("complete_dish")) {
-				removeItem(p, gm.itemID, 1);
-				addItem(p, p.getCache().getInt("complete_dish"), 1);
+				remove(p, gm.itemID, 1);
+				give(p, p.getCache().getInt("complete_dish"), 1);
 				resetGnomeCooking(p);
 			}
 			p.message(gm.messages[0]);

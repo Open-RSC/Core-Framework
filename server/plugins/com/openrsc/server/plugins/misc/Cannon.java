@@ -11,7 +11,7 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.delay;
 
 public class Cannon implements OpLocTrigger,
 	OpInvTrigger,
@@ -94,21 +94,21 @@ public class Cannon implements OpLocTrigger,
 		if (command.equalsIgnoreCase("set down")) {
 			if (player.getQuestStage(Quests.DWARF_CANNON) != -1) {
 				player.message("you can't set up this cannon...");
-				sleep(1500);
+				delay(1500);
 				player.message("...you need to complete the dwarf cannon quest");
 				return;
 			}
 			if (player.getLocation().inDwarfArea()) {
 				player.message("it is not permitted to set up a cannon...");
-				sleep(1500);
+				delay(1500);
 				player.message("...this close to the dwarf black guard");
 				return;
 			}
 			if (player.getCache().hasKey("has_cannon")) {
 				player.message("you cannot construct more than one cannon at a time...");
-				sleep(1500);
+				delay(1500);
 				player.message("if you have lost your cannon ...");
-				sleep(1500);
+				delay(1500);
 				player.message("...go and see the dwarf cannon engineer");
 				return;
 			}
@@ -128,7 +128,7 @@ public class Cannon implements OpLocTrigger,
 			player.resetPath();
 			player.setBusy(true);
 			player.message("you place the cannon base on the ground");
-			sleep(1500);
+			delay(1500);
 			player.getCarriedItems().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
 
 			GameObject cannonBase = new GameObject(
@@ -234,7 +234,7 @@ public class Cannon implements OpLocTrigger,
 				player.message("you can't pick that up, the owners still around");
 			} else {
 				player.message("you can't fire this cannon...");
-				sleep(1500);
+				delay(1500);
 				player.message("...it doesn't belong to you");
 			}
 		} else if (!command.equalsIgnoreCase("fire") && player.getFatigue() >= player.MAX_FATIGUE)

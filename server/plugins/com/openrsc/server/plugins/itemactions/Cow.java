@@ -21,11 +21,11 @@ public class Cow implements UseNpcTrigger {
 		npc.resetPath();
 		npc.face(player);
 		npc.setBusy(true);
-		showBubble(player, item);
+		thinkbubble(player, item);
 		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
 			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.MILK.id(),true);
 		}
-		message(player, 3500, "You milk the cow");
+		mes(player, 3500, "You milk the cow");
 		npc.setBusy(false);
 	}
 }

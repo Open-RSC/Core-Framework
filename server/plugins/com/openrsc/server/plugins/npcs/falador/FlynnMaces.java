@@ -37,14 +37,14 @@ public final class FlynnMaces implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello do you want to buy or sell any maces?");
+		npcsay(p, n, "Hello do you want to buy or sell any maces?");
 
-		int opt = showMenu(p, n, false, //do not send over
+		int opt = multi(p, n, false, //do not send over
 			"No thanks", "Well I'll have a look anyway");
 		if (opt == 0) {
-			playerTalk(p, n, "no thanks");
+			say(p, n, "no thanks");
 		} else if (opt == 1) {
-			playerTalk(p, n, "Well I'll have a look anyway");
+			say(p, n, "Well I'll have a look anyway");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}

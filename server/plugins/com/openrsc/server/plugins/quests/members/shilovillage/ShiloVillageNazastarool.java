@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
@@ -39,13 +40,13 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 					p.message("You find nothing new on the Dolmen.");
 					return;
 				}
-				message(p, "You search the Dolmen...",
+				Functions.mes(p, "You search the Dolmen...",
 					"and find the mumified remains of a human female corpse.");
 				p.message("Do you want to take the corpse?");
-				int menu = showMenu(p, "Yes, I'll take the remains.", "No, I'll leave them where they are.");
+				int menu = multi(p, "Yes, I'll take the remains.", "No, I'll leave them where they are.");
 				if (menu == 0) {
 					p.message("You carefully place the remains in your inventory.");
-					addItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
+					give(p, ItemId.RASHILIYA_CORPSE.id(), 1);
 				} else if (menu == 1) {
 					p.message("You decide to leave the remains where they are.");
 				}
@@ -56,11 +57,11 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				choke(p);
 			}
 			p.message("You touch the Dolmen, and the ground starts to shake.");
-			sleep(1200);
+			delay(1200);
 			p.message("You hear an unearthly voice booming and ");
-			sleep(1200);
+			delay(1200);
 			p.message("you step away from the Dolmen in anticipation...");
-			sleep(1000);
+			delay(1000);
 			p.teleport(380, 3625);
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
@@ -84,7 +85,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	}
 
 	private void choke(Player p) {
-		message(p, "@red@You feel invisible hands starting to choke you...");
+		Functions.mes(p, "@red@You feel invisible hands starting to choke you...");
 		p.damage(getCurrentLevel(p, Skills.HITS) / 2);
 	}
 
@@ -93,13 +94,13 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 		p.teleport(379, 3626);
 		n.teleport(378, 3622);
 		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {
-			npcTalk(p, n, "Leave then, and let Rashiliyia rest in peace!",
+			npcsay(p, n, "Leave then, and let Rashiliyia rest in peace!",
 				"Do not return here or your life will be forfeit!");
 		} else if (n.getID() == NpcId.NAZASTAROOL_SKELETON.id()) {
-			npcTalk(p, n, "Leave now mortal, sweet Rashiliyia will rest!",
+			npcsay(p, n, "Leave now mortal, sweet Rashiliyia will rest!",
 				"Your life will be forfeit if you return!");
 		} else if (n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
-			npcTalk(p, n, "Run infidel and never polute the tomb of Rashiliyia again!",
+			npcsay(p, n, "Run infidel and never polute the tomb of Rashiliyia again!",
 				"A grisly death is what you will meet should you return.");
 		}
 		n.remove();
@@ -108,8 +109,8 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 
 	// run away coords 379, 3626
 	private void spawnAndMoveAway(Player p, int npcID) {
-		Npc npc = spawnNpc(p.getWorld(), npcID, 380, 3625, 60000 * 5);
-		sleep(1000);
+		Npc npc = addnpc(p.getWorld(), npcID, 380, 3625, 60000 * 5);
+		delay(1000);
 		npc.teleport(381, 3625);
 		if (npc.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			zombieShout(p, npc);
@@ -122,18 +123,18 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	}
 
 	private void zombieShout(Player p, Npc n) {
-		npcTalk(p, n, "Who dares disturb Rashiliyias' rest?",
+		npcsay(p, n, "Who dares disturb Rashiliyias' rest?",
 			"I am Nazastarool!",
 			"Prepare to die!");
 	}
 
 	private void skeletonShout(Player p, Npc n) {
-		npcTalk(p, n, "Quake in fear, for I am reborn!",
+		npcsay(p, n, "Quake in fear, for I am reborn!",
 			"Your death will be swift.");
 	}
 
 	private void ghostShout(Player p, Npc n) {
-		npcTalk(p, n, "Nazastarool returns with vengeance!",
+		npcsay(p, n, "Nazastarool returns with vengeance!",
 			"Soon you will serve Rashiliyia!");
 	}
 
@@ -151,11 +152,11 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				p.getCache().store("dolmen_zombie", true);
 			}
 			p.message("You defeat Nazastarool and the corpse falls to  ");
-			sleep(1200);
+			delay(1200);
 			p.message("the ground. The bones start to move again and   ");
-			sleep(1200);
+			delay(1200);
 			p.message("soon they reform into a grisly giant skeleton.  ");
-			sleep(1000);
+			delay(1000);
 			spawnAndMoveAway(p, NpcId.NAZASTAROOL_SKELETON.id());
 			p.setBusy(false);
 		}
@@ -166,11 +167,11 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				p.getCache().store("dolmen_skeleton", true);
 			}
 			p.message("You defeat the Nazastarool Skeleton as the corpse falls to ");
-			sleep(1200);
+			delay(1200);
 			p.message("the ground. An ethereal form starts taking shape above the ");
-			sleep(1200);
+			delay(1200);
 			p.message("bones and you soon face the vengeful ghost of Nazastarool ");
-			sleep(1000);
+			delay(1000);
 			spawnAndMoveAway(p, NpcId.NAZASTAROOL_GHOST.id());
 			p.setBusy(false);
 		}
@@ -181,9 +182,9 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				p.getCache().store("dolmen_ghost", true);
 			}
 			p.message("@yel@Nazastarool: May you perish in the fires of Zamoraks furnace!");
-			sleep(1200);
+			delay(1200);
 			p.message("@yel@Nazastarool: May Rashiliyias Curse be upon you!");
-			sleep(1200);
+			delay(1200);
 			p.message("You see something appear on the Dolmen");
 			p.setBusy(false);
 		}

@@ -3,13 +3,17 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.quests.members.undergroundpass.npcs.UndergroundPassKoftik;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -76,7 +80,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 					}
 					break;
 				case 1:
-					Npc koftik = getNearestNpc(p, NpcId.KOFTIK_ARDOUGNE.id(), 10);
+					Npc koftik = ifnearvisnpc(p, NpcId.KOFTIK_ARDOUGNE.id(), 10);
 					if (koftik != null) {
 						UndergroundPassKoftik.koftikEnterCaveDialogue(p, koftik);
 					}
@@ -89,17 +93,17 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				case 7:
 				case 8:
 				case -1:
-					message(p, "you cautiously enter the cave");
+					Functions.mes(p, "you cautiously enter the cave");
 					p.teleport(673, 3420);
 					break;
 			}
 		}
 		else if (obj.getID() == CRUMBLED_ROCK) {
-			message(p, "you climb the rock pile");
+			Functions.mes(p, "you climb the rock pile");
 			p.teleport(713, 581);
 		}
 		else if (inArray(obj.getID(), READ_ROCKS)) {
-			message(p, "the writing seems to have been scracthed...",
+			Functions.mes(p, "the writing seems to have been scracthed...",
 				"..into the rock with bare hands, it reads..");
 			if (obj.getID() == 832) {
 				ActionSender.sendBox(p, "@red@All those who thirst for knowledge%@red@Bow down to the lord.% %@red@All you that crave eternal life%@red@Come and meet your God.% %@red@For no man nor beast can cast a spell%@red@Against the wake of eternal hell.", true);
@@ -121,60 +125,60 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == FIRST_SWAMP) {
-			message(p, "you try to cross but you're unable to",
+			Functions.mes(p, "you try to cross but you're unable to",
 				"the swamp seems to cling to your legs");
 			p.message("you slowly feel yourself being dragged below");
-			playerTalk(p, null, "gulp!");
+			say(p, null, "gulp!");
 			p.teleport(674, 3462);
-			playerTalk(p, null, "aargh");
+			say(p, null, "aargh");
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
-			sleep(2000);
+			delay(2000);
 			p.teleport(677, 3462);
-			sleep(650);
+			delay(650);
 			p.teleport(680, 3465);
-			sleep(650);
+			delay(650);
 			p.teleport(682, 3462);
-			sleep(650);
+			delay(650);
 			p.teleport(683, 3465);
-			sleep(650);
+			delay(650);
 			p.teleport(685, 3464);
-			sleep(650);
+			delay(650);
 			p.teleport(687, 3462);
-			sleep(650);
-			playerTalk(p, null, "aargh");
+			delay(650);
+			say(p, null, "aargh");
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
 			p.teleport(690, 3461);
-			message(p, "you tumble deep into the cravass",
+			Functions.mes(p, "you tumble deep into the cravass",
 				"and land battered and bruised at the base");
 		}
 		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
 			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
-			message(p, "you climb up the mud pile");
+			Functions.mes(p, "you climb up the mud pile");
 			p.teleport(685, 3420);
-			message(p, "it leads into darkness, the stench is almost unbearable",
+			Functions.mes(p, "it leads into darkness, the stench is almost unbearable",
 				"you surface by the swamp, covered in muck");
 		}
 		else if (inArray(obj.getID(), MAIN_LEDGE)) {
 			doLedge(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
 		}
 		else if (obj.getID() == LEVER) {
-			message(p, "you pull back on the old lever",
+			Functions.mes(p, "you pull back on the old lever",
 				"the bridge slowly lowers");
 			GameObject bridge_open = new GameObject(obj.getWorld(), Point.location(704, 3417), 727, 2, 0);
 			GameObject bridge_closed = new GameObject(obj.getWorld(), Point.location(704, 3417), 726, 2, 0);
 			bridge_open.getWorld().registerGameObject(bridge_open);
 			bridge_closed.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
 			p.teleport(709, 3420);
-			sleep(650);
+			delay(650);
 			p.teleport(706, 3420);
-			sleep(650);
+			delay(650);
 			p.teleport(703, 3420);
 			p.message("you cross the bridge");
 		}
 		else if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
-			message(p, "you step in rancid swamp",
+			Functions.mes(p, "you step in rancid swamp",
 				"it clings to your feet, you cannot cross");
 		}
 		else if (obj.getID() == CLEAR_ROCKS) {
@@ -182,19 +186,19 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				p.teleport(695, 3435);
 				return;
 			}
-			message(p, "you move the rocks from your path");
+			Functions.mes(p, "you move the rocks from your path");
 			p.message("you hear a strange mechanical sound");
 			obj.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
 					.getType()));
 			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
-			playerTalk(p, null, "aaarrghhh");
-			message(p, "You've triggered a trap");
+			say(p, null, "aaarrghhh");
+			Functions.mes(p, "You've triggered a trap");
 		}
 		else if (inArray(obj.getID(), SPEAR_ROCKS)) {
 			if (cmd.equalsIgnoreCase("step over")) {
-				message(p, "you step over the rock");
+				Functions.mes(p, "you step over the rock");
 				p.message("you feel a thread tug at your boot");
 				p.message("it's a trap");
 				p.teleport(obj.getX(), obj.getY());
@@ -203,14 +207,14 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 						.getType()));
 				obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
-				playerTalk(p, null, "aaarghh");
+				say(p, null, "aaarghh");
 			} else {
-				message(p, "you search the rock",
+				Functions.mes(p, "you search the rock",
 					"you find a trip wire");
 				p.message("do you wish to disarm the trap?");
-				int menu = showMenu(p, "yes, i'll have a go", "no chance");
+				int menu = multi(p, "yes, i'll have a go", "no chance");
 				if (menu == 0) {
-					message(p, "you carefully try and diconnect the trip wire");
+					Functions.mes(p, "you carefully try and diconnect the trip wire");
 					if (succeed(p, 1)) {
 						p.message("you manage to delay the trap..");
 						p.message("...long enough to cross the rocks");
@@ -227,7 +231,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 								.getType()));
 						obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 						p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
-						playerTalk(p, null, "aaarghh");
+						say(p, null, "aaarghh");
 					}
 
 				} else if (menu == 1) {
@@ -255,5 +259,134 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			level_difference = 40 + level_difference;
 
 		return percent <= level_difference;
+	}
+
+	public static void doLedge(final GameObject object, final Player p, int damage) {
+		p.setBusyTimer(650);
+		p.message("you climb the ledge");
+		boolean failLedge = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
+		if (object != null && !failLedge) {
+			if (object.getDirection() == 2 || object.getDirection() == 6) {
+				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
+					if (object.getID() == 753) {
+						p.message("and drop down to the cave floor");
+						teleport(p, object.getX() - 2, object.getY());
+					} else {
+						p.message("and drop down to the cave floor");
+						teleport(p, object.getX() - 1, object.getY());
+					}
+				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
+					if (object.getID() == 753) {
+						p.message("and drop down to the cave floor");
+						teleport(p, object.getX() + 2, object.getY());
+					} else {
+						p.message("and drop down to the cave floor");
+						teleport(p, object.getX() + 1, object.getY());
+					}
+				}
+			}
+			if (object.getDirection() == 4 || object.getDirection() == 0) {
+				if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // X
+					teleport(p, object.getX(), object.getY() + 1);
+					p.message("and drop down to the cave floor");
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // Y
+					teleport(p, object.getX(), object.getY() - 1);
+				}
+			}
+		} else {
+			p.message("but you slip");
+			p.damage(damage);
+			say(p, null, "aargh");
+		}
+	}
+
+	public static void doRock(final GameObject object, final Player p, int damage, boolean eventMessage,
+							  int spikeLocation) {
+		p.setBusyTimer(650);
+		p.message("you climb onto the rock");
+		boolean failRock = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
+		if (object != null && !failRock) {
+			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
+				|| object.getDirection() == 3) {
+				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
+					teleport(p, object.getX() - 1, object.getY());
+				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
+					teleport(p, object.getX() + 1, object.getY());
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+					// side
+					if (object.getID() == 749) {
+						teleport(p, object.getX(), object.getY() + 1);
+					} else {
+						teleport(p, object.getX() + 1, object.getY());
+					}
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					// side.
+					if (object.getID() == 749) {
+						teleport(p, object.getX(), object.getY() - 1);
+					} else {
+						teleport(p, object.getX() + 1, object.getY());
+					}
+				}
+			}
+			if (object.getDirection() == 6) {
+				if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+					// side
+					teleport(p, object.getX(), object.getY() + 1);
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					// side.
+					teleport(p, object.getX(), object.getY() - 1);
+				} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
+					teleport(p, object.getX() + 1, object.getY() + 1);
+				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
+					teleport(p, object.getX(), object.getY() + 1);
+				}
+			}
+			if (object.getDirection() == 0) {
+				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
+					teleport(p, object.getX() - 1, object.getY());
+				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
+					teleport(p, object.getX() + 1, object.getY());
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+					// side
+					teleport(p, object.getX(), object.getY() + 1);
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					// side.
+					teleport(p, object.getX(), object.getY() - 1);
+				}
+			}
+			if (object.getDirection() == 7) {
+				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
+					teleport(p, object.getX() - 1, object.getY() - 1);
+				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
+					teleport(p, object.getX() + 1, object.getY());
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+					// side
+					teleport(p, object.getX(), object.getY() + 1);
+				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					// side.
+					teleport(p, object.getX() + 1, object.getY());
+				}
+			}
+			p.message("and step down the other side");
+		} else {
+			p.message("but you slip");
+			p.damage(damage);
+			if (spikeLocation == 1) {
+				p.teleport(743, 3475);
+			} else if (spikeLocation == 2) {
+				p.teleport(748, 3482);
+			} else if (spikeLocation == 3) {
+				p.teleport(738, 3483);
+			} else if (spikeLocation == 4) {
+				p.teleport(736, 3475);
+			} else if (spikeLocation == 5) {
+				p.teleport(730, 3478);
+			}
+			say(p, null, "aargh");
+		}
+		if (eventMessage) {
+			p.getWorld().getServer().getGameEventHandler()
+				.add(new UndergroundPassMessages(p.getWorld(), p, DataConversions.random(2000, 10000)));
+		}
 	}
 }

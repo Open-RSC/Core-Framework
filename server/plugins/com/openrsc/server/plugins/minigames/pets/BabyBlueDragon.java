@@ -26,7 +26,7 @@ public class BabyBlueDragon implements UseNpcTrigger {
 			player.setBusy(true);
 			npc.face(player);
 			player.face(npc);
-			showBubble(player, item);
+			thinkbubble(player, item);
 			player.message("You attempt to put the baby blue dragon in the crystal.");
 			npc.setBusyTimer(1600);
 
@@ -55,8 +55,8 @@ public class BabyBlueDragon implements UseNpcTrigger {
 					}*/
 					if (random(0, 4) != 0) {
 						player.message("You catch the baby blue dragon in the crystal.");
-						removeItem(player, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
-						addItem(player, ItemId.A_RED_CRYSTAL.id(), 1);
+						remove(player, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
+						give(player, ItemId.A_RED_CRYSTAL.id(), 1);
 						ActionSender.sendInventory(player);
 						player.setBusy(false);
 						npc.setBusyTimer(0);

@@ -8,7 +8,7 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
 public class Guildmaster implements TalkNpcTrigger {
 
@@ -23,7 +23,7 @@ public class Guildmaster implements TalkNpcTrigger {
 		defaultMenu.addOption(new Option("What is this place?") {
 			@Override
 			public void action() {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"This is the champions' guild",
 					"Only Adventurers who have proved themselves worthy",
@@ -37,7 +37,7 @@ public class Guildmaster implements TalkNpcTrigger {
 			"Do you know where I could get a rune plate mail body?") {
 			@Override
 			public void action() {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"I have a friend called Oziach who lives by the cliffs",
 					"He has a supply of rune plate mail",

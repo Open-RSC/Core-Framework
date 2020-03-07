@@ -1,12 +1,13 @@
 package com.openrsc.server.plugins.npcs.grandtree;
 
 import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 public class Trainers implements TalkNpcTrigger {
@@ -19,28 +20,28 @@ public class Trainers implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GNOME_TRAINER_ENTRANCE.id()) {
-			playerTalk(p, n, "hello, what is this place?");
-			npcTalk(p, n, "this my friend, is where we train",
+			Functions.say(p, n, "hello, what is this place?");
+			npcsay(p, n, "this my friend, is where we train",
 					"it improves our agility, an essential skill");
-			playerTalk(p, n, "looks easy enough");
-			npcTalk(p, n, "if you complete the course...",
+			Functions.say(p, n, "looks easy enough");
+			npcsay(p, n, "if you complete the course...",
 					"from the slippery log to the end",
 					"your agilty will increase much faster..",
 					".. than repeating one obstical");
 		} else if (n.getID() == NpcId.GNOME_TRAINER_STARTINGNET.id()) {
-			playerTalk(p, n, "hello");
-			npcTalk(p, n, "this isn't a granny's tea party",
+			Functions.say(p, n, "hello");
+			npcsay(p, n, "this isn't a granny's tea party",
 					"let's see some sweat human",
 					"go, go ,go ,go");
 		} else if (n.getID() == NpcId.GNOME_TRAINER_PLATFORM.id()) {
-			playerTalk(p, n, "this is fun");
-			npcTalk(p, n, "this is training soldier",
+			Functions.say(p, n, "this is fun");
+			npcsay(p, n, "this is training soldier",
 					"if you want fun, go make some cocktails");
 		} else if (n.getID() == NpcId.GNOME_TRAINER_ENDINGNET.id()) {
-			playerTalk(p, n, "hello");
-			npcTalk(p, n, "hi");
-			playerTalk(p, n, "how are you?");
-			npcTalk(p, n, "im amazed by how much you humans chat",
+			Functions.say(p, n, "hello");
+			npcsay(p, n, "hi");
+			Functions.say(p, n, "how are you?");
+			npcsay(p, n, "im amazed by how much you humans chat",
 					"the sign say's training area...",
 					"..not pointless conversation area",
 					"now move it soldier");

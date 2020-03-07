@@ -8,8 +8,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.skills.Mining;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.mes;
 
 public class RawEssence implements OpLocTrigger {
 	@Override
@@ -22,13 +22,13 @@ public class RawEssence implements OpLocTrigger {
 		int axeID = Mining.getAxe(player);
 		if (axeID < 0)
 		{
-			message(player, "You need a pickaxe to mine Rune Essence.");
+			mes(player, "You need a pickaxe to mine Rune Essence.");
 			return;
 		}
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Mining rune essence", player.getCarriedItems().getInventory().getFreeSlots(), true) {
 			public void action() {
-				addItem(player, ItemId.RUNE_ESSENCE.id(), 1);
+				give(player, ItemId.RUNE_ESSENCE.id(), 1);
 				player.incExp(Skills.MINING, 20, true);
 				if (player.getCarriedItems().getInventory().full())
 					interrupt();

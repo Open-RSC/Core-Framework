@@ -20,13 +20,13 @@ public class Zenesha implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 
-		npcTalk(p, n, "hello I sell plate mail tops");
-		int menu = showMenu(p, n, false, "I'm not intersted", "I may be intersted");
+		npcsay(p, n, "hello I sell plate mail tops");
+		int menu = multi(p, n, false, "I'm not intersted", "I may be intersted");
 		if (menu == 0) {
-			playerTalk(p, n, "I'm not interested");
+			say(p, n, "I'm not interested");
 		} else if (menu == 1) {
-			playerTalk(p, n, "I may be interested");
-			npcTalk(p, n, "Look at these fine samples then");
+			say(p, n, "I may be interested");
+			npcsay(p, n, "Look at these fine samples then");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}

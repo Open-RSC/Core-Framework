@@ -61,144 +61,144 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		else if (n.getID() == NpcId.GERTRUDE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					playerTalk(p, n, "hello, are you ok?");
-					npcTalk(p, n, "do i look ok?...those kids drive me crazy",
+					say(p, n, "hello, are you ok?");
+					npcsay(p, n, "do i look ok?...those kids drive me crazy",
 						"...i'm sorry,  it's just, ive lost her");
-					playerTalk(p, n, "lost who?");
-					npcTalk(p, n, "fluffs, poor fluffs, she never hurt anyone");
-					playerTalk(p, n, "who's fluffs");
-					npcTalk(p, n, "my beloved feline friend fluffs",
+					say(p, n, "lost who?");
+					npcsay(p, n, "fluffs, poor fluffs, she never hurt anyone");
+					say(p, n, "who's fluffs");
+					npcsay(p, n, "my beloved feline friend fluffs",
 						"she's been purring by my side for almost a decade",
 						"please, could you go search for her...",
 						"...while i look over the kids?");
-					int first = showMenu(p, n, "well, i suppose i could",
+					int first = multi(p, n, "well, i suppose i could",
 						"what's in it for me?",
 						"sorry, i'm too busy to play pet rescue");
 					if (first == 0) {
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"really?, thank you so much",
 							"i really have no idea where she could be",
 							"i think my sons, shilop and Wilough, saw the cat last",
 							"they'll be out in the market place");
-						playerTalk(p, n, "alright then, i'll see what i can do");
+						say(p, n, "alright then, i'll see what i can do");
 						p.updateQuestStage(getQuestId(), 1);
 					} else if (first == 1) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"i'm sorry, i'm too poor to pay you anything",
 							"the best i could offer is a warm meal",
 							"so, can you help?");
-						int second = showMenu(p, n, "well, i suppose i could",
+						int second = multi(p, n, "well, i suppose i could",
 							"sorry, i'm too busy to play pet rescue");
 						if (second == 0) {
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"really?, thank you so much",
 								"i really have no idea where she could be",
 								"i think my sons, shilop and Wilough, saw the cat last",
 								"they'll be out in the market place");
-							playerTalk(p, n, "alright then, i'll see what i can do");
+							say(p, n, "alright then, i'll see what i can do");
 							p.updateQuestStage(getQuestId(), 1);
 						} else if (second == 1) {
-							npcTalk(p, n,
+							npcsay(p, n,
 								" well, ok then, i'll have to find someone else");
 						}
 					} else if (first == 2) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							" well, ok then, i'll have to find someone else");
 					}
 					break;
 				case 1:
-					playerTalk(p, n, "hello gertrude");
-					npcTalk(p, n, "have you seen my poor fluffs?");
-					playerTalk(p, n, "i'm afraid not");
-					npcTalk(p, n, "what about shilop?");
-					playerTalk(p, n, "no sign of him either");
-					npcTalk(p, n, "hmmm...strange, he should be at the market");
+					say(p, n, "hello gertrude");
+					npcsay(p, n, "have you seen my poor fluffs?");
+					say(p, n, "i'm afraid not");
+					npcsay(p, n, "what about shilop?");
+					say(p, n, "no sign of him either");
+					npcsay(p, n, "hmmm...strange, he should be at the market");
 					break;
 				case 2:
 					if (!p.getCache().hasKey("cat_milk") && !p.getCache().hasKey("cat_sardine")) {
-						playerTalk(p, n, "hello gertrude");
-						npcTalk(p, n, "hello again, did you manage to find shilop?",
+						say(p, n, "hello gertrude");
+						npcsay(p, n, "hello again, did you manage to find shilop?",
 							"i can't keep an eye on him for the life of me");
-						playerTalk(p, n, "he does seem quite a handfull");
-						npcTalk(p, n, "you have no idea!.... did he help at all?");
-						playerTalk(p, n, "i think so, i'm just going to look now");
-						npcTalk(p, n, "thanks again adventurer");
+						say(p, n, "he does seem quite a handfull");
+						npcsay(p, n, "you have no idea!.... did he help at all?");
+						say(p, n, "i think so, i'm just going to look now");
+						npcsay(p, n, "thanks again adventurer");
 					} else if (p.getCache().hasKey("cat_milk") && !p.getCache().hasKey("cat_sardine")) {
-						playerTalk(p, n, "hello again");
-						npcTalk(p, n, "hello, how's it going?, any luck?");
-						playerTalk(p, n, "yes, i've found fluffs");
-						npcTalk(p, n, "well well, you are clever, did you bring her back?");
-						playerTalk(p, n, "well, that's the thing, she refuses to leave");
-						npcTalk(p, n, "oh dear, oh dear, maybe she's just hungry",
+						say(p, n, "hello again");
+						npcsay(p, n, "hello, how's it going?, any luck?");
+						say(p, n, "yes, i've found fluffs");
+						npcsay(p, n, "well well, you are clever, did you bring her back?");
+						say(p, n, "well, that's the thing, she refuses to leave");
+						npcsay(p, n, "oh dear, oh dear, maybe she's just hungry",
 							"she loves doogle sardines but i'm all out");
-						playerTalk(p, n, "doogle sardines?");
-						npcTalk(p, n, "yes, raw sardines seasoned with doogle leaves",
+						say(p, n, "doogle sardines?");
+						npcsay(p, n, "yes, raw sardines seasoned with doogle leaves",
 							"unfortunatly i've used all my doogle leaves",
 							"but you may find some in the woods out back");
 					} else if (p.getCache().hasKey("cat_sardine")) {
-						playerTalk(p, n, "hi");
-						npcTalk(p, n, "hey traveller, did fluffs eat the sardines?");
-						playerTalk(p, n, "yeah, she loved them, but she still won't leave");
-						npcTalk(p, n, "well that is strange, there must be a reason!");
+						say(p, n, "hi");
+						npcsay(p, n, "hey traveller, did fluffs eat the sardines?");
+						say(p, n, "yeah, she loved them, but she still won't leave");
+						npcsay(p, n, "well that is strange, there must be a reason!");
 					}
 					break;
 				case 3:
-					playerTalk(p, n, "hello gertrude",
+					say(p, n, "hello gertrude",
 						"fluffs ran off with her two kittens");
-					npcTalk(p, n, "you're back , thank you, thank you",
+					npcsay(p, n, "you're back , thank you, thank you",
 						"fluffs just came back, i think she was just upset...",
 						"...as she couldn't find her kittens");
-					message(p, "gertrude gives you a hug");
-					npcTalk(p, n,
+					Functions.mes(p, "gertrude gives you a hug");
+					npcsay(p, n,
 						"if you hadn't found her kittens they'd have died out there");
-					playerTalk(p, n, "that's ok, i like to do my bit");
-					npcTalk(p,
+					say(p, n, "that's ok, i like to do my bit");
+					npcsay(p,
 						n,
 						"i don't know how to thank you",
 						"I have no real material possessions..but i do have kittens",
 						"..i can only really look after one");
-					playerTalk(p, n, "well, if it needs a home");
-					npcTalk(p,
+					say(p, n, "well, if it needs a home");
+					npcsay(p,
 						n,
 						"i would sell it to my cousin in west ardounge..",
 						"i hear there's a rat epidemic there..but it's too far",
 						"here you go, look after her and thank you again");
-					message(p, "gertrude gives you a kitten...", "...and some food");
-					addItem(p, ItemId.KITTEN.id(), 1);
-					addItem(p, ItemId.CHOCOLATE_CAKE.id(), 1);
-					addItem(p, ItemId.STEW.id(), 1);
+					Functions.mes(p, "gertrude gives you a kitten...", "...and some food");
+					give(p, ItemId.KITTEN.id(), 1);
+					give(p, ItemId.CHOCOLATE_CAKE.id(), 1);
+					give(p, ItemId.STEW.id(), 1);
 					p.sendQuestComplete(Quests.GERTRUDES_CAT);
 					break;
 				case -1:
-					playerTalk(p, n, "hello again gertrude");
-					npcTalk(p, n, "well hello adventurer, how are you?");
+					say(p, n, "hello again gertrude");
+					npcsay(p, n, "well hello adventurer, how are you?");
 					if (p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id(), Optional.empty()) || p.getBank().hasItemId(ItemId.KITTEN.id())) {
-						playerTalk(p, n, "pretty good thanks, yourself?");
-						npcTalk(p, n,
+						say(p, n, "pretty good thanks, yourself?");
+						npcsay(p, n,
 							"same old, running after shilob most of the time");
-						playerTalk(p, n,
+						say(p, n,
 							"never mind, i'm sure he'll calm down with age");
 					} else {
-						playerTalk(p, n, "i'm ok, but i lost my kitten");
-						npcTalk(p, n,
+						say(p, n, "i'm ok, but i lost my kitten");
+						npcsay(p, n,
 							"that is a shame..as it goes fluffs just had more",
 							"i'm selling them at 100 coins each...",
 							"...it was shilop's idea");
-						playerTalk(p, n, "!");
-						npcTalk(p, n, "would you like one");
-						int menu = showMenu(p, n, "yes please",
+						say(p, n, "!");
+						npcsay(p, n, "would you like one");
+						int menu = multi(p, n, "yes please",
 							"no thanks, i've paid that boy enough already");
 						if (menu == 0) {
-							npcTalk(p, n, "ok then, here you go");
+							npcsay(p, n, "ok then, here you go");
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 100) {
-								playerTalk(p, n, "thanks");
-								message(p, "gertrude gives you another kitten");
+								say(p, n, "thanks");
+								Functions.mes(p, "gertrude gives you another kitten");
 								p.getCarriedItems().remove(ItemId.COINS.id(), 100);
 								p.getCarriedItems().getInventory().add(new Item(ItemId.KITTEN.id()));
 							} else {
-								playerTalk(p, n,
+								say(p, n,
 									"oops, looks like i'm a bit short",
 									"i'll have to come back later");
 							}
@@ -213,88 +213,88 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		else if (n.getID() == NpcId.SHILOP.id() || n.getID() == NpcId.WILOUGH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					playerTalk(p, n, "hello youngster");
-					npcTalk(p, n, "i don't talk to strange old people");
+					say(p, n, "hello youngster");
+					npcsay(p, n, "i don't talk to strange old people");
 					break;
 				case 1:
-					playerTalk(p, n, "hello there, i've been looking for you");
-					npcTalk(p, n, "i didn't mean to take it!, i just forgot to pay");
-					playerTalk(p, n,
+					say(p, n, "hello there, i've been looking for you");
+					npcsay(p, n, "i didn't mean to take it!, i just forgot to pay");
+					say(p, n,
 						"what?...i'm trying to help your mum find fluffs");
-					npcTalk(p, n,
+					npcsay(p, n,
 						"ohh..., well, in that case i might be able to help",
 						"fluffs followed me to my secret play area..",
 						"i haven't seen him since");
-					playerTalk(p, n, "and where is this play area?");
-					npcTalk(p, n, "if i told you that, it wouldn't be a secret");
-					int first = showMenu(p, n, false, //do not send over
+					say(p, n, "and where is this play area?");
+					npcsay(p, n, "if i told you that, it wouldn't be a secret");
+					int first = multi(p, n, false, //do not send over
 						"tell me sonny, or i will hurt you",
 						"what will make you tell me?",
 						"well never mind, fluffs' loss");
 					if (first == 0) {
-						playerTalk(p, n, "tell me sonny, or i will hurt you");
-						npcTalk(p, n,
+						say(p, n, "tell me sonny, or i will hurt you");
+						npcsay(p, n,
 							"w..w..what? y..you wouldn't, a young lad like me",
 							"i'd have you behind bars before nightfall");
-						message(p, "you decide it's best not to hurt the boy");
+						Functions.mes(p, "you decide it's best not to hurt the boy");
 					} else if (first == 1) {
-						playerTalk(p, n, "what will make you tell me?");
-						npcTalk(p, n,
+						say(p, n, "what will make you tell me?");
+						npcsay(p, n,
 							"well...now you ask, i am a bit short on cash");
-						playerTalk(p, n, "how much?");
-						npcTalk(p, n, "100 coins should cover it");
-						playerTalk(p, n, "100 coins!, why should i pay you?");
-						npcTalk(p, n, "you shouldn't, but i won't help otherwise",
+						say(p, n, "how much?");
+						npcsay(p, n, "100 coins should cover it");
+						say(p, n, "100 coins!, why should i pay you?");
+						npcsay(p, n, "you shouldn't, but i won't help otherwise",
 							"i never liked that cat any way, so what do you say?");
-						int second = showMenu(p, n, "i'm not paying you a penny",
+						int second = multi(p, n, "i'm not paying you a penny",
 							"ok then, i'll pay");
 						if (second == 0) {
-							npcTalk(p, n,
+							npcsay(p, n,
 								"ok then, i find another way to make money");
 						} else if (second == 1) {
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 100) {
-								playerTalk(p, n,
+								say(p, n,
 									"there you go, now where did you see fluffs?");
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"i play at an abandoned lumber mill to the north..",
 									"just beyond the jolly boar inn...",
 									"i saw fluffs running around in there");
-								playerTalk(p, n, "anything else?");
-								npcTalk(p,
+								say(p, n, "anything else?");
+								npcsay(p,
 									n,
 									"well, you'll have to find a broken fence to get in",
 									"i'm sure you can manage that");
-								message(p, "you give the lad 100 coins");
+								Functions.mes(p, "you give the lad 100 coins");
 								p.getCarriedItems().remove(ItemId.COINS.id(), 100);
 
 								p.updateQuestStage(getQuestId(), 2);
 							} else {
-								playerTalk(p, n,
+								say(p, n,
 									"but i'll have to get some money first");
-								npcTalk(p, n, "i'll be waiting");
+								npcsay(p, n, "i'll be waiting");
 							}
 						}
 					} else if (first == 2) {
-						playerTalk(p, n, "well, never mind, fluffs' loss");
-						npcTalk(p, n, "i'm sure my mum will get over it");
+						say(p, n, "well, never mind, fluffs' loss");
+						npcsay(p, n, "i'm sure my mum will get over it");
 					}
 
 					break;
 				case 2:
 				case 3:
-					playerTalk(p, n, "where did you say you saw fluffs?");
-					npcTalk(p, n, "weren't you listerning?, i saw the flee bag...",
+					say(p, n, "where did you say you saw fluffs?");
+					npcsay(p, n, "weren't you listerning?, i saw the flee bag...",
 						"...in the old lumber mill just north east of here",
 						"just walk past the jolly boar inn and you should find it");
 					break;
 				case -1:
-					playerTalk(p, n, "hello again");
-					npcTalk(p, n, "you think you're tough do you?");
-					playerTalk(p, n, "pardon?");
-					npcTalk(p, n, "i can beat anyone up");
-					playerTalk(p, n, "really");
-					message(p, "the boy begins to jump around with his fists up",
+					say(p, n, "hello again");
+					npcsay(p, n, "you think you're tough do you?");
+					say(p, n, "pardon?");
+					npcsay(p, n, "i can beat anyone up");
+					say(p, n, "really");
+					Functions.mes(p, "the boy begins to jump around with his fists up",
 						"you decide it's best not to kill him just yet");
 					break;
 			}
@@ -335,11 +335,11 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.GERTRUDES_CAT.id() && i.getY() == 2327) {
 			int damage = DataConversions.getRandom().nextInt(2) + 1;
-			message(p, "you attempt to pick up the cat");
+			Functions.mes(p, "you attempt to pick up the cat");
 			p.message("but the cat scratches you");
 			p.damage(damage);
 
-			playerTalk(p, null, "ouch");
+			say(p, null, "ouch");
 			if (p.getQuestStage(Quests.GERTRUDES_CAT) >= 3
 				|| p.getQuestStage(Quests.GERTRUDES_CAT) == -1) {
 				return;
@@ -347,7 +347,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 
 			if (p.getCache().hasKey("cat_sardine")
 				&& p.getCache().hasKey("cat_milk")) {
-				message(p, "the cats seems afraid to leave",
+				Functions.mes(p, "the cats seems afraid to leave",
 					"she keeps meowing",
 					"in the distance you hear kittens purring");
 			}
@@ -383,7 +383,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 			return;
 		}
 		if (myItem.getCatalogId() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
-			message(p, "you give the cat some milk", "she really enjoys it",
+			Functions.mes(p, "you give the cat some milk", "she really enjoys it",
 				"but she now seems to be hungry");
 			p.getCache().store("cat_milk", true);
 			p.getCarriedItems().remove(ItemId.MILK.id(), 1);
@@ -391,7 +391,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			if (p.getCache().hasKey("cat_milk")) {
-				message(p, "you give the cat the sardine",
+				Functions.mes(p, "you give the cat the sardine",
 					"the cat gobbles it up",
 					"she still seems scared of leaving");
 				p.getCache().store("cat_sardine", true);
@@ -400,10 +400,10 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (myItem.getCatalogId() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
-			message(p, "you place the kittens by their mother",
+			Functions.mes(p, "you place the kittens by their mother",
 				"she purrs at you appreciatively",
 				"and then runs off home with her kittens");
-			removeItem(p, ItemId.KITTENS.id(), 1);
+			remove(p, ItemId.KITTENS.id(), 1);
 			p.updateQuestStage(getQuestId(), 3);
 			p.getCache().remove("cat_milk");
 			p.getCache().remove("cat_sardine");
@@ -419,7 +419,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
-			message(p, "you rub the doogle leaves over the sardine");
+			Functions.mes(p, "you rub the doogle leaves over the sardine");
 			p.getCarriedItems().remove(ItemId.DOOGLE_LEAVES.id(), 1);
 			p.getCarriedItems().getInventory().replace(ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id());
 		}
@@ -434,29 +434,29 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 1039) {
-			message(p, "you search the crate...", "...but find nothing...");
+			Functions.mes(p, "you search the crate...", "...but find nothing...");
 			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
 				|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
 				//nothing
 			} else {
-				message(p, "...you hear a cat's purring close by");
+				Functions.mes(p, "...you hear a cat's purring close by");
 			}
 		} else if (obj.getID() == 1041) {
-			message(p, "you search the barrel...", "...but find nothing...");
+			Functions.mes(p, "you search the barrel...", "...but find nothing...");
 			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
 				|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
 				//nothing
 			} else {
-				message(p, "...you hear a cat's purring close by");
+				Functions.mes(p, "...you hear a cat's purring close by");
 			}
 		} else if (obj.getID() == 1040) {
-			message(p, "you search the crate...");
+			Functions.mes(p, "you search the crate...");
 			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
 				|| p.getQuestStage(getQuestId()) >= 3 || p.getQuestStage(getQuestId()) == -1) {
-				message(p, "you find nothing...");
+				Functions.mes(p, "you find nothing...");
 			} else {
-				message(p, "...and find two kittens");
-				addItem(p, ItemId.KITTENS.id(), 1);
+				Functions.mes(p, "...and find two kittens");
+				give(p, ItemId.KITTENS.id(), 1);
 			}
 		}
 
@@ -470,8 +470,8 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTENS.id()) {
-			message(p, "you drop the kittens", "they run back to the crate");
-			removeItem(p, ItemId.KITTENS.id(), 1);
+			Functions.mes(p, "you drop the kittens", "they run back to the crate");
+			remove(p, ItemId.KITTENS.id(), 1);
 		}
 	}
 }

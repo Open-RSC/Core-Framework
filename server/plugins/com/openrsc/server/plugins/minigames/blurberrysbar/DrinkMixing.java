@@ -49,11 +49,11 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 		}
 		if (p.getCarriedItems().hasCatalogID(dm.itemIDOther, Optional.of(false))) {
 			p.setBusy(true);
-			message(p, 1900, dm.messages[0]);
+			mes(p, 1900, dm.messages[0]);
 			if (dm.itemIDOther == ItemId.MILK.id()) {
 				p.getCarriedItems().getInventory().replace(ItemId.MILK.id(), ItemId.BUCKET.id());
 			} else {
-				removeItem(p, dm.itemIDOther, 1);
+				remove(p, dm.itemIDOther, 1);
 			}
 			if (dm.messages.length > 1) {
 				p.message(dm.messages[1]);
@@ -227,7 +227,7 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 					// ??
 					p.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.COCKTAIL_GLASS.id());
 				}
-				message(p, 600, "you pour the contents into a glass");
+				mes(p, 600, "you pour the contents into a glass");
 			} else {
 				p.message("first you'll need a glass to pour the drink into");
 			}

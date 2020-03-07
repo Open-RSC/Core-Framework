@@ -2,10 +2,11 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -17,11 +18,11 @@ public class FinancialAdvisor implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello there",
+		npcsay(p, n, "Hello there",
 			"I'm your designated financial advisor");
-		playerTalk(p, n, "That's good because I don't have any money at the moment",
+		Functions.say(p, n, "That's good because I don't have any money at the moment",
 			"How do I get rich?");
-		npcTalk(p, n, "There are many different ways to make money in runescape",
+		npcsay(p, n, "There are many different ways to make money in runescape",
 			"for example certain monsters will drop a bit of loot",
 			"To start with killing men and goblins might be a good idea",
 			"Some higher level monsters will drop quite a lot of treasure",

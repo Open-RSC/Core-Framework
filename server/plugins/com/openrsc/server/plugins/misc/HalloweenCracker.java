@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.thinkbubble;
 
 public class HalloweenCracker implements UsePlayerTrigger {
 
@@ -130,13 +130,13 @@ public class HalloweenCracker implements UsePlayerTrigger {
 
 			player.getCarriedItems().remove(item);
 
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-			showBubble(player, item);
+			Functions.thinkbubble(player, item);
 			player.message("You pull the cracker with " + otherPlayer.getUsername() + "...");
 			otherPlayer.message(player.getUsername() + " is pulling a cracker with you...");
 
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

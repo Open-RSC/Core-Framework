@@ -5,17 +5,18 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
+import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
 import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.addnpc;
 
 public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 
@@ -46,14 +47,14 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						} else if (!p.getCache().hasKey("winch_rope_1")) {
 							p.playerServerMessage(MessageType.QUEST, "You operate the winch");
 							p.message("The bucket descends, but does not reach the bottom");
-							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
+							Functions.say(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
 							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
 								p.setBusy(false);
 								return;
 							}
-							message(p, "You try to climb down the rope",
+							mes(p, "You try to climb down the rope",
 								"You lower yourself into the shaft");
 							p.incExp(Skills.AGILITY, 20, true);
 							p.teleport(26, 3346);
@@ -68,14 +69,14 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						} else if (!p.getCache().hasKey("winch_rope_2")) {
 							p.playerServerMessage(MessageType.QUEST, "You operate the winch");
 							p.message("The bucket descends, but does not reach the bottom");
-							playerTalk(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
+							Functions.say(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
 							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
 								p.setBusy(false);
 								return;
 							}
-							message(p, "You try to climb down the rope",
+							mes(p, "You try to climb down the rope",
 								"You lower yourself into the shaft");
 							p.incExp(Skills.AGILITY, 20, true);
 							if (p.getQuestStage(Quests.DIGSITE) >= 6) {
@@ -108,7 +109,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						p.message("There is already a rope tied to this bucket");
 					}
 				} else {
-					playerTalk(p, null, "Err... I have no idea why I am doing this !");
+					Functions.say(p, null, "Err... I have no idea why I am doing this !");
 				}
 			}
 			else if (obj.getID() == WINCH[1]) {
@@ -121,7 +122,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						p.message("There is already a rope tied to this bucket");
 					}
 				} else {
-					playerTalk(p, null, "Err... I have no idea why I am doing this !");
+					Functions.say(p, null, "Err... I have no idea why I am doing this !");
 				}
 			}
 		}
@@ -130,18 +131,18 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 	private void handleCantUseWinch(Player p, GameObject obj) {
 		boolean workmanWasSpawned;
 
-		Npc workman = getNearestNpc(p, NpcId.WORKMAN.id(), 5);
+		Npc workman = ifnearvisnpc(p, NpcId.WORKMAN.id(), 5);
 		if (workman == null) {
-			workman = spawnNpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 60000);
+			workman = addnpc(p.getWorld(), NpcId.WORKMAN.id(), p.getX(), p.getY(), 60000);
 			workmanWasSpawned = true;
 		} else {
 			workmanWasSpawned = false;
 			workman.resetPath();
 			workman.teleport(p.getX(), p.getY());
 		}
-		npcTalk(p, workman, "Sorry, this area is private");
+		npcsay(p, workman, "Sorry, this area is private");
 		workman.teleport(p.getX() + (obj.getID() == WINCH[0] ? +1 : -1), p.getY());
-		npcTalk(p, workman, "The only way you'll get to use these",
+		npcsay(p, workman, "The only way you'll get to use these",
 			"Is by impressing the expert",
 			"Up at the centre",
 			"Find something worthwhile...",

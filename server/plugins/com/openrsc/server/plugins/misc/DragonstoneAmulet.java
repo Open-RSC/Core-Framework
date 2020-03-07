@@ -6,6 +6,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
@@ -27,9 +28,9 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			p.message("You rub the amulet");
-			sleep(600);
+			delay(600);
 			p.message("Where would you like to teleport to?");
-			int menu = showMenu(p, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
+			int menu = multi(p, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
 			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
@@ -42,7 +43,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				return;
 			}
 			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				message(p, "You can't teleport while holding Ana,",
+				Functions.mes(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
@@ -91,7 +92,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
-			sleep(1000);
+			delay(1000);
 			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 
 				@Override
@@ -106,7 +107,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 						interrupt();
 				}
 			});
-			message(p, "You feel more power emanating from it than before",
+			Functions.mes(p, "You feel more power emanating from it than before",
 				"you can now rub this amulet to teleport",
 				"Though using it to much means you will need to recharge it");
 			p.message("It now also means you can find more gems when mining");

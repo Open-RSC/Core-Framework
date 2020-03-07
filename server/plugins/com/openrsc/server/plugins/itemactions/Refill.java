@@ -36,9 +36,9 @@ public class Refill implements UseLocTrigger {
 					@Override
 					public void action() {
 						if (getOwner().getCarriedItems().getInventory().hasInInventory(itemID)) {
-							showBubble(getOwner(), item);
+							thinkbubble(getOwner(), item);
 							getOwner().playSound("filljug");
-							sleep(300);
+							delay(300);
 							getOwner().message(
 								"You fill the "
 								+ item.getDef(getWorld()).getName().toLowerCase()

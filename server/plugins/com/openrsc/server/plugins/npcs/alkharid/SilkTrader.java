@@ -19,7 +19,7 @@ public class SilkTrader implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		final String[] options;
-		npcTalk(p, n, "Do you want to buy any fine silks?");
+		npcsay(p, n, "Do you want to buy any fine silks?");
 		if (p.getQuestStage(Quests.FAMILY_CREST) <= 2 || p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
 			options = new String[]{
 				"How much are they?",
@@ -32,42 +32,42 @@ public class SilkTrader implements TalkNpcTrigger {
 				"I'm in search of a man named adam fitzharmon"
 			};
 		}
-		int option1 = showMenu(p, n, options);
+		int option1 = multi(p, n, options);
 		if (option1 == 0) {
-			npcTalk(p, n, "3 Coins");
+			npcsay(p, n, "3 Coins");
 
-			int option2 = showMenu(p, n, "No. That's too much for me",
+			int option2 = multi(p, n, "No. That's too much for me",
 				"OK, that sounds good");
 			if (option2 == 0) {
-				npcTalk(p, n, "Two coins and that's as low as I'll go",
+				npcsay(p, n, "Two coins and that's as low as I'll go",
 					"I'm not selling it for any less",
 					"You'll probably go and sell it in Varrock for a profit anyway"
 				);
 
-				int option3 = showMenu(p, n, "Two coins sounds good",
+				int option3 = multi(p, n, "Two coins sounds good",
 					"No, really. I don't want it"
 				);
 				if (option3 == 0) {
 					p.message("You buy some silk for 2 coins");
 					if (p.getCarriedItems().remove(ItemId.COINS.id(), 2) > -1) {
-						addItem(p, ItemId.SILK.id(), 1);
+						give(p, ItemId.SILK.id(), 1);
 					} else {
-						playerTalk(p, n, "Oh dear. I don't have enough money");
+						say(p, n, "Oh dear. I don't have enough money");
 					}
 				} else if (option3 == 1) {
-					npcTalk(p, n, "OK, but that's the best price you're going to get");
+					npcsay(p, n, "OK, but that's the best price you're going to get");
 				}
 
 			} else if (option2 == 1) {
 				if (p.getCarriedItems().remove(ItemId.COINS.id(), 3) > -1) {
-					addItem(p, ItemId.SILK.id(), 1);
+					give(p, ItemId.SILK.id(), 1);
 					p.message("You buy some silk for 3 coins");
 				} else {
-					playerTalk(p, n, "Oh dear. I don't have enough money");
+					say(p, n, "Oh dear. I don't have enough money");
 				}
 			}
 		} else if (option1 == 2) {
-			npcTalk(p, n, "I haven't seen him",
+			npcsay(p, n, "I haven't seen him",
 					"I'm sure if he's been to Al Kharid recently",
 					"Someone around here will have seen him though");
 		}

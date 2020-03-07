@@ -6,6 +6,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import org.apache.logging.log4j.LogManager;
@@ -31,12 +32,12 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, final Npc npc) {
-		npcTalk(player, npc, "Hello");
+		npcsay(player, npc, "Hello");
 		int menu;
 		if (npc.getID() == AUCTION_CLERK) {
-			menu = showMenu(player, npc, "I'd like to browse the auction house", "Can you teleport me to Varrock Centre");
+			menu = multi(player, npc, "I'd like to browse the auction house", "Can you teleport me to Varrock Centre");
 		} else {
-			menu = showMenu(player, npc, "I'd like to browse the auction house");
+			menu = multi(player, npc, "I'd like to browse the auction house");
 		}
 		if (menu == 0) {
 			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
@@ -44,18 +45,18 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 				player.message("As an Iron Man, you cannot use the Auction.");
 				return;
 			}
-			if(validateBankPin(player)) {
-				npcTalk(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+			if(validatebankpin(player)) {
+				npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				player.setAttribute("auctionhouse", true);
 				ActionSender.sendOpenAuctionHouse(player);
 			}
 		} else if (menu == 1) {
-			npcTalk(player, npc, "Yes of course " + (player.isMale() ? "Sir" : "Miss"),
+			npcsay(player, npc, "Yes of course " + (player.isMale() ? "Sir" : "Miss"),
 				"the costs is 1,000 coins");
-			int tMenu = showMenu(player, npc, "Teleport me", "I'll stay here");
+			int tMenu = multi(player, npc, "Teleport me", "I'll stay here");
 			if (tMenu == 0) {
-				if (hasItem(player, ItemId.COINS.id(), 1000)) {
-					removeItem(player, ItemId.COINS.id(), 1000);
+				if (ifheld(player, ItemId.COINS.id(), 1000)) {
+					remove(player, ItemId.COINS.id(), 1000);
 					player.teleport(133, 508);
 				} else {
 					player.message("You don't seem to have enough coins");
@@ -84,7 +85,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if(validateBankPin(p)) {
+				if(validatebankpin(p)) {
 					p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
 					p.setAttribute("auctionhouse", true);
 					ActionSender.sendOpenAuctionHouse(p);
@@ -97,7 +98,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 					p.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if(validateBankPin(p)) {
+				if(validatebankpin(p)) {
 					p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
 					p.setAttribute("auctionhouse", true);
 					ActionSender.sendOpenAuctionHouse(p);
@@ -105,11 +106,11 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 			} else if (command.equalsIgnoreCase("Teleport")) {
 				n.face(p);
 				p.face(n);
-				message(p, n, 1300, "Would you like to be teleport to Varrock centre for 1000 gold?");
-				int yesOrNo = showMenu(p, "Yes please!", "No thanks.");
+				Functions.mes(p, n, 1300, "Would you like to be teleport to Varrock centre for 1000 gold?");
+				int yesOrNo = multi(p, "Yes please!", "No thanks.");
 				if (yesOrNo == 0) {
-					if (hasItem(p, ItemId.COINS.id(), 1000)) {
-						removeItem(p, ItemId.COINS.id(), 1000);
+					if (ifheld(p, ItemId.COINS.id(), 1000)) {
+						remove(p, ItemId.COINS.id(), 1000);
 						p.teleport(133, 508);
 						p.message("You have been teleported to the Varrock Centre");
 					} else {

@@ -7,6 +7,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -17,7 +18,7 @@ public final class PortSarimSailor implements OpLocTrigger,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Do you want to go on a trip to Karamja?",
+		npcsay(p, n, "Do you want to go on a trip to Karamja?",
 			"The trip will cost you 30 gold");
 		String[] menu = new String[]{
 			"I'd rather go to Crandor Isle",
@@ -27,28 +28,28 @@ public final class PortSarimSailor implements OpLocTrigger,
 			menu = new String[]{ // Crandor option is not needed.
 				"Yes please", "No thankyou"
 			};
-			int choice = showMenu(p, n, menu);
+			int choice = multi(p, n, menu);
 			if (choice >= 0) {
 				travel(p, n, choice + 1);
 			}
 		} else {
-			int choice = showMenu(p, n, menu);
+			int choice = multi(p, n, menu);
 			travel(p, n, choice);
 		}
 	}
 
 	public void travel(final Player p, final Npc n, int option) {
 		if (option == 0) {
-			npcTalk(p, n, "No I need to stay alive",
+			npcsay(p, n, "No I need to stay alive",
 				"I have a wife and family to support");
 		} else if (option == 1) {
 			if (p.getCarriedItems().remove(ItemId.COINS.id(), 30) > -1) {
-				message(p, "You pay 30 gold", "You board the ship");
+				Functions.mes(p, "You pay 30 gold", "You board the ship");
 				p.teleport(324, 713, false);
-				sleep(1000);
-				message(p, "The ship arrives at Karamja");
+				delay(1000);
+				Functions.mes(p, "The ship arrives at Karamja");
 			} else {
-				playerTalk(p, n, "Oh dear I don't seem to have enough money");
+				say(p, n, "Oh dear I don't seem to have enough money");
 			}
 		}
 	}
@@ -61,7 +62,7 @@ public final class PortSarimSailor implements OpLocTrigger,
 
 	@Override
 	public void onOpLoc(GameObject arg0, String arg1, Player p) {
-		Npc sailor = getNearestNpc(p, NpcId.CAPTAIN_TOBIAS.id(), 5);
+		Npc sailor = ifnearvisnpc(p, NpcId.CAPTAIN_TOBIAS.id(), 5);
 		if (sailor != null) {
 			sailor.initializeTalkScript(p);
 		} else {

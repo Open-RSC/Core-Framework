@@ -54,20 +54,20 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	private void morganDialogue(Player p, Npc n) {
 		switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "Please please help us, bold hero");
-				playerTalk(p, n, "What's the problem?");
-				npcTalk(p,
+				npcsay(p, n, "Please please help us, bold hero");
+				say(p, n, "What's the problem?");
+				npcsay(p,
 					n,
 					"Our little village has been dreadfully ravaged by an evil vampire",
 					"There's hardly any of us left",
 					"We need someone to get rid of him once and for good");
-				int choice = showMenu(p, n,
+				int choice = multi(p, n,
 					"No. vampires are scary", "Ok I'm up for an adventure",
 					"I tried fighting him. He wouldn't die");
 				if (choice == 0) {
-					npcTalk(p, n, "I don't blame you");
+					npcsay(p, n, "I don't blame you");
 				} else if (choice == 1) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
@@ -77,10 +77,10 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						"He's a bit of an old soak",
 						"Mention his old friend Morgan",
 						"I'm sure he wouldn't want me to be killed by a vampire");
-					playerTalk(p, n, "I'll look him up then");
+					say(p, n, "I'll look him up then");
 					p.updateQuestStage(getQuestId(), 1);
 				} else if (choice == 2) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"Maybe you're not going about it right",
 						"I think first you should seek help",
@@ -91,21 +91,21 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						"He's a bit of an old soak",
 						"Mention his old friend Morgan",
 						"I'm sure he wouldn't want me to be killed by a vampire");
-					playerTalk(p, n, "I'll look him up then");
+					say(p, n, "I'll look him up then");
 					p.updateQuestStage(getQuestId(), 1);
 				}
 				break;
 			case 1:
 			case 2:
-				npcTalk(p, n, "How are you doing with your quest?");
-				playerTalk(p, n, "I'm working on it still");
-				npcTalk(p, n, "Please hurry", "Every day we live in fear of lives",
+				npcsay(p, n, "How are you doing with your quest?");
+				say(p, n, "I'm working on it still");
+				npcsay(p, n, "Please hurry", "Every day we live in fear of lives",
 					"That we will be the vampires next victim");
 				break;
 			case -1:
-				npcTalk(p, n, "How are you doing with your quest?");
-				playerTalk(p, n, "I have slain the foul creature");
-				npcTalk(p, n, "Thank you, thank you",
+				npcsay(p, n, "How are you doing with your quest?");
+				say(p, n, "I have slain the foul creature");
+				npcsay(p, n, "Thank you, thank you",
 					"You will always be a hero in our village");
 				break;
 		}
@@ -118,7 +118,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 			case 1:
 			case 2:
 				String[] options;
-				npcTalk(p, n, "Buy me a drrink pleassh");
+				npcsay(p, n, "Buy me a drrink pleassh");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.STAKE.id(), Optional.empty())
 					&& p.getQuestStage(Quests.VAMPIRE_SLAYER) != -1) {
 					options = new String[]{"No you've had enough", "Ok mate",
@@ -126,36 +126,36 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 				} else {
 					options = new String[]{"No you've had enough", "Ok mate"};
 				}
-				int choice = showMenu(p, n, options);
+				int choice = multi(p, n, options);
 				if (choice == 0) {
 				} else if (choice == 1) {
 					if (p.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 						p.message("You give a beer to Dr Harlow");
 						p.getCarriedItems().getInventory().remove(
 							p.getCarriedItems().getInventory().getLastIndexById(ItemId.BEER.id()));
-						npcTalk(p, n, "Cheersh matey");
+						npcsay(p, n, "Cheersh matey");
 					} else {
-						playerTalk(p, n, "I'll just go and buy one");
+						say(p, n, "I'll just go and buy one");
 					}
 				} else if (choice == 2) {
-					npcTalk(p, n, "Morgan you shhay?");
-					playerTalk(p, n,
+					npcsay(p, n, "Morgan you shhay?");
+					say(p, n,
 						"His village is being terrorised by a vampire",
 						"He wanted me to ask you how i should go about stopping it");
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Buy me a beer then i'll teash you what you need to know");
-					int choice2 = showMenu(p, n, "Ok mate",
+					int choice2 = multi(p, n, "Ok mate",
 						"But this is your friend Morgan we're talking about");
 					if (choice2 == 0) {
 						if (p.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 							p.message("You give a beer to Dr Harlow");
-							npcTalk(p, n, "Cheersh matey");
+							npcsay(p, n, "Cheersh matey");
 							p.getCarriedItems().getInventory().remove(p.getCarriedItems().getInventory().getLastIndexById(ItemId.BEER.id()));
-							playerTalk(p, n, "So tell me how to kill vampires then");
-							npcTalk(p, n,
+							say(p, n, "So tell me how to kill vampires then");
+							npcsay(p, n,
 								"Yesh yesh vampires I was very good at killing em once");
 							p.message("Dr Harlow appears to sober up slightly");
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"Well you're gonna to kill it with a stake",
 								"Otherwishe he'll just regenerate",
@@ -163,7 +163,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 								"I jusht happen to have one on me");
 							p.message("Dr Harlow hands you a stake");
 							p.getCarriedItems().getInventory().add(new Item(ItemId.STAKE.id()));
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"You'll need a hammer to hand to drive it in properly as well",
 								"One last thing",
@@ -171,13 +171,13 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 								"Vampires are weakened somewhat if they can smell garlic",
 								"Dunno where you'd find that though",
 								"Remember even then a vampire is a dangeroush foe");
-							playerTalk(p, n, "Thank you very much");
+							say(p, n, "Thank you very much");
 							p.updateQuestStage(getQuestId(), 2);
 						} else {
-							playerTalk(p, n, "I'll just go and buy one");
+							say(p, n, "I'll just go and buy one");
 						}
 					} else if (choice2 == 1) {
-						npcTalk(p, n, "Buy ush a drink anyway");
+						npcsay(p, n, "Buy ush a drink anyway");
 					}
 				}
 				break;
@@ -212,7 +212,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						}
 					}
 
-					final Npc n = spawnNpc(NpcId.COUNT_DRAYNOR.id(), 206, 3381, 1000 * 60 * 5, player);
+					final Npc n = addnpc(NpcId.COUNT_DRAYNOR.id(), 206, 3381, 1000 * 60 * 5, player);
 					n.setShouldRespawn(false);
 					player.message("A vampire jumps out of the coffin");
 					return;

@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class FishingGuildGeneralShop implements
 	ShopInterface, TalkNpcTrigger {
@@ -41,9 +42,9 @@ public class FishingGuildGeneralShop implements
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy some fishing equipment",
+		npcsay(p, n, "Would you like to buy some fishing equipment",
 			"Or sell some fish");
-		final int option = showMenu(p, n, "Yes please",
+		final int option = Functions.multi(p, n, "Yes please",
 			"No thankyou");
 		if (option == 0) {
 			p.setAccessingShop(shop);

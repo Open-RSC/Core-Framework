@@ -122,7 +122,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.incExp(Skills.HERBLAW, 20, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
-			showBubble(player, new Item(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()));
+			thinkbubble(player, new Item(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id()));
 			player.getCarriedItems().remove(com.openrsc.server.constants.ItemId.AMMONIUM_NITRATE.id(), 1);
 			player.getCarriedItems().getInventory().replace(com.openrsc.server.constants.ItemId.NITROGLYCERIN.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id());
 		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id()
@@ -138,7 +138,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.incExp(Skills.HERBLAW, 25, true);
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
-			showBubble(player, new Item(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()));
+			thinkbubble(player, new Item(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id()));
 			player.getCarriedItems().remove(com.openrsc.server.constants.ItemId.GROUND_CHARCOAL.id(), 1);
 			player.getCarriedItems().getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_1.id(), com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id());
 		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id()
@@ -154,10 +154,10 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.incExp(Skills.HERBLAW, 30, true);
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
-			showBubble(player, new Item(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()));
+			thinkbubble(player, new Item(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id()));
 			player.getCarriedItems().remove(com.openrsc.server.constants.ItemId.ARCENIA_ROOT.id(), 1);
 			player.getCarriedItems().getInventory().replace(com.openrsc.server.constants.ItemId.MIXED_CHEMICALS_2.id(), com.openrsc.server.constants.ItemId.EXPLOSIVE_COMPOUND.id());
-			playerTalk(player, null, "Excellent this looks just right");
+			say(player, null, "Excellent this looks just right");
 		} else if (usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id()
 				|| usedWith.getCatalogId() == com.openrsc.server.constants.ItemId.BLAMISH_SNAIL_SLIME.id() && item.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_HARRALANDER_POTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 25) {
@@ -261,7 +261,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		if (vial.getCatalogId() == com.openrsc.server.constants.ItemId.VIAL.id() && herb.getCatalogId() == com.openrsc.server.constants.ItemId.GROUND_BAT_BONES.id()) {
 			player.message("You mix the ground bones into the water");
 			player.message("Fizz!!!");
-			playerTalk(player, null, "Oh dear, the mixture has evaporated!",
+			say(player, null, "Oh dear, the mixture has evaporated!",
 				"It's useless...");
 			player.getCarriedItems().remove(vial.getCatalogId(), 1);
 			player.getCarriedItems().remove(herb.getCatalogId(), 1);
@@ -342,7 +342,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		//constraint shaman potion
 		if (second.getCatalogId() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id() && unfinished.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_GUAM_POTION.id() &&
 			(player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 6)) {
-			playerTalk(player, null, "Hmmm...perhaps I shouldn't try and mix these items together",
+			say(player, null, "Hmmm...perhaps I shouldn't try and mix these items together",
 				"It might have unpredictable results...");
 			return false;
 		} else if (second.getCatalogId() == com.openrsc.server.constants.ItemId.JANGERBERRIES.id() && unfinished.getCatalogId() == com.openrsc.server.constants.ItemId.UNFINISHED_GUAM_POTION.id()) {
@@ -379,7 +379,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				if (getOwner().getCarriedItems().hasCatalogID(second.getCatalogId())
 					&& getOwner().getCarriedItems().hasCatalogID(unfinished.getCatalogId())) {
 					if (bubbleItem.get() != null) {
-						showBubble(getOwner(), bubbleItem.get());
+						thinkbubble(getOwner(), bubbleItem.get());
 					}
 					getOwner().playSound("mix");
 					getOwner().playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(getWorld()).getName()
@@ -407,7 +407,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			p.message("Bang!!!");
 			displayTeleportBubble(p, p.getX(), p.getY(), true);
 			p.damage(8);
-			playerTalk(p, null, "Ow!");
+			say(p, null, "Ow!");
 			p.playerServerMessage(MessageType.QUEST, "You mixed this ingredients incorrectly and the mixture exploded!");
 			p.getCarriedItems().remove(unfinishedPot.getCatalogId(), 1);
 			p.getCarriedItems().remove(ingredient.getCatalogId(), 1);
@@ -425,15 +425,15 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				return false;
 			}
 			if (p.getQuestStage(Quests.WATCHTOWER) >= 0 && p.getQuestStage(Quests.WATCHTOWER) < 6) {
-				playerTalk(p, null, "Hmmm...perhaps I shouldn't try and mix these items together",
+				say(p, null, "Hmmm...perhaps I shouldn't try and mix these items together",
 					"It might have unpredictable results...");
 				return false;
 			} else if (p.getCarriedItems().hasCatalogID(ingredient.getCatalogId())
 				&& p.getCarriedItems().hasCatalogID(unfinishedPot.getCatalogId())) {
 				if (!isSwapped) {
-					showBubble(p, unfinishedPot);
+					thinkbubble(p, unfinishedPot);
 				} else {
-					showBubble(p, ingredient);
+					thinkbubble(p, ingredient);
 				}
 				p.playerServerMessage(MessageType.QUEST, "You mix the " + ingredient.getDef(p.getWorld()).getName().toLowerCase() + " into the liquid");
 				p.playerServerMessage(MessageType.QUEST, "You produce a strong potion");
@@ -488,7 +488,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 						getOwner().playerServerMessage(MessageType.QUEST, "You grind the " + item.getDef(getWorld()).getName()
 							+ " to dust");
 					}
-					showBubble(getOwner(), new Item(ItemId.PESTLE_AND_MORTAR.id()));
+					thinkbubble(getOwner(), new Item(ItemId.PESTLE_AND_MORTAR.id()));
 					getOwner().getCarriedItems().getInventory().add(new Item(newID, 1));
 
 				}

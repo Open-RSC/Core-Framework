@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -18,7 +19,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Yes please?");
+		npcsay(p, n, "Yes please?");
 		String[] options = {};
 		if (p.getCache().hasKey("barcrawl") && !p.getCache().hasKey("barone")) {
 			options = new String[]{
@@ -34,19 +35,19 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"Heard any good gossip?"
 			};
 		}
-		int reply = showMenu(p, n, options);
+		int reply = multi(p, n, options);
 		if (reply == 0) {
-			npcTalk(p, n, "Ok, that'll be two coins");
+			npcsay(p, n, "Ok, that'll be two coins");
 
-			if (hasItem(p, ItemId.COINS.id(), 2)) {
+			if (ifheld(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
 				p.getCarriedItems().remove(ItemId.COINS.id(), 2);
-				addItem(p, ItemId.BEER.id(), 1);
+				give(p, ItemId.BEER.id(), 1);
 			} else {
-				playerTalk(p, n, "Oh dear. I don't seem to have enough money");
+				say(p, n, "Oh dear. I don't seem to have enough money");
 			}
 		} else if (reply == 1) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"It's funny you should say that",
 				"An adventurer passed through here, the other day,",
 				"claiming to have found a dungeon full of treasure,",
@@ -56,9 +57,9 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"Now how much faith you put in that story is up to you,",
 				"but it probably wouldn't do any harm to have a look"
 			);
-			playerTalk(p, n, "Thanks", "I may try that at some point");
+			say(p, n, "Thanks", "I may try that at some point");
 		} else if (reply == 2) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"I'm not that well up on the gossip out here",
 				"I've heard that the bartender in the Blue Moon Inn has gone a little crazy",
 				"He keeps claiming he is part of something called a computer game",
@@ -66,20 +67,20 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"That's probably old news by now though"
 			);
 		} else if (reply == 3) {
-			npcTalk(p, n, "Ah, there seems to be a fair few doing that one these days",
+			npcsay(p, n, "Ah, there seems to be a fair few doing that one these days",
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
-			if (hasItem(p, ItemId.COINS.id(), 10)) {
+			if (ifheld(p, ItemId.COINS.id(), 10)) {
 				p.getCarriedItems().remove(ItemId.COINS.id(), 10);
-				message(p, "You buy a pint of Olde Suspiciouse",
+				Functions.mes(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");
 				drinkAle(p);
-				message(p, "The bartender signs your card");
+				Functions.mes(p, "The bartender signs your card");
 				p.getCache().store("barone", true);
-				playerTalk(p, n, "Thanksh very mush");
+				say(p, n, "Thanksh very mush");
 			} else {
-				playerTalk(p, n, "I don't have 10 coins right now");
+				say(p, n, "I don't have 10 coins right now");
 			}
 		}
 	}

@@ -22,26 +22,26 @@ public class FurMerchant implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("furStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("furStolen") + 1200)) {
-			npcTalk(p, n, "Do you really think I'm going to buy something",
+			npcsay(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight first
+			Npc attacker = ifnearvisnpc(p, NpcId.KNIGHT.id(), 5); // Knight first
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard second
+				attacker = ifnearvisnpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard second
 
 			if (attacker != null)
 				attacker.setChasing(p);
 
 		} else {
-			npcTalk(p, n, "would you like to do some fur trading?");
-			int menu = showMenu(p, n, false, "yes please", "No thank you");
+			npcsay(p, n, "would you like to do some fur trading?");
+			int menu = multi(p, n, false, "yes please", "No thank you");
 			if (menu == 0) {
-				playerTalk(p, n, "Yes please");
+				say(p, n, "Yes please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (menu == 1) {
-				playerTalk(p, n, "No thank you");
+				say(p, n, "No thank you");
 			}
 		}
 	}

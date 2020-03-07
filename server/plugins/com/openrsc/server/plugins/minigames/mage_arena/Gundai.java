@@ -18,8 +18,8 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Gundai.class);
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		playerTalk(player, n, "hello, what are you doing out here?");
-		npcTalk(player, n, "why i'm a banker, the only one around these dangerous parts");
+		say(player, n, "hello, what are you doing out here?");
+		npcsay(player, n, "why i'm a banker, the only one around these dangerous parts");
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("cool, I'd like to access my bank account please") {
 			@Override
@@ -29,8 +29,8 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 					return;
 				}
 
-				if(validateBankPin(player)) {
-					npcTalk(player, n, "no problem");
+				if(validatebankpin(player)) {
+					npcsay(player, n, "no problem");
 					player.setAccessingBank(true);
 					ActionSender.showBank(player);
 				}
@@ -40,13 +40,13 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 			defaultMenu.addOption(new Option("I'd like to talk about bank pin") {
 				@Override
 				public void action() {
-					int menu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+					int menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 					if (menu == 0) {
-						setBankPin(player);
+						setbankpin(player);
 					} else if (menu == 1) {
-						changeBankPin(player);
+						changebankpin(player);
 					} else if (menu == 2) {
-						removeBankPin(player);
+						removebankpin(player);
 					}
 				}
 			});
@@ -56,7 +56,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 			defaultMenu.addOption(new Option("I'd like to collect my items from auction") {
 				@Override
 				public void action() {
-					if(validateBankPin(player)) {
+					if(validatebankpin(player)) {
 						player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 					}
 				}
@@ -66,7 +66,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		defaultMenu.addOption(new Option("Well, now i know") {
 			@Override
 			public void action() {
-				npcTalk(player, n, "knowledge is power my friend");
+				npcsay(player, n, "knowledge is power my friend");
 			}
 		});
 		defaultMenu.showMenu(player);
@@ -105,7 +105,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 			return;
 		}
 
-		if(validateBankPin(player)) {
+		if(validatebankpin(player)) {
 			if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {

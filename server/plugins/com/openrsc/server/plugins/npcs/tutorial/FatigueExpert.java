@@ -2,11 +2,12 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -19,8 +20,8 @@ public class FatigueExpert implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") <= 85) {
-			playerTalk(p, n, "Hi I'm feeling a little tired after all this learning");
-			npcTalk(p, n, "Yes when you use your skills you will slowly get fatigued",
+			Functions.say(p, n, "Hi I'm feeling a little tired after all this learning");
+			npcsay(p, n, "Yes when you use your skills you will slowly get fatigued",
 				"If you look on your stats menu you will see a fatigue stat",
 				"When your fatigue reaches 100 percent then you will be very tired",
 				"You won't be able to concentrate enough to gain experience in your skills",
@@ -30,18 +31,18 @@ public class FatigueExpert implements TalkNpcTrigger {
 				"When you have done that talk to me again");
 			p.getCache().set("tutorial", 85);
 		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 86) {
-			npcTalk(p, n, "How are you feeling now?");
-			playerTalk(p, n, "I feel much better rested now");
-			npcTalk(p, n, "Tell you what, I'll give you this useful sleeping bag",
+			npcsay(p, n, "How are you feeling now?");
+			Functions.say(p, n, "I feel much better rested now");
+			npcsay(p, n, "Tell you what, I'll give you this useful sleeping bag",
 				"So you can rest anywhere");
-			addItem(p, ItemId.SLEEPING_BAG.id(), 1);
+			give(p, ItemId.SLEEPING_BAG.id(), 1);
 			p.message("The expert hands you a sleeping bag");
-			npcTalk(p, n, "This saves you the trouble of finding a bed",
+			npcsay(p, n, "This saves you the trouble of finding a bed",
 				"but you will need to sleep longer to restore your fatigue fully",
 				"You can now go through the next door\"");
 			p.getCache().set("tutorial", 90);
 		} else {
-			npcTalk(p, n, "When you use your skills you will slowly get fatigued",
+			npcsay(p, n, "When you use your skills you will slowly get fatigued",
 				"If you look on your stats menu you will see a fatigue stat",
 				"When your fatigue reaches 100 percent then you will be very tired",
 				"You won't be able to concentrate enough to gain experience in your skills",

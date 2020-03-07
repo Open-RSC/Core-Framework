@@ -43,7 +43,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			p.message("The map of Kharazi Jungle is complete, Sir Radimus will be pleased.");
-			int menu = showMenu(p, "Read Mission Briefing", "Close");
+			int menu = multi(p, "Read Mission Briefing", "Close");
 			if (menu == 0) {
 				missionBreifing(p);
 			} else if (menu == 1) {
@@ -53,7 +53,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 		else if (item.getCatalogId() == ItemId.RADIMUS_SCROLLS.id()) {
 			boolean canMap = true;
 			p.message("You open and start to read the scrolls that Radimus gave you.");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Read Mission Briefing",
 				"Start Mapping Kharazi Jungle.");
 			if (menu == 0) {
@@ -62,44 +62,44 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 				if (!JUNGLE_WEST_AREA(p) && !JUNGLE_MIDDLE_AREA(p) && !JUNGLE_EAST_AREA(p)) {
 					int rnd = DataConversions.random(0, 1);
 					if (rnd == 0) {
-						message(p, 1200, "You're not even in the Kharazi Jungle yet.");
-						message(p, 1200, "You need to get to the Southern end of Karamja ");
-						message(p, 1200, "before you can start mapping.");
+						mes(p, 1200, "You're not even in the Kharazi Jungle yet.");
+						mes(p, 1200, "You need to get to the Southern end of Karamja ");
+						mes(p, 1200, "before you can start mapping.");
 					}
 					else {
-						message(p, 1900, "You prepare to start mapping this area...");
-						message(p, 1200, "This doesn't look like the Kharazi Jungle! ");
-						message(p, 1200, "You need to go to the very southern end of the Island of Karamja !");
+						mes(p, 1900, "You prepare to start mapping this area...");
+						mes(p, 1200, "This doesn't look like the Kharazi Jungle! ");
+						mes(p, 1200, "You need to go to the very southern end of the Island of Karamja !");
 					}
 					return;
 				}
-				message(p, 1900, "You prepare to start mapping this area...");
+				mes(p, 1900, "You prepare to start mapping this area...");
 				if (p.getCache().hasKey("JUNGLE_EAST") && JUNGLE_EAST_AREA(p)) {
-					message(p, 1200, "You have already completed this part of the map.");
+					mes(p, 1200, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
 				}
 				if (p.getCache().hasKey("JUNGLE_MIDDLE") && JUNGLE_MIDDLE_AREA(p)) {
-					message(p, 1200, "You have already completed this part of the map.");
+					mes(p, 1200, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
 				}
 				if (p.getCache().hasKey("JUNGLE_WEST") && JUNGLE_WEST_AREA(p)) {
-					message(p, 1200, "You have already completed this part of the map.");
+					mes(p, 1200, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
 				}
 				if (!p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
 					&& !p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // no charcoal or papyrus
-					message(p, 1200, "You'll need some papyrus and charcoal to complete this map.");
+					mes(p, 1200, "You'll need some papyrus and charcoal to complete this map.");
 					canMap = false;
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
 					&& !p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // has papyrus but no charcoal
-					message(p, 1200, "You'll need some charcoal to complete this map.");
+					mes(p, 1200, "You'll need some charcoal to complete this map.");
 					canMap = false;
 				} else if (!p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
 					&& p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // has charcoal but no papyrus
-					message(p, 1200, "You'll need some additional Papyrus to complete this map.");
+					mes(p, 1200, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
 				}
 				//potentially this check was done earlier?
@@ -124,27 +124,27 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 
 	private void checkMapComplete(Player p) {
 		if (!p.getCache().hasKey("JUNGLE_EAST")) {
-			message(p, 1200, "@red@You have yet to map the eastern part of the Kharazi Jungle");
+			mes(p, 1200, "@red@You have yet to map the eastern part of the Kharazi Jungle");
 		} else {
-			message(p, 1200, "@gre@Eastern area of the Kharazi Jungle - *** Completed ***");
+			mes(p, 1200, "@gre@Eastern area of the Kharazi Jungle - *** Completed ***");
 		}
 		if (!p.getCache().hasKey("JUNGLE_MIDDLE")) {
-			message(p, 1200, "@red@You have yet to map the mid - part of the Kharazi Jungle.");
+			mes(p, 1200, "@red@You have yet to map the mid - part of the Kharazi Jungle.");
 		} else {
-			message(p, 1200, "@gre@Middle area of the Kharazi Jungle- *** Completed ***");
+			mes(p, 1200, "@gre@Middle area of the Kharazi Jungle- *** Completed ***");
 		}
 		if (!p.getCache().hasKey("JUNGLE_WEST")) {
-			message(p, 1200, "@red@You have yet to map the Western part of the Kharazi Jungle.");
+			mes(p, 1200, "@red@You have yet to map the Western part of the Kharazi Jungle.");
 		} else {
-			message(p, 1200, "@gre@Western part of the Kharazi Jungle- *** Completed ***");
+			mes(p, 1200, "@gre@Western part of the Kharazi Jungle- *** Completed ***");
 		}
 	}
 
 	private void mapArea(Player p) {
 		int random = DataConversions.random(0, 100);
 		if (random <= 29) { // 30% succeed.
-			removeItem(p, ItemId.PAPYRUS.id(), 1);
-			message(p, 1200, "You neatly add a new section to your map.");
+			remove(p, ItemId.PAPYRUS.id(), 1);
+			mes(p, 1200, "You neatly add a new section to your map.");
 			if (JUNGLE_WEST_AREA(p)) {
 				if (!p.getCache().hasKey("JUNGLE_WEST")) {
 					p.getCache().store("JUNGLE_WEST", true);
@@ -161,28 +161,28 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 				}
 			}
 			if (p.getCache().hasKey("JUNGLE_EAST") && p.getCache().hasKey("JUNGLE_MIDDLE") && p.getCache().hasKey("JUNGLE_WEST")) {
-				message(p, 1200, "Well done !",
+				mes(p, 1200, "Well done !",
 					"You have completed mapping the Kharazai jungle on the southern end of Karamja,");
-				message(p, 1900, "Grand Vizier Erkle will be pleased.");
+				mes(p, 1900, "Grand Vizier Erkle will be pleased.");
 				p.getCarriedItems().getInventory().replace(ItemId.RADIMUS_SCROLLS.id(), ItemId.RADIMUS_SCROLLS_COMPLETE.id()); // switch map to complete map.
 				checkMapComplete(p);
 				p.getCache().remove("JUNGLE_EAST");
 				p.getCache().remove("JUNGLE_MIDDLE");
 				p.getCache().remove("JUNGLE_WEST");
 			} else {
-				message(p, 1900, "You still have some sections of the map to complete.");
+				mes(p, 1900, "You still have some sections of the map to complete.");
 				checkMapComplete(p);
 			}
 		} else if (random <= 50) { // 20 % fail both.
 			p.message("You fall over, landing on your charcoal and papyrus, destroying them both.");
-			removeItem(p, ItemId.PAPYRUS.id(), 1);
-			removeItem(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
+			remove(p, ItemId.PAPYRUS.id(), 1);
+			remove(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
 		} else if (random <= 70) { // 20% to fail papyrus
 			p.message("You make a mess of the map, the paper is totally ruined.");
-			removeItem(p, ItemId.PAPYRUS.id(), 1);
+			remove(p, ItemId.PAPYRUS.id(), 1);
 		} else if (random <= 90) { // 20% to fail charcoal
 			p.message("You snap your stick of charcoal.");
-			removeItem(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
+			remove(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
 		} else if (random <= 100) { // 10% to fail and save papyrus
 			p.message("You make a mess of the map, but are able to rescue the paper.");
 		}

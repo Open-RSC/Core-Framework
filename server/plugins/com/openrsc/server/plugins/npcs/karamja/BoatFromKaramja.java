@@ -6,6 +6,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -20,51 +21,51 @@ public final class BoatFromKaramja implements
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		int option = showMenu(p, n, "Can I board this ship?",
+		int option = multi(p, n, "Can I board this ship?",
 			"Does Karamja have any unusual customs then?");
 		if (option == 0) {
 			onIndirectTalkToNpc(p, n);
 		} else if (option == 1) {
-			npcTalk(p, n, "I'm not that sort of customs officer");
+			npcsay(p, n, "I'm not that sort of customs officer");
 		}
 	}
 
 	@Override
 	public void onIndirectTalkToNpc(Player p, final Npc n) {
-		npcTalk(p, n, "You need to be searched before you can board");
-		int sub_opt = showMenu(p, n, "Why?",
+		npcsay(p, n, "You need to be searched before you can board");
+		int sub_opt = multi(p, n, "Why?",
 			"Search away I have nothing to hide",
 			"You're not putting your hands on my things");
 		if (sub_opt == 0) {
-			npcTalk(p, n,
+			npcsay(p, n,
 				"Because Asgarnia has banned the import of intoxicating spirits");
 		} else if (sub_opt == 1) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
-				npcTalk(p, n, "Aha trying to smuggle rum are we?");
-				message(p, "The customs officer confiscates your rum");
-				removeItem(p, ItemId.KARAMJA_RUM.id(), 1);
+				npcsay(p, n, "Aha trying to smuggle rum are we?");
+				Functions.mes(p, "The customs officer confiscates your rum");
+				remove(p, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Well you've got some odd stuff, but it's all legal",
 					"Now you need to pay a boarding charge of 30 gold");
-				int pay_opt = showMenu(p, n, false, "Ok", "Oh, I'll not bother then");
+				int pay_opt = multi(p, n, false, "Ok", "Oh, I'll not bother then");
 				if (pay_opt == 0) {
-					if (removeItem(p, ItemId.COINS.id(), 30)) {
-						playerTalk(p, n, "Ok");
-						message(p, "You pay 30 gold", "You board the ship");
-						movePlayer(p, 269, 648, true);
+					if (remove(p, ItemId.COINS.id(), 30)) {
+						say(p, n, "Ok");
+						Functions.mes(p, "You pay 30 gold", "You board the ship");
+						teleport(p, 269, 648);
 						p.message("The ship arrives at Port Sarim");
 					} else { // not enough money
-						playerTalk(p, n,
+						say(p, n,
 							"Oh dear I don't seem to have enough money");
 					}
 				} else if (pay_opt == 1) {
-					playerTalk(p, n, "Oh, I'll not bother then");
+					say(p, n, "Oh, I'll not bother then");
 				}
 			}
 		} else if (sub_opt == 2) {
-			npcTalk(p, n, "You're not getting on this ship then");
+			npcsay(p, n, "You're not getting on this ship then");
 		}
 	}
 
@@ -75,7 +76,7 @@ public final class BoatFromKaramja implements
 				if (p.getY() != 713) {
 					return;
 				}
-				Npc officer = getNearestNpc(p, NpcId.CUSTOMS_OFFICER.id(), 4);
+				Npc officer = ifnearvisnpc(p, NpcId.CUSTOMS_OFFICER.id(), 4);
 				if (officer != null) {
 					officer.initializeIndirectTalkScript(p);
 				} else {

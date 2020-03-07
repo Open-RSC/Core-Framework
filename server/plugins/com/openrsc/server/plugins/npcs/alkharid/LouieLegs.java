@@ -9,11 +9,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class LouieLegs implements ShopInterface,
 	TalkNpcTrigger {
@@ -45,7 +46,7 @@ public final class LouieLegs implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		final String[] options;
-		npcTalk(p, n, "Hey, wanna buy some armour?");
+		npcsay(p, n, "Hey, wanna buy some armour?");
 		if (p.getQuestStage(Quests.FAMILY_CREST) <= 2 || p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
 			options = new String[]{
 				"What have you got?",
@@ -58,16 +59,16 @@ public final class LouieLegs implements ShopInterface,
 				"I'm in search of a man named adam fitzharmon"
 			};
 		}
-		int option = showMenu(p, n, options);
+		int option = Functions.multi(p, n, options);
 
 		if (option == 0) {
-			npcTalk(p, n, "Take a look, see");
+			npcsay(p, n, "Take a look, see");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
 			//nothing
 		} else if (option == 2) {
-			npcTalk(p, n, "I haven't seen him",
+			npcsay(p, n, "I haven't seen him",
 					"I'm sure if he's been to Al Kharid recently",
 					"Someone around here will have seen him though");
 		}

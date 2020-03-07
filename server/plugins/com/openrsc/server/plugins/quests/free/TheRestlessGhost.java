@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -56,11 +57,11 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 			}
 			if (cID == -1) {
 				if (p.getQuestStage(this) == 3) {
-					playerTalk(p, n, "Hello ghost, how are you?");
-					npcTalk(p, n, "How are you doing finding my skull?");
+					say(p, n, "Hello ghost, how are you?");
+					npcsay(p, n, "How are you doing finding my skull?");
 					if (!p.getCarriedItems().hasCatalogID(ItemId.QUEST_SKULL.id(), Optional.of(false))) {
-						playerTalk(p, n, "Sorry, I can't find it at the moment");
-						npcTalk(p,
+						say(p, n, "Sorry, I can't find it at the moment");
+						npcsay(p,
 							n,
 							"Ah well keep on looking",
 							"I'm pretty sure it's somewhere in the tower south west from here",
@@ -69,8 +70,8 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 						// kosher: this condition made player need to restart skull process incl. skeleton fight
 						p.getCache().remove("tried_grab_skull");
 					} else {
-						playerTalk(p, n, "I have found it");
-						npcTalk(p,
+						say(p, n, "I have found it");
+						npcsay(p,
 							n,
 							"Hurrah now I can stop being a ghost",
 							"You just need to put it in my coffin over there",
@@ -80,27 +81,27 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 				}
 				if (p.getQuestStage(this) == 0
 					|| !p.getCarriedItems().getEquipment().hasEquipped(ItemId.AMULET_OF_GHOSTSPEAK.id())) {
-					playerTalk(p, n, "Hello ghost, how are you?");
-					npcTalk(p, n, "Wooo wooo wooooo");
-					int choice = showMenu(p, n,
+					say(p, n, "Hello ghost, how are you?");
+					npcsay(p, n, "Wooo wooo wooooo");
+					int choice = multi(p, n,
 						"Sorry I don't speak ghost",
 						"Ooh that's interesting",
 						"Any hints where I can find some treasure?");
 					if (choice == 0) {
 						ghostDialogue(p, n, Ghost.DONTSPEAK);
 					} else if (choice == 1) {
-						npcTalk(p, n, "Woo wooo", "Woooooooooooooooooo");
-						int choice2 = showMenu(p, n,
+						npcsay(p, n, "Woo wooo", "Woooooooooooooooooo");
+						int choice2 = multi(p, n,
 							"Did he really?", "Yeah that's what I thought");
 						if (choice2 == 0) {
-							npcTalk(p, n, "Woo");
-							int choice3 = showMenu(p, n,
+							npcsay(p, n, "Woo");
+							int choice3 = multi(p, n,
 								"My brother had exactly the same problem",
 								"Goodbye. Thanks for the chat");
 							if (choice3 == 0) {
-								npcTalk(p, n, "Woo Wooooo",
+								npcsay(p, n, "Woo Wooooo",
 									"Wooooo Woo woo woo");
-								int choice4 = showMenu(
+								int choice4 = multi(
 									p,
 									n,
 									"Goodbye. Thanks for the chat",
@@ -108,8 +109,8 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 								if (choice4 == 0) {
 									ghostDialogue(p, n, Ghost.GOODBYE);
 								} else if (choice4 == 1) {
-									npcTalk(p, n, "Wooooooo woo woooooooo");
-									int choice6 = showMenu(p, n,
+									npcsay(p, n, "Wooooooo woo woooooooo");
+									int choice6 = multi(p, n,
 										"Goodbye. Thanks for the chat",
 										"Hmm I'm not sure about that");
 									if (choice6 == 0) {
@@ -119,9 +120,9 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 									}
 								}
 							} else if (choice3 == 1) {
-								npcTalk(p, n, "Wooo wooo",
+								npcsay(p, n, "Wooo wooo",
 									"Wooo woooooooooooooooo");
-								int choice7 = showMenu(p, n,
+								int choice7 = multi(p, n,
 									"Goodbye. Thanks for the chat",
 									"Hmm I'm not sure about that");
 								if (choice7 == 0) {
@@ -131,8 +132,8 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 								}
 							}
 						} else if (choice2 == 1) {
-							npcTalk(p, n, "Wooo woooooooooooooo");
-							int choice5 = showMenu(p, n,
+							npcsay(p, n, "Wooo woooooooooooooo");
+							int choice5 = multi(p, n,
 								"Goodbye. Thanks for the chat",
 								"Hmm I'm not sure about that");
 							if (choice5 == 0) {
@@ -142,71 +143,71 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 							}
 						}
 					} else if (choice == 2) {
-						npcTalk(p, n, "Wooooooo woo!");
-						int choice8 = showMenu(p, n, false, //do not send over
+						npcsay(p, n, "Wooooooo woo!");
+						int choice8 = multi(p, n, false, //do not send over
 							"Sorry I don't speak ghost",
 							"Thank you. You've been very helpful");
 						if (choice8 == 0) {
-							playerTalk(p, n, "Sorry I don't speak ghost");
+							say(p, n, "Sorry I don't speak ghost");
 							ghostDialogue(p, n, Ghost.DONTSPEAK);
 						} else if (choice8 == 1) {
-							playerTalk(p, n, "Thank you. You've been very helpfull");
-							npcTalk(p, n, "Wooooooo");
+							say(p, n, "Thank you. You've been very helpfull");
+							npcsay(p, n, "Wooooooo");
 						}
 					}
 				} else {
-					playerTalk(p, n, "Hello ghost, how are you?");
-					npcTalk(p, n, "Not very good actually");
-					playerTalk(p, n, "What's the problem then?");
-					npcTalk(p, n, "Did you just understand what I said?");
-					int choice = showMenu(p, n, false, //do not send over
+					say(p, n, "Hello ghost, how are you?");
+					npcsay(p, n, "Not very good actually");
+					say(p, n, "What's the problem then?");
+					npcsay(p, n, "Did you just understand what I said?");
+					int choice = multi(p, n, false, //do not send over
 						"Yep, now tell me what the problem is",
 						"No, you sound like you're speaking nonsense to me",
 						"Wow, this amulet works");
 					if (choice == 0) {
-						playerTalk(p, n, "Yep, now tell me what the problem is");
-						npcTalk(p, n,
+						say(p, n, "Yep, now tell me what the problem is");
+						npcsay(p, n,
 							"Wow this is incredible, I didn't expect any one to understand me again");
-						playerTalk(p, n, "Yes, yes I can understand you",
+						say(p, n, "Yes, yes I can understand you",
 							"But have you any idea why you're doomed to be a ghost?");
-						npcTalk(p, n, "I'm not sure");
-						playerTalk(
+						npcsay(p, n, "I'm not sure");
+						say(
 							p,
 							n,
 							"I've been told a certain task may need to be completed",
 							"So you can rest in peace");
-						npcTalk(p, n, "I should think it is probably because ",
+						npcsay(p, n, "I should think it is probably because ",
 							"A warlock has come along and stolen my skull",
 							"If you look inside my coffin there",
 							"you'll find my corpse without a head on it");
-						playerTalk(p, n,
+						say(p, n,
 							"Do you know where this warlock might be now?");
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"I think it was one of the warlocks who lives in the big tower",
 							"In the sea southwest from here");
-						playerTalk(p, n,
+						say(p, n,
 							"Ok I will try and get the skull back for you, so you can rest in peace.");
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"Ooh thank you. That would be such a great relief",
 							"It is so dull being a ghost");
 						p.updateQuestStage(Quests.THE_RESTLESS_GHOST, 3);
 					} else if (choice == 1) {
-						playerTalk(p, n, "No");
-						npcTalk(p, n,
+						say(p, n, "No");
+						npcsay(p, n,
 							"Oh that's a pity. You got my hopes up there");
-						playerTalk(p, n, "Yeah, it is pity. Sorry");
-						npcTalk(p, n, "Hang on a second. You can understand me");
-						int choice2 = showMenu(p, n, "No I can't", "Yep clever aren't I");
+						say(p, n, "Yeah, it is pity. Sorry");
+						npcsay(p, n, "Hang on a second. You can understand me");
+						int choice2 = multi(p, n, "No I can't", "Yep clever aren't I");
 						if (choice2 == 0) {
-							npcTalk(p, n,
+							npcsay(p, n,
 								"I don't know, the first person I can speak to in ages is a moron");
 						} else if (choice2 == 1) {
-							npcTalk(p, n, "I'm impressed",
+							npcsay(p, n, "I'm impressed",
 								"You must be very powerfull",
 								"I don't suppose you can stop me being a ghost?");
-							int choice3 = showMenu(p, n,
+							int choice3 = multi(p, n,
 								"Yes, Ok. Do you know why you're a ghost?",
 								"No, you're scary");
 							if (choice3 == 0) {
@@ -216,12 +217,12 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 							}
 						}
 					} else if (choice == 2) {
-						playerTalk(p, n, "Wow, this amulet works");
-						npcTalk(p,
+						say(p, n, "Wow, this amulet works");
+						npcsay(p,
 							n,
 							"Oh its your amulet that's doing it. I did wonder",
 							"I don't suppose you can help me? I don't like being a ghost");
-						int choice3 = showMenu(p, n,
+						int choice3 = multi(p, n,
 							"Yes, Ok. Do you know why you're a ghost?",
 							"No, you're scary");
 						if (choice3 == 0) {
@@ -235,42 +236,42 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 			}
 			switch (cID) {
 				case Ghost.DONTSPEAK:
-					npcTalk(p, n, "Woo woo?");
-					playerTalk(p, n, "Nope still don't understand you");
-					npcTalk(p, n, "Woooooooo");
-					playerTalk(p, n, "Never mind");
+					npcsay(p, n, "Woo woo?");
+					say(p, n, "Nope still don't understand you");
+					npcsay(p, n, "Woooooooo");
+					say(p, n, "Never mind");
 					break;
 				case Ghost.GOODBYE:
-					npcTalk(p, n, "Wooo wooo");
+					npcsay(p, n, "Wooo wooo");
 					break;
 				case Ghost.NOTSURE:
-					npcTalk(p, n, "Wooo woo");
-					playerTalk(p, n, "Well if you insist");
-					npcTalk(p, n, "Wooooooooo");
-					playerTalk(p, n, "Ah well, better be off now");
-					npcTalk(p, n, "Woo");
-					playerTalk(p, n, "Bye");
+					npcsay(p, n, "Wooo woo");
+					say(p, n, "Well if you insist");
+					npcsay(p, n, "Wooooooooo");
+					say(p, n, "Ah well, better be off now");
+					npcsay(p, n, "Woo");
+					say(p, n, "Bye");
 					break;
 				case Ghost.WHY:
-					npcTalk(p, n,
+					npcsay(p, n,
 						"No, I just know I can't do anything much like this");
-					playerTalk(
+					say(
 						p,
 						n,
 						"I've been told a certain task may need to be completed",
 						"So you can rest in peace");
-					npcTalk(p, n, "I should think it is probably because ",
+					npcsay(p, n, "I should think it is probably because ",
 						"a warlock has come along and stolen my skull",
 						"If you look inside my coffin there",
 						"you'll find my corpse without a head on it");
-					playerTalk(p, n, "Do you know where this warlock might be now?");
-					npcTalk(p,
+					say(p, n, "Do you know where this warlock might be now?");
+					npcsay(p,
 						n,
 						"I think it was one of the warlocks who lives in the big tower",
 						"In the sea southwest from here");
-					playerTalk(p, n,
+					say(p, n,
 						"Ok I will try and get the skull back for you, so you can rest in peace.");
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Ooh thank you. That would be such a great relief",
 						"It is so dull being a ghost");
 					p.updateQuestStage(Quests.THE_RESTLESS_GHOST, 3);
@@ -311,16 +312,16 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
-			spawnNpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
-			message(player, "You put the skull in the coffin");
-			removeItem(player, ItemId.QUEST_SKULL.id(), 1);
+			addnpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
+			Functions.mes(player, "You put the skull in the coffin");
+			remove(player, ItemId.QUEST_SKULL.id(), 1);
 			//on completion cache key no longer needed
 			player.getCache().remove("tried_grab_skull");
-			Npc npc = getNearestNpc(player, NpcId.GHOST_RESTLESS.id(), 8);
+			Npc npc = ifnearvisnpc(player, NpcId.GHOST_RESTLESS.id(), 8);
 			if (npc != null) {
 				npc.remove();
 			}
-			message(player, "The ghost has vanished",
+			Functions.mes(player, "The ghost has vanished",
 				"You think you hear a faint voice in the air", "Thank you");
 			player.sendQuestComplete(Quests.THE_RESTLESS_GHOST);
 			return;
@@ -351,21 +352,21 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 
 	@Override
 	public void onTakeObj(Player p, GroundItem i) {
-		Npc skeleton = getNearestNpc(p, NpcId.SKELETON_RESTLESS.id(), 10);
+		Npc skeleton = ifnearvisnpc(p, NpcId.SKELETON_RESTLESS.id(), 10);
 		if (i.getID() == ItemId.QUEST_SKULL.id()) {
 			// spawn-place
 			if (i.getX() == 218 && i.getY() == 3521) {
 				if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) != 3) {
-					playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
+					say(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
 					return;
 				} else if (!p.getCache().hasKey("tried_grab_skull")) {
 					p.getCache().store("tried_grab_skull", true);
 					p.getWorld().unregisterItem(i);
-					addItem(p, ItemId.QUEST_SKULL.id(), 1);
+					give(p, ItemId.QUEST_SKULL.id(), 1);
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						p.message("Out of nowhere a skeleton appears");
-						skeleton = spawnNpc(p.getWorld(), NpcId.SKELETON_RESTLESS.id(), 217, 3520, 100);
+						skeleton = addnpc(p.getWorld(), NpcId.SKELETON_RESTLESS.id(), 217, 3520, 100);
 						skeleton.setChasing(p);
 					} else {
 						skeleton.setChasing(p);
@@ -375,16 +376,16 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 				// allow if player had at least one time tried grab skull
 				else {
 					p.getWorld().unregisterItem(i);
-					addItem(p, ItemId.QUEST_SKULL.id(), 1);
+					give(p, ItemId.QUEST_SKULL.id(), 1);
 				}
 
 			}
 			// allow wild if post-quest
 			else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 && i.getY() <= 425) {
 				p.getWorld().unregisterItem(i);
-				addItem(p, ItemId.QUEST_SKULL.id(), 1);
+				give(p, ItemId.QUEST_SKULL.id(), 1);
 			} else {
-				playerTalk(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
+				say(p, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
 				return;
 			}
 		}

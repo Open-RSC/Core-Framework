@@ -13,11 +13,11 @@ public class FillHole implements OpLocTrigger {
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player player) {
 		player.setBusyTimer(650);
-		if (removeItem(player, ItemId.SWAMP_PASTE.id(), 1)) {
-			removeObject(obj);
-			message(player, 0, "you fill the hole with swamp paste");
+		if (remove(player, ItemId.SWAMP_PASTE.id(), 1)) {
+			delloc(obj);
+			mes(player, 0, "you fill the hole with swamp paste");
 		} else {
-			message(player, 0, "you'll need some swamp paste to fill that");
+			mes(player, 0, "you'll need some swamp paste to fill that");
 		}
 	}
 

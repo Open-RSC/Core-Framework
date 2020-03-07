@@ -47,20 +47,20 @@ public final class WydinsGrocery implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome to my foodstore",
+		npcsay(p, n, "Welcome to my foodstore",
 			"Would you like to buy anything");
 
-		int option = showMenu(p, n, false, //do not send over
+		int option = multi(p, n, false, //do not send over
 				"yes please", "No thankyou", "what can you recommend?");
 		switch (option) {
 			case 0:
-				playerTalk(p, n, "Yes please");
+				say(p, n, "Yes please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;
 			case 2:
-				playerTalk(p, n, "What can you recommend?");
-				npcTalk(p, n, "We have this really exotic fruit",
+				say(p, n, "What can you recommend?");
+				npcsay(p, n, "We have this really exotic fruit",
 					"All the way from Karamja", "It's called a banana");
 				break;
 		}
@@ -76,34 +76,34 @@ public final class WydinsGrocery implements ShopInterface,
 			if (n != null && !p.getCache().hasKey("job_wydin")) {
 				n.face(p);
 				p.face(n);
-				npcTalk(p, n, "Heh you can't go in there",
+				npcsay(p, n, "Heh you can't go in there",
 					"Only employees of the grocery store can go in");
 
-				int option = showMenu(p, n, false, //do not send over
+				int option = multi(p, n, false, //do not send over
 					"Well can I get a job here?", "Sorry I didn't realise");
 				if (option == 0) {
-					playerTalk(p, n, "Can I get a job here?");
-					npcTalk(p, n, "Well you're keen I'll give you that",
+					say(p, n, "Can I get a job here?");
+					npcsay(p, n, "Well you're keen I'll give you that",
 						"Ok I'll give you a go",
 						"Have you got your own apron?");
 					if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.WHITE_APRON.id())) {
-						playerTalk(p, n, "Yes I have one right here");
-						npcTalk(p, n,
+						say(p, n, "Yes I have one right here");
+						npcsay(p, n,
 							"Wow you are well prepared, you're hired",
 							"Go through to the back and tidy up for me please");
 						p.getCache().store("job_wydin", true);
 					} else {
-						playerTalk(p, n, "No");
-						npcTalk(p, n,
+						say(p, n, "No");
+						npcsay(p, n,
 							"Well you can't work here unless you have an apron",
 							"Health and safety regulations, you understand");
 					}
 				} else if (option == 1) {
-					playerTalk(p, n, "Sorry I didn't realise");
+					say(p, n, "Sorry I didn't realise");
 				}
 			} else {
 				if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.WHITE_APRON.id())) {
-					npcTalk(p, n, "Can you put your apron on before going in there please");
+					npcsay(p, n, "Can you put your apron on before going in there please");
 				} else {
 					if (p.getX() < 277) {
 						doDoor(obj, p);

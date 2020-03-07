@@ -18,9 +18,9 @@ public class Priest implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {// that could work
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1) {
-			npcTalk(p, n, "Have you got rid of the ghost yet?");
-			playerTalk(p, n, "I can't find father Urhney at the moment");
-			npcTalk(p,
+			npcsay(p, n, "Have you got rid of the ghost yet?");
+			say(p, n, "I can't find father Urhney at the moment");
+			npcsay(p,
 				n,
 				"Well to get to the swamp he is in",
 				"you need to go round the back of the castle",
@@ -30,37 +30,37 @@ public class Priest implements TalkNpcTrigger {
 			return;
 		}
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) >= 2) {
-			npcTalk(p, n, "Have you got rid of the ghost yet?");
+			npcsay(p, n, "Have you got rid of the ghost yet?");
 			if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 2) {
-				playerTalk(p, n, "I had a talk with father Urhney",
+				say(p, n, "I had a talk with father Urhney",
 					"He has given me this funny amulet to talk to the ghost with");
-				npcTalk(p, n, "I always wondered what that amulet was",
+				npcsay(p, n, "I always wondered what that amulet was",
 					"Well I hope it's useful. Tell me if you get rid of the ghost");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
 				&& !p.getCarriedItems().hasCatalogID(ItemId.QUEST_SKULL.id(), Optional.of(false))) {
-				playerTalk(
+				say(
 					p,
 					n,
 					"I've found out that the ghost's corpse has lost its skull",
 					"If I can find the skull the ghost will go");
-				npcTalk(p, n, "That would explain it",
+				npcsay(p, n, "That would explain it",
 					"Well I haven't seen any skulls");
-				playerTalk(p, n, "Yes I think a warlock has stolen it");
-				npcTalk(p, n, "I hate warlocks", "Ah well good luck");
+				say(p, n, "Yes I think a warlock has stolen it");
+				npcsay(p, n, "I hate warlocks", "Ah well good luck");
 			} else if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 3
 				&& p.getCarriedItems().hasCatalogID(ItemId.QUEST_SKULL.id(), Optional.of(false))) {
-				playerTalk(p, n, "I've finally found the ghost's skull");
-				npcTalk(p, n,
+				say(p, n, "I've finally found the ghost's skull");
+				npcsay(p, n,
 					"Great. Put it in the ghost's coffin and see what happens!");
 			}
 			return;
 		}
-		npcTalk(p, n, "Welcome to the church of holy Saradomin");
+		npcsay(p, n, "Welcome to the church of holy Saradomin");
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("Who's Saradomin?") {
 			@Override
 			public void action() {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Surely you have heard of the God, Saradomin?",
 					"He who creates the forces of goodness and purity in this world?",
@@ -71,12 +71,12 @@ public class Priest implements TalkNpcTrigger {
 				new Menu().addOptions(new Option("Oh that Saradomin") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "There is only one Saradomin");
+						npcsay(p, n, "There is only one Saradomin");
 					}
 				}, new Option("Oh sorry I'm not from this world") {
 					@Override
 					public void action() {
-						npcTalk(p, n, "That's strange",
+						npcsay(p, n, "That's strange",
 							"I thought things not from this world were all slime and tenticles");
 						new Menu()
 							.addOptions(
@@ -84,18 +84,18 @@ public class Priest implements TalkNpcTrigger {
 									"You don't understand. This is a computer game") {
 									@Override
 									public void action() {
-										npcTalk(p, n,
+										npcsay(p, n,
 											"I beg your pardon?");
-										playerTalk(p, n, "Never mind");
+										say(p, n, "Never mind");
 									}
 								},
 								new Option(
 									"I am - do you like my disguise?") {
 									@Override
 									public void action() {
-										npcTalk(p, n,
+										npcsay(p, n,
 											"Aargh begone foul creature from another dimension");
-										playerTalk(p, n,
+										say(p, n,
 											"Ok, Ok, It was a joke");
 									}
 								}).showMenu(p);
@@ -106,7 +106,7 @@ public class Priest implements TalkNpcTrigger {
 		defaultMenu.addOption(new Option("Nice place you've got here") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "It is, isn't it?", "It was built 230 years ago");
+				npcsay(p, n, "It is, isn't it?", "It was built 230 years ago");
 			}
 		});
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) <= 0) {
@@ -114,10 +114,10 @@ public class Priest implements TalkNpcTrigger {
 				@Override
 				public void action() {
 					if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 0) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"That's lucky, I need someone to do a quest for me");
-						playerTalk(p, n, "Ok I'll help");
-						npcTalk(p,
+						say(p, n, "Ok I'll help");
+						npcsay(p,
 							n,
 							"Ok the problem is, there is a ghost in the church graveyard",
 							"I would like you to get rid of it",
@@ -131,7 +131,7 @@ public class Priest implements TalkNpcTrigger {
 							"I have heard they can be quite dangerous");
 						p.updateQuestStage(Quests.THE_RESTLESS_GHOST, 1);
 					} else {
-						npcTalk(p, n, "Sorry I only had the one quest");
+						npcsay(p, n, "Sorry I only had the one quest");
 					}
 				}
 			});

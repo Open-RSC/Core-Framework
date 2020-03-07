@@ -22,20 +22,20 @@ public final class Irksol implements ShopInterface,
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.IRKSOL.id()) {
-			npcTalk(p, n, "selling ruby rings",
+			npcsay(p, n, "selling ruby rings",
 				"The best deals in all the planes of existance");
-			int option = showMenu(p, n, false, //do not send over
+			int option = multi(p, n, false, //do not send over
 				"I'm interested in these deals",
 				"No thankyou");
 			switch (option) {
 				case 0:
-					playerTalk(p, n, "I'm interested in these deals");
-					npcTalk(p, n, "Take a look at these beauties");
+					say(p, n, "I'm interested in these deals");
+					npcsay(p, n, "Take a look at these beauties");
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 					break;
 				case 1:
-					playerTalk(p, n, "no thankyou");
+					say(p, n, "no thankyou");
 					break;
 			}
 		}

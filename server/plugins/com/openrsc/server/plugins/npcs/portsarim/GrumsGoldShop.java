@@ -39,18 +39,18 @@ public final class GrumsGoldShop implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy or sell some gold jewellery?");
-		int option = showMenu(p, n, false, //do not send over
+		npcsay(p, n, "Would you like to buy or sell some gold jewellery?");
+		int option = multi(p, n, false, //do not send over
 				"Yes please", "No, I'm not that rich");
 		switch (option) {
 			case 0:
-				playerTalk(p, n, "Yes Please");
+				say(p, n, "Yes Please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;
 			case 1:
-				playerTalk(p, n, "No, I'm not that rich");
-				npcTalk(p, n, "Get out then we don't want any riff-raff in here");
+				say(p, n, "No, I'm not that rich");
+				npcsay(p, n, "Get out then we don't want any riff-raff in here");
 				break;
 		}
 

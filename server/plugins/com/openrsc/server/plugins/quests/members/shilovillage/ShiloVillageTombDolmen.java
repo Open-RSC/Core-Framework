@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -87,7 +88,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 				return;
 			}
 			if (command.equalsIgnoreCase("Look")) {
-				message(p, "The Dolmen is intricately decorated with the family",
+				Functions.mes(p, "The Dolmen is intricately decorated with the family",
 					"symbol of two crossed palm trees .");
 				if (p.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 					p.message("There is nothing on the Dolmen.");
@@ -103,37 +104,37 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					p.message("You can see that there are some items on the Dolmen.");
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
-				message(p, "The Dolmen is intricately decorated with the symbol of");
-				message(p, "two crossed palm trees. It might be the family crest?");
+				Functions.mes(p, "The Dolmen is intricately decorated with the symbol of");
+				Functions.mes(p, "two crossed palm trees. It might be the family crest?");
 				if (p.getCarriedItems().hasCatalogID( ItemId.SWORD_POMMEL.id(), Optional.empty())
 					&& p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
-					message(p, "There is nothing on the Dolmen.");
+					Functions.mes(p, "There is nothing on the Dolmen.");
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
 					|| p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
-					message(p, "You can see an item on the Dolmen");
+					Functions.mes(p, "You can see an item on the Dolmen");
 				} else {
-					message(p, "You can see that there are some items on the Dolmen.");
+					Functions.mes(p, "You can see that there are some items on the Dolmen.");
 				}
 				if (!p.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
 					&& !p.getCarriedItems().hasCatalogID(ItemId.BONE_BEADS.id(), Optional.empty())) { // SWORD POMMEL
-					message(p, "You find a rusty sword with an ivory pommel.");
+					Functions.mes(p, "You find a rusty sword with an ivory pommel.");
 					p.message("You take the pommel and place it into your inventory.");
-					addItem(p, ItemId.SWORD_POMMEL.id(), 1);
-					sleep(500);
+					give(p, ItemId.SWORD_POMMEL.id(), 1);
+					delay(500);
 				}
 				if (!p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) { // crystal
-					message(p, "You find a Crystal Sphere ");
-					addItem(p, ItemId.LOCATING_CRYSTAL.id(), 1);
+					Functions.mes(p, "You find a Crystal Sphere ");
+					give(p, ItemId.LOCATING_CRYSTAL.id(), 1);
 				}
-				message(p, "You find some writing on the dolmen,");
+				Functions.mes(p, "You find some writing on the dolmen,");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && p.getCache().hasKey("dropped_writing")) {
-					message(p, "You would need some Papyrus and Charcoal");
+					Functions.mes(p, "You would need some Papyrus and Charcoal");
 					p.message("to take more notes from this Dolmen!");
 				} else if (!p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && !p.getCache().hasKey("dropped_writing")) {
-					message(p, "you grab some nearby scraps of delicate paper together ",
+					Functions.mes(p, "you grab some nearby scraps of delicate paper together ",
 						"and copy the text as best you can and collect");
 					p.message("them together as a scroll");
-					addItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
+					give(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 				}
 			}
 		}
@@ -152,37 +153,37 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					if (p.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.of(false))) {
 						p.message("You already have Bervirius Tomb Notes in your inventory.");
 					} else {
-						message(p, "You try to take some new notes on the delicate papyrus.");
+						Functions.mes(p, "You try to take some new notes on the delicate papyrus.");
 						if (!p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) {
 							p.message("You need some charcoal to make notes.");
 							return;
 						}
-						message(p, "You use the charcoal and the Papyrus to make some new notes.");
+						Functions.mes(p, "You use the charcoal and the Papyrus to make some new notes.");
 						p.message("You collect the notes together as a scroll.");
-						removeItem(p, ItemId.PAPYRUS.id(), 1);
-						removeItem(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
-						addItem(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
+						remove(p, ItemId.PAPYRUS.id(), 1);
+						remove(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
+						give(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 					}
 					break;
 				case RASHILIYA_CORPSE: // COMPLETE QUEST - RASHILIYIA CORPSE
 					if (p.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 						p.setBusy(true);
 						p.message("You carefully place Rashiliyia's remains on the Dolmen.");
-						sleep(1200);
+						delay(1200);
 						p.message("You feel a strange vibration in the air.");
-						Npc rash = spawnNpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 60000);
+						Npc rash = addnpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 60000);
 						if (rash != null) {
 							rash.teleport(rash.getX() + 1, rash.getY());
-							npcTalk(p, rash, "You have my gratitude for releasing my spirit.",
+							npcsay(p, rash, "You have my gratitude for releasing my spirit.",
 								"I have suffered a vengeful and evil existence.",
 								"I was tricked by Zamorak. He returned my son to me as an undead Creature.",
 								"My hatred and bitterness corrupted me.",
 								"I tried too destroy all life...now I am released.",
 								"And am grateful to contemplate eternal rest...");
-							message(p, "Without warning the spirit of Rashiliyia disapears.");
+							Functions.mes(p, "Without warning the spirit of Rashiliyia disapears.");
 							rash.remove();
 						}
-						removeItem(p, ItemId.RASHILIYA_CORPSE.id(), 1);
+						remove(p, ItemId.RASHILIYA_CORPSE.id(), 1);
 						p.sendQuestComplete(Quests.SHILO_VILLAGE);
 						p.setBusy(false);
 					}

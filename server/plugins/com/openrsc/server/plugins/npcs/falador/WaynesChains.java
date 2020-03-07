@@ -41,7 +41,7 @@ public final class WaynesChains implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.WAYNE.id()) {
-			npcTalk(p, n, "Welcome to Wayne's chains",
+			npcsay(p, n, "Welcome to Wayne's chains",
 				"Do you wanna buy or sell some chain mail?");
 
 			List<String> options = new ArrayList<>();
@@ -52,19 +52,19 @@ public final class WaynesChains implements ShopInterface,
 				options.add("I need your help with a special armour");
 			String[] optionsArray = new String[options.size()];
 			optionsArray = options.toArray(optionsArray);
-			int option = showMenu(p, n, false, //do not send over
+			int option = multi(p, n, false, //do not send over
 				optionsArray);
 			if (option == 0) {
-				playerTalk(p, n, "Yes Please");
+				say(p, n, "Yes Please");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (option == 1) {
-				playerTalk(p, n, "No thanks");
+				say(p, n, "No thanks");
 			} else if (option == 2) {
-				playerTalk(p, n, "I need your help with a special armor");
-				npcTalk(p, n, "special you say? how can I help?");
-				playerTalk(p, n, "Gramat told me you can make dragon scale mail");
-				npcTalk(p, n, "ah yes. I am able, but it's very difficult",
+				say(p, n, "I need your help with a special armor");
+				npcsay(p, n, "special you say? how can I help?");
+				say(p, n, "Gramat told me you can make dragon scale mail");
+				npcsay(p, n, "ah yes. I am able, but it's very difficult",
 					"first, you need to bring me the materials",
 					"500 dragon metal chains",
 					"and 150 chipped dragon scales");
@@ -72,42 +72,42 @@ public final class WaynesChains implements ShopInterface,
 				boolean hasScales = false;
 				if (p.getCarriedItems().getInventory().countId(ItemId.CHIPPED_DRAGON_SCALE.id()) >= 150) {
 					hasScales = true;
-					playerTalk(p, n, "i have the scales here");
+					say(p, n, "i have the scales here");
 				} else
-					playerTalk(p, n, "i don't seem to have enough scales");
+					say(p, n, "i don't seem to have enough scales");
 
 				if (p.getCarriedItems().getInventory().countId(ItemId.DRAGON_METAL_CHAIN.id()) >= 500) {
 					hasChains = true;
-					playerTalk(p, n, "i have the chains here");
+					say(p, n, "i have the chains here");
 				} else
-					playerTalk(p, n, "i don't seem to have enough chains");
+					say(p, n, "i don't seem to have enough chains");
 
 				if (hasChains && hasScales) {
-					npcTalk(p, n, "great, you have the materials",
+					npcsay(p, n, "great, you have the materials",
 						"for my time I also require compensation",
 						"how does 500,000 gold pieces sound");
-					int option2 = showMenu(p, n, false,
+					int option2 = multi(p, n, false,
 						"sounds fair", "no way");
 					if (option2 == 0) {
-						playerTalk(p, n, "sounds fair");
+						say(p, n, "sounds fair");
 						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 500000) {
-							playerTalk(p, n, "but I'm short at the moment");
-							npcTalk(p, n, "get the money and return to me");
+							say(p, n, "but I'm short at the moment");
+							npcsay(p, n, "get the money and return to me");
 							return;
 						}
 						if (p.getCarriedItems().remove(ItemId.CHIPPED_DRAGON_SCALE.id(), 150) > -1) {
 							if (p.getCarriedItems().remove(ItemId.DRAGON_METAL_CHAIN.id() ,500) > -1) {
 								if (p.getCarriedItems().remove(ItemId.COINS.id(), 500000) > -1) {
 									p.message("you hand over the materials and money");
-									sleep(p.getWorld().getServer().getConfig().GAME_TICK * 4);
+									delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 									p.message("Wayne flashes a smile");
-									sleep(p.getWorld().getServer().getConfig().GAME_TICK * 4);
-									npcTalk(p, n, "i happen to have one made already",
+									delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
+									npcsay(p, n, "i happen to have one made already",
 										"so there's no need for you to wait");
 									p.message("Wayne hands you a dragon scale mail");
-									addItem(p, ItemId.DRAGON_SCALE_MAIL.id(), 1);
-									playerTalk(p, n, "thanks");
-									npcTalk(p, n, "my pleasure " + p.getUsername(),
+									give(p, ItemId.DRAGON_SCALE_MAIL.id(), 1);
+									say(p, n, "thanks");
+									npcsay(p, n, "my pleasure " + p.getUsername(),
 										"if you need my help again",
 										"i'm always open");
 									p.message("Congratulations! You have received a dragon scale mail");
@@ -115,11 +115,11 @@ public final class WaynesChains implements ShopInterface,
 							}
 						}
 					} else if (option2 == 1) {
-						playerTalk(p, n, "no way");
-						npcTalk(p, n, "suit yourself");
+						say(p, n, "no way");
+						npcsay(p, n, "suit yourself");
 					}
 				} else {
-					npcTalk(p, n, "if you're able to gather them",
+					npcsay(p, n, "if you're able to gather them",
 						"come see me again");
 				}
 			}

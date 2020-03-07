@@ -21,7 +21,7 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 				p.setBusyTimer(500);
 				int coalLeft = p.getCache().getInt("coal_truck");
 				p.playerServerMessage(MessageType.QUEST, "You remove a piece of coal from the truck");
-				addItem(p, ItemId.COAL.id(), 1);
+				give(p, ItemId.COAL.id(), 1);
 				p.getCache().set("coal_truck", coalLeft - 1);
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "there is no coal left in the truck\"");
@@ -56,8 +56,8 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 					p.getCache().set("coal_truck", coalAmount);
 				}
 				p.playerServerMessage(MessageType.QUEST, "You put a piece of coal in the truck");
-				removeItem(p, ItemId.COAL.id(), 1);
-				sleep(50);
+				remove(p, ItemId.COAL.id(), 1);
+				delay(50);
 			}
 			p.setBusy(false);
 		}

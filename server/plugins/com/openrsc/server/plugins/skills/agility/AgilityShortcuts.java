@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -77,19 +78,19 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				message(p, "The bridge beyond this fence looks very unsafe.");
-				message(p, "However, you could try to negotiate it if you're feeling very agile.");
+				Functions.mes(p, "The bridge beyond this fence looks very unsafe.");
+				Functions.mes(p, "However, you could try to negotiate it if you're feeling very agile.");
 				p.message("Would you like to try?");
-				int jumpMenu = showMenu(p,
+				int jumpMenu = multi(p,
 					"No thanks! It looks far too dangerous!",
 					"Yes, I'm totally brave and quite agile!");
 				if (jumpMenu == 0) {
-					message(p, "You decide that common sense is the better part of valour.",
+					Functions.mes(p, "You decide that common sense is the better part of valour.",
 						"And stop yourself from being hurled to what must be an ");
 					p.message("inevitable death.");
 				} else if (jumpMenu == 1) {
-					message(p, "You prepare to negotiate the bridge fence...");
-					message(p, "You run and jump...");
+					Functions.mes(p, "You prepare to negotiate the bridge fence...");
+					Functions.mes(p, "You run and jump...");
 					if (succeed(p, 32)) {
 						p.message("...and land perfectly on the other side!");
 						if (p.getX() >= 460) { // back
@@ -100,21 +101,21 @@ public class AgilityShortcuts implements OpLocTrigger,
 					} else {
 						p.message("...slip and fall incompetently into the river below!");
 						p.teleport(458, 832);
-						playerTalk(p, null, "* Ahhhhhhhhhh! *");
+						say(p, null, "* Ahhhhhhhhhh! *");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(500);
+						delay(500);
 						p.teleport(458, 836);
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(1000);
-						playerTalk(p, null, "* Gulp! *");
-						sleep(1500);
+						delay(1000);
+						say(p, null, "* Gulp! *");
+						delay(1500);
 						p.teleport(459, 841);
-						playerTalk(p, null, "* Gulp! *");
-						sleep(1000);
+						say(p, null, "* Gulp! *");
+						delay(1000);
 						p.message("You just manage to drag your pitiful frame onto the river bank.");
-						playerTalk(p, null, "* Gasp! *");
+						say(p, null, "* Gasp! *");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(1000);
+						delay(1000);
 						p.message("Though you nearly drowned in the river!");
 					}
 				}
@@ -125,15 +126,15 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				message(p, "These rocks look quite dangerous to climb.",
+				Functions.mes(p, "These rocks look quite dangerous to climb.",
 					"But you may be able to scale them.");
 				p.message("Would you like to try?");
-				int menu = showMenu(p,
+				int menu = multi(p,
 					"Yes, I can easily climb this!",
 					"Nope, I'm sure I'll probably fall!");
 				if (menu == 0) {
 					if (succeed(p, 32)) {
-						message(p, "You manage to climb the rocks succesfully and pick");
+						Functions.mes(p, "You manage to climb the rocks succesfully and pick");
 						if (obj.getX() == 450) {
 							p.message("a route though the trecherous embankment to the top.");
 							p.teleport(452, 829);
@@ -143,9 +144,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 						}
 					} else {
 						p.teleport(450, 828);
-						message(p, "You fall and hurt yourself.");
+						Functions.mes(p, "You fall and hurt yourself.");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(500);
+						delay(500);
 						p.teleport(449, 828);
 					}
 				} else if (menu == 1) {
@@ -159,7 +160,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You climb over the wall");
-				movePlayer(p, 338, 555);
+				teleport(p, 338, 555);
 				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_SWING:
@@ -169,10 +170,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You grab the vine and try and swing across");
-				sleep(1000);
-				movePlayer(p, 511, 669);
+				delay(1000);
+				teleport(p, 511, 669);
 				p.message("You skillfully swing across the stream");
-				playerTalk(p, null, "Aaaaahahah");
+				say(p, null, "Aaaaahahah");
 				p.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_BACK_SWING:
@@ -182,10 +183,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You grab the vine and try and swing across");
-				sleep(1000);
-				movePlayer(p, 508, 668);
+				delay(1000);
+				teleport(p, 508, 668);
 				p.message("You skillfully swing across the stream");
-				playerTalk(p, null, "Aaaaahahah");
+				say(p, null, "Aaaaahahah");
 				p.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_SWING:
@@ -194,8 +195,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				sleep(1000);
-				movePlayer(p, 207, 3221);
+				delay(1000);
+				teleport(p, 207, 3221);
 				p.message("You skillfully swing across the hole");
 				p.incExp(Skills.AGILITY, 40, true);
 				break;
@@ -205,8 +206,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				sleep(1000);
-				movePlayer(p, 206, 3225);
+				delay(1000);
+				teleport(p, 206, 3225);
 				p.message("You skillfully swing across the hole");
 				p.incExp(Skills.AGILITY, 40, true);
 				break;
@@ -218,8 +219,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You stand on the slippery log");
 				for (int x = 595; x >= 592; x--) {
-					movePlayer(p, x, 458);
-					sleep(650);
+					teleport(p, x, 458);
+					delay(650);
 				}
 				p.message("and you walk across");
 				p.incExp(Skills.AGILITY, 34, true);
@@ -232,8 +233,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You stand on the slippery log");
 				for (int x = 595; x <= 598; x++) {
-					movePlayer(p, x, 458);
-					sleep(650);
+					teleport(p, x, 458);
+					delay(650);
 				}
 				p.message("and you walk across");
 				p.incExp(Skills.AGILITY, 34, true);
@@ -254,13 +255,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You grab the rope and try and swing across");
 				if (!succeed(p, 57, 77)) {
-					message(p, "You miss the opposite side and fall to the level below");
-					movePlayer(p, 596, 3534);
+					Functions.mes(p, "You miss the opposite side and fall to the level below");
+					teleport(p, 596, 3534);
 					p.setBusy(false);
 					return;
 				}
-				sleep(2200);
-				movePlayer(p, 596, 3581);
+				delay(2200);
+				teleport(p, 596, 3581);
 				p.message("You skillfully swing across the hole");
 				p.incExp(Skills.AGILITY, 110, true);
 				break;
@@ -279,13 +280,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You grab the rope and try and swing across");
 				if (!succeed(p, 57, 77)) {
-					message(p, "You miss the opposite side and fall to the level below");
-					movePlayer(p, 598, 3536);
+					Functions.mes(p, "You miss the opposite side and fall to the level below");
+					teleport(p, 598, 3536);
 					p.setBusy(false);
 					return;
 				}
-				sleep(2200);
-				movePlayer(p, 598, 3585);
+				delay(2200);
+				teleport(p, 598, 3585);
 				p.message("You skillfully swing across the hole");
 				p.incExp(Skills.AGILITY, 110, true);
 				break;
@@ -304,14 +305,14 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				p.message("You put your foot on the ledge and try to edge across");
-				sleep(2200);
+				delay(2200);
 				if (!succeed(p, 40, 65)) {
-					message(p, "you lose your footing and fall to the level below");
-					movePlayer(p, 603, 3520);
+					Functions.mes(p, "you lose your footing and fall to the level below");
+					teleport(p, 603, 3520);
 					p.setBusy(false);
 					return;
 				}
-				movePlayer(p, 601, 3563);
+				teleport(p, 601, 3563);
 				p.setBusyTimer(1000);
 				p.message("You skillfully balance across the hole");
 				p.incExp(Skills.AGILITY, 90, true);
@@ -330,15 +331,15 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				p.message("You put your foot on the ledge and try to edge across");
-				sleep(2200);
+				delay(2200);
 				if (!succeed(p, 40, 65)) {
-					message(p, "you lose your footing and fall to the level below");
-					movePlayer(p, 603, 3520);
+					Functions.mes(p, "you lose your footing and fall to the level below");
+					teleport(p, 603, 3520);
 					p.setBusy(false);
 					return;
 				}
 				p.setBusyTimer(1000);
-				movePlayer(p, 601, 3557);
+				teleport(p, 601, 3557);
 				p.message("You skillfully balance across the hole");
 				p.incExp(Skills.AGILITY, 90, true);
 				break;
@@ -349,7 +350,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				movePlayer(p, 580, 3525);
+				teleport(p, 580, 3525);
 				p.message("You climb down the pile of rubble");
 				break;
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE_UP:
@@ -365,7 +366,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				movePlayer(p, 582, 3573);
+				teleport(p, 582, 3573);
 				p.message("You climb up the pile of rubble");
 				p.incExp(Skills.AGILITY, 54, true);
 				break;
@@ -384,8 +385,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				p.message("You squeeze through the pipe");
-				sleep(2200);
-				movePlayer(p, 608, 3568);
+				delay(2200);
+				teleport(p, 608, 3568);
 				p.incExp(Skills.AGILITY, 30, true);
 				break;
 			case SHORTCUT_YANILLE_PIPE_BACK:
@@ -402,8 +403,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				p.message("You squeeze through the pipe");
-				sleep(2200);
-				movePlayer(p, 605, 3568);
+				delay(2200);
+				teleport(p, 605, 3568);
 				p.incExp(Skills.AGILITY, 30, true);
 				break;
 			case GREW_ISLAND_ROPE_ATTACHED:
@@ -413,15 +414,15 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You grab the rope and try and swing across");
-				sleep(2200);
-				movePlayer(p, 664, 755);
+				delay(2200);
+				teleport(p, 664, 755);
 				p.message("You skillfully swing across the stream");
 				p.incExp(Skills.AGILITY, 50, true);
 				break;
 			case GREW_ISLAND_SWING_BACK:
 				p.message("You grab the rope and try and swing across");
-				sleep(2200);
-				movePlayer(p, 666, 755);
+				delay(2200);
+				teleport(p, 666, 755);
 				p.message("You skillfully swing across the stream");
 				p.incExp(Skills.AGILITY, 50, true);
 				break;
@@ -432,25 +433,25 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You attempt to walk over the the slippery log..");
-				sleep(1900);
+				delay(1900);
 				if (!succeed(p, 32)) {
-					movePlayer(p, 368, 781);
-					sleep(650);
+					teleport(p, 368, 781);
+					delay(650);
 					p.message("@red@You fall into the stream!");
 					p.message("You lose some health");
-					movePlayer(p, 370, 776);
+					teleport(p, 370, 776);
 					p.damage(1);
 					p.setBusy(false);
 					return;
 				}
 				if (p.getX() <= 367) {
-					movePlayer(p, 368, 781);
-					sleep(650);
-					movePlayer(p, 370, 781);
+					teleport(p, 368, 781);
+					delay(650);
+					teleport(p, 370, 781);
 				} else {
-					movePlayer(p, 368, 781);
-					sleep(650);
-					movePlayer(p, 366, 781);
+					teleport(p, 368, 781);
+					delay(650);
+					teleport(p, 366, 781);
 				}
 				p.message("...and make it without any problems!");
 				p.incExp(Skills.AGILITY, 10, true);
@@ -471,33 +472,33 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You jump onto the rock");
 				if (p.getY() <= 805) {
-					movePlayer(p, 347, 806);
-					sleep(650);
+					teleport(p, 347, 806);
+					delay(650);
 					if (!succeed(p, 32)) {
-						sleep(900);
-						movePlayer(p, 341, 809);
+						delay(900);
+						teleport(p, 341, 809);
 						p.message("@red@!!! You Fall !!!");
-						message(p, "You get washed up on the other side of the river...",
+						Functions.mes(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
 						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						p.setBusy(false);
 						return;
 					}
-					movePlayer(p, 346, 808);
+					teleport(p, 346, 808);
 				} else {
-					movePlayer(p, 346, 807);
-					sleep(650);
+					teleport(p, 346, 807);
+					delay(650);
 					if (!succeed(p, 32)) {
-						sleep(900);
-						movePlayer(p, 341, 805);
+						delay(900);
+						teleport(p, 341, 805);
 						p.message("@red@!!! You Fall !!!");
-						message(p, "You get washed up on the other side of the river...",
+						Functions.mes(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
 						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						p.setBusy(false);
 						return;
 					}
-					movePlayer(p, 347, 805);
+					teleport(p, 347, 805);
 				}
 				p.message("And cross the water without problems.");
 				p.incExp(Skills.AGILITY, 10, true);
@@ -535,7 +536,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 			}
 			p.message("You squeeze through the pipe");
-			movePlayer(p, 372, 3352);
+			teleport(p, 372, 3352);
 			p.incExp(Skills.AGILITY, 30, true);
 			p.setBusy(false);
 			break;
@@ -554,7 +555,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 			}
 			p.message("You squeeze through the pipe");
-			movePlayer(p, 375, 3352);
+			teleport(p, 375, 3352);
 			p.incExp(Skills.AGILITY, 30, true);
 			p.setBusy(false);
 			break;
@@ -571,12 +572,12 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				sleep(p.getWorld().getServer().getConfig().GAME_TICK);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				if (p.getLocation().getY() < 550) {
-					movePlayer(p, 434, 551);
+					teleport(p, 434, 551);
 					p.incExp(Skills.AGILITY, 15, true);
 				} else {
-					movePlayer(p, 434, 549);
+					teleport(p, 434, 549);
 					p.incExp(Skills.AGILITY, 15, true);
 				}
 				p.setBusy(false);
@@ -603,7 +604,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("you tie the rope to the tree");
-			removeItem(p, ItemId.ROPE.id(), 1);
+			remove(p, ItemId.ROPE.id(), 1);
 			p.getWorld().replaceGameObject(obj,
 				new GameObject(p.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
 					.getType()));

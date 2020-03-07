@@ -72,7 +72,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		}
 
 		if (!p.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
-			message(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
+			mes(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
 			return;
 		}
 
@@ -93,7 +93,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		}
 
 		p.setBusy(true);
-		showBubble(p, new Item(axeId));
+		thinkbubble(p, new Item(axeId));
 		p.playerServerMessage(MessageType.QUEST, "You swing your " + p.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
 		if (p.getFatigue() >= 149840) {
 			if (p.getFatigue() < p.MAX_FATIGUE) {
@@ -113,7 +113,7 @@ public class WoodcutJungle implements OpLocTrigger,
 					p.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 					if (!force)
 						// authentic does not send to quest tab
-						message(p, 1200, "You hack your way through the jungle.");
+						mes(p, 1200, "You hack your way through the jungle.");
 				} else {
 					p.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
 					p.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
@@ -130,7 +130,7 @@ public class WoodcutJungle implements OpLocTrigger,
 			p.teleport(obj.getX(), obj.getY());
 			if (p.getY() > 871) {
 				if (obj.getID() == JUNGLE_VINE)
-					sleep(4000);
+					delay(4000);
 				p.message("You manage to hack your way into the Kharazi Jungle.");
 			}
 		} else {

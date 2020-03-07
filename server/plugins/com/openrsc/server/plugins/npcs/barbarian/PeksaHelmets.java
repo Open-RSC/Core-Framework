@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class PeksaHelmets implements ShopInterface,
 	TalkNpcTrigger {
@@ -39,15 +40,15 @@ public final class PeksaHelmets implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Are you interested in buying or selling a helmet?");
+		npcsay(p, n, "Are you interested in buying or selling a helmet?");
 
-		int option = showMenu(p, n, "I could be, yes", "No, I'll pass on that");
+		int option = Functions.multi(p, n, "I could be, yes", "No, I'll pass on that");
 		if (option == 0) {
-			npcTalk(p, n, "Well look at all these great helmets!");
+			npcsay(p, n, "Well look at all these great helmets!");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
-			npcTalk(p, n, "Well come back if you change your mind");
+			npcsay(p, n, "Well come back if you change your mind");
 		}
 	}
 

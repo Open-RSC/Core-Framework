@@ -3,10 +3,11 @@ package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.mes;
 
 public class LegendsQuestGates implements OpLocTrigger {
 
@@ -30,8 +31,8 @@ public class LegendsQuestGates implements OpLocTrigger {
 						p.teleport(513, 539);
 					}
 				} else {
-					message(p, 1300, "You need to complete the Legends Guild Quest");
-					message(p, 1200, "before you can enter the Legends Guild");
+					Functions.mes(p, 1300, "You need to complete the Legends Guild Quest");
+					Functions.mes(p, 1200, "before you can enter the Legends Guild");
 				}
 			} else if (command.equalsIgnoreCase("search")) {
 				p.message("Nothing interesting happens");

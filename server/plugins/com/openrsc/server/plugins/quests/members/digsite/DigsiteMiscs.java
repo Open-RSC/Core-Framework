@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -21,33 +22,33 @@ public class DigsiteMiscs implements DropObjTrigger {
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			p.message("bang!");
-			removeItem(p, ItemId.UNIDENTIFIED_LIQUID.id(), 1);
+			remove(p, ItemId.UNIDENTIFIED_LIQUID.id(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.3D + 5));
-			playerTalk(p, null, "Ow!");
+			say(p, null, "Ow!");
 			p.message("The liquid exploded!");
 			p.message("You were injured by the burning liquid");
 		}
 		else if (i.getCatalogId() == ItemId.MIXED_CHEMICALS_1.id() || i.getCatalogId() == ItemId.MIXED_CHEMICALS_2.id()) {
 			p.message("bang!");
-			removeItem(p, i.getCatalogId(), 1);
+			remove(p, i.getCatalogId(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 2 + 6));
-			playerTalk(p, null, "Ow!");
+			say(p, null, "Ow!");
 			p.message("The chemicals exploded!");
 			p.message("You were injured by the exploding liquid");
 		}
 		else if (i.getCatalogId() == ItemId.NITROGLYCERIN.id()) {
 			p.message("bang!");
-			removeItem(p, ItemId.NITROGLYCERIN.id(), 1);
+			remove(p, ItemId.NITROGLYCERIN.id(), 1);
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 2 - 3));
-			playerTalk(p, null, "Ow!");
+			say(p, null, "Ow!");
 			p.message("The nitroglycerin exploded!");
 			p.message("You were injured by the exploding liquid");
 		}
 		else if (i.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
-			message(p, "bang!");
-			removeItem(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
+			Functions.mes(p, "bang!");
+			remove(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
 			p.damage(61);
-			playerTalk(p, null, "Ow!");
+			say(p, null, "Ow!");
 			p.message("The compound exploded!");
 			p.message("You were badly injured by the exploding liquid");
 		}

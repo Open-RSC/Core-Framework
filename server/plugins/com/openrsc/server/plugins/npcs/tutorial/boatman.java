@@ -15,24 +15,24 @@ public class boatman implements TalkNpcTrigger {
 	 */
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello my job is to take you to the main game area",
+		npcsay(p, n, "Hello my job is to take you to the main game area",
 			"It's only a short row",
 			"I shall take you to the small town of Lumbridge",
 			"In the kingdom of Misthalin");
-		int menu = showMenu(p, n, "Ok I'm ready to go", "I'm not done here yet");
+		int menu = multi(p, n, "Ok I'm ready to go", "I'm not done here yet");
 		if (menu == 0) {
-			npcTalk(p, n, "Lets go then");
+			npcsay(p, n, "Lets go then");
 			p.message("You have completed the tutorial");
 			p.teleport(120, 648, false);
 			if (p.getCache().hasKey("tutorial")) {
 				p.getCache().remove("tutorial");
 			}
-			sleep(2000);
+			delay(2000);
 			p.message("The boat arrives in Lumbridge");
 			p.getWorld().sendWorldAnnouncement("New adventurer @gre@" + p.getUsername() + "@whi@ has arrived in lumbridge!");
 			ActionSender.sendPlayerOnTutorial(p);
 		} else if (menu == 1) {
-			npcTalk(p, n, "Ok come back when you are ready");
+			npcsay(p, n, "Ok come back when you are ready");
 		}
 
 	}

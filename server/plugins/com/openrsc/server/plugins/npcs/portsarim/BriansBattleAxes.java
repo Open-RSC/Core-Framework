@@ -37,17 +37,17 @@ public final class BriansBattleAxes implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "ello");
-		int option = showMenu(p, n, false, //do not send over
+		npcsay(p, n, "ello");
+		int option = multi(p, n, false, //do not send over
 				"So are you selling something?", "ello");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "Yep take a look at these great axes");
+				npcsay(p, n, "Yep take a look at these great axes");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;
 			case 1:
-				playerTalk(p, n, "Ello");
+				say(p, n, "Ello");
 				break;
 		}
 	}

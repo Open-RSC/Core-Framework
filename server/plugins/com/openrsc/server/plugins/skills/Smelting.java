@@ -35,10 +35,10 @@ public class Smelting implements UseLocTrigger {
 						p.message("You need to complete the dwarf cannon quest");
 						return;
 					}
-					showBubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
+					thinkbubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 					int messagedelay = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
 					int delay = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
-					message(p, messagedelay, "you heat the steel bar into a liquid state",
+					mes(p, messagedelay, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
 
@@ -67,7 +67,7 @@ public class Smelting implements UseLocTrigger {
 
 							if (!isCompleted()) {
 								getOwner().message("you repeat the process");
-								showBubble(getOwner(), new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
+								thinkbubble(getOwner(), new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 							}
 							if (getCurrentLevel(getOwner(), Skills.SMITHING) < 30) {
 								getOwner().message("You need at least level 30 smithing to make cannon balls");
@@ -121,9 +121,9 @@ public class Smelting implements UseLocTrigger {
 			}
 			if (p.getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
 				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
-				sleep(p.getWorld().getServer().getConfig().GAME_TICK * 5);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
-				addItem(p, ItemId.DRAGON_BAR.id(), amount);
+				give(p, ItemId.DRAGON_BAR.id(), amount);
 			}
 		}
 	}
@@ -158,7 +158,7 @@ public class Smelting implements UseLocTrigger {
 			}
 		}
 
-		showBubble(p, item);
+		thinkbubble(p, item);
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 				&& p.getFatigue() >= p.MAX_FATIGUE) {
@@ -225,10 +225,10 @@ public class Smelting implements UseLocTrigger {
 						return;
 					}
 				}
-				showBubble(getOwner(), item);
+				thinkbubble(getOwner(), item);
 				if (getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) > 0) {
 					if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
-						removeItem(getOwner(), ItemId.GOLD_FAMILYCREST.id(), 1);
+						remove(getOwner(), ItemId.GOLD_FAMILYCREST.id(), 1);
 					else
 						getOwner().getCarriedItems().remove(smelt.getID(), smelt.getOreAmount());
 
@@ -238,7 +238,7 @@ public class Smelting implements UseLocTrigger {
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
 						if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {
 							getOwner().message("Your ring of forging shines brightly");
-							addItem(getOwner(), smelt.getSmeltBarId(), 1);
+							give(getOwner(), smelt.getSmeltBarId(), 1);
 							if (getOwner().getCache().hasKey("ringofforging")) {
 								int ringCheck = getOwner().getCache().getInt("ringofforging");
 								if (ringCheck + 1 == getWorld().getServer().getConfig().RING_OF_FORGING_USES) {
@@ -256,9 +256,9 @@ public class Smelting implements UseLocTrigger {
 						}
 					} else {
 						if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
-							addItem(getOwner(), ItemId.GOLD_BAR_FAMILYCREST.id(), 1);
+							give(getOwner(), ItemId.GOLD_BAR_FAMILYCREST.id(), 1);
 						else
-							addItem(getOwner(), smelt.getSmeltBarId(), 1);
+							give(getOwner(), smelt.getSmeltBarId(), 1);
 
 						getOwner().playerServerMessage(MessageType.QUEST, "You retrieve a bar of " + new Item(smelt.getSmeltBarId()).getDef(getWorld()).getName().toLowerCase().replaceAll("bar", ""));
 

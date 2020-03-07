@@ -7,6 +7,7 @@ import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -14,7 +15,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.thinkbubble;
 
 public class Woodcutting implements OpLocTrigger {
 
@@ -67,7 +68,7 @@ public class Woodcutting implements OpLocTrigger {
 
 		final int axeID = axeId;
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
-		showBubble(player, new Item(axeId));
+		Functions.thinkbubble(player, new Item(axeId));
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Woodcutting", Formulae.getRepeatTimes(player, Skills.WOODCUT), true) {
 			@Override
 			public void action() {
@@ -123,7 +124,7 @@ public class Woodcutting implements OpLocTrigger {
 				}
 				if (!isCompleted()) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You swing your " + getWorld().getServer().getEntityHandler().getItemDef(axeID).getName().toLowerCase() + " at the tree...");
-					showBubble(getOwner(), new Item(axeID));
+					Functions.thinkbubble(getOwner(), new Item(axeID));
 				}
 			}
 		});

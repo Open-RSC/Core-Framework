@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class Obli implements ShopInterface,
 	TalkNpcTrigger {
@@ -30,16 +31,16 @@ public class Obli implements ShopInterface,
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.OBLI.id()) {
-			npcTalk(p, n, "Welcome to Obli's General Store Bwana!",
+			npcsay(p, n, "Welcome to Obli's General Store Bwana!",
 				"Would you like to see my items?");
-			int menu = showMenu(p, n,
+			int menu = Functions.multi(p, n,
 				"Yes please!",
 				"No, but thanks for the offer.");
 			if (menu == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 			} else if (menu == 1) {
-				npcTalk(p, n, "That's fine and thanks for your interest.");
+				npcsay(p, n, "That's fine and thanks for your interest.");
 			}
 		}
 	}

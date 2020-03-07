@@ -23,21 +23,21 @@ public class SilverMerchant implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("silverStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("silverStolen") + 1200)) {
-			npcTalk(p, n, "Do you really think I'm going to buy something",
+			npcsay(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, NpcId.PALADIN.id(), 5); // Paladin first
+			Npc attacker = ifnearvisnpc(p, NpcId.PALADIN.id(), 5); // Paladin first
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight second
+				attacker = ifnearvisnpc(p, NpcId.KNIGHT.id(), 5); // Knight second
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard third
+				attacker = ifnearvisnpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard third
 
 			if (attacker != null)
 				attacker.setChasing(p);
 		} else {
-			npcTalk(p, n, "Silver! Silver!", "Best prices for buying and selling in all Kandarin!");
-			int menu = showMenu(p, n, "Yes please", "No thankyou");
+			npcsay(p, n, "Silver! Silver!", "Best prices for buying and selling in all Kandarin!");
+			int menu = multi(p, n, "Yes please", "No thankyou");
 			if (menu == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);

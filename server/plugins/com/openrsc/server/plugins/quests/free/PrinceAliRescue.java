@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
@@ -41,12 +42,12 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	@Override
 	public void handleReward(final Player p) {
 		if (p.getCache().hasKey("pre_paid")) {
-			message(p, "The chancellor pays you 620 coins");
-			addItem(p, ItemId.COINS.id(), 620);
+			Functions.mes(p, "The chancellor pays you 620 coins");
+			give(p, ItemId.COINS.id(), 620);
 			p.getCache().remove("pre_paid");
 		} else {
-			message(p, "The chancellor pays you 700 coins");
-			addItem(p, ItemId.COINS.id(), 700);
+			Functions.mes(p, "The chancellor pays you 700 coins");
+			give(p, ItemId.COINS.id(), 700);
 		}
 		p.message("You have completed the quest of the Prince of Al Kharid");
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PRINCE_ALI_RESCUE), true);
@@ -82,27 +83,27 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	private void hassanDialogue(final Player p, final Npc n) {
 		switch (p.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Greetings. I am Hassan, Chancellor to the Emir of Al Kharid");
-				final int choice = showMenu(
+				final int choice = multi(
 					p,
 					n,
 					"Can I help you? You must need some help here in the desert.",
 					"Its just too hot here. How can you stand it?",
 					"Do you mind if I just kill your Warriors?");
 				if (choice == 0) {
-					npcTalk(p, n, "I need the services of someone, yes.",
+					npcsay(p, n, "I need the services of someone, yes.",
 						"If you are interested, see the spymaster, Osman",
 						"I manage the finances here. come to me when you need payment");
 					p.updateQuestStage(this, 1); // yepp
 				} else if (choice == 1) {
-					npcTalk(p, n,
+					npcsay(p, n,
 						"We manage, in our humble way. We are a wealthy town",
 						"And we have water. It cures many thirsts");
 					p.message("The chancellor hands you some water");
-					addItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
+					give(p, ItemId.BUCKET_OF_WATER.id(), 1);
 				} else if (choice == 2) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"You are welcome. They are not expensive.",
 						"We have them here to stop the elite guard being bothered",
@@ -110,24 +111,24 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case 1:
-				npcTalk(p, n, "Have you found the spymaster, Osman, Yet?",
+				npcsay(p, n, "Have you found the spymaster, Osman, Yet?",
 					"You cannot proceed in your task without reporting to him");
 				break;
 			case 2:
 				if (!p.getCache().hasKey("key_made")) {
-					npcTalk(p, n, "I understand the spymaster has hired you",
+					npcsay(p, n, "I understand the spymaster has hired you",
 						"I will pay the reward only when the Prince is rescued",
 						"I can pay some expenses once the spymaster approves it");
 				} else {
 					if (!p.getCache().hasKey("pre_paid")) {
-						npcTalk(p, n, "You have proved your services useful to us",
+						npcsay(p, n, "You have proved your services useful to us",
 							"Here is 80 coins for the work you have already done");
-						message(p, "The chancellor hands you 80 coins");
-						addItem(p, ItemId.COINS.id(), 80);
+						Functions.mes(p, "The chancellor hands you 80 coins");
+						give(p, ItemId.COINS.id(), 80);
 						p.getCache().store("pre_paid", true);
 
 					} else {
-						npcTalk(p, n, "Hello again adventurer",
+						npcsay(p, n, "Hello again adventurer",
 							"You have received payment for your tasks so far",
 							"No more will be paid until the Prince is rescued");
 					}
@@ -139,13 +140,13 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					p.getCache().remove("key_made");
 				}
 				if (p.getCache().hasKey("pre_paid")) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"You have the eternal gratitude of the Emir for rescuing his son",
 						"I am authorised to pay you 700 coins",
 						"80 was put aside for the key. that leaves 620");
 				} else {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"You have the eternal gratitude of the Emir for rescuing his son",
 						"I am authorised to pay you 700 coins");
@@ -153,7 +154,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				p.sendQuestComplete(getQuestId());
 				break;
 			case -1:
-				npcTalk(p, n, "You are a friend of the town of Al Kharid",
+				npcsay(p, n, "You are a friend of the town of Al Kharid",
 					"If we have more tasks to complete, we will ask you.",
 					"Please, keep in contact. Good employees are not easy to find");
 				break;
@@ -161,18 +162,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	}
 
 	private void jailGuardDialogue(final Player p, final Npc n) {
-		playerTalk(p, n, "Hi, who are you guarding here?");
-		npcTalk(p, n, "Can't say, all very secret. you should get out of here",
+		say(p, n, "Hi, who are you guarding here?");
+		npcsay(p, n, "Can't say, all very secret. you should get out of here",
 			"I am not supposed to talk while I guard");
-		final int choice = showMenu(p, n,
+		final int choice = multi(p, n,
 			"Hey, chill out, I won't cause you trouble",
 			"I had better leave, I don't want trouble");
 		if (choice == 0) {
-			playerTalk(p, n, "I was just wondering what you do to relax");
-			npcTalk(p, n,
+			say(p, n, "I was just wondering what you do to relax");
+			npcsay(p, n,
 				"You never relax with these people, but its a good career for a young man");
 		} else if (choice == 1) {
-			npcTalk(p,
+			npcsay(p,
 				n,
 				"Thanks I appreciate that",
 				"Talking on duty can be punishable by having your mouth stitched up",
@@ -184,13 +185,13 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "Hi, I'm Joe, door guard for Lady Keli");
-					playerTalk(p, n, "Hi, who are you guarding here?");
-					npcTalk(p,
+					npcsay(p, n, "Hi, I'm Joe, door guard for Lady Keli");
+					say(p, n, "Hi, who are you guarding here?");
+					npcsay(p,
 						n,
 						"Can't say, all very secret. you should get out of here",
 						"I am not supposed to talk while I guard");
-					final int choice = showMenu(p, n,
+					final int choice = multi(p, n,
 						"Hey, chill out, I won't cause you trouble",
 						"Tell me about the life of a guard",
 						"What did you want to be when you were a boy",
@@ -207,21 +208,21 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					break;
 				case 2:
 					if (p.getCache().hasKey("joe_is_drunk")) {
-						npcTalk(p, n, "Halt. Who goes there?");
-						playerTalk(p, n,
+						npcsay(p, n, "Halt. Who goes there?");
+						say(p, n,
 							"Hello friend, i am just rescuing the prince, is that ok?");
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Thatsh a funny joke. You are lucky i am shober",
 							"Go in peace, friend");
 						return;
 					}
-					npcTalk(p, n, "Hi, I'm Joe, door guard for Lady Keli");
-					playerTalk(p, n, "Hi, who are you guarding here?");
-					npcTalk(p,
+					npcsay(p, n, "Hi, I'm Joe, door guard for Lady Keli");
+					say(p, n, "Hi, who are you guarding here?");
+					npcsay(p,
 						n,
 						"Can't say, all very secret, you should get out of here",
 						"I am not supposed to talk while I guard");
-					final int menu2 = showMenu(p, n,
+					final int menu2 = multi(p, n,
 						"I have some beer here, fancy one?",
 						"Tell me about the life of a guard",
 						"What did you want to be when you were a boy",
@@ -238,11 +239,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					break;
 				case 3:
 				case -1:
-					playerTalk(p, n,
+					say(p, n,
 						"Hi friend, i am just checking out things here");
-					npcTalk(p, n, "The prince got away, i am in trouble",
+					npcsay(p, n, "The prince got away, i am in trouble",
 						"I better not talk to you, they are not sure i was drunk");
-					playerTalk(p, n,
+					say(p, n,
 						"I won't say anything, your secret is safe with me");
 					break;
 			}
@@ -251,41 +252,41 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 		switch (cID) {
 			case Joe.BEER:
 				if (p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) == 0) {
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
-					playerTalk(p, n,
+					say(p, n,
 						"Of course, it must be tough being here without a drink", "Oh dear seems like I don't have any beer");
 
 				} else if ((p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) >= 1 && p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) <= 2)) {
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
-					playerTalk(p, n,
+					say(p, n,
 						"Of course, it must be tough being here without a drink");
-					message(p,
+					Functions.mes(p,
 						"You hand a beer to the guard, he drinks it in seconds");
-					removeItem(p, ItemId.BEER.id(), 1);
+					remove(p, ItemId.BEER.id(), 1);
 
-					npcTalk(p, n, "Thas was perfect, i cant thank you enough");
-					playerTalk(p, n, "How are you? still ok. Not too drunk?");
-					npcTalk(p, n, "No, I don't get drunk with only one drink",
+					npcsay(p, n, "Thas was perfect, i cant thank you enough");
+					say(p, n, "How are you? still ok. Not too drunk?");
+					npcsay(p, n, "No, I don't get drunk with only one drink",
 						"You would need a few to do that, but thanks for the beer");
 				} else if (p.getCarriedItems().getInventory().countId(ItemId.BEER.id()) >= 3) {
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Ah, that would be lovely, just one now, just to wet my throat");
-					playerTalk(p, n,
+					say(p, n,
 						"Of course, it might be tough being here without a drink");
-					message(p,
+					Functions.mes(p,
 						"You hand a beer to the guard, he drinks it in seconds");
-					removeItem(p, ItemId.BEER.id(), 1); //takes 2 more after dialogue
-					npcTalk(p, n, "Thas was perfect, i cant thank you enough");
-					playerTalk(p, n, "Would you care for another, my friend?");
-					npcTalk(p, n, "I better not, I don't want to be drunk on duty");
-					playerTalk(p, n,
+					remove(p, ItemId.BEER.id(), 1); //takes 2 more after dialogue
+					npcsay(p, n, "Thas was perfect, i cant thank you enough");
+					say(p, n, "Would you care for another, my friend?");
+					npcsay(p, n, "I better not, I don't want to be drunk on duty");
+					say(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
-					message(p, "You hand two more beers to the guard");
+					Functions.mes(p, "You hand two more beers to the guard");
 					p.getCarriedItems().remove(ItemId.BEER.id(), 2);
-					message(p, "he takes a sip of one, and then he drinks them both");
-					npcTalk(p,
+					Functions.mes(p, "he takes a sip of one, and then he drinks them both");
+					npcsay(p,
 						n,
 						"Franksh, that wash just what I need to shtay on guard",
 						"No more beersh, i don't want to get drunk");
@@ -294,13 +295,13 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Joe.CHILL:
-				playerTalk(p, n, "I was just wondering what you do to relax");
-				npcTalk(p,
+				say(p, n, "I was just wondering what you do to relax");
+				npcsay(p,
 					n,
 					"You never relax with these people, but its a good career for a young man",
 					"And some of the shouting I rather like",
 					"RESISTANCE IS USELESS!");
-				final int choice = showMenu(p, n,
+				final int choice = multi(p, n,
 					"So what do you buy with these great wages?",
 					"Tell me about the life of a guard",
 					"Would you be interested in making a little more money?",
@@ -316,13 +317,13 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Joe.BUYWITH:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Really, after working here, theres only time for a drink or three",
 					"All us guards go to the same bar, And drink ourselves stupid",
 					"Its what I enjoy these days, that fade into unconciousness",
 					"I can't resist the sight of a really cold beer");
-				final int choice1 = showMenu(p, n,
+				final int choice1 = multi(p, n,
 					"Tell me about the life of a guard",
 					"What did you want to be when you were a boy",
 					"I had better leave, I don't want trouble");
@@ -335,15 +336,15 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Joe.MOREMONEY:
-				npcTalk(p, n, "WHAT! are you trying to bribe me?",
+				npcsay(p, n, "WHAT! are you trying to bribe me?",
 					"I may not be a great guard, but I am loyal",
 					"How DARE you try to bribe me!");
-				playerTalk(p, n,
+				say(p, n,
 					"No,no, you got the wrong idea, totally",
 					"I just wondered if you wanted some part-time bodyguard work");
-				npcTalk(p, n, "Oh. sorry. no, I don't need money",
+				npcsay(p, n, "Oh. sorry. no, I don't need money",
 					"As long as you were not offering me a bribe");
-				final int choice11 = showMenu(p, n,
+				final int choice11 = multi(p, n,
 					"Tell me about the life of a guard",
 					"What did you want to be when you were a boy",
 					"I had better leave, I don't want trouble");
@@ -356,13 +357,13 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Joe.LIFE:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Well, the hours are good.....",
 					".... But most of those hours are a drag",
 					"If only I had spent more time in Knight school when I was a young boy",
 					"Maybe I wouldn't be here now, scared of Keli");
-				final int choice2 = showMenu(p, n,
+				final int choice2 = multi(p, n,
 					"Hey chill out, I won't cause you trouble",
 					"What did you want to be when you were a boy",
 					"I had better leave, I don't want trouble");
@@ -375,16 +376,16 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Joe.BOY:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Well, I loved to sit by the lake, with my toes in the water",
 					"And shoot the fish with my bow and arrow");
-				playerTalk(p, n, "That was a strange hobby for a little boy");
-				npcTalk(p,
+				say(p, n, "That was a strange hobby for a little boy");
+				npcsay(p,
 					n,
 					"It kept us from goblin hunting, which was what most boys did",
 					"What are you here for?");
-				final int choice3 = showMenu(p, n,
+				final int choice3 = multi(p, n,
 					"Hey chill out, I won't cause you trouble",
 					"Tell me about the life of a guard",
 					"I had better leave, I don't want trouble");
@@ -397,7 +398,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Joe.BETTERLEAVE:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Thanks I appreciate that",
 					"Talking on duty can be punishable by having your mouth stitched up",
@@ -412,10 +413,10 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				case 0:
 				case 1:
 				case 2:
-					playerTalk(p, n, "Are you the famous Lady Keli?",
+					say(p, n, "Are you the famous Lady Keli?",
 						"Leader of the toughest gang of mercenary killers around?");
-					npcTalk(p, n, "I am Keli, you have heard of me then");
-					final int choice = showMenu(
+					npcsay(p, n, "I am Keli, you have heard of me then");
+					final int choice = multi(
 						p,
 						n,
 						"Heard of you? you are famous in Runescape!",
@@ -434,7 +435,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					break;
 				case 3:
 				case -1:
-					npcTalk(p, n, "You tricked me, and tied me up",
+					npcsay(p, n, "You tricked me, and tied me up",
 						"You should not stay here if you want to remain alive",
 						"Guards! Guards! Kill this stranger");
 					break;
@@ -442,11 +443,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 		}
 		switch (cID) {
 			case Keli.FAMOUS:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Thats very kind of you to say. Reputations are not easily earnt",
 					"I have managed to succeed where many fail");
-				final int choice = showMenu(p, n,
+				final int choice = multi(p, n,
 					"I think Katrine is still tougher",
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
@@ -462,23 +463,23 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.KATRINE:
-				npcTalk(p, n, "Well you can think that all you like",
+				npcsay(p, n, "Well you can think that all you like",
 					"I know those blackarm cowards dare not leave the city",
 					"Out here, I am toughest. You can tell them that!",
 					"Now get out of my sight, before I call my guards");
 				break;
 			case Keli.NOT_DISTURB:
-				npcTalk(p, n, "I need to do a lot of work, goodbye",
+				npcsay(p, n, "I need to do a lot of work, goodbye",
 					"When you get a little tougher, maybe I will give you a job");
 				break;
 			case Keli.PLAN:
-				playerTalk(p, n, "Of course, you need not go into specific details");
-				npcTalk(p,
+				say(p, n, "Of course, you need not go into specific details");
+				npcsay(p,
 					n,
 					"Well, I can tell you, I have a valuable prisoner here in my cells",
 					"I can expect a high reward to be paid very soon for this guy",
 					"I can't tell you who he is, but he is a lot colder now");
-				final int choice2 = showMenu(p, n,
+				final int choice2 = multi(p, n,
 					"Ah, I see. You must have been very skilful",
 					"Thats great, are you sure they will pay?",
 					"Can you be sure they will not try to get him out?",
@@ -494,12 +495,12 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.SKILLFUL:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Yes, I did most of the work, we had to grab the Pr...",
 					"er, we had to grab him under cover of ten of his bodyguards",
 					"It was a stronke of genius");
-				final int choice3 = showMenu(p, n,
+				final int choice3 = multi(p, n,
 					"Are you sure they will pay?",
 					"Can you be sure they will not try to get him out?",
 					"I should not disturb someone as tough as you");
@@ -512,14 +513,14 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.GREAT:
-				npcTalk(p, n,
+				npcsay(p, n,
 					"They will pay, or we will cut his hair off and send it to them");
-				playerTalk(p, n,
+				say(p, n,
 					"Don't you think that something tougher, maybe cut his finger off?");
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Thats a good idea, I could use talented people like you",
 					"I may call on you if I need work doing");
-				final int choice4 = showMenu(p, n,
+				final int choice4 = multi(p, n,
 					"You must have been very skilful",
 					"Can you be sure they will not try to get him out?",
 					"I should not disturb someone as tough as you");
@@ -532,12 +533,12 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.BESURE:
-				npcTalk(p, n, "There is no way to release him",
+				npcsay(p, n, "There is no way to release him",
 					"The only key to the door is on a chain around my neck",
 					"And the locksmith who made the lock,",
 					"died suddenly when he had finished",
 					"There is not another key like this in the world");
-				final int choice5 = showMenu(p, n,
+				final int choice5 = multi(p, n,
 					"Could I see the key please",
 					"That is a good way to keep secrets",
 					"I should not disturb someone as tough as you");
@@ -550,43 +551,43 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.KEYPLEASE:
-				playerTalk(p, n,
+				say(p, n,
 					"It would be something I can tell my grandchildren",
 					"When you are even more famous than you are now");
-				npcTalk(p, n, "As you put it that way, I am sure you can see it",
+				npcsay(p, n, "As you put it that way, I am sure you can see it",
 					"You cannot steal the key, it is on an Adamantite chain",
 					"I cannot see the harm");
 				p.message("Keli shows you a small key on a stronglooking chain");
 				if (p.getQuestStage(this) == 2 && p.getCarriedItems().hasCatalogID(ItemId.SOFT_CLAY.id(), Optional.of(false))) {
-					final int menu1 = showMenu(p, n,
+					final int menu1 = multi(p, n,
 						"Could I touch the key for a moment please",
 						"I should not disturb someone as tough as you");
 					if (menu1 == 0) {
-						npcTalk(p, n, "Only for a moment then");
-						message(p,
+						npcsay(p, n, "Only for a moment then");
+						Functions.mes(p,
 							"You put a piece of your soft clay in your hand",
 							"As you touch the key, you take an imprint of it");
-						removeItem(p, ItemId.SOFT_CLAY.id(), 1);
-						addItem(p, ItemId.KEYPRINT.id(), 1);
-						playerTalk(p, n,
+						remove(p, ItemId.SOFT_CLAY.id(), 1);
+						give(p, ItemId.KEYPRINT.id(), 1);
+						say(p, n,
 							"Thankyou so much, you are too kind, o great Keli");
-						npcTalk(p, n,
+						npcsay(p, n,
 							"You are welcome, run along now, I am very busy");
 					} else if (menu1 == 1) {
 						keliDialogue(p, n, Keli.NOT_DISTURB);
 					}
 				} else {
-					npcTalk(p, n, "There, run along now, I am very busy");
+					npcsay(p, n, "There, run along now, I am very busy");
 				}
 				break;
 			case Keli.SECRETS:
-				npcTalk(p, n, "It is the best way I know", "Dead men tell no tales");
-				playerTalk(p, n, "I am glad I know none of your secrets, Keli");
+				npcsay(p, n, "It is the best way I know", "Dead men tell no tales");
+				say(p, n, "I am glad I know none of your secrets, Keli");
 				break;
 			case Keli.TRAINED:
-				npcTalk(p, n, "I have used a sword since I was a small girl",
+				npcsay(p, n, "I have used a sword since I was a small girl",
 					"I stabbed three people before I was 6 years old");
-				final int choice6 = showMenu(p, n,
+				final int choice6 = multi(p, n,
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
 					"I think Katrine is still tougher");
@@ -599,12 +600,12 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.KILLPEOPLE:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Theres always someone ready to spread rumours",
 					"I heard a rumour the other day, that some men are wearing skirts",
 					"If one of my men wore a skirt, he would wish he hadn't");
-				final int choice7 = showMenu(p, n,
+				final int choice7 = multi(p, n,
 					"I think Katrine is still tougher",
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
@@ -620,9 +621,9 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.NEVERHEARD:
-				npcTalk(p, n, "You must be new to this land then",
+				npcsay(p, n, "You must be new to this land then",
 					"EVERYONE knows of Lady Keli and her prowess with the sword");
-				final int choice8 = showMenu(p, n,
+				final int choice8 = multi(p, n,
 					"No, still doesn't ring a bell",
 					"Yes, of course I have heard of you",
 					"You must have trained a lot for this work",
@@ -638,16 +639,16 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.NOBELL:
-				npcTalk(p, n, "Well, you know of me now",
+				npcsay(p, n, "Well, you know of me now",
 					"I will ring your bell if you do not show respect");
-				final int choice9 = showMenu(
+				final int choice9 = multi(
 					p,
 					n,
 					"I do not show respect to killers and hoodlums",
 					"You must have trained a lot for this work",
 					"I should not disturb someone as tough as you, great lady");
 				if (choice9 == 0) {
-					npcTalk(p, n, "You should, you really should",
+					npcsay(p, n, "You should, you really should",
 						"I am wealthy enough to place a bounty on your head",
 						"Or just remove your head myself",
 						"Now go, I am busy, too busy to fight a would-be hoodlum");
@@ -658,11 +659,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Keli.OFCOURSE:
-				playerTalk(p, n, "You are famous in Runescape!");
-				npcTalk(p, n,
+				say(p, n, "You are famous in Runescape!");
+				npcsay(p, n,
 					"Thats very kind of you to say. Reputations are not easily earnt",
 					"I have managed to succeed where many fail");
-				final int menu = showMenu(p, n,
+				final int menu = multi(p, n,
 					"I think Katrine is still tougher",
 					"What is your latest plan then?",
 					"You must have trained a lot for this work",
@@ -685,22 +686,22 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
-					playerTalk(p, n, "What are you waiting here for");
-					npcTalk(p, n, "That is no concern of yours, adventurer");
+					say(p, n, "What are you waiting here for");
+					npcsay(p, n, "That is no concern of yours, adventurer");
 					break;
 				case 2:
 					if((p.getCache().hasKey("joe_is_drunk")) && p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
-						npcTalk(p, n, "Great! The guard is now harmless",
+						npcsay(p, n, "Great! The guard is now harmless",
 								"Now you just need to use the rope on Keli to remove her",
 								"Then you can go in and give everything to the prince");
 						return;
 					}
 					if ((p.getCache().hasKey("key_sent")) && !p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"My father sent this key for you, be careful not to lose it");
-						message(p,
+						Functions.mes(p,
 							"Leela gives you a copy of the key to the princes door");
-						addItem(p, ItemId.BRONZE_KEY.id(), 1);
+						give(p, ItemId.BRONZE_KEY.id(), 1);
 						p.getCache().remove("key_sent");
 						return;
 					}
@@ -708,9 +709,9 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						&& p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))) {
-						npcTalk(p, n, "Good, you have all the basic equipment",
+						npcsay(p, n, "Good, you have all the basic equipment",
 							"What are your plans to stop the guard interfering?");
-						final int chose = showMenu(p, n,
+						final int chose = multi(p, n,
 							"I haven't spoken to him yet",
 							"I was going to attack him",
 							"I hoped to get him drunk",
@@ -726,8 +727,8 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						}
 						return;
 					}
-					playerTalk(p, n, "I am here to help you free the Prince");
-					npcTalk(p, n, "Your employment is known to me.",
+					say(p, n, "I am here to help you free the Prince");
+					npcsay(p, n, "Your employment is known to me.",
 						"Now, do you know all that we need to make the break?");
 					String[] choices = new String[] { "I must make a disguise. What do you suggest?",
 							"I need to get the key made",
@@ -738,7 +739,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 								"What can i do with the guards?",
 								"I will go and get the rest of the escape equipment" };
 					}
-					int choice = showMenu(p, n, choices);
+					int choice = multi(p, n, choices);
 					if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false)) && choice > 0) {
 						//skip option of key made
 						choice++;
@@ -755,7 +756,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					break;
 				case 3:
 				case -1:
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"Thankyou, Al Kharid will forever owe you for your help",
 						"I think that if there is ever anything that needs to be done,",
@@ -766,19 +767,19 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 		switch (cID) {// if you loose your items u need to get them again ? yes.
 			// but how, just put the 3 case there too
 			case Leela.HAVENT_SPOKE:
-				npcTalk(p, n, "Well, speaking to him may find a weakness he has",
+				npcsay(p, n, "Well, speaking to him may find a weakness he has",
 					"See if theres something that could stop him bothering us",
 					"Good luck with the guard. When the guard is out you can tie up Keli");
 				break;
 			case Leela.ATTACK_HIM:
-				npcTalk(p, n, "I don't think you should",
+				npcsay(p, n, "I don't think you should",
 					"If you do the rest of the gang and Keli would attack you",
 					"The door guard should be removed first, to make it easy",
 					"Good luck with the guard. When the guard is out you can tie up Keli");
 				break;
 
 			case Leela.DRUNK:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Well, thats possible. These guards do like a drink",
 					"I would think it will take at least 3 beers to do it well",
@@ -787,7 +788,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"Good luck with the guard. When the guard is out you can tie up Keli");
 				break;
 			case Leela.BRIBE:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"You could try. I don't think the emir will pay anything towards it",
 					"And we did bribe one of their guards once",
@@ -796,51 +797,51 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"Good luck with the guard. When the guard is out you can tie up Keli");
 				break;
 			case Leela.DISGUISE:// Make it, u cant make it with the npc playa talk
-				npcTalk(p, n,
+				npcsay(p, n,
 					"Only the lady Keli, can wander about outside the jail",
 					"The guards will shoot to kill if they see the prince out",
 					"so we need a disguise well enough to fool them at a distance");
 
 				//note: not known if there was a check for regular wig, yet osrs-rs2 didn't feature one
 				if (!p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"You need a wig, maybe made from wool",
 						"If you find someone who can work with wool, ask them about it",
 						"Then the old witch may be able to help you dye it");
 				}
 				else {
-					npcTalk(p, n, "The wig you have got, well done");
+					npcsay(p, n, "The wig you have got, well done");
 				}
 
-				npcTalk(p,
+				npcsay(p,
 					n,
 					!p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false)) ? "You will need to get a pink skirt, same as Keli's"
 						: "You have got the skirt, good");
 
 				if (!p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"we still need something to colour the Princes skin lighter",
 						"Theres an old witch close to here, she knows about many things",
 						"She may know some way to make the skin lighter");
 				} else {
-					npcTalk(p, n, "You have the skin paint, well done",
+					npcsay(p, n, "You have the skin paint, well done",
 						"I thought you would struggle to make that");
 				}
 				if (p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))
 					&& p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false))
 					&& p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false))) {
-					npcTalk(p, n, "You do have everything for the disguise");
+					npcsay(p, n, "You do have everything for the disguise");
 				}
 
 				if (!p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false))) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"You will still need some rope to tie up Keli, of course",
 						"I heard that there was a good ropemaker around here");
 				} else {
-					npcTalk(p, n, "You have rope I see, tie up Keli",
+					npcsay(p, n, "You have rope I see, tie up Keli",
 						"that will be the most dangerous part of the plan");
 
 				}
@@ -852,7 +853,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					choices = new String[] { "What can i do with the guards?",
 							"I will go and get the rest of the escape equipment" };
 				}
-				int choice = showMenu(p, n, choices);
+				int choice = multi(p, n, choices);
 				if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false)) && choice >= 0) {
 					choice++;
 				}
@@ -866,7 +867,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				break;
 
 			case Leela.KEYMADE:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Yes, that is most important",
 					"There is no way you can get the real key.",
@@ -875,7 +876,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"then take the print, with bronze, to my father");
 				break;
 			case Leela.GUARDS:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Most of the guards will be easy",
 					"The disguise will get past them",
@@ -889,7 +890,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					choices2 = new String[] { "I must make a disguise. What do you suggest?",
 							"I will go and get the rest of the escape equipment" };
 				}
-				int choice2 = showMenu(p, n, choices2);
+				int choice2 = multi(p, n, choices2);
 				if (p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false)) && choice2 > 0) {
 					choice2++;
 				}
@@ -902,7 +903,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Leela.ESCAPE:
-				npcTalk(p, n, "Good, I shall await your return with everything");
+				npcsay(p, n, "Good, I shall await your return with everything");
 				break;
 		}
 	}
@@ -928,7 +929,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						   final Player player) {
 		if (obj.getID() == 45 && item.getCatalogId() == ItemId.BRONZE_KEY.id()) {
 			if (obj.getY() == 640) {
-				final Npc keli = getNearestNpc(player, NpcId.LADY_KELI.id(), 20);
+				final Npc keli = ifnearvisnpc(player, NpcId.LADY_KELI.id(), 20);
 				if (player.getX() <= 198) {
 					if (keli != null) {
 						player.message("You'd better get rid of Lady Keli before trying to go through there");
@@ -978,7 +979,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						  final Player p) {
 		if (obj.getID() == 45) {
 			if (obj.getY() == 640) {
-				final Npc keli = getNearestNpc(p, NpcId.LADY_KELI.id(), 20);
+				final Npc keli = ifnearvisnpc(p, NpcId.LADY_KELI.id(), 20);
 				if (p.getX() <= 198) {
 					if (keli != null) {
 						p.message("You'd better get rid of Lady Keli before trying to go through there");
@@ -1001,30 +1002,30 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "Hello, I am Osman",
+					npcsay(p, n, "Hello, I am Osman",
 						"What can I assist you with");
-					final int choice = showMenu(p, n,
+					final int choice = multi(p, n,
 						"You don't seem very tough. Who are you?",
 						"I hear wild rumours about a Prince",
 						"I am just being nosy.");
 					if (choice == 0) {
-						npcTalk(p, n, "I am in the employ of the Emir",
+						npcsay(p, n, "I am in the employ of the Emir",
 							"That is all you need to know");
 					} else if (choice == 1) {
-						npcTalk(p, n, "The prince is not here. He is... away",
+						npcsay(p, n, "The prince is not here. He is... away",
 							"If you can be trusted, speak to the chancellor, Hassan");
 					} else if (choice == 2) {
-						npcTalk(p, n, "That bothers me not",
+						npcsay(p, n, "That bothers me not",
 							"The secrets of Al Kharid protect themselves");
 					}
 					break;
 				case 1:
-					playerTalk(p, n,
+					say(p, n,
 						"The chancellor trusts me. I have come for instructions");
-					npcTalk(p, n, "Our Prince is captive by the Lady Keli",
+					npcsay(p, n, "Our Prince is captive by the Lady Keli",
 						"We just need to make the rescue",
 						"There are three things we need you to do");
-					final int menu = showMenu(p, n,
+					final int menu = multi(p, n,
 						"What is first thing I must do?",
 						"What is needed second?",
 						"And the final thing you need?");
@@ -1039,15 +1040,15 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				case 2:
 					if (p.getCarriedItems().hasCatalogID(ItemId.KEYPRINT.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.BRONZE_BAR.id(), Optional.of(false))) {
-						npcTalk(p, n, "Well done, we can make the key now.");
+						npcsay(p, n, "Well done, we can make the key now.");
 						p.message("Osman takes the Key imprint and the bronze bar");
-						removeItem(p, ItemId.KEYPRINT.id(), 1);
-						removeItem(p, ItemId.BRONZE_BAR.id(), 1);
+						remove(p, ItemId.KEYPRINT.id(), 1);
+						remove(p, ItemId.BRONZE_BAR.id(), 1);
 						p.getCache().store("key_sent", true);
 						p.getCache().store("key_made", true);
-						npcTalk(p, n, "Pick the key up from Leela.",
+						npcsay(p, n, "Pick the key up from Leela.",
 							"I will let you get 80 coins from the chancellor for getting this key");
-						final int wutwut = showMenu(p, n,
+						final int wutwut = multi(p, n,
 							"Thankyou, I will try to find the other items",
 							"Can you tell me what I still need to get?");
 						if (wutwut == 0) {
@@ -1059,13 +1060,13 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					}
 					break;
 				case 3:
-					npcTalk(p, n,
+					npcsay(p, n,
 						"The prince is safe, and on his way home with Leela");
-					npcTalk(p, n,
+					npcsay(p, n,
 						"You can pick up your payment from the chancellor");
 					break;
 				case -1:
-					npcTalk(p, n, "Well done. A great rescue",
+					npcsay(p, n, "Well done. A great rescue",
 							"I will remember you if I have anything dangerous to do");
 					break;
 			}
@@ -1073,7 +1074,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 		}
 		switch (cID) {
 			case Osman.FIRST:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"The prince is guarded by some stupid guards, and a clever woman",
 					"The woman is our only way to get the prince out",
@@ -1081,14 +1082,14 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"I think you will need to tie her up",
 					"one coil of rope should do for that",
 					"And then disguise the prince as her to get him out without suspicion");
-				playerTalk(p, n, "How good must the disguise be?");
-				npcTalk(p, n, "Only enough to fool the guards at a distance",
+				say(p, n, "How good must the disguise be?");
+				npcsay(p, n, "Only enough to fool the guards at a distance",
 					"Get a skirt like hers. Same colour, same style",
 					"We will only have a short time",
 					"A blonde wig too. That is up to you to make or find",
 					"Something to colour the skin of the prince.",
 					"My daughter and top spy, leela, can help you there");
-				final int firstMenu = showMenu(p, n,
+				final int firstMenu = multi(p, n,
 					"Explain the first thing again", "What is needed second?",
 					"And the final thing you need?",
 					"Okay, I better go find some things");
@@ -1103,14 +1104,14 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Osman.SECOND:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"We need the key, or a copy made",
 					"If you can get some soft clay, then you can copy the key",
 					"If you can convince Lady Keli to show it to you for a moment",
 					"She is very boastful. It should not be too hard",
 					"Bring the imprint to me, with a bar of bronze.");
-				final int choice = showMenu(p, n,
+				final int choice = multi(p, n,
 					"What is first thing I must do?",
 					"What exactly is needed second?",
 					"And the final thing you need?",
@@ -1126,9 +1127,9 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Osman.FINAL:
-				npcTalk(p, n, "You will need to stop the guard at the door",
+				npcsay(p, n, "You will need to stop the guard at the door",
 					"Find out if he has any weaknesses, and use them");
-				final int finalChoice = showMenu(p, n,
+				final int finalChoice = multi(p, n,
 					"What is first thing I must do?", "What is needed second?",
 					"Okay, I better go find some things");
 				if (finalChoice == 0) {
@@ -1140,36 +1141,36 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				}
 				break;
 			case Osman.BETTER_FIND:
-				npcTalk(p, n, "May good luck travel with you",
+				npcsay(p, n, "May good luck travel with you",
 					"Don't forget to find Leela. It can't be done without her help");
 				p.updateQuestStage(this, 2);
 				break;
 			case Osman.STILL_NEED:
-				npcTalk(p, n, "Let me check. You need:");
+				npcsay(p, n, "Let me check. You need:");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
-					npcTalk(p, n,
+					npcsay(p, n,
 						"A print of the key in soft clay, and a bronze bar");
-					npcTalk(p, n, "Then collect the key from Leela");
+					npcsay(p, n, "Then collect the key from Leela");
 				} else {
-					npcTalk(p, n, "You have the key, good");
+					npcsay(p, n, "You have the key, good");
 				}
-				npcTalk(p,
+				npcsay(p,
 					n,
 					!p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false)) ? "You need to make a Blonde Wig somehow. Leela may help"
 						: "The wig you have got, well done");
-				npcTalk(p, n, !p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false)) ? "A skirt the same as Keli's,"
+				npcsay(p, n, !p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false)) ? "A skirt the same as Keli's,"
 					: "You have the skirt, good");
-				npcTalk(p,
+				npcsay(p,
 					n,
 					!p.getCarriedItems().hasCatalogID(ItemId.PASTE.id(), Optional.of(false)) ? "Something to colour the Princes skin lighter"
 						: "You have the skin paint, well done",
 					"I thought you would struggle to make that");
-				npcTalk(p, n, !p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false)) ? "Rope to tie Keli up with"
+				npcsay(p, n, !p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false)) ? "Rope to tie Keli up with"
 					: "Yes, you have the rope.");
-				npcTalk(p, n,
+				npcsay(p, n,
 					"You still need some way to stop the guard from interfering");
 
-				npcTalk(p, n, "Once you have everything, Go to Leela",
+				npcsay(p, n, "Once you have everything, Go to Leela",
 					"she must be ready to get the prince away");
 				break;
 
@@ -1179,9 +1180,9 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	private void princeAliDialogue(final Player p, final Npc n, final int cID) {
 		switch (p.getQuestStage(this)) {
 			case 2:
-				playerTalk(p, n, "Prince, I come to rescue you");
-				npcTalk(p, n, "That is very very kind of you, how do I get out?");
-				playerTalk(p, n, "With a disguise, I have removed the Lady Keli",
+				say(p, n, "Prince, I come to rescue you");
+				npcsay(p, n, "That is very very kind of you, how do I get out?");
+				say(p, n, "With a disguise, I have removed the Lady Keli",
 					"She is tied up, but will not stay tied up for long");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.BLONDE_WIG.id(), Optional.of(false))
 					|| !p.getCarriedItems().hasCatalogID(ItemId.PINK_SKIRT.id(), Optional.of(false))
@@ -1190,24 +1191,24 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					//from behavior on osrs just returns, no evidence rsc had otherwise behavior
 					return;
 				}
-				playerTalk(p, n, "Take this disguise, and this key");
-				removeItem(p, ItemId.BLONDE_WIG.id(), 1);
-				removeItem(p, ItemId.PINK_SKIRT.id(), 1);
-				removeItem(p, ItemId.PASTE.id(), 1);
-				removeItem(p, ItemId.BRONZE_KEY.id(), 1);
-				message(p, "You hand the disguise and the key to the prince");
-				final Npc ladyAli = transform(n, NpcId.PRINCE_ALI_DISGUISE.id(), false);
-				npcTalk(p, ladyAli, "Thankyou my friend, I must leave you now",
+				say(p, n, "Take this disguise, and this key");
+				remove(p, ItemId.BLONDE_WIG.id(), 1);
+				remove(p, ItemId.PINK_SKIRT.id(), 1);
+				remove(p, ItemId.PASTE.id(), 1);
+				remove(p, ItemId.BRONZE_KEY.id(), 1);
+				Functions.mes(p, "You hand the disguise and the key to the prince");
+				final Npc ladyAli = changenpc(n, NpcId.PRINCE_ALI_DISGUISE.id(), false);
+				npcsay(p, ladyAli, "Thankyou my friend, I must leave you now",
 					"My father will pay you well for this");
-				playerTalk(p, ladyAli, "Go to Leela, she is close to here");
+				say(p, ladyAli, "Go to Leela, she is close to here");
 				ladyAli.remove();
-				message(p, 1000, "The prince has escaped, well done!", "You are now a friend of Al kharid",
+				mes(p, 1000, "The prince has escaped, well done!", "You are now a friend of Al kharid",
 						"And may pass through the Al Kharid toll gate for free");
 				p.updateQuestStage(this, 3);
 				break;
 			case 3:
 			case -1:
-				npcTalk(p, n, "I owe you my life for that escape",
+				npcsay(p, n, "I owe you my life for that escape",
 						"You cannot help me this time, they know who you are",
 						"Go in peace, friend of Al Kharid");
 				break;

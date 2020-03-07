@@ -26,19 +26,19 @@ public final class HeckelFunchGroceries implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		playerTalk(p, n, "hello there");
-		npcTalk(p, n, "good day to you my friend ..and a beautiful one at that",
+		say(p, n, "hello there");
+		npcsay(p, n, "good day to you my friend ..and a beautiful one at that",
 			"would you like some groceries? i have all sorts",
 			"alcohol also, if your partial to a drink");
 
-		int option = showMenu(p, n, "no thank you", "i'll have a look");
+		int option = multi(p, n, "no thank you", "i'll have a look");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "ahh well, all the best to you");
+				npcsay(p, n, "ahh well, all the best to you");
 				break;
 
 			case 1:
-				npcTalk(p, n, "there's a good human");
+				npcsay(p, n, "there's a good human");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;

@@ -3,11 +3,12 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.multi;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -19,7 +20,7 @@ public class BankAssistant implements
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello welcome to the bank of runescape",
+		npcsay(p, n, "Hello welcome to the bank of runescape",
 			"You can deposit your items in banks",
 			"This allows you to own much more equipment",
 			"Than can be fitted in your inventory",
@@ -28,21 +29,21 @@ public class BankAssistant implements
 			"You can withdraw deposited items from any bank in the world");
 		if (p.getCache().hasKey("tutorial")
 			&& p.getCache().getInt("tutorial") == 55) {
-			playerTalk(p, n, "Can I access my bank account please?");
-			npcTalk(p, n, "Certainly " + (p.isMale() ? "Sir" : "Miss"));
+			Functions.say(p, n, "Can I access my bank account please?");
+			npcsay(p, n, "Certainly " + (p.isMale() ? "Sir" : "Miss"));
 			p.setAccessingBank(true);
 			ActionSender.showBank(p);
 			p.getCache().set("tutorial", 60);
 		} else {
-			npcTalk(p, n, "Now proceed through the next door");
-			int menu = showMenu(p, n, "Can I access my bank account please?",
+			npcsay(p, n, "Now proceed through the next door");
+			int menu = Functions.multi(p, n, "Can I access my bank account please?",
 				"Okay thankyou for your help");
 			if (menu == 0) {
-				npcTalk(p, n, "Certainly " + (p.isMale() ? "Sir" : "Miss"));
+				npcsay(p, n, "Certainly " + (p.isMale() ? "Sir" : "Miss"));
 				p.setAccessingBank(true);
 				ActionSender.showBank(p);
 			} else if (menu == 1) {
-				npcTalk(p, n, "Not a problem");
+				npcsay(p, n, "Not a problem");
 			}
 		}
 	}

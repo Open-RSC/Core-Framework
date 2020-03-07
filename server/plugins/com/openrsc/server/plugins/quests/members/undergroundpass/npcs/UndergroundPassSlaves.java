@@ -23,16 +23,16 @@ public class UndergroundPassSlaves implements TalkNpcTrigger {
 			p.message("the man seems to be in a weak state of mind");
 			switch (NpcId.getById(n.getID())) {
 				case SLAVE_1:
-					playerTalk(p, n, "hello");
-					npcTalk(p, n, "Eating me...they keep eating me!",
+					say(p, n, "hello");
+					npcsay(p, n, "Eating me...they keep eating me!",
 						"Eating me from the inside. Please stop  them eating me",
 						"... I can feel them wriggling around inside me right now",
 						"... please  stop them!");
 					n.startCombat(p);
 					break;
 				case SLAVE_2:
-					playerTalk(p, n, "hi");
-					npcTalk(p, n, "Blood, blood... never enough blood to go round",
+					say(p, n, "hi");
+					npcsay(p, n, "Blood, blood... never enough blood to go round",
 						"When I lift up my arm like this,it all pours back into my body",
 						"I hope it remembers to go back inside my arm",
 						"And don't even ask me about my legs..",
@@ -43,38 +43,38 @@ public class UndergroundPassSlaves implements TalkNpcTrigger {
 					p.message("the prisoner has clearly been here too long");
 					break;
 				case SLAVE_3:
-					playerTalk(p, n, "hello, are you ok?");
-					npcTalk(p, n, "Oh yes, you're a fine one. Nice red cheeks, shiny hair",
+					say(p, n, "hello, are you ok?");
+					npcsay(p, n, "Oh yes, you're a fine one. Nice red cheeks, shiny hair",
 						"Let's see now, some potatoes, some cabbage,",
 						"maybe half a clove of garlic",
 						"...yes  I think you'd  make a fine soup",
 						"You don't mind do you?");
-					playerTalk(p, n, "actually i do");
-					npcTalk(p, n, "You're welcome to have some with me of course.");
+					say(p, n, "actually i do");
+					npcsay(p, n, "You're welcome to have some with me of course.");
 					n.startCombat(p);
 					break;
 				case SLAVE_4:
-					playerTalk(p, n, "hi");
-					npcTalk(p, n, "Mwaarrr fnnntchh. Gbpp dng sktd delp?");
-					playerTalk(p, n, "pardon?");
-					npcTalk(p, n, "Kjp lar falut: Gbpp dng sktd delp?");
-					playerTalk(p, n, "sorry, i dont under..");
-					npcTalk(p, n, "Mwaarrr fnnntchh. Gbpp dng sktd delp?",
+					say(p, n, "hi");
+					npcsay(p, n, "Mwaarrr fnnntchh. Gbpp dng sktd delp?");
+					say(p, n, "pardon?");
+					npcsay(p, n, "Kjp lar falut: Gbpp dng sktd delp?");
+					say(p, n, "sorry, i dont under..");
+					npcsay(p, n, "Mwaarrr fnnntchh. Gbpp dng sktd delp?",
 						"GBPP DNG SKTD DELP! GBPP DNG SKTD DELP!");
 					n.startCombat(p);
 					break;
 				case SLAVE_5:
-					playerTalk(p, n, "hi");
-					npcTalk(p, n, "Kill the villagers, burn them all- every last one",
+					say(p, n, "hi");
+					npcsay(p, n, "Kill the villagers, burn them all- every last one",
 						"I want nothing to survive: nothing but the sweet smell of burning flesh");
-					playerTalk(p, n, "you're ill");
-					npcTalk(p, n, "What's that - you've never smelt it before",
+					say(p, n, "you're ill");
+					npcsay(p, n, "What's that - you've never smelt it before",
 						"Well, let's just say that it's an acquired taste");
 					n.startCombat(p);
 					break;
 				case SLAVE_6:
-					playerTalk(p, n, "hello");
-					npcTalk(p, n, "Danger, everywhere danger! But not from man nor beast-",
+					say(p, n, "hello");
+					npcsay(p, n, "Danger, everywhere danger! But not from man nor beast-",
 						"no this is the danger that is inside you.",
 						"Bring it out, nurture it, cherish it",
 						"Stroke it like you would stroke a wounded bird-",
@@ -82,8 +82,8 @@ public class UndergroundPassSlaves implements TalkNpcTrigger {
 						"Don't say I didn't warn you");
 					break;
 				case SLAVE_7:
-					playerTalk(p, n, "hello");
-					npcTalk(p, n, "What's that...is that a dagger I see before me?",
+					say(p, n, "hello");
+					npcsay(p, n, "What's that...is that a dagger I see before me?",
 						"Why should I bear the slings and arrows of outrageous fortune",
 						"for what is a man but this quintessence of dust?",
 						"And so I say goodnight sweet prince. The rest is silence.");

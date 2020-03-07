@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -21,10 +22,10 @@ public class TeleportStone implements OpInvTrigger {
 	@Override
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
-			message(p, "the stone starts shaking...");
+			Functions.mes(p, "the stone starts shaking...");
 			p.message("a magical portal opens up, where would you like to go?");
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};
-			int menu = showMenu(p, teleLoc);
+			int menu = multi(p, teleLoc);
 			//if (p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
@@ -37,7 +38,7 @@ public class TeleportStone implements OpInvTrigger {
 				return;
 			}
 			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				message(p, "You can't teleport while holding Ana,",
+				Functions.mes(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
@@ -90,8 +91,8 @@ public class TeleportStone implements OpInvTrigger {
 				case 12:
 					return;
 			}
-			removeItem(p, TELEPORT_STONE, 1);
-			sleep(650);
+			remove(p, TELEPORT_STONE, 1);
+			delay(650);
 			p.message("You landed in " + teleLoc[menu]);
 		}
 	}

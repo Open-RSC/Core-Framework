@@ -6,7 +6,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.delay;
 
 public class BailingBucket implements OpInvTrigger {
 
@@ -25,7 +25,7 @@ public class BailingBucket implements OpInvTrigger {
 			else {
 				player.message("you begin to bail a bucket load of water");
 			}
-			sleep(650);
+			delay(650);
 			trawler.bailWater();
 		} else {
 			// player.message("");

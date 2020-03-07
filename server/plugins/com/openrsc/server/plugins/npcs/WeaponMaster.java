@@ -24,7 +24,7 @@ public class WeaponMaster implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTr
 	@Override
 	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (isPhoenixGang(p)) {
-			playerTalk(p, affectedmob, "Nope, I'm not going to attack a fellow gang member");
+			say(p, affectedmob, "Nope, I'm not going to attack a fellow gang member");
 			return;
 		} else {
 			p.startCombat(affectedmob);
@@ -45,10 +45,10 @@ public class WeaponMaster implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTr
 	@Override
 	public void onTakeObj(Player p, GroundItem i) {
 		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476 && i.getID() == ItemId.PHOENIX_CROSSBOW.id()) {
-			Npc weaponMaster = getNearestNpc(p, NpcId.WEAPONSMASTER.id(), 20);
+			Npc weaponMaster = ifnearvisnpc(p, NpcId.WEAPONSMASTER.id(), 20);
 			if (weaponMaster == null) {
 				p.getWorld().unregisterItem(i);
-				addItem(p, ItemId.PHOENIX_CROSSBOW.id(), 1);
+				give(p, ItemId.PHOENIX_CROSSBOW.id(), 1);
 				if (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 1) == BLACKARM_MISSION) {
 					p.getCache().set("arrav_gang", BLACK_ARM);
 					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 4);
@@ -56,10 +56,10 @@ public class WeaponMaster implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTr
 					p.getCache().remove("spoken_tramp");
 				}
 			} else if (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p)) {
-				npcTalk(p, weaponMaster, "Hey thief!");
+				npcsay(p, weaponMaster, "Hey thief!");
 				weaponMaster.setChasing(p);
 			} else if (isPhoenixGang(p)) {
-				npcTalk(p, weaponMaster, "Hey, that's Straven's",
+				npcsay(p, weaponMaster, "Hey, that's Straven's",
 						"He won't like you messing with that");
 			}
 		}
@@ -68,19 +68,19 @@ public class WeaponMaster implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTr
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p)) {
-			playerTalk(p, n, "Hello");
-			npcTalk(p, n, "Hey I don't know you",
+			say(p, n, "Hello");
+			npcsay(p, n, "Hey I don't know you",
 				"You're not meant to be here");
 			n.setChasing(p);
 		} else if (isPhoenixGang(p)) {
-			npcTalk(p, n, "Hello Fellow phoenix",
+			npcsay(p, n, "Hello Fellow phoenix",
 				"What are you after?");
-			int menu = showMenu(p, n, "I'm after a weapon or two",
+			int menu = multi(p, n, "I'm after a weapon or two",
 				"I'm looking for treasure");
 			if (menu == 0) {
-				npcTalk(p, n, "Sure have a look around");
+				npcsay(p, n, "Sure have a look around");
 			} else if (menu == 1) {
-				npcTalk(p, n, "We've not got any up here",
+				npcsay(p, n, "We've not got any up here",
 					"Go mug someone somewhere",
 					"If you want some treasure");
 			}

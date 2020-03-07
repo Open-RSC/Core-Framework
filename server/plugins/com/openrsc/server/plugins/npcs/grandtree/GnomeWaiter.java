@@ -25,20 +25,20 @@ public final class GnomeWaiter implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		playerTalk(p, n, "hello");
-		npcTalk(p, n, "good afternoon",
+		say(p, n, "hello");
+		npcsay(p, n, "good afternoon",
 			"can i tempt you with our new menu?");
 
-		int option = showMenu(p, n, "i'll take a look", "not really");
+		int option = multi(p, n, "i'll take a look", "not really");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "i hope you like what you see");
+				npcsay(p, n, "i hope you like what you see");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;
 
 			case 1:
-				npcTalk(p, n, "ok then, enjoy your stay");
+				npcsay(p, n, "ok then, enjoy your stay");
 				break;
 		}
 	}

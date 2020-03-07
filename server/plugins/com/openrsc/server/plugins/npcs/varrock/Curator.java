@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
@@ -20,15 +21,15 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome to the museum of Varrock");
+		npcsay(p, n, "Welcome to the museum of Varrock");
 		if (p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id()) && p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
 			// curator authentically does not check if you already have a certificate in your inventory before triggering this
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
-				playerTalk(p, n,
+				say(p, n,
 					"I have retrieved the shield of Arrav and I would like to claim my reward");
-				npcTalk(p, n, "The shield of Arrav?", "Let me see that");
-				message(p, "The curator peers at the shield");
-				npcTalk(p,
+				npcsay(p, n, "The shield of Arrav?", "Let me see that");
+				Functions.mes(p, "The curator peers at the shield");
+				npcsay(p,
 					n,
 					"This is incredible",
 					"That shield has been missing for about twenty five years",
@@ -36,20 +37,20 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 					"And I'll write you out a certificate",
 					"Saying you have returned the shield",
 					"So you can claim your reward from the king");
-				playerTalk(
+				say(
 					p,
 					n,
 					"Can I have two certificates?",
 					"I needed significant help from a friend to get the shield",
 					"We'll split the reward");
-				npcTalk(p, n, "Oh ok");
-				message(p, "You hand over the shield parts");
-				removeItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
-				removeItem(p, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
-				message(p, "The curator writes out two certificates");
-				addItem(p, ItemId.CERTIFICATE.id(), 1);
-				addItem(p, ItemId.CERTIFICATE.id(), 1);
-				npcTalk(p, n, "Take these to the king",
+				npcsay(p, n, "Oh ok");
+				Functions.mes(p, "You hand over the shield parts");
+				remove(p, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
+				remove(p, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
+				Functions.mes(p, "The curator writes out two certificates");
+				give(p, ItemId.CERTIFICATE.id(), 1);
+				give(p, ItemId.CERTIFICATE.id(), 1);
+				npcsay(p, n, "Take these to the king",
 					"And he'll pay you both handsomely");
 
 				return;
@@ -57,12 +58,12 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 		} else if (p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id()) || p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0) {
 				// possible this triggers always, but confirmed that it does occur authentically after the quest is complete. (state < 0)
-				playerTalk(p, n,
+				say(p, n,
 						"I have half the shield of Arrav here",
 						"Can I get a reward");
-				npcTalk(p, n, "Well it might be worth a small reward",
+				npcsay(p, n, "Well it might be worth a small reward",
 						"The entire shield would me worth much much more");
-				playerTalk(p, n,
+				say(p, n,
 						"Ok I'll hang onto it",
 						"And see if I can find the other half");
 				return;
@@ -72,16 +73,16 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 		defaultMenu.addOption(new Option("Have you any interesting news?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "No, I'm only interested in old stuff");
+				npcsay(p, n, "No, I'm only interested in old stuff");
 			}
 		});
 		defaultMenu.addOption(new Option(
 			"Do you know where I could find any treasure?") {
 			@Override
 			public void action() {
-				npcTalk(p, n, "This museum is full of treasures");
-				playerTalk(p, n, "No, I meant treasures for me");
-				npcTalk(p, n, "Any treasures this museum knows about",
+				npcsay(p, n, "This museum is full of treasures");
+				say(p, n, "No, I meant treasures for me");
+				npcsay(p, n, "Any treasures this museum knows about",
 					"It aquires");
 			}
 		});
@@ -103,55 +104,55 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.CURATOR.id()) {
 			if (item.getCatalogId() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()) {
-				playerTalk(p, n, "I have been given this by the examiner at the digsite",
+				say(p, n, "I have been given this by the examiner at the digsite",
 					"Can you stamp this for me ?");
-				npcTalk(p, n, "What have we here ?",
+				npcsay(p, n, "What have we here ?",
 					"A letter of recommendation indeed",
 					"Normally I wouldn't do this",
 					"But in this instance I don't see why not",
 					"There you go, good luck student...");
-				removeItem(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
-				addItem(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
-				npcTalk(p, n, "Be sure to come back and show me your certificates",
+				remove(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
+				give(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
+				npcsay(p, n, "Be sure to come back and show me your certificates",
 					"I would like to see how you get on");
-				playerTalk(p, n, "Okay, I will, thanks, see you later");
+				say(p, n, "Okay, I will, thanks, see you later");
 			} else if (item.getCatalogId() == ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id()) {
-				npcTalk(p, n, "No, I don't want it back, thankyou");
+				npcsay(p, n, "No, I don't want it back, thankyou");
 			} else if (item.getCatalogId() == ItemId.LEVEL_1_CERTIFICATE.id()) {
-				playerTalk(p, n, "Look what I have been awarded");
-				removeItem(p, ItemId.LEVEL_1_CERTIFICATE.id(), 1);
-				npcTalk(p, n, "Well that's great, well done",
+				say(p, n, "Look what I have been awarded");
+				remove(p, ItemId.LEVEL_1_CERTIFICATE.id(), 1);
+				npcsay(p, n, "Well that's great, well done",
 					"I'll take that for safekeeping",
 					"Come and tell me when you are the next level");
 			} else if (item.getCatalogId() == ItemId.LEVEL_2_CERTIFICATE.id()) {
-				playerTalk(p, n, "Look, I am level 2 now...");
-				npcTalk(p, n, "Excellent work!");
-				removeItem(p, ItemId.LEVEL_2_CERTIFICATE.id(), 1);
-				npcTalk(p, n, "I'll take that for safekeeping",
+				say(p, n, "Look, I am level 2 now...");
+				npcsay(p, n, "Excellent work!");
+				remove(p, ItemId.LEVEL_2_CERTIFICATE.id(), 1);
+				npcsay(p, n, "I'll take that for safekeeping",
 					"Remember to come and see me when you have graduated");
 			} else if (item.getCatalogId() == ItemId.LEVEL_3_CERTIFICATE.id()) {
-				playerTalk(p, n, "Look at this certificate, curator...");
-				npcTalk(p, n, "Well well, a level 3 graduate!",
+				say(p, n, "Look at this certificate, curator...");
+				npcsay(p, n, "Well well, a level 3 graduate!",
 					"I'll keep your certificate safe for you",
 					"I feel I must reward you for your work...",
 					"What would you prefer, something to eat or drink ?");
-				int menu = showMenu(p, n,
+				int menu = multi(p, n,
 					"Something to eat please",
 					"Something to drink please");
 				if (menu == 0) {
-					removeItem(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
-					npcTalk(p, n, "Very good, come and eat this cake I baked");
-					playerTalk(p, n, "Yum, thanks!");
-					addItem(p, ItemId.CHOCOLATE_CAKE.id(), 1);
+					remove(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
+					npcsay(p, n, "Very good, come and eat this cake I baked");
+					say(p, n, "Yum, thanks!");
+					give(p, ItemId.CHOCOLATE_CAKE.id(), 1);
 				} else if (menu == 1) {
-					removeItem(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
-					npcTalk(p, n, "Certainly, have this...");
-					addItem(p, ItemId.FRUIT_BLAST.id(), 1);
-					playerTalk(p, n, "A cocktail ?");
-					npcTalk(p, n, "It's a new recipie from the gnome kingdom",
+					remove(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
+					npcsay(p, n, "Certainly, have this...");
+					give(p, ItemId.FRUIT_BLAST.id(), 1);
+					say(p, n, "A cocktail ?");
+					npcsay(p, n, "It's a new recipie from the gnome kingdom",
 						"You'll like it I'm sure");
-					playerTalk(p, n, "Cheers!");
-					npcTalk(p, n, "Cheers!");
+					say(p, n, "Cheers!");
+					npcsay(p, n, "Cheers!");
 				}
 			}
 		}

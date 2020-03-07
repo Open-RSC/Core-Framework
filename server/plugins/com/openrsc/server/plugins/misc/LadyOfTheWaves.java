@@ -25,7 +25,7 @@ public class LadyOfTheWaves implements OpLocTrigger {
 			p.message("This ship looks like it might take you somewhere.");
 			p.message("The captain shouts down,");
 			p.message("@yel@Captain: Where would you like to go?");
-			int menu = showMenu(p,
+			int menu = multi(p,
 				"Khazard Port",
 				"Port Sarim",
 				"No where thanks!");
@@ -34,7 +34,7 @@ public class LadyOfTheWaves implements OpLocTrigger {
 			} else if (menu == 1) {
 				sail(p, menu);
 			} else if (menu == 2) {
-				playerTalk(p, null, "No where thanks!");
+				say(p, null, "No where thanks!");
 				p.message("@yel@Captain: Ok, come back if you change your mind.");
 			}
 		}
@@ -43,9 +43,9 @@ public class LadyOfTheWaves implements OpLocTrigger {
 	private void sail(Player p, int option) {
 		p.setBusy(true);
 		if (p.getCarriedItems().hasCatalogID(ItemId.SHIP_TICKET.id(), Optional.of(false))) {
-			removeItem(p, ItemId.SHIP_TICKET.id(), 1);
-			message(p, 1200, "@yel@Captain: Thanks for the ticket, let's set sail!");
-			message(p, 1200, "You board the ship and it sails off.");
+			remove(p, ItemId.SHIP_TICKET.id(), 1);
+			mes(p, 1200, "@yel@Captain: Thanks for the ticket, let's set sail!");
+			mes(p, 1200, "You board the ship and it sails off.");
 			if (option == 0) {
 				p.teleport(545, 703);
 				p.message("Before you know it, you're in Khazard Port.");
@@ -56,10 +56,10 @@ public class LadyOfTheWaves implements OpLocTrigger {
 				p.setBusy(false);
 			}
 		} else {
-			message(p, 1200, "The captain shakes his head.");
-			message(p, 1200, "@yel@Captain: Sorry Bwana, but you need a ticket!");
-			message(p, 1200, "@yel@Captain: You can get one in Shilo Village ");
-			message(p, 1200, "@yel@Captain: Just above the fishing shop. ");
+			mes(p, 1200, "The captain shakes his head.");
+			mes(p, 1200, "@yel@Captain: Sorry Bwana, but you need a ticket!");
+			mes(p, 1200, "@yel@Captain: You can get one in Shilo Village ");
+			mes(p, 1200, "@yel@Captain: Just above the fishing shop. ");
 			p.setBusy(false);
 		}
 	}

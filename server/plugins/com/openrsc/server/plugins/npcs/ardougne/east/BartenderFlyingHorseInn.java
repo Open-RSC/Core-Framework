@@ -21,20 +21,20 @@ public class BartenderFlyingHorseInn implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == BARTENDER) {
-			npcTalk(p, n, "Would you like to buy a drink?");
-			playerTalk(p, n, "What do you serve?");
-			npcTalk(p, n, "Beer");
-			int menu = showMenu(p, n,
+			npcsay(p, n, "Would you like to buy a drink?");
+			say(p, n, "What do you serve?");
+			npcsay(p, n, "Beer");
+			int menu = multi(p, n,
 				"I'll have a beer then",
 				"I'll not have anything then");
 			if (menu == 0) {
-				npcTalk(p, n, "Ok, that'll be two coins");
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
-					removeItem(p, ItemId.COINS.id(), 2);
-					addItem(p, ItemId.BEER.id(), 1);
+				npcsay(p, n, "Ok, that'll be two coins");
+				if (ifheld(p, ItemId.COINS.id(), 2)) {
+					remove(p, ItemId.COINS.id(), 2);
+					give(p, ItemId.BEER.id(), 1);
 					p.message("You buy a pint of beer");
 				} else {
-					playerTalk(p, n, "Oh dear. I don't seem to have enough money");
+					say(p, n, "Oh dear. I don't seem to have enough money");
 				}
 			}
 		}

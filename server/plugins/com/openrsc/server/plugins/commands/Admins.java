@@ -1668,7 +1668,7 @@ public final class Admins implements CommandTrigger {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
-			Functions.attack(n, j);
+			Functions.npcattack(n, j);
 		} else if (cmd.equalsIgnoreCase("npcrangedlvl")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");

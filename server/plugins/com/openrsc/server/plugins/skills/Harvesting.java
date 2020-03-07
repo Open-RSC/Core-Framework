@@ -220,7 +220,7 @@ public final class Harvesting implements OpLocTrigger {
 			return;
 		}
 
-		showBubble(player, new Item(ItemId.HERB_CLIPPERS.id()));
+		thinkbubble(player, new Item(ItemId.HERB_CLIPPERS.id()));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
 			@Override
@@ -280,7 +280,7 @@ public final class Harvesting implements OpLocTrigger {
 				}
 				if (!isCompleted()) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
-					showBubble(getOwner(), new Item(ItemId.HERB_CLIPPERS.id()));
+					thinkbubble(getOwner(), new Item(ItemId.HERB_CLIPPERS.id()));
 				}
 			}
 		});
@@ -296,7 +296,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		final int toolId = getTool(player, object);
 
-		if (toolId != ItemId.NOTHING.id()) showBubble(player, new Item(toolId));
+		if (toolId != ItemId.NOTHING.id()) thinkbubble(player, new Item(toolId));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
 			@Override
@@ -383,7 +383,7 @@ public final class Harvesting implements OpLocTrigger {
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					evt.set(checkCare(obj, getOwner()));
 					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
-					if (toolId != ItemId.NOTHING.id()) showBubble(getOwner(), new Item(toolId));
+					if (toolId != ItemId.NOTHING.id()) thinkbubble(getOwner(), new Item(toolId));
 				}
 			}
 		});

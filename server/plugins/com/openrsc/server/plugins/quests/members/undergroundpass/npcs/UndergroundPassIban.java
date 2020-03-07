@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -33,35 +34,35 @@ public class UndergroundPassIban implements UseLocTrigger {
 				&& p.getCache().hasKey("cons_on_doll")
 				&& p.getCache().hasKey("ash_on_doll")
 				&& p.getCache().hasKey("shadow_on_doll")) {
-				Npc iban = getNearestNpc(p, NpcId.IBAN.id(), 10);
+				Npc iban = ifnearvisnpc(p, NpcId.IBAN.id(), 10);
 				if (iban == null) {
 					p.message("iban is still not here");
 					return;
 				}
 				else {
-					message(p, "you throw the doll of iban into the pit");
-					removeItem(p, new Item(ItemId.A_DOLL_OF_IBAN.id(), 1));
+					Functions.mes(p, "you throw the doll of iban into the pit");
+					remove(p, new Item(ItemId.A_DOLL_OF_IBAN.id(), 1));
 					defeated = true;
 					p.setAttribute("iban_bubble_show", true);
-					npcTalk(p, iban, "what's happening?, it's dark here...so dark",
+					npcsay(p, iban, "what's happening?, it's dark here...so dark",
 						"im falling into the dark, what have you done?");
-					message(p, "iban falls to his knees clutching his throat");
-					npcTalk(p, iban, "noooooooo!");
+					Functions.mes(p, "iban falls to his knees clutching his throat");
+					npcsay(p, iban, "noooooooo!");
 					p.message("iban slumps motionless to the floor");
 					iban.remove();
 				}
 				if (defeated) {
-					message(p, "a roar comes from the pit of the damned",
+					Functions.mes(p, "a roar comes from the pit of the damned",
 							"the infamous iban has finally gone to rest");
 						p.message("amongst ibans remains you find his staff..");
-						message(p, "...and some runes");
+						Functions.mes(p, "...and some runes");
 						p.message("suddenly around you rocks crash to the floor..");
-						message(p, "...as the ground begins to shake",
+						Functions.mes(p, "...as the ground begins to shake",
 							"the temple walls begin to collapse in",
 							"and you're thrown from the temple platform");
-						addItem(p, ItemId.STAFF_OF_IBAN.id(), 1);
-						addItem(p, ItemId.DEATH_RUNE.id(), 15);
-						addItem(p, ItemId.FIRE_RUNE.id(), 30);
+						give(p, ItemId.STAFF_OF_IBAN.id(), 1);
+						give(p, ItemId.DEATH_RUNE.id(), 15);
+						give(p, ItemId.FIRE_RUNE.id(), 30);
 						p.teleport(687, 3485);
 
 						/*player may teleport out after defeating iban

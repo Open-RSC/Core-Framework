@@ -19,16 +19,16 @@ public final class Chadwell implements ShopInterface, TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		playerTalk(p, n, "hello there");
-		npcTalk(p, n, "good day, what can i get you?");
-		int options = showMenu(p, n, false, //do not send over
+		say(p, n, "hello there");
+		npcsay(p, n, "good day, what can i get you?");
+		int options = multi(p, n, false, //do not send over
 				"nothing thanks, just browsing", "lets see what you've got");
 		if (options == 0) {
-			playerTalk(p, n, "nothing thanks");
-			npcTalk(p, n, "ok then");
+			say(p, n, "nothing thanks");
+			npcsay(p, n, "ok then");
 		}
 		if (options == 1) {
-			playerTalk(p, n, "let's see what you've got then");
+			say(p, n, "let's see what you've got then");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}

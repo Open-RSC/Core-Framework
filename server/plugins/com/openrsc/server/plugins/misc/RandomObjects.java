@@ -7,6 +7,7 @@ import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -26,7 +27,7 @@ public class RandomObjects implements OpLocTrigger {
 				if (command.equals("close")) {
 					owner.setBusyTimer(600);
 					owner.playerServerMessage(MessageType.QUEST, "You slide the cover back over the manhole");
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 78, object.getDirection(), object.getType()));
+					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 78, object.getDirection(), object.getType()));
 				} else {
 					owner.message("Nothing interesting happens");
 				}
@@ -35,58 +36,58 @@ public class RandomObjects implements OpLocTrigger {
 				if (command.equals("open")) {
 					owner.setBusyTimer(600);
 					owner.playerServerMessage(MessageType.QUEST, "You slide open the manhole cover");
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 79, object.getDirection(), object.getType()));
+					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 79, object.getDirection(), object.getType()));
 				}
 				break;
 			case 203:
 				if (command.equals("close"))
-					replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 202, object.getDirection(), object.getType()));
+					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 202, object.getDirection(), object.getType()));
 				else
 					owner.message("the coffin is empty.");
 				break;
 			case 202:
-				replaceObject(object, new GameObject(object.getWorld(), object.getLocation(), 203, object.getDirection(), object.getType()));
+				changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 203, object.getDirection(), object.getType()));
 				break;
 			case 613: // Shilo cart
 				if (object.getX() != 384 || object.getY() != 851) {
 					return;
 				}
 				if (owner.getX() >= 386) {
-					message(owner, "You climb up onto the cart.",
+					Functions.mes(owner, "You climb up onto the cart.",
 						"You nimbly jump from one side of the cart...");
 					owner.teleport(383, 852);
 					owner.playerServerMessage(MessageType.QUEST, "...to the other and climb down again.");
 					return;
 				}
 				if (command.toLowerCase().equals("search") || owner.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
-					message(owner, "It looks as if you can climb across.",
+					Functions.mes(owner, "It looks as if you can climb across.",
 							"You search the cart.");
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too fatigued to attempt climb across");
 						return;
 					}
-					message(owner, "You may be able to climb across the cart.",
+					Functions.mes(owner, "You may be able to climb across the cart.",
 							"Would you like to try?");
-						int menu = showMenu(owner,
+						int menu = multi(owner,
 							"Yes, I am am very nimble and agile!",
 							"No, I am happy where I am thanks!");
 						if (menu == 0) {
-							message(owner, "You climb up onto the cart",
+							Functions.mes(owner, "You climb up onto the cart",
 								"You nimbly jump from one side of the cart to the other.");
 							owner.teleport(386, 852);
 							owner.playerServerMessage(MessageType.QUEST, "And climb down again");
 						} else if (menu == 1) {
-							message(owner, "You think better of clambering over the cart, you might get dirty.");
-							playerTalk(owner, null, "I'd probably have just scraped my knees up as well.");
+							Functions.mes(owner, "You think better of clambering over the cart, you might get dirty.");
+							say(owner, null, "I'd probably have just scraped my knees up as well.");
 						}
 				} else {
-					message(owner, "You approach the cart and see undead creatures gathering by the village gates.",
+					Functions.mes(owner, "You approach the cart and see undead creatures gathering by the village gates.",
 							"There is a note attached to the cart.",
 							"The note says,",
 							"@gre@Danger deadly green mist do not enter if you value your life");
-					Npc mosol = getNearestNpc(owner, NpcId.MOSOL.id(), 15);
+					Npc mosol = ifnearvisnpc(owner, NpcId.MOSOL.id(), 15);
 					if (mosol != null) {
-						npcTalk(owner, mosol, "You must be a maniac to go in there!");
+						npcsay(owner, mosol, "You must be a maniac to go in there!");
 					}
 				}
 				break;
@@ -118,16 +119,16 @@ public class RandomObjects implements OpLocTrigger {
 			case 241:
 			case 242:
 			case 243:
-				message(owner, "You board the ship");
+				Functions.mes(owner, "You board the ship");
 				owner.teleport(263, 660, false);
-				sleep(2200);
+				delay(2200);
 				owner.message("The ship arrives at Port Sarim");
 				break;
 			case 1241:
 				if (owner.getCache().hasKey("scotruth_to_chaos_altar")) {
 					owner.message("You step into the tunnel...");
 					owner.teleport(331,213, false);
-					sleep(4*owner.getWorld().getServer().getConfig().GAME_TICK);
+					delay(4*owner.getWorld().getServer().getConfig().GAME_TICK);
 					owner.message("And find your way into the wilderness");
 				} else {
 					owner.message("You don't have permission to use this");
@@ -135,7 +136,7 @@ public class RandomObjects implements OpLocTrigger {
 				break;
 			case 1242:
 				owner.message("You enter the rowboat...");
-				sleep(3*owner.getWorld().getServer().getConfig().GAME_TICK);
+				delay(3*owner.getWorld().getServer().getConfig().GAME_TICK);
 				owner.teleport(206,449);
 				owner.message("And stop in Edgeville");
 				break;
@@ -147,12 +148,12 @@ public class RandomObjects implements OpLocTrigger {
 		}
 		// ARDOUGNE WALL GATEWAY FOR BIOHAZARD ETC...
 		if (object.getID() == 450) {
-			message(owner, "you pull on the large wooden doors");
+			Functions.mes(owner, "you pull on the large wooden doors");
 			if (owner.getQuestStage(Quests.BIOHAZARD) == -1) {
 				owner.message("you open it and walk through");
-				Npc gateMourner = getNearestNpc(owner, NpcId.MOURNER_BYENTRANCE.id(), 15);
+				Npc gateMourner = ifnearvisnpc(owner, NpcId.MOURNER_BYENTRANCE.id(), 15);
 				if (gateMourner != null) {
-					npcTalk(owner, gateMourner, "go through");
+					npcsay(owner, gateMourner, "go through");
 				}
 				if (owner.getX() >= 624) {
 					owner.teleport(620, 589);

@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.thinkbubble;
 
 public class ChristmasCracker implements UsePlayerTrigger {
 
@@ -56,11 +56,11 @@ public class ChristmasCracker implements UsePlayerTrigger {
 			player.face(otherPlayer);
 			//otherPlayer.face(player);
 
-			showBubble(player, item);
+			Functions.thinkbubble(player, item);
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

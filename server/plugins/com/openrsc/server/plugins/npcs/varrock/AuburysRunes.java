@@ -54,18 +54,18 @@ public final class AuburysRunes implements ShopInterface,
 			else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
 				menu.add("Teleport to rune essence");
 
-		npcTalk(p, n, "Do you want to buy some runes?");
+		npcsay(p, n, "Do you want to buy some runes?");
 
-		int opt = showMenu(p, n, false, menu.toArray(new String[menu.size()]));
+		int opt = multi(p, n, false, menu.toArray(new String[menu.size()]));
 
 		if (opt == 0) {
-			playerTalk(p, n, "Yes Please");
+			say(p, n, "Yes Please");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		}
 		else if (opt == 1) {
-			playerTalk(p, n, "Oh it's a rune shop. No thank you, then");
-			npcTalk(p, n,
+			say(p, n, "Oh it's a rune shop. No thank you, then");
+			npcsay(p, n,
 				"Well if you find someone who does want runes,",
 				"send them my way");
 		}

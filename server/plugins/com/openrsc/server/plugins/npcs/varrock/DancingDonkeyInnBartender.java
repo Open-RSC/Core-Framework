@@ -21,41 +21,41 @@ public class DancingDonkeyInnBartender implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == BARTENDER) {
-			playerTalk(p, n, "hello");
-			npcTalk(p, n, "good day to you, brave adventurer",
+			say(p, n, "hello");
+			npcsay(p, n, "good day to you, brave adventurer",
 				"can i get you a refreshing beer");
-			int menu = showMenu(p, n,
+			int menu = multi(p, n,
 				"yes please",
 				"no thanks",
 				"how much?");
 			if (menu == 0) {
 				buyBeer(p, n);
 			} else if (menu == 1) {
-				npcTalk(p, n, "let me know if you change your mind");
+				npcsay(p, n, "let me know if you change your mind");
 			} else if (menu == 2) {
-				npcTalk(p, n, "two gold pieces a pint",
+				npcsay(p, n, "two gold pieces a pint",
 					"so, what do you say?");
-				int subMenu = showMenu(p, n,
+				int subMenu = multi(p, n,
 					"yes please",
 					"no thanks");
 				if (subMenu == 0) {
 					buyBeer(p, n);
 				} else if (subMenu == 1) {
-					npcTalk(p, n, "let me know if you change your mind");
+					npcsay(p, n, "let me know if you change your mind");
 				}
 			}
 		}
 	}
 
 	private void buyBeer(Player p, Npc n) {
-		npcTalk(p, n, "ok then, that's two gold coins please");
-		if (hasItem(p, ItemId.COINS.id(), 2)) {
+		npcsay(p, n, "ok then, that's two gold coins please");
+		if (ifheld(p, ItemId.COINS.id(), 2)) {
 			p.message("you give two coins to the barman");
-			removeItem(p, ItemId.COINS.id(), 2);
+			remove(p, ItemId.COINS.id(), 2);
 			p.message("he gives you a cold beer");
-			addItem(p, ItemId.BEER.id(), 1);
-			npcTalk(p, n, "cheers");
-			playerTalk(p, n, "cheers");
+			give(p, ItemId.BEER.id(), 1);
+			npcsay(p, n, "cheers");
+			say(p, n, "cheers");
 		} else {
 			p.message("you don't have enough gold");
 		}

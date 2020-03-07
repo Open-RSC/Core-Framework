@@ -2,11 +2,12 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.multi;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -18,12 +19,12 @@ public class WildernessGuide implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hi are you someone who likes to fight other players?",
+		npcsay(p, n, "Hi are you someone who likes to fight other players?",
 			"Granted it has big risks",
 			"but it can be very rewarding too");
-		int menu = showMenu(p, n, "Yes I'm up for a bit of a fight", "I'd prefer to avoid that");
+		int menu = Functions.multi(p, n, "Yes I'm up for a bit of a fight", "I'd prefer to avoid that");
 		if (menu == 0) {
-			npcTalk(p, n, "Then the wilderness is the place for you",
+			npcsay(p, n, "Then the wilderness is the place for you",
 				"That is the area of the game where you can attack other players",
 				"Be careful though",
 				"Other players can be a lot more dangerous than monsters",
@@ -31,15 +32,15 @@ public class WildernessGuide implements TalkNpcTrigger {
 				"Especially when they hunt in groups");
 			optionsDialogue(p, n);
 		} else if (menu == 1) {
-			npcTalk(p, n, "Then don't stray into the wilderness",
+			npcsay(p, n, "Then don't stray into the wilderness",
 				"That is the area of the game where you can attack other players");
 			optionsDialogue(p, n);
 		}
 	}
 
 	private void optionsDialogue_where(Player p, Npc n) {
-		playerTalk(p, n, "Where is this wilderness?");
-		npcTalk(p, n, "Once you get into the main playing area head north",
+		Functions.say(p, n, "Where is this wilderness?");
+		npcsay(p, n, "Once you get into the main playing area head north",
 				"then you will eventually reach the wilderness",
 				"The deeper you venture into the wilderness",
 				"The greater the level range of players who can attack you",
@@ -48,8 +49,8 @@ public class WildernessGuide implements TalkNpcTrigger {
 	}
 
 	private void optionsDialogue_die(Player p, Npc n) {
-		playerTalk(p, n, "What happens when I die?");
-		npcTalk(p, n, "normally when you die",
+		Functions.say(p, n, "What happens when I die?");
+		npcsay(p, n, "normally when you die",
 				"you will lose all of the items in your inventory",
 				"Except the three most valuable",
 				"You never keep stackable items like coins and runes",
@@ -60,7 +61,7 @@ public class WildernessGuide implements TalkNpcTrigger {
 	}
 
 	private void optionsDialogue(Player p, Npc n) {
-		int menu = showMenu(p, n, false, "Where is this wilderness?", "What happens when I die?");
+		int menu = multi(p, n, false, "Where is this wilderness?", "What happens when I die?");
 		if (menu == 0) {
 			optionsDialogue_where(p, n);
 			optionsDialogue_die(p, n);
@@ -69,7 +70,7 @@ public class WildernessGuide implements TalkNpcTrigger {
 			optionsDialogue_where(p, n);
 		}
 		if (menu != -1) {
-			npcTalk(p, n, "Now proceed through the next door");
+			npcsay(p, n, "Now proceed through the next door");
 			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 70) {
 				p.getCache().set("tutorial", 70);
 			}

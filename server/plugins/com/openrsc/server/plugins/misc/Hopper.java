@@ -23,9 +23,9 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 			player.message("There is already grain in the hopper");
 			return;
 		}
-		showBubble(player, item);
+		thinkbubble(player, item);
 		obj.setAttribute("contains_item", item.getCatalogId());
-		removeItem(player, item);
+		remove(player, item);
 		player.message("You put the grain in the hopper");
 	}
 
@@ -36,7 +36,7 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player player) {
-		message(player, 500, "You operate the hopper");
+		mes(player, 500, "You operate the hopper");
 		player.playSound("mechanical");
 		int contains = obj.getAttribute("contains_item", -1);
 		if (contains != ItemId.GRAIN.id()) {
@@ -52,9 +52,9 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 		}
 
 		if (obj.getID() == 246) {
-			createGroundItem(player.getWorld(), ItemId.FLOUR.id(), 1, 162, 3533);
+			addobject(player.getWorld(), ItemId.FLOUR.id(), 1, 162, 3533);
 		} else {
-			createGroundItem(player.getWorld(), ItemId.FLOUR.id(), 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false), false) + offY);
+			addobject(player.getWorld(), ItemId.FLOUR.id(), 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false), false) + offY);
 		}
 		obj.removeAttribute("contains_item");
 	}

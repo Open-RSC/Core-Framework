@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -47,7 +48,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 		p.getCache().remove("2nd_cog");
 		p.getCache().remove("3rd_cog");
 		p.getCache().remove("4th_cog");
-		addItem(p, ItemId.COINS.id(), 500);
+		give(p, ItemId.COINS.id(), 500);
 	}
 
 	/**
@@ -64,28 +65,28 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 		if (n.getID() == NpcId.BROTHER_KOJO.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
-					playerTalk(p, n, "Hello Monk");
-					npcTalk(p, n, "Hello traveller, I'm Brother Kojo",
+					say(p, n, "Hello Monk");
+					npcsay(p, n, "Hello traveller, I'm Brother Kojo",
 						"Do you know the time?");
-					playerTalk(p, n, "No... Sorry");
-					npcTalk(p, n, "Oh dear, oh dear, I must fix the clock",
+					say(p, n, "No... Sorry");
+					npcsay(p, n, "Oh dear, oh dear, I must fix the clock",
 						"The town people are becoming angry",
 						"Please could you help?");
-					int menu = showMenu(p, n, "Ok old monk what can I do?",
+					int menu = multi(p, n, "Ok old monk what can I do?",
 						"Not now old monk");
 					if (menu == 0) {
-						npcTalk(p, n, "Oh thank you kind sir",
+						npcsay(p, n, "Oh thank you kind sir",
 							"In the cellar below you'll find four cogs",
 							"They're too heavy for me, but you should",
 							"Be able to carry them one at a time",
 							"One goes on each floor",
 							"But I can't remember which goes where");
-						playerTalk(p, n, "I'll do my best");
-						npcTalk(p, n,
+						say(p, n, "I'll do my best");
+						npcsay(p, n,
 							"Be careful, strange beasts dwell in the cellars");
 						setQuestStage(p, this, 1);
 					} else if (menu == 1) {
-						npcTalk(p, n, "Ok then");
+						npcsay(p, n, "Ok then");
 					}
 					break;
 				case 1:
@@ -93,28 +94,28 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 						&& p.getCache().hasKey("2nd_cog")
 						&& p.getCache().hasKey("3rd_cog")
 						&& p.getCache().hasKey("4th_cog")) {
-						playerTalk(p, n, "I have replaced all the cogs");
-						npcTalk(p, n, "Really..? wait, listen");
+						say(p, n, "I have replaced all the cogs");
+						npcsay(p, n, "Really..? wait, listen");
 						p.message("Tick Tock, Tick Tock");
-						npcTalk(p, n, "Well done, well done");
+						npcsay(p, n, "Well done, well done");
 						p.message("Tick Tock, Tick Tock");
-						npcTalk(p, n, "Yes yes yes, you've done it",
+						npcsay(p, n, "Yes yes yes, you've done it",
 							"You are clever");
 						p.message("You have completed the clock tower quest");
-						npcTalk(p, n, "That will please the village folk",
+						npcsay(p, n, "That will please the village folk",
 							"Please take these coins as a reward");
 						p.sendQuestComplete(Quests.CLOCK_TOWER);
 						return;
 					}
-					playerTalk(p, n, "Hello again");
-					npcTalk(p, n, "Oh hello, are you having trouble?",
+					say(p, n, "Hello again");
+					npcsay(p, n, "Oh hello, are you having trouble?",
 						"The cogs are in four rooms below us",
 						"Place one cog on a pole on each",
 						"Of the four tower levels");
 					break;
 				case -1:
-					playerTalk(p, n, "Hello again Brother Kojo");
-					npcTalk(p, n, "Oh hello there traveller",
+					say(p, n, "Hello again Brother Kojo");
+					npcsay(p, n, "Oh hello there traveller",
 						"You've done a grand job with the clock",
 						"It's just like new");
 					break;
@@ -193,7 +194,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			}
 
 			if (p.getCache().hasKey("foodtrough") && correctSetup) {
-				message(p, "In their panic the rats bend and twist",
+				Functions.mes(p, "In their panic the rats bend and twist",
 						"The cage bars with their teeth",
 						"They're becoming weak, some have collapsed",
 						"The rats are eating the poison",
@@ -231,7 +232,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) {
 			p.message("You pour the rat poison into the feeding trough");
-			removeItem(p, ItemId.RAT_POISON.id(), 1);
+			remove(p, ItemId.RAT_POISON.id(), 1);
 			p.getCache().store("foodtrough", true);
 		}
 		/** TOP PURPLE POLE OTHERWISE NOT FIT MESSAGE - 1st cog **/
@@ -240,7 +241,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 364 && obj.getX() == 581 && obj.getY() == 2525) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("1st_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, ItemId.LARGE_COG_PURPLE.id(), 1);
+					remove(p, ItemId.LARGE_COG_PURPLE.id(), 1);
 					p.getCache().store("1st_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("1st_cog")) {
@@ -256,7 +257,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 365 && obj.getX() == 581 && obj.getY() == 639) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("2nd_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
+					remove(p, ItemId.LARGE_COG_BLACK.id(), 1);
 					p.getCache().store("2nd_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("2nd_cog")) {
@@ -272,7 +273,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 362 && obj.getX() == 580 && obj.getY() == 3470) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("3rd_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, ItemId.LARGE_COG_BLUE.id(), 1);
+					remove(p, ItemId.LARGE_COG_BLUE.id(), 1);
 					p.getCache().store("3rd_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("3rd_cog")) {
@@ -288,7 +289,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 363 && obj.getX() == 582 && obj.getY() == 1582) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("4th_cog")) {
 					p.message("The cog fits perfectly");
-					removeItem(p, ItemId.LARGE_COG_RED.id(), 1);
+					remove(p, ItemId.LARGE_COG_RED.id(), 1);
 					p.getCache().store("4th_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("4th_cog")) {
@@ -314,7 +315,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 111) {
 			if (p.getCache().hasKey("rats_dead") || atQuestStage(p, this, -1)) {
 				p.message("In a panic to escape, the rats have..");
-				sleep(500);
+				delay(500);
 				p.message("..bent the bars, you can just crawl through");
 				if (p.getX() >= 583) {
 					p.setLocation(Point.location(582, 3476), true);
@@ -338,7 +339,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseObj(Item myItem, GroundItem item, Player p) {
 		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
-			message(p, "You pour water over the cog",
+			Functions.mes(p, "You pour water over the cog",
 				"The cog quickly cools down");
 			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
@@ -347,8 +348,8 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 				p.message("You can only carry one");
 			} else {
 				p.message("You take the cog");
-				addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
-				removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
+				give(p, ItemId.LARGE_COG_BLACK.id(), 1);
+				remove(p, ItemId.BUCKET_OF_WATER.id(), 1);
 			}
 		}
 	}
@@ -375,7 +376,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.ICE_GLOVES.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
-				message(p, "The ice gloves cool down the cog",
+				Functions.mes(p, "The ice gloves cool down the cog",
 					"You can carry it now");
 				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
@@ -384,10 +385,10 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					p.message("You can only carry one");
 				} else {
 					p.message("You take the cog");
-					addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
+					give(p, ItemId.LARGE_COG_BLACK.id(), 1);
 				}
 			} else if (p.getCarriedItems().hasCatalogID(ItemId.BUCKET_OF_WATER.id(), Optional.of(false))) {
-				message(p, "You pour water over the cog",
+				Functions.mes(p, "You pour water over the cog",
 					"The cog quickly cools down");
 				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
@@ -396,11 +397,11 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					p.message("You can only carry one");
 				} else {
 					p.message("You take the cog");
-					addItem(p, ItemId.LARGE_COG_BLACK.id(), 1);
-					removeItem(p, ItemId.BUCKET_OF_WATER.id(), 1);
+					give(p, ItemId.LARGE_COG_BLACK.id(), 1);
+					remove(p, ItemId.BUCKET_OF_WATER.id(), 1);
 				}
 			} else {
-				message(p,
+				Functions.mes(p,
 					"The cog is red hot from the flames, too hot to carry",
 					"The cogs are heavy");
 				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())

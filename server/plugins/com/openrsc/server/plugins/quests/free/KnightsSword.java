@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -62,14 +63,14 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void vyvinDialogue(final Player p, final Npc n) {
-		playerTalk(p, n, "Hello");
-		npcTalk(p, n, "Greetings traveller");
-		int option = showMenu(p, n, "Do you have anything to trade?",
+		say(p, n, "Hello");
+		npcsay(p, n, "Greetings traveller");
+		int option = multi(p, n, "Do you have anything to trade?",
 			"Why are there so many knights in this city?");
 		if (option == 0) {
-			npcTalk(p, n, "No I'm sorry");
+			npcsay(p, n, "No I'm sorry");
 		} else if (option == 1) {
-			npcTalk(p, n, "We are the White Knights of Falador",
+			npcsay(p, n, "We are the White Knights of Falador",
 				"We are the most powerfull order of knights in the land",
 				"We are helping the king Vallance rule the kingdom",
 				"As he is getting old and tired");
@@ -79,31 +80,31 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	public void dwarfDialogue(final Player p, final Npc n) {
 		switch (p.getQuestStage(this)) {
 			case -1:
-				playerTalk(p, n, "Thanks for your help in getting the sword for me");
-				npcTalk(p, n, "No worries mate");
+				say(p, n, "Thanks for your help in getting the sword for me");
+				npcsay(p, n, "No worries mate");
 				break;
 			case 0:
 				p.message("Thurgo doesn't appear to be interested in talking");
 				break;
 			case 1:
-				playerTalk(p, n, "Hello are you are an Imcando Dwarf?");
-				npcTalk(p, n, "Yeah what about it?");
+				say(p, n, "Hello are you are an Imcando Dwarf?");
+				npcsay(p, n, "Yeah what about it?");
 				break;
 			case 2:
 				if (!p.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) {
-					playerTalk(p, n, "Hello are you are an Imcando Dwarf?");
-					npcTalk(p, n, "Yeah what about it?");
+					say(p, n, "Hello are you are an Imcando Dwarf?");
+					npcsay(p, n, "Yeah what about it?");
 				} else {
-					int option = showMenu(p, n, "Hello are you an Imcando Dwarf?",
+					int option = multi(p, n, "Hello are you an Imcando Dwarf?",
 						"Would you like some redberry pie?");
 					if (option == 0) {
-						npcTalk(p, n, "Yeah what about it?");
-						option = showMenu(p, n, "Would you like some redberry  Pie?",
+						npcsay(p, n, "Yeah what about it?");
+						option = multi(p, n, "Would you like some redberry  Pie?",
 							"Can you make me a special sword?");
 						if (option == 0) {
 							givePie(p, n);
 						} else if (option == 1) {
-							npcTalk(p, n, "no I don't do that anymore",
+							npcsay(p, n, "no I don't do that anymore",
 								"I'm getting old");
 						}
 					} else if (option == 1) {
@@ -112,37 +113,37 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				}
 				break;
 			case 3:
-				playerTalk(p, n, "Can you make me a special sword?");
-				npcTalk(p, n, "Well after you've brought me such a great pie",
+				say(p, n, "Can you make me a special sword?");
+				npcsay(p, n, "Well after you've brought me such a great pie",
 					"I guess I should give it a go",
 					"What sort of sword is it?");
-				playerTalk(
+				say(
 					p,
 					n,
 					"I need you to make a sword for one of Falador's knights",
 					"He had one which was passed down through five generations",
 					"But his squire has lost it",
 					"So we need an identical one to replace it");
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"A Knight's sword eh?",
 					"Well I'd need to know exactly how it looked",
 					"Before I could make a new one",
 					"All the Faladian knights used to have swords with different designs",
 					"could you bring me a picture or something?");
-				playerTalk(p, n, "I'll see if I can find one",
+				say(p, n, "I'll see if I can find one",
 					"I'll go and ask his squire");
 				p.updateQuestStage(this, 4);
 				break;
 			case 4:
 				if (p.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false))) {
-					playerTalk(p, n,
+					say(p, n,
 						"I have found a picture of the sword I would like you to make");
 					p.message("You give the portrait to Thurgo");
-					removeItem(p, ItemId.PORTRAIT.id(), 1);
-					message(p, "Thurgo studies the portrait");
+					remove(p, ItemId.PORTRAIT.id(), 1);
+					Functions.mes(p, "Thurgo studies the portrait");
 					p.updateQuestStage(this, 5);
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"Ok you'll need to get me some stuff for me to make this",
 						"I'll need two Iron bars to make the sword to start with",
@@ -158,41 +159,41 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						"But there's definitly some blurite in there",
 						"You'll need a little bit of mining experience",
 						"TO be able to find it");
-					playerTalk(p, n, "Ok I'll go and find them");
+					say(p, n, "Ok I'll go and find them");
 				} else {
-					npcTalk(p, n, "Have you got a picture of the sword for me yet?");
-					playerTalk(p, n, "Sorry not yet");
+					npcsay(p, n, "Have you got a picture of the sword for me yet?");
+					say(p, n, "Sorry not yet");
 				}
 				break;
 			case 5:
 			case 6:
 				if (p.getCarriedItems().hasCatalogID(ItemId.FALADIAN_KNIGHTS_SWORD.id(), Optional.of(false))) {
-					playerTalk(p, n,
+					say(p, n,
 						"Thanks for your help in getting the sword for me");
-					npcTalk(p, n, "No worries mate");
+					npcsay(p, n, "No worries mate");
 					return;
 				}
-				if (hasItem(p, ItemId.IRON_BAR.id(), 2) && p.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
-					npcTalk(p, n, "How are you doing finding sword materials?");
-					playerTalk(p, n, "I have them all");
-					message(p, "You give some blurite ore and two iron bars to Thurgo");
+				if (ifheld(p, ItemId.IRON_BAR.id(), 2) && p.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
+					npcsay(p, n, "How are you doing finding sword materials?");
+					say(p, n, "I have them all");
+					Functions.mes(p, "You give some blurite ore and two iron bars to Thurgo");
 
-					removeItem(p, ItemId.IRON_BAR.id(), 1);
-					removeItem(p, ItemId.IRON_BAR.id(), 1);
-					removeItem(p, ItemId.BLURITE_ORE.id(), 1);
-					message(p, "Thurgo starts making a sword",
+					remove(p, ItemId.IRON_BAR.id(), 1);
+					remove(p, ItemId.IRON_BAR.id(), 1);
+					remove(p, ItemId.BLURITE_ORE.id(), 1);
+					Functions.mes(p, "Thurgo starts making a sword",
 						"Thurgo hammers away",
 						"Thurgo hammers some more",
 						"Thurgo hands you a sword");
 
-					addItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
-					playerTalk(p, n, "Thank you very much");
-					npcTalk(p, n, "Just remember to call in with more pie some time");
+					give(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
+					say(p, n, "Thank you very much");
+					npcsay(p, n, "Just remember to call in with more pie some time");
 					p.updateQuestStage(this, 6);
 				} else {
-					npcTalk(p, n, "How are you doing finding sword materials?");
-					playerTalk(p, n, "I haven't found everything yet");
-					npcTalk(p, n, "Well come back when you do",
+					npcsay(p, n, "How are you doing finding sword materials?");
+					say(p, n, "I haven't found everything yet");
+					npcsay(p, n, "Well come back when you do",
 						"Remember I need blurite ore and two iron bars");
 				}
 				break;
@@ -200,18 +201,18 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void givePie(Player p, Npc n) {
-		message(p, "Thurgo's eyes light up");
-		npcTalk(p, n, "I'd never say no to a redberry pie");
-		npcTalk(p, n, "It's great stuff");
+		Functions.mes(p, "Thurgo's eyes light up");
+		npcsay(p, n, "I'd never say no to a redberry pie");
+		npcsay(p, n, "It's great stuff");
 		if (!p.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) { //should not happen here
-			playerTalk(p, n, "Well that's too bad, because I don't have any");
-			message(p, "Thurgo does not look impressed");
+			say(p, n, "Well that's too bad, because I don't have any");
+			Functions.mes(p, "Thurgo does not look impressed");
 		} else {
-			message(p, "You hand over the pie");
-			removeItem(p, ItemId.REDBERRY_PIE.id(), 1);
+			Functions.mes(p, "You hand over the pie");
+			remove(p, ItemId.REDBERRY_PIE.id(), 1);
 			p.updateQuestStage(this, 3);
-			message(p, "Thurgo eats the pie", "Thurgo pats his stomach");
-			npcTalk(p, n, "By Guthix that was good pie",
+			Functions.mes(p, "Thurgo eats the pie", "Thurgo pats his stomach");
+			npcsay(p, n, "By Guthix that was good pie",
 				"Anyone who makes pie like that has gotta be alright");
 		}
 	}
@@ -220,22 +221,22 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 		if (cID == -1) {
 			switch (p.getQuestStage(this)) {
 				case -1:
-					npcTalk(p, n, "Hello friend", "thanks for your help before",
+					npcsay(p, n, "Hello friend", "thanks for your help before",
 						"Vyvin never even realised it was a different sword");
 					break;
 				case 0:
-					npcTalk(p, n, "Hello I am the squire to Sir Vyvin");
-					int option = showMenu(p, n, "And how is life as a squire?",
+					npcsay(p, n, "Hello I am the squire to Sir Vyvin");
+					int option = multi(p, n, "And how is life as a squire?",
 						"Wouldn't you prefer to be a squire for me?");
 					if (option == 0) {
-						npcTalk(p, n, "Well Sir Vyvin is a good guy to work for",
+						npcsay(p, n, "Well Sir Vyvin is a good guy to work for",
 							"However I'm in a spot of trouble today",
 							"I've gone and lost Sir Vyvin's sword");
-						option = showMenu(p, n, "Do you know where you lost it?",
+						option = multi(p, n, "Do you know where you lost it?",
 							"I can make a new sword if you like",
 							"Is he angry?");
 						if (option == 0) {
-							npcTalk(p, n, "Well now if I knew that",
+							npcsay(p, n, "Well now if I knew that",
 								"It wouldn't be lost,now would it?");
 
 							squireDialogue(p, n, Squire.MAIN);
@@ -245,20 +246,20 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 							squireDialogue(p, n, Squire.ANGRY);
 						}
 					} else if (option == 1) {
-						npcTalk(p, n, "No, sorry I'm loyal to Vyvin");
+						npcsay(p, n, "No, sorry I'm loyal to Vyvin");
 					}
 					break;
 				case 1:
 				case 2:
 				case 3:
-					npcTalk(p, n, "So how are you doing getting a sword?");
-					playerTalk(p, n, "I'm still looking for Imcando dwarves");
+					npcsay(p, n, "So how are you doing getting a sword?");
+					say(p, n, "I'm still looking for Imcando dwarves");
 					break;
 				case 4:
-					npcTalk(p, n, "So how are you doing getting a sword?");
-					playerTalk(p, n, "I've found an Imcando dwarf",
+					npcsay(p, n, "So how are you doing getting a sword?");
+					say(p, n, "I've found an Imcando dwarf",
 						"But he needs a picture of the sword before he can make it");
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"A picture eh?",
 						"The only one I can think of is in a small portrait of Sir Vyvin's father",
@@ -267,15 +268,15 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				case 5:
 				case 6:
 					if (p.getCarriedItems().hasCatalogID(ItemId.FALADIAN_KNIGHTS_SWORD.id(), Optional.of(false))) {
-						playerTalk(p, n, "I have retrieved your sword for you");
-						npcTalk(p, n, "Thankyou, Thankyou",
+						say(p, n, "I have retrieved your sword for you");
+						npcsay(p, n, "Thankyou, Thankyou",
 							"I was seriously worried I'd have to own up to Sir Vyvin");
 						p.message("You give the sword to the squire");
-						removeItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
+						remove(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
 						p.sendQuestComplete(getQuestId());
 					} else {
-						npcTalk(p, n, "So how are you doing getting a sword?");
-						playerTalk(p, n, "I've found a dwarf who will make the sword",
+						npcsay(p, n, "So how are you doing getting a sword?");
+						say(p, n, "I've found a dwarf who will make the sword",
 							"I've just got to find the materials for it now");
 					}
 					break;
@@ -283,33 +284,33 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 		}
 		switch (cID) {
 			case Squire.MAIN:
-				int option = showMenu(p, n, false, //do not send over
+				int option = multi(p, n, false, //do not send over
 					"Well do you know the vague area you lost it?",
 					"I can make a new sword if you like",
 					"Well the kingdom is fairly abundant with swords",
 					"Is he angry?");
 				if (option == 0) {
-					playerTalk(p, n, "Well do you know the vague area you lost it in?");
+					say(p, n, "Well do you know the vague area you lost it in?");
 					squireDialogue(p, n, Squire.LOST_IT);
 				} else if (option == 1) {
-					playerTalk(p, n, "I can make a new sword if you like");
+					say(p, n, "I can make a new sword if you like");
 					squireDialogue(p, n, Squire.NEW_SWORD);
 				} else if (option == 2) {
-					playerTalk(p, n, "Well the kingdom is fairly abundant with swords");
+					say(p, n, "Well the kingdom is fairly abundant with swords");
 					squireDialogue(p, n, Squire.ABUNDANT);
 				} else if (option == 3) {
-					playerTalk(p, n, "Is he angry?");
+					say(p, n, "Is he angry?");
 					squireDialogue(p, n, Squire.ANGRY);
 				}
 				break;
 			case Squire.LOST_IT:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"No I was carrying it for him all the way from where he had it stored in Lumbridge",
 					"It must have slipped from my pack during the trip",
 					"And you know what people are like these days",
 					"Someone will have just picked it up and kept it for themselves");
-				int option1 = showMenu(p, n, "I can make a new sword if you like",
+				int option1 = multi(p, n, "I can make a new sword if you like",
 					"Well the kingdom is fairly abundant with swords",
 					"Well I hope you find it soon");
 				if (option1 == 0) {
@@ -321,29 +322,29 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				}
 				break;
 			case Squire.NEW_SWORD:
-				npcTalk(p, n, "Thanks for the offer",
+				npcsay(p, n, "Thanks for the offer",
 					"I'd be surprised if you could though");
 				squireDialogue(p, n, Squire.DWARF_CHAT);
 				break;
 			case Squire.ABUNDANT:
-				npcTalk(p, n, "Yes you can get bronze swords anywhere",
+				npcsay(p, n, "Yes you can get bronze swords anywhere",
 					"But this isn't any old sword");
 				squireDialogue(p, n, Squire.DWARF_CHAT);
 				break;
 			case Squire.ANGRY:
-				npcTalk(p, n, "He doesn't know yet",
+				npcsay(p, n, "He doesn't know yet",
 					"I was hoping I could think of something to do",
 					"Before he does find out",
 					"But I find myself at a loss");
 				squireDialogue(p, n, Squire.MAIN);
 				break;
 			case Squire.FIND_IT:
-				npcTalk(p, n, "Yes me too",
+				npcsay(p, n, "Yes me too",
 					"I'm not looking forward to telling Vyvin I've lost it",
 					"He's going to want it for the parade next week as well");
 				break;
 			case Squire.DWARF_CHAT:
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"The thing is,this sword is a family heirloom",
 					"It has been passed down through Vyvin's family for five generations",
@@ -351,11 +352,11 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					"Who were a particularly skilled tribe of dwarven smiths",
 					"I doubt anyone could make it in the style they do");
 
-				int option11 = showMenu(p, n,
+				int option11 = multi(p, n,
 					"So would these dwarves make another one?",
 					"Well I hope you find it soon");
 				if (option11 == 0) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"I'm not a hundred percent sure the Imcando tribe exists anymore",
 						"I should think Reldo the palace librarian in Varrock will know",
@@ -363,10 +364,10 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						"I don't suppose you could try and track down the Imcando dwarves for me?",
 						"I've got so much work to do");
 
-					int option2 = showMenu(p, n, "Ok I'll give it a go",
+					int option2 = multi(p, n, "Ok I'll give it a go",
 						"No I've got lots of mining work to do");
 					if (option2 == 0) {
-						npcTalk(p, n, "Thankyou very much",
+						npcsay(p, n, "Thankyou very much",
 							"As I say the best place to start should be with Reldo");
 						p.updateQuestStage(this, 1);
 					}
@@ -397,9 +398,9 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					if (!n.isBusy()) {
 						n.face(p);
 						p.face(n);
-						npcTalk(p, n, "Hey what are you doing?",
+						npcsay(p, n, "Hey what are you doing?",
 							"That's my cupboard");
-						message(p,
+						Functions.mes(p,
 							"Maybe you need to get someone to distract Sir Vyvin for you");
 					} else {
 						if (p.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false)) || p.getQuestStage(this) < 4) {
@@ -407,7 +408,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 							return;
 						}
 						p.message("You find a small portrait in here which you take");
-						addItem(p, ItemId.PORTRAIT.id(), 1);
+						give(p, ItemId.PORTRAIT.id(), 1);
 					}
 				}
 			}

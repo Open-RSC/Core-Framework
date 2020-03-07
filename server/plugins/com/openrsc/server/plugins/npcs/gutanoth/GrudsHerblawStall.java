@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class GrudsHerblawStall implements ShopInterface,
 	TalkNpcTrigger {
@@ -22,16 +23,16 @@ public class GrudsHerblawStall implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		npcTalk(p, n, "Does The little creature want to buy sumfin'");
-		int menu = showMenu(p, n,
+		npcsay(p, n, "Does The little creature want to buy sumfin'");
+		int menu = Functions.multi(p, n,
 			"Yes I do",
 			"No I don't");
 		if (menu == 0) {
-			npcTalk(p, n, "Welcome to Grud's herblaw stall");
+			npcsay(p, n, "Welcome to Grud's herblaw stall");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (menu == 1) {
-			npcTalk(p, n, "Suit yourself");
+			npcsay(p, n, "Suit yourself");
 		}
 	}
 

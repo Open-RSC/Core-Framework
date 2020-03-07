@@ -27,21 +27,21 @@ public final class Rometti implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
-		playerTalk(p, n, "hello");
-		npcTalk(p, n, "hello traveller",
+		say(p, n, "hello");
+		npcsay(p, n, "hello traveller",
 			"have a look at my latest range of gnome fashion",
 			"rometti is the ultimate label in gnome high society");
-		playerTalk(p, n, "really");
-		npcTalk(p, n, "pastels are all the rage this season");
-		int option = showMenu(p, n, false, //do not send over
+		say(p, n, "really");
+		npcsay(p, n, "pastels are all the rage this season");
+		int option = multi(p, n, false, //do not send over
 			"i've no time for fashion", "ok then let's have a look");
 		switch (option) {
 			case 0:
-				playerTalk(p, n, "i've no time for fashion");
-				npcTalk(p, n, "hmm...i did wonder");
+				say(p, n, "i've no time for fashion");
+				npcsay(p, n, "hmm...i did wonder");
 				break;
 			case 1:
-				playerTalk(p, n, "ok then, let's have a look");
+				say(p, n, "ok then, let's have a look");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;

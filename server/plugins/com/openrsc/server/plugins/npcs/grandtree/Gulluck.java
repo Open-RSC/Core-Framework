@@ -28,18 +28,18 @@ public final class Gulluck implements ShopInterface,
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.GULLUCK.id()) {
-			playerTalk(p, n, "hello");
-			npcTalk(p, n, "good day brave adventurer",
+			say(p, n, "hello");
+			npcsay(p, n, "good day brave adventurer",
 				"could i interest you in my fine selection of weapons?");
 
-			int option = showMenu(p, n, "i'll take a look", "no thanks");
+			int option = multi(p, n, "i'll take a look", "no thanks");
 			switch (option) {
 				case 0:
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 					break;
 				case 1:
-					npcTalk(p, n, "grrrr");
+					npcsay(p, n, "grrrr");
 					break;
 
 			}

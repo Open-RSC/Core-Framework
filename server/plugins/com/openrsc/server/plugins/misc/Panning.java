@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -14,15 +15,15 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.getNearestNpc;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showBubble;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
+import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
+import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.remove;
+import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.delay;
 
 public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpInvTrigger {
 
@@ -50,12 +51,12 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			return false;
 		}
 		p.setBusy(true);
-		showBubble(p, new Item(ItemId.PANNING_TRAY.id()));
+		Functions.thinkbubble(p, new Item(ItemId.PANNING_TRAY.id()));
 		p.playSound("mix");
 		p.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
-		message(p, "You swirl away the excess water");
-		sleep(1500);
-		showBubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
+		mes(p, "You swirl away the excess water");
+		delay(1500);
+		Functions.thinkbubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
 		p.incExp(Skills.MINING, 20, true);
@@ -67,29 +68,29 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == PANNING_POINT) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
-				Npc guide = getNearestNpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
+				Npc guide = ifnearvisnpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
 				if (guide != null) {
 					// NOT SURE? if(p.getQuestStage(Quests.DIGSITE) < 2) {
 					if (!p.getCache().hasKey("unlocked_panning")) {
-						npcTalk(p, guide, "Hey! you can't pan yet!");
-						playerTalk(p, guide, "Why not ?");
-						npcTalk(p, guide, "We do not allow the uninvited to pan here");
-						int menu = showMenu(p, guide,
+						npcsay(p, guide, "Hey! you can't pan yet!");
+						Functions.say(p, guide, "Why not ?");
+						npcsay(p, guide, "We do not allow the uninvited to pan here");
+						int menu = Functions.multi(p, guide,
 							"Okay, forget it",
 							"So how do I become invited then ?");
 						if (menu == 0) {
-							npcTalk(p, guide, "You can of course use this place when you know what you are doing");
+							npcsay(p, guide, "You can of course use this place when you know what you are doing");
 						} else if (menu == 1) {
-							npcTalk(p, guide, "I'm not supposed to let people pan here",
+							npcsay(p, guide, "I'm not supposed to let people pan here",
 								"Unless they have permission from the authorities first",
 								"Mind you I could let you have a go...",
 								"If you're willing to do me a favour");
-							playerTalk(p, guide, "What's that ?");
-							npcTalk(p, guide, "Well...to be honest...",
+							Functions.say(p, guide, "What's that ?");
+							npcsay(p, guide, "Well...to be honest...",
 								"What I would really like...",
 								"Is a nice cup of tea !");
-							playerTalk(p, guide, "Tea !?");
-							npcTalk(p, guide, "Absolutely, I'm parched !",
+							Functions.say(p, guide, "Tea !?");
+							npcsay(p, guide, "Absolutely, I'm parched !",
 								"If you could bring me one of those...",
 								"I would be more than willing to let you pan here");
 						}
@@ -115,27 +116,27 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		if (npc.getID() == NpcId.DIGSITE_GUIDE.id()) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 				p.message("You give the panning tray to the guide");
-				npcTalk(p, npc, "Yes, this is a panning tray...");
+				npcsay(p, npc, "Yes, this is a panning tray...");
 			}
 			if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 				p.message("You give the full panning tray to the guide");
-				npcTalk(p, npc, "This is no good to me",
+				npcsay(p, npc, "This is no good to me",
 					"I don't deal with finds");
 			}
 			if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 				p.message("You give the full panning tray to the guide");
-				npcTalk(p, npc, "I am afraid I don't deal with finds",
+				npcsay(p, npc, "I am afraid I don't deal with finds",
 					"That's not my job");
 			}
 			if (item.getCatalogId() == ItemId.CUP_OF_TEA.id()) {
 				if (p.getCache().hasKey("unlocked_panning")) {
-					npcTalk(p, npc, "No thanks, I've had enough!");
+					npcsay(p, npc, "No thanks, I've had enough!");
 				} else {
-					npcTalk(p, npc, "Ah! Lovely!",
+					npcsay(p, npc, "Ah! Lovely!",
 						"You can't beat a good cuppa...",
 						"You're free to pan all you want");
-					playerTalk(p, npc, "Thanks");
-					removeItem(p, ItemId.CUP_OF_TEA.id(), 1);
+					Functions.say(p, npc, "Thanks");
+					Functions.remove(p, ItemId.CUP_OF_TEA.id(), 1);
 					p.getCache().store("unlocked_panning", true);
 				}
 			}
@@ -152,11 +153,11 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
-			playerTalk(p, null, "Err, why am I searching an empty tray ?");
+			Functions.say(p, null, "Err, why am I searching an empty tray ?");
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 			p.setBusy(true);
-			message(p, "You search the contents of the tray...");
-			sleep(1500);
+			mes(p, "You search the contents of the tray...");
+			delay(1500);
 			int randomNumber = DataConversions.random(0, 100);
 			int addItem = -1;
 			int addAmount = 1;
@@ -188,14 +189,14 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 				} else if (addItem == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 					p.playerServerMessage(MessageType.QUEST, "You find some gold nuggets within the mud!");
 				}
-				addItem(p, addItem, addAmount);
+				give(p, addItem, addAmount);
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "The tray contains only plain mud");
 			}
 			p.setBusy(false);
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 			p.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_GOLD_NUGGET.id(), ItemId.PANNING_TRAY.id());
-			addItem(p, ItemId.GOLD_NUGGETS.id(), 1);
+			give(p, ItemId.GOLD_NUGGETS.id(), 1);
 			p.message("You take the gold form the panning tray");
 			p.message("You have a handful of gold nuggets");
 		}

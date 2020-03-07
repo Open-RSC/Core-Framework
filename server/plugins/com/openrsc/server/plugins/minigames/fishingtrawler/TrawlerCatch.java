@@ -37,8 +37,8 @@ public class TrawlerCatch implements OpLocTrigger {
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == TRAWLER_CATCH) {
-			message(p, 1900, "you search the smelly net");
-			showBubble(p, new Item(ItemId.NET.id()));
+			mes(p, 1900, "you search the smelly net");
+			thinkbubble(p, new Item(ItemId.NET.id()));
 			if (p.getCache().hasKey("fishing_trawler_reward")) {
 				p.message("you find...");
 				int fishCaught = p.getCache().getInt("fishing_trawler_reward");
@@ -48,69 +48,69 @@ public class TrawlerCatch implements OpLocTrigger {
 					// roll for a fish
 					if (isFishRoll) {
 						if (catchFish(81, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..a manta ray!");
-							addItem(p, ItemId.RAW_MANTA_RAY.id(), 1);
+							mes(p, 1200, "..a manta ray!");
+							give(p, ItemId.RAW_MANTA_RAY.id(), 1);
 							p.incExp(Skills.FISHING, 460, false);
 						} else if (catchFish(79, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..a sea turtle!");
-							addItem(p, ItemId.RAW_SEA_TURTLE.id(), 1);
+							mes(p, 1200, "..a sea turtle!");
+							give(p, ItemId.RAW_SEA_TURTLE.id(), 1);
 							p.incExp(Skills.FISHING, 380, false);
 						} else if (catchFish(76, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..a shark!");
-							addItem(p, ItemId.RAW_SHARK.id(), 1);
+							mes(p, 1200, "..a shark!");
+							give(p, ItemId.RAW_SHARK.id(), 1);
 							p.incExp(Skills.FISHING, 440, false);
 						} else if (catchFish(50, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..a sword fish");
-							addItem(p, ItemId.RAW_SWORDFISH.id(), 1);
+							mes(p, 1200, "..a sword fish");
+							give(p, ItemId.RAW_SWORDFISH.id(), 1);
 							p.incExp(Skills.FISHING, 400, false);
 						} else if (catchFish(40, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..a lobster");
-							addItem(p, ItemId.RAW_LOBSTER.id(), 1);
+							mes(p, 1200, "..a lobster");
+							give(p, ItemId.RAW_LOBSTER.id(), 1);
 							p.incExp(Skills.FISHING, 360, false);
 						} else if (catchFish(30, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..some tuna");
-							addItem(p, ItemId.RAW_TUNA.id(), 1);
+							mes(p, 1200, "..some tuna");
+							give(p, ItemId.RAW_TUNA.id(), 1);
 							p.incExp(Skills.FISHING, 320, false);
 						} else if (catchFish(15, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..some anchovies");
-							addItem(p, ItemId.RAW_ANCHOVIES.id(), 1);
+							mes(p, 1200, "..some anchovies");
+							give(p, ItemId.RAW_ANCHOVIES.id(), 1);
 							p.incExp(Skills.FISHING, 160, false);
 						} else if (catchFish(5, p.getSkills().getLevel(Skills.FISHING))) {
-							message(p, 1200, "..a sardine");
-							addItem(p, ItemId.RAW_SARDINE.id(), 1);
+							mes(p, 1200, "..a sardine");
+							give(p, ItemId.RAW_SARDINE.id(), 1);
 							p.incExp(Skills.FISHING, 80, false);
 						} else {
-							message(p, 1200, "..some shrimp");
-							addItem(p, ItemId.RAW_SHRIMP.id(), 1);
+							mes(p, 1200, "..some shrimp");
+							give(p, ItemId.RAW_SHRIMP.id(), 1);
 							p.incExp(Skills.FISHING, 40, false);
 						}
 					}
 					 else {
 						int randomJunkItem = JUNK_ITEMS[DataConversions.random(0, JUNK_ITEMS.length - 1)];
 						if (randomJunkItem == ItemId.EDIBLE_SEAWEED.id()) { // Edible seaweed
-							message(p, 1200, "..some seaweed");
-							addItem(p, ItemId.EDIBLE_SEAWEED.id(), 1);
+							mes(p, 1200, "..some seaweed");
+							give(p, ItemId.EDIBLE_SEAWEED.id(), 1);
 							p.incExp(Skills.FISHING, 20, false);
 						} else if (randomJunkItem == ItemId.OYSTER.id()) { // Oyster
-							message(p, 1200, "..an oyster!");
-							addItem(p, ItemId.OYSTER.id(), 1);
+							mes(p, 1200, "..an oyster!");
+							give(p, ItemId.OYSTER.id(), 1);
 							p.incExp(Skills.FISHING, 40, false);
 						} else {
 							// Broken glass, buttons, damaged armour, ceramic remains
 							if (randomJunkItem == ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id() || randomJunkItem == ItemId.BUTTONS.id()
 								|| randomJunkItem == ItemId.DAMAGED_ARMOUR_1.id() || randomJunkItem == ItemId.DAMAGED_ARMOUR_2.id()
 								|| randomJunkItem == ItemId.CERAMIC_REMAINS.id()) {
-								message(p, 1200, "..some " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
+								mes(p, 1200, "..some " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
 							}
 							// Old boot
 							else if (randomJunkItem == ItemId.OLD_BOOT.id()) {
-								message(p, 1200, "..an " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
+								mes(p, 1200, "..an " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
 							}
 							// broken arrow, broken staff, Rusty sword, vase
 							else {
-								message(p, 1200, "..a " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
+								mes(p, 1200, "..a " + p.getWorld().getServer().getEntityHandler().getItemDef(randomJunkItem).getName());
 							}
-							addItem(p, randomJunkItem, 1);
+							give(p, randomJunkItem, 1);
 							p.incExp(Skills.FISHING, 5, false);
 						}
 					}

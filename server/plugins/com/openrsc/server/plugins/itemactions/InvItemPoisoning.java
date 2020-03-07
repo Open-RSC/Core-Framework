@@ -34,7 +34,7 @@ public class InvItemPoisoning implements UseInvTrigger {
 		if (item.getDef(player.getWorld()).isStackable()) {
 			//6 darts or 5 bolts/arrows
 			maxAmount = rawItemName.contains("dart") ? 6 : 5;
-			makeAmount = hasItem(player, item.getCatalogId(), maxAmount) ? maxAmount : player.getCarriedItems().getInventory().countId(item.getCatalogId());
+			makeAmount = ifheld(player, item.getCatalogId(), maxAmount) ? maxAmount : player.getCarriedItems().getInventory().countId(item.getCatalogId());
 
 			procItemName = "some ";
 			if (rawItemName.contains("dart")) {
@@ -53,9 +53,9 @@ public class InvItemPoisoning implements UseInvTrigger {
 		}
 		Item poisonedItem = getPoisonedItem(player.getWorld(), item.getDef(player.getWorld()).getName());
 		if (poisonedItem != null) {
-			if (removeItem(player, ItemId.WEAPON_POISON.id(), 1) && removeItem(player, item.getCatalogId(), makeAmount)) {
+			if (remove(player, ItemId.WEAPON_POISON.id(), 1) && remove(player, item.getCatalogId(), makeAmount)) {
 				player.message("You poison " + procItemName);
-				addItem(player, poisonedItem.getCatalogId(), makeAmount);
+				give(player, poisonedItem.getCatalogId(), makeAmount);
 			}
 		} else {
 			player.message("Nothing interesting happens");

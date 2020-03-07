@@ -10,6 +10,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -72,7 +73,7 @@ public class Fishing implements OpLocTrigger {
 			}
 		}
 		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
-			message(player, "that's enough fishing for now",
+			Functions.mes(player, "that's enough fishing for now",
 					"go through the next door to continue the tutorial");
 			return;
 		}
@@ -108,7 +109,7 @@ public class Fishing implements OpLocTrigger {
 		}
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
-		showBubble(player, new Item(netId));
+		thinkbubble(player, new Item(netId));
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Fishing", Formulae.getRepeatTimes(player, Skills.FISHING), true) {
 			@Override
 			public void action() {
@@ -170,7 +171,7 @@ public class Fishing implements OpLocTrigger {
 								if (DataConversions.random(0, 200) == 100) {
 									getOwner().playerServerMessage(MessageType.QUEST, "You catch a casket");
 									getOwner().incExp(Skills.FISHING, 40, true);
-									addItem(getOwner(), ItemId.CASKET.id(), 1);
+									give(getOwner(), ItemId.CASKET.id(), 1);
 								}
 								for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
 									ObjectFishDef fishDef = iter.next();
@@ -213,7 +214,7 @@ public class Fishing implements OpLocTrigger {
 						}
 					}
 					if (!isCompleted()) {
-						showBubble(getOwner(), new Item(netId));
+						thinkbubble(getOwner(), new Item(netId));
 						getOwner().playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 					}
 				} catch (GameDatabaseException ex) {

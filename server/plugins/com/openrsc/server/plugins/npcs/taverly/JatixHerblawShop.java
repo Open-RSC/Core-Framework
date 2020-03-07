@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class JatixHerblawShop implements ShopInterface,
 	TalkNpcTrigger {
@@ -37,8 +38,8 @@ public class JatixHerblawShop implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello how can I help you?");
-		final int option = showMenu(p, n, new String[]{
+		npcsay(p, n, "Hello how can I help you?");
+		final int option = Functions.multi(p, n, new String[]{
 			"What are you selling?", "You can't, I'm beyond help",
 			"I'm okay, thankyou"});
 

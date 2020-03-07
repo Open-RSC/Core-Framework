@@ -37,9 +37,9 @@ public class OziachsRunePlateShop implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		playerTalk(p, n, "I have slain the dragon");
-		npcTalk(p, n, "Well done");
-		final int option = showMenu(p, n, "Can I buy a rune plate mail body now please?", "Thank you");
+		say(p, n, "I have slain the dragon");
+		npcsay(p, n, "Well done");
+		final int option = multi(p, n, "Can I buy a rune plate mail body now please?", "Thank you");
 		if (option == 0) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);

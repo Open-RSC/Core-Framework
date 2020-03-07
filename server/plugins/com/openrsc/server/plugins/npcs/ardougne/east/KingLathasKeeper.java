@@ -29,14 +29,14 @@ public final class KingLathasKeeper implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		playerTalk(p, n, "hello");
-		npcTalk(p, n, "so are you looking to buy some weapons",
+		say(p, n, "hello");
+		npcsay(p, n, "so are you looking to buy some weapons",
 			"king lathas keeps us very well stocked");
-		int option = showMenu(p, n, "what do you have?", "no thanks");
+		int option = multi(p, n, "what do you have?", "no thanks");
 		switch (option) {
 
 			case 0:
-				npcTalk(p, n, "take a look");
+				npcsay(p, n, "take a look");
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);
 				break;

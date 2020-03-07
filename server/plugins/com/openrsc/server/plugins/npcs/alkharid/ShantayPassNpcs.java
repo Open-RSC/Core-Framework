@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
@@ -57,30 +58,30 @@ public class ShantayPassNpcs implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, Npc n) {
 		if (n.getID() == SHANTAY_STANDING_GUARD) {
-			npcTalk(p, n, "Hello there!", "What can I do for you?");
-			int menu = showMenu(p, n, "I'd like to go into the desert please.",
+			npcsay(p, n, "Hello there!", "What can I do for you?");
+			int menu = multi(p, n, "I'd like to go into the desert please.",
 				"Nothing thanks.");
 			if (menu == 0) {
-				npcTalk(p, n, "Of course!");
+				npcsay(p, n, "Of course!");
 				if (!p.getCarriedItems().hasCatalogID(SHANTAY_PASS, Optional.of(false))) {
-					npcTalk(p, n, "You'll need a Shantay pass to go through the gate into the desert.",
+					npcsay(p, n, "You'll need a Shantay pass to go through the gate into the desert.",
 						"See Shantay, he'll sell you one for a very reasonable price.");
 				} else {
 					int menus;
 					if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-						message(p, "There is a large poster on the wall near the gateway. It reads..",
+						Functions.mes(p, "There is a large poster on the wall near the gateway. It reads..",
 							"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 							"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
 							"@gre@No responsibility is taken by Shantay ",
 							"@gre@If anything bad should happen to you in any circumstances whatsoever.",
 							"That seems pretty scary! Are you sure you want to go through?");
-						menus = showMenu(p,
+						menus = multi(p,
 							"Yeah, that poster doesn't scare me!",
 							"No, I'm having serious second thoughts now.");
 					} else {
-						message(p, "A poster on the wall says exactly the same as the disclaimer.",
+						Functions.mes(p, "A poster on the wall says exactly the same as the disclaimer.",
 							"Are you sure you want to go through?");
-						menus = showMenu(p,
+						menus = multi(p,
 							"Yeah, I'm not scared!",
 							"No, I'm having serious second thoughts now.");
 					}
@@ -91,38 +92,38 @@ public class ShantayPassNpcs implements ShopInterface,
 						p.getWorld().getServer().getGameEventHandler().add(
 							new SingleEvent(p.getWorld(), null, 60000, "Shantay Pass Talk Delay") {
 								public void action() {
-									npcTalk(p, npc, "Right, time for dinner!");
+									npcsay(p, npc, "Right, time for dinner!");
 									npc.remove();
 								}
 							});
-						sleep(1000);
-						npcTalk(p, npc, "Can I see your Shantay Desert Pass please.");
+						delay(1000);
+						npcsay(p, npc, "Can I see your Shantay Desert Pass please.");
 						p.message("You hand over a Shantay Pass.");
-						removeItem(p, SHANTAY_PASS, 1);
-						playerTalk(p, npc, "Sure, here you go!");
+						remove(p, SHANTAY_PASS, 1);
+						say(p, npc, "Sure, here you go!");
 						if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-							npcTalk(p, npc, "Here, have a disclaimer...",
+							npcsay(p, npc, "Here, have a disclaimer...",
 								"It means that Shantay isn't responsible if you die in the desert.");
 							p.message("The guard gives you a disclaimer.");
-							addItem(p, SHANTAY_DISCLAIMER, 1);
+							give(p, SHANTAY_DISCLAIMER, 1);
 						}
 						p.message("you go through the gate");
 						p.teleport(62, 735);
 					} else if (menus == 1) {
-						message(p, "You decide that your visit to the desert can be postponed..");
+						Functions.mes(p, "You decide that your visit to the desert can be postponed..");
 						p.message("Perhaps indefinitely!");
 					}
 
 				}
 			} else if (menu == 1) {
-				npcTalk(p, n, "Ok then, have a nice day.");
+				npcsay(p, n, "Ok then, have a nice day.");
 			}
 			return;
 		}
 		if (n.getID() == SHANTAY_MOVING_GUARD) {
-			npcTalk(p, n, "Go talk to Shantay or one of his assistants.",
+			npcsay(p, n, "Go talk to Shantay or one of his assistants.",
 				"I'm on duty and I don't have time to talk to the likes of you!");
-			message(p, "The guard seems quite bad tempered,",
+			Functions.mes(p, "The guard seems quite bad tempered,",
 				"probably from having to wear heavy armour in this intense heat.");
 			return;
 		}
@@ -132,27 +133,27 @@ public class ShantayPassNpcs implements ShopInterface,
 				p.getWorld().registerItem(groundItem);
 			}
 
-			npcTalk(p, n, "Hello Effendi, I am Shantay.");
+			npcsay(p, n, "Hello Effendi, I am Shantay.");
 			if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-				npcTalk(p, n, "I see you're new!",
+				npcsay(p, n, "I see you're new!",
 					"Make sure you read the poster before going into the desert.");
 			}
 			if (p.getQuestStage(Quests.TOURIST_TRAP) == 0) {
-				npcTalk(p, n, "There is a heartbroken Mother just past the gates and in the Desert.",
+				npcsay(p, n, "There is a heartbroken Mother just past the gates and in the Desert.",
 					"Her name is Irena and she mourns her lost Daughter. Such a shame.");
 			}
 		} else if (n.getID() == ASSISTANT) {
-			npcTalk(p, n, "Hello Effendi, I am a Shantay Pass Assistant.");
+			npcsay(p, n, "Hello Effendi, I am a Shantay Pass Assistant.");
 			if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-				npcTalk(p, n, "I see you're new!",
+				npcsay(p, n, "I see you're new!",
 					"Make sure you read the poster before going into the desert.");
 			}
 		}
-		int menu = showMenu(p, n, "What is this place?",
+		int menu = multi(p, n, "What is this place?",
 			"Can I see what you have to sell please?", "I must be going.");
 		if (menu == 0) {
 			if (inJail) {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"You should be in jail!",
 					"Well, no doubt the authorities in Port Sarim know what they're doing.",
@@ -160,7 +161,7 @@ public class ShantayPassNpcs implements ShopInterface,
 				inJail = false;
 				return;
 			}
-			npcTalk(p,
+			npcsay(p,
 				n,
 				"This is the pass of Shantay.",
 				"Mr Shantay guards this area with his men.",
@@ -168,53 +169,53 @@ public class ShantayPassNpcs implements ShopInterface,
 				"He and his men prevent outlaws from getting out of the desert.",
 				"And he stops the inexperienced from a dry death in the sands.",
 				"Which would you say you were?");
-			int menu2 = showMenu(p, n,
+			int menu2 = multi(p, n,
 				"I am definitely an outlaw, prepare to die!",
 				"I am a little inexperienced.",
 				"Er, neither, I'm an adventurer.");
 			if (menu2 == 0) {
-				npcTalk(p, n, "Ha, very funny.....", "Guards arrest him!");
-				message(p, "The guards arrest you and place you in the jail.");
-				npcTalk(p,
+				npcsay(p, n, "Ha, very funny.....", "Guards arrest him!");
+				Functions.mes(p, "The guards arrest you and place you in the jail.");
+				npcsay(p,
 					n,
 					"You'll have to stay in there until you pay the fine of five gold pieces.",
 					"Do you want to pay now?");
 				inJail = true;
-				int menu6 = showMenu(p, n, "Yes, Ok.",
+				int menu6 = multi(p, n, "Yes, Ok.",
 					"No thanks, you're not having my money.");
 				if (menu6 == 0) {
-					npcTalk(p, n,
+					npcsay(p, n,
 						"Good, I see that you have come to your senses.");
 					if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
-						message(p, "You hand over five gold pieces to Shantay.");
-						npcTalk(p, n,
+						Functions.mes(p, "You hand over five gold pieces to Shantay.");
+						npcsay(p, n,
 							"Great Effendi, now please try to keep the peace.");
-						message(p,
+						Functions.mes(p,
 							"The assistant unlocks the door to the cell.");
-						removeItem(p, ItemId.COINS.id(), 5);
+						remove(p, ItemId.COINS.id(), 5);
 						inJail = false;
 					} else {
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"You don't have that kind of cash on you I see.",
 							"But perhaps you have some in your bank?",
 							"You can transfer some money from your bank and pay the fine.",
 							"or you will be sent to a maximum security prison in Port Sarim.",
 							"Which is it going to be?");
-						int menu8 = showMenu(p, n, "I'll pay the fine.",
+						int menu8 = multi(p, n, "I'll pay the fine.",
 							"I'm not paying the fine!");
 						if (menu8 == 0) {
 							if (p.isIronMan(2)) {
 								p.message("As an Ultimate Iron Man, you cannot use the bank.");
 								return;
 							}
-							npcTalk(p, n,
+							npcsay(p, n,
 								"Ok then..., you'll need access to your bank.");
 							p.setAccessingBank(true);
 							ActionSender.showBank(p);
 							inJail = false;
 						} else if (menu8 == 1) {
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"You are to be transported to a maximum security prison in Port Sarim.",
 								"I hope you've learnt an important lesson from this.");
@@ -222,47 +223,47 @@ public class ShantayPassNpcs implements ShopInterface,
 						}
 					}
 				} else if (menu6 == 1) {
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"You have a choice.",
 						"You can either pay five gold pieces or...",
 						"You can be transported to a maximum security prison in Port Sarim.",
 						"Will you pay the five gold pieces?");
-					int menu7 = showMenu(p, n, "Yes, Ok.", "No, do your worst!");
+					int menu7 = multi(p, n, "Yes, Ok.", "No, do your worst!");
 					if (menu7 == 0) {
-						npcTalk(p, n,
+						npcsay(p, n,
 							"Good, I see that you have come to your senses.");
 						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
-							message(p,
+							Functions.mes(p,
 								"You hand over five gold pieces to Shantay.");
-							npcTalk(p, n,
+							npcsay(p, n,
 								"Great Effendi, now please try to keep the peace.");
-							message(p,
+							Functions.mes(p,
 								"The assistant unlocks the door to the cell.");
-							removeItem(p, ItemId.COINS.id(), 5);
+							remove(p, ItemId.COINS.id(), 5);
 							inJail = false;
 						} else {
-							npcTalk(p,
+							npcsay(p,
 								n,
 								"You don't have that kind of cash on you I see.",
 								"But perhaps you have some in your bank?",
 								"You can transfer some money from your bank and pay the fine.",
 								"or you will be sent to a maximum security prison in Port Sarim.",
 								"Which is it going to be?");
-							int menu8 = showMenu(p, n, "I'll pay the fine.",
+							int menu8 = multi(p, n, "I'll pay the fine.",
 								"I'm not paying the fine!");
 							if (menu8 == 0) {
 								if (p.isIronMan(2)) {
 									p.message("As an Ultimate Iron Man, you cannot use the bank.");
 									return;
 								}
-								npcTalk(p, n,
+								npcsay(p, n,
 									"Ok then..., you'll need access to your bank.");
 								p.setAccessingBank(true);
 								ActionSender.showBank(p);
 								inJail = false;
 							} else if (menu8 == 1) {
-								npcTalk(p,
+								npcsay(p,
 									n,
 									"You are to be transported to a maximum security prison in Port Sarim.",
 									"I hope you've learnt an important lesson from this.");
@@ -270,7 +271,7 @@ public class ShantayPassNpcs implements ShopInterface,
 							}
 						}
 					} else if (menu7 == 1) {
-						npcTalk(p,
+						npcsay(p,
 							n,
 							"You are to be transported to a maximum security prison in Port Sarim.",
 							"I hope you've learnt an important lesson from this.");
@@ -278,7 +279,7 @@ public class ShantayPassNpcs implements ShopInterface,
 					}
 				}
 			} else if (menu2 == 1) {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Can I recommend that you purchase a full waterskin and a knife!",
 					"These items will no doubt save your life...",
@@ -289,18 +290,18 @@ public class ShantayPassNpcs implements ShopInterface,
 					"To  keep the pass open and bandit free, we charge a small toll of five gold pieces.",
 					"You can buy a desert pass from me, just ask me to open the shop.",
 					"You can also use our free banking services by clicking on the chest.");
-				int menu5 = showMenu(p, n,
+				int menu5 = multi(p, n,
 					"Can I see what you have to sell please?",
 					"I must be going.");
 				if (menu5 == 0) {
-					npcTalk(p, n, "Absolutely Effendi!");
+					npcsay(p, n, "Absolutely Effendi!");
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 				} else if (menu5 == 1) {
-					npcTalk(p, n, " So long...");
+					npcsay(p, n, " So long...");
 				}
 			} else if (menu2 == 2) {
-				npcTalk(p,
+				npcsay(p,
 					n,
 					"Great, I have just the thing for the desert adventurer.",
 					"I sell desert clothes which will keep you cool in the heat of the desert.",
@@ -310,44 +311,44 @@ public class ShantayPassNpcs implements ShopInterface,
 					"It's hot in the desert, you'll bake in all that armour.",
 					"To keep the pass open we ask for 5 gold pieces.",
 					"and we give you a Shantay Pass, just ask to see what I sell to buy one.");
-				int menu3 = showMenu(p, n,
+				int menu3 = multi(p, n,
 					"Can I see what you have to sell please?",
 					"I must be going.",
 					"Why do I have to pay to go into the desert?");
 				if (menu3 == 0) {
-					npcTalk(p, n, "Absolutely Effendi!");
+					npcsay(p, n, "Absolutely Effendi!");
 					p.setAccessingShop(shop);
 					ActionSender.showShop(p, shop);
 				} else if (menu3 == 1) {
-					npcTalk(p, n, "So long...");
+					npcsay(p, n, "So long...");
 				} else if (menu3 == 2) {
-					message(p,
+					Functions.mes(p,
 						"The Assistant opens his arms wide as if too embrace you.");
-					npcTalk(p,
+					npcsay(p,
 						n,
 						"Effendi, you insult me!",
 						"We are not interested in making a profit from you!",
 						"I merely seek to cover my expenses in keeping this pass open.",
 						"There is repair work to carry out and also the mens wages to consider.",
 						"For the paltry sum of 5 Gold pieces, I think we offer a great service.");
-					int menu4 = showMenu(p, n,
+					int menu4 = multi(p, n,
 						"Can I see what you have to sell please?",
 						"I must be going.");
 					if (menu4 == 0) {
 
 					} else if (menu4 == 1) {
-						npcTalk(p, n, " Absolutely Effendi!");
+						npcsay(p, n, " Absolutely Effendi!");
 						p.setAccessingShop(shop);
 						ActionSender.showShop(p, shop);
 					}
 				}
 			}
 		} else if (menu == 1) {
-			npcTalk(p, n, "Absolutely Effendi!");
+			npcsay(p, n, "Absolutely Effendi!");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (menu == 2) {
-			npcTalk(p, n, "So long...");
+			npcsay(p, n, "So long...");
 		}
 	}
 
@@ -384,12 +385,12 @@ public class ShantayPassNpcs implements ShopInterface,
 				return;
 			}
 			if (!p.getCache().hasKey("shantay-chest")) {
-				message(p, "This chest is used by Shantay and his men.",
+				Functions.mes(p, "This chest is used by Shantay and his men.",
 					"They can put things in and out of storage for you.",
 					"You open the bank.");
 				p.getCache().store("shantay-chest", true);
 			}
-			if(validateBankPin(p)) {
+			if(validatebankpin(p)) {
 				p.setAccessingBank(true);
 				ActionSender.showBank(p);
 			}
@@ -398,43 +399,43 @@ public class ShantayPassNpcs implements ShopInterface,
 			if (command.equals("go through")) {
 				int menu;
 				if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-					message(p, "There is a large poster on the wall near the gateway. It reads..",
+					Functions.mes(p, "There is a large poster on the wall near the gateway. It reads..",
 						"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 						"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
 						"@gre@No responsibility is taken by Shantay ",
 						"@gre@If anything bad should happen to you in any circumstances whatsoever.",
 						"That seems pretty scary! Are you sure you want to go through?");
-					menu = showMenu(p,
+					menu = multi(p,
 						"Yeah, that poster doesn't scare me!",
 						"No, I'm having serious second thoughts now.");
 				} else {
-					message(p, "A poster on the wall says exactly the same as the disclaimer.",
+					Functions.mes(p, "A poster on the wall says exactly the same as the disclaimer.",
 						"Are you sure you want to go through?");
-					menu = showMenu(p,
+					menu = multi(p,
 						"Yeah, I'm not scared!",
 						"No, I'm having serious second thoughts now.");
 				}
-				Npc shantayGuard = getNearestNpc(p, SHANTAY_STANDING_GUARD, 5);
+				Npc shantayGuard = ifnearvisnpc(p, SHANTAY_STANDING_GUARD, 5);
 				if (menu == 0) {
 					if (!p.getCarriedItems().hasCatalogID(SHANTAY_PASS, Optional.of(false))) {
-						message(p, "A guard stops you on your way out of the gate...");
+						Functions.mes(p, "A guard stops you on your way out of the gate...");
 						if (shantayGuard != null) {
-							npcTalk(p, shantayGuard, "You need a Shantay pass to get through this gate.",
+							npcsay(p, shantayGuard, "You need a Shantay pass to get through this gate.",
 								"See Shantay, he will sell you one for a very reasonable price.");
 						} else {
 							p.message("Shantay guard seem to be busy at the moment.");
 						}
 					} else {
 						if (shantayGuard != null) {
-							npcTalk(p, shantayGuard, "Can I see your Shantay Desert Pass please.");
+							npcsay(p, shantayGuard, "Can I see your Shantay Desert Pass please.");
 							p.message("You hand over a Shantay Pass.");
-							removeItem(p, SHANTAY_PASS, 1);
-							playerTalk(p, shantayGuard, "Sure, here you go!");
+							remove(p, SHANTAY_PASS, 1);
+							say(p, shantayGuard, "Sure, here you go!");
 							if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-								npcTalk(p, shantayGuard, "Here, have a disclaimer...",
+								npcsay(p, shantayGuard, "Here, have a disclaimer...",
 									"It means that Shantay isn't responsible if you die in the desert.");
 								p.message("The guard gives you a disclaimer.");
-								addItem(p, SHANTAY_DISCLAIMER, 1);
+								give(p, SHANTAY_DISCLAIMER, 1);
 							}
 							p.message("you go through the gate");
 							p.teleport(62, 735);
@@ -443,11 +444,11 @@ public class ShantayPassNpcs implements ShopInterface,
 						}
 					}
 				} else if (menu == 1) {
-					message(p, "You decide that your visit to the desert can be postponed..");
+					Functions.mes(p, "You decide that your visit to the desert can be postponed..");
 					p.message("Perhaps indefinitely!");
 				}
 			} else if (command.equals("look")) {
-				message(p, "You look at the huge Stone Gate.",
+				Functions.mes(p, "You look at the huge Stone Gate.",
 					"On the gate is a large poster, it reads.",
 					"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 					"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
@@ -467,9 +468,9 @@ public class ShantayPassNpcs implements ShopInterface,
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == SHANTAY_DISCLAIMER) {
 			p.message("This looks very important indeed, would you like to read it now?");
-			addItem(p, SHANTAY_DISCLAIMER, 1);
+			give(p, SHANTAY_DISCLAIMER, 1);
 			i.remove();
-			int menu = showMenu(p, "Yes, I'll read it now!", "No thanks, it'll keep!");
+			int menu = multi(p, "Yes, I'll read it now!", "No thanks, it'll keep!");
 			if (menu == 0) {
 				ActionSender.sendBox(p, "@red@*** Shantay Disclaimer***% %@gre@The Desert is a VERY Dangerous place.% %@red@Do not enter if you're scared of dying.% %@gre@Beware of high temperatures, sand storms, and slavers% %@red@No responsibility is taken by Shantay% %@gre@If anything bad happens to you under any circumstances.", true);
 			} else if (menu == 1) {

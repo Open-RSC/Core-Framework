@@ -8,11 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public final class CraftingEquipmentShops implements ShopInterface,
 	TalkNpcTrigger {
@@ -39,10 +40,10 @@ public final class CraftingEquipmentShops implements ShopInterface,
 
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy some crafting equipment");
-		int option = showMenu(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
+		npcsay(p, n, "Would you like to buy some crafting equipment");
+		int option = Functions.multi(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
 		if (option == 0) {
-			npcTalk(p, n, "Ok fair well on your travels");
+			npcsay(p, n, "Ok fair well on your travels");
 		} else if (option == 1) {
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
