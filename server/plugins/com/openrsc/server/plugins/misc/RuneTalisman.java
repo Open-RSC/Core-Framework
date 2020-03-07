@@ -5,9 +5,8 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
-public class RuneTalisman implements InvActionListener, InvActionExecutiveListener {
+public class RuneTalisman implements InvActionListener {
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {

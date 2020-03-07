@@ -5,7 +5,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface InvUseOnNpcListener {
-
-	public void onInvUseOnNpc(Player player, Npc npc, Item item);
-
+	void onInvUseOnNpc(Player player, Npc npc, Item item);
+	boolean blockInvUseOnNpc(Player player, Npc npc, Item item);
 }

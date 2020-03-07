@@ -6,8 +6,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Arrays;
@@ -17,8 +15,7 @@ import java.util.Set;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BarbarianAgilityCourse implements WallObjectActionListener,
-	WallObjectActionExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener {
+	ObjectActionListener {
 
 	private static final int LOW_WALL = 163;
 	private static final int LOW_WALL2 = 164;

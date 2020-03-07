@@ -10,7 +10,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class WaynesChains implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 25000, 100, 65, 1, new Item(ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
 		3), new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 2), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.BLACK_CHAIN_MAIL_BODY.id(), 1),

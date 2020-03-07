@@ -5,11 +5,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class ItemDurability implements InvActionListener, InvActionExecutiveListener {
+public class ItemDurability implements InvActionListener {
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {
 		return (item.getCatalogId() == ItemId.RING_OF_RECOIL.id() || item.getCatalogId() == ItemId.RING_OF_FORGING.id()

@@ -4,12 +4,11 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
 
-public class PineappleTree implements ObjectActionExecutiveListener,
+public class PineappleTree implements
 	ObjectActionListener {
 
 	@Override

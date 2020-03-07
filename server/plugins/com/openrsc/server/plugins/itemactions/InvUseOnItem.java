@@ -6,14 +6,13 @@ import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 
-public class InvUseOnItem implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class InvUseOnItem implements InvUseOnItemListener {
 	private int[] capes = {
 		ItemId.RED_CAPE.id(), ItemId.BLACK_CAPE.id(), ItemId.BLUE_CAPE.id(),
 		ItemId.GREEN_CAPE.id(), ItemId.YELLOW_CAPE.id(), ItemId.ORANGE_CAPE.id(),

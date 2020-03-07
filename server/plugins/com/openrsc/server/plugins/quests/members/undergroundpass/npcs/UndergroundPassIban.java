@@ -8,11 +8,10 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassIban implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class UndergroundPassIban implements InvUseOnObjectListener {
 
 	private static int PIT_OF_THE_DAMNED = 913;
 

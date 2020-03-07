@@ -16,10 +16,6 @@ import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -27,8 +23,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, PickupListener, PickupExecutiveListener,
-InvActionListener, InvActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
+public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, PickupListener,
+	InvActionListener, ObjectActionListener {
 
 	private static final int[][] SCORES_XP = {{20, 30, 35, 40, 220} , {40, 50, 60, 70, 220}};
 

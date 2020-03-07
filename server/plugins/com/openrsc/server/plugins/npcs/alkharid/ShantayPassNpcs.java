@@ -15,9 +15,6 @@ import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,8 +24,8 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShantayPassNpcs implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionListener,
-	ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener {
+	TalkToNpcListener, ObjectActionListener,
+	PickupListener {
 	private static final Logger LOGGER = LogManager.getLogger(ShantayPassNpcs.class);
 	private static int ASSISTANT = 720;
 	private static int SHANTAY_DISCLAIMER = ItemId.A_FREE_SHANTAY_DISCLAIMER.id();

@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -19,12 +18,12 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GertrudesCat implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, PickupListener,
-	PickupExecutiveListener, InvUseOnGroundItemListener,
-	InvUseOnGroundItemExecutiveListener, InvUseOnItemListener,
-	InvUseOnItemExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, DropListener, DropExecutiveListener {
+	WallObjectActionListener,
+	PickupListener,
+	InvUseOnGroundItemListener,
+	InvUseOnItemListener,
+	ObjectActionListener,
+	DropListener {
 
 	@Override
 	public int getQuestId() {

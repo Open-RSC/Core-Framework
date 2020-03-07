@@ -12,10 +12,6 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -23,9 +19,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SeaSlug implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener,
-	ObjectActionListener, ObjectActionExecutiveListener,
-	WallObjectActionListener, WallObjectActionExecutiveListener {
+	PickupListener,
+	ObjectActionListener,
+	WallObjectActionListener {
 
 	@Override
 	public int getQuestId() {

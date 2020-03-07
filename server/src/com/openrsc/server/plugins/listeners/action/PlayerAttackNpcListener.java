@@ -5,6 +5,6 @@ import com.openrsc.server.model.entity.player.Player;
 
 public interface PlayerAttackNpcListener {
 
-	public void onPlayerAttackNpc(Player p, Npc affectedmob);
-
+	void onPlayerAttackNpc(Player p, Npc affectedmob);
+	boolean blockPlayerAttackNpc(Player p, Npc affectedmob);
 }

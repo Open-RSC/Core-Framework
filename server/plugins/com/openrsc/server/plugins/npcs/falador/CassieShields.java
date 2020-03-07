@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class CassieShields implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 2,
 		new Item(ItemId.WOODEN_SHIELD.id(), 5), new Item(ItemId.BRONZE_SQUARE_SHIELD.id(), 3), new Item(ItemId.BRONZE_KITE_SHIELD.id(), 3),

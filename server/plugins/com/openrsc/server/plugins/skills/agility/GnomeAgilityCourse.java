@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,7 +14,7 @@ import java.util.Set;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeAgilityCourse implements ObjectActionListener, ObjectActionExecutiveListener {
+public class GnomeAgilityCourse implements ObjectActionListener {
 
 	private static final int BALANCE_LOG = 655;
 	private static final int NET = 647;

@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,8 +15,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeNpcs implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener,
-TalkToNpcListener, TalkToNpcExecutiveListener, NpcCommandListener, NpcCommandExecutiveListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener {
+public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener,
+	TalkToNpcListener, NpcCommandListener, IndirectTalkToNpcListener {
 
 	private static final int[] GNOME_BALLERS_ZONE_PASS = {605, 606, 607, 608};
 	private static final int[] GNOME_BALLERS_ZONE1XP_OUTER = {603, 604};

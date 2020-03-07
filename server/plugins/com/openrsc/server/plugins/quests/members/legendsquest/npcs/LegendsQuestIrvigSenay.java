@@ -6,14 +6,13 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestIrvigSenay implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener,
-	PlayerNpcRunListener, PlayerNpcRunExecutiveListener {
+public class LegendsQuestIrvigSenay implements PlayerAttackNpcListener, PlayerKilledNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener,
+	PlayerNpcRunListener {
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {

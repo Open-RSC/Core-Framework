@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGuildGuard implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
+public class LegendsQuestGuildGuard implements TalkToNpcListener, ObjectActionListener {
 
 	private static final int MITHRIL_GATES = 1079;
 

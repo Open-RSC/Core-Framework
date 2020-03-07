@@ -10,13 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class OgreTrader implements ShopInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public class OgreTrader implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 15000, 130, 40, 3,
 		new Item(ItemId.POT.id(), 3),

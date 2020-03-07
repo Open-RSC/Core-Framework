@@ -8,12 +8,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-public class InvAction extends Functions implements InvActionListener, InvActionExecutiveListener {
+public class InvAction extends Functions implements InvActionListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player player, String command) {

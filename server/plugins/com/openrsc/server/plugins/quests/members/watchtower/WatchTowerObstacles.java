@@ -10,8 +10,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -21,7 +19,7 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerObstacles implements ObjectActionListener, ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
+public class WatchTowerObstacles implements ObjectActionListener, WallObjectActionListener {
 
 
 	/**

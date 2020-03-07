@@ -5,15 +5,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class Yohnus implements TalkToNpcExecutiveListener, TalkToNpcListener, WallObjectActionListener, WallObjectActionExecutiveListener {
+public class Yohnus implements TalkToNpcListener, WallObjectActionListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {

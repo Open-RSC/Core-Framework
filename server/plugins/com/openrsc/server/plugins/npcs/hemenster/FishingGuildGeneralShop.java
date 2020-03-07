@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class FishingGuildGeneralShop implements
-	ShopInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
+	ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 15000, 100, 70, 2,
 		new Item(ItemId.FISHING_BAIT.id(), 200), new Item(ItemId.FEATHER.id(), 200), new Item(ItemId.RAW_COD.id(), 0),

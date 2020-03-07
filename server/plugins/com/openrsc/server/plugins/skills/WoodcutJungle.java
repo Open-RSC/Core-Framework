@@ -7,8 +7,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -18,7 +16,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements ObjectActionListener,
-	ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
+	WallObjectActionListener {
 
 	private static int[] JUNGLE_TREES = {1086, 1100, 1099, 1092, 1091};
 

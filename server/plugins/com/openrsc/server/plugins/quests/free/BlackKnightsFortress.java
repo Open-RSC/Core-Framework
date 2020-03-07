@@ -15,19 +15,14 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import java.util.Collection;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener, ObjectActionExecutiveListener,
-	TalkToNpcExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, WallObjectActionExecutiveListener,
+	ObjectActionListener,
+	InvUseOnObjectListener,
 	WallObjectActionListener {
 	/**
 	 * GameObjects associated with this quest;

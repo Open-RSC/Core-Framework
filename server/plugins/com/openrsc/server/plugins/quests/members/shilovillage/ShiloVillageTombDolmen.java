@@ -10,14 +10,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListener, InvUseOnObjectListener {
 
 	private static final int TOMB_DOLMEN = 689;
 

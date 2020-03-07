@@ -7,12 +7,10 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SinisterChest implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class SinisterChest implements ObjectActionListener, InvUseOnObjectListener {
 
 	private final int SINISTER_CHEST = 645;
 	private final int SINISTER_CHEST_OPEN = 644;

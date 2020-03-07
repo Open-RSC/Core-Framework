@@ -6,9 +6,8 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
-public class Bones implements InvActionListener, InvActionExecutiveListener {
+public class Bones implements InvActionListener {
 
 	private void buryBonesHelper(Player owner, Item item) {
 		owner.message("You bury the "

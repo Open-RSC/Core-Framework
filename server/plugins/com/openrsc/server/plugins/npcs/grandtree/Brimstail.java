@@ -7,10 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-public class Brimstail implements TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionExecutiveListener, ObjectActionListener {
+public class Brimstail implements TalkToNpcListener, ObjectActionListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

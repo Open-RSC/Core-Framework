@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Drogo implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 70, 2, new Item(ItemId.HAMMER.id(),
 		4), new Item(ItemId.BRONZE_PICKAXE.id(), 4), new Item(ItemId.COPPER_ORE.id(), 0), new Item(ItemId.TIN_ORE.id(), 0),

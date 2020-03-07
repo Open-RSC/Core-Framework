@@ -4,7 +4,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
@@ -12,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.getMaxLevel;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class Prayer implements ObjectActionExecutiveListener, ObjectActionListener {
+public class Prayer implements ObjectActionListener {
 
 	@Override
 	public void onObjectAction(final GameObject object, String command, Player player) {

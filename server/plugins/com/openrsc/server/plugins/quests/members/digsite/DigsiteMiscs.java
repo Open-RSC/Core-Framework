@@ -5,12 +5,11 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.DropListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteMiscs implements DropListener, DropExecutiveListener {
+public class DigsiteMiscs implements DropListener {
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {

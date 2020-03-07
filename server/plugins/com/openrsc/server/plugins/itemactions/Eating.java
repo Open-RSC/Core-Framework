@@ -7,13 +7,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Eating implements InvActionListener, InvActionExecutiveListener {
+public class Eating implements InvActionListener {
 
 	@Override
 	public boolean blockInvAction(Item item, Player p, String command) {

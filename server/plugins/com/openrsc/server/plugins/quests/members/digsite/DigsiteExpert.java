@@ -10,13 +10,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteExpert implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class DigsiteExpert implements QuestInterface, TalkToNpcListener, InvUseOnNpcListener {
 
 	@Override
 	public int getQuestId() {

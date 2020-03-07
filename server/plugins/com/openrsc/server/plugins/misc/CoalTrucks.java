@@ -6,13 +6,11 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CoalTrucks implements ObjectActionExecutiveListener, ObjectActionListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class CoalTrucks implements ObjectActionListener, InvUseOnObjectListener {
 
 	private static int COAL_TRUCK = 383;
 

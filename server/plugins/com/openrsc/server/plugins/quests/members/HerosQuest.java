@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -22,8 +21,8 @@ import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
 public class HerosQuest implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener,
-	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener{
+	WallObjectActionListener, InvUseOnWallObjectListener, ObjectActionListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener,
+	PlayerKilledNpcListener, PickupListener {
 
 	private static final int GRIPS_CUPBOARD_OPEN = 264;
 	private static final int GRIPS_CUPBOARD_CLOSED = 263;
@@ -332,15 +331,21 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
-			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
-				return false;
-			} else {
+			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				p.message("Ouch that is too hot to take");
 				p.message("I need something cold to pick it up with");
 				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.15D);
 				p.damage(damage);
+			}
+		}
+	}
+
+	@Override
+	public boolean blockPickup(Player p, GroundItem i) {
+		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
+			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				return true;
 			}
 		}

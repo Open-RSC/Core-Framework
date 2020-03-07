@@ -10,12 +10,10 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ArdougneGeneralShop implements ShopInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public class ArdougneGeneralShop implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 15000, 130, 40, 3, new Item(ItemId.VIAL.id(),
 		10), new Item(ItemId.BRONZE_PICKAXE.id(), 2), new Item(ItemId.IRON_AXE.id(), 2), new Item(ItemId.COOKEDMEAT.id(), 2),

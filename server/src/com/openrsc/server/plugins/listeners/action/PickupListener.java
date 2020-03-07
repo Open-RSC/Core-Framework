@@ -7,5 +7,9 @@ public interface PickupListener {
 	/**
 	 * Called when a user picks up an item
 	 */
-	public void onPickup(Player p, GroundItem i);
+	void onPickup(Player p, GroundItem i);
+	/**
+	 * Return true if you wish to prevent a user from picking up an item
+	 */
+	boolean blockPickup(Player p, GroundItem i);
 }

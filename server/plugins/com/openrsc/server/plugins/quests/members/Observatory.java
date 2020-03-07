@@ -13,9 +13,6 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -23,9 +20,8 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Observatory implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+	ObjectActionListener,
+	InvUseOnObjectListener {
 
 	private int selectedNumber = 0;
 

@@ -8,14 +8,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * @author n0m, Fate
  */
-public class Zamorak implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcExecutiveListener, PlayerRangeNpcListener, PlayerMageNpcExecutiveListener, PlayerMageNpcListener {
+public class Zamorak implements TalkToNpcListener, PickupListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener {
 
 	@Override
 	public void onPickup(Player owner, GroundItem item) {

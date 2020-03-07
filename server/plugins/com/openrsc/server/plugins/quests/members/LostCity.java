@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,11 +26,11 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author n0m
  */
 public class LostCity implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener,
-	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener,
-	InvUseOnItemListener, InvUseOnItemExecutiveListener,
-	WallObjectActionListener, WallObjectActionExecutiveListener {
+	ObjectActionListener,
+	PlayerKilledNpcListener,
+	InvUseOnItemListener,
+	WallObjectActionListener,
+	PlayerAttackNpcListener {
 	private static final Logger LOGGER = LogManager.getLogger(LostCity.class);
 
 	/* Objects */
@@ -381,11 +380,21 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == NpcId.TREE_SPIRIT.id()) {
+			if (affectedmob.getAttribute("spawnedFor", null) != null) {
+				if (!affectedmob.getAttribute("spawnedFor").equals(p)) {
+					p.message("That npc is not after you.");
+				}
+			}
+		}
+	}
+
+	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.TREE_SPIRIT.id()) {
 			if (n.getAttribute("spawnedFor", null) != null) {
 				if (!n.getAttribute("spawnedFor").equals(p)) {
-					p.message("That npc is not after you.");
 					return true;
 				}
 			}

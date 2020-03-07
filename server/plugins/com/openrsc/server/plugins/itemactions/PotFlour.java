@@ -6,10 +6,8 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnGroundItemListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 
-public class PotFlour implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, PickupListener, PickupExecutiveListener {
+public class PotFlour implements InvUseOnGroundItemListener, PickupListener {
 
 	@Override
 	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {

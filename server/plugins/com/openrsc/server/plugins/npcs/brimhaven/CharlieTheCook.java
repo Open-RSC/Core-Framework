@@ -3,14 +3,13 @@ package com.openrsc.server.plugins.npcs.brimhaven;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class CharlieTheCook implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class CharlieTheCook implements TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {

@@ -4,11 +4,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.DropListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestOnDrop implements DropListener, DropExecutiveListener {
+public class LegendsQuestOnDrop implements DropListener {
 
 	@Override
 	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {

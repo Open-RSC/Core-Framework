@@ -11,14 +11,13 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class CandleMakerShop implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 1000, 100, 80, 2, new Item(ItemId.UNLIT_CANDLE.id(), 10));
 

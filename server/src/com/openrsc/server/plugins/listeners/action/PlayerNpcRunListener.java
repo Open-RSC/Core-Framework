@@ -11,4 +11,8 @@ public interface PlayerNpcRunListener {
 	 * @param n
 	 */
 	void onPlayerNpcRun(Player p, Npc n);
+	/**
+	 * Return true if you wish to prevent a user from running from npc
+	 */
+	boolean blockPlayerNpcRun(Player p, Npc n);
 }

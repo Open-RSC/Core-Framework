@@ -11,15 +11,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.HashMap;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestHolyWater implements InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class LegendsQuestHolyWater implements InvActionListener, InvUseOnItemListener {
 
 	private static final HashMap<Player, RestartableDelayedEvent> playerEventMap = new HashMap<Player, RestartableDelayedEvent>();
 

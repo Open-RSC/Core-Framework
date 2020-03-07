@@ -11,14 +11,10 @@ import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageUtils implements DropListener, DropExecutiveListener, InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener, PickupExecutiveListener {
+public class ShiloVillageUtils implements DropListener, InvActionListener, InvUseOnItemListener, PickupListener {
 
 	static void BUMPY_DIRT_HOLDER(Player p) {
 		p.message("Do you want to try to crawl through the fissure?");

@@ -7,13 +7,12 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener {
 
 	@Override
 	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {

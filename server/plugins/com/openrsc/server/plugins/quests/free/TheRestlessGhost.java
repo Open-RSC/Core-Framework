@@ -13,19 +13,14 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TheRestlessGhost implements QuestInterface, PickupExecutiveListener, PickupListener,
-	TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener,
-	InvUseOnObjectListener, InvUseOnObjectExecutiveListener,
-	ObjectActionExecutiveListener {
+public class TheRestlessGhost implements QuestInterface, PickupListener,
+	TalkToNpcListener, ObjectActionListener,
+	InvUseOnObjectListener {
 
 	private static final int GHOST_COFFIN_OPEN = 40;
 	private static final int GHOST_COFFIN_CLOSED = 39;

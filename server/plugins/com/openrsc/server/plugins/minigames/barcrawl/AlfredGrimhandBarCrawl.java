@@ -9,16 +9,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener {
+	ObjectActionListener {
 
 	@Override
 	public int getMiniGameId() {

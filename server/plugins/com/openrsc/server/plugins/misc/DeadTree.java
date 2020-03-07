@@ -5,9 +5,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-public class DeadTree implements ObjectActionListener, ObjectActionExecutiveListener {
+public class DeadTree implements ObjectActionListener {
 
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {

@@ -7,8 +7,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
+public class Gundai implements TalkToNpcListener, NpcCommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Gundai.class);
 	@Override
 	public void onTalkToNpc(final Player player, final Npc n) {

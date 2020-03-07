@@ -1,30 +1,24 @@
 package com.openrsc.server.plugins.minigames.gnomerestaurant;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
+import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.resetGnomeCooking;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
+public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, InvActionListener, DropListener {
 
 	@Override
 	public int getMiniGameId() {
@@ -581,11 +575,14 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, Ta
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.GNOMECRUNCHIE.id() || i.getCatalogId() == ItemId.GNOMEBOWL.id() || i.getCatalogId() == ItemId.GNOMEBATTA.id()) {
 			resetGnomeCooking(p);
-			return false;
 		}
+	}
+
+	@Override
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return false;
 	}
 }

@@ -6,11 +6,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
+import com.openrsc.server.plugins.listeners.action.DropListener;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.DropExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -24,7 +22,7 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener, InvActionListener, InvActionExecutiveListener, DropExecutiveListener {
+public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, InvActionListener, DropListener {
 
 	@Override
 	public int getMiniGameId() {
@@ -336,11 +334,14 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, Talk
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDrop(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || i.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			checkAndRemoveBlurberry(p, true);
-			return false;
 		}
+	}
+
+	@Override
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
 		return false;
 	}
 

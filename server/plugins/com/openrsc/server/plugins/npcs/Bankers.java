@@ -7,14 +7,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Bankers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
+public class Bankers implements TalkToNpcListener, NpcCommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
 	public static int[] BANKERS = {95, 224, 268, 540, 617};
 

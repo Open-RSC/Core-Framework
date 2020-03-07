@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -24,11 +23,11 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author n0m
  */
 public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, InvUseOnItemListener,
-	InvUseOnItemExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
-	TalkToNpcListener, PlayerKilledNpcExecutiveListener {
+	InvUseOnItemListener,
+	WallObjectActionListener,
+	ObjectActionListener,
+	TalkToNpcListener,
+	PlayerKilledNpcListener{
 	/*
 	 * Ship: -Arrived: 281, 3472
 	 *
@@ -391,7 +390,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public void onPlayerKilledNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WORMBRAIN.id() && p.getQuestStage(this) >= 2) {
 			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
@@ -417,6 +416,10 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 		} else if (n.getID() == NpcId.DRAGON.id() && p.getQuestStage(this) == 3) {
 			p.sendQuestComplete(getQuestId());
 		}
+	}
+
+	@Override
+	public boolean blockPlayerKilledNpc(Player p, Npc n) {
 		return false;
 	}
 

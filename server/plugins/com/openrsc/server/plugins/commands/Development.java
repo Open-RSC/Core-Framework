@@ -8,12 +8,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class Development implements CommandListener, CommandExecutiveListener {
+public final class Development implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Development.class);
 
 	public static String messagePrefix = null;

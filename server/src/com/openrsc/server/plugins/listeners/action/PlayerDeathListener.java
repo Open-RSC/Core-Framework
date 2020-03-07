@@ -9,4 +9,10 @@ public interface PlayerDeathListener {
 	 * @param p
 	 */
 	void onPlayerDeath(Player p);
-}
+	/**
+	 * Return true to prevent the default action on death (stake item drop, wild item drop etc)
+	 *
+	 * @param p
+	 * @return
+	 */
+	boolean blockPlayerDeath(Player p);}

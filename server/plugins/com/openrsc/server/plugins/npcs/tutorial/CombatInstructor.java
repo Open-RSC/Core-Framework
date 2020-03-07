@@ -4,18 +4,16 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerMageNpcExecutiveListener, PlayerAttackNpcExecutiveListener {
+public class CombatInstructor implements TalkToNpcListener, PlayerKilledNpcListener, PlayerAttackNpcListener, PlayerMageNpcListener {
 	/**
 	 * @author Davve
 	 * Tutorial island combat instructor
@@ -87,22 +85,35 @@ public class CombatInstructor implements TalkToNpcExecutiveListener, TalkToNpcLi
 	}
 
 	@Override
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (!(
+			(!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone()) ||
+				(affectedmob.getID() == NpcId.CHICKEN.id()) ||
+				(affectedmob.getID() == NpcId.RAT_TUTORIAL.id() && p.getCache().getInt("tutorial") == 16)
+		)) {
+			if (p.getCache().getInt("tutorial") < 16)
+				message(p, "Speak to the combat instructor before killing rats");
+			else
+				message(p, "That's enough rat killing for now");
+		}
+	}
+
+	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone())
+		if (
+			(!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone()) ||
+				(n.getID() == NpcId.CHICKEN.id()) ||
+				(n.getID() == NpcId.RAT_TUTORIAL.id() && p.getCache().getInt("tutorial") == 16)
+		) {
 			return false;
-		if (n.getID() == NpcId.CHICKEN.id())
-			return false;
-		if (n.getID() == NpcId.RAT_TUTORIAL.id()) {
-			if (p.getCache().getInt("tutorial") == 16)
-				return false;
 		}
 
-		if (p.getCache().getInt("tutorial") < 16)
-			message(p, "Speak to the combat instructor before killing rats");
-		else
-			message(p, "That's enough rat killing for now");
-
 		return true;
+	}
+
+	@Override
+	public void onPlayerMageNpc(Player p, Npc n) {
+		onPlayerAttackNpc(p, n);
 	}
 
 	@Override

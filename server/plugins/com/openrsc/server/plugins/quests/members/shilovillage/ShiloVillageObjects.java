@@ -10,14 +10,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class ShiloVillageObjects implements ObjectActionListener, InvUseOnObjectListener {
 
 	/* Objects */
 	private static final int SPEC_STONE = 674;

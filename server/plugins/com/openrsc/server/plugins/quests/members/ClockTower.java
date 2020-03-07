@@ -11,19 +11,17 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ClockTower implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, InvUseOnGroundItemListener,
-	InvUseOnGroundItemExecutiveListener, PickupListener,
-	PickupExecutiveListener {
+	ObjectActionListener,
+	InvUseOnObjectListener,
+	WallObjectActionListener,
+	InvUseOnGroundItemListener,
+	PickupListener {
 
 	@Override
 	public int getQuestId() {

@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Chamber_Guardian implements ShopInterface, TalkToNpcExecutiveListener,
+public class Chamber_Guardian implements ShopInterface,
 	TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 60000 * 5, 100, 60, 2,

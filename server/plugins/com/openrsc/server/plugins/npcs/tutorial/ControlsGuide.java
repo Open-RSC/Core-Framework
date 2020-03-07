@@ -3,14 +3,13 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
 import com.openrsc.server.constants.NpcId;
 
-public class ControlsGuide implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class ControlsGuide implements TalkToNpcListener {
 	/**
 	 * @author Davve
 	 * Tutorial island second room guide

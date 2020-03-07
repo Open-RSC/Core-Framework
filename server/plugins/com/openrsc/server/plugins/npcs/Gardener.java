@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class Gardener implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private Shop shop = null;
 

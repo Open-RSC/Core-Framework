@@ -10,16 +10,12 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassKardiaTheWitch implements ObjectActionListener, ObjectActionExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, PickupExecutiveListener, PickupListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
+public class UndergroundPassKardiaTheWitch implements ObjectActionListener, WallObjectActionListener, PickupListener, InvUseOnWallObjectListener {
 
 	/**
 	 * OBJECT IDs

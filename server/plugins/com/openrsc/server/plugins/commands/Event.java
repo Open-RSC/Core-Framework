@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public final class Event implements CommandListener, CommandExecutiveListener {
+public final class Event implements CommandListener {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
 
 	public static String messagePrefix = null;

@@ -10,18 +10,14 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Jungle_Potion implements QuestInterface, ObjectActionListener,
-	ObjectActionExecutiveListener, TalkToNpcListener,
-	TalkToNpcExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener {
+	TalkToNpcListener,
+	WallObjectActionListener {
 
 	@Override
 	public int getQuestId() {

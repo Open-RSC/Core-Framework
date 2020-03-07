@@ -8,7 +8,6 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGujuo implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class LegendsQuestGujuo implements TalkToNpcListener {
 
 	private void GujuoDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.GUJUO.id()) {

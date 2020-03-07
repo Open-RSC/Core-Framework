@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class KittenToCat implements MiniGameInterface, CatGrowthListener, CatGrowthExecutiveListener, DropListener, DropExecutiveListener,
-InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class KittenToCat implements MiniGameInterface, CatGrowthListener, DropListener,
+	InvActionListener, InvUseOnItemListener, InvUseOnNpcListener {
 
 	protected static final int BASE_FACTOR = 16;
 

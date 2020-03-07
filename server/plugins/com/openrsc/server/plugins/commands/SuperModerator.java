@@ -9,7 +9,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.StringUtil;
 
@@ -18,7 +17,7 @@ import java.util.*;
 
 import static com.openrsc.server.plugins.commands.Event.LOGGER;
 
-public final class SuperModerator implements CommandListener, CommandExecutiveListener {
+public final class SuperModerator implements CommandListener {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;

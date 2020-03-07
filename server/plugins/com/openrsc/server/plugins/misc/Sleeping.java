@@ -7,10 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
-public class Sleeping implements ObjectActionExecutiveListener, ObjectActionListener, InvActionListener, InvActionExecutiveListener {
+public class Sleeping implements ObjectActionListener, InvActionListener {
 
 	@Override
 	public void onObjectAction(final GameObject object, String command, Player owner) {

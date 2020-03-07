@@ -4,13 +4,11 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassPuzzle implements ObjectActionListener, ObjectActionExecutiveListener {
+public class UndergroundPassPuzzle implements ObjectActionListener {
 
 	public static int WALK_HERE_ROCK_EAST = 792;
 	public static int WALK_HERE_ROCK_WEST = 793;

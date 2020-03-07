@@ -14,10 +14,6 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -25,10 +21,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TribalTotem implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener {
+	ObjectActionListener,
+	InvUseOnObjectListener,
+	WallObjectActionListener {
 
 	boolean firstOpt = false;
 	boolean secondOpt = false;

@@ -8,14 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SheepShearer implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public class SheepShearer implements QuestInterface, TalkToNpcListener {
 
 	/**
 	 * Quest: Sheep Shearer - fully working made by Fate 2013-09-10. GIVE BALLS

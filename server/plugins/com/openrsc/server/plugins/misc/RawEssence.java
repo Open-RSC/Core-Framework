@@ -6,13 +6,12 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.skills.Mining;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.message;
 
-public class RawEssence implements ObjectActionListener, ObjectActionExecutiveListener {
+public class RawEssence implements ObjectActionListener {
 	@Override
 	public boolean blockObjectAction(GameObject obj, String command, Player player) {
 		return obj.getID() == 1227;

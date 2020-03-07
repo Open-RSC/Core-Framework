@@ -14,8 +14,6 @@ import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.plugins.listeners.action.InvUseOnGroundItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnGroundItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -23,7 +21,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.inArray;
 
-public class Firemaking implements InvUseOnGroundItemListener, InvUseOnGroundItemExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class Firemaking implements InvUseOnGroundItemListener, InvUseOnItemListener {
 
 	private final static int TINDERBOX = ItemId.TINDERBOX.id();
 	/**

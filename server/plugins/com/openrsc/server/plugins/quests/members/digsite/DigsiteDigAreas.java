@@ -8,9 +8,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -31,7 +28,7 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 /**
  * @author Imposter/Fate
  */
-public class DigsiteDigAreas implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvActionListener, InvActionExecutiveListener {
+public class DigsiteDigAreas implements ObjectActionListener, InvUseOnObjectListener, InvActionListener {
 
 	private static int[] SOIL = {1065, 1066, 1067};
 	private static int ROCK = 1059;

@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -20,12 +19,11 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, InvActionListener,
-	InvActionExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, InvUseOnWallObjectListener,
-	InvUseOnWallObjectExecutiveListener {
+	ObjectActionListener,
+	InvUseOnObjectListener,
+	InvActionListener,
+	WallObjectActionListener,
+	InvUseOnWallObjectListener {
 
 	private static final int BAXTORIAN_CUPBOARD_OPEN = 507;
 	private static final int BAXTORIAN_CUPBOARD_CLOSED = 506;

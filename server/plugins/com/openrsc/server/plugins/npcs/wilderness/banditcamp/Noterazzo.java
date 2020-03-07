@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class Noterazzo implements ShopInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Noterazzo implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 12400, 90, 60, 3,
 		new Item(ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2), new Item(ItemId.TINDERBOX.id(), 2),

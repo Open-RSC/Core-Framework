@@ -9,17 +9,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.sleep;
 
 public class Cannon implements ObjectActionListener,
-	ObjectActionExecutiveListener, InvActionListener,
-	InvActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+	InvActionListener,
+	InvUseOnObjectListener {
 
 	public final static int[] cannonObjectIDs = {
 		946, // Cannon Base

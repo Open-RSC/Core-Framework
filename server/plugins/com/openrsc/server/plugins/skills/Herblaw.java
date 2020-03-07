@@ -11,16 +11,13 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Herblaw implements InvActionListener, InvUseOnItemListener,
-	InvActionExecutiveListener, InvUseOnItemExecutiveListener {
+public class Herblaw implements InvActionListener, InvUseOnItemListener {
 
 	@Override
 	public void onInvAction(final Item item, Player player, String command) {

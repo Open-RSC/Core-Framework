@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 
 import java.util.Optional;
 
@@ -21,12 +20,11 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author n0m
  */
 public class ErnestTheChicken implements QuestInterface,
-	InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener,
-	InvUseOnItemListener, InvUseOnItemExecutiveListener,
-	WallObjectActionListener, WallObjectActionExecutiveListener,
-	TalkToNpcListener, ObjectActionListener, ObjectActionExecutiveListener,
-	TalkToNpcExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+	InvUseOnWallObjectListener,
+	InvUseOnItemListener,
+	WallObjectActionListener,
+	TalkToNpcListener, ObjectActionListener,
+	InvUseOnObjectListener {
 
 	@Override
 	public int getQuestId() {

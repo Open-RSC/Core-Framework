@@ -12,10 +12,6 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +21,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener, InvUseOnWallObjectListener,
-	InvUseOnWallObjectExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener {
+	InvUseOnNpcListener,
+	InvUseOnWallObjectListener,
+	WallObjectActionListener {
 
 	// items 679 (scorpion1 taverly), 686 (scorpion2 barbarian), 687 (scorpion3 monastery)
 

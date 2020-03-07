@@ -7,14 +7,12 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class AgilityShortcuts implements ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+	InvUseOnObjectListener {
 
 	private static final int SHORTCUT_FALADOR_HANDHOLD = 693;
 	private static final int SHORTCUT_BRIMHAVEN_SWING = 694;

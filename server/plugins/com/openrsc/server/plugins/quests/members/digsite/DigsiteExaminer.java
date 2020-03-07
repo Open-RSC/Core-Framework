@@ -6,13 +6,12 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteExaminer implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class DigsiteExaminer implements TalkToNpcListener {
 
 	private int CORRECT_ANSWERS = 0;
 

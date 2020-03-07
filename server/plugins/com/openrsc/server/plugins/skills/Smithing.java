@@ -11,14 +11,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Smithing implements InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+public class Smithing implements InvUseOnObjectListener {
 
 	private final int DORICS_ANVIL = 177;
 	private final int ANVIL = 50;

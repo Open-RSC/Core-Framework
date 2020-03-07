@@ -12,10 +12,6 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -23,9 +19,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class PrinceAliRescue implements QuestInterface, WallObjectActionListener,
-	WallObjectActionExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener,
-	InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
+	InvUseOnNpcListener,
+	TalkToNpcListener,
+	InvUseOnWallObjectListener {
 
 	@Override
 	public int getQuestId() {

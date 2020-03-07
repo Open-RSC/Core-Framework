@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -15,7 +14,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class WormBrain implements WallObjectActionListener, WallObjectActionExecutiveListener {
+public final class WormBrain implements WallObjectActionListener {
 
 	@Override
 	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {

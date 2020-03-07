@@ -10,18 +10,15 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class IronMan implements TalkToNpcExecutiveListener,
-	TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener,
-	PickupListener, PickupExecutiveListener {
+public class IronMan implements
+	TalkToNpcListener, NpcCommandListener,
+	PickupListener {
 	private static final Logger LOGGER = LogManager.getLogger(IronMan.class);
 	private static int IRON_MAN = NpcId.IRONMAN.id();
 	private static int ULTIMATE_IRON_MAN = NpcId.ULTIMATE_IRONMAN.id();

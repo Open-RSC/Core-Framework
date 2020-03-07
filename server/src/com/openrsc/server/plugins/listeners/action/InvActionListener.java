@@ -16,5 +16,10 @@ public interface InvActionListener {
 	 * @param item
 	 * @param player
 	 */
-	public void onInvAction(Item item, Player player, String command);
+	void onInvAction(Item item, Player player, String command);
+
+	/**
+	 * Return true to prevent inventory action
+	 */
+	boolean blockInvAction(Item item, Player player, String command);
 }

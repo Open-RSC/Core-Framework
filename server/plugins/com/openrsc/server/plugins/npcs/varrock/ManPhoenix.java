@@ -7,8 +7,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.IndirectTalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.IndirectTalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -17,8 +15,8 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
-public class ManPhoenix implements TalkToNpcExecutiveListener,
-	TalkToNpcListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener {
+public class ManPhoenix implements
+	TalkToNpcListener, IndirectTalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {

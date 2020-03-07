@@ -11,8 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.InvUseOnWallObjectListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnWallObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestUngadulu;
 import com.openrsc.server.plugins.quests.members.shilovillage.ShiloVillageUtils;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -21,7 +19,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestWallObjects implements WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener {
+public class LegendsQuestWallObjects implements WallObjectActionListener, InvUseOnWallObjectListener {
 
 	public static final int FLAME_WALL = 210;
 	public static final int RUT = 206;

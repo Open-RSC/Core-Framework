@@ -39,6 +39,11 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+		return false;
+	}
+
+	@Override
 	public void onInvUseOnObject(final GameObject object, final Item item, final Player owner) {
 		if (doors.blockInvUseOnWallObject(object, item, owner)) {
 			doors.onInvUseOnWallObject(object, item, owner);
@@ -46,6 +51,11 @@ public class Default implements DefaultHandler,
 			owner.message("Nothing interesting happens");
 			//System.out.println("InvUseOnObject unhandled: item " + item.getID() + " used with object: " + object.getID());
 		}
+	}
+
+	@Override
+	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+		return false;
 	}
 
 	@Override
@@ -60,10 +70,20 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+		return false;
+	}
+
+	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {
 		p.message(
 			"The " + n.getDef().getName()
 				+ " does not appear interested in talking");
+	}
+
+	@Override
+	public boolean blockTalkToNpc(Player p, Npc n) {
+		return false;
 	}
 
 	@Override
@@ -76,6 +96,11 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player player) {
+		return false;
+	}
+
+	@Override
 	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
 		if (doors.blockWallObjectAction(obj, click, p)) {
 			doors.onWallObjectAction(obj, click, p);
@@ -85,13 +110,28 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+		return false;
+	}
+
+	@Override
 	public void onCatGrowth(Player p) {
 		// No default actions
 	}
 
 	@Override
+	public boolean blockCatGrowth(Player p) {
+		return false;
+	}
+
+	@Override
 	public void onCommand(String cmd, String[] args, Player player) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockCommand(String cmd, String[] args, Player player) {
+		return false;
 	}
 
 	@Override
@@ -121,8 +161,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+		return false;
+	}
+
+	@Override
 	public void onIndirectTalkToNpc(Player p, Npc n) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
+		return false;
 	}
 
 	@Override
@@ -131,8 +181,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockInvAction(Item item, Player player, String command) {
+		return false;
+	}
+
+	@Override
 	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
 		player.message("Nothing interesting happens");
+	}
+
+	@Override
+	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
+		return false;
 	}
 
 	@Override
@@ -141,8 +201,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+		return false;
+	}
+
+	@Override
 	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
 		player.message("Nothing interesting happens");
+	}
+
+	@Override
+	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+		return false;
 	}
 
 	@Override
@@ -151,8 +221,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockNpcCommand(Npc n, String command, Player p) {
+		return false;
+	}
+
+	@Override
 	public void onPickup(Player p, GroundItem i) {
 		p.groundItemTake(i);
+	}
+
+	@Override
+	public boolean blockPickup(Player p, GroundItem i) {
+		return false;
 	}
 
 	@Override
@@ -166,6 +246,11 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerAttack(Player p, Player affectedmob) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
 		p.startCombat(affectedmob);
 		if (p.getWorld().getServer().getConfig().WANT_PARTIES) {
@@ -176,9 +261,19 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerAttackNpc(Player p, Npc affectedmob) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerDeath(Player p) {
 		// TODO: This plugin is not handled anywhere
 		// No default actions
+	}
+
+	@Override
+	public boolean blockPlayerDeath(Player p) {
+		return false;
 	}
 
 	@Override
@@ -187,8 +282,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerKilledPlayer(Player killer, Player killed) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockPlayerKilledPlayer(Player killer, Player killed) {
+		return false;
 	}
 
 	@Override
@@ -197,8 +302,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerLogin(Player player) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerLogout(Player player) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockPlayerLogout(Player player) {
+		return false;
 	}
 
 	@Override
@@ -207,8 +322,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerMage(Player player, Player affectedPlayer, Integer spell) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockPlayerMage(Player player, Player affectedPlayer, Integer spell) {
+		return false;
 	}
 
 	@Override
@@ -217,8 +342,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerMageNpc(Player p, Npc n) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerMageObject(Player player, GameObject obj, SpellDef spell) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockPlayerMageObject(Player player, GameObject obj, SpellDef spell) {
+		return false;
 	}
 
 	@Override
@@ -228,8 +363,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerNpcRun(Player p, Npc n) {
+		return false;
+	}
+
+	@Override
 	public void onPlayerRangePlayer(Player p, Player affectedMob) {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockPlayerRangePlayer(Player p, Player affectedMob) {
+		return false;
 	}
 
 	@Override
@@ -238,8 +383,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockPlayerRangeNpc(Player p, Npc n) {
+		return false;
+	}
+
+	@Override
 	public void onStartup() {
 		// No default actions
+	}
+
+	@Override
+	public boolean blockStartup() {
+		return false;
 	}
 
 	@Override
@@ -249,8 +404,18 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public boolean blockTeleport(Player p) {
+		return false;
+	}
+
+	@Override
 	public void onUnequip(UnequipRequest request) {
 		request.player.getCarriedItems().getEquipment().unequipItem(request);
+	}
+
+	@Override
+	public boolean blockUnequip(UnequipRequest request) {
+		return false;
 	}
 
 	@Override
@@ -259,12 +424,27 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
+	public void blockEquip(EquipRequest request) {
+
+	}
+
+	@Override
 	public void onWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
 		p.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
 	}
 
 	@Override
+	public void blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
+
+	}
+
+	@Override
 	public void onDeposit(Player player, Integer catalogID, Integer amount) {
 		player.getBank().depositItemFromInventory(catalogID, amount, true);
+	}
+
+	@Override
+	public boolean blockDeposit(Player p, Integer catalogID, Integer amount) {
+		return false;
 	}
 }

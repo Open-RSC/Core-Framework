@@ -4,11 +4,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeSlice implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class GnomeSlice implements InvUseOnItemListener {
 
 	@Override
 	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {

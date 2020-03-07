@@ -7,12 +7,11 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Certer implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Certer implements TalkToNpcListener {
 
 	//official certers
 	int[] certers = new int[]{NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(), NpcId.WATTO.id(),

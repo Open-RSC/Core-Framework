@@ -7,14 +7,12 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageObjectListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageObjectExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class LegendsQuestDarkMetalGate implements ObjectActionListener, ObjectActionExecutiveListener, PlayerMageObjectListener, PlayerMageObjectExecutiveListener {
+public class LegendsQuestDarkMetalGate implements ObjectActionListener, PlayerMageObjectListener {
 
 
 	public static final int DARK_METAL_GATE = 1165;

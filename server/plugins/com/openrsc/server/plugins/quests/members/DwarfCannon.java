@@ -15,10 +15,6 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.plugins.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -27,9 +23,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DwarfCannon
-	implements QuestInterface, PickupExecutiveListener, PickupListener,
-	TalkToNpcListener, TalkToNpcExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
+	implements QuestInterface, PickupListener,
+	TalkToNpcListener, WallObjectActionListener,
+	ObjectActionListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.DWARF_CANNON_BASE.id(), 3), new Item(ItemId.DWARF_CANNON_STAND.id(), 3),
 		new Item(ItemId.DWARF_CANNON_BARRELS.id(), 3), new Item(ItemId.DWARF_CANNON_FURNACE.id(), 3),

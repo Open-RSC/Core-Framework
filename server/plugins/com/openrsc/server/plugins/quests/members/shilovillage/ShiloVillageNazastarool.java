@@ -10,18 +10,14 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageNazastarool implements ObjectActionListener, ObjectActionExecutiveListener,
-	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener,
-	PlayerMageNpcListener, PlayerMageNpcExecutiveListener {
+public class ShiloVillageNazastarool implements ObjectActionListener,
+	PlayerKilledNpcListener, PlayerNpcRunListener,
+	PlayerMageNpcListener {
 
 	private static final int TOMB_DOLMEN_Nazastarool = 724;
 

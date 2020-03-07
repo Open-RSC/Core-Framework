@@ -13,8 +13,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
 import com.openrsc.server.plugins.skills.Mining;
 import com.openrsc.server.plugins.skills.Thieving;
@@ -25,7 +23,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGameObjects implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class LegendsQuestGameObjects implements ObjectActionListener, InvUseOnObjectListener {
 
 	// Objects
 	private static final int LEGENDS_CUPBOARD = 1149;

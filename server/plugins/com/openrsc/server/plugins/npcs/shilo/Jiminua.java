@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class Jiminua implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 15000, 150, 50, 2,
 		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.EMPTY_VIAL.id(), 10), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3),

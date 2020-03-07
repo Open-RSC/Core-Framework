@@ -6,12 +6,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SandPit implements InvUseOnObjectListener,
-InvUseOnObjectExecutiveListener {
+public class SandPit implements InvUseOnObjectListener {
 
 	@Override
 	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {

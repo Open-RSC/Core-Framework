@@ -5,11 +5,10 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class BailingBucket implements InvActionExecutiveListener, InvActionListener {
+public class BailingBucket implements InvActionListener {
 
 	@Override
 	public void onInvAction(Item item, Player player, String command) {

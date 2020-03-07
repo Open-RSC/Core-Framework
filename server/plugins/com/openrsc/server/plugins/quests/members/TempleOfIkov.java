@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -20,7 +19,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener, PickupExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
+	ObjectActionListener, PickupListener, InvUseOnObjectListener, PlayerMageNpcListener, PlayerKilledNpcListener, PlayerAttackNpcListener, PlayerRangeNpcListener {
 
 	/**
 	 * Quest Objects

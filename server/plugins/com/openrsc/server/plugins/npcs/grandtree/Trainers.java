@@ -8,9 +8,8 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-public class Trainers implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Trainers implements TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

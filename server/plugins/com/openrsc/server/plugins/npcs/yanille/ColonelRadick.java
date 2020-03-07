@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.npcs.yanille;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -11,7 +10,7 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class ColonelRadick implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class ColonelRadick implements TalkToNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

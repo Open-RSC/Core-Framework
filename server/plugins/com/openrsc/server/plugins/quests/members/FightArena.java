@@ -13,10 +13,6 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -24,10 +20,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FightArena implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, PlayerKilledNpcListener,
-	PlayerKilledNpcExecutiveListener {
+	ObjectActionListener,
+	InvUseOnObjectListener,
+	PlayerKilledNpcListener {
 
 	private static final int GUARDS_CUPBOARD_OPEN = 382;
 	private static final int GUARDS_CUPBOARD_CLOSED = 381;

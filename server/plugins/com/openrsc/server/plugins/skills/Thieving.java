@@ -17,9 +17,6 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -31,8 +28,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thieving extends Functions
-	implements ObjectActionListener, NpcCommandListener, NpcCommandExecutiveListener, ObjectActionExecutiveListener,
-	WallObjectActionExecutiveListener, WallObjectActionListener {
+	implements ObjectActionListener, NpcCommandListener,
+	WallObjectActionListener {
 
 	private static final String piece_of = "piece of ";
 

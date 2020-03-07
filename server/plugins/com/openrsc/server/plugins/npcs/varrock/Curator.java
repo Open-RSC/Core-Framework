@@ -8,14 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Curator implements TalkToNpcExecutiveListener, TalkToNpcListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class Curator implements TalkToNpcListener, InvUseOnNpcListener {
 	public boolean blockTalkToNpc(final Player player, final Npc npc) {
 		return npc.getID() == NpcId.CURATOR.id();
 	}

@@ -6,13 +6,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
+public class HalloweenCracker implements InvUseOnPlayerListener {
 
 	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 64, 64, 64};
 	private static final int[] holidayIds = {

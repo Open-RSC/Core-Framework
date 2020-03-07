@@ -9,11 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.*;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -22,9 +18,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 
 public class PiratesTreasure implements QuestInterface, InvActionListener,
-	InvActionExecutiveListener, TalkToNpcListener, ObjectActionListener,
-	ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
-	InvUseOnObjectListener, InvUseOnObjectExecutiveListener, TeleportExecutiveListener {
+	TalkToNpcListener, ObjectActionListener,
+	InvUseOnObjectListener, TeleportListener {
 
 	private static final int HECTORS_CHEST_OPEN = 186;
 	private static final int HECTORS_CHEST_CLOSED = 187;
@@ -346,10 +341,14 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockTeleport(Player p) {
+	public void onTeleport(Player p) {
 		if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (p.getLocation().inKaramja())) {
 			p.getCarriedItems().getInventory().remove(ItemId.KARAMJA_RUM.id());
 		}
+	}
+
+	@Override
+	public boolean blockTeleport(Player p) {
 		return false;
 	}
 

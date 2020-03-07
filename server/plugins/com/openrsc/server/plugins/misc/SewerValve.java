@@ -3,11 +3,10 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.message;
 
-public class SewerValve implements ObjectActionExecutiveListener, ObjectActionListener {
+public class SewerValve implements ObjectActionListener {
 
 	private static final int SEWER_VALVE_1 = 412;
 	private static final int SEWER_VALVE_2 = 413;

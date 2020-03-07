@@ -11,12 +11,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public final class SiegfriedErkel implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class SiegfriedErkel implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 60000, 150, 50, 2,
 		new Item(ItemId.MITHRIL_SEED.id(), 6), new Item(ItemId.DUSTY_KEY.id(), 5), new Item(ItemId.SILVERLIGHT.id(), 4),

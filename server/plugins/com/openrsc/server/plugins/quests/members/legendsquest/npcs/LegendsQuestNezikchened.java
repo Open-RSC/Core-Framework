@@ -4,15 +4,7 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
 
 import static com.openrsc.server.plugins.Functions.atQuestStages;
 import static com.openrsc.server.plugins.Functions.createGroundItem;
@@ -25,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 import static com.openrsc.server.plugins.Functions.transform;
 
-public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, PlayerAttackNpcExecutiveListener {
+public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpcRunListener, PlayerKilledNpcListener, PlayerRangeNpcListener, PlayerAttackNpcListener {
 
 	/**
 	 * @param p public method to use for third fight summons and nezichened
@@ -217,13 +209,21 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerMag
 	}
 
 	@Override
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == NpcId.NEZIKCHENED.id()) {
+			if ((affectedmob.getAttribute("spawnedFor", null) != null && !affectedmob.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Quests.LEGENDS_QUEST, 3, 7, 8)) {
+				message(p, 1300, "Your attack glides straight through the Demon.");
+				message(p, 600, "as if it wasn't really there.");
+				if (affectedmob != null)
+					affectedmob.remove();
+			}
+		}
+	}
+
+	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Quests.LEGENDS_QUEST, 3, 7, 8)) {
-				message(p, 1300, "Your attack glides straight through the Demon.");
-				message(p, 600, "as if it wasn't really there.");
-				if (n != null)
-					n.remove();
 				return true;
 			}
 		}

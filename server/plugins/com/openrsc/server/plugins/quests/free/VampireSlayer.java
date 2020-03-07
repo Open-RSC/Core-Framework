@@ -10,21 +10,18 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class VampireSlayer implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, PlayerKilledNpcExecutiveListener,
-	PlayerKilledNpcListener, PlayerAttackNpcExecutiveListener {
+	ObjectActionListener,
+	PlayerKilledNpcListener,
+	PlayerAttackNpcListener {
 
 	private static final int COUNT_DRAYNOR_COFFIN_OPEN = 136;
 	private static final int COUNT_DRAYNOR_COFFIN_CLOSED = 135;
@@ -276,18 +273,22 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.GARLIC.id())) {
 				p.message("The vampire appears to weaken");
 				//if a better approx is found, replace
 				for (int i = 0; i < 3; i++) {
-					int maxStat = n.getSkills().getMaxStat(i);
+					int maxStat = affectedmob.getSkills().getMaxStat(i);
 					int newStat = maxStat - (int) (maxStat * 0.1);
-					n.getSkills().setLevel(i, newStat);
+					affectedmob.getSkills().setLevel(i, newStat);
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		return false;
 	}
 }

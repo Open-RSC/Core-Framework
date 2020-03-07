@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class DavonShop implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class DavonShop implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 900000000, 120, 90, 2, new Item(ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(), 0),
 			new Item(ItemId.SAPPHIRE_AMULET_OF_MAGIC.id(), 1), new Item(ItemId.EMERALD_AMULET_OF_PROTECTION.id(), 0), new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 0), new Item(ItemId.DIAMOND_AMULET_OF_POWER.id(), 0));

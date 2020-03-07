@@ -5,10 +5,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerLoginListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerLoginExecutiveListener;
 
-public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecutiveListener, PlayerLoginListener, PlayerLoginExecutiveListener {
+public class BabyBlueDragonCrystal implements InvActionListener, PlayerLoginListener {
 
 	protected Player petOwnerA;
 

@@ -11,6 +11,10 @@ public interface IndirectTalkToNpcListener {
      * @param p
      * @param n
      */
-    public void onIndirectTalkToNpc(Player p, Npc n);
+    void onIndirectTalkToNpc(Player p, Npc n);
 
+	/**
+	 * Return true to block a player from indirectly talking to a npc
+	 */
+	boolean blockIndirectTalkToNpc(Player p, Npc n);
 }

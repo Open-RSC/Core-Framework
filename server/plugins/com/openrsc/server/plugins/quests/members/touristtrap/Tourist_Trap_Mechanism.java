@@ -12,15 +12,14 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Tourist_Trap_Mechanism implements UnequipListener, UnequipExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, PickupListener,
-PickupExecutiveListener, DropListener, DropExecutiveListener, TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListener, ObjectActionListener, InvUseOnObjectListener, InvUseOnItemListener, PickupListener,
+	DropListener, TalkToNpcListener {
 
 	private static int MINING_CAVE = 963;
 	private static int MINING_CART = 976;

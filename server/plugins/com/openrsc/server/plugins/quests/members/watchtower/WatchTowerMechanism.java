@@ -11,10 +11,6 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -24,7 +20,7 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener, PickupListener, PickupExecutiveListener {
+public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnItemListener, InvUseOnNpcListener, PickupListener {
 
 	private static final int TOBAN_CHEST_OPEN = 979;
 	private static final int TOBAN_CHEST_CLOSED = 978;

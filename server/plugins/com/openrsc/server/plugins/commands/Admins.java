@@ -31,7 +31,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -42,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-public final class Admins implements CommandListener, CommandExecutiveListener {
+public final class Admins implements CommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
 
 	public static String messagePrefix = null;

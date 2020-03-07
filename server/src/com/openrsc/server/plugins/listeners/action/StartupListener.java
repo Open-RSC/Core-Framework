@@ -4,5 +4,6 @@ public interface StartupListener {
 	/**
 	 * Called when the server starts up
 	 */
-	public void onStartup();
+	void onStartup();
+	boolean blockStartup();
 }

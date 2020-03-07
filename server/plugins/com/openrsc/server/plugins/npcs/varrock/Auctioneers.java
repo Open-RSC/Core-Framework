@@ -8,14 +8,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Auctioneers implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
+public class Auctioneers implements TalkToNpcListener, NpcCommandListener {
 	private static final Logger LOGGER = LogManager.getLogger(Auctioneers.class);
 	public static int AUCTIONEER = NpcId.AUCTIONEER.id();
 	public static int AUCTION_CLERK = NpcId.AUCTION_CLERK.id();

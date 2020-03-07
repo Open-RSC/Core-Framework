@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -18,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
  *
  * @author n0m
  */
-public class InvCooking implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class InvCooking implements InvUseOnItemListener {
 
 	@Override
 	public void onInvUseOnItem(Player player, Item item1, Item item2) {

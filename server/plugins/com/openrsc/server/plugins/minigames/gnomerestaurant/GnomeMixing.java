@@ -5,13 +5,12 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class GnomeMixing implements InvUseOnItemListener {
 
 	private boolean canMix(World world, Item itemOne, Item itemTwo) {
 		for (GnomeMix gm : GnomeMix.values()) {

@@ -6,11 +6,10 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Mourner implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Mourner implements TalkToNpcListener {
 
 	public static final int MOURNER_444 = NpcId.MOURNER_BYALRENA.id();
 	public static final int MOURNER_491 = NpcId.MOURNER_BYENTRANCE2.id();

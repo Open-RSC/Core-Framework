@@ -6,11 +6,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiritTrees implements ObjectActionListener, ObjectActionExecutiveListener {
+public class SpiritTrees implements ObjectActionListener {
 
 	private static int STRONGHOLD_SPIRIT_TREE = 661;
 	private static int TREE_GNOME_VILLAGE_SPIRIT_TREE = 390;

@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
@@ -14,7 +13,7 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class MagicInstructor implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class MagicInstructor implements TalkToNpcListener {
 	/**
 	 * @author Davve
 	 * Tutorial island magic instructor

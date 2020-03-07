@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -20,13 +19,13 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WitchesHouse implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, DropListener, DropExecutiveListener,
-	InvUseOnNpcListener, InvUseOnNpcExecutiveListener,
-	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener,
-	PickupListener, PickupExecutiveListener,
-	PlayerAttackNpcExecutiveListener {
+	WallObjectActionListener,
+	ObjectActionListener,
+	DropListener,
+	InvUseOnNpcListener,
+	PlayerKilledNpcListener,
+	PickupListener,
+	PlayerAttackNpcListener {
 
 	/**
 	 * INFORMATION Rat appears on coords: 356, 494 Dropping cheese in the whole
@@ -357,9 +356,15 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == NpcId.SHAPESHIFTER_HUMAN.id() && p.getQuestStage(getQuestId()) == -1) {
+			p.message("I have already done that quest");
+		}
+	}
+
+	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SHAPESHIFTER_HUMAN.id() && p.getQuestStage(getQuestId()) == -1) {
-			p.message("I have already done that quest");
 			return true;
 		}
 		return false;

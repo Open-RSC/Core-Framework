@@ -3,14 +3,13 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class DancingDonkeyInnBartender implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class DancingDonkeyInnBartender implements TalkToNpcListener {
 
 	public static int BARTENDER = NpcId.BARTENDER_EAST_VARROCK.id();
 

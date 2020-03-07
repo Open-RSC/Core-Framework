@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class HarrysFishingShack implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.NET.id(), 3),
 		new Item(ItemId.FISHING_ROD.id(), 3), new Item(ItemId.HARPOON.id(), 2), new Item(ItemId.LOBSTER_POT.id(), 2),

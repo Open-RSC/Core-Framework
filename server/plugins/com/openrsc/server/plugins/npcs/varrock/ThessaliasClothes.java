@@ -12,13 +12,11 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class ThessaliasClothes implements PickupListener, PickupExecutiveListener,
-	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class ThessaliasClothes implements PickupListener,
+	ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 3, new Item(ItemId.WHITE_APRON.id(),
 		3), new Item(ItemId.LEATHER_ARMOUR.id(), 12), new Item(ItemId.LEATHER_GLOVES.id(), 10), new Item(ItemId.BOOTS.id(), 10),

@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class SpiceMerchant implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 15000, 100, 70, 2, new Item(ItemId.SPICE.id(), 1));
 

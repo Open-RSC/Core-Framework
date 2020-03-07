@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public class FatTony implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 5000, 100, 60, 2, new Item(ItemId.PIZZA_BASE.id(), 30));
 

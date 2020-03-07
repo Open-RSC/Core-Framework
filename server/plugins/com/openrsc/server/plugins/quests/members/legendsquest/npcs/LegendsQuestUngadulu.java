@@ -1,37 +1,19 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerNpcRunListener;
-import com.openrsc.server.plugins.listeners.action.PlayerRangeNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerNpcRunExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerRangeNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.listeners.action.*;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
-import static com.openrsc.server.plugins.Functions.transform;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestUngadulu implements TalkToNpcListener, TalkToNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, PlayerNpcRunListener, PlayerNpcRunExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener, PlayerNpcRunListener, InvUseOnNpcListener {
 
 	private static void ungaduluTalkToDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.UNGADULU.id()) {

@@ -14,8 +14,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -26,8 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Crafting implements InvUseOnItemListener,
-	InvUseOnItemExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+	InvUseOnObjectListener {
 
 	/**
 	 * World instance

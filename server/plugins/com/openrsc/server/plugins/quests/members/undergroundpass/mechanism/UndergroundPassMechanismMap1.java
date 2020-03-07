@@ -9,13 +9,11 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class UndergroundPassMechanismMap1 implements InvUseOnItemListener, InvUseOnObjectListener {
 
 	/**
 	 * OBJECT IDs

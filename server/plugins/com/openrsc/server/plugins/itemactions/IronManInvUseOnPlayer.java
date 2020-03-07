@@ -4,11 +4,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class IronManInvUseOnPlayer implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
+public class IronManInvUseOnPlayer implements InvUseOnPlayerListener {
 
 	@Override
 	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {

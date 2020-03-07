@@ -3,12 +3,11 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class MagicGuildPortals implements WallObjectActionListener, WallObjectActionExecutiveListener {
+public class MagicGuildPortals implements WallObjectActionListener {
 
 	private static int[] MAGIC_PORTALS = {147, 148, 149};
 

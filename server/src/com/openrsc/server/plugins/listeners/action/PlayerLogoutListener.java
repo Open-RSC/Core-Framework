@@ -9,5 +9,6 @@ public interface PlayerLogoutListener {
 	/**
 	 * Called when player logs out (by himself, or when he's logged out by a timeout, mod etc)
 	 */
-	public void onPlayerLogout(Player player);
+	void onPlayerLogout(Player player);
+	boolean blockPlayerLogout(Player player);
 }

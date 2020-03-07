@@ -5,15 +5,13 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.removeItem;
 
-public class BattlestaffCrafting implements InvUseOnItemListener,
-	InvUseOnItemExecutiveListener {
+public class BattlestaffCrafting implements InvUseOnItemListener {
 
 	private boolean canCraft(Item itemOne, Item itemTwo) {
 		for (Battlestaff c : Battlestaff.values()) {

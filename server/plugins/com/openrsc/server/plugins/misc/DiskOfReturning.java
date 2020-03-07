@@ -4,9 +4,8 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
-public class DiskOfReturning implements InvActionListener, InvActionExecutiveListener {
+public class DiskOfReturning implements InvActionListener {
 
 	public boolean insideMines(Player p) {
 		return ((p.getX() >= 250 && p.getX() <= 315) && (p.getY() >= 3325 && p.getY() <= 3400));

@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Lundail implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(ItemId.AIR_RUNE.id(),
 		100), new Item(ItemId.FIRE_RUNE.id(), 100), new Item(ItemId.WATER_RUNE.id(), 100), new Item(ItemId.EARTH_RUNE.id(),

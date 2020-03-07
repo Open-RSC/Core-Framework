@@ -10,12 +10,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class Fionella implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Fionella implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 20000, 155, 55, 13,
 		new Item(ItemId.SWORDFISH.id(), 2), new Item(ItemId.APPLE_PIE.id(), 5), new Item(ItemId.SLEEPING_BAG.id(), 1),

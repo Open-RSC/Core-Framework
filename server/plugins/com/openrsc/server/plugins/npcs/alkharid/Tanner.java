@@ -6,11 +6,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Tanner implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Tanner implements TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(Player p, final Npc n) {
 		npcTalk(p, n, "Greetings friend I'm a manufacturer of leather");

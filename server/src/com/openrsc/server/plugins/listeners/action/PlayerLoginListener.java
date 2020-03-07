@@ -9,5 +9,6 @@ public interface PlayerLoginListener {
 	/**
 	 * Called when player logins
 	 */
-	public void onPlayerLogin(Player player);
+	void onPlayerLogin(Player player);
+	boolean blockPlayerLogin(Player player);
 }

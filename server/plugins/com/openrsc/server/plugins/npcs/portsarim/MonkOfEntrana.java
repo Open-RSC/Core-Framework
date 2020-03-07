@@ -9,8 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -18,7 +16,7 @@ import java.util.Arrays;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class MonkOfEntrana implements ObjectActionExecutiveListener, ObjectActionListener, TalkToNpcExecutiveListener,
+public final class MonkOfEntrana implements ObjectActionListener,
 	TalkToNpcListener {
 
 	private String[] blockedItems = new String[]{

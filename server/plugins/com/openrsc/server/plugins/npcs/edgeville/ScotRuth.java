@@ -6,9 +6,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
-public class ScotRuth implements TalkToNpcExecutiveListener,
+public class ScotRuth implements
 	TalkToNpcListener {
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {

@@ -3,13 +3,12 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 
-public class TeleportStone implements InvActionListener, InvActionExecutiveListener {
+public class TeleportStone implements InvActionListener {
 
 	// Pretty sure this item doesn't even exist.
 	private final int TELEPORT_STONE = 2107;

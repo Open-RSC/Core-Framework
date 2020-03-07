@@ -10,13 +10,12 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class PeksaHelmets implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 1, new Item(ItemId.MEDIUM_BRONZE_HELMET.id(),
 		5), new Item(ItemId.MEDIUM_IRON_HELMET.id(), 3), new Item(ItemId.MEDIUM_STEEL_HELMET.id(), 3), new Item(ItemId.MEDIUM_MITHRIL_HELMET.id(), 1),

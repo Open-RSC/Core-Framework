@@ -8,9 +8,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -18,7 +15,7 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author Imposter/Fate
  */
 public class WatchTowerGorad implements TalkToNpcListener,
-	TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener {
+	PlayerKilledNpcListener, PlayerAttackNpcListener {
 
 	@Override
 	public boolean blockPlayerKilledNpc(Player p, Npc n) {

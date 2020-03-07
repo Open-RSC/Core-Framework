@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -20,7 +19,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GrandTree implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActionListener, PlayerAttackNpcListener, PlayerKilledNpcListener, InvUseOnObjectListener {
 
 	/***********************************
 	 * Hazelmere coords: 535, 754       *

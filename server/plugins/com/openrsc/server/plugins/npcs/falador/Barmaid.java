@@ -7,12 +7,11 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Barmaid implements TalkToNpcExecutiveListener,
+public final class Barmaid implements
 	TalkToNpcListener {
 	private final String notEnoughMoney = "Oh dear. I don't seem to have enough money";
 

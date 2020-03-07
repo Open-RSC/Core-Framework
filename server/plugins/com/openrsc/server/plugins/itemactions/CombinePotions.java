@@ -4,11 +4,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 
-public class CombinePotions implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class CombinePotions implements InvUseOnItemListener {
 
 	int[][] combinePotions = {
 		{ItemId.ONE_ATTACK_POTION.id(), ItemId.TWO_ATTACK_POTION.id(), ItemId.FULL_ATTACK_POTION.id()},

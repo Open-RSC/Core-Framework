@@ -4,13 +4,12 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LadyOfTheWaves implements ObjectActionListener, ObjectActionExecutiveListener {
+public class LadyOfTheWaves implements ObjectActionListener {
 
 	private static final int SHIP_LADY_OF_THE_WAVES_FRONT = 780;
 	private static final int SHIP_LADY_OF_THE_WAVES_BACK = 781;

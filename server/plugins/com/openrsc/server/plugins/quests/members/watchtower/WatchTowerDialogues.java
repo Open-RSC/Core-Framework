@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -17,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
+public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener {
 
 	/**
 	 * REMEMBER:

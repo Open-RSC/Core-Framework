@@ -4,7 +4,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -12,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActionExecutiveListener {
+public class LegendsQuestCaveAgility implements ObjectActionListener {
 
 	private static final int ROCK_HEWN_STAIRS_1 = 1114;
 	private static final int ROCK_HEWN_STAIRS_2 = 1123;
@@ -195,7 +194,7 @@ public class LegendsQuestCaveAgility implements ObjectActionListener, ObjectActi
 		}
 		p.setBusy(false);
 	}
-	
+
 	boolean succeed(Player player, int req) {
 		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
 	}

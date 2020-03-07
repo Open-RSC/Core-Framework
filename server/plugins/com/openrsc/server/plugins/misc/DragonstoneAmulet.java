@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class DragonstoneAmulet implements InvActionListener, InvUseOnObjectListener {
 
 	/**
 	 * RE-CHARGE AMULET

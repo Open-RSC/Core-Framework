@@ -11,6 +11,9 @@ public interface TalkToNpcListener {
 	 * @param p
 	 * @param n
 	 */
-	public void onTalkToNpc(Player p, Npc n);
-
+	void onTalkToNpc(Player p, Npc n);
+	/**
+	 * Return true to block a player from talking to a npc
+	 */
+	boolean blockTalkToNpc(Player p, Npc n);
 }

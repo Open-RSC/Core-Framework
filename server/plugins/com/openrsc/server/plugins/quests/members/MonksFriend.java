@@ -9,14 +9,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MonksFriend implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener {
+	InvUseOnNpcListener {
 
 	@Override
 	public int getQuestId() {

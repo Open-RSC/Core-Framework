@@ -2,7 +2,6 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectFishDef;
@@ -12,7 +11,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -25,7 +23,7 @@ import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Fishing implements ObjectActionListener, ObjectActionExecutiveListener {
+public class Fishing implements ObjectActionListener {
 	/**
 	 * The asynchronous logger.
 	 */

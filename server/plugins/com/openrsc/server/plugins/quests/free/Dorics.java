@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Dorics implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public class Dorics implements QuestInterface, TalkToNpcListener {
 
 	/**
 	 * Quest: Doric's Quest - fully working made by Fate 2013-09-10. GIVE DORIC

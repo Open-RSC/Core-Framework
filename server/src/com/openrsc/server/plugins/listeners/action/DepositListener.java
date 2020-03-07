@@ -6,5 +6,10 @@ public interface DepositListener {
 	/**
 	 * Called when a user deposits an item
 	 */
-	public void onDeposit(Player player, Integer catalogID, Integer amount);
+	void onDeposit(Player player, Integer catalogID, Integer amount);
+
+	/**
+	 * Return true if you wish to prevent a user from depositing an item
+	 */
+	boolean blockDeposit(Player p, Integer catalogID, Integer amount);
 }

@@ -7,11 +7,10 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
+public class LegendsQuestViyeldi implements TalkToNpcListener, PickupListener, PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

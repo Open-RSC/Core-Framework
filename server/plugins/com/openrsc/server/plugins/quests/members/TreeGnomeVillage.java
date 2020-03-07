@@ -11,10 +11,6 @@ import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -22,10 +18,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, PlayerKilledNpcListener,
-	PlayerKilledNpcExecutiveListener {
+	WallObjectActionListener,
+	ObjectActionListener,
+	PlayerKilledNpcListener {
 
 	private static final int KHAZARD_CHEST_OPEN = 409;
 	private static final int KHAZARD_CHEST_CLOSED = 410;

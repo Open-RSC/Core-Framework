@@ -5,11 +5,10 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HighPriestOfEntrana implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class HighPriestOfEntrana implements TalkToNpcListener {
 
 	private static void entranaPriestDialogue(Player p, Npc n, int cID) {
 		if (cID == -1) {

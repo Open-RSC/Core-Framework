@@ -11,9 +11,6 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -21,9 +18,8 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DruidicRitual implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+	WallObjectActionListener,
+	InvUseOnObjectListener {
 
 	@Override
 	public int getQuestId() {

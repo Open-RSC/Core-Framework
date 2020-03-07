@@ -11,16 +11,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DemonSlayer implements QuestInterface,
-	PlayerAttackNpcExecutiveListener, PlayerKilledNpcExecutiveListener,
 	PlayerKilledNpcListener, TalkToNpcListener, ObjectActionListener,
-	ObjectActionExecutiveListener, TalkToNpcExecutiveListener,
-	InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
+	InvUseOnObjectListener, PlayerRangeNpcListener, PlayerAttackNpcListener {
 
 	@Override
 	public int getQuestId() {
@@ -1076,22 +1073,20 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.DELRITH.id()) {
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (affectedmob.getID() == NpcId.DELRITH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
 				case 3:
 					playerTalk(p, null, "I'd rather not. He looks scary");
-					return true;
 				case 4:
 					if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())) {
 						playerTalk(p, null, "Maybe I'd better wield silverlight first");
-						return true;
 					} else {
 						// silverlight effect shared in its own file
-						n.getSkills().setLevel(Skills.HITS, n.getDef().getHits());
+						affectedmob.getSkills().setLevel(Skills.HITS, affectedmob.getDef().getHits());
 						p.resetMenuHandler();
 						p.setOption(-1);
 						p.setAttribute("delrith", false);
@@ -1099,6 +1094,25 @@ public class DemonSlayer implements QuestInterface,
 					break;
 				case -1:
 					p.message("You've already done that quest");
+			}
+		}
+	}
+
+	@Override
+	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+		if (n.getID() == NpcId.DELRITH.id()) {
+			switch (p.getQuestStage(this)) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+					return true;
+				case 4:
+					if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())) {
+						return true;
+					}
+					break;
+				case -1:
 					return true;
 			}
 		}

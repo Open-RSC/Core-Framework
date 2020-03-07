@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -24,11 +23,11 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author start of holy grail quest - davve
  */
 public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, PlayerKilledNpcListener,
-	PlayerKilledNpcExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, DropListener, DropExecutiveListener {
+	ObjectActionListener,
+	WallObjectActionListener,
+	PlayerKilledNpcListener,
+	InvUseOnObjectListener,
+	DropListener {
 
 	@Override
 	public int getQuestId() {

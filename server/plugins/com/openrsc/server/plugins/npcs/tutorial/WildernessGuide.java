@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -11,7 +10,7 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class WildernessGuide implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class WildernessGuide implements TalkToNpcListener {
 	/**
 	 * @author Davve
 	 * Tutorial island wilderness guide
@@ -37,7 +36,7 @@ public class WildernessGuide implements TalkToNpcExecutiveListener, TalkToNpcLis
 			optionsDialogue(p, n);
 		}
 	}
-	
+
 	private void optionsDialogue_where(Player p, Npc n) {
 		playerTalk(p, n, "Where is this wilderness?");
 		npcTalk(p, n, "Once you get into the main playing area head north",
@@ -47,7 +46,7 @@ public class WildernessGuide implements TalkToNpcExecutiveListener, TalkToNpcLis
 				"So if you go in really deep",
 				"Players much stronger than you can attack you");
 	}
-	
+
 	private void optionsDialogue_die(Player p, Npc n) {
 		playerTalk(p, n, "What happens when I die?");
 		npcTalk(p, n, "normally when you die",

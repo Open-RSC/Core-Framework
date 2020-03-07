@@ -6,11 +6,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class InvItemPoisoning implements InvUseOnItemListener, InvUseOnItemExecutiveListener {
+public class InvItemPoisoning implements InvUseOnItemListener {
 
 	@Override
 	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {

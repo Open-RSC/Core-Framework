@@ -9,16 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.PickupListener;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
 
-public class WeaponMaster implements TalkToNpcListener, TalkToNpcExecutiveListener,
-	PickupExecutiveListener, PickupListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener {
+public class WeaponMaster implements TalkToNpcListener, PickupListener, PlayerAttackNpcListener {
 
 	@Override
 	public boolean blockTalkToNpc(Player p, Npc n) {

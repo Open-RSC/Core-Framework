@@ -12,18 +12,16 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FamilyCrest implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener, PlayerKilledNpcListener,
-	PlayerKilledNpcExecutiveListener {
+	ObjectActionListener,
+	WallObjectActionListener,
+	InvUseOnNpcListener,
+	PlayerKilledNpcListener {
 
 	@Override
 	public int getQuestId() {

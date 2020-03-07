@@ -12,14 +12,12 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
 import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class WydinsGrocery implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener,
-	WallObjectActionExecutiveListener, WallObjectActionListener {
+	TalkToNpcListener,
+	WallObjectActionListener {
 
 	private final Shop shop = new Shop(false, 12500, 100, 70, 1, new Item(ItemId.POT_OF_FLOUR.id(),
 		3), new Item(ItemId.RAW_CHICKEN.id(), 1), new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.BANANA.id(), 3),

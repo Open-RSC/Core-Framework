@@ -5,14 +5,13 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.time.Instant;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SilkMerchant implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class SilkMerchant implements TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {

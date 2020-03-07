@@ -7,12 +7,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CooksAssistant implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public class CooksAssistant implements QuestInterface, TalkToNpcListener {
 
 	/*
 	 * Original Author: Fate 2013-09-10

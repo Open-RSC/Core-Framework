@@ -4,12 +4,11 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.message;
 
-public class LegendsQuestGates implements ObjectActionListener, ObjectActionExecutiveListener {
+public class LegendsQuestGates implements ObjectActionListener {
 
 	public static final int LEGENDS_HALL_DOOR = 1080;
 

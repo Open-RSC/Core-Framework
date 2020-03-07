@@ -17,10 +17,6 @@ import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.HashMap;
@@ -29,10 +25,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SheepHerder implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+	ObjectActionListener,
+	InvUseOnNpcListener,
+	InvUseOnObjectListener {
 
 	private static final int GATE = 443;
 	private static final int CATTLE_FURNACE = 444;

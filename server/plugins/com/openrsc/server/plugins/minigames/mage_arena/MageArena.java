@@ -14,20 +14,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.listeners.action.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener, TalkToNpcListener, PlayerKilledNpcListener,
-	PlayerKilledNpcExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerDeathExecutiveListener,
-	PlayerMageNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PickupListener,
-	PickupExecutiveListener {
+public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKilledNpcListener, ObjectActionListener, PickupListener, PlayerMageNpcListener, PlayerAttackNpcListener, PlayerDeathListener {
 
 	public static final int SARADOMIN_STONE = 1152;
 	public static final int GUTHIX_STONE = 1153;
@@ -422,11 +415,20 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	}
 
 	@Override
+	public void onPlayerMageNpc(Player p, Npc n) {
+		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+			NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
+			if (!n.getAttribute("spawnedFor", null).equals(p)) {
+				p.message("that mage is busy.");
+			}
+		}
+	}
+
+	@Override
 	public boolean blockPlayerMageNpc(final Player p, final Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			if (!n.getAttribute("spawnedFor", null).equals(p)) {
-				p.message("that mage is busy.");
 				return true;
 			}
 		}
@@ -582,22 +584,33 @@ public class MageArena implements MiniGameInterface, TalkToNpcExecutiveListener,
 	}
 
 	@Override
+	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+		if (!affectedmob.getAttribute("spawnedFor", null).equals(p)) {
+			p.message("that mage is busy.");
+		}
+	}
+
+	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
-			if (!n.getAttribute("spawnedFor", null).equals(p)) {
-				p.message("that mage is busy.");
+			if(!n.getAttribute("spawnedFor", null).equals(p)) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	@Override
-	public boolean blockPlayerDeath(Player p) {
+	public void onPlayerDeath(Player p) {
 		if (p.getAttribute("spawned_kolodion", null) != null) {
 			p.setAttribute("spawned_kolodion", null);
 		}
+	}
+
+	@Override
+	public boolean blockPlayerDeath(Player p) {
 		return false;
 	}
 

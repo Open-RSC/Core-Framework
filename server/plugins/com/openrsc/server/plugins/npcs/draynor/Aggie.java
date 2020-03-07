@@ -6,14 +6,12 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Aggie implements TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public final class Aggie implements TalkToNpcListener {
 
 	private static final int SKIN_PASTE = 0;
 	private static final int FROGS = 1;

@@ -10,7 +10,6 @@ import com.openrsc.server.model.world.Area;
 import com.openrsc.server.model.world.Areas;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +18,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassObstaclesMap3 implements ObjectActionListener, ObjectActionExecutiveListener {
+public class UndergroundPassObstaclesMap3 implements ObjectActionListener {
 	private static final Logger LOGGER = LogManager.getLogger(UndergroundPassObstaclesMap3.class);
 	/**
 	 * OBJECT IDs

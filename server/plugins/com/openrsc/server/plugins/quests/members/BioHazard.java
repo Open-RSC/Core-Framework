@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -18,7 +17,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BioHazard implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
+	WallObjectActionListener, ObjectActionListener, InvUseOnObjectListener, PlayerKilledNpcListener {
 
 	/**
 	 * 1.Decided to add the door into Elena for starting the Biohazard quest in this template,

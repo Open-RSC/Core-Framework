@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,8 +21,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpcExecutiveListener, IndirectTalkToNpcListener, IndirectTalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener,
-	ObjectActionListener, ObjectActionExecutiveListener, NpcCommandListener, NpcCommandExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener {
+public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectTalkToNpcListener, InvUseOnNpcListener,
+	ObjectActionListener, NpcCommandListener, PlayerKilledNpcListener, PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener, WallObjectActionListener {
 
 	private static final Logger LOGGER = LogManager.getLogger(TouristTrap.class);
 

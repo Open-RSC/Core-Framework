@@ -5,14 +5,12 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvActionListener;
 import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnItemExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DrinkMixing implements InvUseOnItemListener, InvUseOnItemExecutiveListener, InvActionListener, InvActionExecutiveListener {
+public class DrinkMixing implements InvUseOnItemListener, InvActionListener {
 
 	private boolean canMix(Item itemOne, Item itemTwo) {
 		for (DrinkMix dm : DrinkMix.values()) {

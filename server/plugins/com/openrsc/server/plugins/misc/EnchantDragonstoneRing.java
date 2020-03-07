@@ -7,11 +7,10 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.listeners.action.PlayerMageItemListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageItemExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMageItemExecutiveListener {
+public class EnchantDragonstoneRing implements PlayerMageItemListener {
 	@Override
 	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID) {
 		return (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);

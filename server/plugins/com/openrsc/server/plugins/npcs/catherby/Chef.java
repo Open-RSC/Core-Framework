@@ -7,7 +7,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -16,7 +15,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.members.FamilyCrest.getGauntletEnchantment;
 
-public class Chef implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Chef implements TalkToNpcListener {
 
 	@Override
 	public void onTalkToNpc(final Player p, final Npc n) {

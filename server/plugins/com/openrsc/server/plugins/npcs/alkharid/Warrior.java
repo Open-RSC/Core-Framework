@@ -4,12 +4,11 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Warrior implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Warrior implements TalkToNpcListener {
 
 	private final int WARRIOR = 86;
 

@@ -11,12 +11,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class AlfonseTheWaiter implements ShopInterface, TalkToNpcListener {
 
 	private final Shop shop = new Shop(false, 10000, 110, 75, 2,
 		new Item(ItemId.HERRING.id(), 5), new Item(ItemId.COD.id(), 5),

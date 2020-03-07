@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -20,7 +19,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class ObjectCooking implements InvUseOnObjectListener {
 	@Override
 	public void onInvUseOnObject(GameObject object, Item item, Player owner) {
 		Npc cook = getNearestNpc(owner, 7, 20);

@@ -3,15 +3,10 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
 import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerAttackNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -19,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Fate
  */
-public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerKilledNpcExecutiveListener, PlayerKilledNpcListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Necromancer implements PlayerAttackNpcListener, PlayerKilledNpcListener, PlayerMageNpcListener, TalkToNpcListener {
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
@@ -107,7 +102,7 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerAttackNpcExec
 	public boolean blockTalkToNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id();
 	}
-	
+
 	@Override
 	public void onTalkToNpc(Player p, Npc n) {
 		p.playerServerMessage(MessageType.QUEST, "Invrigar the necromancer is not interested in talking");

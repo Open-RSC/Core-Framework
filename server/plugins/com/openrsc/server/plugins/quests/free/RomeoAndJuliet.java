@@ -8,14 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener {
+public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener {
 
 	@Override
 	public int getQuestId() {

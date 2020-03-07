@@ -11,12 +11,11 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ArheinGeneralShop implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+	TalkToNpcListener {
 
 	private final Shop shop = new Shop(true, 15000, 130, 40, 3, new Item(ItemId.BUCKET.id(), 10),
 		new Item(ItemId.BRONZE_PICKAXE.id(), 2), new Item(ItemId.BOWL.id(), 2), new Item(ItemId.CAKE_TIN.id(), 2),
@@ -51,13 +50,13 @@ public class ArheinGeneralShop implements ShopInterface,
 			npcTalk(p, n,
 				"Yes I use it to make deliver my goods up and down the coast",
 				"These crates here are all ready for my next trip");
-			
+
 			String[] menuOptions = new String[] {"Where do you deliver too?", "Are you rich then?"};
 			if (p.getQuestStage(Quests.MERLINS_CRYSTAL) == 2) {
 				menuOptions = new String[] {"Do you deliver to the fort just down the coast?",
 						"Where do you deliver too?",
 						"Are you rich then?"};
-				
+
 				option = showMenu(p, n, false, menuOptions);
 				shipBranchDialogue(p, n, option);
 			} else {
@@ -67,7 +66,7 @@ public class ArheinGeneralShop implements ShopInterface,
 			}
 		}
 	}
-	
+
 	public void shipBranchDialogue(final Player p, final Npc n, int option) {
 		if (option == 0) {
 			playerTalk(p, n, "Do you deliver to the fort just down the coast?");

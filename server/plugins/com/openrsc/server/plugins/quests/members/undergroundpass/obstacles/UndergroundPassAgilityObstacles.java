@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassAgilityObstacles implements ObjectActionListener, ObjectActionExecutiveListener {
+public class UndergroundPassAgilityObstacles implements ObjectActionListener {
 
 	public static final int[] LEDGES = {862, 864, 863, 872, 865, 866};
 	public static final int NORTH_STONE_STEP = 889;
