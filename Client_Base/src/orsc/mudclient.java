@@ -210,7 +210,8 @@ public final class mudclient implements Runnable {
 			|| S_MENU_COMBAT_STYLE_TOGGLE
 			|| S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
 			|| S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
-			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU);
+			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU
+			|| S_SHOW_LOGIN_BOX);
 	public long totalXpGainedStartTime = 0;
 	public String[] achievementNames = new String[500];
 	public String[] achievementTitles = new String[500];
@@ -8874,6 +8875,17 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		// Show Login Box
+		if (S_SHOW_LOGIN_BOX) {
+			if (C_SHOW_LOGIN_BOX) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Show Login Box - @gre@Yes", 20, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Show Login Box - @red@No", 20, null, null);
+			}
+		}
+
 		// if clans are enabled
 		if (S_WANT_CLANS) {
 			// if floating name tags are enabled
@@ -9209,6 +9221,16 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(34);
 			boolean setting = C_INV_COUNT;
+			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
+		// Show Login Box - byte index 40
+		if (settingIndex == 20 && this.mouseButtonClick == 1 && S_SHOW_LOGIN_BOX) {
+			C_SHOW_LOGIN_BOX = !C_SHOW_LOGIN_BOX;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().writeBuffer1.putByte(40);
+			boolean setting = C_SHOW_LOGIN_BOX;
 			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
@@ -16580,6 +16602,8 @@ public final class mudclient implements Runnable {
 	public void setCustomUI(boolean b) {
 		C_CUSTOM_UI = b;
 	}
+
+	public void setShowLoginBox(boolean b) { C_SHOW_LOGIN_BOX = b; }
 
 	public void setBlockPartyInv(boolean b) {
 		C_PARTY_INV = b;

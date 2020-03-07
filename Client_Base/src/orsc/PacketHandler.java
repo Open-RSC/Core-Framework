@@ -823,7 +823,7 @@ public class PacketHandler {
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
-		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting;
+		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, showLoginBox;
 
 		String logoSpriteID;
 
@@ -902,6 +902,7 @@ public class PacketHandler {
 			skillingExpRate = this.getClientStream().getUnsignedByte(); //72
 			wantPkBots = this.getClientStream().getUnsignedByte(); // 73
 			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
+			showLoginBox = this.getClientStream().getUnsignedByte(); // 75
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -977,6 +978,7 @@ public class PacketHandler {
 			skillingExpRate = packetsIncoming.getUnsignedByte(); //72
 			wantPkBots = packetsIncoming.getUnsignedByte(); // 73
 			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
+			showLoginBox = packetsIncoming.getUnsignedByte(); // 75
 		}
 
 		if (Config.DEBUG) {
@@ -1054,7 +1056,8 @@ public class PacketHandler {
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
 					"\nS_WANT_PK_BOTS " + wantPkBots + // 73
-					 "\nS_WANT_HARVESTING " + wantHarvesting // 74
+					"\nS_WANT_HARVESTING " + wantHarvesting  + // 74
+					"\nS_SHOW_LOGIN_BOX " + showLoginBox // 75
 					);
 		}
 
@@ -1134,6 +1137,7 @@ public class PacketHandler {
 		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
 		props.setProperty("S_WANT_PK_BOTS", wantPkBots == 1 ? "true" : "false"); // 73
 		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
+		props.setProperty("S_SHOW_LOGIN_BOX", showLoginBox == 1 ? "true" : "false"); // 75
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1145,7 +1149,8 @@ public class PacketHandler {
 				|| Config.S_MENU_COMBAT_STYLE_TOGGLE
 				|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
 				|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
-				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU);
+				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU
+				|| Config.S_SHOW_LOGIN_BOX);
 
 
 		if (!mc.gotInitialConfigs) {
@@ -1839,6 +1844,7 @@ public class PacketHandler {
 		mc.setAndroidInvToggle(packetsIncoming.getUnsignedByte() == 1); // 37
 		mc.setShowNPCKC(packetsIncoming.getUnsignedByte() == 1); // 38
 		mc.setCustomUI(packetsIncoming.getUnsignedByte() == 1); //39
+		mc.setShowLoginBox(packetsIncoming.getUnsignedByte() == 1); // 40
 	}
 
 	private void togglePrayer(int length) {
@@ -2049,15 +2055,17 @@ public class PacketHandler {
 	}
 
 	private void showLoginDialog() {
-		if (!mc.getWelcomeScreenShown()) {
-			mc.setWelcomeLastLoggedInIp(packetsIncoming.readString());
-			mc.setWelcomeLastLoggedInDays(packetsIncoming.getShort());
-			mc.setWelcomeRecoverySetDays(packetsIncoming.getShort());
-			mc.setWelcomeTipOfDay((int) (Math.random() * 6.0D));
-			//this.welcomeUnreadMessages = packetsIncoming.getShort();
-			mc.setShowDialogMessage(true);
-			mc.setWelcomeLastLoggedInHost(null);
-			mc.setWelcomeScreenShown(true);
+		if (Config.C_SHOW_LOGIN_BOX) {
+			if (!mc.getWelcomeScreenShown()) {
+				mc.setWelcomeLastLoggedInIp(packetsIncoming.readString());
+				mc.setWelcomeLastLoggedInDays(packetsIncoming.getShort());
+				mc.setWelcomeRecoverySetDays(packetsIncoming.getShort());
+				mc.setWelcomeTipOfDay((int) (Math.random() * 6.0D));
+				//this.welcomeUnreadMessages = packetsIncoming.getShort();
+				mc.setShowDialogMessage(true);
+				mc.setWelcomeLastLoggedInHost(null);
+				mc.setWelcomeScreenShown(true);
+			}
 		}
 	}
 
