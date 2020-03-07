@@ -7,7 +7,7 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
+import com.openrsc.server.plugins.listeners.InvActionListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

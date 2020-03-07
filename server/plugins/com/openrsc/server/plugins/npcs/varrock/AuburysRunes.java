@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.NpcCommandListener;
+import com.openrsc.server.plugins.listeners.TalkToNpcListener;
 import com.openrsc.server.plugins.quests.members.RuneMysteries;
 
 import java.util.ArrayList;

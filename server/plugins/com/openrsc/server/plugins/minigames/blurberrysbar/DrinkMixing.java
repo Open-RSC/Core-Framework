@@ -3,8 +3,8 @@ package com.openrsc.server.plugins.minigames.blurberrysbar;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
+import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
 
 import java.util.Optional;
 

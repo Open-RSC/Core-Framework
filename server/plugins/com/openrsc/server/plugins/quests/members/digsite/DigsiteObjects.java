@@ -6,8 +6,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.ObjectActionListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 

@@ -5,7 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
+import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 

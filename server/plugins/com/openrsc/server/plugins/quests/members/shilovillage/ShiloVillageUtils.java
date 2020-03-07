@@ -7,10 +7,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.DropListener;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.DropListener;
+import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.listeners.PickupListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 

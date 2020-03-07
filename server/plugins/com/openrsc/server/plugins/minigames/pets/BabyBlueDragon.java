@@ -7,7 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
+import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 

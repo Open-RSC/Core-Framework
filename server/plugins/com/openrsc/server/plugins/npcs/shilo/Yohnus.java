@@ -3,8 +3,8 @@ package com.openrsc.server.plugins.npcs.shilo;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.WallObjectActionListener;
 
 import static com.openrsc.server.plugins.Functions.*;
 

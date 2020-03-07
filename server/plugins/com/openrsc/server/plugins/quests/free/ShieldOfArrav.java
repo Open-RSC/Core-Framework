@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.listeners.*;
 import com.openrsc.server.plugins.listeners.action.*;
 
 import java.util.Optional;

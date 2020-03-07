@@ -12,10 +12,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
+import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.PickupListener;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 

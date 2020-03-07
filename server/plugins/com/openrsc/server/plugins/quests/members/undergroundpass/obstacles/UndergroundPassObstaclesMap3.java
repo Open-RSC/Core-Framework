@@ -9,7 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.Area;
 import com.openrsc.server.model.world.Areas;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.ObjectActionListener;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

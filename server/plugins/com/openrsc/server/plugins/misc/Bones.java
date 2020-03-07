@@ -5,7 +5,7 @@ import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
+import com.openrsc.server.plugins.listeners.InvActionListener;
 
 public class Bones implements InvActionListener {
 

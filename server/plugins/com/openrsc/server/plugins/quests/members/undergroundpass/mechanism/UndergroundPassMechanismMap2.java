@@ -5,7 +5,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
 import com.openrsc.server.plugins.quests.members.undergroundpass.obstacles.UndergroundPassObstaclesMap2;
 
 import static com.openrsc.server.plugins.Functions.*;

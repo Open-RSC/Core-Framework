@@ -4,7 +4,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
 
 import java.util.Optional;
 

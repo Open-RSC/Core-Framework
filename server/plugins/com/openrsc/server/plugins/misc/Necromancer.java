@@ -3,10 +3,10 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.PlayerAttackNpcListener;
+import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.listeners.PlayerMageNpcListener;
+import com.openrsc.server.plugins.listeners.TalkToNpcListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;

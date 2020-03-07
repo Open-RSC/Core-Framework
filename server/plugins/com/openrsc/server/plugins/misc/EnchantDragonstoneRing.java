@@ -6,7 +6,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.PlayerMageItemListener;
+import com.openrsc.server.plugins.listeners.PlayerMageItemListener;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 

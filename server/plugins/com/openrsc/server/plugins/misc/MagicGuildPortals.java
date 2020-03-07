@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.WallObjectActionListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;

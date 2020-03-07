@@ -8,9 +8,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
+import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.PickupListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;

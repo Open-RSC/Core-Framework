@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
+import com.openrsc.server.plugins.listeners.InvActionListener;
 
 public class DiskOfReturning implements InvActionListener {
 

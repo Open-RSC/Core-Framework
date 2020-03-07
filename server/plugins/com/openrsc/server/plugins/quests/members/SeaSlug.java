@@ -8,10 +8,10 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.PickupListener;
+import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.listeners.WallObjectActionListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;

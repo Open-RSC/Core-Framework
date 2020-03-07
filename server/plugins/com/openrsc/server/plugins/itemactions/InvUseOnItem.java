@@ -5,7 +5,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnItemListener;
+import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
