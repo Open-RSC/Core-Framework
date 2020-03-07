@@ -584,7 +584,7 @@ public final class CustomBankInterface extends BankInterface {
 					mc.getSurface().drawBoxBorder(drawX, 50, drawY, 35, 0);
 
 					if (draggingInventoryID != -1
-						&& (mc.getInventoryItemsCount()[draggingInventoryID]) != -1) {
+						&& (mc.getInventoryItemAmount(draggingInventoryID) != -1)) {
 						ItemDef def = mc.getInventoryItem(selectedInventorySlot).getItemDef();
 						if (mc.getInventoryItem(selectedInventorySlot).getNoted()) {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
@@ -621,7 +621,7 @@ public final class CustomBankInterface extends BankInterface {
 								def.getBlueMask(),false, 0, 1);
 						}
 						if (def.isStackable()) { // Stack items
-							drawString(mudclient.formatStackAmount(mc.getInventoryItemsCount()[inventorySlot]),
+							drawString(mudclient.formatStackAmount(mc.getInventoryItemAmount(inventorySlot)),
 								drawX + 1, drawY + 10, 1, '\uffff');
 						}
 					}

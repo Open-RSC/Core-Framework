@@ -291,7 +291,7 @@ public final class AuctionHouse {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48,
 								32, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 						}
-						graphics.drawString(String.valueOf(mc.getInventoryItemsCount()[inventorySlot]), drawX + 1,
+						graphics.drawString(String.valueOf(mc.getInventoryItemAmount(inventorySlot)), drawX + 1,
 							drawY + 10, 65280, 1);
 					}
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + boxWidth && mc.getMouseY() > drawY

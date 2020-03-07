@@ -36,10 +36,21 @@ public class Item {
 	 */
 	private int charges;
 	//</editor-fold>
+	@Override
+	public Item clone() {
+		Item ret = new Item();
+		ret.itemDef = this.itemDef;
+		ret.amount = this.amount;
+		ret.equipped = this.equipped;
+		ret.noted = this.noted;
+		ret.durability = this.durability;
+		ret.charges = this.charges;
+		return ret;
+	}
 	//<editor-fold desc="Constructors">
 	public Item() {
 		this.itemDef = null;
-		this.amount = 0;
+		this.amount = -1;
 		this.durability = 0;
 		this.charges = 0;
 		this.noted = false;

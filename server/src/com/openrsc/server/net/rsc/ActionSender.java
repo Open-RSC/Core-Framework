@@ -1122,6 +1122,7 @@ public class ActionSender {
 	}
 
 	public static void sendInventoryUpdateItem(Player player, int slot) {
+		//TODO: need to add a boolean for noted, and update the client PacketHandler:updateInventory() method
 		Item item = player.getCarriedItems().getInventory().get(slot);
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY_UPDATEITEM.opcode);
