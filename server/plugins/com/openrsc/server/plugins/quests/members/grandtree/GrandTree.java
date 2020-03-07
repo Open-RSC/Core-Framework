@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;

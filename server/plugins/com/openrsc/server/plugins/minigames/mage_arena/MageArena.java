@@ -15,7 +15,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 

@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;

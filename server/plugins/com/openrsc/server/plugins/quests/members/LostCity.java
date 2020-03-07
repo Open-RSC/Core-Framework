@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

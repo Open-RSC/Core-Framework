@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 

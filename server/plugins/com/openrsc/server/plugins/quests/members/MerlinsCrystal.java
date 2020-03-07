@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
