@@ -6,8 +6,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
+import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.listeners.WallObjectActionListener;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
