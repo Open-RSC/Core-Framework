@@ -86,7 +86,7 @@ public class ServerConfiguration {
 	public static boolean FOG_TOGGLE;
 	public boolean GROUND_ITEM_TOGGLE;
 	public boolean AUTO_MESSAGE_SWITCH_TOGGLE;
-	public boolean SHOW_LOGIN_BOX_TOGGLE;
+	public boolean HIDE_LOGIN_BOX_TOGGLE;
 	public boolean BATCH_PROGRESSION;
 	public boolean SIDE_MENU_TOGGLE;
 	public boolean INVENTORY_COUNT_TOGGLE;
@@ -347,7 +347,7 @@ public class ServerConfiguration {
 		SIDE_MENU_TOGGLE = tryReadBool("side_menu_toggle").orElse(false);
 		INVENTORY_COUNT_TOGGLE = tryReadBool("inventory_count_toggle").orElse(false);
 		AUTO_MESSAGE_SWITCH_TOGGLE = tryReadBool("auto_message_switch_toggle").orElse(false);
-		SHOW_LOGIN_BOX_TOGGLE = tryReadBool("show_login_box_toggle").orElse(false);
+		HIDE_LOGIN_BOX_TOGGLE = tryReadBool("hide_login_box_toggle").orElse(false);
 		BATCH_PROGRESSION = tryReadBool("batch_progression").orElse(false);
 		WANT_GLOBAL_CHAT = tryReadBool("want_global_chat").orElse(false);
 		WANT_GLOBAL_FRIEND = tryReadBool("want_global_friend").orElse(false);

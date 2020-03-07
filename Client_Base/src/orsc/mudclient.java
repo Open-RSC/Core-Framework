@@ -211,7 +211,7 @@ public final class mudclient implements Runnable {
 			|| S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
 			|| S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
 			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU
-			|| S_SHOW_LOGIN_BOX);
+			|| S_HIDE_LOGIN_BOX);
 	public long totalXpGainedStartTime = 0;
 	public String[] achievementNames = new String[500];
 	public String[] achievementTitles = new String[500];
@@ -8876,13 +8876,13 @@ public final class mudclient implements Runnable {
 		}
 
 		// Show Login Box
-		if (S_SHOW_LOGIN_BOX) {
-			if (C_SHOW_LOGIN_BOX) {
+		if (S_HIDE_LOGIN_BOX) {
+			if (C_HIDE_LOGIN_BOX) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Show Login Box - @gre@Yes", 20, null, null);
+					"@whi@Hide Login Box - @gre@Yes", 20, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Show Login Box - @red@No", 20, null, null);
+					"@whi@Hide Login Box - @red@No", 20, null, null);
 			}
 		}
 
@@ -9226,11 +9226,11 @@ public final class mudclient implements Runnable {
 		}
 
 		// Show Login Box - byte index 40
-		if (settingIndex == 20 && this.mouseButtonClick == 1 && S_SHOW_LOGIN_BOX) {
-			C_SHOW_LOGIN_BOX = !C_SHOW_LOGIN_BOX;
+		if (settingIndex == 20 && this.mouseButtonClick == 1 && S_HIDE_LOGIN_BOX) {
+			C_HIDE_LOGIN_BOX = !C_HIDE_LOGIN_BOX;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().writeBuffer1.putByte(40);
-			boolean setting = C_SHOW_LOGIN_BOX;
+			boolean setting = C_HIDE_LOGIN_BOX;
 			this.packetHandler.getClientStream().writeBuffer1.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
@@ -16603,7 +16603,7 @@ public final class mudclient implements Runnable {
 		C_CUSTOM_UI = b;
 	}
 
-	public void setShowLoginBox(boolean b) { C_SHOW_LOGIN_BOX = b; }
+	public void setHideLoginBox(boolean b) { C_HIDE_LOGIN_BOX = b; }
 
 	public void setBlockPartyInv(boolean b) {
 		C_PARTY_INV = b;
