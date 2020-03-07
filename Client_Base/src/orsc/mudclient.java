@@ -8875,7 +8875,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		// Show Login Box
+		// Hide Login Box
 		if (S_HIDE_LOGIN_BOX) {
 			if (C_HIDE_LOGIN_BOX) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,

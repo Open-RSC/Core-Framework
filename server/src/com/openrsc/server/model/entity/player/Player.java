@@ -2650,10 +2650,8 @@ public final class Player extends Mob {
 			if (getCache().hasKey("setting_hide_login_box")) {
 				return getCache().getBoolean("setting_hide_login_box");
 			}
-			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public Boolean getHideSideMenu() {
