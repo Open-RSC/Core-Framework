@@ -454,6 +454,7 @@ public class ActionSender {
 		s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
 		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
 		s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
+		s.writeByte((byte) (player.getShowLoginBox() ? 1 : 0)); // 40
 		player.write(s.toPacket());
 	}
 
@@ -535,6 +536,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().SKILLING_EXP_RATE + " 72");
 			LOGGER.info(server.getConfig().WANT_PK_BOTS + " 73");
 			LOGGER.info(server.getConfig().WANT_HARVESTING + " 74");
+			LOGGER.info(server.getConfig().SHOW_LOGIN_BOX_TOGGLE + " 75");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -631,6 +633,7 @@ public class ActionSender {
 		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //72
 		s.writeByte((byte) (server.getConfig().WANT_PK_BOTS ? 1 : 0)); // 73
 		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
+		s.writeByte((byte) (server.getConfig().SHOW_LOGIN_BOX_TOGGLE ? 1 : 0)); // 75
 		return s;
 	}
 
@@ -1269,6 +1272,7 @@ public class ActionSender {
 				}
 
 				sendWakeUp(p, false, true);
+				sendGameSettings(p);
 				sendLoginBox(p);
 
 				for (Npc n : p.getWorld().getNpcs()) {
@@ -1299,7 +1303,6 @@ public class ActionSender {
 					sendBox(p, "@gre@Welcome to the " + p.getWorld().getServer().getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				sendGameSettings(p);
 				sendPrivacySettings(p);
 
 				sendStats(p);

@@ -2645,6 +2645,17 @@ public final class Player extends Mob {
 		}
 	}
 
+	public Boolean getShowLoginBox() {
+		if (getWorld().getServer().getConfig().SHOW_LOGIN_BOX_TOGGLE) {
+			if (getCache().hasKey("setting_show_login_box")) {
+				return getCache().getBoolean("setting_show_login_box");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public Boolean getHideSideMenu() {
 		if (getWorld().getServer().getConfig().SIDE_MENU_TOGGLE) {
 			if (getCache().hasKey("setting_side_menu")) {
