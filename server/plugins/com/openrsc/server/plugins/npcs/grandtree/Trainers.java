@@ -7,17 +7,17 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-public class Trainers implements TalkToNpcListener {
+public class Trainers implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.GNOME_TRAINER_ENTRANCE.id(), NpcId.GNOME_TRAINER_STARTINGNET.id(), NpcId.GNOME_TRAINER_PLATFORM.id(), NpcId.GNOME_TRAINER_ENDINGNET.id());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GNOME_TRAINER_ENTRANCE.id()) {
 			playerTalk(p, n, "hello, what is this place?");
 			npcTalk(p, n, "this my friend, is where we train",

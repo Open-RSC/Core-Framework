@@ -5,19 +5,19 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SandPit implements InvUseOnObjectListener {
+public class SandPit implements UseLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == 302 && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(GameObject obj, final Item item, Player player) {
 		final int itemID = item.getCatalogId();
 		final int refilledID = ItemId.SAND.id();
 		if (item.getCatalogId() != ItemId.BUCKET.id()) {

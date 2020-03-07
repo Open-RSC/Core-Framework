@@ -9,14 +9,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Murphy implements MiniGameInterface, TalkToNpcListener {
+public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 
 	/**
 	 * IMPORTANT NOTES:
@@ -50,12 +50,12 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MURPHY_LAND.id() || n.getID() == NpcId.MURPHY_BOAT.id() || n.getID() == NpcId.MURPHY_UNRELEASED.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MURPHY_LAND.id()) { // Murphy on land
 			if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
 				|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {

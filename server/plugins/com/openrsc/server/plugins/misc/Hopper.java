@@ -4,21 +4,21 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Hopper implements InvUseOnObjectListener, ObjectActionListener {
+public class Hopper implements UseLocTrigger, OpLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getCatalogId() == ItemId.GRAIN.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getAttribute("contains_item", null) != null) {
 			player.message("There is already grain in the hopper");
 			return;
@@ -30,12 +30,12 @@ public class Hopper implements InvUseOnObjectListener, ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getGameObjectDef() != null && obj.getGameObjectDef().getName().toLowerCase().equals("hopper") && command.equals("operate");
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		message(player, 500, "You operate the hopper");
 		player.playSound("mechanical");
 		int contains = obj.getAttribute("contains_item", -1);

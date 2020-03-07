@@ -4,15 +4,15 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Reldo implements TalkToNpcListener {
+public final class Reldo implements TalkNpcTrigger {
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.RELDO.id();
 	}
 
@@ -21,7 +21,7 @@ public final class Reldo implements TalkToNpcListener {
 	 * is bad choice.
 	 */
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		if (p.getCache().hasKey("read_arrav")
 			&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {

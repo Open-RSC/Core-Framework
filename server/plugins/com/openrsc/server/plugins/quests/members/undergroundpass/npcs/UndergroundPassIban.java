@@ -7,21 +7,21 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassIban implements InvUseOnObjectListener {
+public class UndergroundPassIban implements UseLocTrigger {
 
 	private static int PIT_OF_THE_DAMNED = 913;
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == PIT_OF_THE_DAMNED && item.getCatalogId() == ItemId.A_DOLL_OF_IBAN.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == PIT_OF_THE_DAMNED) {
 			//iban has been killed (+ doesn't matter status of doll)
 			if(atQuestStages(p, Quests.UNDERGROUND_PASS, 8, -1)) {

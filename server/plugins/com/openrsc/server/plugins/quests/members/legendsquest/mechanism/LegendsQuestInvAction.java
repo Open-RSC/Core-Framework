@@ -10,18 +10,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestInvAction implements InvActionListener, InvUseOnItemListener {
+public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return inArray(item.getCatalogId(),
 			ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id(),
 			ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), ItemId.SHAMANS_TOME.id(), ItemId.BOOKING_OF_BINDING.id(),
@@ -30,7 +30,7 @@ public class LegendsQuestInvAction implements InvActionListener, InvUseOnItemLis
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
 			message(p, 1300, "This totem pole is utterly awe inspiring.",
 				"Perhaps you should show it to Radimus Erkle...");
@@ -163,12 +163,12 @@ public class LegendsQuestInvAction implements InvActionListener, InvUseOnItemLis
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 			for (int i = 0; i < p.getCarriedItems().getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
 				removeItem(p, ItemId.YOMMI_TREE_SEED.id(), 1);

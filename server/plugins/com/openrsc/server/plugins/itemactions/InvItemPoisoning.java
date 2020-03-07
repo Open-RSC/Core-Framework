@@ -5,19 +5,19 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class InvItemPoisoning implements InvUseOnItemListener {
+public class InvItemPoisoning implements UseInvTrigger {
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return item1.getCatalogId() == ItemId.WEAPON_POISON.id() || item2.getCatalogId() == ItemId.WEAPON_POISON.id();
 	}
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.WEAPON_POISON.id()) {
 			applyPoison(player, item2);
 		} else if (item2.getCatalogId() == ItemId.WEAPON_POISON.id()) {

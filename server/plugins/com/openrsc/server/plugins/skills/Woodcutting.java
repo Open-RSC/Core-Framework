@@ -7,7 +7,7 @@ import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,11 +16,11 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class Woodcutting implements ObjectActionListener {
+public class Woodcutting implements OpLocTrigger {
 
 	@Override
-	public boolean blockObjectAction(final GameObject obj,
-									 final String command, final Player player) {
+	public boolean blockOpLoc(final GameObject obj,
+							  final String command, final Player player) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(obj.getID());
 		return (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204);
 	}
@@ -130,7 +130,7 @@ public class Woodcutting implements ObjectActionListener {
 	}
 
 	@Override
-	public void onObjectAction(final GameObject object, final String command, final Player player) {
+	public void onOpLoc(final GameObject object, final String command, final Player player) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
 		if (command.equals("chop") && def != null && object.getID() != 245 && object.getID() != 204) {
 			handleWoodcutting(object, player, player.click);

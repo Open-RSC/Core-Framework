@@ -6,9 +6,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.DropListener;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.DropObjTrigger;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -22,7 +22,7 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, InvActionListener, DropListener {
+public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
 
 	@Override
 	public int getMiniGameId() {
@@ -45,12 +45,12 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, InvA
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BLURBERRY.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player player, Npc npc) {
+	public void onTalkNpc(Player player, Npc npc) {
 		if (npc.getID() == NpcId.BLURBERRY.id()) {
 			if (!player.getCache().hasKey("blurberrys_bar")) {
 				startBlurberrysBar(player, npc);
@@ -290,12 +290,12 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, InvA
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.GNOME_COCKTAIL_GUIDE.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.GNOME_COCKTAIL_GUIDE.id()) {
 			p.message("you open blurberry's cocktail book");
 			p.message("inside are a list of cocktails");
@@ -334,14 +334,14 @@ public class BlurberrysBar implements MiniGameInterface, TalkToNpcListener, InvA
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || i.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			checkAndRemoveBlurberry(p, true);
 		}
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return false;
 	}
 

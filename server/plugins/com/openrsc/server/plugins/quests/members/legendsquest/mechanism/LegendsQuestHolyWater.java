@@ -9,25 +9,25 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.HashMap;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestHolyWater implements InvActionListener, InvUseOnItemListener {
+public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 
 	private static final HashMap<Player, RestartableDelayedEvent> playerEventMap = new HashMap<Player, RestartableDelayedEvent>();
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		// simple random for the moment
 		message(player, 0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
@@ -49,12 +49,12 @@ public class LegendsQuestHolyWater implements InvActionListener, InvUseOnItemLis
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.HOLY_WATER_VIAL.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.HOLY_WATER_VIAL.id())) {
 			player.message("You need to equip this item to throw it.");
 		}

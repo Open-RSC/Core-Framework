@@ -7,13 +7,13 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class Present implements InvUseOnPlayerListener, InvActionListener {
+public class Present implements UsePlayerTrigger, OpInvTrigger {
 
 	private static DropTable presentDrops;
 
@@ -256,7 +256,7 @@ public class Present implements InvUseOnPlayerListener, InvActionListener {
 	}
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.PRESENT.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
@@ -336,18 +336,18 @@ public class Present implements InvUseOnPlayerListener, InvActionListener {
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		player.message("It would be selfish to keep this for myself");
 		player.message("I should give it to someone else");
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 }

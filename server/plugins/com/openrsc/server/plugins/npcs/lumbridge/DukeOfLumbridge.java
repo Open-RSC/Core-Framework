@@ -5,7 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -13,10 +13,10 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class DukeOfLumbridge implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Greetings welcome to my castle");
 
 		ArrayList<String> menu = new ArrayList<String>();
@@ -71,7 +71,7 @@ public final class DukeOfLumbridge implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.DUKE_OF_LUMBRIDGE.id();
 	}
 

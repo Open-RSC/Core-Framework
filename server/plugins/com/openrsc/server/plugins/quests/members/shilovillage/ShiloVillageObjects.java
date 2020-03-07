@@ -8,14 +8,14 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageObjects implements ObjectActionListener, InvUseOnObjectListener {
+public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 
 	/* Objects */
 	private static final int SPEC_STONE = 674;
@@ -46,7 +46,7 @@ public class ShiloVillageObjects implements ObjectActionListener, InvUseOnObject
 	private static final int TOMB_DOORS = 794;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), SPEC_STONE, BUMPY_DIRT, PILE_OF_RUBBLE, SMASHED_TABLE, WET_ROCKS, CAVE_SACK, ROTTEN_GALLOWS, PILE_OF_RUBBLE_TATTERED_SCROLL,
 				WELL_STACKED_ROCKS, TOMB_DOLMEN_HANDHOLDS, SEARCH_TREE_FOR_ENTRANCE, HILLSIDE_ENTRANCE, RASH_EXIT_DOOR, METALLIC_DUNGEON_GATE, CLIMB_CAVE_ROCKS,
 				TOMB_DOORS) || (obj.getID() == BRIDGE_BLOCKADE && command.equalsIgnoreCase("Investigate"));
@@ -55,7 +55,7 @@ public class ShiloVillageObjects implements ObjectActionListener, InvUseOnObject
 	// 572
 	// 377 3633
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == TOMB_DOORS) {
 			if (command.equalsIgnoreCase("Open")) {
 				if (p.getCache().hasKey("tomb_door_shilo")) {
@@ -526,7 +526,7 @@ public class ShiloVillageObjects implements ObjectActionListener, InvUseOnObject
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.SPADE.id())
 				|| (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.LIT_CANDLE.id())
 				|| (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.ROPE.id())
@@ -538,7 +538,7 @@ public class ShiloVillageObjects implements ObjectActionListener, InvUseOnObject
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOMB_DOORS && item.getCatalogId() == ItemId.BONES.id()) {
 			if (!hasItem(p, ItemId.BONES.id(), 3)) {
 				p.message("You do not have enough bones for all the recesses.");

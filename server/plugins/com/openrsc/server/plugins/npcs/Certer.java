@@ -6,12 +6,12 @@ import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Certer implements TalkToNpcListener {
+public class Certer implements TalkNpcTrigger {
 
 	//official certers
 	int[] certers = new int[]{NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(), NpcId.WATTO.id(),
@@ -20,7 +20,7 @@ public class Certer implements TalkToNpcListener {
 	//sidney smith is in its own file
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 
 		// Forester (Log certer; custom)
 		if ((n.getID() == NpcId.FORESTER.id())
@@ -235,7 +235,7 @@ public class Certer implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && p.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD);
 	}
 }

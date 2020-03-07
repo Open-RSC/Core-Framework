@@ -30,7 +30,7 @@ import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.CommandListener;
+import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -41,7 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-public final class Admins implements CommandListener {
+public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
 
 	public static String messagePrefix = null;

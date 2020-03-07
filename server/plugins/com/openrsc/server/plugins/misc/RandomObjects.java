@@ -7,15 +7,15 @@ import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class RandomObjects implements ObjectActionListener {
+public class RandomObjects implements OpLocTrigger {
 
 	@Override
-	public void onObjectAction(final GameObject object, String command, Player owner) {
+	public void onOpLoc(final GameObject object, String command, Player owner) {
 		if (command.equals("search") && object.getID() == 17) {
 			owner.message(
 				"You search the chest, but find nothing");
@@ -170,7 +170,7 @@ public class RandomObjects implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 417) {
 			return true;
 		}

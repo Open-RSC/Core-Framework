@@ -4,7 +4,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -12,10 +12,10 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
 public final class Oracle implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		Menu defaultMenu = new Menu();
 		if (p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
 			defaultMenu.addOption(new Option(
@@ -73,7 +73,7 @@ public final class Oracle implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ORACLE.id();
 	}
 }

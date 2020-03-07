@@ -5,9 +5,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -28,7 +28,7 @@ import static com.openrsc.server.plugins.Functions.spawnNpc;
 /**
  * @author Imposter/Fate
  */
-public class DigsiteDigAreas implements ObjectActionListener, InvUseOnObjectListener, InvActionListener {
+public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigger {
 
 	private static int[] SOIL = {1065, 1066, 1067};
 	private static int ROCK = 1059;
@@ -333,12 +333,12 @@ public class DigsiteDigAreas implements ObjectActionListener, InvUseOnObjectList
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return inArray(obj.getID(), SOIL) || (obj.getID() == ROCK && item.getCatalogId() == ItemId.ROCK_PICK.id());
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (inArray(obj.getID(), SOIL)) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case TROWEL:
@@ -366,12 +366,12 @@ public class DigsiteDigAreas implements ObjectActionListener, InvUseOnObjectList
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), SOIL);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), SOIL)) {
 			p.playerServerMessage(MessageType.QUEST, "You examine the patch of soil");
 			p.message("You see nothing on the surface");
@@ -380,12 +380,12 @@ public class DigsiteDigAreas implements ObjectActionListener, InvUseOnObjectList
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.SPADE.id() && getDigsite(p);
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.SPADE.id() && getDigsite(p)) {
 			doSpade(p, item, null);
 		}

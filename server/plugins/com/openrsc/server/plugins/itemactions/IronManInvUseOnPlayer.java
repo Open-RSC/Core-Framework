@@ -3,14 +3,14 @@ package com.openrsc.server.plugins.itemactions;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class IronManInvUseOnPlayer implements InvUseOnPlayerListener {
+public class IronManInvUseOnPlayer implements UsePlayerTrigger {
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_1.id() || item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_2.id()) {
 			return true;
 		}
@@ -30,7 +30,7 @@ public class IronManInvUseOnPlayer implements InvUseOnPlayerListener {
 	}
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()
 			|| item.getCatalogId() == ItemId.CANDLESTICK.id()
 			|| item.getCatalogId() == ItemId.CERTIFICATE.id()

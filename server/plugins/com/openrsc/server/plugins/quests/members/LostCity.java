@@ -11,8 +11,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,12 +26,12 @@ import static com.openrsc.server.plugins.Functions.*;
  *
  * @author n0m
  */
-public class LostCity implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	PlayerKilledNpcListener,
-	InvUseOnItemListener,
-	WallObjectActionListener,
-	PlayerAttackNpcListener {
+public class LostCity implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	KillNpcTrigger,
+	UseInvTrigger,
+	OpBoundTrigger,
+	AttackNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(LostCity.class);
 
 	/* Objects */
@@ -66,14 +66,14 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return inArray(obj.getID(), LEPROCHAUN_TREE, ENTRANA_LADDER,
 			DRAMEN_TREE);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 			case 244:
 				Npc monk = getNearestNpc(p, NpcId.MONK_OF_ENTRANA_ENTRANA.id(), 10);
@@ -168,13 +168,13 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ADVENTURER_ARCHER.id(), NpcId.ADVENTURER_CLERIC.id(), NpcId.ADVENTURER_WARRIOR.id(),
 				NpcId.ADVENTURER_WIZARD.id(), NpcId.LEPRECHAUN.id(), NpcId.MONK_OF_ENTRANA_ENTRANA.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LEPRECHAUN.id()) {
 			if (atQuestStage(p, this, 0)) {
 				npcTalk(p, n, "Ay you big elephant", "You have caught me",
@@ -381,7 +381,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.TREE_SPIRIT.id()) {
 			if (affectedmob.getAttribute("spawnedFor", null) != null) {
 				if (!affectedmob.getAttribute("spawnedFor").equals(p)) {
@@ -392,7 +392,7 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.TREE_SPIRIT.id()) {
 			if (n.getAttribute("spawnedFor", null) != null) {
 				if (!n.getAttribute("spawnedFor").equals(p)) {
@@ -404,12 +404,12 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.TREE_SPIRIT.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (atQuestStage(p, this, 3)) {
 			kill(n, p);
 			setQuestStage(p, this, 4);
@@ -417,12 +417,12 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.DRAMEN_BRANCH.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (p.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
 				message(p,
@@ -437,13 +437,13 @@ public class LostCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return inArray(obj.getID(), MAGIC_DOOR, ZANARIS_DOOR);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == MAGIC_DOOR) {
 			p.teleport(109, 245, true);
 			sleep(500);

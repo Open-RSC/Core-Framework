@@ -7,15 +7,15 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-public class InvAction extends Functions implements InvActionListener {
+public class InvAction extends Functions implements OpInvTrigger {
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return inArray(item.getCatalogId(),
 			ItemId.BARCRAWL_CARD.id(), ItemId.INSTRUCTION_MANUAL.id(), ItemId.DIARY.id(),
 			ItemId.DRY_STICKS.id(), ItemId.SCRUFFY_NOTE.id(), ItemId.MAGIC_SCROLL.id(),
@@ -34,7 +34,7 @@ public class InvAction extends Functions implements InvActionListener {
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		int id = item.getCatalogId();
 
 		if (id == ItemId.OYSTER.id()) {

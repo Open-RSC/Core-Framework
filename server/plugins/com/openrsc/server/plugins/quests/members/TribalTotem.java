@@ -10,20 +10,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TribalTotem implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener,
-	WallObjectActionListener {
+public class TribalTotem implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	OpBoundTrigger {
 
 	boolean firstOpt = false;
 	boolean secondOpt = false;
@@ -54,13 +54,13 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.KANGAI_MAU.id(), NpcId.HORACIO.id(),
 				NpcId.WIZARD_CROMPERTY.id(), NpcId.RPDT_EMPLOYEE.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KANGAI_MAU.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -328,8 +328,8 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615)
 				|| (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614)
 				|| (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617)
@@ -339,7 +339,7 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615
 			|| obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614) {
 			p.message("The crate is empty");
@@ -406,13 +406,13 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id()) {
 			if (p.getQuestStage(this) == -1) {
 				p.message("You've already done this!");
@@ -427,13 +427,13 @@ public class TribalTotem implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586
 			&& click == 0) {
 			p.message("choose a position for dial 1");

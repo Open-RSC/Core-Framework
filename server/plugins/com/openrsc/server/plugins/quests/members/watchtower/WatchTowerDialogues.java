@@ -6,7 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -16,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener {
+public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 
 	/**
 	 * REMEMBER:
@@ -45,14 +45,14 @@ public class WatchTowerDialogues implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.WATCHTOWER_WIZARD.id(), NpcId.GREW.id(), NpcId.OG.id(), NpcId.TOBAN.id(), NpcId.OGRE_CITIZEN.id(),
 				NpcId.OGRE_TRADER_FOOD.id(), NpcId.OGRE_GUARD_CAVE_ENTRANCE.id(), NpcId.OGRE_TRADER_ROCKCAKE.id(), NpcId.CITY_GUARD.id(),
 				NpcId.SKAVID_FINALQUIZ.id(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id(), NpcId.SKAVID_INITIAL.id());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SKAVID_FINALQUIZ.id()) {
 			if (p.getCache().hasKey("skavid_completed_language") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				npcTalk(p, n, "What, you gots the crystal...");

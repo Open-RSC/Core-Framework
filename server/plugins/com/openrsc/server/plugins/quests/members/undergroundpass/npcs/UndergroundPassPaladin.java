@@ -5,23 +5,23 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassPaladin implements TalkToNpcListener,
-	PlayerKilledNpcListener {
+public class UndergroundPassPaladin implements TalkNpcTrigger,
+	KillNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
 			case 4:
 				playerTalk(p, n, "hello paladin");
@@ -57,12 +57,12 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id() || n.getID() == NpcId.PALADIN_UNDERGROUND.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id()) {
 			n.killedBy(p);
 			message(p, "the paladin slumps to the floor",

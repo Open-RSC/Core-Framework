@@ -7,15 +7,15 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassDungeonFloor implements ObjectActionListener, WallObjectActionListener, InvUseOnObjectListener {
+public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger, UseLocTrigger {
 
 	/**
 	 * OBJECT IDs
@@ -27,12 +27,12 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, WallOb
 	public static int PILE_OF_MUD = 890;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == LADDER || obj.getID() == TOMB_OF_IBAN || obj.getID() == DWARF_BARREL || obj.getID() == PILE_OF_MUD;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == LADDER) {
 			message(p, "you climb the ladder");
 			p.message("it leads to some stairs, you walk up...");
@@ -66,12 +66,12 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, WallOb
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == TOMB_OF_IBAN && (item.getCatalogId() == ItemId.DWARF_BREW.id() || item.getCatalogId() == ItemId.TINDERBOX.id());
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.DWARF_BREW.id()) {
 			if (p.getCache().hasKey("doll_of_iban") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.message("you pour the strong alcohol over the tomb");
@@ -106,12 +106,12 @@ public class UndergroundPassDungeonFloor implements ObjectActionListener, WallOb
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return obj.getID() == SPIDER_NEST_RAILING;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == SPIDER_NEST_RAILING) {
 			message(p, "you search the bars");
 			if (p.getCache().hasKey("doll_of_iban") || p.getQuestStage(Quests.UNDERGROUND_PASS) >= 7 || p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {

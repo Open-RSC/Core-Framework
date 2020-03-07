@@ -7,15 +7,15 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListener,
-	ObjectActionListener {
+public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkNpcTrigger,
+	OpLocTrigger {
 
 	@Override
 	public int getMiniGameId() {
@@ -38,17 +38,17 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == 311 && obj.getX() == 494;
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.BARBARIAN_GUARD.id();
 	}
 
 	@Override
-	public void onObjectAction(final GameObject obj, String command, Player p) {
+	public void onOpLoc(final GameObject obj, String command, Player p) {
 		if (obj.getID() == 311 && obj.getX() == 494) {
 			if (p.getCache().hasKey("barcrawl_completed")) {
 				doGate(p, obj);
@@ -62,7 +62,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkToNpcListe
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.BARBARIAN_GUARD.id()) {
 			if (p.getCache().hasKey("barcrawl_completed")) {
 				npcTalk(p, n, "Ello friend");

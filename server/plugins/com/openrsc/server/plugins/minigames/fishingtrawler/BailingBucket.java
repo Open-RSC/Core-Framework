@@ -4,14 +4,14 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class BailingBucket implements InvActionListener {
+public class BailingBucket implements OpInvTrigger {
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (player.isBusy())
 			return;
 		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
@@ -33,7 +33,7 @@ public class BailingBucket implements InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.BAILING_BUCKET.id();
 	}
 

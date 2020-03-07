@@ -9,18 +9,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FurMerchant implements ShopInterface, TalkToNpcListener {
+public class FurMerchant implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 15000, 120, 95, 2, new Item(ItemId.FUR.id(), 3), new Item(ItemId.GREY_WOLF_FUR.id(), 3));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("furStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("furStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
@@ -50,7 +50,7 @@ public class FurMerchant implements ShopInterface, TalkToNpcListener {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.FUR_TRADER.id();
 	}
 

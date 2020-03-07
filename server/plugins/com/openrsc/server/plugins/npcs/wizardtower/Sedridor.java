@@ -4,8 +4,8 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.quests.members.RuneMysteries;
 
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 
 
-public class Sedridor implements TalkToNpcListener, NpcCommandListener {
+public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p,n,"Welcome, adventurer, to the world-renowned Wizards' Tower",
 			"How many I help you?");
 
@@ -39,17 +39,17 @@ public class Sedridor implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SEDRIDOR.id();
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		RuneMysteries.sedridorDialog(p,n, 0);
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		return (n.getID() == 803 &&
 			p.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
 			p.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&

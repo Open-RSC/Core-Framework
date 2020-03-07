@@ -11,8 +11,8 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class HerosQuest implements QuestInterface, TalkToNpcListener,
-	WallObjectActionListener, InvUseOnWallObjectListener, ObjectActionListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener,
-	PlayerKilledNpcListener, PickupListener {
+public class HerosQuest implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger, UseBoundTrigger, OpLocTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger, SpellNpcTrigger,
+	KillNpcTrigger, TakeObjTrigger {
 
 	private static final int GRIPS_CUPBOARD_OPEN = 264;
 	private static final int GRIPS_CUPBOARD_CLOSED = 263;
@@ -75,7 +75,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	 * 457, 377
 	 **/
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ACHETTIES.id(), NpcId.GRUBOR.id(),
 				NpcId.TROBERT.id(), NpcId.GRIP.id()}, n.getID());
 	}
@@ -152,7 +152,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
 				int menu = showMenu(p, n,
@@ -332,7 +332,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				p.message("Ouch that is too hot to take");
@@ -344,7 +344,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				return true;
@@ -354,7 +354,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682)
 				|| (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694)
 				|| (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681)
@@ -364,7 +364,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682) {
 			if (p.getCache().hasKey("talked_alf") || p.getQuestStage(this) == -1) {
 				p.message("you open the door");
@@ -506,12 +506,12 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(GameObject obj, Item item, Player player) {
 		return obj.getID() == 80 || obj.getID() == 81;
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public void onUseBound(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 80) {
 			if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
 				showBubble(p, item);
@@ -531,13 +531,13 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED
 				|| obj.getID() == CANDLESTICK_CHEST_OPEN || obj.getID() == CANDLESTICK_CHEST_CLOSED;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		Npc guard = getNearestNpc(p, NpcId.GUARD_PIRATE.id(), 10);
 		Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
 		if (obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED) {
@@ -613,7 +613,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			p.getWorld().registerItem(
 					new GroundItem(p.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
@@ -623,17 +623,17 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom();
 	}
 
@@ -643,7 +643,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
 			playerTalk(p, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
@@ -665,7 +665,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc n) {
+	public void onAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			if (!p.getLocation().inHeroQuestRangeRoom()) {
 				playerTalk(p, null, "I can't attack the head guard here",

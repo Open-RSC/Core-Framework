@@ -6,15 +6,15 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Baraek implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		int menu;
 		boolean bargained = false;
 		boolean hasFur = p.getCarriedItems().hasCatalogID(ItemId.FUR.id());
@@ -153,7 +153,7 @@ public final class Baraek implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARAEK.id();
 	}
 

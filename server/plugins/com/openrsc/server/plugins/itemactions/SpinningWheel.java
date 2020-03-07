@@ -6,21 +6,21 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class SpinningWheel implements InvUseOnObjectListener {
+public class SpinningWheel implements UseLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == 121;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(GameObject obj, final Item item, Player player) {
 		int produceID = -1;
 		int requiredLevel = -1;
 		int experience = -1;

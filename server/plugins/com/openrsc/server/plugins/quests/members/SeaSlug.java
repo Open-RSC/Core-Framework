@@ -8,20 +8,20 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SeaSlug implements QuestInterface, TalkToNpcListener,
-	PickupListener,
-	ObjectActionListener,
-	WallObjectActionListener {
+public class SeaSlug implements QuestInterface, TalkNpcTrigger,
+	TakeObjTrigger,
+	OpLocTrigger,
+	OpBoundTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -46,14 +46,14 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.CAROLINE.id(), NpcId.HOLGART_LAND.id(), NpcId.HOLGART_PLATFORM.id(), NpcId.HOLGART_ISLAND.id(),
 				NpcId.KENNITH.id(), NpcId.KENT.id(), NpcId.PLATFORM_FISHERMAN_GOLDEN.id(), NpcId.PLATFORM_FISHERMAN_PURPLE.id(),
 				NpcId.PLATFORM_FISHERMAN_GRAY.id(), NpcId.BAILEY.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KENT.id()) {
 			switch (p.getQuestStage(this)) {
 				case 4:
@@ -579,12 +579,12 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.SEASLUG.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.SEASLUG.id()) {
 			int damage = DataConversions.getRandom().nextInt(8) + 1;
 			p.message("you pick up the seaslug");
@@ -596,12 +596,12 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == 458 || obj.getID() == 453;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 458) {
 			if (p.getQuestStage(getQuestId()) < 5) {
 				message(p, "You climb up the ladder");
@@ -657,13 +657,13 @@ public class SeaSlug implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getID() == 124;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 124) {
 			if (p.getQuestStage(getQuestId()) == 5) {
 				message(p, "you kick the loose panel",

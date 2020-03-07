@@ -7,20 +7,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
-	WallObjectActionListener,
-	ObjectActionListener,
-	PlayerKilledNpcListener {
+public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger,
+	OpLocTrigger,
+	KillNpcTrigger {
 
 	private static final int KHAZARD_CHEST_OPEN = 409;
 	private static final int KHAZARD_CHEST_CLOSED = 410;
@@ -49,14 +49,14 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ELKOY.id(), NpcId.LOCAL_GNOME.id(), NpcId.REMSAI.id(), NpcId.BOLREN.id(),
 				NpcId.GNOME_TROOP.id(), NpcId.COMMANDER_MONTAI.id(), NpcId.TRACKER_3.id(), NpcId.TRACKER_1.id(),
 				NpcId.KHAZARD_WARLORD.id(), NpcId.KALRON.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			if (p.getQuestStage(getQuestId()) == 6
 				|| p.getQuestStage(getQuestId()) == -1) {
@@ -804,13 +804,13 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return (obj.getID() == 101 && obj.getY() == 705) || (obj.getID() == 101 && obj.getX() == 540 && obj.getY() == 445);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 101 && obj.getY() == 705) {
 			p.message("You push your way through the fence");
 			doDoor(obj, p, 16);
@@ -822,13 +822,13 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return DataConversions.inArray(new int[] {392, 388, 393, KHAZARD_CHEST_OPEN, KHAZARD_CHEST_CLOSED}, obj.getID());
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 392) {
 			Npc trackerTwo = getNearestNpc(p, NpcId.TRACKER_2.id(), 5);
 			switch (p.getQuestStage(getQuestId())) {
@@ -971,12 +971,12 @@ public class TreeGnomeVillage implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.KHAZARD_WARLORD.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			n.resetCombatEvent();
 			n.killedBy(p);

@@ -3,10 +3,10 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -14,10 +14,10 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Fate
  */
-public class Necromancer implements PlayerAttackNpcListener, PlayerKilledNpcListener, PlayerMageNpcListener, TalkToNpcListener {
+public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTrigger, TalkNpcTrigger {
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id();
 	}
 
@@ -74,37 +74,37 @@ public class Necromancer implements PlayerAttackNpcListener, PlayerKilledNpcList
 
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc necromancer) {
+	public void onAttackNpc(Player p, Npc necromancer) {
 		necromancerFightSpawnMethod(p, necromancer);
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		necromancerOnKilledMethod(p, n);
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id() || n.getID() == NpcId.ZOMBIE_INVOKED.id();
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id() || n.getID() == NpcId.ZOMBIE_INVOKED.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc necromancer) {
+	public void onSpellNpc(Player p, Npc necromancer) {
 		necromancerFightSpawnMethod(p, necromancer);
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		p.playerServerMessage(MessageType.QUEST, "Invrigar the necromancer is not interested in talking");
 	}
 }

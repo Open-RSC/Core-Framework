@@ -5,13 +5,13 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class MakeOverMage implements TalkToNpcListener {
+public class MakeOverMage implements TalkNpcTrigger {
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		npcTalk(p, n, "Are you happy with your looks?",
 			"If not I can change them for the cheap cheap price",
 			"Of 3000 coins");
@@ -29,7 +29,7 @@ public class MakeOverMage implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MAKE_OVER_MAGE.id();
 	}
 

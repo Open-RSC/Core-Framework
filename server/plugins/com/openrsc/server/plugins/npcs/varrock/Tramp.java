@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
@@ -11,13 +11,13 @@ import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class Tramp implements TalkToNpcListener {
-	public boolean blockTalkToNpc(final Player player, final Npc npc) {
+public class Tramp implements TalkNpcTrigger {
+	public boolean blockTalkNpc(final Player player, final Npc npc) {
 		return npc.getID() == NpcId.TRAMP.id();
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Spare some change guv?");
 		int menu = showMenu(p, n, "Sorry I haven't got any",
 			"Go get a job",

@@ -4,17 +4,17 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.time.Instant;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SilkMerchant implements TalkToNpcListener {
+public class SilkMerchant implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("silkStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("silkStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
@@ -75,7 +75,7 @@ public class SilkMerchant implements TalkToNpcListener {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SILK_MERCHANT.id();
 	}
 }

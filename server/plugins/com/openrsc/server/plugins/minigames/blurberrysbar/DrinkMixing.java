@@ -3,14 +3,14 @@ package com.openrsc.server.plugins.minigames.blurberrysbar;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DrinkMixing implements InvUseOnItemListener, InvActionListener {
+public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 
 	private boolean canMix(Item itemOne, Item itemTwo) {
 		for (DrinkMix dm : DrinkMix.values()) {
@@ -22,12 +22,12 @@ public class DrinkMixing implements InvUseOnItemListener, InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return canMix(item1, item2);
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		DrinkMix dm = null;
 		for (DrinkMix mix : DrinkMix.values()) {
 			if (mix.isValid(item1.getCatalogId(), item2.getCatalogId())) {
@@ -158,12 +158,12 @@ public class DrinkMixing implements InvUseOnItemListener, InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.COCKTAIL_GLASS.id(), Optional.of(false))) {
 				boolean complete = false;

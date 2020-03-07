@@ -7,8 +7,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class KittenToCat implements MiniGameInterface, CatGrowthListener, DropListener,
-	InvActionListener, InvUseOnItemListener, InvUseOnNpcListener {
+public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObjTrigger,
+	OpInvTrigger, UseInvTrigger, UseNpcTrigger {
 
 	protected static final int BASE_FACTOR = 16;
 
@@ -42,12 +42,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthListener, DropLi
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return i.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTEN.id()) {
 			removeItem(p, ItemId.KITTEN.id(), 1);
 			message(p, 1200, "you drop the kitten");
@@ -59,12 +59,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthListener, DropLi
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			message(p, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
@@ -218,12 +218,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthListener, DropLi
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2);
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2)) {
 			boolean isGrownCat = item1.getCatalogId() != ItemId.KITTEN.id() && item2.getCatalogId() != ItemId.KITTEN.id();
 			Item item;
@@ -255,13 +255,13 @@ public class KittenToCat implements MiniGameInterface, CatGrowthListener, DropLi
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player p, Npc n, Item item) {
 		//only small rats
 		return (item.getCatalogId() == ItemId.KITTEN.id() || item.getCatalogId() == ItemId.CAT.id()) && n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (item.getCatalogId() == ItemId.KITTEN.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			p.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {

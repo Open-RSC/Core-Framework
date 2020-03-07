@@ -4,25 +4,25 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class MuddyChest implements ObjectActionListener, InvUseOnObjectListener {
+public class MuddyChest implements OpLocTrigger, UseLocTrigger {
 
 	private final int MUDDY_CHEST = 222;
 	private final int MUDDY_CHEST_OPEN = 221;
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == MUDDY_CHEST) {
 			p.message("the chest is locked");
 		}
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == MUDDY_CHEST && item.getCatalogId() == ItemId.MUDDY_KEY.id()) {
 			int respawnTime = 3000;
 			p.message("you unlock the chest with your key");
@@ -42,12 +42,12 @@ public class MuddyChest implements ObjectActionListener, InvUseOnObjectListener 
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == MUDDY_CHEST;
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == MUDDY_CHEST && item.getCatalogId() == ItemId.MUDDY_KEY.id();
 	}
 }

@@ -8,20 +8,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class PrinceAliRescue implements QuestInterface, WallObjectActionListener,
-	InvUseOnNpcListener,
-	TalkToNpcListener,
-	InvUseOnWallObjectListener {
+public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
+	UseNpcTrigger,
+	TalkNpcTrigger,
+	UseBoundTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -54,19 +54,19 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(final Player player, final Npc npc,
-									final Item item) {
+	public boolean blockUseNpc(final Player player, final Npc npc,
+							   final Item item) {
 		return npc.getID() == NpcId.LADY_KELI.id() && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(final GameObject obj,
-									   final Item item, final Player player) {
+	public boolean blockUseBound(final GameObject obj,
+								 final Item item, final Player player) {
 		return obj.getID() == 45 && obj.getY() == 640 && item.getCatalogId() == ItemId.BRONZE_KEY.id();
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		// AGGIE -> separate file
 		// NED -> separate file
 		return DataConversions.inArray(new int[] {NpcId.LADY_KELI.id(), NpcId.HASSAN.id(), NpcId.OSMAN.id(),
@@ -74,8 +74,8 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public boolean blockWallObjectAction(final GameObject obj,
-										 final Integer click, final Player player) {
+	public boolean blockOpBound(final GameObject obj,
+								final Integer click, final Player player) {
 		return obj.getID() == 45 && obj.getY() == 640;
 	}
 
@@ -908,7 +908,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public void onInvUseOnNpc(final Player p, final Npc npc, final Item item) {
+	public void onUseNpc(final Player p, final Npc npc, final Item item) {
 		if (npc.getID() == NpcId.LADY_KELI.id() && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (p.getCache().hasKey("joe_is_drunk") && p.getQuestStage(this) == 2) {
 				npc.remove();
@@ -924,8 +924,8 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public void onInvUseOnWallObject(final GameObject obj, final Item item,
-								 final Player player) {
+	public void onUseBound(final GameObject obj, final Item item,
+						   final Player player) {
 		if (obj.getID() == 45 && item.getCatalogId() == ItemId.BRONZE_KEY.id()) {
 			if (obj.getY() == 640) {
 				final Npc keli = getNearestNpc(player, NpcId.LADY_KELI.id(), 20);
@@ -954,7 +954,7 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		//border guard in separate file
 		if (n.getID() == NpcId.LADY_KELI.id()) {
 			keliDialogue(p, n, -1);
@@ -974,8 +974,8 @@ public class PrinceAliRescue implements QuestInterface, WallObjectActionListener
 	}
 
 	@Override
-	public void onWallObjectAction(final GameObject obj, final Integer click,
-								   final Player p) {
+	public void onOpBound(final GameObject obj, final Integer click,
+						  final Player p) {
 		if (obj.getID() == 45) {
 			if (obj.getY() == 640) {
 				final Npc keli = getNearestNpc(p, NpcId.LADY_KELI.id(), 20);

@@ -5,8 +5,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -15,8 +15,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class WoodcutJungle implements ObjectActionListener,
-	WallObjectActionListener {
+public class WoodcutJungle implements OpLocTrigger,
+	OpBoundTrigger {
 
 	private static int[] JUNGLE_TREES = {1086, 1100, 1099, 1092, 1091};
 
@@ -25,7 +25,7 @@ public class WoodcutJungle implements ObjectActionListener,
 	private static int JUNGLE_TREE_STUMP = 1087;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), JUNGLE_TREES)) {
 			return true;
 		}
@@ -36,7 +36,7 @@ public class WoodcutJungle implements ObjectActionListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), JUNGLE_TREES)) {
 			handleJungleWoodcut(obj, p);
 		}
@@ -140,12 +140,12 @@ public class WoodcutJungle implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return obj.getID() == JUNGLE_VINE;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == JUNGLE_VINE) {
 			handleJungleWoodcut(obj, p);
 		}

@@ -5,15 +5,15 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeCooking implements InvActionListener, InvUseOnObjectListener {
+public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 	private boolean canCook(Item item, GameObject object) {
 		for (GnomeCook c : GnomeCook.values()) {
@@ -179,24 +179,24 @@ public class GnomeCooking implements InvActionListener, InvUseOnObjectListener {
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.GIANNE_DOUGH.id()) {
 			mouldDough(item, p);
 		}
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.GIANNE_DOUGH.id();
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return canCook(item, obj);
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		handleGnomeCooking(item, p, obj);
 	}
 

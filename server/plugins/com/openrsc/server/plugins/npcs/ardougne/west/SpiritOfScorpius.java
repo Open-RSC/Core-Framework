@@ -6,24 +6,24 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiritOfScorpius implements TalkToNpcListener, ObjectActionListener {
+public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 
 	public int GRAVE_OF_SCORPIUS = 941;
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SPIRIT_OF_SCORPIUS.id() || n.getID() == NpcId.GHOST_SCORPIUS.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SPIRIT_OF_SCORPIUS.id()) {
 			if (p.getQuestStage(Quests.OBSERVATORY_QUEST) != -1) {
 				npcTalk(p, n, "How dare you disturb me!");
@@ -114,12 +114,12 @@ public class SpiritOfScorpius implements TalkToNpcListener, ObjectActionListener
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == GRAVE_OF_SCORPIUS;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == GRAVE_OF_SCORPIUS) {
 			player.message("Here lies Scorpius:");
 			player.message("Only those who have seen beyond the stars");

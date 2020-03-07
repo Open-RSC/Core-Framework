@@ -10,18 +10,18 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Observatory implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener {
+public class Observatory implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger {
 
 	private int selectedNumber = 0;
 
@@ -50,12 +50,12 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.OBSERVATORY_ASSISTANT.id() || n.getID() == NpcId.OBSERVATORY_PROFESSOR.id() || n.getID() == NpcId.PROFESSOR.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.PROFESSOR.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -416,14 +416,14 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	} // DUNGEON SPIDER 656 poison
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return DataConversions.inArray(new int[] {928, 937, 936, 929, 917, 930, 919, 935, 934, 927, 925}, obj.getID())
 				|| (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 928) {
 			if (p.getQuestStage(getQuestId()) == 0) {
 				p.teleport(712, 3512, false);
@@ -704,13 +704,13 @@ public class Observatory implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id()) {
 			Npc guard = getNearestNpc(p, NpcId.GOBLIN_GUARD.id(), 5);
 			if (guard != null) {

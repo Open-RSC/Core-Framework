@@ -3,10 +3,10 @@ package com.openrsc.server.plugins.commands;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.CommandListener;
+import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class PlayerModerator implements CommandListener {
+public final class PlayerModerator implements CommandTrigger {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;

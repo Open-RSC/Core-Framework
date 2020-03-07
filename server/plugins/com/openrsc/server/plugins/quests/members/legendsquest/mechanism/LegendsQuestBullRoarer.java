@@ -7,26 +7,26 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestBullRoarer implements InvActionListener {
+public class LegendsQuestBullRoarer implements OpInvTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(LegendsQuestBullRoarer.class);
 	private boolean inKharaziJungle(Player p) {
 		return p.getLocation().inBounds(338, 869, 477, 908);
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.BULL_ROARER.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.BULL_ROARER.id()) {
 			message(p, 1300, "You start to swing the bullroarer above your head.",
 				"You feel a bit silly at first, but soon it makes an interesting sound.");

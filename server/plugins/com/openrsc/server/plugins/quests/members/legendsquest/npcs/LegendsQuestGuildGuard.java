@@ -6,12 +6,12 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGuildGuard implements TalkToNpcListener, ObjectActionListener {
+public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 
 	private static final int MITHRIL_GATES = 1079;
 
@@ -210,12 +210,12 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, ObjectActionLi
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.LEGENDS_GUILD_GUARD.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
 				message(p, 1200, "You approach a nearby guard...");
@@ -225,12 +225,12 @@ public class LegendsQuestGuildGuard implements TalkToNpcListener, ObjectActionLi
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == MITHRIL_GATES;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == MITHRIL_GATES) {
 			if (command.equals("open")) {
 				if (p.getY() <= 550) {

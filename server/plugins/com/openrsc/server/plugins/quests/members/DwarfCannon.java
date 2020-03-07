@@ -11,10 +11,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -23,9 +23,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DwarfCannon
-	implements QuestInterface, PickupListener,
-	TalkToNpcListener, WallObjectActionListener,
-	ObjectActionListener {
+	implements QuestInterface, TakeObjTrigger,
+	TalkNpcTrigger, OpBoundTrigger,
+	OpLocTrigger {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.DWARF_CANNON_BASE.id(), 3), new Item(ItemId.DWARF_CANNON_STAND.id(), 3),
 		new Item(ItemId.DWARF_CANNON_BARRELS.id(), 3), new Item(ItemId.DWARF_CANNON_FURNACE.id(), 3),
@@ -54,13 +54,13 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id() ||
 			n.getID() == NpcId.GRAMAT.id() || n.getID() == NpcId.DWARVEN_SMITHY.id() || n.getID() == NpcId.DWARVEN_YOUTH.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.DWARF_CANNON_ENGINEER.id()) {
 			switch (p.getQuestStage(this)) {
 				case 5:
@@ -526,7 +526,7 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return (obj.getID() == 181 || obj.getID() == 182 || obj.getID() == 183 || obj.getID() == 184 || obj.getID() == 185 || obj.getID() == 186)
 				|| obj.getID() == 194 || (obj.getID() == 197 && obj.getX() == 278);
 	}
@@ -562,7 +562,7 @@ public class DwarfCannon
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 193) {
 			message(p, "you search the railing", "but find nothing of interest");
 		}
@@ -635,13 +635,13 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return (obj.getID() == 982 && obj.getY() == 523) || (obj.getID() == 981 || obj.getID() == 985) || obj.getID() == 994 || obj.getID() == 983
 				|| obj.getID() == 986 || obj.getID() == 987;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 981) {
 			player.message("you climb up the ladder");
 			if(player.getQuestStage(this) == 0) {
@@ -764,12 +764,12 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.DWARF_REMAINS.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.DWARF_REMAINS.id()) {
 			if(p.getCarriedItems().hasCatalogID(ItemId.DWARF_REMAINS.id(), Optional.of(false))) {
 				p.message("carrying one 'dwarfs remains' is bad enough");

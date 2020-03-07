@@ -6,18 +6,18 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.PlayerMageItemListener;
+import com.openrsc.server.plugins.triggers.SpellInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class EnchantDragonstoneRing implements PlayerMageItemListener {
+public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
-	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID) {
+	public boolean blockSpellInv(Player p, Integer itemID, Integer spellID) {
 		return (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override
-	public void onPlayerMageItem(Player p, Integer itemID, Integer spellID) {
+	public void onSpellInv(Player p, Integer itemID, Integer spellID) {
 		SpellDef spellDef = p.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
 		if (spellDef == null)
 			return;

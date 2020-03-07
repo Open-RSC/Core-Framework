@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class HudoGlenfadGroceries implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 1,
 		new Item(ItemId.GIANNE_DOUGH.id(), 8), new Item(ItemId.EQUA_LEAVES.id(), 5), new Item(ItemId.POT_OF_FLOUR.id(), 5),
@@ -26,7 +26,7 @@ public final class HudoGlenfadGroceries implements ShopInterface,
 		new Item(ItemId.MILK.id(), 5), new Item(ItemId.KNIFE.id(), 5), new Item(ItemId.GIANNE_COOK_BOOK.id(), 5));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		playerTalk(p, n, "hello there");
 		npcTalk(p, n, "good day ..and a beautiful one at that",
 			"would you like some groceries? i have a large selection");
@@ -46,7 +46,7 @@ public final class HudoGlenfadGroceries implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.HUDO_GLENFAD.id();
 	}
 

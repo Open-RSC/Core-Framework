@@ -6,20 +6,20 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Curator implements TalkToNpcListener, InvUseOnNpcListener {
-	public boolean blockTalkToNpc(final Player player, final Npc npc) {
+public class Curator implements TalkNpcTrigger, UseNpcTrigger {
+	public boolean blockTalkNpc(final Player player, final Npc npc) {
 		return npc.getID() == NpcId.CURATOR.id();
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to the museum of Varrock");
 		if (p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id()) && p.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
 			// curator authentically does not check if you already have a certificate in your inventory before triggering this
@@ -89,7 +89,7 @@ public class Curator implements TalkToNpcListener, InvUseOnNpcListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.CURATOR.id() && (item.getCatalogId() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()
 			|| item.getCatalogId() == ItemId.LEVEL_1_CERTIFICATE.id()
 			|| item.getCatalogId() == ItemId.LEVEL_2_CERTIFICATE.id()
@@ -100,7 +100,7 @@ public class Curator implements TalkToNpcListener, InvUseOnNpcListener {
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.CURATOR.id()) {
 			if (item.getCatalogId() == ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()) {
 				playerTalk(p, n, "I have been given this by the examiner at the digsite",

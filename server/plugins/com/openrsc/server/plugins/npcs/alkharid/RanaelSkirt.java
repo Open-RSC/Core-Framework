@@ -10,12 +10,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class RanaelSkirt implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 25000, 100, 65, 1,
 		new Item(ItemId.BRONZE_PLATED_SKIRT.id(), 5),
@@ -27,7 +27,7 @@ public final class RanaelSkirt implements ShopInterface,
 	);
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.RANAEL.id();
 	}
 
@@ -42,7 +42,7 @@ public final class RanaelSkirt implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		final String[] options;
 		npcTalk(p, n, "Do you want to buy any armoured skirts?",
 			"Designed especially for ladies who like to fight");

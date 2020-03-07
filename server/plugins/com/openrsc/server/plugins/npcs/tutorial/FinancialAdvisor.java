@@ -2,21 +2,21 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
 import com.openrsc.server.constants.NpcId;
 
-public class FinancialAdvisor implements TalkToNpcListener {
+public class FinancialAdvisor implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island financial advisor
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "Hello there",
 			"I'm your designated financial advisor");
 		playerTalk(p, n, "That's good because I don't have any money at the moment",
@@ -42,7 +42,7 @@ public class FinancialAdvisor implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.FINANCIAL_ADVISOR.id();
 	}
 

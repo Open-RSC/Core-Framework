@@ -6,28 +6,28 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerNpcRunListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
+import com.openrsc.server.plugins.triggers.EscapeNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageNazastarool implements ObjectActionListener,
-	PlayerKilledNpcListener, PlayerNpcRunListener,
-	PlayerMageNpcListener {
+public class ShiloVillageNazastarool implements OpLocTrigger,
+	KillNpcTrigger, EscapeNpcTrigger,
+	SpellNpcTrigger {
 
 	private static final int TOMB_DOLMEN_Nazastarool = 724;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == TOMB_DOLMEN_Nazastarool;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == TOMB_DOLMEN_Nazastarool) {
 			if (p.getCache().hasKey("dolmen_zombie")
 				&& p.getCache().hasKey("dolmen_skeleton")
@@ -138,12 +138,12 @@ public class ShiloVillageNazastarool implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() ==  NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			n.remove();
 			p.setBusy(true);
@@ -190,24 +190,24 @@ public class ShiloVillageNazastarool implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockPlayerNpcRun(Player p, Npc n) {
+	public boolean blockEscapeNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id();
 	}
 
 	@Override
-	public void onPlayerNpcRun(Player p, Npc n) {
+	public void onEscapeNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			runFromNazastarool(p, n);
 		}
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id() || n.getID() == NpcId.NAZASTAROOL_SKELETON.id() || n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);

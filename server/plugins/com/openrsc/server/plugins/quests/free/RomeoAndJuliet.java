@@ -7,13 +7,13 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener {
+public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -392,7 +392,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.ROMEO.id()) {
 			romeoDialogue(p, n);
 		} else if (n.getID() == NpcId.JULIET.id()) {
@@ -403,7 +403,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ROMEO.id() || n.getID() == NpcId.JULIET.id() || n.getID() == NpcId.FATHER_LAWRENCE.id();
 	}
 }

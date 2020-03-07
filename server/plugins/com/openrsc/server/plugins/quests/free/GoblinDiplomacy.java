@@ -7,11 +7,11 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener {
+public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -37,7 +37,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.GOLD_BAR.id(), 1));
 	}
 
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		final Npc otherGoblin = n.getID() == NpcId.GENERAL_WARTFACE.id() ? p.getWorld().getNpc(NpcId.GENERAL_BENTNOZE.id(),
 			314, 330, 441, 457) : p.getWorld().getNpc(NpcId.GENERAL_WARTFACE.id(), 321, 445,
 			326, 449);
@@ -151,7 +151,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id();
 	}
 }

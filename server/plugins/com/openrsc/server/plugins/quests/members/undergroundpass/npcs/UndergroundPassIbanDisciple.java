@@ -5,21 +5,21 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener {
+public class UndergroundPassIbanDisciple implements KillNpcTrigger {
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.IBAN_DISCIPLE.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.IBAN_DISCIPLE.id()) {
 			n.killedBy(p);
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {

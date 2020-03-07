@@ -8,8 +8,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.removeItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcListener, InvUseOnNpcListener {
+public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -61,12 +61,12 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() || n.getID() == NpcId.SIR_RADIMUS_ERKLE_GUILD.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id()) {
 			radimusInHouseDialogue(p, n, -1);
 		}
@@ -457,13 +457,13 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkToNpcLis
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player p, Npc n, Item item) {
 		return n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && (item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()
 				|| item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id() || item.getCatalogId() == ItemId.TOTEM_POLE.id());
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 11) {
 				npcTalk(p, n, "Go through to the main Legends Guild and I will join you.");

@@ -5,16 +5,16 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteStudents implements TalkToNpcListener {
+public class DigsiteStudents implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.STUDENT_ORANGE.id() || n.getID() == NpcId.STUDENT_PURPLE.id() || n.getID() == NpcId.STUDENT_GREEN.id();
 	}
 
@@ -23,7 +23,7 @@ public class DigsiteStudents implements TalkToNpcListener {
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.STUDENT_ORANGE.id()) {
 			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case 0:

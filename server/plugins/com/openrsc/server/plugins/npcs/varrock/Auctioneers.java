@@ -6,20 +6,20 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Auctioneers implements TalkToNpcListener, NpcCommandListener {
+public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Auctioneers.class);
 	public static int AUCTIONEER = NpcId.AUCTIONEER.id();
 	public static int AUCTION_CLERK = NpcId.AUCTION_CLERK.id();
 
 	@Override
-	public boolean blockTalkToNpc(final Player player, final Npc npc) {
+	public boolean blockTalkNpc(final Player player, final Npc npc) {
 		if (npc.getID() == AUCTIONEER) {
 			return true;
 		}
@@ -30,7 +30,7 @@ public class Auctioneers implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player player, final Npc npc) {
+	public void onTalkNpc(Player player, final Npc npc) {
 		npcTalk(player, npc, "Hello");
 		int menu;
 		if (npc.getID() == AUCTION_CLERK) {
@@ -65,7 +65,7 @@ public class Auctioneers implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		if ((n.getID() == AUCTIONEER) && command.equalsIgnoreCase("Auction")) {
 			return true;
 		}
@@ -76,7 +76,7 @@ public class Auctioneers implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (n.getID() == AUCTIONEER) {
 			if (command.equalsIgnoreCase("Auction")) {
 				if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())

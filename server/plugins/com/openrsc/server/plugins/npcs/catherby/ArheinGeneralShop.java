@@ -10,12 +10,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ArheinGeneralShop implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(true, 15000, 130, 40, 3, new Item(ItemId.BUCKET.id(), 10),
 		new Item(ItemId.BRONZE_PICKAXE.id(), 2), new Item(ItemId.BOWL.id(), 2), new Item(ItemId.CAKE_TIN.id(), 2),
@@ -23,7 +23,7 @@ public class ArheinGeneralShop implements ShopInterface,
 		new Item(ItemId.ROPE.id(), 2), new Item(ItemId.POT.id(), 2));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.ARHEIN.id();
 	}
 
@@ -38,7 +38,7 @@ public class ArheinGeneralShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Hello would you like to trade");
 		int option = showMenu(p, n, "Yes ok",
 			"No thankyou",

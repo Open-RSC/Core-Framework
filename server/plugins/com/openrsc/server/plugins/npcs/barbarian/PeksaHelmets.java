@@ -9,13 +9,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class PeksaHelmets implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 1, new Item(ItemId.MEDIUM_BRONZE_HELMET.id(),
 		5), new Item(ItemId.MEDIUM_IRON_HELMET.id(), 3), new Item(ItemId.MEDIUM_STEEL_HELMET.id(), 3), new Item(ItemId.MEDIUM_MITHRIL_HELMET.id(), 1),
@@ -23,7 +23,7 @@ public final class PeksaHelmets implements ShopInterface,
 		new Item(ItemId.LARGE_STEEL_HELMET.id(), 2), new Item(ItemId.LARGE_MITHRIL_HELMET.id(), 1), new Item(ItemId.LARGE_ADAMANTITE_HELMET.id(), 1));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.PEKSA.id();
 	}
 
@@ -38,7 +38,7 @@ public final class PeksaHelmets implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Are you interested in buying or selling a helmet?");
 
 		int option = showMenu(p, n, "I could be, yes", "No, I'll pass on that");

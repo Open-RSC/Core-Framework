@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class Noterazzo implements ShopInterface, TalkToNpcListener {
+public class Noterazzo implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(true, 12400, 90, 60, 3,
 		new Item(ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2), new Item(ItemId.TINDERBOX.id(), 2),
@@ -22,12 +22,12 @@ public class Noterazzo implements ShopInterface, TalkToNpcListener {
 		new Item(ItemId.BRONZE_AXE.id(), 10));
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NOTERAZZO.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NOTERAZZO.id()) {
 
 			npcTalk(p, n, "Hey wanna trade?, I'll give the best deals you can find");

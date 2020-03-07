@@ -6,20 +6,20 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestViyeldi implements TalkToNpcListener, PickupListener, PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener {
+public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
 			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 7:
@@ -50,12 +50,12 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, PickupListener, P
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.A_BLUE_WIZARDS_HAT.id() && i.getX() == 426 && i.getY() == 3708;
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.A_BLUE_WIZARDS_HAT.id() && i.getX() == 426 && i.getY() == 3708) {
 			p.teleport(i.getX(), i.getY());
 			message(p, 1300, "Your hand passes through the hat as if it wasn't there.");
@@ -74,12 +74,12 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, PickupListener, P
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc n) {
+	public void onAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
 			attackViyeldi(p, n);
 		}
@@ -110,12 +110,12 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, PickupListener, P
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
 			attackViyeldi(p, n);
 		}

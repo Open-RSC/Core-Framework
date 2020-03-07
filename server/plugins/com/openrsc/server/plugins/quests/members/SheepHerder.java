@@ -13,10 +13,10 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.HashMap;
@@ -24,10 +24,10 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SheepHerder implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnNpcListener,
-	InvUseOnObjectListener {
+public class SheepHerder implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseNpcTrigger,
+	UseLocTrigger {
 
 	private static final int GATE = 443;
 	private static final int CATTLE_FURNACE = 444;
@@ -57,12 +57,12 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.COUNCILLOR_HALGRIVE.id() || n.getID() == NpcId.FARMER_BRUMTY.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() ==  NpcId.FARMER_BRUMTY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 2:
@@ -186,13 +186,13 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == GATE;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == GATE) {
 			if (wearingProtectiveClothing(p) || !wearingProtectiveClothing(p) && p.getX() == 589) {
 				openGatey(obj, p);
@@ -240,13 +240,13 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return DataConversions.inArray(new int[] {NpcId.FIRST_PLAGUE_SHEEP.id(), NpcId.SECOND_PLAGUE_SHEEP.id(),
 				NpcId.THIRD_PLAGUE_SHEEP.id(), NpcId.FOURTH_PLAGUE_SHEEP.id()}, npc.getID());
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, final Npc plagueSheep, Item item) {
+	public void onUseNpc(Player p, final Npc plagueSheep, Item item) {
 		if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.SECOND_PLAGUE_SHEEP.id()
 			|| plagueSheep.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() || plagueSheep.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
 			if (item.getCatalogId() == ItemId.CATTLE_PROD.id()) {
@@ -694,13 +694,13 @@ public class SheepHerder implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == CATTLE_FURNACE;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == CATTLE_FURNACE) {
 			if (DataConversions.inArray(new int[]{ItemId.PLAGUED_SHEEP_REMAINS_1.id(), ItemId.PLAGUED_SHEEP_REMAINS_2.id(),
 					ItemId.PLAGUED_SHEEP_REMAINS_3.id(), ItemId.PLAGUED_SHEEP_REMAINS_4.id()}, item.getCatalogId())) {

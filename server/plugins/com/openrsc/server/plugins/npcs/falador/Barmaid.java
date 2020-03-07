@@ -6,22 +6,22 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Barmaid implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 	private final String notEnoughMoney = "Oh dear. I don't seem to have enough money";
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BARMAID.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (p.getCache().hasKey("barcrawl")
 			&& !p.getCache().hasKey("barthree")) {
 			int barCrawlOpt = showMenu(p, n, false, //do not send over

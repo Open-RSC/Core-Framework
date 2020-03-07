@@ -9,13 +9,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class FishingTrawlerGeneralStore implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(true, 3000, 130, 40, 3,
 		new Item(ItemId.BRONZE_PICKAXE.id(), 5), new Item(ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2),
@@ -24,7 +24,7 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 		new Item(ItemId.POT_OF_FLOUR.id(), 30), new Item(ItemId.BAILING_BUCKET.id(), 30), new Item(ItemId.SWAMP_PASTE.id(), 30));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 
 		npcTalk(p, n, "Can I help you at all?");
 
@@ -40,7 +40,7 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SHOPKEEPER_PORTKHAZARD.id();
 	}
 

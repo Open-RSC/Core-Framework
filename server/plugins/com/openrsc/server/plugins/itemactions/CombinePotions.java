@@ -3,11 +3,11 @@ package com.openrsc.server.plugins.itemactions;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 
-public class CombinePotions implements InvUseOnItemListener {
+public class CombinePotions implements UseInvTrigger {
 
 	int[][] combinePotions = {
 		{ItemId.ONE_ATTACK_POTION.id(), ItemId.TWO_ATTACK_POTION.id(), ItemId.FULL_ATTACK_POTION.id()},
@@ -24,7 +24,7 @@ public class CombinePotions implements InvUseOnItemListener {
 	};
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 
 		// No Decanting without the config set to true!
 		if (!p.getWorld().getServer().getConfig().WANT_DECANTING) {
@@ -113,7 +113,7 @@ public class CombinePotions implements InvUseOnItemListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		// 1 dose on 2 dose str = 3 dose
 		if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() || item1.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {
 			return true;

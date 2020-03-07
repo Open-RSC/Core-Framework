@@ -6,7 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -16,19 +16,19 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerGateObstacles implements ObjectActionListener {
+public class WatchTowerGateObstacles implements OpLocTrigger {
 
 	private static int NORTH_WEST_GATE = 989;
 	private static int EAST_SOUTH_GATE = 988;
 	private static int OGRE_ELCLAVE_GATE = 1068;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == NORTH_WEST_GATE || obj.getID() == EAST_SOUTH_GATE || obj.getID() == OGRE_ELCLAVE_GATE;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == OGRE_ELCLAVE_GATE) {
 			p.playerServerMessage(MessageType.QUEST, "The gate is locked tight");
 			p.message("I'll have to find another way out...");

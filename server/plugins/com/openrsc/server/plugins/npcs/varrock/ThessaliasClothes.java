@@ -10,13 +10,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class ThessaliasClothes implements PickupListener,
-	ShopInterface, TalkToNpcListener {
+public final class ThessaliasClothes implements TakeObjTrigger,
+	ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 3, new Item(ItemId.WHITE_APRON.id(),
 		3), new Item(ItemId.LEATHER_ARMOUR.id(), 12), new Item(ItemId.LEATHER_GLOVES.id(), 10), new Item(ItemId.BOOTS.id(), 10),
@@ -25,7 +25,7 @@ public final class ThessaliasClothes implements PickupListener,
 		new Item(ItemId.PRIEST_ROBE.id(), 3), new Item(ItemId.PRIEST_GOWN.id(), 3));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.THESSALIA.id();
 	}
 
@@ -40,7 +40,7 @@ public final class ThessaliasClothes implements PickupListener,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		playerTalk(p, n, "Hello");
 		npcTalk(p, n, "Do you want to buy any fine clothes?");
 
@@ -113,7 +113,7 @@ public final class ThessaliasClothes implements PickupListener,
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.BUNNY_EARS.id()) {
 			if(!p.isAdmin()) {
 				if (p.getCarriedItems().hasCatalogID(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0) {
@@ -143,7 +143,7 @@ public final class ThessaliasClothes implements PickupListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.BUNNY_EARS.id() || i.getID() == ItemId.SCYTHE.id();
 	}
 }

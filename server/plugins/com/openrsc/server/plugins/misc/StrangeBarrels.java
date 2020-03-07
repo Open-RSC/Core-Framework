@@ -8,12 +8,12 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class StrangeBarrels implements ObjectActionListener {
+public class StrangeBarrels implements OpLocTrigger {
 
 	/**
 	 * @author Davve
@@ -100,12 +100,12 @@ public class StrangeBarrels implements ObjectActionListener {
 			NpcId.RAT_LVL8.id(), NpcId.SCORPION.id()};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == STRANGE_BARREL;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == STRANGE_BARREL) {
 			p.setBusyTimer(600);
 			int action = DataConversions.random(0, 4);

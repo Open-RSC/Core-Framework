@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class GnomeWaiter implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 25, 1,
 		new Item(ItemId.GNOME_WAITER_CHEESE_AND_TOMATO_BATTA.id(), 3), new Item(ItemId.GNOME_WAITER_TOAD_BATTA.id(), 3), new Item(ItemId.GNOME_WAITER_WORM_BATTA.id(), 3),
@@ -24,7 +24,7 @@ public final class GnomeWaiter implements ShopInterface,
 		new Item(ItemId.GNOME_WAITER_SPICE_CRUNCHIES.id(), 4));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		playerTalk(p, n, "hello");
 		npcTalk(p, n, "good afternoon",
 			"can i tempt you with our new menu?");
@@ -44,7 +44,7 @@ public final class GnomeWaiter implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GNOME_WAITER.id();
 	}
 

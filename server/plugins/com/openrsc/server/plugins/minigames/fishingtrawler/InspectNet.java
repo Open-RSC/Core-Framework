@@ -4,22 +4,22 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class InspectNet implements ObjectActionListener {
+public class InspectNet implements OpLocTrigger {
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == 1102 || obj.getID() == 1101;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 
 		message(player, 1900, "you inspect the net");
 		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);

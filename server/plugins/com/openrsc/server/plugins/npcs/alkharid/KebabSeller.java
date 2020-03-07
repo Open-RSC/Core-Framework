@@ -4,16 +4,16 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.Quests;
 
-public final class KebabSeller implements TalkToNpcListener {
+public final class KebabSeller implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		final String[] options;
 		npcTalk(p, n, "Would you like to buy a nice kebab?", "Only 1 gold");
 		if (p.getQuestStage(Quests.FAMILY_CREST) <= 2 || p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
@@ -48,7 +48,7 @@ public final class KebabSeller implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.KEBAB_SELLER.id();
 	}
 

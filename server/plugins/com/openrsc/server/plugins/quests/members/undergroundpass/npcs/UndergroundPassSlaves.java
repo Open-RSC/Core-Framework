@@ -2,22 +2,22 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
-public class UndergroundPassSlaves implements TalkToNpcListener {
+public class UndergroundPassSlaves implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.SLAVE_1.id(), NpcId.SLAVE_2.id(), NpcId.SLAVE_3.id(),
 				NpcId.SLAVE_4.id(), NpcId.SLAVE_5.id(), NpcId.SLAVE_6.id(), NpcId.SLAVE_7.id());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (inArray(n.getID(), NpcId.SLAVE_1.id(), NpcId.SLAVE_2.id(), NpcId.SLAVE_3.id(),
 				NpcId.SLAVE_4.id(), NpcId.SLAVE_5.id(), NpcId.SLAVE_6.id(), NpcId.SLAVE_7.id())) {
 			p.message("the man seems to be in a weak state of mind");

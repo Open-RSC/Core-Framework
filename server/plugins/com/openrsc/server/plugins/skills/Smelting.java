@@ -10,20 +10,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Smelting implements InvUseOnObjectListener {
+public class Smelting implements UseLocTrigger {
 
 	public static final int FURNACE = 118;
 	public static final int LAVA_FURNACE = 1284;
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId())) {
 			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
 				if (p.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
@@ -293,7 +293,7 @@ public class Smelting implements InvUseOnObjectListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId()))
 			|| obj.getID() == LAVA_FURNACE;
 	}

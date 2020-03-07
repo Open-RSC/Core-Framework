@@ -7,15 +7,15 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class KnightsSword implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener {
+public class KnightsSword implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger {
 	private static final int VYVINS_CUPBOARD_OPEN = 175;
 	private static final int VYVINS_CUPBOARD_CLOSED = 174;
 	private static final int CUPBOARD_Y = 2454;
@@ -45,13 +45,13 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.THURGO.id() || n.getID() == NpcId.SQUIRE.id()
 			|| n.getID() == NpcId.SIR_VYVIN.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.THURGO.id()) {
 			dwarfDialogue(p, n);
 		} else if (n.getID() == NpcId.SQUIRE.id()) {
@@ -378,13 +378,13 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return (obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 				&& obj.getX() == 318;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		final Npc n = p.getWorld().getNpc(138, 316, 320, 2454, 2459);
 		if ((obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {

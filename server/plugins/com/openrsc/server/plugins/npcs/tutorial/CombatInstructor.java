@@ -4,16 +4,16 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerMageNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CombatInstructor implements TalkToNpcListener, PlayerKilledNpcListener, PlayerAttackNpcListener, PlayerMageNpcListener {
+public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackNpcTrigger, SpellNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island combat instructor
@@ -22,7 +22,7 @@ public class CombatInstructor implements TalkToNpcListener, PlayerKilledNpcListe
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (!p.getCarriedItems().hasCatalogID(ItemId.WOODEN_SHIELD.id(), Optional.of(false))
 			&& (!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_LONG_SWORD.id(), Optional.of(false))) && p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 15) {
 			npcTalk(p, n, "Aha a new recruit",
@@ -75,17 +75,17 @@ public class CombatInstructor implements TalkToNpcListener, PlayerKilledNpcListe
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.COMBAT_INSTRUCTOR.id();
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.RAT_TUTORIAL.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (!(
 			(!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone()) ||
 				(affectedmob.getID() == NpcId.CHICKEN.id()) ||
@@ -99,7 +99,7 @@ public class CombatInstructor implements TalkToNpcListener, PlayerKilledNpcListe
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		if (
 			(!p.getCache().hasKey("tutorial") || !p.getLocation().aroundTutorialRatZone()) ||
 				(n.getID() == NpcId.CHICKEN.id()) ||
@@ -112,17 +112,17 @@ public class CombatInstructor implements TalkToNpcListener, PlayerKilledNpcListe
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
-		onPlayerAttackNpc(p, n);
+	public void onSpellNpc(Player p, Npc n) {
+		onAttackNpc(p, n);
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return blockPlayerAttackNpc(p, n);
+	public boolean blockSpellNpc(Player p, Npc n) {
+		return blockAttackNpc(p, n);
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.RAT_TUTORIAL.id()) {
 			n.resetCombatEvent();
 			n.remove();

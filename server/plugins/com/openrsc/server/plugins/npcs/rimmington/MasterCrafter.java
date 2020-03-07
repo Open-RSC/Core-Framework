@@ -3,16 +3,16 @@ package com.openrsc.server.plugins.npcs.rimmington;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
 import com.openrsc.server.constants.NpcId;
 
-public class MasterCrafter implements TalkToNpcListener {
+public class MasterCrafter implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MASTER_CRAFTER.id()) {
 			npcTalk(p, n, "Hello welcome to the Crafter's guild",
 				"Accomplished crafters from all over the land come here",
@@ -21,7 +21,7 @@ public class MasterCrafter implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MASTER_CRAFTER.id();
 	}
 }

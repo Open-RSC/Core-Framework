@@ -6,20 +6,20 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.IndirectTalkToNpcListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class BoatFromKaramja implements
-	TalkToNpcListener, IndirectTalkToNpcListener,
-	ObjectActionListener {
+	TalkNpcTrigger, IndirectTalkToNpcTrigger,
+	OpLocTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		int option = showMenu(p, n, "Can I board this ship?",
 			"Does Karamja have any unusual customs then?");
 		if (option == 0) {
@@ -69,7 +69,7 @@ public final class BoatFromKaramja implements
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 161 || (obj.getID() == 162) || (obj.getID() == 163)) {
 			if (command.equals("board")) {
 				if (p.getY() != 713) {
@@ -86,7 +86,7 @@ public final class BoatFromKaramja implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CUSTOMS_OFFICER.id();
 	}
 
@@ -96,7 +96,7 @@ public final class BoatFromKaramja implements
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
 		return (arg0.getID() == 161 && arg0.getLocation().equals(Point.location(326, 710)))
 			|| (arg0.getID() == 163 && arg0.getLocation().equals(Point.location(319, 710)))
 			|| (arg0.getID() == 162 && arg0.getLocation().equals(Point.location(324, 710)));

@@ -5,11 +5,11 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Refill implements InvUseOnObjectListener {
+public class Refill implements UseLocTrigger {
 
 	final int[] VALID_OBJECTS_WELL = {2, 466, 814};
 	final int[] VALID_OBJECTS_OTHER = {48, 26, 86, 1130};
@@ -21,13 +21,13 @@ public class Refill implements InvUseOnObjectListener {
 	};
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return (inArray(obj.getID(), VALID_OBJECTS_OTHER)
 			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id());
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(GameObject obj, final Item item, Player player) {
 		for (int i = 0; i < REFILLABLE.length; i++) {
 			if (REFILLABLE[i] == item.getCatalogId()) {
 				final int itemID = item.getCatalogId();

@@ -3,16 +3,16 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
 
 public class PineappleTree implements
-	ObjectActionListener {
+	OpLocTrigger {
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 430) {
 			p.message("you pick a pineapple");
 			addItem(p, ItemId.FRESH_PINEAPPLE.id(), 1);
@@ -33,7 +33,7 @@ public class PineappleTree implements
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == 431 || obj.getID() == 430;
 	}
 

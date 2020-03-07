@@ -4,7 +4,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class WildernessAgilityCourse implements ObjectActionListener {
+public class WildernessAgilityCourse implements OpLocTrigger {
 
 	private static final int GATE = 703;
 	private static final int SECOND_GATE = 704;
@@ -27,12 +27,12 @@ public class WildernessAgilityCourse implements ObjectActionListener {
 	private static Integer lastObstacle = VINE;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), GATE, SECOND_GATE, WILD_PIPE, WILD_ROPESWING, STONE, LEDGE, VINE);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		final int failRate = failRate();
 		if (obj.getID() == GATE) {
 			if (getCurrentLevel(p, Skills.AGILITY) < 52) {

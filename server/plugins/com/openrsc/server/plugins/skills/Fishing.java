@@ -10,7 +10,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -23,7 +23,7 @@ import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Fishing implements ObjectActionListener {
+public class Fishing implements OpLocTrigger {
 	/**
 	 * The asynchronous logger.
 	 */
@@ -44,7 +44,7 @@ public class Fishing implements ObjectActionListener {
 	}
 
 	@Override
-	public void onObjectAction(final GameObject object, String command, Player player) {
+	public void onOpLoc(final GameObject object, String command, Player player) {
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
 			|| command.equals("cage")) {
 			handleFishing(object, player, player.click, command);
@@ -237,7 +237,7 @@ public class Fishing implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		//special hemenster fishing spots
 		if (obj.getID() == 351 || obj.getID() == 352 || obj.getID() == 353 || obj.getID() == 354)
 			return false;

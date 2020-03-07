@@ -2,24 +2,24 @@ package com.openrsc.server.plugins.npcs.varrock;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class DancingDonkeyInnBartender implements TalkToNpcListener {
+public class DancingDonkeyInnBartender implements TalkNpcTrigger {
 
 	public static int BARTENDER = NpcId.BARTENDER_EAST_VARROCK.id();
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == BARTENDER;
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == BARTENDER) {
 			playerTalk(p, n, "hello");
 			npcTalk(p, n, "good day to you, brave adventurer",

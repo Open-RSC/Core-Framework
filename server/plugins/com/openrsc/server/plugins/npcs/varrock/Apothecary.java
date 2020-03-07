@@ -7,7 +7,7 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -15,10 +15,10 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Apothecary implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (p.getQuestStage(Quests.ROMEO_N_JULIET) == 4) {
 			playerTalk(p, n, "Apothecary. Father Lawrence sent me",
 				"I need some Cadava potion to help Romeo and Juliet");
@@ -162,7 +162,7 @@ public final class Apothecary implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.APOTHECARY.id();
 	}
 }

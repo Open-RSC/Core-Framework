@@ -5,14 +5,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class AgilityShortcuts implements ObjectActionListener,
-	InvUseOnObjectListener {
+public class AgilityShortcuts implements OpLocTrigger,
+	UseLocTrigger {
 
 	private static final int SHORTCUT_FALADOR_HANDHOLD = 693;
 	private static final int SHORTCUT_BRIMHAVEN_SWING = 694;
@@ -42,8 +42,8 @@ public class AgilityShortcuts implements ObjectActionListener,
 	private static final int ENTRANA_RUBBLE = 1286;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return inArray(obj.getID(), SHORTCUT_YANILLE_PIPE,
 			SHORTCUT_YANILLE_PIPE_BACK,
 			SHORTCUT_YANILLE_PILE_OF_RUBBLE,
@@ -68,7 +68,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		p.setBusy(true);
 		switch (obj.getID()) {
 			case SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP:
@@ -595,12 +595,12 @@ public class AgilityShortcuts implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("you tie the rope to the tree");
 			removeItem(p, ItemId.ROPE.id(), 1);

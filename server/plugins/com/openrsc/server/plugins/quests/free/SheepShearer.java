@@ -7,13 +7,13 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SheepShearer implements QuestInterface, TalkToNpcListener {
+public class SheepShearer implements QuestInterface, TalkNpcTrigger {
 
 	/**
 	 * Quest: Sheep Shearer - fully working made by Fate 2013-09-10. GIVE BALLS
@@ -196,14 +196,14 @@ public class SheepShearer implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.FRED_THE_FARMER.id()) {
 			fredDialogue(p, n, -1);
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.FRED_THE_FARMER.id();
 	}
 

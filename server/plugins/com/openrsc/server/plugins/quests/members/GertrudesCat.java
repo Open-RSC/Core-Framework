@@ -10,21 +10,20 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GertrudesCat implements QuestInterface, TalkToNpcListener,
-	WallObjectActionListener,
-	PickupListener,
-	InvUseOnGroundItemListener,
-	InvUseOnItemListener,
-	ObjectActionListener,
-	DropListener {
+public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger,
+	TakeObjTrigger,
+	UseObjTrigger,
+	UseInvTrigger,
+	OpLocTrigger,
+	DropObjTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -49,13 +48,13 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.GERTRUDE.id(), NpcId.SHILOP.id(), NpcId.WILOUGH.id(),
 				NpcId.KANEL.id(), NpcId.PHILOP.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.KANEL.id() || n.getID() == NpcId.PHILOP.id()) {
 			p.message("The boy's busy playing");
 		}
@@ -303,12 +302,12 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return obj.getID() == 199 && obj.getY() == 438;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 199 && obj.getY() == 438) {
 			if (p.getQuestStage(Quests.GERTRUDES_CAT) >= 2
 				|| p.getQuestStage(Quests.GERTRUDES_CAT) == -1) {
@@ -328,12 +327,12 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.GERTRUDES_CAT.id() && i.getY() == 2327;
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.GERTRUDES_CAT.id() && i.getY() == 2327) {
 			int damage = DataConversions.getRandom().nextInt(2) + 1;
 			message(p, "you attempt to pick up the cat");
@@ -363,14 +362,14 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item,
-										   Player player) {
+	public boolean blockUseObj(Item myItem, GroundItem item,
+							   Player player) {
 		return (myItem.getCatalogId() == ItemId.MILK.id() || myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id()
 				|| myItem.getCatalogId() == ItemId.KITTENS.id()) && item.getID() == ItemId.GERTRUDES_CAT.id();
 	}
 
 	@Override
-	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
+	public void onUseObj(Item myItem, GroundItem item, Player p) {
 		if (p.getQuestStage(getQuestId()) != 2) {
 			if (myItem.getCatalogId() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 				p.message("the cat doesn't seem to be thirsty");
@@ -413,12 +412,12 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
 			message(p, "you rub the doogle leaves over the sardine");
 			p.getCarriedItems().remove(ItemId.DOOGLE_LEAVES.id(), 1);
@@ -427,13 +426,13 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == 1039 || obj.getID() == 1041 || obj.getID() == 1040;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 1039) {
 			message(p, "you search the crate...", "...but find nothing...");
 			if (p.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !p.getCache().hasKey("cat_sardine")
@@ -464,12 +463,12 @@ public class GertrudesCat implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return i.getCatalogId() == ItemId.KITTENS.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTENS.id()) {
 			message(p, "you drop the kittens", "they run back to the crate");
 			removeItem(p, ItemId.KITTENS.id(), 1);

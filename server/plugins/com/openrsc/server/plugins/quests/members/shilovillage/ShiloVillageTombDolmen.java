@@ -8,14 +8,14 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListener, InvUseOnObjectListener {
+public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, UseLocTrigger {
 
 	private static final int TOMB_DOLMEN = 689;
 
@@ -75,12 +75,12 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == TOMB_DOLMEN;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == TOMB_DOLMEN) {
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				p.message("You find nothing on the Dolmen.");
@@ -140,12 +140,12 @@ public class ShiloVillageTombDolmen implements QuestInterface, ObjectActionListe
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == TOMB_DOLMEN;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOMB_DOLMEN) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case PAPYRUS:

@@ -9,18 +9,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class ZaffsStaffs implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private Shop shop = null;
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.ZAFF.id();
 	}
 
@@ -35,7 +35,7 @@ public final class ZaffsStaffs implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Would you like to buy or sell some staffs?");
 		int option = showMenu(p, n, "Yes please", "No, thank you");
 		if (option == 0) {

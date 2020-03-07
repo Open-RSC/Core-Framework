@@ -7,13 +7,13 @@ import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassAgilityObstacles implements ObjectActionListener {
+public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 
 	public static final int[] LEDGES = {862, 864, 863, 872, 865, 866};
 	public static final int NORTH_STONE_STEP = 889;
@@ -23,13 +23,13 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener {
 	public static final int[] STONE_REMAINING_BRIDGES = {893, 907, 905, 909, 903, 901, 895, 899, 897};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), LEDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES) || inArray(obj.getID(), STONE_REMAINING_BRIDGES)
 				|| obj.getID() == FIRST_REMAINING_BRIDGE || obj.getID() == NORTH_STONE_STEP || obj.getID() == SOUTH_STONE_STEP;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), LEDGES)) {
 			message(p, "you climb the ledge");
 			if (succeed(p, 1)) {

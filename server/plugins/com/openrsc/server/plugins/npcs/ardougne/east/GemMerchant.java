@@ -9,20 +9,20 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GemMerchant implements ShopInterface, TalkToNpcListener {
+public class GemMerchant implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 60000 * 5, 150, 80, 3, new Item(ItemId.SAPPHIRE.id(),
 		2), new Item(ItemId.EMERALD.id(), 1), new Item(ItemId.RUBY.id(), 1), new Item(ItemId.DIAMOND.id(),
 		0));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("gemStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("gemStolen") + 1200)) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
@@ -56,7 +56,7 @@ public class GemMerchant implements ShopInterface, TalkToNpcListener {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GEM_MERCHANT.id();
 	}
 

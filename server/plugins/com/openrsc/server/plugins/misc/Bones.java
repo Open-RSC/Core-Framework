@@ -5,9 +5,9 @@ import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-public class Bones implements InvActionListener {
+public class Bones implements OpInvTrigger {
 
 	private void buryBonesHelper(Player owner, Item item) {
 		owner.message("You bury the "
@@ -33,7 +33,7 @@ public class Bones implements InvActionListener {
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if(command.equalsIgnoreCase("bury")) {
 			if (item.getCatalogId() == 1308 || item.getCatalogId() == 1648 || item.getCatalogId() == 1793 || item.getCatalogId() == 1871 || item.getCatalogId() == 2257) {
 				player.message("You can't bury noted bones");
@@ -67,7 +67,7 @@ public class Bones implements InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return command.equalsIgnoreCase("bury");
 	}
 }

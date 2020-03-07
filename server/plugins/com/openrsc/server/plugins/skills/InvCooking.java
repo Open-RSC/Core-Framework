@@ -5,7 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -17,10 +17,10 @@ import static com.openrsc.server.plugins.Functions.*;
  *
  * @author n0m
  */
-public class InvCooking implements InvUseOnItemListener {
+public class InvCooking implements UseInvTrigger {
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id()) {
 			if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
 				&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
@@ -174,7 +174,7 @@ public class InvCooking implements InvUseOnItemListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id())
 			return true;
 		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()

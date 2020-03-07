@@ -4,11 +4,11 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassPuzzle implements ObjectActionListener {
+public class UndergroundPassPuzzle implements OpLocTrigger {
 
 	public static int WALK_HERE_ROCK_EAST = 792;
 	public static int WALK_HERE_ROCK_WEST = 793;
@@ -22,13 +22,13 @@ public class UndergroundPassPuzzle implements ObjectActionListener {
 	public static int[] WORKING_GRILLS = {777, 785, 786, 787, 788, 789, 790, 791};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), WORKING_GRILLS) || obj.getID() == FAIL_GRILL || obj.getID() == WALK_HERE_ROCK_EAST
 				|| obj.getID() == WALK_HERE_ROCK_WEST || obj.getID() == LEVER;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), WORKING_GRILLS)) {
 			moveForward(p, obj);
 		}

@@ -6,21 +6,21 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.random;
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class Sheep implements InvUseOnNpcListener {
+public class Sheep implements UseNpcTrigger {
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return npc.getID() == NpcId.SHEEP.id() && item.getCatalogId() == ItemId.SHEARS.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
+	public void onUseNpc(Player player, Npc npc, Item item) {
 		npc.resetPath();
 
 		npc.face(player);

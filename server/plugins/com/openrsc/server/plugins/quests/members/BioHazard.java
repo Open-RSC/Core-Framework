@@ -9,16 +9,16 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BioHazard implements QuestInterface, TalkToNpcListener,
-	WallObjectActionListener, ObjectActionListener, InvUseOnObjectListener, PlayerKilledNpcListener {
+public class BioHazard implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger, OpLocTrigger, UseLocTrigger, KillNpcTrigger {
 
 	/**
 	 * 1.Decided to add the door into Elena for starting the Biohazard quest in this template,
@@ -67,14 +67,14 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ELENA_HOUSE.id(), NpcId.OMART.id(), NpcId.JERICO.id(), NpcId.KILRON.id(), NpcId.NURSE_SARAH.id(),
 				NpcId.CHEMIST.id(), NpcId.CHANCY.id(), NpcId.HOPS.id(), NpcId.DEVINCI.id(), NpcId.KING_LATHAS.id(), NpcId.CHANCY_BAR.id(),
 				NpcId.HOPS_BAR.id(), NpcId.DEVINCI_BAR.id(), NpcId.GUIDORS_WIFE.id(), NpcId.GUIDOR.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ELENA_HOUSE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1015,12 +1015,12 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return obj.getID() == ELENAS_DOOR;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == ELENAS_DOOR) {
 			if (p.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 				doDoor(obj, p);
@@ -1032,13 +1032,13 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return DataConversions.inArray(new int[] {JERICOS_CUPBOARD_ONE_OPEN, JERICOS_CUPBOARD_ONE_CLOSED, JERICOS_CUPBOARD_TWO_OPEN, JERICOS_CUPBOARD_TWO_CLOSED,
 				WATCH_TOWER, NURSE_SARAHS_CUPBOARD_OPEN, NURSE_SARAHS_CUPBOARD_CLOSED, GET_INTO_CRATES_GATE, DISTILLATOR_CRATE, OTHER_CRATE}, obj.getID());
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == JERICOS_CUPBOARD_ONE_OPEN || obj.getID() == JERICOS_CUPBOARD_ONE_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, p, JERICOS_CUPBOARD_ONE_OPEN);
@@ -1117,14 +1117,14 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER)
 				|| (item.getCatalogId() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT)
 				|| (item.getCatalogId() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE);
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER) {
 			if (p.getQuestStage(this) == 2) {
 				message(p, "you throw a hand full of seeds onto the watch tower",
@@ -1160,12 +1160,12 @@ public class BioHazard implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MOURNER_ILL.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MOURNER_ILL.id()) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.BIOHAZARD_BRONZE_KEY.id(), Optional.empty())) {
 				message(p, "you search the mourner");

@@ -12,8 +12,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -23,8 +23,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Crafting implements InvUseOnItemListener,
-	InvUseOnObjectListener {
+public class Crafting implements UseInvTrigger,
+	UseLocTrigger {
 
 	/**
 	 * World instance
@@ -48,7 +48,7 @@ public class Crafting implements InvUseOnItemListener,
 	};
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CHISEL.id()) {
 			doCutGem(player, item1, item2);
 			return;
@@ -120,7 +120,7 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, final Player player) {
+	public void onUseLoc(GameObject obj, final Item item, final Player player) {
 
 		if (!craftingChecks(obj, item, player)) return;
 
@@ -906,7 +906,7 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(item1.getCatalogId());
 		ItemGemDef gemDef2 = player.getWorld().getServer().getEntityHandler().getItemGemDef(item2.getCatalogId());
 		if (item1.getCatalogId() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
@@ -938,7 +938,7 @@ public class Crafting implements InvUseOnItemListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return craftingTypeChecks(obj, item, player);
 	}
 }

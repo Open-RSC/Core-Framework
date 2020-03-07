@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -10,14 +10,14 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class WildernessGuide implements TalkToNpcListener {
+public class WildernessGuide implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island wilderness guide
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "Hi are you someone who likes to fight other players?",
 			"Granted it has big risks",
 			"but it can be very rewarding too");
@@ -77,7 +77,7 @@ public class WildernessGuide implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.WILDERNESS_GUIDE.id();
 	}
 

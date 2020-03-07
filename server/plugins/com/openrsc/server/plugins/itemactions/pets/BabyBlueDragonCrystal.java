@@ -3,20 +3,20 @@ package com.openrsc.server.plugins.itemactions.pets;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.PlayerLoginListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.PlayerLoginTrigger;
 
-public class BabyBlueDragonCrystal implements InvActionListener, PlayerLoginListener {
+public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
 
 	protected Player petOwnerA;
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return command.equalsIgnoreCase("inspect");
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		//if (getConfig().DEBUG)
 		System.out.println("Pet item clicked");
 		int id = item.getCatalogId();

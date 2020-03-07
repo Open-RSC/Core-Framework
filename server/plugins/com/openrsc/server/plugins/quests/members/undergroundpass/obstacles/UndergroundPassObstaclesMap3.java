@@ -9,7 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.Area;
 import com.openrsc.server.model.world.Areas;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassObstaclesMap3 implements ObjectActionListener {
+public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(UndergroundPassObstaclesMap3.class);
 	/**
 	 * OBJECT IDs
@@ -32,12 +32,12 @@ public class UndergroundPassObstaclesMap3 implements ObjectActionListener {
 	public static final Area boundArea = new Area(PIT_COORDS[0] - 24, PIT_COORDS[0] + 24, PIT_COORDS[1] - 24, PIT_COORDS[1] + 24);
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), CAGES) || obj.getID() == DEMONS_CHEST_CLOSED || obj.getID() == ZAMORAKIAN_TEMPLE_DOOR;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), CAGES)) {
 			if (obj.getID() == CAGES[1]) {
 				p.message("the man seems to be entranced");

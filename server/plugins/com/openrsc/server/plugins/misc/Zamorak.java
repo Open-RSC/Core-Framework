@@ -7,18 +7,18 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * @author n0m, Fate
  */
-public class Zamorak implements TalkToNpcListener, PickupListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener {
+public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger, SpellNpcTrigger {
 
 	@Override
-	public void onPickup(Player owner, GroundItem item) {
+	public void onTakeObj(Player owner, GroundItem item) {
 		if (item.getID() == ItemId.WINE_OF_ZAMORAK.id() && item.getX() == 333 && item.getY() == 434) {
 			Npc zam = getMultipleNpcsInArea(owner, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			if (zam != null && !zam.inCombat()) {
@@ -30,7 +30,7 @@ public class Zamorak implements TalkToNpcListener, PickupListener, PlayerAttackN
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.WINE_OF_ZAMORAK.id()) {
 			Npc zam = getMultipleNpcsInArea(p, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			return zam != null && !zam.inCombat();
@@ -39,24 +39,24 @@ public class Zamorak implements TalkToNpcListener, PickupListener, PlayerAttackN
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc zamorak) {
+	public void onAttackNpc(Player p, Npc zamorak) {
 		if (zamorak.getID() == NpcId.MONK_OF_ZAMORAK.id() || zamorak.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
 			applyCurse(p, zamorak);
 		}
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc zamorak) {
+	public void onSpellNpc(Player p, Npc zamorak) {
 		if (zamorak.getID() == NpcId.MONK_OF_ZAMORAK.id() || zamorak.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
 			applyCurse(p, zamorak);
 		}
@@ -95,12 +95,12 @@ public class Zamorak implements TalkToNpcListener, PickupListener, PlayerAttackN
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
 			if (n.getID() == NpcId.MONK_OF_ZAMORAK.id()) {
 				npcTalk(p, n, "Save your speech for the altar");

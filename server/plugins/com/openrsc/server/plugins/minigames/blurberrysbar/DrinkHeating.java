@@ -4,15 +4,15 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
 import static com.openrsc.server.plugins.Functions.message;
 
-public class DrinkHeating implements InvUseOnObjectListener {
+public class DrinkHeating implements UseLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			return true;
 		}
@@ -24,7 +24,7 @@ public class DrinkHeating implements InvUseOnObjectListener {
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			message(p, "you briefly place the drink in the oven");
 			p.message("you remove the warm drink");

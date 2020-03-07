@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class HeckelFunchGroceries implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 1,
 		new Item(ItemId.BRANDY.id(), 5), new Item(ItemId.GIN.id(), 5), new Item(ItemId.VODKA.id(), 5),
@@ -25,7 +25,7 @@ public final class HeckelFunchGroceries implements ShopInterface,
 		new Item(ItemId.KNIFE.id(), 5), new Item(ItemId.GNOME_COCKTAIL_GUIDE.id(), 5));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		playerTalk(p, n, "hello there");
 		npcTalk(p, n, "good day to you my friend ..and a beautiful one at that",
 			"would you like some groceries? i have all sorts",
@@ -46,7 +46,7 @@ public final class HeckelFunchGroceries implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.HECKEL_FUNCH.id();
 	}
 

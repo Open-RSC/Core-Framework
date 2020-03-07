@@ -4,16 +4,16 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
-public class Boot implements TalkToNpcListener {
+public class Boot implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Hello tall person");
 		Menu defaultMenu = new Menu();
 		if (p.getQuestStage(Quests.FAMILY_CREST) == 5) {
@@ -46,7 +46,7 @@ public class Boot implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BOOT_THE_DWARF.id();
 	}
 

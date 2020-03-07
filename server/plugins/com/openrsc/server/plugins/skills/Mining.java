@@ -9,7 +9,7 @@ import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Mining implements ObjectActionListener {
+public final class Mining implements OpLocTrigger {
 
 	/*static int[] ids;
 
@@ -41,8 +41,8 @@ public final class Mining implements ObjectActionListener {
 	}
 
 	@Override
-	public void onObjectAction(final GameObject object, String command,
-							   Player player) {
+	public void onOpLoc(final GameObject object, String command,
+						Player player) {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
@@ -265,7 +265,7 @@ public final class Mining implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588 && obj.getID() != 1227;
 	}
 

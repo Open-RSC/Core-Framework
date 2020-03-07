@@ -11,16 +11,16 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener, PickupListener, InvUseOnObjectListener, PlayerMageNpcListener, PlayerKilledNpcListener, PlayerAttackNpcListener, PlayerRangeNpcListener {
+public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger, TakeObjTrigger, UseLocTrigger, SpellNpcTrigger, KillNpcTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger {
 
 	/**
 	 * Quest Objects
@@ -63,7 +63,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.LUCIEN.id(), NpcId.WINELDA.id(), NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(),
 				NpcId.GUARDIAN_OF_ARMADYL_MALE.id(), NpcId.LUCIEN_EDGE.id()}, n.getID());
 	}
@@ -416,7 +416,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already completed this quest");
@@ -460,12 +460,12 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return (obj.getID() == STAIR_DOWN || obj.getID() == STAIR_UP) || (obj.getID() == LEVER || obj.getID() == COMPLETE_LEVER);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == STAIR_DOWN) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false))
 				|| p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))
@@ -521,7 +521,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ICE_ARROWS.id()) {
 			return true;
 		}
@@ -536,7 +536,7 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ICE_ARROWS.id()) {
 			if (i.getX() == 560 && i.getY() == 3352 || i.getX() == 563 && i.getY() == 3354) {
 				addItem(p, ItemId.ICE_ARROWS.id(), 1);
@@ -569,12 +569,12 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET) {
 			p.message("You fit the lever into the bracket");
 			removeItem(p, ItemId.LEVER.id(), 1);
@@ -586,12 +586,12 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id()) {
 			if (p.getCache().hasKey("killedLesarkus") || p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already killed the fire warrior");
@@ -602,12 +602,12 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id() || n.getID() == NpcId.LUCIEN_EDGE.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id()) {
 			n.killedBy(p);
 			if (!p.getCache().hasKey("killedLesarkus")) {
@@ -630,12 +630,12 @@ public class TempleOfIkov implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.LUCIEN_EDGE.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc n) {
+	public void onAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (p.getQuestStage(this) == -1 || p.getQuestStage(this) == -2) {
 				p.message("You have already completed this quest");

@@ -4,21 +4,21 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.DropListener;
+import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteMiscs implements DropListener {
+public class DigsiteMiscs implements DropObjTrigger {
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return DataConversions.inArray(new int[] {ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id(),
 				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, i.getCatalogId());
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			p.message("bang!");
 			removeItem(p, ItemId.UNIDENTIFIED_LIQUID.id(), 1);

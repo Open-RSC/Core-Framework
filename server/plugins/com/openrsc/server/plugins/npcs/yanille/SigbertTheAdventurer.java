@@ -2,22 +2,22 @@ package com.openrsc.server.plugins.npcs.yanille;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class SigbertTheAdventurer implements TalkToNpcListener {
+public class SigbertTheAdventurer implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id()) {
 			npcTalk(p, n, "I'd be very careful going up there friend");
 			int menu = showMenu(p, n,

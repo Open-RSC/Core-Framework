@@ -4,14 +4,14 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Civillians implements TalkToNpcListener {
+public class Civillians implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		boolean hasCat = p.getCarriedItems().hasCatalogID(ItemId.CAT.id());
 		boolean hasKitten = p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id());
 		boolean hasKardiasCat = p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id());
@@ -142,7 +142,7 @@ public class Civillians implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.CIVILLIAN_APRON.id(), NpcId.CIVILLIAN_ATTACKABLE.id(), NpcId.CIVILLIAN_PICKPOCKET.id());
 	}
 

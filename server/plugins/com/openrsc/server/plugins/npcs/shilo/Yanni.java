@@ -5,22 +5,22 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Yanni implements TalkToNpcListener, InvUseOnNpcListener {
+public class Yanni implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.YANNI.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		boolean hasItemsInterest = false;
 		if (n.getID() == NpcId.YANNI.id()) {
 			playerTalk(p, n, "Hello there!");
@@ -80,12 +80,12 @@ public class Yanni implements TalkToNpcListener, InvUseOnNpcListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
+	public boolean blockUseNpc(Player p, Npc npc, Item item) {
 		return npc.getID() == NpcId.YANNI.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.YANNI.id()) {
 			switch (ItemId.getById(item.getCatalogId())) {
 			case BONE_KEY:

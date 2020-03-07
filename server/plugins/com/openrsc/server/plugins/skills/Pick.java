@@ -4,17 +4,17 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 
 public final class Pick implements
-	ObjectActionListener {
+	OpLocTrigger {
 
 	@Override
-	public boolean blockObjectAction(final GameObject obj,
-									 final String command, final Player player) {
+	public boolean blockOpLoc(final GameObject obj,
+							  final String command, final Player player) {
 		return command.equals("pick")
 			|| /* Flax */obj.getID() == 313;
 	}
@@ -40,8 +40,8 @@ public final class Pick implements
 	}
 
 	@Override
-	public void onObjectAction(final GameObject object, final String command,
-							   final Player player) {
+	public void onOpLoc(final GameObject object, final String command,
+						final Player player) {
 		switch (object.getID()) {
 			case 72: // Wheat
 				handleCropPickup(player, ItemId.GRAIN.id(), "You get some grain");

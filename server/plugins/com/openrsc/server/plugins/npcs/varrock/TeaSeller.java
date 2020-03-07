@@ -10,26 +10,26 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class TeaSeller implements ShopInterface,
-	TalkToNpcListener,
-	PickupListener {
+	TalkNpcTrigger,
+	TakeObjTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.CUP_OF_TEA.id(),
 		20));
 
 	@Override
-	public boolean blockPickup(final Player p, final GroundItem i) {
+	public boolean blockTakeObj(final Player p, final GroundItem i) {
 		return i.getID() == ItemId.DISPLAY_TEA.id();
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.TEA_SELLER.id();
 	}
 
@@ -44,7 +44,7 @@ public final class TeaSeller implements ShopInterface,
 	}
 
 	@Override
-	public void onPickup(final Player p, final GroundItem i) {
+	public void onTakeObj(final Player p, final GroundItem i) {
 		if (i.getID() == ItemId.DISPLAY_TEA.id()) {
 			final Npc n = p.getWorld().getNpcById(NpcId.TEA_SELLER.id());
 			if (n == null) {
@@ -58,7 +58,7 @@ public final class TeaSeller implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Greetings!",
 			"Are you in need of refreshment ?");
 

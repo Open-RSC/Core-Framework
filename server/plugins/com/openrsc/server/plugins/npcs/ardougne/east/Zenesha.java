@@ -9,16 +9,16 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Zenesha implements ShopInterface, TalkToNpcListener {
+public class Zenesha implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.BRONZE_PLATE_MAIL_TOP.id(), 3), new Item(ItemId.IRON_PLATE_MAIL_TOP.id(), 1), new Item(ItemId.STEEL_PLATE_MAIL_TOP.id(), 1), new Item(ItemId.BLACK_PLATE_MAIL_TOP.id(), 1), new Item(ItemId.MITHRIL_PLATE_MAIL_TOP.id(), 1));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 
 		npcTalk(p, n, "hello I sell plate mail tops");
 		int menu = showMenu(p, n, false, "I'm not intersted", "I may be intersted");
@@ -33,7 +33,7 @@ public class Zenesha implements ShopInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ZENESHA.id();
 	}
 

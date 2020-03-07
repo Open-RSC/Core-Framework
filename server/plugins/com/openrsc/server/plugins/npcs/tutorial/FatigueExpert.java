@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.npcTalk;
@@ -11,13 +11,13 @@ import static com.openrsc.server.plugins.Functions.playerTalk;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class FatigueExpert implements TalkToNpcListener {
+public class FatigueExpert implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island fatigue expert
 	 */
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") <= 85) {
 			playerTalk(p, n, "Hi I'm feeling a little tired after all this learning");
 			npcTalk(p, n, "Yes when you use your skills you will slowly get fatigued",
@@ -53,7 +53,7 @@ public class FatigueExpert implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.FATIGUE_EXPERT.id();
 	}
 

@@ -8,16 +8,16 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassOrbs implements ObjectActionListener, InvUseOnObjectListener, PickupListener {
+public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObjTrigger {
 
 	/**
 	 * North Passage obstacles
@@ -31,14 +31,14 @@ public class UndergroundPassOrbs implements ObjectActionListener, InvUseOnObject
 	public static int FURNACE = 813;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), NORTH_PASSAGE) || inArray(obj.getID(), WEST_PASSAGE) || obj.getID() == SOUTH_WEST_PASSAGE
 				|| obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE
 				|| obj.getID() == SOUTH_WEST_STALAGMITE;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String cmd, Player p) {
+	public void onOpLoc(GameObject obj, String cmd, Player p) {
 		if (inArray(obj.getID(), NORTH_PASSAGE)) {
 			if (cmd.equalsIgnoreCase("walk here")) {
 				message(p, "you walk down the passage way");
@@ -152,7 +152,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, InvUseOnObject
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2]))
 				|| (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE)
 				|| (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
@@ -160,7 +160,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, InvUseOnObject
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
 			player.message("you carefully place the planks over the pressure triggers");
 			player.message("you walk across the wooden planks");
@@ -213,7 +213,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, InvUseOnObject
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_WHITE.id(), Optional.empty())) {
 				p.message("you are already carrying this orb");
@@ -237,7 +237,7 @@ public class UndergroundPassOrbs implements ObjectActionListener, InvUseOnObject
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_WHITE.id(), Optional.empty())) {
 				return true;

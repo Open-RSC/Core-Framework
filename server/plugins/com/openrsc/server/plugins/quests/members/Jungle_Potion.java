@@ -7,17 +7,17 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Jungle_Potion implements QuestInterface, ObjectActionListener,
-	TalkToNpcListener,
-	WallObjectActionListener {
+public class Jungle_Potion implements QuestInterface, OpLocTrigger,
+	TalkNpcTrigger,
+	OpBoundTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -43,7 +43,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.TRUFITUS.id();
 	}
 
@@ -959,15 +959,15 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.TRUFITUS.id()) {
 			trufitisChat(p, n, -1);
 		}
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == QuestObjects.Snake_Jungle_Vine
 			|| isObject(obj, QuestObjects.Ardrigal_Palm_Tree)
 			|| isObject(obj, QuestObjects.Sito_Scorched_Earth)
@@ -977,7 +977,7 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	//herbs should only be obtainable if player is assigned to find them, must pass with
 	//Trufitus to drop trick, unless the player is on the legends quest (for snakes weed + ardrigal)
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (isObject(obj, QuestObjects.Snake_Jungle_Vine)) {
 			if (!atQuestStage(p, this, 1) && p.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
 				p.message("Yep, it looks like a vine...");
@@ -1049,13 +1049,13 @@ public class Jungle_Potion implements QuestInterface, ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getID() == QuestObjects.Rogues_Purse_Wall;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (isObject(obj, QuestObjects.Rogues_Purse_Wall)) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), Optional.of(false))
 				&& !p.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))

@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -10,14 +10,14 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class QuestAdvisor implements TalkToNpcListener {
+public class QuestAdvisor implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island quest advisor
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "Greetings traveller",
 			"If you're interested in a bit of adventure",
 			"I can recommend going on a good quest",
@@ -51,7 +51,7 @@ public class QuestAdvisor implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.QUEST_ADVISOR.id();
 	}
 

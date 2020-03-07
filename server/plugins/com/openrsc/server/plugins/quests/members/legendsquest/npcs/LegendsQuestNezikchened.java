@@ -4,8 +4,8 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import static com.openrsc.server.plugins.Functions.atQuestStages;
 import static com.openrsc.server.plugins.Functions.createGroundItem;
@@ -18,7 +18,7 @@ import static com.openrsc.server.plugins.Functions.sleep;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 import static com.openrsc.server.plugins.Functions.transform;
 
-public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpcRunListener, PlayerKilledNpcListener, PlayerRangeNpcListener, PlayerAttackNpcListener {
+public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigger, KillNpcTrigger, PlayerRangeNpcTrigger, AttackNpcTrigger {
 
 	/**
 	 * @param p public method to use for third fight summons and nezichened
@@ -74,12 +74,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpc
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NEZIKCHENED.id() && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p);
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id() && n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) {
 			p.message("Your attack passes through");
 			n.remove();
@@ -87,12 +87,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpc
 	}
 
 	@Override
-	public boolean blockPlayerNpcRun(Player p, Npc n) {
+	public boolean blockEscapeNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NEZIKCHENED.id();
 	}
 
 	@Override
-	public void onPlayerNpcRun(Player p, Npc n) {
+	public void onEscapeNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 3:
@@ -125,12 +125,12 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpc
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NEZIKCHENED.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			// FIRST FIGHT.
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 3 && p.getLocation().isInsideFlameWall()) {
@@ -210,7 +210,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpc
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((affectedmob.getAttribute("spawnedFor", null) != null && !affectedmob.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Quests.LEGENDS_QUEST, 3, 7, 8)) {
 				message(p, 1300, "Your attack glides straight through the Demon.");
@@ -222,7 +222,7 @@ public class LegendsQuestNezikchened implements PlayerMageNpcListener, PlayerNpc
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((n.getAttribute("spawnedFor", null) != null && !n.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Quests.LEGENDS_QUEST, 3, 7, 8)) {
 				return true;

@@ -10,19 +10,19 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
-	WallObjectActionListener,
-	InvActionListener,
-	PlayerKilledNpcListener, PickupListener,
-	ObjectActionListener {
+public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger,
+	OpInvTrigger,
+	KillNpcTrigger, TakeObjTrigger,
+	OpLocTrigger {
 	/**
 	 * @author Davve
 	 */
@@ -63,13 +63,13 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	 * Merlin should be the one of library (393)
 	 */
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.MERLIN_LIBRARY.id(), NpcId.BLACK_KNIGHT_TITAN.id(), NpcId.UNHAPPY_PEASANT.id(),
 				NpcId.FISHERMAN.id(), NpcId.FISHER_KING.id(), NpcId.KING_PERCIVAL.id(), NpcId.HAPPY_PEASANT.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MERLIN_LIBRARY.id()) {
 			switch (p.getQuestStage(Quests.THE_HOLY_GRAIL)) {
 				case 1:
@@ -271,12 +271,12 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return obj.getID() == 117 || obj.getID() == 116;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 117) {
 			if (p.getQuestStage(this) >= 1
 				&& atQuestStage(p, Quests.MERLINS_CRYSTAL, -1)
@@ -299,12 +299,12 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.MAGIC_WHISTLE.id() || item.getCatalogId() == ItemId.BELL.id() || item.getCatalogId() == ItemId.MAGIC_GOLDEN_FEATHER.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.MAGIC_WHISTLE.id()) {
 			if (p.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
 				if (p.getQuestStage(this) == 5 || p.getQuestStage(this) == -1) {
@@ -363,12 +363,12 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BLACK_KNIGHT_TITAN.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
 			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
 				n.killedBy(p);
@@ -390,7 +390,7 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	 * "You must complete some task here before you are worthy");
 	 */
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924) {
 			message(p, "You feel that the grail shouldn't be moved",
 				"You must complete some task here before you are worthy");
@@ -398,17 +398,17 @@ public class TheHolyGrail implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924;
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == 408;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 408) {
 			if (p.getQuestStage(this) == 4) {
 				message(p, "You hear muffled noises from the sack");

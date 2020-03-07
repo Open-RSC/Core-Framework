@@ -3,14 +3,14 @@ package com.openrsc.server.plugins.minigames.gnomerestaurant;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeSlice implements InvUseOnItemListener {
+public class GnomeSlice implements UseInvTrigger {
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.ORANGE.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LIME.id()))
@@ -27,7 +27,7 @@ public class GnomeSlice implements InvUseOnItemListener {
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.ORANGE.id())) {
 			p.message("you can slice or dice the orange");
 			int menu = showMenu(p,

@@ -7,11 +7,11 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Dorics implements QuestInterface, TalkToNpcListener {
+public class Dorics implements QuestInterface, TalkNpcTrigger {
 
 	/**
 	 * Quest: Doric's Quest - fully working made by Fate 2013-09-10. GIVE DORIC
@@ -126,14 +126,14 @@ public class Dorics implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.DORIC.id()) {
 			doricDialogue(p, n);
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.DORIC.id();
 	}
 }

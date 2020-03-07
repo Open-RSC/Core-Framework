@@ -9,18 +9,18 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiceMerchant implements ShopInterface, TalkToNpcListener {
+public class SpiceMerchant implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 15000, 100, 70, 2, new Item(ItemId.SPICE.id(), 1));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("spiceStolen") && Instant.now().getEpochSecond() < p.getCache().getLong("spiceStolen") + 1200) {
 			npcTalk(p, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
@@ -56,7 +56,7 @@ public class SpiceMerchant implements ShopInterface, TalkToNpcListener {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SPICE_MERCHANT.id();
 	}
 

@@ -14,9 +14,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -28,8 +28,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thieving extends Functions
-	implements ObjectActionListener, NpcCommandListener,
-	WallObjectActionListener {
+	implements OpLocTrigger, OpNpcTrigger,
+	OpBoundTrigger {
 
 	private static final String piece_of = "piece of ";
 
@@ -279,7 +279,7 @@ public class Thieving extends Functions
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		String formattedName = obj.getGameObjectDef().getName().toUpperCase().replaceAll(" ", "_");
 
 		if (formattedName.contains("STALL")) {
@@ -310,7 +310,7 @@ public class Thieving extends Functions
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = null;
 			try {
@@ -428,7 +428,7 @@ public class Thieving extends Functions
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		String formattedName = obj.getGameObjectDef().getName().toUpperCase().replaceAll(" ", "_");
 		if (formattedName.contains("STALL")) {
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
@@ -534,7 +534,7 @@ public class Thieving extends Functions
 	 * @param obj
 	 */
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
 			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
@@ -657,7 +657,7 @@ public class Thieving extends Functions
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
 			if (pickpocket != null) {
@@ -669,7 +669,7 @@ public class Thieving extends Functions
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		handlePicklock(obj, p, click);
 	}
 

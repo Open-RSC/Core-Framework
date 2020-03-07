@@ -4,7 +4,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -15,15 +15,15 @@ import static com.openrsc.server.plugins.Functions.*;
  * TODO:
  * the messages inside UndeadOnes a mist (possible to damage?)
  */
-public class ShiloVillageMosolRei implements TalkToNpcListener {
+public class ShiloVillageMosolRei implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MOSOL.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MOSOL.id()) {
 			moselReiDialogue(p, n, -1);
 		}

@@ -5,14 +5,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestMapJungle implements InvActionListener {
+public class LegendsQuestMapJungle implements OpInvTrigger {
 
 	/**
 	 * MAPPING THE JUNGLE!!
@@ -40,7 +40,7 @@ public class LegendsQuestMapJungle implements InvActionListener {
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			p.message("The map of Kharazi Jungle is complete, Sir Radimus will be pleased.");
 			int menu = showMenu(p, "Read Mission Briefing", "Close");
@@ -189,7 +189,7 @@ public class LegendsQuestMapJungle implements InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.RADIMUS_SCROLLS.id() || item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id();
 	}
 }

@@ -5,7 +5,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -13,10 +13,10 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Lady implements TalkToNpcListener {
+public class Lady implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Good day to you " + (p.isMale() ? "sir" : "madam"));
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("Who are you?") {
@@ -54,7 +54,7 @@ public class Lady implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.LADY_LAKE.id();
 	}
 

@@ -7,16 +7,16 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class CaptainBarnaby implements ObjectActionListener,
-	TalkToNpcListener {
+public final class CaptainBarnaby implements OpLocTrigger,
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Do you want to go on a trip to Karamja?",
 			"The trip will cost you 30 gold");
 		String[] menu = new String[]{
@@ -54,13 +54,13 @@ public final class CaptainBarnaby implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CAPTAIN_BARNABY.id();
 	}
 
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 157) {
 			if (command.equals("board")) {
 				if (p.getY() != 616) {
@@ -78,7 +78,7 @@ public final class CaptainBarnaby implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
 		return (arg0.getID() == 157 && arg0.getLocation().equals(Point.location(536, 617)))
 			|| (arg0.getID() == 155 && arg0.getLocation().equals(Point.location(531, 617)));
 	}

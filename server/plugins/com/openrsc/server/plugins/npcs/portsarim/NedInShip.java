@@ -5,7 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.quests.free.DragonSlayer;
 
 import java.util.Optional;
@@ -13,10 +13,10 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class NedInShip implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		//2 cases: ned in portsarim side
 		//ned in crandor side
 		if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == DragonSlayer.CRANDOR) {
@@ -112,7 +112,7 @@ public final class NedInShip implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.NED_BOAT.id();
 	}
 }

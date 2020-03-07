@@ -9,20 +9,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FishingContest implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener,
-	InvUseOnNpcListener {
+public class FishingContest implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	UseNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -69,21 +69,21 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(final GameObject obj,
-									   final Item item, final Player player) {
+	public boolean blockUseLoc(final GameObject obj,
+							   final Item item, final Player player) {
 		return obj.getID() == 355 || obj.getID() == 350;
 	}
 
 	@Override
-	public boolean blockObjectAction(final GameObject obj,
-									 final String command, final Player player) {
+	public boolean blockOpLoc(final GameObject obj,
+							  final String command, final Player player) {
 		//353 - big dave's spot, 354 - joshua's spot
 		return obj.getID() == 358 || obj.getID() == 352 || obj.getID() == 351
 				|| obj.getID() == 359 || obj.getID() == 353 || obj.getID() == 354;
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		// joshua and big dave were not interested in talking directly
 		return DataConversions.inArray(new int[] {NpcId.MOUNTAIN_DWARF.id(), NpcId.BONZO.id(), NpcId.SINISTER_STRANGER.id(),
 				NpcId.GRANDPA_JACK.id()}, n.getID());
@@ -468,8 +468,8 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(final GameObject obj, final Item item,
-								 final Player player) {
+	public void onUseLoc(final GameObject obj, final Item item,
+						 final Player player) {
 
 		if (obj.getID() == 355 && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
@@ -501,8 +501,8 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onObjectAction(final GameObject obj, final String command,
-							   final Player p) {
+	public void onOpLoc(final GameObject obj, final String command,
+						final Player p) {
 
 		if (obj.getID() == 358) {
 			Npc bonzo = getNearestNpc(p, NpcId.BONZO.id(), 15);
@@ -675,7 +675,7 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.MOUNTAIN_DWARF.id()) {
 			mountainDwarfDialogue(p, n);
 		}
@@ -770,13 +770,13 @@ public class FishingContest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item i) {
+	public boolean blockUseNpc(Player p, Npc n, Item i) {
 		//garlic on sinister stranger
 		return n.getID() == NpcId.SINISTER_STRANGER.id() && i.getCatalogId() == ItemId.GARLIC.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item i) {
+	public void onUseNpc(Player p, Npc n, Item i) {
 		if (n.getID() == NpcId.SINISTER_STRANGER.id() && i.getCatalogId() == ItemId.GARLIC.id()) {
 			npcTalk(p, n, "urrggh get zat horrible ving avay from me",
 				"How do people like to eat that stuff",

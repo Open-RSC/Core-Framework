@@ -5,8 +5,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
@@ -17,17 +17,17 @@ import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.spawnNpc;
 
-public class DigsiteWinch implements ObjectActionListener, InvUseOnObjectListener {
+public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 
 	private static final int[] WINCH = {1095, 1053};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), WINCH);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), WINCH)) {
 			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case -1:
@@ -91,12 +91,12 @@ public class DigsiteWinch implements ObjectActionListener, InvUseOnObjectListene
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return inArray(obj.getID(), WINCH) && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (inArray(obj.getID(), WINCH) && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (obj.getID() == WINCH[0]) {
 				if (p.getCache().hasKey("digsite_winshaft")) {

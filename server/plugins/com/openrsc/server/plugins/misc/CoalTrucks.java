@@ -4,18 +4,18 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CoalTrucks implements ObjectActionListener, InvUseOnObjectListener {
+public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 
 	private static int COAL_TRUCK = 383;
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == COAL_TRUCK) {
 			if (p.getCache().hasKey("coal_truck") && p.getCache().getInt("coal_truck") > 0) {
 				p.setBusyTimer(500);
@@ -30,17 +30,17 @@ public class CoalTrucks implements ObjectActionListener, InvUseOnObjectListener 
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == COAL_TRUCK;
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id()) {
 			p.setBusy(true);
 			int coalAmount = p.getCarriedItems().getInventory().countId(ItemId.COAL.id());

@@ -10,15 +10,15 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DemonSlayer implements QuestInterface,
-	PlayerKilledNpcListener, TalkToNpcListener, ObjectActionListener,
-	InvUseOnObjectListener, PlayerRangeNpcListener, PlayerAttackNpcListener {
+	KillNpcTrigger, TalkNpcTrigger, OpLocTrigger,
+	UseLocTrigger, PlayerRangeNpcTrigger, AttackNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -43,13 +43,13 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == 77;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 77) {
 			switch (player.getQuestStage(this)) {
 				case 0:
@@ -76,19 +76,19 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] { NpcId.GYPSY.id(), NpcId.SIR_PRYSIN.id(),
 				NpcId.TRAIBORN_THE_WIZARD.id(), NpcId.CAPTAIN_ROVIN.id() }, n.getID());
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == 77;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 77 && obj.getY() == 461) {
 			switch (player.getQuestStage(this)) {
 				case 0:
@@ -121,7 +121,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GYPSY.id()) {
 			gypsyDialogue(p, n, -1);
 		} else if (n.getID() == NpcId.SIR_PRYSIN.id()) {
@@ -1074,7 +1074,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.DELRITH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1100,7 +1100,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.DELRITH.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1120,7 +1120,7 @@ public class DemonSlayer implements QuestInterface,
 		return false;
 	}
 
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		n.getSkills().setLevel(Skills.HITS, n.getDef().getHits());
 		if (p.getMenuHandler() == null && !p.getAttribute("delrith", false)) {
 			p.setAttribute("delrith", true);
@@ -1155,7 +1155,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.DELRITH.id();
 	}
 

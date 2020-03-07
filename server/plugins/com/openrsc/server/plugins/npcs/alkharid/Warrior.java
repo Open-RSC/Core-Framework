@@ -3,22 +3,22 @@ package com.openrsc.server.plugins.npcs.alkharid;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Warrior implements TalkToNpcListener {
+public class Warrior implements TalkNpcTrigger {
 
 	private final int WARRIOR = 86;
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == WARRIOR;
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == WARRIOR) {
 			int chatRandom = DataConversions.getRandom().nextInt(17);
 			playerTalk(p, n, "Hello", "How's it going?");

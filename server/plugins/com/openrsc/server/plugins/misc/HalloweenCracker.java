@@ -5,13 +5,13 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class HalloweenCracker implements InvUseOnPlayerListener {
+public class HalloweenCracker implements UsePlayerTrigger {
 
 	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 64, 64, 64};
 	private static final int[] holidayIds = {
@@ -108,7 +108,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener {
 
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
@@ -178,7 +178,7 @@ public class HalloweenCracker implements InvUseOnPlayerListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		return item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id();
 	}
 }

@@ -9,17 +9,17 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HazeelCult implements QuestInterface, TalkToNpcListener, PlayerKilledNpcListener, ObjectActionListener, InvUseOnObjectListener {
+public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigger, OpLocTrigger, UseLocTrigger {
 
 	private static final int BUTLERS_CUPBOARD_OPEN = 441;
 	private static final int BUTLERS_CUPBOARD_CLOSED = 440;
@@ -61,13 +61,13 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, PlayerKill
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.CLAUS.id(), NpcId.CERIL.id(), NpcId.BUTLER.id(), NpcId.HENRYETA.id(), NpcId.PHILIPE.id(),
 				NpcId.CARNILLEAN_GUARD.id(), NpcId.CLIVET.id(), NpcId.CULT_MEMBER.id(), NpcId.ALOMONE.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CERIL.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1191,12 +1191,12 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, PlayerKill
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ALOMONE.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ALOMONE.id()) {
 			if (p.getCache().hasKey("good_side")) {
 				n.killedBy(p);
@@ -1217,13 +1217,13 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, PlayerKill
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return DataConversions.inArray(new int[] {BUTLERS_CUPBOARD_OPEN, BUTLERS_CUPBOARD_CLOSED, BASEMENT_CRATE,
 				TOP_LEVEL_BOOKCASE, CARNILLEAN_CHEST_CLOSED}, obj.getID());
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == BUTLERS_CUPBOARD_OPEN || obj.getID() == BUTLERS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, player, BUTLERS_CUPBOARD_OPEN);
@@ -1300,12 +1300,12 @@ public class HazeelCult implements QuestInterface, TalkToNpcListener, PlayerKill
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getCatalogId() == ItemId.CARNILLEAN_KEY.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getCatalogId() == ItemId.CARNILLEAN_KEY.id()) {
 			player.message("you use the key to open");
 			player.message("the chest");

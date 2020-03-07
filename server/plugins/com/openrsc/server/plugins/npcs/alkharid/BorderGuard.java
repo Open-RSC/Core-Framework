@@ -7,16 +7,16 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class BorderGuard implements
-	TalkToNpcListener, ObjectActionListener {
+	TalkNpcTrigger, OpLocTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == -1
 			|| p.getQuestStage(Quests.PRINCE_ALI_RESCUE) == 3) {
 			playerTalk(p, n, "Can I come through this gate?");
@@ -63,20 +63,20 @@ public final class BorderGuard implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BORDER_GUARD_ALKHARID.id() || n.getID() == NpcId.BORDER_GUARD_LUMBRIDGE.id();
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 180 && command.equals("open")) {
 			player.message("You need to talk to the border guard");
 		}
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == 180 && command.equals("open");
 	}
 }

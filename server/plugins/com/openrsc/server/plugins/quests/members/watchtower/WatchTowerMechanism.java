@@ -7,10 +7,10 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -20,18 +20,18 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnItemListener, InvUseOnNpcListener, PickupListener {
+public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpcTrigger, TakeObjTrigger {
 
 	private static final int TOBAN_CHEST_OPEN = 979;
 	private static final int TOBAN_CHEST_CLOSED = 978;
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id()) {
 			openChest(obj, 2000, TOBAN_CHEST_OPEN);
 			if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
@@ -46,14 +46,14 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnItem
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
 				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) ||
 			Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
 				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
 			p.message("I think these fit together, but I can't seem to make it fit");
@@ -64,7 +64,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnItem
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
+	public boolean blockUseNpc(Player p, Npc npc, Item item) {
 		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() || (npc.getID() == NpcId.CITY_GUARD.id() && item.getCatalogId() == ItemId.DEATH_RUNE.id())
 				|| (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getCatalogId() == ItemId.NIGHTSHADE.id());
 	}
@@ -83,7 +83,7 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnItem
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
 			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.message("The wizard has no need for more evidence");
@@ -277,13 +277,13 @@ public class WatchTowerMechanism implements InvUseOnObjectListener, InvUseOnItem
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return inArray(i.getID(), ItemId.SHAMAN_ROBE.id(), ItemId.POWERING_CRYSTAL1.id(), ItemId.POWERING_CRYSTAL2.id(),
 				ItemId.POWERING_CRYSTAL3.id(), ItemId.POWERING_CRYSTAL4.id());
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.SHAMAN_ROBE.id()) {
 			p.message("You take the robe");
 			addItem(p, ItemId.SHAMAN_ROBE.id(), 1);

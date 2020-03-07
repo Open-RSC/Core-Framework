@@ -8,20 +8,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener,
-	PlayerKilledNpcListener,
-	InvActionListener,
-	TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener,
-	WallObjectActionListener {
+public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
+	KillNpcTrigger,
+	OpInvTrigger,
+	TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	OpBoundTrigger {
 
 	public static final int BLACK_ARM = 0;
 	public static final int PHOENIX_GANG = 1;
@@ -72,23 +72,23 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return false;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.KATRINE.id();
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		if (obj.getID() == PHOENIX_CHEST_OPEN || obj.getID() == PHOENIX_CHEST_CLOSED) {
 			return true;
 		} else if (obj.getID() == BARM_CUPBOARD_OPEN || obj.getID() == BARM_CUPBOARD_CLOSED) {
@@ -100,7 +100,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		switch (obj.getID()) {
 			case 67:
 				if (player.getQuestStage(this) == 1) {
@@ -159,7 +159,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		switch (NpcId.getById(n.getID())) {
 			case KATRINE:
 				katrineDialogue(p, n, -1);
@@ -430,12 +430,12 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.BOOK.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BOOK:
 				message(player,
@@ -460,7 +460,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.JONNY_THE_BEARD.id()) {
 			n.killedBy(p);
 			if (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION) {
@@ -473,7 +473,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 21 && obj.getY() == 533) {
 			if (isBlackArmGang(p) && !(p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 5)) {
 				p.message("You hear the door being unbarred");
@@ -529,8 +529,8 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		//door on phoenix gang entrance
 		if (obj.getID() == 19 && obj.getY() == 3370) {
 			return true;
@@ -546,14 +546,14 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
-										   Player player) {
+	public boolean blockUseBound(GameObject obj, Item item,
+								 Player player) {
 		return item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 				&& obj.getY() == 532;
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
+	public void onUseBound(GameObject obj, Item item, Player player) {
 		if (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 			&& obj.getY() == 532) {
 			showBubble(player, item);
@@ -569,7 +569,7 @@ public class ShieldOfArrav implements QuestInterface, InvUseOnWallObjectListener
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.JONNY_THE_BEARD.id();
 	}
 

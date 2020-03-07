@@ -4,20 +4,20 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FishingInstructor implements TalkToNpcListener {
+public class FishingInstructor implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island fishing instructor
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 40) {
 			playerTalk(p, n, "Hi are you here to tell me how to catch fish?");
 			npcTalk(p, n, "Yes that's right, you're a smart one",
@@ -52,7 +52,7 @@ public class FishingInstructor implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.FISHING_INSTRUCTOR.id();
 	}
 

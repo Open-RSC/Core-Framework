@@ -12,10 +12,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -23,8 +23,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, PickupListener,
-	InvActionListener, ObjectActionListener {
+public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTrigger,
+	OpInvTrigger, OpLocTrigger {
 
 	private static final int[][] SCORES_XP = {{20, 30, 35, 40, 220} , {40, 50, 60, 70, 220}};
 
@@ -49,7 +49,7 @@ public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, Pic
 	}
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.GNOME_BALL.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
@@ -81,7 +81,7 @@ public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, Pic
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		Zone playerZone = GnomeField.getInstance().resolvePositionToZone(player);
 		if (playerZone == Zone.ZONE_NO_PASS) {
 			player.message("you can't make the pass from here");
@@ -210,7 +210,7 @@ public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, Pic
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem item) {
+	public void onTakeObj(Player p, GroundItem item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 				message(p, 1200, "you can only carry one ball at a time", "otherwise it would be too easy");
@@ -222,27 +222,27 @@ public class GnomeBall implements MiniGameInterface, InvUseOnPlayerListener, Pic
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		return item.getCatalogId() == ItemId.GNOME_BALL.id();
 	}
 
 	@Override
-	public boolean blockPickup(Player player, GroundItem item) {
+	public boolean blockTakeObj(Player player, GroundItem item) {
 		return item.getID() == ItemId.GNOME_BALL.id();
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.GNOME_BALL.id();
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == 702;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 702) {
 			if (player.getY() > 456 || !player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 				player.message("you open the gate");

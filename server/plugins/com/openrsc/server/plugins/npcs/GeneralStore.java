@@ -9,13 +9,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class GeneralStore implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	public static Item[] shop_items = new Item[]{new Item(ItemId.POT.id(), 3),
 		new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(), 2),
@@ -29,7 +29,7 @@ public final class GeneralStore implements ShopInterface,
 	private Shop[] shops = null;
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		for (final Shop s : shops) {
 			if (s != null) {
 				for (final int i : s.ownerIDs) {
@@ -66,7 +66,7 @@ public final class GeneralStore implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		boolean found = false;
 		Shop shp = null;
 		for (final Shop s : shops) {

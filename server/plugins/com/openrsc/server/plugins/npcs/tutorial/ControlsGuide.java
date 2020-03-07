@@ -2,20 +2,20 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
 import com.openrsc.server.constants.NpcId;
 
-public class ControlsGuide implements TalkToNpcListener {
+public class ControlsGuide implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island second room guide
 	 */
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "Hello I'm here to tell you more about the game's controls",
 			"Most of your options and character information",
 			"can be accesed by the menus in the top right corner of the screen",
@@ -33,7 +33,7 @@ public class ControlsGuide implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CONTROLS_GUIDE.id();
 	}
 

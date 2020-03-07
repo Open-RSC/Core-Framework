@@ -4,8 +4,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Arrays;
@@ -14,8 +14,8 @@ import java.util.Set;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BarbarianAgilityCourse implements WallObjectActionListener,
-	ObjectActionListener {
+public class BarbarianAgilityCourse implements OpBoundTrigger,
+	OpLocTrigger {
 
 	private static final int LOW_WALL = 163;
 	private static final int LOW_WALL2 = 164;
@@ -32,12 +32,12 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 	private static Integer lastObstacle = LOW_WALL2;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), PIPE, BACK_PIPE, SWING, LOG, LEDGE, NET, HANDHOLDS);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == BACK_PIPE || obj.getID() == PIPE) {
 			if (getCurrentLevel(p, Skills.AGILITY) < 35) {
 				p.message("You need an agility level of 35 to attempt to squeeze through the pipe");
@@ -156,12 +156,12 @@ public class BarbarianAgilityCourse implements WallObjectActionListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return inArray(obj.getID(), LOW_WALL, LOW_WALL2);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 				&& p.getFatigue() >= p.MAX_FATIGUE) {

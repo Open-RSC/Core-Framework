@@ -4,13 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeMixing implements InvUseOnItemListener {
+public class GnomeMixing implements UseInvTrigger {
 
 	private boolean canMix(World world, Item itemOne, Item itemTwo) {
 		for (GnomeMix gm : GnomeMix.values()) {
@@ -22,12 +22,12 @@ public class GnomeMixing implements InvUseOnItemListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return canMix(p.getWorld(), item1, item2);
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		GnomeMix gm = null;
 		for (GnomeMix mix : GnomeMix.values()) {
 			if (mix.isValid(p.getWorld(), item1.getCatalogId(), item2.getCatalogId())) {

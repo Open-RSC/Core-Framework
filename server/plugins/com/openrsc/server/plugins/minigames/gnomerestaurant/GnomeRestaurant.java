@@ -9,16 +9,16 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.DropListener;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.DropObjTrigger;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, InvActionListener, DropListener {
+public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
 
 	@Override
 	public int getMiniGameId() {
@@ -41,12 +41,12 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, In
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ALUFT_GIANNE.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ALUFT_GIANNE.id()) {
 			if (!p.getCache().hasKey("gnome_cooking")) {
 				playerTalk(p, n, "hello");
@@ -509,12 +509,12 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, In
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.GIANNE_COOK_BOOK.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.GIANNE_COOK_BOOK.id()) {
 			p.message("you open aluft's cook book");
 			p.message("inside are various gnome dishes");
@@ -575,14 +575,14 @@ public class GnomeRestaurant implements MiniGameInterface, TalkToNpcListener, In
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.GNOMECRUNCHIE.id() || i.getCatalogId() == ItemId.GNOMEBOWL.id() || i.getCatalogId() == ItemId.GNOMEBATTA.id()) {
 			resetGnomeCooking(p);
 		}
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return false;
 	}
 }

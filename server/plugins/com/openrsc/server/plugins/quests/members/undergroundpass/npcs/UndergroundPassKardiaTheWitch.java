@@ -6,16 +6,16 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassKardiaTheWitch implements ObjectActionListener, WallObjectActionListener, PickupListener, InvUseOnWallObjectListener {
+public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigger, TakeObjTrigger, UseBoundTrigger {
 
 	/**
 	 * OBJECT IDs
@@ -25,12 +25,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Wall
 	private static int WITCH_CHEST = 885;
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return obj.getID() == WITCH_RAILING || obj.getID() == WITCH_DOOR;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == WITCH_RAILING) {
 			message(p, "inside you see Kardia the witch");
 			p.message("her appearence make's you feel quite ill");
@@ -74,12 +74,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Wall
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false));
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false))) {
 			message(p, "it's not very nice to squeeze one cat into a satchel");
 			p.message("...two's just plain cruel!");
@@ -87,12 +87,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Wall
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseBound(GameObject obj, Item item, Player p) {
 		return obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id();
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public void onUseBound(GameObject obj, Item item, Player p) {
 		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
 			if (!p.getCache().hasKey("kardia_cat")) {
 				message(p, "you place the cat by the door");
@@ -111,12 +111,12 @@ public class UndergroundPassKardiaTheWitch implements ObjectActionListener, Wall
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == WITCH_CHEST;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == WITCH_CHEST) {
 			message(p, "you search the chest");
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !p.getCache().hasKey("doll_of_iban")) {

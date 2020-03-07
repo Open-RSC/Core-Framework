@@ -9,19 +9,19 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class VampireSlayer implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	PlayerKilledNpcListener,
-	PlayerAttackNpcListener {
+public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	KillNpcTrigger,
+	AttackNpcTrigger {
 
 	private static final int COUNT_DRAYNOR_COFFIN_OPEN = 136;
 	private static final int COUNT_DRAYNOR_COFFIN_CLOSED = 135;
@@ -185,7 +185,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.MORGAN.id()) {
 			morganDialogue(p, n);
 		} else if (n.getID() == NpcId.DR_HARLOW.id()) {
@@ -194,7 +194,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if ((obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380) {
 			if (command.equalsIgnoreCase("open")) {
 				openGenericObject(obj, player, COUNT_DRAYNOR_COFFIN_OPEN, "You open the coffin");
@@ -237,24 +237,24 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MORGAN.id() || n.getID() == NpcId.DR_HARLOW.id();
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return (obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380
 				|| (obj.getID() == GARLIC_CUPBOARD_OPEN || obj.getID() == GARLIC_CUPBOARD_CLOSED) && obj.getY() == 1562;
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.COUNT_DRAYNOR.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.STAKE.id()) && p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id())) {
 				p.getCarriedItems().remove(ItemId.STAKE.id(), 1, true);
@@ -273,7 +273,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.GARLIC.id())) {
 				p.message("The vampire appears to weaken");
@@ -288,7 +288,7 @@ public class VampireSlayer implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return false;
 	}
 }

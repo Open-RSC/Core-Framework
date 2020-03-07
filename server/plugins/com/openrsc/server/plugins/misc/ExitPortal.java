@@ -4,12 +4,12 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
-public class ExitPortal implements ObjectActionListener {
+public class ExitPortal implements OpLocTrigger {
 	ArrayList<Point> level1Portals;
 	ArrayList<Point> level2Portals;
 	ArrayList<Point> level3Portals;
@@ -39,12 +39,12 @@ public class ExitPortal implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getGameObjectDef().getObjectModel().equalsIgnoreCase("portal");
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 
 		if (command.equalsIgnoreCase("exit")) {
 			switch (obj.getID()) {

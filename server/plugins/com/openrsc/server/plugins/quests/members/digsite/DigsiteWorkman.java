@@ -6,20 +6,20 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteWorkman implements TalkToNpcListener, InvUseOnNpcListener {
+public class DigsiteWorkman implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.WORKMAN.id() || n.getID() == NpcId.WORKMAN_UNDERGROUND.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WORKMAN.id()) {
 			switch (p.getQuestStage(Quests.DIGSITE)) {
 				case -1:
@@ -161,12 +161,12 @@ public class DigsiteWorkman implements TalkToNpcListener, InvUseOnNpcListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player p, Npc n, Item item) {
 		return n.getID() == NpcId.WORKMAN.id() && item.getCatalogId() == ItemId.DIGSITE_SCROLL.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.WORKMAN.id() && item.getCatalogId() == ItemId.DIGSITE_SCROLL.id()) {
 			playerTalk(p, n, "Here, have a look at this...");
 			npcTalk(p, n, "I give permission...blah de blah etc....",

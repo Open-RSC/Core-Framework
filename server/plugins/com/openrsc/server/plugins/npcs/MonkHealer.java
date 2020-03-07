@@ -3,15 +3,15 @@ package com.openrsc.server.plugins.npcs;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
-public class MonkHealer implements TalkToNpcListener {
+public class MonkHealer implements TalkNpcTrigger {
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		npcTalk(p, n, "Greetings traveller");
 		int option = showMenu(p, n, false, //do not send over
 			"Can you heal me? I'm injured", "Isn't this place built a bit out the way?");
@@ -34,7 +34,7 @@ public class MonkHealer implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MONK.id() || n.getID() == NpcId.ABBOT_LANGLEY.id();
 	}
 }

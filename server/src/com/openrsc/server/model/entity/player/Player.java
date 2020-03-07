@@ -1337,7 +1337,6 @@ public final class Player extends Mob {
 	}
 
 	public String getUsername() {
-
 		return username;
 	}
 

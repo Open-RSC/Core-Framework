@@ -7,14 +7,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener, PlayerNpcRunListener, InvUseOnNpcListener {
+public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger, EscapeNpcTrigger, UseNpcTrigger {
 
 	private static void ungaduluTalkToDialogue(Player p, Npc n, int cID) {
 		if (n.getID() == NpcId.UNGADULU.id()) {
@@ -746,12 +746,12 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcL
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.UNGADULU.id() || n.getID() == NpcId.EVIL_UNGADULU.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.UNGADULU.id()) {
 			ungaduluTalkToDialogue(p, n, -1);
 		}
@@ -761,12 +761,12 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcL
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.UNGADULU.id() || n.getID() == NpcId.EVIL_UNGADULU.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
@@ -819,12 +819,12 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcL
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.UNGADULU.id() || n.getID() == NpcId.EVIL_UNGADULU.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc affectedmob) {
+	public void onSpellNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.UNGADULU.id()) {
 			p.message("You feel a strange force coming over you...");
 			p.message("You feel weakened....");
@@ -841,12 +841,12 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcL
 	}
 
 	@Override
-	public boolean blockPlayerNpcRun(Player p, Npc n) {
+	public boolean blockEscapeNpc(Player p, Npc n) {
 		return n.getID() == NpcId.UNGADULU.id();
 	}
 
 	@Override
-	public void onPlayerNpcRun(Player p, Npc n) {
+	public void onEscapeNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.UNGADULU.id()) {
 			n.resetCombatEvent();
 			npcWalkFromPlayer(p, n);
@@ -860,13 +860,13 @@ public class LegendsQuestUngadulu implements TalkToNpcListener, PlayerAttackNpcL
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
+	public boolean blockUseNpc(Player p, Npc npc, Item item) {
 		return npc.getID() == NpcId.UNGADULU.id() && (item.getCatalogId() == ItemId.BOOKING_OF_BINDING.id()
 				|| item.getCatalogId() == ItemId.GLOWING_DARK_DAGGER.id() || item.getCatalogId() == ItemId.DARK_DAGGER.id());
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.DARK_DAGGER.id()) { // NOT KILLED VIEYLDY - dark dagger
 			message(p, npc, 1300, "You hand the dagger over to the Shaman.",
 				"The Shaman's face turns pale...");

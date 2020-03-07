@@ -4,24 +4,24 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CutWeb implements InvUseOnWallObjectListener,
-	WallObjectActionListener {
+public class CutWeb implements UseBoundTrigger,
+	OpBoundTrigger {
 
 	private static int WEB = 24;
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseBound(GameObject obj, Item item, Player p) {
 		return obj.getID() == WEB;
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public void onUseBound(GameObject obj, Item item, Player p) {
 		if (obj.getID() == WEB) {
 			if (item.getDef(p.getWorld()).getWieldPosition() != 4 && item.getCatalogId() != ItemId.KNIFE.id()) {
 				p.message("Nothing interesting happens");
@@ -39,13 +39,13 @@ public class CutWeb implements InvUseOnWallObjectListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return p.getWorld().getServer().getConfig().WANT_LEFTCLICK_WEBS
 			&& obj.getID() == WEB;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player player) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 
 		boolean canCut = false;
 		//First, check their equipment for an appropriate weapon

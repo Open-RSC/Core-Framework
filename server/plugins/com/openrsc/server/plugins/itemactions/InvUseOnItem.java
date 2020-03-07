@@ -5,14 +5,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 
-public class InvUseOnItem implements InvUseOnItemListener {
+public class InvUseOnItem implements UseInvTrigger {
 	private int[] capes = {
 		ItemId.RED_CAPE.id(), ItemId.BLACK_CAPE.id(), ItemId.BLUE_CAPE.id(),
 		ItemId.GREEN_CAPE.id(), ItemId.YELLOW_CAPE.id(), ItemId.ORANGE_CAPE.id(),
@@ -28,7 +28,7 @@ public class InvUseOnItem implements InvUseOnItemListener {
 	};
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		/*
 		 * Dye the wig with yellow dye and get blonde wig for Prince Ali rescue Quest
 		 */
@@ -275,7 +275,7 @@ public class InvUseOnItem implements InvUseOnItemListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.YELLOWDYE.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.BLUEDYE.id()))

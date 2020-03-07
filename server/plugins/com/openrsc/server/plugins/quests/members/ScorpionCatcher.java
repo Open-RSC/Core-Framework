@@ -8,10 +8,10 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,10 +20,10 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
-	InvUseOnNpcListener,
-	InvUseOnWallObjectListener,
-	WallObjectActionListener {
+public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
+	UseNpcTrigger,
+	UseBoundTrigger,
+	OpBoundTrigger {
 
 	// items 679 (scorpion1 taverly), 686 (scorpion2 barbarian), 687 (scorpion3 monastery)
 
@@ -50,7 +50,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.THORMAC_THE_SORCEROR.id() || n.getID() == NpcId.SEER.id() || n.getID() == NpcId.VELRAK_THE_EXPLORER.id();
 	}
 
@@ -370,7 +370,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SEER.id()) {
 			seerDialogue(p, n, -1);
 		}
@@ -383,7 +383,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc n, Item i) {
+	public boolean blockUseNpc(Player player, Npc n, Item i) {
 		int cageId = i.getCatalogId();
 		if (player.getCarriedItems().getInventory().countId(cageId) <= 0) return false;
 
@@ -407,7 +407,7 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item i) {
+	public void onUseNpc(Player p, Npc n, Item i) {
 
 		if (p.getQuestStage(this) == 2) {
 
@@ -508,15 +508,15 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
-										   Player player) {
+	public boolean blockUseBound(GameObject obj, Item item,
+								 Player player) {
 		return (obj.getID() == 83 && obj.getY() == 3428 && item.getCatalogId() == ItemId.JAIL_KEYS.id())
 				|| (obj.getID() == 83 && obj.getY() == 3425 && item.getCatalogId() == ItemId.JAIL_KEYS.id())
 				|| (obj.getID() == 84 && obj.getY() == 3353 && item.getCatalogId() == ItemId.DUSTY_KEY.id());
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
+	public void onUseBound(GameObject obj, Item item, Player player) {
 		/*
 		 * Velrak cell door
 		 */
@@ -542,13 +542,13 @@ public class ScorpionCatcher implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getID() == 87 && obj.getY() == 3353;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 87 && obj.getY() == 3353 && p.getQuestStage(this) == 2) {
 			doDoor(obj, p);
 			p.message("You just went through a secret door");

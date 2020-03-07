@@ -7,14 +7,14 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class GemMining implements ObjectActionListener {
+public class GemMining implements OpLocTrigger {
 
 	private static final int GEM_ROCK = 588;
 
@@ -155,12 +155,12 @@ public class GemMining implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"));
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			handleGemRockMining(obj, p, p.click);
 		}

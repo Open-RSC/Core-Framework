@@ -9,7 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -19,9 +19,9 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ObjectCooking implements InvUseOnObjectListener {
+public class ObjectCooking implements UseLocTrigger {
 	@Override
-	public void onInvUseOnObject(GameObject object, Item item, Player owner) {
+	public void onUseLoc(GameObject object, Item item, Player owner) {
 		Npc cook = getNearestNpc(owner, 7, 20);
 		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
 			&& object.getID() == 119) {
@@ -193,7 +193,7 @@ public class ObjectCooking implements InvUseOnObjectListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		int[] ids = new int[]{97, 11, 119, 274, 435, 491};
 		Arrays.sort(ids);
 		if ((item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id() || item.getCatalogId() == ItemId.SEAWEED.id()

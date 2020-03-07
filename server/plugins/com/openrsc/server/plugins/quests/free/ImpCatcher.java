@@ -6,13 +6,13 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ImpCatcher implements QuestInterface, TalkToNpcListener {
+public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -40,7 +40,7 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener {
 	 * // COORDS FOR KARAMJA CAVE: 425, 684
 	 */
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.WIZARD_MIZGOG.id()) {
 			if (p.getQuestStage(this) == 1) {
 				npcTalk(p, n, "So how are you doing finding my beads?");
@@ -142,7 +142,7 @@ public class ImpCatcher implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.WIZARD_MIZGOG.id();
 	}
 }

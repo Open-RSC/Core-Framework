@@ -2,22 +2,22 @@ package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 
 import com.openrsc.server.constants.NpcId;
 
-public class DigsiteGuide implements TalkToNpcListener {
+public class DigsiteGuide implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.DIGSITE_GUIDE.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.DIGSITE_GUIDE.id()) {
 			playerTalk(p, n, "Hello, who are you ?");
 			npcTalk(p, n, "Hello, I am the panning guide",

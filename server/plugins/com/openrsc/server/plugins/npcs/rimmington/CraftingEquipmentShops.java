@@ -9,13 +9,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 public final class CraftingEquipmentShops implements ShopInterface,
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 5000, 100, 65, 2,
 		new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
@@ -23,7 +23,7 @@ public final class CraftingEquipmentShops implements ShopInterface,
 		new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.ROMMIK.id() || n.getID() == NpcId.DOMMIK.id();
 	}
 
@@ -38,7 +38,7 @@ public final class CraftingEquipmentShops implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Would you like to buy some crafting equipment");
 		int option = showMenu(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
 		if (option == 0) {

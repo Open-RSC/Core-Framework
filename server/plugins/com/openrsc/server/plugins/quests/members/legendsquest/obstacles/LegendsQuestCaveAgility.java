@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -11,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class LegendsQuestCaveAgility implements ObjectActionListener {
+public class LegendsQuestCaveAgility implements OpLocTrigger {
 
 	private static final int ROCK_HEWN_STAIRS_1 = 1114;
 	private static final int ROCK_HEWN_STAIRS_2 = 1123;
@@ -24,12 +24,12 @@ public class LegendsQuestCaveAgility implements ObjectActionListener {
 	private static final int ROCKY_WALKWAY_4 = 561;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), ROCK_HEWN_STAIRS_1, ROCK_HEWN_STAIRS_2, ROCK_HEWN_STAIRS_3, ROCK_HEWN_STAIRS_4, ROCKY_WALKWAY_1, ROCKY_WALKWAY_2, ROCKY_WALKWAY_3, ROCKY_WALKWAY_4);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		p.setBusy(true);
 		switch (obj.getID()) {
 			case ROCKY_WALKWAY_1:

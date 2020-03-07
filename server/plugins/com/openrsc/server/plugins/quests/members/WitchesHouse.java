@@ -11,22 +11,22 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class WitchesHouse implements QuestInterface, TalkToNpcListener,
-	WallObjectActionListener,
-	ObjectActionListener,
-	DropListener,
-	InvUseOnNpcListener,
-	PlayerKilledNpcListener,
-	PickupListener,
-	PlayerAttackNpcListener {
+public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger,
+	OpLocTrigger,
+	DropObjTrigger,
+	UseNpcTrigger,
+	KillNpcTrigger,
+	TakeObjTrigger,
+	AttackNpcTrigger {
 
 	/**
 	 * INFORMATION Rat appears on coords: 356, 494 Dropping cheese in the whole
@@ -63,12 +63,12 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BOY.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.BOY.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -119,14 +119,14 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getID() == 69 || (obj.getID() == 70 && obj.getX() == 358) || (obj.getID() == 71 && obj.getY() == 495)
 				|| (obj.getID() == 73 && obj.getX() == 351) || (obj.getID() == 72 && obj.getX() == 356);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 69) {
 			p.message("The door is locked");
 		}
@@ -219,14 +219,14 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == 255 || (obj.getID() == 256 && obj.getX() == 363)
 				|| ((obj.getID() == WITCHES_HOUSE_CUPBOARD_OPEN || obj.getID() == WITCHES_HOUSE_CUPBOARD_CLOSED) && obj.getY() == 3328);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 255) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.FRONT_DOOR_KEY.id(), Optional.of(false))) {
 				p.message("You find a key under the mat");
@@ -277,13 +277,13 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return i.getCatalogId() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496);
 	}
 
 	// room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.CHEESE.id() && p.getLocation().inBounds(356, 357, 494, 496)) {
 			if (p.getQuestStage(this) == -1) {
 				playerTalk(p, null, "I would rather eat it to be honest");
@@ -295,12 +295,12 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return item.getCatalogId() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player p, Npc npc, Item item) {
 		if (item.getCatalogId() == ItemId.MAGNET.id() && npc.getID() == NpcId.RAT_WITCHES_HOUSE.id()) {
 			if (p.getQuestStage(this) == -1) {
 				return;
@@ -321,13 +321,13 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.SHAPESHIFTER_HUMAN.id(), NpcId.SHAPESHIFTER_SPIDER.id(),
 				NpcId.SHAPESHIFTER_BEAR.id(), NpcId.SHAPESHIFTER_WOLF.id()}, n.getID());
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		n.resetCombatEvent();
 		if (n.getID() >= NpcId.SHAPESHIFTER_WOLF.id()) {
 			n.killedBy(p);
@@ -357,14 +357,14 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.SHAPESHIFTER_HUMAN.id() && p.getQuestStage(getQuestId()) == -1) {
 			p.message("I have already done that quest");
 		}
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SHAPESHIFTER_HUMAN.id() && p.getQuestStage(getQuestId()) == -1) {
 			return true;
 		}
@@ -372,7 +372,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.BALL.id() && i.getX() == 351 && i.getY() == 491) {
 			if (p.getQuestStage(getQuestId()) == -1) {
 				return true;
@@ -385,7 +385,7 @@ public class WitchesHouse implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (!p.getCache().hasKey("shapeshifter")) {
 			Npc shapeshifter = getNearestNpc(p, NpcId.SHAPESHIFTER_HUMAN.id(), 20);
 			if (shapeshifter != null) {

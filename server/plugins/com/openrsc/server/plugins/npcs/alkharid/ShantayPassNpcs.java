@@ -12,9 +12,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +24,8 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShantayPassNpcs implements ShopInterface,
-	TalkToNpcListener, ObjectActionListener,
-	PickupListener {
+	TalkNpcTrigger, OpLocTrigger,
+	TakeObjTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(ShantayPassNpcs.class);
 	private static int ASSISTANT = 720;
 	private static int SHANTAY_DISCLAIMER = ItemId.A_FREE_SHANTAY_DISCLAIMER.id();
@@ -55,7 +55,7 @@ public class ShantayPassNpcs implements ShopInterface,
 	private boolean inJail = false;
 
 	@Override
-	public void onTalkToNpc(final Player p, Npc n) {
+	public void onTalkNpc(final Player p, Npc n) {
 		if (n.getID() == SHANTAY_STANDING_GUARD) {
 			npcTalk(p, n, "Hello there!", "What can I do for you?");
 			int menu = showMenu(p, n, "I'd like to go into the desert please.",
@@ -352,7 +352,7 @@ public class ShantayPassNpcs implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == ASSISTANT || n.getID() == SHANTAY || n.getID() == SHANTAY_MOVING_GUARD
 			|| n.getID() == SHANTAY_STANDING_GUARD;
 	}
@@ -368,8 +368,8 @@ public class ShantayPassNpcs implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		if (obj.getID() == BANK_CHEST || (obj.getID() == STONE_GATE && player.getY() < 735)) {
 			return true;
 		}
@@ -377,7 +377,7 @@ public class ShantayPassNpcs implements ShopInterface,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == BANK_CHEST) {
 			if (p.isIronMan(2)) {
 				p.message("As an Ultimate Iron Man, you cannot use the bank.");
@@ -459,12 +459,12 @@ public class ShantayPassNpcs implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == SHANTAY_DISCLAIMER;
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == SHANTAY_DISCLAIMER) {
 			p.message("This looks very important indeed, would you like to read it now?");
 			addItem(p, SHANTAY_DISCLAIMER, 1);

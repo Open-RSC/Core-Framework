@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.playerTalk;
@@ -12,13 +12,13 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 import com.openrsc.server.constants.NpcId;
 
 public class BankAssistant implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 	/**
 	 * @author Davve Tutorial island bank assistant
 	 */
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "Hello welcome to the bank of runescape",
 			"You can deposit your items in banks",
 			"This allows you to own much more equipment",
@@ -48,7 +48,7 @@ public class BankAssistant implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BANK_ASSISTANT.id();
 	}
 

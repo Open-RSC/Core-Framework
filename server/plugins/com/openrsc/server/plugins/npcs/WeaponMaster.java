@@ -6,23 +6,23 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
 
-public class WeaponMaster implements TalkToNpcListener, PickupListener, PlayerAttackNpcListener {
+public class WeaponMaster implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.WEAPONSMASTER.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (isPhoenixGang(p)) {
 			playerTalk(p, affectedmob, "Nope, I'm not going to attack a fellow gang member");
 			return;
@@ -32,18 +32,18 @@ public class WeaponMaster implements TalkToNpcListener, PickupListener, PlayerAt
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.WEAPONSMASTER.id();
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return (i.getX() == 107 || i.getX() == 105) && i.getY() == 1476
 				&& i.getID() == ItemId.PHOENIX_CROSSBOW.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if ((i.getX() == 107 || i.getX() == 105) && i.getY() == 1476 && i.getID() == ItemId.PHOENIX_CROSSBOW.id()) {
 			Npc weaponMaster = getNearestNpc(p, NpcId.WEAPONSMASTER.id(), 20);
 			if (weaponMaster == null) {
@@ -66,7 +66,7 @@ public class WeaponMaster implements TalkToNpcListener, PickupListener, PlayerAt
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (!p.getCache().hasKey("arrav_gang") || isBlackArmGang(p)) {
 			playerTalk(p, n, "Hello");
 			npcTalk(p, n, "Hey I don't know you",

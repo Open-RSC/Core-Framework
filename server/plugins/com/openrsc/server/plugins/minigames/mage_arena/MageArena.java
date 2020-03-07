@@ -14,14 +14,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKilledNpcListener, ObjectActionListener, PickupListener, PlayerMageNpcListener, PlayerAttackNpcListener, PlayerDeathListener {
+public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrigger, OpLocTrigger, TakeObjTrigger, SpellNpcTrigger, AttackNpcTrigger, PlayerDeathTrigger {
 
 	public static final int SARADOMIN_STONE = 1152;
 	public static final int GUTHIX_STONE = 1153;
@@ -48,7 +48,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
 			playerTalk(p, n, "hello there", "what is this place?");
 			npcTalk(p, n, "do not waste my time with trivial questions!",
@@ -353,18 +353,18 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.KOLODION.id();
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id());
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			n.remove();
@@ -416,7 +416,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 			NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			if (!n.getAttribute("spawnedFor", null).equals(p)) {
@@ -426,7 +426,7 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(final Player p, final Npc n) {
+	public boolean blockSpellNpc(final Player p, final Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			if (!n.getAttribute("spawnedFor", null).equals(p)) {
@@ -462,13 +462,13 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == 1019 || obj.getID() == 1020 || obj.getID() == 1027
 			|| obj.getID() == SARADOMIN_STONE || obj.getID() == GUTHIX_STONE || obj.getID() == ZAMORAK_STONE;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		boolean firstTimeEnchant = false;
 		if (obj.getID() == 1019 || obj.getID() == 1020) {
 			player.message("you open the gate ...");
@@ -585,14 +585,14 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (!affectedmob.getAttribute("spawnedFor", null).equals(p)) {
 			p.message("that mage is busy.");
 		}
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			if(!n.getAttribute("spawnedFor", null).equals(p)) {
@@ -616,12 +616,12 @@ public class MageArena implements MiniGameInterface, TalkToNpcListener, PlayerKi
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.ZAMORAK_CAPE.id() || i.getID() == ItemId.SARADOMIN_CAPE.id() || i.getID() == ItemId.GUTHIX_CAPE.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.ZAMORAK_CAPE.id() || i.getID() == ItemId.SARADOMIN_CAPE.id() || i.getID() == ItemId.GUTHIX_CAPE.id()) {
 			if (alreadyHasCape(p)) {
 				p.message("you may only possess one sacred cape at a time");

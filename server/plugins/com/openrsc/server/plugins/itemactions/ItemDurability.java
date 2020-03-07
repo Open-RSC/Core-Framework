@@ -4,20 +4,20 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class ItemDurability implements InvActionListener {
+public class ItemDurability implements OpInvTrigger {
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return (item.getCatalogId() == ItemId.RING_OF_RECOIL.id() || item.getCatalogId() == ItemId.RING_OF_FORGING.id()
 			|| item.getCatalogId() == ItemId.DWARVEN_RING.id())
 			&& (command.equalsIgnoreCase("check") || command.equalsIgnoreCase("break"));
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (command.equalsIgnoreCase("check")) {
 			int charges;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {

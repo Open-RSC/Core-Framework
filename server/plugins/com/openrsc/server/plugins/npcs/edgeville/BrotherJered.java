@@ -4,17 +4,17 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BrotherJered implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		int option = showMenu(p, n, "What can you do to help a bold adventurer like myself?", "Praise be to Saradomin");
 		if (option == 0) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.UNBLESSED_HOLY_SYMBOL.id(), Optional.of(false))
@@ -49,7 +49,7 @@ public class BrotherJered implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BROTHER_JERED.id();
 	}
 

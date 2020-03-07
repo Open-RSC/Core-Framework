@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.npcs.khazard;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -11,10 +11,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
 public final class KhazardBartender implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_BARTENDER.id()) {
 			playerTalk(p, n, "Hello");
 			npcTalk(p, n,
@@ -40,7 +40,7 @@ public final class KhazardBartender implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.KHAZARD_BARTENDER.id();
 	}
 }

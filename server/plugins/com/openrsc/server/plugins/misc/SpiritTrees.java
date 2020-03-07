@@ -5,23 +5,23 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiritTrees implements ObjectActionListener {
+public class SpiritTrees implements OpLocTrigger {
 
 	private static int STRONGHOLD_SPIRIT_TREE = 661;
 	private static int TREE_GNOME_VILLAGE_SPIRIT_TREE = 390;
 	private static int YOUNG_SPIRIT_TREES = 391;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == YOUNG_SPIRIT_TREES || obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE || obj.getID() == STRONGHOLD_SPIRIT_TREE;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		/** STRONGHOLD SPIRIT TREE
 		 *  NOTE: does not teleport you back to tree gnome village unless you have completed Grand Tree quest
 		 * **/

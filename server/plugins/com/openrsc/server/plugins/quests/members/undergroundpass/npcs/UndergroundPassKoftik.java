@@ -7,13 +7,13 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener {
+public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 	/**
 	 * Note: King Lathas (Quest starer) is located in the Biohazard quest template
 	 **/
@@ -82,12 +82,12 @@ public class UndergroundPassKoftik implements QuestInterface, TalkToNpcListener 
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.KOFTIK_ARDOUGNE.id(), NpcId.KOFTIK_CAVE1.id(), NpcId.KOFTIK_CAVE2.id(), NpcId.KOFTIK_CAVE3.id(), NpcId.KOFTIK_CAVE4.id(), NpcId.KOFTIK_RECOVERED.id());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KOFTIK_ARDOUGNE.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:

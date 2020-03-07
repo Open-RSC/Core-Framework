@@ -5,25 +5,25 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PlayerMageObjectListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.SpellLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.message;
 import static com.openrsc.server.plugins.Functions.playerTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class LegendsQuestDarkMetalGate implements ObjectActionListener, PlayerMageObjectListener {
+public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger {
 
 
 	public static final int DARK_METAL_GATE = 1165;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == DARK_METAL_GATE;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == DARK_METAL_GATE) {
 			if (command.equalsIgnoreCase("open")) {
 				if (p.getY() <= 3715) {
@@ -65,7 +65,7 @@ public class LegendsQuestDarkMetalGate implements ObjectActionListener, PlayerMa
 	}
 
 	@Override
-	public void onPlayerMageObject(Player p, GameObject obj, SpellDef spell) {
+	public void onSpellLoc(Player p, GameObject obj, SpellDef spell) {
 		if (obj.getID() == DARK_METAL_GATE) {
 			switch (spell.getName()) {
 				case "Charge Fire Orb":
@@ -92,7 +92,7 @@ public class LegendsQuestDarkMetalGate implements ObjectActionListener, PlayerMa
 	}
 
 	@Override
-	public boolean blockPlayerMageObject(Player player, GameObject obj, SpellDef spell) {
+	public boolean blockSpellLoc(Player player, GameObject obj, SpellDef spell) {
 		return obj.getID() == DARK_METAL_GATE;
 	}
 }

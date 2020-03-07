@@ -6,7 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -14,16 +14,16 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class WormBrain implements WallObjectActionListener {
+public final class WormBrain implements OpBoundTrigger {
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return p.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, final Player p) {
+	public void onOpBound(GameObject obj, Integer click, final Player p) {
 		if (p.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = getNearestNpc(p, NpcId.WORMBRAIN.id(), 10);

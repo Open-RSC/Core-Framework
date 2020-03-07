@@ -11,8 +11,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -24,8 +24,8 @@ import static com.openrsc.server.plugins.Functions.*;
  * MURDER MYSTERY 2014-01-11
  */
 
-public class MurderMystery implements QuestInterface, TalkToNpcListener,
-	PickupListener, WallObjectActionListener, ObjectActionListener, InvUseOnItemListener {
+public class MurderMystery implements QuestInterface, TalkNpcTrigger,
+	TakeObjTrigger, OpBoundTrigger, OpLocTrigger, UseInvTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -272,7 +272,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.GUARD_SINCLAIR_MANSION.id(), NpcId.POISON_SALESMAN.id(),
 				NpcId.DAVID_SINCLAIR.id(), NpcId.ANNA_SINCLAIR.id(), NpcId.FRANK_SINCLAIR.id(),
 				NpcId.BOB_SINCLAIR.id(), NpcId.ELIZABETH_SINCLAIR.id(), NpcId.CAROL_SINCLAIR.id(),
@@ -282,7 +282,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		/** Quest starter **/
 		if (n.getID() == NpcId.GUARD_SINCLAIR_MANSION.id()) {
 			switch (p.getQuestStage(this)) {
@@ -1211,12 +1211,12 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.A_SILVER_DAGGER.id() || i.getID() == ItemId.MURDER_SCENE_POT.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.A_SILVER_DAGGER.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1255,13 +1255,13 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		/** WINDOW FOR THREAD **/
 		return obj.getID() == 205;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 205) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1319,7 +1319,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		// BARRELS / SACKS / FLOUR BARREL
 		return DataConversions.inArray(new int[] {1133, 1132, 1136, 1137, 1135, 1134}, obj.getID()) || obj.getID() == 1139 || obj.getID() == 1138
 				// COMPOST / FOUNTAIN / BEEHIVE / DRAIN / GATE TO DOG / SINCLAIR CREST / SPIDER NEST WEB
@@ -1327,7 +1327,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 1133 ||
 			obj.getID() == 1132 ||
 			obj.getID() == 1136 ||
@@ -1522,7 +1522,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())
 				|| Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())
 				|| Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())
@@ -1547,7 +1547,7 @@ public class MurderMystery implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle a small amount of flour on the murderweapon");
 			p.message("the murderweapon is now coated with a thin layer of flour");

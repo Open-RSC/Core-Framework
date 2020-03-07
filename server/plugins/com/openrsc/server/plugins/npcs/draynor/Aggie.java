@@ -5,13 +5,13 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Aggie implements TalkToNpcListener {
+public final class Aggie implements TalkNpcTrigger {
 
 	private static final int SKIN_PASTE = 0;
 	private static final int FROGS = 1;
@@ -27,7 +27,7 @@ public final class Aggie implements TalkToNpcListener {
 	private static final int HAPPY = 11;
 
 	@Override
-	public void onTalkToNpc(Player player, final Npc npc) {
+	public void onTalkNpc(Player player, final Npc npc) {
 		aggieDialogue(player, npc, -1);
 	}
 
@@ -295,7 +295,7 @@ public final class Aggie implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.AGGIE.id();
 	}
 }

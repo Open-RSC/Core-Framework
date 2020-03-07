@@ -2,21 +2,21 @@ package com.openrsc.server.plugins.npcs.ardougne.east;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 
 import com.openrsc.server.constants.NpcId;
 
-public class Gunnjorn implements TalkToNpcListener {
+public class Gunnjorn implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GUNNJORN.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GUNNJORN.id()) {
 			npcTalk(p, n, "Haha welcome to my obstacle course",
 					"Have fun, but remember this isn't a child's playground",

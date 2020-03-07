@@ -4,11 +4,11 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HighPriestOfEntrana implements TalkToNpcListener {
+public class HighPriestOfEntrana implements TalkNpcTrigger {
 
 	private static void entranaPriestDialogue(Player p, Npc n, int cID) {
 		if (cID == -1) {
@@ -103,14 +103,14 @@ public class HighPriestOfEntrana implements TalkToNpcListener {
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.HIGH_PRIEST_OF_ENTRANA.id()) {
 			entranaPriestDialogue(p, n, -1);
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.HIGH_PRIEST_OF_ENTRANA.id();
 	}
 

@@ -2,17 +2,17 @@ package com.openrsc.server.plugins.npcs.brimhaven;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
 import com.openrsc.server.constants.NpcId;
 
-public class CharlieTheCook implements TalkToNpcListener {
+public class CharlieTheCook implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CHARLIE_THE_COOK.id()) {
 			npcTalk(p, n, "Hey what are you doing round here");
 			int menu = showMenu(p, n,
@@ -54,7 +54,7 @@ public class CharlieTheCook implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CHARLIE_THE_COOK.id();
 	}
 

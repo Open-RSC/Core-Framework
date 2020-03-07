@@ -9,24 +9,24 @@ import com.openrsc.server.external.ItemHerbSecond;
 import com.openrsc.server.external.ItemUnIdentHerbDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Herblaw implements InvActionListener, InvUseOnItemListener {
+public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 	@Override
-	public void onInvAction(final Item item, Player player, String command) {
+	public void onOpInv(final Item item, Player player, String command) {
 		if (command.equalsIgnoreCase("Identify")) {
 			handleHerbIdentify(item, player);
 		}
 	}
 
-	public boolean blockInvAction(final Item i, Player p, String command) {
+	public boolean blockOpInv(final Item i, Player p, String command) {
 		return command.equalsIgnoreCase("Identify");
 	}
 
@@ -85,7 +85,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener {
 	}
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item, Item usedWith) {
+	public void onUseInv(Player player, Item item, Item usedWith) {
 		ItemHerbSecond secondDef = null;
 		if ((secondDef = player.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getCatalogId(), usedWith
 			.getCatalogId())) != null) {
@@ -215,7 +215,7 @@ public class Herblaw implements InvActionListener, InvUseOnItemListener {
 		}
 	}
 
-	public boolean blockInvUseOnItem(Player p, Item item, Item usedWith) {
+	public boolean blockUseInv(Player p, Item item, Item usedWith) {
 		if ((p.getWorld().getServer().getEntityHandler().getItemHerbSecond(item.getCatalogId(), usedWith.getCatalogId())) != null
 			|| (p.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWith.getCatalogId(), item
 			.getCatalogId())) != null) {

@@ -3,16 +3,16 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-public class DiskOfReturning implements InvActionListener {
+public class DiskOfReturning implements OpInvTrigger {
 
 	public boolean insideMines(Player p) {
 		return ((p.getX() >= 250 && p.getX() <= 315) && (p.getY() >= 3325 && p.getY() <= 3400));
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if(item.getCatalogId() == ItemId.DISK_OF_RETURNING.id()) {
 			if (player.getLocation().onBlackHole()) {
 				player.message("You spin your disk of returning");
@@ -25,7 +25,7 @@ public class DiskOfReturning implements InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.DISK_OF_RETURNING.id();
 	}
 }

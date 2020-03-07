@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeAgilityCourse implements ObjectActionListener {
+public class GnomeAgilityCourse implements OpLocTrigger {
 
 	private static final int BALANCE_LOG = 655;
 	private static final int NET = 647;
@@ -29,12 +29,12 @@ public class GnomeAgilityCourse implements ObjectActionListener {
 	private static Integer lastObstacle = PIPE;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), BALANCE_LOG, NET, WATCH_TOWER, ROPE_SWING, LANDING, SECOND_NET, PIPE);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 				&& p.getFatigue() >= p.MAX_FATIGUE && !inArray(obj.getID(), WATCH_TOWER, ROPE_SWING, LANDING)) {

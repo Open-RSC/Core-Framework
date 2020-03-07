@@ -9,8 +9,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -18,9 +18,9 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 
-public class PiratesTreasure implements QuestInterface, InvActionListener,
-	TalkToNpcListener, ObjectActionListener,
-	InvUseOnObjectListener, TeleportListener {
+public class PiratesTreasure implements QuestInterface, OpInvTrigger,
+	TalkNpcTrigger, OpLocTrigger,
+	UseLocTrigger, TeleportTrigger {
 
 	private static final int HECTORS_CHEST_OPEN = 186;
 	private static final int HECTORS_CHEST_CLOSED = 187;
@@ -56,14 +56,14 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return item.getCatalogId() == ItemId.BANANA.id() && obj.getID() == 182
 				|| item.getCatalogId() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
 				|| item.getCatalogId() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.BANANA.id() && obj.getID() == 182 && obj.getY() == 711) {
 			if (p.getCache().hasKey("bananas")) {
 				if (p.getCache().getInt("bananas") >= 10) {
@@ -107,7 +107,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.REDBEARD_FRANK.id() || n.getID() == NpcId.LUTHAS.id();
 	}
 
@@ -284,7 +284,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.LUTHAS.id()) {
 			luthasDialogue(p, n, -1);
 		} else if (n.getID() == NpcId.REDBEARD_FRANK.id()) {
@@ -293,13 +293,13 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == 182 || obj.getID() == 185;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 			case 182:
 				String s = "";
@@ -336,7 +336,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return (p.getY() == 548 && p.getX() > 287 && p.getX() < 291)
 			&& item.getCatalogId() == ItemId.SPADE.id();
 	}
@@ -354,7 +354,7 @@ public class PiratesTreasure implements QuestInterface, InvActionListener,
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (p.getQuestStage(this) != 3)
 			return;
 		if (p.isBusy())

@@ -6,16 +6,16 @@ import com.openrsc.server.event.rsc.impl.FireCannonEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class Cannon implements ObjectActionListener,
-	InvActionListener,
-	InvUseOnObjectListener {
+public class Cannon implements OpLocTrigger,
+	OpInvTrigger,
+	UseLocTrigger {
 
 	public final static int[] cannonObjectIDs = {
 		946, // Cannon Base
@@ -215,7 +215,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 943 && !command.equalsIgnoreCase("fire")) {
 			return true;
 		} else if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
@@ -228,7 +228,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (inArray(obj.getID(), 946, 947, 948, 943) && !obj.getOwner().equals(player.getUsername())) {
 			if (!command.equalsIgnoreCase("fire")) {
 				player.message("you can't pick that up, the owners still around");
@@ -252,19 +252,19 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.DWARF_CANNON_BASE.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_BASE.id()) {
 			handleBase(player, item, command);
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 946) {
 			return true;
 		}
@@ -278,7 +278,7 @@ public class Cannon implements ObjectActionListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 946) {
 			if (!obj.getOwner().equals(p.getUsername())) {
 				p.message("you can only add this stand to your own base");

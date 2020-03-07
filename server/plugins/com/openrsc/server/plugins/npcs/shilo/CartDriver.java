@@ -3,20 +3,20 @@ package com.openrsc.server.plugins.npcs.shilo;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class CartDriver implements TalkToNpcListener, ObjectActionListener {
+public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 
 	public static final int TRAVEL_CART = 768;
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CART_DRIVER_SHILO.id();
 	}
 
@@ -48,7 +48,7 @@ public class CartDriver implements TalkToNpcListener, ObjectActionListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CART_DRIVER_SHILO.id()) {
 			playerTalk(p, n, "Hello!");
 			npcTalk(p, n, "Hello Bwana!");
@@ -57,12 +57,12 @@ public class CartDriver implements TalkToNpcListener, ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == TRAVEL_CART;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == TRAVEL_CART) {
 			if (command.equalsIgnoreCase("Board")) {
 				p.message("This looks like a sturdy travelling cart.");

@@ -9,18 +9,18 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TheRestlessGhost implements QuestInterface, PickupListener,
-	TalkToNpcListener, ObjectActionListener,
-	InvUseOnObjectListener {
+public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
+	TalkNpcTrigger, OpLocTrigger,
+	UseLocTrigger {
 
 	private static final int GHOST_COFFIN_OPEN = 40;
 	private static final int GHOST_COFFIN_CLOSED = 39;
@@ -282,14 +282,14 @@ public class TheRestlessGhost implements QuestInterface, PickupListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.GHOST_RESTLESS.id()) {
 			ghostDialogue(p, n, -1);
 		}
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == GHOST_COFFIN_OPEN || obj.getID() == GHOST_COFFIN_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openGenericObject(obj, player, GHOST_COFFIN_OPEN, "You open the coffin");
@@ -308,7 +308,7 @@ public class TheRestlessGhost implements QuestInterface, PickupListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
 			spawnNpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
@@ -328,29 +328,29 @@ public class TheRestlessGhost implements QuestInterface, PickupListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GHOST_RESTLESS.id();
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return item.getCatalogId() == ItemId.QUEST_SKULL.id() && obj.getID() == GHOST_COFFIN_OPEN;
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == GHOST_COFFIN_OPEN || obj.getID() == GHOST_COFFIN_CLOSED;
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.QUEST_SKULL.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		Npc skeleton = getNearestNpc(p, NpcId.SKELETON_RESTLESS.id(), 10);
 		if (i.getID() == ItemId.QUEST_SKULL.id()) {
 			// spawn-place

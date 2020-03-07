@@ -1,13 +1,12 @@
 package com.openrsc.server.plugins.minigames.gnomeball;
 
-import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,8 +15,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener,
-	TalkToNpcListener, NpcCommandListener, IndirectTalkToNpcListener {
+public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger,
+	TalkNpcTrigger, OpNpcTrigger, IndirectTalkToNpcTrigger {
 
 	private static final int[] GNOME_BALLERS_ZONE_PASS = {605, 606, 607, 608};
 	private static final int[] GNOME_BALLERS_ZONE1XP_OUTER = {603, 604};
@@ -40,7 +39,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
@@ -48,7 +47,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
@@ -66,7 +65,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		if(DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
@@ -76,7 +75,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc n) {
+	public void onAttackNpc(Player p, Npc n) {
 		if(DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
@@ -86,7 +85,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == CHEERLEADER || n.getID() == OFFICIAL || n.getID() == REFEREE
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
@@ -95,7 +94,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		return n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
@@ -104,7 +103,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == CHEERLEADER) {
 			playerTalk(p, n, "hello");
 			npcTalk(p, n, "hi there, how are you doing?");
@@ -222,7 +221,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
 			Zone currentZone = GnomeField.getInstance().resolvePositionToZone(p);
 			if (currentZone == GnomeField.Zone.ZONE_NO_PASS) {
@@ -295,7 +294,7 @@ public class GnomeNpcs implements PlayerAttackNpcListener, PlayerMageNpcListener
 		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
 			//pass to -> direct use of command
 			//pass -> passing via gnome ball's shoot (requires player to be in correct position)
-			this.onNpcCommand(n, "pass", p);
+			this.onOpNpc(n, "pass", p);
 		}
 	}
 

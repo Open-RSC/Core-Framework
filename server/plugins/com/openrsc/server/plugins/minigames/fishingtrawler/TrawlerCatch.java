@@ -5,13 +5,13 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TrawlerCatch implements ObjectActionListener {
+public class TrawlerCatch implements OpLocTrigger {
 
 	private static final int TRAWLER_CATCH = 1106;
 	private static final int[] JUNK_ITEMS = new int[]{
@@ -30,12 +30,12 @@ public class TrawlerCatch implements ObjectActionListener {
 	};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == TRAWLER_CATCH;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == TRAWLER_CATCH) {
 			message(p, 1900, "you search the smelly net");
 			showBubble(p, new Item(ItemId.NET.id()));

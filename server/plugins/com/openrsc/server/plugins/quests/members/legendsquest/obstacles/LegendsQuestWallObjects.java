@@ -9,8 +9,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.InvUseOnWallObjectListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestUngadulu;
 import com.openrsc.server.plugins.quests.members.shilovillage.ShiloVillageUtils;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestWallObjects implements WallObjectActionListener, InvUseOnWallObjectListener {
+public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger {
 
 	public static final int FLAME_WALL = 210;
 	public static final int RUT = 206;
@@ -35,12 +35,12 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, InvUse
 	public static final int SEARCH = 1;
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return inArray(obj.getID(), FLAME_WALL, RUT, ANCIENT_WALL, RUINED_WALL);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == ANCIENT_WALL) {
 			if (click == USE) {
 				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
@@ -198,12 +198,12 @@ public class LegendsQuestWallObjects implements WallObjectActionListener, InvUse
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseBound(GameObject obj, Item item, Player p) {
 		return obj.getID() == FLAME_WALL || obj.getID() == ANCIENT_WALL;
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public void onUseBound(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FLAME_WALL) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case BLESSED_GOLDEN_BOWL_WITH_PURE_WATER:

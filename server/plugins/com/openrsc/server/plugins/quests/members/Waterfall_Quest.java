@@ -11,20 +11,20 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener,
-	InvActionListener,
-	WallObjectActionListener,
-	InvUseOnWallObjectListener {
+public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	OpInvTrigger,
+	OpBoundTrigger,
+	UseBoundTrigger {
 
 	private static final int BAXTORIAN_CUPBOARD_OPEN = 507;
 	private static final int BAXTORIAN_CUPBOARD_CLOSED = 506;
@@ -68,7 +68,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ALMERA.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -264,19 +264,19 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ALMERA.id(), NpcId.HUDON.id(),
 				NpcId.HADLEY.id(), NpcId.GERALD.id(), NpcId.GOLRIE.id()}, n.getID());
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return DataConversions.inArray(new int[] {492, 486, 467, 469, BAXTORIAN_CUPBOARD_OPEN, BAXTORIAN_CUPBOARD_CLOSED, 481, 471, 479, 470, 480, 463, 462, 482, 464}, obj.getID());
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 464) {
 			message(p, "you board the small raft", "and push off down stream",
 				"the raft is pulled down stream by strong currents",
@@ -628,8 +628,8 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return (item.getCatalogId() == ItemId.LARGE_KEY.id() && obj.getID() == 480)
 			|| item.getCatalogId() == ItemId.AN_OLD_KEY.id() && obj.getID() == 135
 			|| (obj.getID() == 462 || obj.getID() == 463
@@ -643,7 +643,7 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 480 && item.getCatalogId() == ItemId.LARGE_KEY.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_KEY.id(), Optional.of(false))) {
 				doGate(p, obj);
@@ -742,12 +742,12 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.BOOK_ON_BAXTORIAN.id() || item.getCatalogId() == ItemId.MITHRIL_SEED.id();
 	}
 
 	@Override
-	public void onInvAction(Item i, Player p, String command) {
+	public void onOpInv(Item i, Player p, String command) {
 		if (i.getCatalogId() == ItemId.MITHRIL_SEED.id()) {
 			message(p, "you open the small mithril case");
 			if (p.getViewArea().getGameObject(p.getLocation()) != null) {
@@ -825,26 +825,26 @@ public class Waterfall_Quest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getID() == 135;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 135) {
 			message(p, "the door is locked", "you need a key");
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
-										   Player player) {
+	public boolean blockUseBound(GameObject obj, Item item,
+								 Player player) {
 		return obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id();
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
+	public void onUseBound(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id()) {
 			message(player, "you open the door with the key");
 			doDoor(obj, player);

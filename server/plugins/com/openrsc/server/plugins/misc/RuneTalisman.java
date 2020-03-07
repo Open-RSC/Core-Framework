@@ -4,12 +4,12 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-public class RuneTalisman implements InvActionListener {
+public class RuneTalisman implements OpInvTrigger {
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		switch(ItemId.getById(item.getCatalogId())) {
 			case AIR_TALISMAN:
 			case MIND_TALISMAN:
@@ -103,7 +103,7 @@ public class RuneTalisman implements InvActionListener {
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.AIR_TALISMAN.id() || item.getCatalogId() == ItemId.MIND_TALISMAN.id() ||
 			item.getCatalogId() == ItemId.WATER_TALISMAN.id() || item.getCatalogId() == ItemId.EARTH_TALISMAN.id() ||
 			item.getCatalogId() == ItemId.FIRE_TALISMAN.id() || item.getCatalogId() == ItemId.BODY_TALISMAN.id() ||

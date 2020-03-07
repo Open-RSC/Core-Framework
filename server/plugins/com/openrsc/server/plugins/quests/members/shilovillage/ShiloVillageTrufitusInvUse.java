@@ -6,16 +6,16 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener {
+public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player p, Npc n, Item item) {
 		return n.getID() == NpcId.TRUFITUS.id() && (inArray(item.getCatalogId(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
 				ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id()));
 	}
@@ -111,7 +111,7 @@ public class ShiloVillageTrufitusInvUse implements InvUseOnNpcListener {
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.TRUFITUS.id() && item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 				playerTalk(p, n, "Have a look at this.");

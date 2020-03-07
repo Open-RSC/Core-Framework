@@ -4,17 +4,17 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class boatman implements TalkToNpcListener {
+public class boatman implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island boat man - last npc before main land (Lumbridge)
 	 */
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "Hello my job is to take you to the main game area",
 			"It's only a short row",
 			"I shall take you to the small town of Lumbridge",
@@ -38,7 +38,7 @@ public class boatman implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BOATMAN.id();
 	}
 

@@ -6,21 +6,21 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Eating implements InvActionListener {
+public class Eating implements OpInvTrigger {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.isEdible(p.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
-	public void onInvAction(final Item item, final Player player, final String command) {
+	public void onOpInv(final Item item, final Player player, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
 			if (player.cantConsume())
 				return;

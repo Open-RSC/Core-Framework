@@ -2,24 +2,24 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 
-public class TeleportStone implements InvActionListener {
+public class TeleportStone implements OpInvTrigger {
 
 	// Pretty sure this item doesn't even exist.
 	private final int TELEPORT_STONE = 2107;
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == TELEPORT_STONE;
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
 			message(p, "the stone starts shaking...");
 			p.message("a magical portal opens up, where would you like to go?");

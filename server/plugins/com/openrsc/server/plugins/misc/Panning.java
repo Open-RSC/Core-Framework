@@ -7,10 +7,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -24,24 +24,24 @@ import static com.openrsc.server.plugins.Functions.showBubble;
 import static com.openrsc.server.plugins.Functions.showMenu;
 import static com.openrsc.server.plugins.Functions.sleep;
 
-public class Panning implements ObjectActionListener, InvUseOnObjectListener, InvUseOnNpcListener, InvActionListener {
+public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpInvTrigger {
 
 	private static int PANNING_POINT = 1058;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == PANNING_POINT;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == PANNING_POINT) {
 			p.message("If I had a panning tray I could pan here");
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == PANNING_POINT;
 	}
 
@@ -64,7 +64,7 @@ public class Panning implements ObjectActionListener, InvUseOnObjectListener, In
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == PANNING_POINT) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 				Npc guide = getNearestNpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
@@ -106,12 +106,12 @@ public class Panning implements ObjectActionListener, InvUseOnObjectListener, In
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
+	public boolean blockUseNpc(Player p, Npc npc, Item item) {
 		return npc.getID() == NpcId.DIGSITE_GUIDE.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player p, Npc npc, Item item) {
 		if (npc.getID() == NpcId.DIGSITE_GUIDE.id()) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 				p.message("You give the panning tray to the guide");
@@ -143,13 +143,13 @@ public class Panning implements ObjectActionListener, InvUseOnObjectListener, In
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.PANNING_TRAY.id() || item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id() || item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id();
 	}
 
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
 			playerTalk(p, null, "Err, why am I searching an empty tray ?");

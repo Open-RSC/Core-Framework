@@ -8,12 +8,12 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.quests.members.undergroundpass.npcs.UndergroundPassKoftik;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassObstaclesMap1 implements ObjectActionListener {
+public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 
 	/**
 	 * Quest Objects
@@ -53,7 +53,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener {
 	public static int[] SPEAR_ROCKS = {806, 807, 808, 809, 810, 811, 882, 883};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String cmd, Player p) {
+	public boolean blockOpLoc(GameObject obj, String cmd, Player p) {
 		return obj.getID() == UNDERGROUND_CAVE || obj.getID() == CRUMBLED_ROCK
 				|| inArray(obj.getID(), READ_ROCKS) || inArray(obj.getID(), MAIN_ROCKS)
 				|| inArray(obj.getID(), MAIN_LEDGE) || obj.getID() == FIRST_SWAMP
@@ -63,7 +63,7 @@ public class UndergroundPassObstaclesMap1 implements ObjectActionListener {
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String cmd, Player p) {
+	public void onOpLoc(GameObject obj, String cmd, Player p) {
 		if (obj.getID() == UNDERGROUND_CAVE) {
 			switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
 				case 0:

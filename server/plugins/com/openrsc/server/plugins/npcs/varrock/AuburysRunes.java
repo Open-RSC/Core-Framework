@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.quests.members.RuneMysteries;
 
 import java.util.ArrayList;
@@ -19,14 +19,14 @@ import java.util.ArrayList;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class AuburysRunes implements ShopInterface,
-	TalkToNpcListener, NpcCommandListener {
+	TalkNpcTrigger, OpNpcTrigger {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.FIRE_RUNE.id(),
 		50), new Item(ItemId.WATER_RUNE.id(), 50), new Item(ItemId.AIR_RUNE.id(), 50), new Item(ItemId.EARTH_RUNE.id(),
 		50), new Item(ItemId.MIND_RUNE.id(), 50), new Item(ItemId.BODY_RUNE.id(), 50));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.AUBURY.id();
 	}
 
@@ -41,7 +41,7 @@ public final class AuburysRunes implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		ArrayList<String> menu = new ArrayList<>();
 		menu.add("Yes please");
 		menu.add("Oh it's a rune shop. No thank you, then.");
@@ -75,12 +75,12 @@ public final class AuburysRunes implements ShopInterface,
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		RuneMysteries.auburyDialog(p,n);
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		return ( n.getID() == 54 &&
 			p.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
 			p.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&

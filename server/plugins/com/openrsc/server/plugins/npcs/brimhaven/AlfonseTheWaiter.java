@@ -10,19 +10,19 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class AlfonseTheWaiter implements ShopInterface, TalkToNpcListener {
+public class AlfonseTheWaiter implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 10000, 110, 75, 2,
 		new Item(ItemId.HERRING.id(), 5), new Item(ItemId.COD.id(), 5),
 		new Item(ItemId.TUNA.id(), 5), new Item(ItemId.LOBSTER.id(), 3), new Item(ItemId.SWORDFISH.id(), 2));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ALFONSE_THE_WAITER.id()) {
 			npcTalk(p, n, "Welcome to the shrimp and parrot",
 				"Would you like to order sir?");
@@ -51,7 +51,7 @@ public class AlfonseTheWaiter implements ShopInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.ALFONSE_THE_WAITER.id();
 	}
 

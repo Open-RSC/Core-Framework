@@ -9,11 +9,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ArdougneGeneralShop implements ShopInterface, TalkToNpcListener {
+public class ArdougneGeneralShop implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(true, 15000, 130, 40, 3, new Item(ItemId.VIAL.id(),
 		10), new Item(ItemId.BRONZE_PICKAXE.id(), 2), new Item(ItemId.IRON_AXE.id(), 2), new Item(ItemId.COOKEDMEAT.id(), 2),
@@ -21,7 +21,7 @@ public class ArdougneGeneralShop implements ShopInterface, TalkToNpcListener {
 		new Item(ItemId.ROPE.id(), 1), new Item(ItemId.PAPYRUS.id(), 50), new Item(ItemId.SLEEPING_BAG.id(), 10));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.KORTAN.id() || n.getID() == NpcId.AEMAD.id();
 	}
 
@@ -36,7 +36,7 @@ public class ArdougneGeneralShop implements ShopInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Hello you look like a bold adventurer",
 			"You've come to the right place for adventurer's equipment");
 		final int option = showMenu(p, n, false, //do not send over

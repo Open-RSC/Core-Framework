@@ -5,8 +5,8 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import org.apache.logging.log4j.LogManager;
@@ -14,10 +14,10 @@ import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Gundai implements TalkToNpcListener, NpcCommandListener {
+public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Gundai.class);
 	@Override
-	public void onTalkToNpc(final Player player, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		playerTalk(player, n, "hello, what are you doing out here?");
 		npcTalk(player, n, "why i'm a banker, the only one around these dangerous parts");
 		Menu defaultMenu = new Menu();
@@ -73,12 +73,12 @@ public class Gundai implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GUNDAI.id();
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (n.getID() == NpcId.GUNDAI.id()) {
 			if (command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, p, false);
@@ -89,7 +89,7 @@ public class Gundai implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}

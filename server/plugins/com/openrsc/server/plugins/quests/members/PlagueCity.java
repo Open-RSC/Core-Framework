@@ -8,18 +8,18 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class PlagueCity implements QuestInterface, TalkToNpcListener,
-	InvUseOnObjectListener,
-	ObjectActionListener {
+public class PlagueCity implements QuestInterface, TalkNpcTrigger,
+	UseLocTrigger,
+	OpLocTrigger {
 
 	private int BUCKETS_USED = 0;
 
@@ -49,14 +49,14 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.EDMOND.id(), NpcId.ALRENA.id(), NpcId.JETHICK.id(),
 				NpcId.TED_REHNISON.id(), NpcId.MARTHA_REHNISON.id(), NpcId.MILLI_REHNISON.id(), NpcId.BILLY_REHNISON.id(),
 				NpcId.CLERK.id(), NpcId.BRAVEK.id(), NpcId.ELENA.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.ELENA.id()) {
 			if (p.getQuestStage(this) >= 11 || p.getQuestStage(this) == -1) {
 				p.message("You have already rescued Elena");
@@ -766,13 +766,13 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == 447 || obj.getID() == 449 || (obj.getID() == 457 && item.getCatalogId() == ItemId.LITTLE_KEY.id());
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 447) {
 			if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				if (p.getQuestStage(getQuestId()) == 2) {
@@ -832,13 +832,13 @@ public class PlagueCity implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return DataConversions.inArray(new int[] {448, 449, 456, 457, ALRENAS_CUPBOARD_OPEN, ALRENAS_CUPBOARD_CLOSED}, obj.getID());
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == ALRENAS_CUPBOARD_OPEN || obj.getID() == ALRENAS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, p, ALRENAS_CUPBOARD_OPEN);

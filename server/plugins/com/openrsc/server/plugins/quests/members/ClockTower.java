@@ -10,19 +10,19 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ClockTower implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener,
-	WallObjectActionListener,
-	InvUseOnGroundItemListener,
-	PickupListener {
+public class ClockTower implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	OpBoundTrigger,
+	UseObjTrigger,
+	TakeObjTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -56,12 +56,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	 */
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BROTHER_KOJO.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.BROTHER_KOJO.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -131,13 +131,13 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	 * Second Lever (rats cage) #373 First Lever (rats cage)
 	 */
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364 || obj.getID() == 365)
 				|| (obj.getID() == 373 || obj.getID() == 374) || (obj.getID() == 371 && obj.getY() == 3475);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364 || obj.getID() == 365) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -221,7 +221,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	 */
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) ||
 				((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
 				&& (item.getCatalogId() == ItemId.LARGE_COG_PURPLE.id() || item.getCatalogId() == ItemId.LARGE_COG_BLACK.id()
@@ -229,7 +229,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) {
 			p.message("You pour the rat poison into the feeding trough");
 			removeItem(p, ItemId.RAT_POISON.id(), 1);
@@ -306,12 +306,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	 * Wallobjects: #111 rat cage cell
 	 */
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return (obj.getID() == 111) || (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 111) {
 			if (p.getCache().hasKey("rats_dead") || atQuestStage(p, this, -1)) {
 				p.message("In a panic to escape, the rats have..");
@@ -332,12 +332,12 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
+	public boolean blockUseObj(Item myItem, GroundItem item, Player p) {
 		return myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id();
 	}
 
 	@Override
-	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player p) {
+	public void onUseObj(Item myItem, GroundItem item, Player p) {
 		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			message(p, "You pour water over the cog",
 				"The cog quickly cools down");
@@ -355,7 +355,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_PURPLE.id() || i.getID() == ItemId.LARGE_COG_BLUE.id() || i.getID() == ItemId.LARGE_COG_RED.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
 				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
@@ -373,7 +373,7 @@ public class ClockTower implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.ICE_GLOVES.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				message(p, "The ice gloves cool down the cog",

@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActionListener, PlayerAttackNpcListener, PlayerKilledNpcListener, InvUseOnObjectListener {
+public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, AttackNpcTrigger, KillNpcTrigger, UseLocTrigger {
 
 	/***********************************
 	 * Hazelmere coords: 535, 754       *
@@ -83,14 +83,14 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActio
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.KING_NARNODE_SHAREEN.id(), NpcId.KING_NARNODE_SHAREEN_UNDERGROUND.id(),
 				NpcId.HAZELMERE.id(), NpcId.GLOUGH.id(), NpcId.CHARLIE.id(), NpcId.SHIPYARD_WORKER_WHITE.id(), NpcId.SHIPYARD_WORKER_BLACK.id(),
 				NpcId.SHIPYARD_FOREMAN.id(), NpcId.SHIPYARD_FOREMAN_HUT.id(), NpcId.FEMI.id(), NpcId.FEMI_STRONGHOLD.id(), NpcId.ANITA.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KING_NARNODE_SHAREEN.id()) {
 			switch (p.getQuestStage(this)) {
 				case 0:
@@ -1200,14 +1200,14 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActio
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE,
 				GLOUGH_CHEST_CLOSED, WATCH_TOWER_UP, WATCH_TOWER_DOWN, WATCH_TOWER_STONE_STAND, ROOT_ONE, ROOT_TWO, ROOT_THREE, PUSH_ROOT, PUSH_ROOT_BACK}, obj.getID())
 			|| (obj.getID() == STRONGHOLD_GATE && p.getQuestStage(this) == 0);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, final Player p) {
+	public void onOpLoc(GameObject obj, String command, final Player p) {
 		if (obj.getID() == GLOUGHS_CUPBOARD_OPEN || obj.getID() == GLOUGHS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, p, GLOUGHS_CUPBOARD_OPEN);
@@ -1457,12 +1457,12 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActio
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CHARLIE.id() || (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id() && p.getQuestStage(this) == 10);
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.CHARLIE.id()) {
 			p.message("you can't attack through the bars");
 		}
@@ -1472,12 +1472,12 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActio
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id() || n.getID() == NpcId.BLACK_DEMON_GRANDTREE.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id()) {
 			if (p.getQuestStage(this) == 9) {
 				n.killedBy(p);
@@ -1503,14 +1503,14 @@ public class GrandTree implements QuestInterface, TalkToNpcListener, ObjectActio
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id())
 				|| (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getCatalogId() == ItemId.PEBBLE_3.id()
 				|| item.getCatalogId() == ItemId.PEBBLE_2.id() || item.getCatalogId() == ItemId.PEBBLE_4.id() || item.getCatalogId() == ItemId.PEBBLE_1.id()));
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id()) {
 			message(player, "the key fits the chest");
 			player.message("you open the chest");

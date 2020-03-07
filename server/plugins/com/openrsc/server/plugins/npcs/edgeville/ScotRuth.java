@@ -5,12 +5,12 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 public class ScotRuth implements
-	TalkToNpcListener {
+	TalkNpcTrigger {
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("scotruth_to_chaos_altar")) {
 			p.message("Thanks for yer business. The tunnel's just over there");
 		} else {
@@ -39,7 +39,7 @@ public class ScotRuth implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SCOTRUTH.id();
 	}
 }

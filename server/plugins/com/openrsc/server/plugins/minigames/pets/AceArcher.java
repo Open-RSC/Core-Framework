@@ -7,19 +7,19 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class AceArcher implements InvUseOnNpcListener {
+public class AceArcher implements UseNpcTrigger {
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return npc.getID() == NpcId.GUARD_UNRELEASED.id() && item.getCatalogId() == ItemId.A_GLOWING_RED_CRYSTAL.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
+	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (player.getWorld().getServer().getConfig().WANT_PETS) {
 			npc.resetPath();
 			//npc.resetRange();

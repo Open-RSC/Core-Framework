@@ -7,8 +7,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -16,8 +16,8 @@ import java.util.Arrays;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class MonkOfEntrana implements ObjectActionListener,
-	TalkToNpcListener {
+public final class MonkOfEntrana implements OpLocTrigger,
+	TalkNpcTrigger {
 
 	private String[] blockedItems = new String[]{
 		"arrow", "axe", "staff", "bow", "mail", "plate",
@@ -55,12 +55,12 @@ public final class MonkOfEntrana implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id() || n.getID() == NpcId.MONK_OF_ENTRANA_UNRELEASED.id();
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id()) {
 			npcTalk(p, n, "Are you looking to take passage to our holy island?",
 					"If so your weapons and armour must be left behind");
@@ -110,7 +110,7 @@ public final class MonkOfEntrana implements ObjectActionListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject arg0, String arg1, Player p) {
+	public void onOpLoc(GameObject arg0, String arg1, Player p) {
 		Npc monk = getNearestNpc(p, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
 		if (monk != null) {
 			monk.initializeTalkScript(p);
@@ -121,7 +121,7 @@ public final class MonkOfEntrana implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
 		return (arg0.getID() == 240 && arg0.getLocation().equals(Point.location(257, 661)))
 			|| (arg0.getID() == 239 && arg0.getLocation().equals(Point.location(262, 661)))
 			|| (arg0.getID() == 239 && arg0.getLocation().equals(Point.location(264, 661)))

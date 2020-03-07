@@ -7,14 +7,14 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Random;
 
-public class SeersPartyChest implements InvUseOnObjectListener {
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+public class SeersPartyChest implements UseLocTrigger {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		if(obj.getID() != 18 && obj.getID() != 17) {
 			return false;
 		}
@@ -27,7 +27,7 @@ public class SeersPartyChest implements InvUseOnObjectListener {
 		return true;
 	}
 
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if(player.getCarriedItems().remove(item) <= -1) {
 			return;
 		}

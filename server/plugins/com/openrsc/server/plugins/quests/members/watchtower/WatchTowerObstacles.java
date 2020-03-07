@@ -8,8 +8,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerObstacles implements ObjectActionListener, WallObjectActionListener {
+public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 
 
 	/**
@@ -55,7 +55,7 @@ public class WatchTowerObstacles implements ObjectActionListener, WallObjectActi
 	private static int OGRE_ENCLAVE_EXIT = 1024;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return (obj.getID() == TOWER_FIRST_FLOOR_LADDER || obj.getID() == COMPLETED_QUEST_LADDER || obj.getID() == TOWER_SECOND_FLOOR_LADDER)
 				|| (obj.getID() == WATCHTOWER_LEVER || obj.getID() == WATCHTOWER_LEVER_DOWNPOSITION) || inArray(obj.getID(), WRONG_BUSHES)
 				|| inArray(obj.getID(), CORRECT_BUSHES) || inArray(obj.getID(), TELEPORT_CAVES)
@@ -67,7 +67,7 @@ public class WatchTowerObstacles implements ObjectActionListener, WallObjectActi
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == COMPLETED_QUEST_LADDER) {
 			p.teleport(636, 1684);
 		}
@@ -400,12 +400,12 @@ public class WatchTowerObstacles implements ObjectActionListener, WallObjectActi
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return obj.getID() == BATTLEMENT || obj.getID() == SOUTH_WEST_BATTLEMENT || inArray(obj.getID(), CAVE_EXITS);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (inArray(obj.getID(), CAVE_EXITS)) { // 6 WEBS!!
 			if (obj.getID() == CAVE_EXITS[0]) {
 				p.teleport(648, 769);

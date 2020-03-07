@@ -11,16 +11,16 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListener, ObjectActionListener, InvUseOnObjectListener, InvUseOnItemListener, PickupListener,
-	DropListener, TalkToNpcListener {
+public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, OpLocTrigger, UseLocTrigger, UseInvTrigger, TakeObjTrigger,
+	DropObjTrigger, TalkNpcTrigger {
 
 	private static int MINING_CAVE = 963;
 	private static int MINING_CART = 976;
@@ -34,12 +34,12 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	private static int DISTURBED_SAND2 = 945;
 
 	@Override
-	public boolean blockUnequip(UnequipRequest request) {
+	public boolean blockRemoveObj(UnequipRequest request) {
 		return (request.item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || request.item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (request.player.getLocation().inTouristTrapCave()) && request.player.getQuestStage(Quests.TOURIST_TRAP) != -1;
 	}
 
 	@Override
-	public void onUnequip(UnequipRequest request) {
+	public void onRemoveObj(UnequipRequest request) {
 		Item item = request.item;
 		Player player = request.player;
 		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
@@ -65,7 +65,7 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc npc, Item item) {
+	public boolean blockUseNpc(Player p, Npc npc, Item item) {
 		return (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id())
 				|| (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id())
 				|| (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id())
@@ -73,7 +73,7 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player p, Npc npc, Item item) {
 		if (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) > 7
 				|| p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
@@ -216,13 +216,13 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), DISTURBED_SAND1, DISTURBED_SAND2, 1006, MINING_CAVE, MINING_CAVE_BACK, MINING_CART,
 				MINING_BARREL, TRACK, LIFT_PLATFORM, LIFT_UP, MINING_CART_ABOVE);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		//closest to irena
 		if (obj.getID() == DISTURBED_SAND1) {
 			if (command.equals("look")) {
@@ -862,7 +862,7 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id())
 				|| (obj.getID() == MINING_CART && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id())
 				|| (obj.getID() == LIFT_PLATFORM && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id())
@@ -870,7 +870,7 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_DART_TIP.id(), Optional.of(false))) {
 				p.message("You have already made the prototype dart tip.");
@@ -909,24 +909,24 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id())) {
 			attachFeathersToPrototype(p, item1, item2);
 		}
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem item) {
+	public boolean blockTakeObj(Player p, GroundItem item) {
 		return item.getID() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
-	public void onPickup(Player player, GroundItem item) {
+	public void onTakeObj(Player player, GroundItem item) {
 		if (item.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 			//non-kosher, unsure if item despawned when killed or gave dialogue on this condition
 			player.message("@gre@Ana: Don't think for one minute ...");
@@ -938,12 +938,12 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				removeItem(p, ItemId.ANA_IN_A_BARREL.id(), 1);
@@ -994,12 +994,12 @@ public class Tourist_Trap_Mechanism implements UnequipListener, InvUseOnNpcListe
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MINING_CART_DRIVER.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MINING_CART_DRIVER.id()) {
 			if (n.getID() == NpcId.MINING_CART_DRIVER.id()) {
 				if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {

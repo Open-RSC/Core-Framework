@@ -5,11 +5,11 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Mourner implements TalkToNpcListener {
+public class Mourner implements TalkNpcTrigger {
 
 	public static final int MOURNER_444 = NpcId.MOURNER_BYALRENA.id();
 	public static final int MOURNER_491 = NpcId.MOURNER_BYENTRANCE2.id();
@@ -21,7 +21,7 @@ public class Mourner implements TalkToNpcListener {
 	public static final int ILL_MOURNER = NpcId.MOURNER_ILL.id();
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == MOURNER_444) {
 			if (p.getQuestStage(Quests.PLAGUE_CITY) != -1) {
 				playerTalk(p, n, "hello there");
@@ -231,7 +231,7 @@ public class Mourner implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		if (n.getID() == MOURNER_451 || n.getID() == MOURNER_444 || n.getID() == MOURNER_445 || n.getID() == HEAD_MOURNER || n.getID() == DOOR_MOURNER || n.getID() == ATTACK_MOURNER || n.getID() == ILL_MOURNER) {
 			return true;
 		}

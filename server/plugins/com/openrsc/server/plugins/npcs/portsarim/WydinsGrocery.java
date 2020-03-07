@@ -10,14 +10,14 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class WydinsGrocery implements ShopInterface,
-	TalkToNpcListener,
-	WallObjectActionListener {
+	TalkNpcTrigger,
+	OpBoundTrigger {
 
 	private final Shop shop = new Shop(false, 12500, 100, 70, 1, new Item(ItemId.POT_OF_FLOUR.id(),
 		3), new Item(ItemId.RAW_CHICKEN.id(), 1), new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.BANANA.id(), 3),
@@ -25,13 +25,13 @@ public final class WydinsGrocery implements ShopInterface,
 		new Item(ItemId.CHEESE.id(), 3), new Item(ItemId.TOMATO.id(), 3), new Item(ItemId.POTATO.id(), 1));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player p, final Npc n) {
 		return n.getID() == NpcId.WYDIN.id();
 	}
 
 	@Override
-	public boolean blockWallObjectAction(final GameObject obj,
-										 final Integer click, final Player player) {
+	public boolean blockOpBound(final GameObject obj,
+								final Integer click, final Player player) {
 		return obj.getID() == 47 && obj.getX() == 277 && obj.getY() == 658;
 	}
 
@@ -46,7 +46,7 @@ public final class WydinsGrocery implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		npcTalk(p, n, "Welcome to my foodstore",
 			"Would you like to buy anything");
 
@@ -68,8 +68,8 @@ public final class WydinsGrocery implements ShopInterface,
 	}
 
 	@Override
-	public void onWallObjectAction(final GameObject obj, final Integer click,
-								   final Player p) {
+	public void onOpBound(final GameObject obj, final Integer click,
+						  final Player p) {
 		if (obj.getID() == 47 && obj.getX() == 277 && obj.getY() == 658) {
 			final Npc n = p.getWorld().getNpcById(NpcId.WYDIN.id());
 

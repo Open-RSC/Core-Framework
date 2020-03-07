@@ -5,7 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
@@ -13,10 +13,10 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Priest implements TalkToNpcListener {
+public class Priest implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {// that could work
+	public void onTalkNpc(final Player p, final Npc n) {// that could work
 		if (p.getQuestStage(Quests.THE_RESTLESS_GHOST) == 1) {
 			npcTalk(p, n, "Have you got rid of the ghost yet?");
 			playerTalk(p, n, "I can't find father Urhney at the moment");
@@ -141,7 +141,7 @@ public class Priest implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.PRIEST.id();
 	}
 }

@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 
@@ -21,11 +21,11 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author n0m
  */
 public class ErnestTheChicken implements QuestInterface,
-	InvUseOnWallObjectListener,
-	InvUseOnItemListener,
-	WallObjectActionListener,
-	TalkToNpcListener, ObjectActionListener,
-	InvUseOnObjectListener {
+	UseBoundTrigger,
+	UseInvTrigger,
+	OpBoundTrigger,
+	TalkNpcTrigger, OpLocTrigger,
+	UseLocTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -51,14 +51,14 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id())
 				|| (obj.getID() == QuestObjects.COMPOST && item.getCatalogId() == ItemId.SPADE.id());
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
 			message(p, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
@@ -92,13 +92,13 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.VERONICA.id() || n.getID() == NpcId.PROFESSOR_ODDENSTEIN.id();
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		switch (obj.getID()) {
 			case 36:
 				return true;
@@ -116,7 +116,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 			case QuestObjects.LADDER:
 				if (p.getCache().hasKey("LeverA") || p.getCache().hasKey("LeverB")
@@ -223,7 +223,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		switch (NpcId.getById(n.getID())) {
 			case VERONICA:
 				veronicaDialogue(p, n, -1);
@@ -446,8 +446,8 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		if (obj.getID() >= 25 && obj.getID() <= 29) {
 			return true;
 		}
@@ -461,7 +461,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		Cache c = p.getCache();
 		switch (obj.getID()) {
 			case 35:
@@ -624,12 +624,12 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
 			removeItem(player, ItemId.FISH_FOOD.id(), 1);
 			removeItem(player, ItemId.POISON.id(), 1);
@@ -639,13 +639,13 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item,
-										   Player player) {
+	public boolean blockUseBound(GameObject obj, Item item,
+								 Player player) {
 		return item.getCatalogId() == ItemId.CLOSET_KEY.id() && obj.getID() == 35;
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player player) {
+	public void onUseBound(GameObject obj, Item item, Player player) {
 		if (item.getCatalogId() == ItemId.CLOSET_KEY.id() && obj.getID() == 35) {
 			doDoor(obj, player);
 			player.message("You unlock the door");

@@ -6,15 +6,15 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassObstaclesMap2 implements ObjectActionListener, WallObjectActionListener {
+public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigger {
 
 	/**
 	 * OBJECT IDs
@@ -35,7 +35,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, WallO
 	public static int GATE_OF_ZAMORAK = 875;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2) || obj.getID() == CRATE || inArray(obj.getID(), DUG_UP_SOIL)
 				|| obj.getID() == LEDGE || obj.getID() == WALL_GRILL_EAST || obj.getID() == WALL_GRILL_WEST
 				|| inArray(obj.getID(), ROCKS) || obj.getID() == HIJACK_ROCK || obj.getID() == PASSAGE || obj.getID() == CAGE_REMAINS
@@ -44,7 +44,7 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, WallO
 	// 753, 3475
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2)) {
 			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[0]) {
 				message(p, "you climb the pile of mud...",
@@ -236,12 +236,12 @@ public class UndergroundPassObstaclesMap2 implements ObjectActionListener, WallO
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return inArray(obj.getID(), RAILINGS);
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (inArray(obj.getID(), RAILINGS)) {
 			if (click == 0) {
 				if (obj.getID() == 168) {

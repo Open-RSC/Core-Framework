@@ -4,16 +4,16 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
 
 public class BananaTree implements
-	ObjectActionListener {
+	OpLocTrigger {
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 
 		if (obj.getID() == 183) {
 			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Pick Banana Tree", p.getCarriedItems().getInventory().getFreeSlots(), false) {
@@ -44,7 +44,7 @@ public class BananaTree implements
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == 183 || obj.getID() == 184;
 	}
 }

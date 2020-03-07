@@ -12,8 +12,8 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.plugins.listeners.InvUseOnGroundItemListener;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseObjTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -21,7 +21,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import static com.openrsc.server.plugins.Functions.compareItemsIds;
 import static com.openrsc.server.plugins.Functions.inArray;
 
-public class Firemaking implements InvUseOnGroundItemListener, InvUseOnItemListener {
+public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 	private final static int TINDERBOX = ItemId.TINDERBOX.id();
 	/**
@@ -31,12 +31,12 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnItemListe
 			ItemId.MAPLE_LOGS.id(), ItemId.YEW_LOGS.id(), ItemId.MAGIC_LOGS.id()};
 
 	@Override
-	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
+	public boolean blockUseObj(Item myItem, GroundItem item, Player player) {
 		return myItem.getCatalogId() == TINDERBOX && inArray(item.getID(), LOGS);
 	}
 
 	@Override
-	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Item myItem, GroundItem item, Player player) {
 		if (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING) {
 			switch (ItemId.getById(item.getID())) {
 				case LOGS:
@@ -208,13 +208,13 @@ public class Firemaking implements InvUseOnGroundItemListener, InvUseOnItemListe
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING &&
 		(item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)));
 	}
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)) {
 			player.playerServerMessage(MessageType.QUEST, "I think you should put the logs down before you light them!");
 		}

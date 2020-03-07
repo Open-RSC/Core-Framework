@@ -11,19 +11,19 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.WallObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import java.util.Collection;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	InvUseOnObjectListener,
-	WallObjectActionListener {
+public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	OpBoundTrigger {
 	/**
 	 * GameObjects associated with this quest;
 	 */
@@ -60,7 +60,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.SIR_AMIK_VARZE.id()) {
 			handleSirAmikVarze(p, n);
 		}
@@ -173,7 +173,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		switch (obj.getID()) {
 			case HOLE:
 				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
@@ -200,25 +200,25 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SIR_AMIK_VARZE.id();
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == HOLE;
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return obj.getID() == LISTEN_GRILL;
 	}
 
 	@Override
-	public void onObjectAction(final GameObject obj, String command,
-							   final Player player) {
+	public void onOpLoc(final GameObject obj, String command,
+						final Player player) {
 		switch (obj.getID()) {
 			case LISTEN_GRILL:
 				if (player.getQuestStage(this) == 1) {
@@ -254,8 +254,8 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		if (obj.getID() == 38 && obj.getLocation().equals(DOOR_LOCATION)) {
 			return true;
 		}
@@ -269,8 +269,8 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onWallObjectAction(final GameObject obj, Integer click,
-								   final Player player) {
+	public void onOpBound(final GameObject obj, Integer click,
+						  final Player player) {
 		switch (obj.getID()) {
 			case DOOR_ENTRANCE:
 				if (obj.getLocation().equals(DOOR_LOCATION) && player.getX() <= 270) {

@@ -11,8 +11,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
 import com.openrsc.server.plugins.skills.Mining;
 import com.openrsc.server.plugins.skills.Thieving;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGameObjects implements ObjectActionListener, InvUseOnObjectListener {
+public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 
 	// Objects
 	private static final int LEGENDS_CUPBOARD = 1149;
@@ -64,7 +64,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, InvUseOnOb
 	private final int[] REFILLED = {1189, 1267, 50, 141, 342, 464};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), GRAND_VIZIERS_DESK, LEGENDS_CUPBOARD, TOTEM_POLE, ROCK, TALL_REEDS,
 				SHALLOW_WATER, CAVE_ENTRANCE_LEAVE_DUNGEON, CRATE, TABLE, BOOKCASE, CAVE_ENTRANCE_FROM_BOULDERS, CRUDE_DESK,
 				CAVE_ANCIENT_WOODEN_DOORS, HEAVY_METAL_GATE, HALF_BURIED_REMAINS, CARVED_ROCK, WOODEN_BEAM, WOODEN_BEAM + 1, ROPE_UP,
@@ -73,7 +73,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, InvUseOnOb
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == ECHNED_ZEKIN_ROCK) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 8) {
 				message(p, 1300, "The rock moves quite easily.");
@@ -583,7 +583,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, InvUseOnOb
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return (item.getCatalogId() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS)
 				|| (item.getCatalogId() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER)
 				|| (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id() && obj.getID() == SHALLOW_WATER)
@@ -598,7 +598,7 @@ public class LegendsQuestGameObjects implements ObjectActionListener, InvUseOnOb
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == TOTEM_POLE && item.getCatalogId() == ItemId.TOTEM_POLE.id()) {
 			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				message(p, "You have already replaced the evil totem pole with your own.",

@@ -4,23 +4,23 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerShaman implements TalkToNpcListener, InvUseOnNpcListener {
+public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.OGRE_SHAMAN.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id()) {
 			npcTalk(p, n, "Grr! how dare you talk to us",
 				"We will destroy you!");
@@ -32,13 +32,13 @@ public class WatchTowerShaman implements TalkToNpcListener, InvUseOnNpcListener 
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return npc.getID() == NpcId.OGRE_SHAMAN.id() && (item.getCatalogId() == ItemId.MAGIC_OGRE_POTION.id()
 				|| item.getCatalogId() == ItemId.OGRE_POTION.id());
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getCatalogId() == ItemId.MAGIC_OGRE_POTION.id()) {
 			p.setBusy(true);
 			if (getCurrentLevel(p, Skills.MAGIC) < 14) {

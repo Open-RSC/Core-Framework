@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.getNearestNpc;
@@ -13,13 +13,13 @@ import static com.openrsc.server.plugins.Functions.showMenu;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class MagicInstructor implements TalkToNpcListener {
+public class MagicInstructor implements TalkNpcTrigger {
 	/**
 	 * @author Davve
 	 * Tutorial island magic instructor
 	 */
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 70) {
 			npcTalk(p, n, "there's good magic potential in this one",
 					"Yes definitely something I can work with");
@@ -80,7 +80,7 @@ public class MagicInstructor implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MAGIC_INSTRUCTOR.id();
 	}
 

@@ -7,14 +7,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.DropListener;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
+import com.openrsc.server.plugins.triggers.DropObjTrigger;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShiloVillageUtils implements DropListener, InvActionListener, InvUseOnItemListener, PickupListener {
+public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTrigger, TakeObjTrigger {
 
 	static void BUMPY_DIRT_HOLDER(Player p) {
 		p.message("Do you want to try to crawl through the fissure?");
@@ -113,7 +113,7 @@ public class ShiloVillageUtils implements DropListener, InvActionListener, InvUs
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return inArray(i.getCatalogId(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
 				ItemId.BONE_KEY.id(), ItemId.BONE_BEADS.id(), ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(),
 				ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id(), ItemId.BEADS_OF_THE_DEAD.id());
@@ -121,7 +121,7 @@ public class ShiloVillageUtils implements DropListener, InvActionListener, InvUs
 
 	//533
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			message(p, "The remains of Rashiliyia look quite delicate.",
 				"You sense that a spirit needs to be put to rest.");
@@ -261,13 +261,13 @@ public class ShiloVillageUtils implements DropListener, InvActionListener, InvUs
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return inArray(item.getCatalogId(), ItemId.ZADIMUS_CORPSE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.STONE_PLAQUE.id(),
 				ItemId.BONE_SHARD.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BONE_KEY.id(), ItemId.RASHILIYA_CORPSE.id());
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) { // bury corpse
+	public void onOpInv(Item item, Player p, String command) { // bury corpse
 		if (item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			p.message("Nothing interesting happens");
 		}
@@ -386,7 +386,7 @@ public class ShiloVillageUtils implements DropListener, InvActionListener, InvUs
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		//chisel and pommel sword / bone beads and wire / chisel and bone shard
 		return Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.SWORD_POMMEL.id())
 				|| Functions.compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())
@@ -394,7 +394,7 @@ public class ShiloVillageUtils implements DropListener, InvActionListener, InvUs
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 20) {
 				p.message("You need a level of 20 Crafting to craft this.");
@@ -439,12 +439,12 @@ public class ShiloVillageUtils implements DropListener, InvActionListener, InvUs
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return i.getID() == ItemId.COINS.id() && i.getX() == 358 && i.getY() == 3626;
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.COINS.id() && i.getX() == 358 && i.getY() == 3626) {
 			if (p.getCache().hasKey("coins_shilo_cave")) {
 				i.remove();

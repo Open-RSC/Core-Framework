@@ -5,16 +5,16 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BrotherGalahad implements TalkToNpcListener {
+public class BrotherGalahad implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player p, final Npc n) {
 		if (p.getQuestStage(Quests.THE_HOLY_GRAIL) == -1) {
 			npcTalk(p, n, "would you like a cup of tea?",
 				"I'll just put the kettle on");
@@ -192,7 +192,7 @@ public class BrotherGalahad implements TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.BROTHER_GALAHAD.id();
 	}
 

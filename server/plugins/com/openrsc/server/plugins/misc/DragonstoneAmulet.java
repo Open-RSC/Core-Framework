@@ -6,12 +6,12 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvActionListener;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DragonstoneAmulet implements InvActionListener, InvUseOnObjectListener {
+public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 
 	/**
 	 * RE-CHARGE AMULET
@@ -19,12 +19,12 @@ public class DragonstoneAmulet implements InvActionListener, InvUseOnObjectListe
 	private static int FOUNTAIN_OF_HEROES = 282;
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player p, String command) {
 		return item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			p.message("You rub the amulet");
 			sleep(600);
@@ -82,12 +82,12 @@ public class DragonstoneAmulet implements InvActionListener, InvUseOnObjectListe
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");

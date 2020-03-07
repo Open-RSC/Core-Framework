@@ -11,8 +11,8 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -23,12 +23,12 @@ import static com.openrsc.server.plugins.Functions.*;
 /**
  * @author n0m
  */
-public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
-	InvUseOnItemListener,
-	WallObjectActionListener,
-	ObjectActionListener,
-	TalkToNpcListener,
-	PlayerKilledNpcListener {
+public class DragonSlayer implements QuestInterface, UseLocTrigger,
+	UseInvTrigger,
+	OpBoundTrigger,
+	OpLocTrigger,
+	TalkNpcTrigger,
+	KillNpcTrigger {
 	/*
 	 * Ship: -Arrived: 281, 3472
 	 *
@@ -78,7 +78,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.OZIACH.id() && p.getQuestStage(this) != -1;
 	}
 
@@ -286,8 +286,8 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return (obj.getY() == 643 && (obj.getID() == LUMBRIDGE_LADY_SARIM1 || obj.getID() == LUMBRIDGE_LADY_SARIM2))
 			|| (obj.getY() == 641 && (obj.getID() == LUMBRIDGE_LADY_CRANDOR1 || obj.getID() == LUMBRIDGE_LADY_CRANDOR2))
 			|| obj.getID() == BOATS_LADDER
@@ -296,7 +296,7 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		switch (obj.getID()) {
 			case DWARVEN_CHEST_OPEN:
 			case DWARVEN_CHEST_CLOSED:
@@ -384,14 +384,14 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.OZIACH.id()) {
 			oziachDialogue(p, n, -1);
 		}
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.WORMBRAIN.id() && p.getQuestStage(this) >= 2) {
 			p.getWorld().registerItem(
 				new GroundItem(p.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
@@ -420,17 +420,17 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return false;
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return obj.getID() == 57 || obj.getID() == 58 || obj.getID() == 59 || obj.getID() == 60;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 57) {
 			//special door dwarven mine
 			if (p.getX() >= 259 && p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_MIND_BOMB.id(), Optional.of(false))
@@ -482,13 +482,13 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
 				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId());
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player p, Item item1, Item item2) {
 		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
 				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId())) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
@@ -503,13 +503,13 @@ public class DragonSlayer implements QuestInterface, InvUseOnObjectListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == 226 || obj.getID() == 232;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if ((obj.getID() == 226 || obj.getID() == 232) && item.getCatalogId() == ItemId.PLANK.id()) {
 			if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
 				p.message("The ship doesn't seem easily repairable at the moment");

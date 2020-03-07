@@ -5,13 +5,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.InvUseOnPlayerListener;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class ChristmasCracker implements InvUseOnPlayerListener {
+public class ChristmasCracker implements UsePlayerTrigger {
 
 	private static final int[] phatWeights = {10, 15, 20, 23, 32, 28};
 	private static final int[] phatIds = {
@@ -38,7 +38,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener {
 	};
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
@@ -87,7 +87,7 @@ public class ChristmasCracker implements InvUseOnPlayerListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		return item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id();
 	}
 }

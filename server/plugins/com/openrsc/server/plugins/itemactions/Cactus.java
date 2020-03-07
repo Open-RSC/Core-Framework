@@ -9,20 +9,20 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.showBubble;
 
-public class Cactus implements InvUseOnObjectListener {
+public class Cactus implements UseLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == 35 && item.getCatalogId() == ItemId.KNIFE.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject object, final Item item, Player player) {
+	public void onUseLoc(GameObject object, final Item item, Player player) {
 		if (item.getCatalogId() != ItemId.KNIFE.id()) {
 			player.message("Nothing interesting happens");
 			return;

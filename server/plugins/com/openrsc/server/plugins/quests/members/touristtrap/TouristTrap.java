@@ -11,8 +11,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,8 +22,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectTalkToNpcListener, InvUseOnNpcListener,
-	ObjectActionListener, NpcCommandListener, PlayerKilledNpcListener, PlayerAttackNpcListener, PlayerMageNpcListener, PlayerRangeNpcListener, WallObjectActionListener {
+public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalkToNpcTrigger, UseNpcTrigger,
+	OpLocTrigger, OpNpcTrigger, KillNpcTrigger, AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger, OpBoundTrigger {
 
 	private static final Logger LOGGER = LogManager.getLogger(TouristTrap.class);
 
@@ -88,7 +88,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return inArray(n.getID(), NpcId.IRENA.id(), NpcId.MERCENARY.id(), NpcId.MERCENARY_CAPTAIN.id(), NpcId.MERCENARY_ESCAPEGATES.id(),
 				NpcId.CAPTAIN_SIAD.id(), NpcId.MINING_SLAVE.id(), NpcId.BEDABIN_NOMAD.id(), NpcId.BEDABIN_NOMAD_GUARD.id(),
 				NpcId.AL_SHABIM.id(), NpcId.MERCENARY_LIFTPLATFORM.id(), NpcId.ANA.id());
@@ -2317,7 +2317,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.IRENA.id()) {
 			irenaDialogue(p, n, -1);
 		} else if (n.getID() == NpcId.MERCENARY.id()) {
@@ -2391,12 +2391,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return inArray(obj.getID(), IRON_GATE, ROCK_1, WOODEN_DOORS, DESK, BOOKCASE, CAPTAINS_CHEST) || (obj.getID() == STONE_GATE && p.getY() >= 735);
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == STONE_GATE && p.getY() >= 735) {
 			if (command.equals("go through")) {
 				if (!p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
@@ -2618,12 +2618,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		return n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch");
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch")) {
 			message(p, "You watch the Mercenary Captain for some time.",
 				"He has a large metal key attached to his belt.",
@@ -2632,12 +2632,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MERCENARY_CAPTAIN.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			p.message("You kill the captain!");
 			if (p.getQuestStage(this) == 1 && !p.getCache().hasKey("first_kill_captn")) {
@@ -2653,13 +2653,13 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		tryToAttackMercenarys(p, affectedmob);
 	}
 
@@ -2675,13 +2675,13 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player p, Npc n) {
 		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player p, Npc n) {
 		tryToAttackMercenarys(p, n);
 	}
 
@@ -2823,7 +2823,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801)
 				|| (obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802)
 				|| obj.getID() == TENT_DOOR_1 || obj.getID() == TENT_DOOR_2
@@ -2831,7 +2831,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802) {
 			message(p, "You search the window.",
 				"After some time you find that one of the bars looks weak,  ",
@@ -3062,12 +3062,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, IndirectT
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return item.getCatalogId() == ItemId.PROTOTYPE_THROWING_DART.id() && npc.getID() == NpcId.AL_SHABIM.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
+	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.AL_SHABIM.id() && player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
 			if (player.getQuestStage(this) == 7) {
 				alShabimDialogue(player, npc, AlShabim.MADE_WEAPON);

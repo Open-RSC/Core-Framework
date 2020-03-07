@@ -7,9 +7,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class IronMan implements
-	TalkToNpcListener, NpcCommandListener,
-	PickupListener {
+	TalkNpcTrigger, OpNpcTrigger,
+	TakeObjTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(IronMan.class);
 	private static int IRON_MAN = NpcId.IRONMAN.id();
 	private static int ULTIMATE_IRON_MAN = NpcId.ULTIMATE_IRONMAN.id();
@@ -31,14 +31,14 @@ public class IronMan implements
 	};
 
 	@Override
-	public void onPickup(Player player, GroundItem item) {
+	public void onTakeObj(Player player, GroundItem item) {
 		if (DataConversions.inArray(ironmanArmourPieces, item.getID())) {
 			player.message("I'd better speak to an Ironman Npc for a replacement");
 		}
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (!p.getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
 
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
@@ -140,17 +140,17 @@ public class IronMan implements
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN;
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		return n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour");
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (!p.getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour")) {
 			armourOption(p, n);
@@ -235,7 +235,7 @@ public class IronMan implements
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player p, GroundItem i) {
 		return DataConversions.inArray(ironmanArmourPieces, i.getID());
 	}
 }

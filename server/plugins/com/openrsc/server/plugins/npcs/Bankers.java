@@ -5,19 +5,19 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Bankers implements TalkToNpcListener, NpcCommandListener {
+public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
 	public static int[] BANKERS = {95, 224, 268, 540, 617};
 
 	@Override
-	public boolean blockTalkToNpc(final Player player, final Npc npc) {
+	public boolean blockTalkNpc(final Player player, final Npc npc) {
 		if (inArray(npc.getID(), BANKERS)) {
 			return true;
 		}
@@ -25,7 +25,7 @@ public class Bankers implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player player, final Npc npc) {
+	public void onTalkNpc(Player player, final Npc npc) {
 		npcTalk(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
 
 		int menu;
@@ -91,7 +91,7 @@ public class Bankers implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player p) {
 		if (inArray(n.getID(), BANKERS)) {
 			if (command.equalsIgnoreCase("Bank") && p.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 				quickFeature(n, p, false);
@@ -102,7 +102,7 @@ public class Bankers implements TalkToNpcListener, NpcCommandListener {
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player p) {
 		if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}

@@ -4,23 +4,23 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnGroundItemListener;
-import com.openrsc.server.plugins.listeners.PickupListener;
+import com.openrsc.server.plugins.triggers.UseObjTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 
-public class PotFlour implements InvUseOnGroundItemListener, PickupListener {
+public class PotFlour implements UseObjTrigger, TakeObjTrigger {
 
 	@Override
-	public boolean blockInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
+	public boolean blockUseObj(Item myItem, GroundItem item, Player player) {
 		return item.getID() == ItemId.FLOUR.id() && myItem.getCatalogId() == ItemId.POT.id();
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem item) {
+	public boolean blockTakeObj(Player p, GroundItem item) {
 		return item.getID() == ItemId.FLOUR.id();
 	}
 
 	@Override
-	public void onInvUseOnGroundItem(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Item myItem, GroundItem item, Player player) {
 		if (myItem.getCatalogId() == ItemId.POT.id()) {
 			if (player.getCarriedItems().remove(myItem) < 0)
 				return;
@@ -32,7 +32,7 @@ public class PotFlour implements InvUseOnGroundItemListener, PickupListener {
 	}
 
 	@Override
-	public void onPickup(Player player, GroundItem item) {
+	public void onTakeObj(Player player, GroundItem item) {
 		if (item.getID() == ItemId.FLOUR.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.POT.id())) {
 				player.message("You put the flour in the pot");

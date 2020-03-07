@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -23,12 +23,12 @@ import static com.openrsc.server.plugins.Functions.*;
  * @author complete dialogues & fixed functions - Davve
  * @author start of holy grail quest - davve
  */
-public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	WallObjectActionListener,
-	PlayerKilledNpcListener,
-	InvUseOnObjectListener,
-	DropListener {
+public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	OpBoundTrigger,
+	KillNpcTrigger,
+	UseLocTrigger,
+	DropObjTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -54,8 +54,8 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(GameObject obj, String command,
+							  Player player) {
 		return (obj.getID() == 292 || obj.getID() == 293)
 			|| obj.getID() == 291
 			|| (obj.getID() == 296 && obj.getY() == 366 && command
@@ -63,7 +63,7 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 292 || obj.getID() == 293) {
 			Npc arhein = getNearestNpc(p, NpcId.ARHEIN.id(), 10);
 			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 2) {
@@ -119,12 +119,12 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.SIR_MORDRED.id() && p.getQuestStage(this) == 2;
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getCombatEvent() != null) {
 			n.getCombatEvent().resetCombat();
 		}
@@ -186,13 +186,13 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == 294 || obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 294) {
 			if (item.getCatalogId() == ItemId.INSECT_REPELLANT.id()) {
 				message(p, "you squirt insect repellant on the beehive",
@@ -232,13 +232,13 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(GameObject obj, Integer click,
+								Player player) {
 		return obj.getX() == 277 && obj.getY() == 632;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getX() == 277 && obj.getY() == 632) {
 			if ((p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 3) || !p.getCache().hasKey("lady_test")) {
 				doDoor(obj, p);
@@ -294,13 +294,13 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
 		return p.getX() == 448 && p.getY() == 435 && i.getCatalogId() == ItemId.BAT_BONES.id()
 			&& p.getCache().hasKey("magic_words") && p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false));
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		Npc n = spawnNpc(p.getWorld(), NpcId.THRANTAX.id(), p.getX(), p.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		p.message("Suddenly a demon appears");
@@ -333,13 +333,13 @@ public class MerlinsCrystal implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock())
 			|| n.getID() == NpcId.SIR_GAWAIN.id() || n.getID() == NpcId.SIR_LANCELOT.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock()) {
 			switch (p.getQuestStage(Quests.THE_HOLY_GRAIL)) {
 				case 1:

@@ -10,28 +10,28 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Smithing implements InvUseOnObjectListener {
+public class Smithing implements UseLocTrigger {
 
 	private final int DORICS_ANVIL = 177;
 	private final int ANVIL = 50;
 	private final int LAVA_ANVIL = 1285;
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item,
+							   Player player) {
 		return obj.getID() == ANVIL
 			|| obj.getID() == DORICS_ANVIL
 			|| obj.getID() == LAVA_ANVIL;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, final Player player) {
+	public void onUseLoc(GameObject obj, final Item item, final Player player) {
 
 		if (obj.getID() == LAVA_ANVIL) {
 			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")

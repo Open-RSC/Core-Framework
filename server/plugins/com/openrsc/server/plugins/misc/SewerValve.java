@@ -2,11 +2,11 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.message;
 
-public class SewerValve implements ObjectActionListener {
+public class SewerValve implements OpLocTrigger {
 
 	private static final int SEWER_VALVE_1 = 412;
 	private static final int SEWER_VALVE_2 = 413;
@@ -17,7 +17,7 @@ public class SewerValve implements ObjectActionListener {
 	private static final int LOG_RAFT_BACK = 433;
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == SEWER_VALVE_1 || obj.getID() == SEWER_VALVE_2 || obj.getID() == SEWER_VALVE_3 || obj.getID() == SEWER_VALVE_4 || obj.getID() == SEWER_VALVE_5) {
 			if (command.equalsIgnoreCase("turn left")) {
 				p.message("you turn the large metal");
@@ -111,7 +111,7 @@ public class SewerValve implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == SEWER_VALVE_1 || obj.getID() == SEWER_VALVE_2 || obj.getID() == SEWER_VALVE_3 || obj.getID() == SEWER_VALVE_4 || obj.getID() == SEWER_VALVE_5 || obj.getID() == LOG_RAFT || obj.getID() == LOG_RAFT_BACK;
 	}
 }

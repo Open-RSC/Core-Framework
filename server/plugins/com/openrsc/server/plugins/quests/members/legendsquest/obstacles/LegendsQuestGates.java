@@ -3,22 +3,22 @@ package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.doDoor;
 import static com.openrsc.server.plugins.Functions.message;
 
-public class LegendsQuestGates implements ObjectActionListener {
+public class LegendsQuestGates implements OpLocTrigger {
 
 	public static final int LEGENDS_HALL_DOOR = 1080;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == LEGENDS_HALL_DOOR;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == LEGENDS_HALL_DOOR) {
 			if (command.equalsIgnoreCase("open")) {
 				if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 11 || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {

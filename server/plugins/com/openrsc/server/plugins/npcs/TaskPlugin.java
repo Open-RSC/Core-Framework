@@ -4,17 +4,17 @@ import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import java.util.ArrayList;
 
-public class TaskPlugin implements TalkToNpcListener, ObjectActionListener {
+public class TaskPlugin implements TalkNpcTrigger, OpLocTrigger {
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		ArrayList<Achievement> availableTasks = player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, obj);
 		if (availableTasks.size() > 1) {
 			player.message("You can get multiple tasks from this object");
@@ -35,7 +35,7 @@ public class TaskPlugin implements TalkToNpcListener, ObjectActionListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		ArrayList<Achievement> availableTasks = p.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(p, n);
 		if (availableTasks.size() > 1) {
 			p.message("You can get multiple tasks from this character");
@@ -55,12 +55,12 @@ public class TaskPlugin implements TalkToNpcListener, ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, obj).size() > 0;
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return p.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(p, n).size() > 0;
 	}
 }

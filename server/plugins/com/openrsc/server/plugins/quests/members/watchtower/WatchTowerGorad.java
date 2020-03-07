@@ -5,25 +5,25 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.PlayerAttackNpcListener;
-import com.openrsc.server.plugins.listeners.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * @author Imposter/Fate
  */
-public class WatchTowerGorad implements TalkToNpcListener,
-	PlayerKilledNpcListener, PlayerAttackNpcListener {
+public class WatchTowerGorad implements TalkNpcTrigger,
+	KillNpcTrigger, AttackNpcTrigger {
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GORAD.id()) {
 			n.killedBy(p);
 			p.message("Gorad has gone");
@@ -33,12 +33,12 @@ public class WatchTowerGorad implements TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.GORAD.id()) {
 			if (p.getCache().hasKey("ogre_grew")) {
 				playerTalk(p, n, "I've come to knock your teeth out!");
@@ -68,12 +68,12 @@ public class WatchTowerGorad implements TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player p, Npc n) {
 		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.GORAD.id()) {
 			npcTalk(p, affectedmob, "Ho Ho! why would I want to fight a worm ?",
 				"Get lost!");

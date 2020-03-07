@@ -5,12 +5,12 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.quests.members.undergroundpass.obstacles.UndergroundPassObstaclesMap2;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener {
+public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 
 	/**
 	 * ITEMS_TO_FLAMES: Unicorn horn, coat of arms red and blue.
@@ -23,7 +23,7 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener {
 	private static int BOULDER = 867;
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
 		return (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getCatalogId() == ItemId.ROPE.id())
 				|| (obj.getID() == UndergroundPassObstaclesMap2.PASSAGE && item.getCatalogId() == ItemId.PLANK.id())
 				|| (obj.getID() == BOULDER && item.getCatalogId() == ItemId.RAILING.id())
@@ -32,7 +32,7 @@ public class UndergroundPassMechanismMap2 implements InvUseOnObjectListener {
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (p.getX() == 763 && p.getY() == 3463) {
 				p.message("you can't reach the grill from here");

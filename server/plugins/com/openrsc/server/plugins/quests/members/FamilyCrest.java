@@ -11,18 +11,18 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.*;
-import com.openrsc.server.plugins.listeners.action.*;
+import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.action.*;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FamilyCrest implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener,
-	WallObjectActionListener,
-	InvUseOnNpcListener,
-	PlayerKilledNpcListener {
+public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	OpBoundTrigger,
+	UseNpcTrigger,
+	KillNpcTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -193,12 +193,12 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.DIMINTHEIS.id() || n.getID() == NpcId.AVAN.id() || n.getID() == NpcId.JOHNATHON.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.DIMINTHEIS.id()) {
 			dimintheisDialogue(p, n, -1);
 		}
@@ -409,13 +409,13 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	 **/
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
 		return (obj.getID() == 88 && obj.getX() == 509 && obj.getY() == 3441) || (obj.getID() == 90 && obj.getX() == 512 && obj.getY() == 3441)
 				|| obj.getID() == 91 || obj.getID() == 92;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player p) {
 		switch (obj.getID()) {
 			case 88:
 				if (p.getCache().hasKey("north_leverA")
@@ -506,12 +506,12 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	 **/
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player p) {
 		return obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (command.equalsIgnoreCase("pull") && (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318))
 			doLever(p, obj.getID());
 		else if (command.equalsIgnoreCase("inspect") && (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318))
@@ -560,12 +560,12 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return npc.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (p.getQuestStage(this) == 7) {
 				message(p, "You feed your potion to Johnathon");
@@ -640,7 +640,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player p, Npc n) {
 		return n.getID() == NpcId.CHRONOZON.id();
 	}
 
@@ -651,7 +651,7 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	 */
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CHRONOZON.id()) {
 			String[] elementals = new String[]{"wind", "water", "earth",
 				"fire"};

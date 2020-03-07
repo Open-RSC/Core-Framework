@@ -9,13 +9,13 @@ import com.openrsc.server.external.ItemDartTipDef;
 import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnItemListener;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.addItem;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class Fletching implements InvUseOnItemListener {
+public class Fletching implements UseInvTrigger {
 
 	private static final int[] logIds = {
 			ItemId.LOGS.id(),
@@ -27,7 +27,7 @@ public class Fletching implements InvUseOnItemListener {
 	};
 
 	@Override
-	public boolean blockInvUseOnItem(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
 			return true;
 		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
@@ -415,7 +415,7 @@ public class Fletching implements InvUseOnItemListener {
 	}
 
 	@Override
-	public void onInvUseOnItem(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
 			doLogCut(player, item1, item2);
 		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {

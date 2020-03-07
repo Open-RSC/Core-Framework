@@ -8,7 +8,7 @@ import com.openrsc.server.model.TimePoint;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Harvesting implements ObjectActionListener {
+public final class Harvesting implements OpLocTrigger {
 
 	enum HarvestingEvents {
 		NEGLECTED(-1),
@@ -142,8 +142,8 @@ public final class Harvesting implements ObjectActionListener {
 	}
 
 	@Override
-	public void onObjectAction(final GameObject object, String command,
-							   Player player) {
+	public void onOpLoc(final GameObject object, String command,
+						Player player) {
 		int retrytimes;
 		// Harvest of Xmas Tree
 		if (object.getID() == 1238) {
@@ -394,7 +394,7 @@ public final class Harvesting implements ObjectActionListener {
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return command.equalsIgnoreCase("harvest") ||
 			command.equalsIgnoreCase("clip") || (command.equals("collect") && obj.getID() == 1238);
 	}

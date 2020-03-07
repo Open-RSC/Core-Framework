@@ -8,17 +8,17 @@ import com.openrsc.server.external.ObjectRunecraftingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.ObjectActionListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
-public class Runecrafting implements ObjectActionListener, InvUseOnObjectListener {
+public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
 		if (def == null)
 			return false;
@@ -44,7 +44,7 @@ public class Runecrafting implements ObjectActionListener, InvUseOnObjectListene
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 
 		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
 
@@ -85,7 +85,7 @@ public class Runecrafting implements ObjectActionListener, InvUseOnObjectListene
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 
 		if (item.getCatalogId() == ItemId.AIR_TALISMAN.id() && obj.getID() == 1190)
 			return true;
@@ -115,7 +115,7 @@ public class Runecrafting implements ObjectActionListener, InvUseOnObjectListene
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player p) {
 
 		if (p.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
 		{

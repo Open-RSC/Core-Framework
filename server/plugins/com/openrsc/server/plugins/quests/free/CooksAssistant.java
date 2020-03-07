@@ -6,11 +6,11 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CooksAssistant implements QuestInterface, TalkToNpcListener {
+public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 
 	/*
 	 * Original Author: Fate 2013-09-10
@@ -154,14 +154,14 @@ public class CooksAssistant implements QuestInterface, TalkToNpcListener {
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player p, final Npc n) {
 		if (n.getID() == NpcId.COOK.id()) {
 			cookDialogue(p, n, -1);
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.COOK.id();
 	}
 

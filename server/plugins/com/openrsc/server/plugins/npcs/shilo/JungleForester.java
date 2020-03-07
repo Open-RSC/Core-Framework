@@ -6,26 +6,26 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class JungleForester implements TalkToNpcListener, InvUseOnNpcListener {
+public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 
 	/*
 	 * JungleForesterNPC class is for not started Legends quest.
 	 */
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.JUNGLE_FORESTER.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.JUNGLE_FORESTER.id()) {
 			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 0:
@@ -286,12 +286,12 @@ public class JungleForester implements TalkToNpcListener, InvUseOnNpcListener {
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player p, Npc n, Item item) {
 		return n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id(); // the complete map.
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.JUNGLE_FORESTER.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) { // the complete map.
 			p.message("You show the completed map of Kharazi Jungle to the Forester.");
 			if (p.getCarriedItems().hasCatalogID(ItemId.BULL_ROARER.id(), Optional.empty())) { // if already have the bull roarer

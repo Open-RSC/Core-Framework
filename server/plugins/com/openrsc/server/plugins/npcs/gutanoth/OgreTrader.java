@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.TalkToNpcListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.npcTalk;
 import static com.openrsc.server.plugins.Functions.showMenu;
 
-public class OgreTrader implements ShopInterface, TalkToNpcListener {
+public class OgreTrader implements ShopInterface, TalkNpcTrigger {
 
 	private final Shop shop = new Shop(false, 15000, 130, 40, 3,
 		new Item(ItemId.POT.id(), 3),
@@ -27,12 +27,12 @@ public class OgreTrader implements ShopInterface, TalkToNpcListener {
 		new Item(ItemId.SLEEPING_BAG.id(), 10));
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player p, Npc n) {
 		return n.getID() == NpcId.OGRE_TRADER_GENSTORE.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player p, Npc n) {
 		npcTalk(p, n, "What the human be wantin'");
 		int menu = showMenu(p, n,
 			"Can I see what you are selling ?",
