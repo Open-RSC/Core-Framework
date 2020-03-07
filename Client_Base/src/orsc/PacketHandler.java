@@ -1351,6 +1351,30 @@ public class PacketHandler {
 		}
 	}
 
+	private void dropItem() {
+		int slot = packetsIncoming.getUnsignedByte();
+		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
+
+		for (int index = slot; mc.getInventoryItemCount() > index; ++index) {
+			mc.setInventoryItem(index, mc.getInventoryItem(index + 1).clone());
+		}
+	}
+
+	private void updateInventory() {
+		int slot = packetsIncoming.getUnsignedByte();
+		int itemID = packetsIncoming.getShort();
+		int stackSize = 1;
+		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable()) {
+			stackSize = packetsIncoming.get32();
+		}
+		mc.setInventoryItemID(slot, FastMath.bitwiseAnd(itemID, 32767));
+		mc.setInventoryItemEquipped(slot, itemID / '\u8000');
+		mc.setInventoryItemSize(slot, stackSize);
+		if (slot >= mc.getInventoryItemCount()) {
+			mc.setInventoryItemCount(1 + slot);
+		}
+	}
+
 	private void updateInventoryItems() {
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
 		{
@@ -1358,6 +1382,7 @@ public class PacketHandler {
 			item.setItemDef(null);
 			item.setAmount(0);
 			item.setEquipped(false);
+			item.setNoted(false);
 			item.setCharges(0);
 			item.setDurability(0);
 		}
@@ -1983,21 +2008,6 @@ public class PacketHandler {
 		mc.getBank().updateBank(slot, item, itemCount);
 	}
 
-	private void updateInventory() {
-		int slot = packetsIncoming.getUnsignedByte();
-		int itemID = packetsIncoming.getShort();
-		int stackSize = 1;
-		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable()) {
-			stackSize = packetsIncoming.get32();
-		}
-		mc.setInventoryItemID(slot, FastMath.bitwiseAnd(itemID, 32767));
-		mc.setInventoryItemEquipped(slot, itemID / '\u8000');
-		mc.setInventoryItemSize(slot, stackSize);
-		if (slot >= mc.getInventoryItemCount()) {
-			mc.setInventoryItemCount(1 + slot);
-		}
-	}
-
 	private void updateExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
 		mc.setRecentSkill(skill);
@@ -2124,17 +2134,6 @@ public class PacketHandler {
 			mc.setDuelOffsetOpponentAccepted(false);
 		} else {
 			mc.setDuelOffsetOpponentAccepted(true);
-		}
-	}
-
-	private void dropItem() {
-		int slot = packetsIncoming.getUnsignedByte();
-		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
-
-		for (int index = slot; mc.getInventoryItemCount() > index; ++index) {
-			mc.setInventoryItemID(index, mc.getInventoryItemID(index + 1));
-			mc.setInventoryItemSize(index, mc.getInventoryItemSize(index + 1));
-			mc.setInventoryItemEquipped(index, mc.getInventoryItemEquippedID(index + 1));
 		}
 	}
 

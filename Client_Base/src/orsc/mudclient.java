@@ -105,7 +105,7 @@ public final class mudclient implements Runnable {
 	private final Item[] inventory = new Item[S_PLAYER_INVENTORY_SLOTS];
 	//private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
 	//private final int[] inventoryItemID = new int[S_PLAYER_INVENTORY_SLOTS];
-	private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
+	//private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
 	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
 	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
 	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
@@ -3123,20 +3123,27 @@ public final class mudclient implements Runnable {
 					for (int itm = 0; this.inventoryItemCount > itm; ++itm) {
 						int xI = 217 + xr + (itm % 5) * 49;
 						int yI = yr + 31 + (itm / 5) * 34;
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.getItemDef(getInventoryItemID(itm))), xI,
-							yI, 48, 32, EntityHandler.getItemDef(getInventoryItemID(itm)).getPictureMask(), 0,
-							EntityHandler.getItemDef(getInventoryItemID(itm)).getBlueMask(), false,
-							0, 1);
 
-						ItemDef def = EntityHandler.getItemDef(getInventoryItemID(itm));
-						if (def.getNotedFormOf() >= 0) {
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-								33, 23, originalDef.getPictureMask(), 0,
-								originalDef.getBlueMask(), false, 0, 1);
+						Item item = getInventoryItem(itm);
+						ItemDef def = item.getItemDef();
+						if (item.getNoted()) {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.noteDef), xI,
+								yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false,
+								0, 1);
+
+							getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
+								33, 23, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
+						} else {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(def), xI,
+								yI, 48, 32, def.getPictureMask(), 0,
+								def.getBlueMask(), false,
+								0, 1);
 						}
-						if (EntityHandler.getItemDef(getInventoryItemID(itm)).isStackable()) {
+						if (def.isStackable()) {
 							this.getSurface().drawString("" + getInventoryItemSize(itm), xI + 1,
 								10 + yI, 0xFFFF00, 1);
 						}
@@ -3176,10 +3183,12 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
 				}
 
-
+				//TODO: Need to change duel offer items to new Item class,
+				//TODO: and allow notes
 				for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
 					int xI = xr + 9 + itmOffer % 4 * 49;
 					int yI = yr + 31 + itmOffer / 4 * 34;
+
 					this.getSurface().drawSpriteClipping(
 						spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
 						xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
@@ -3644,6 +3653,7 @@ public final class mudclient implements Runnable {
 						}
 
 						this.getSurface().drawBoxBorder(sx, 50, sy, 35, 0);
+						//TODO: Need to add noted boolean to shop items
 						if (this.shopItemID[slot] != -1) {
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(EntityHandler.getItemDef(this.shopItemID[slot])),
@@ -4085,18 +4095,25 @@ public final class mudclient implements Runnable {
 				for (int slot = 0; slot < this.inventoryItemCount; ++slot) {
 					int sX = xr + 217 + slot % 5 * 49;
 					int sY = 31 + yr + slot / 5 * 34;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(getInventoryItemID(slot))), sX,
-						sY, 48, 32, EntityHandler.getItemDef(getInventoryItemID(slot)).getPictureMask(), 0,
-						EntityHandler.getItemDef(getInventoryItemID(slot)).getBlueMask(), false,
-						0, 1);
+					Item item = getInventoryItem(slot);
+					ItemDef def = item.getItemDef();
 
-					ItemDef def = EntityHandler.getItemDef(getInventoryItemID(slot));
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), sX + 7, sY + 4,
-							33, 23, originalDef.getPictureMask(), 0,
-							originalDef.getBlueMask(), false, 0, 1);
+					if (item.getNoted()) {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.noteDef), sX,
+							sY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+							EntityHandler.noteDef.getBlueMask(), false,
+							0, 1);
+
+						getSurface().drawSpriteClipping(spriteSelect(def), sX + 7, sY + 4,
+							33, 23, def.getPictureMask(), 0,
+							def.getBlueMask(), false, 0, 1);
+					} else {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(def), sX,
+							sY, 48, 32, def.getPictureMask(), 0,
+							def.getBlueMask(), false,
+							0, 1);
 					}
 
 					if (EntityHandler.getItemDef(getInventoryItemID(slot)).isStackable()) {
@@ -4112,6 +4129,8 @@ public final class mudclient implements Runnable {
 						spriteSelect(EntityHandler.getItemDef(this.tradeItemID[slot])), sx, sy,
 						48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0,
 						EntityHandler.getItemDef(this.tradeItemID[slot]).getBlueMask(), false, 0, 1);
+
+					//TODO: need to switch trade item ID to new item class, add noted boolean
 					if (EntityHandler.getItemDef(this.tradeItemID[slot]).isStackable()) {
 						this.getSurface().drawString("" + this.tradeItemSize[slot], sx + 1, 10 + sy,
 							0xFFFF00, 1);
@@ -5522,6 +5541,7 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawSpriteClipping(sprite, x, y, width, height, mask, 0,
 				EntityHandler.getItemDef(id).getBlueMask(), false, 0, 1);
 
+			//TODO: Need to add noted boolean to ground items
 			ItemDef def = EntityHandler.getItemDef(id);
 			if (def.getNotedFormOf() >= 0) {
 				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
@@ -7377,6 +7397,8 @@ public final class mudclient implements Runnable {
 						var5 = var4 / 34 * 5 + var3 / 49;
 						if (this.inventoryItemCount > var5) {
 							id = getInventoryItemID(var5);
+							Item item = getInventoryItem(var5);
+							ItemDef def = item.getItemDef();
 							if (this.selectedSpell >= 0) {
 								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
 									this.menuCommon.addCharacterItem_WithID(var5,
@@ -7390,19 +7412,18 @@ public final class mudclient implements Runnable {
 									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_UNEQUIP_FROM_INVENTORY, "Remove",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								} else if (EntityHandler.getItemDef(id).wearableID != 0) {
-									String equipCommand;
-									if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
-										equipCommand = "Wear";
-									} else {
-										equipCommand = "Wield";
+									if (!item.getNoted()) {
+										String equipCommand;
+										if ((24 & EntityHandler.getItemDef(id).wearableID) == 0) {
+											equipCommand = "Wear";
+										} else {
+											equipCommand = "Wield";
+										}
+
+										this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP_FROM_INVENTORY, equipCommand,
+											"@lre@" + EntityHandler.getItemDef(id).getName());
 									}
-
-									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_EQUIP_FROM_INVENTORY, equipCommand,
-										"@lre@" + EntityHandler.getItemDef(id).getName());
 								}
-
-								Item item = getInventoryItem(var5);
-								ItemDef def = item.getItemDef();
 
 								if (def.getCommand() != null
 									&& !item.getNoted()) {
@@ -10109,9 +10130,11 @@ public final class mudclient implements Runnable {
 					return;
 			} else {
 				itemIdArray = new int[getInventory().length];
-				for (int i = 0; i < itemIdArray.length; ++i)
+				itemAmountArray = new int[getInventory().length];
+				for (int i = 0; i < itemIdArray.length; ++i) {
 					itemIdArray[i] = getInventoryItemID(i);
-				itemAmountArray = getInventoryItemsCount();
+					itemAmountArray[i] = getInventoryItemAmount(i);
+				}
 
 			}
 			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
@@ -14578,11 +14601,18 @@ public final class mudclient implements Runnable {
 		this.inventory[i].setItemDef(n);
 	}
 
-	public int getInventoryItemID(int i) {
-		if (this.inventory[i].getItemDef() == null)
+	public void setInventoryItem(int index, Item item) {
+		this.inventory[index] = item;
+	}
+	public int getInventoryItemID(int index) {
+		if (this.inventory[index].getItemDef() == null)
 			return Item.ID_NOTHING;
 		else
-			return this.inventory[i].getItemDef().id;
+			return this.inventory[index].getItemDef().id;
+	}
+
+	public int getInventoryItemAmount(int index) {
+		return this.inventory[index].getAmount();
 	}
 
 	public void setInventoryItemEquipped(int i, int n) {
@@ -16152,10 +16182,6 @@ public final class mudclient implements Runnable {
 			}
 		}
 		return new Object[]{equipmentIDs, equipmentAmounts};
-	}
-
-	public int[] getInventoryItemsCount() {
-		return inventoryItemSize;
 	}
 
 	public int getLastMouseDown() {

@@ -145,7 +145,7 @@ public final class LostOnDeathInterface {
 					if (Config.S_WANT_EQUIPMENT_TAB && i >= mc.getInventory().length)
 						stackCount = ((int[])equipmentItems[1])[i - mc.getInventory().length];
 					else
-						stackCount = mc.getInventoryItemsCount()[i];
+						stackCount = mc.getInventoryItemAmount(i);
 					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), stackCount, false));
 				} else {
 					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), 1, false));

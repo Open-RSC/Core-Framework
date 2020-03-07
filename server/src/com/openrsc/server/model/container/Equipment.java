@@ -217,6 +217,9 @@ public class Equipment {
 	 * @return
 	 */
 	public boolean equipItem(EquipRequest request) {
+		//Make sure the item isn't a note
+		if (request.item.getNoted())
+			return false;
 
 		//Check that they are eligible to equip the item
 		if (!ableToEquip(request.item))
