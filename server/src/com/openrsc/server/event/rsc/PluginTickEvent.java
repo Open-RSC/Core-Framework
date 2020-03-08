@@ -29,17 +29,8 @@ public class PluginTickEvent extends GameTickEvent {
 		if (walkToAction != null && walkToAction != getPlayerOwner().getLastExecutedWalkToAction()) {
 			// If the task has not been submitted, then we just cancel this event
 			if (getFuture() == null || (!getPluginTask().isInitialized() && getFuture().cancel(false))) {
-
 				stop();
 				return;
-				/*
-				// This will trigger PluginTask.pause()'s wait() call to generate an InterruptedException.
-				// We then throw a special PluginInterruptedException which can only be caught by PluginTask.action() or PluginTask.call().
-				// When these methods catch the exception it will return the thread which will close the PluginTask's thread down.
-				getFuture().cancel(true);
-				stop();
-				return;
-				*/
 			}
 		}
 

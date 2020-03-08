@@ -25,6 +25,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private volatile boolean initialized = false;
 	private volatile boolean threadRunning = false;
 	private volatile boolean tickCompleted = false;
+	private volatile Thread pluginThread;
 
 	public PluginTask(final World world) {
 		super(world, null, 0, null, true);
@@ -32,15 +33,20 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	public Integer call() {
 		synchronized(this) {
+			pluginThread = Thread.currentThread();
+
 			try {
 				setInitialized(true);
 				registerPluginThread();
 				final int result = action();
-				unregisterPluginThread();
+				stop();
 				return result;
-			} catch (final Exception ex) {
+			} catch(final PluginInterruptedException ex) {
+				stop();
+				return 1;
+			} catch(final Exception ex) {
 				LOGGER.catching(ex);
-				unregisterPluginThread();
+				stop();
 				return 0;
 			}
 		}
@@ -51,6 +57,12 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	public void run() {
 		setDelayTicks(0);
 		notifyAll();
+	}
+
+	@Override
+	public synchronized void stop() {
+		super.stop();
+		unregisterPluginThread();
 	}
 
 	public synchronized void pause(final int ticks) {
@@ -67,18 +79,18 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	}
 
 	private synchronized void registerPluginThread() {
-		final String threadName = Thread.currentThread().getName();
+		final String threadName = getPluginThread().getName();
 		setThreadRunning(true);
 		setTickCompleted(false);
 		tasksMap.put(threadName, this);
 	}
 
 	private synchronized void unregisterPluginThread() {
-		// TODO: Need a way to stop the plugin Thread
-		final String threadName = Thread.currentThread().getName();
+		final String threadName = getPluginThread().getName();
 		setThreadRunning(false);
 		setTickCompleted(false);
 		tasksMap.remove(threadName);
+		getPluginThread().interrupt();
 	}
 
 	public synchronized boolean isInitialized() {
@@ -103,6 +115,10 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	private synchronized void setTickCompleted(boolean tickCompleted) {
 		this.tickCompleted = tickCompleted;
+	}
+
+	public synchronized Thread getPluginThread() {
+		return pluginThread;
 	}
 
 	public class PluginInterruptedException extends RuntimeException {}
