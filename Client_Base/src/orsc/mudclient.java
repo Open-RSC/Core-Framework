@@ -5686,10 +5686,52 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	public final void drawNPCDef(NPCDef def, int x, int y, int width1, int height) {
+		int var11 = 0;
+		for (int var15 = 0; var15 < 12; ++var15) {
+			int var16 = this.getAnimDirLayer_To_CharLayer()[var11][var15];
+
+			int animID = def.getSprite(var16);
+			AnimationDef animationDef = EntityHandler.getAnimationDef(animID);
+			if (animID >= 0) {
+				byte spriteOffsetX = 0;
+				byte spriteOffsetY = 0;
+
+				if (animationDef.hasA()) {
+					//int sprite = variant + animationDef.getNumber();
+					Sprite sprite = spriteSelect(animationDef, 0);
+					int something1 = sprite.getSomething1();
+					int something2 = sprite.getSomething2();
+					if (something1 != 0 && something2 != 0) {
+						int xOffset = (spriteOffsetX * width1) / something1;
+						int yOffset = (spriteOffsetY * height) / something2;
+						int colorVariant = animationDef.getCharColour();// CacheValues.animationCharacterColour[animID];
+						int baseColor = 0;
+						if (colorVariant == 1) {
+							baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+							colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
+						} else if (animID >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
+							baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+						} else if (colorVariant != 2) {
+							if (colorVariant == 3) {
+								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+								colorVariant = def.getBottomColour();// CacheValues.npcColourBottom[npc.npcId];
+							}
+						} else {
+							colorVariant = def.getTopColour();// CacheValues.npcColourTop[npc.npcId];
+							baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+						}
+						this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, width1, height,
+							colorVariant, baseColor, 0, false, 0, 1);
+					}
+				}
+			}
+		}
+	}
+
 	public final void drawNPC(int npcIndex, int x, int y, int width1, int height, int topPixelSkew, int var3,
 							  int overlayMovement) {
 		try {
-
 			ORSCharacter npc = this.npcs[npcIndex];
 			NPCDef def = EntityHandler.getNpcDef(npc.npcId);
 			int var11 = 7 & npc.direction.rsDir + (this.cameraRotation + 16) / 32;
