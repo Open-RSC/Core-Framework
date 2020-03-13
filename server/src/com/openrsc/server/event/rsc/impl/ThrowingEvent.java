@@ -107,13 +107,13 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
 					}
 				} else if(target.isPlayer()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;

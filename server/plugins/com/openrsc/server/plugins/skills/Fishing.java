@@ -28,7 +28,7 @@ public class Fishing implements OpLocTrigger {
 	/**
 	 * The asynchronous logger.
 	 */
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(Fishing.class);
 
 	private ObjectFishDef getFish(ObjectFishingDef objectFishDef, int fishingLevel, int click) {
 		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();

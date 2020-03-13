@@ -3,8 +3,6 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.database.GameDatabase;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
@@ -129,13 +127,13 @@ public class RangeEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(),"PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
 					}
 				} else if(target.isPlayer()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Npc)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Npc)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;

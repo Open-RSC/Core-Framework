@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 
 /**
  * @author n0m
@@ -104,11 +103,11 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 			if (caster.isNpc()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(caster, "PlayerKilledNpc", new Object[]{(Player) opponent, (Npc) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin((Player) opponent, "PlayerKilledNpc", new Object[]{(Player) opponent, (Npc) caster})) {
 					return;
 				}
 			} else if(caster.isPlayer()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(caster, "PlayerKilledPlayer", new Object[]{(Player) opponent, (Player) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin((Player) opponent, "PlayerKilledPlayer", new Object[]{(Player) opponent, (Player) caster})) {
 					return;
 				}
 			}

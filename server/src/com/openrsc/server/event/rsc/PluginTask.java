@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc;
 
+import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,9 +27,11 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private volatile boolean threadRunning = false;
 	private volatile boolean tickCompleted = false;
 	private volatile Thread pluginThread;
+	private volatile int ownerIndex;
 
-	public PluginTask(final World world) {
-		super(world, null, 0, null, true);
+	public PluginTask(final World world, final Player owner) {
+		super(world, owner, 0, null, true);
+		ownerIndex = owner == null ? -1 : owner.getIndex();
 	}
 
 	public Integer call() {

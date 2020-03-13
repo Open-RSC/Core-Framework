@@ -4,7 +4,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -124,7 +123,7 @@ public final class WorldPopulator {
 
 				//Load the in-use ItemID's from the database
 				result = statement.executeQuery("SELECT `itemID` FROM `"
-				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "itemstatuses");
+				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "itemstatuses`");
 				while (result.next())
 					getWorld().getServer().getDatabase().getItemIDList().add(result.getInt("itemID"));
 
