@@ -5196,7 +5196,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         17625),
        (2297, -1, 2296, 'Ring of avarice', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 17625),
-       (2298, 2297, -1, 'Dwarven ring', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0,
+       (2298, 2299, -1, 'Dwarven ring', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0,
         0, 0, 400),
        (2299, -1, 2298, 'Dwarven ring', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 400),
