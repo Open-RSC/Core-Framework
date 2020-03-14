@@ -14,6 +14,8 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 		owner.message("You bury the "
 			+ item.getDef(owner.getWorld()).getName().toLowerCase());
 
+		owner.playSound("dropobject");
+		
 		switch (ItemId.getById(item.getID())) {
 			case BONES:
 				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
