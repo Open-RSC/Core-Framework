@@ -5040,8 +5040,10 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString(
 							"Prayer: " + this.playerStatCurrent[5] + "@gre@/@whi@" + this.playerStatBase[5], 7, i, 0xffffff, 1);
 						i += 14;
-						this.getSurface().drawString(
-							"Kills: " + this.statKills2 + "@whi@", 7, i, 0xffffff, 1);
+						if (C_NPC_KC) {
+							this.getSurface().drawString(
+								"Kills: " + this.statKills2 + "@whi@", 7, i, 0xffffff, 1);
+						}
 						if (Config.S_WANT_FATIGUE) {
 							i += 14;
 							this.getSurface().drawString(
