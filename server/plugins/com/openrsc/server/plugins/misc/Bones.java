@@ -41,29 +41,26 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 				return;
 			}
 
-			if (item.getAmount() > 1) { // bury all
-				player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, String.format("Bury %s", item.getDef(player.getWorld()).getName()), item.getAmount(), false) {
-					@Override
-					public void action() {
-						if (getOwner().getInventory().remove(item.getID(), 1) > -1) {
-							player.message("You dig a hole in the ground");
-							buryBonesHelper(player, item);
-						} else
-							interrupt();
-					}
-				});
-			} else {
-				player.getWorld().getServer().getGameEventHandler()
-					.add(new MiniEvent(player.getWorld(), player, "Bury Bones") {
-						public void action() {
-							if (getOwner().getInventory().remove(item.getID(), 1) > -1) {
-								player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
-								player.message("You dig a hole in the ground");
-								buryBonesHelper(player, item);
-							}
-						}
-					});
+			int buryAmount = item.getAmount();
+			if (buryAmount > 1) {
+				if (!player.getWorld().getServer().getConfig().BATCH_PROGRESSION)
+					buryAmount = 1;
 			}
+
+			player.message("You dig a hole in the ground");
+
+			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, String.format("Bury %s", item.getDef(player.getWorld()).getName()), buryAmount, false) {
+				@Override
+				public void action() {
+					if (getOwner().getInventory().remove(item.getID(), 1) != -1) {
+						buryBonesHelper(player, item);
+					} else
+						interrupt();
+
+					if (!this.isCompleted())
+						player.message("You dig a hole in the ground");
+				}
+			});
 		}
 	}
 
