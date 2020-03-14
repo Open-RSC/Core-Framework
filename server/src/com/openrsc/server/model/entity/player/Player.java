@@ -1975,8 +1975,7 @@ public final class Player extends Mob {
 		ping();
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPacketLock) {
-				if (!incomingPackets.containsKey(e.getID()))
-					incomingPackets.put(e.getID(), e);
+				incomingPackets.put(e.getID(), e);
 			}
 		}
 	}
