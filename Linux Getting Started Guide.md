@@ -1,6 +1,8 @@
-### Guide for running Open RSC on Linux
+### Guide for running Open RuneScape Classic on Linux
 
 ## Using the built in installation script with Docker
+
+** Note: It is suggested to only run the installation scripts on a fresh Ubuntu install or within a VM. These are used for the production server hosting. **
 
 If you are okay with Docker running on your Linux OS, the installation script that is used in "Start-Linux.sh" can obtain Docker for you, download the MariaDB SQL server container, configure your firewall, SSH permissions and port, as well as install other packages that are used when hosting a public game server. It is not recommended unless you are okay with these changes. Example: port 22 for SSH is changed to port 55555 and the firewall modified to allow entry for all game server ports and the new SSH port. If in question, open "scripts/combined-install.sh" and "scripts/docker-install.sh" to get a better idea about what the built-in installer does.
 

@@ -1,4 +1,4 @@
-### Guide for running Open RSC on Windows
+### Guide for running Open RuneScape Classic on Windows
 
 ## Single Player
 
@@ -11,8 +11,11 @@ https://orsc.dev/open-rsc/Single-Player/-/releases
 Download Open JDK 12 for Windows (MSI installer version) and if you already have Java installed (ex: Oracle Java 8), then it is highly suggested that you first uninstall it. Oracle will not be supporting non-enterprise Java much longer and Open JDK is the future.
 <a href="https://cdn.azul.com/zulu/bin/zulu12.2.3-ca-jdk12.0.1-win_x64.msi">https://cdn.azul.com/zulu/bin/zulu12.2.3-ca-jdk12.0.1-win_x64.msi</a>
 
-For the latest version of Open JDK: (pick the MSI installer version!)
-<a href="https://www.azul.com/downloads/zulu/">https://www.azul.com/downloads/zulu/</a>
+For the latest version of Open JDK: (Windows users will want to pick the MSI installer version)
+
+<a href="https://www.azul.com/downloads/zulu/">Zulu OpenJDK 13</a>
+or
+<a href="https://adoptopenjdk.net/releases.html?variant=openjdk13&jvmVariant=hotspot">Adopt OpenJDK 13</a>
 
 ## Starting the game
 

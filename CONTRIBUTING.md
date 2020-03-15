@@ -1,6 +1,6 @@
-# Contributing to Open RSC
+# Contributing to Open RuneScape Classic
 
-We'd love for you to contribute to our source code and to make Open RSC even better than it is
+We'd love for you to contribute to our source code and to make Open RuneScape Classic even better than it is
 today! Here are the guidelines we'd like you to follow:
 
 * [Merge Request Submission Guidelines](#submit-pr)
