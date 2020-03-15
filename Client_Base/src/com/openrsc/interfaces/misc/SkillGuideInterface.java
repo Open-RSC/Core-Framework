@@ -157,18 +157,18 @@ public final class SkillGuideInterface {
 			}
 
 			if (curItem instanceof SkillMenuItem) {
-				ItemDef def = EntityHandler.getItemDef(((SkillMenuItem)curItem).getItemID());
+				ItemDef def = EntityHandler.getItemDef(((SkillMenuItem) curItem).getItemID());
 				if (def != null) {
 					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 						spriteX + 5, allY + 2, 48, 32, def.getPictureMask(), 0,
 						def.getBlueMask(), false, 0, 1);
 				}
 			} else if (curItem instanceof SkillMenuNPC) {
-				NPCDef def = EntityHandler.getNpcDef(((SkillMenuNPC)curItem).getNpcID());
+				NPCDef def = EntityHandler.getNpcDef(((SkillMenuNPC) curItem).getNpcID());
 				if (def != null) {
 					int height = 32;
 					int width = def.getCamera1() / (def.getCamera2() / height);
-					mc.drawNPCDef(def,spriteX + 15, allY + 2, width, height);
+					mc.drawNPCDef(def, spriteX + 15, allY + 2, width, height);
 				}
 			}
 
@@ -238,19 +238,26 @@ public final class SkillGuideInterface {
 	public void populateSkillItems() {
 		skillMenuEntries.clear();
 		if (mc.getSkillGuideChosen().equals("Attack")) {
-			skillMenuEntries.add(new SkillMenuItem(66, "1", "Bronze"));
-			skillMenuEntries.add(new SkillMenuItem(1, "1", "Iron"));
-			skillMenuEntries.add(new SkillMenuItem(67, "5", "Steel"));
-			skillMenuEntries.add(new SkillMenuItem(424, "10", "Black"));
-			skillMenuEntries.add(new SkillMenuItem(68, "20", "Mithril"));
-			skillMenuEntries.add(new SkillMenuItem(69, "30", "Adamantite"));
-			skillMenuEntries.add(new SkillMenuItem(617, "30", "Battlestaves"));
-			skillMenuEntries.add(new SkillMenuItem(397, "40", "Rune"));
-			skillMenuEntries.add(new SkillMenuItem(684, "40", "Enchanted battlestaves"));
-			skillMenuEntries.add(new SkillMenuItem(1000, "50", "Staff of Iban"));
-			skillMenuEntries.add(new SkillMenuItem(593, "60", "Dragon"));
+			if (curTab == 0) {
+				skillMenuEntries.add(new SkillMenuItem(66, "1", "Bronze"));
+				skillMenuEntries.add(new SkillMenuItem(1, "1", "Iron"));
+				skillMenuEntries.add(new SkillMenuItem(67, "5", "Steel"));
+				skillMenuEntries.add(new SkillMenuItem(424, "10", "Black"));
+				skillMenuEntries.add(new SkillMenuItem(68, "20", "Mithril"));
+				skillMenuEntries.add(new SkillMenuItem(69, "30", "Adamantite"));
+				skillMenuEntries.add(new SkillMenuItem(617, "30", "Battlestaves"));
+				skillMenuEntries.add(new SkillMenuItem(397, "40", "Rune"));
+				skillMenuEntries.add(new SkillMenuItem(684, "40", "Enchanted battlestaves"));
+				skillMenuEntries.add(new SkillMenuItem(1000, "50", "Staff of Iban"));
+				skillMenuEntries.add(new SkillMenuItem(593, "60", "Dragon"));
+			} else if (curTab == 1) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2111, "99", "Cape"));
+				}
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Defense")) {
+			skillMenuEntries.add(new SkillMenuItem(15, "1", "Leather"));
 			skillMenuEntries.add(new SkillMenuItem(128, "1", "Bronze"));
 			skillMenuEntries.add(new SkillMenuItem(2, "1", "Iron"));
 			skillMenuEntries.add(new SkillMenuItem(129, "5", "Steel"));
@@ -300,6 +307,9 @@ public final class SkillGuideInterface {
 			skillMenuEntries.add(new SkillMenuItem(750, "", "Pineapple Pizza - Heals 20"));
 			skillMenuEntries.add(new SkillMenuItem(1193, "", "Sea Turtle - Heals 21"));
 			skillMenuEntries.add(new SkillMenuItem(1191, "", "Manta Ray - Heals 22"));
+			/*if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
+			}*/
 		}
 		if (mc.getSkillGuideChosen().equals("Ranged")) {
 			if (curTab == 0) {
@@ -464,6 +474,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(142, "35", "Wine"));
 				skillMenuEntries.add(new SkillMenuItem(1269, "50", "Oomlie Meat Parcel"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "58", "Tasty Ugthanki Kebab"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2105, "99", "Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Woodcutting")) {
@@ -507,26 +520,36 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1068, "52", "Mithril throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1069, "67", "Adamantite throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1070, "82", "Rune throwing dart"));
+			} else if (curTab == 3) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2402, "99", "Fletching Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Fishing")) {
-			skillMenuEntries.add(new SkillMenuItem(349, "1", "Shrimp - Small Fishing Net"));
-			skillMenuEntries.add(new SkillMenuItem(354, "5", "Sardine - Fishing Rod and Bait"));
-			skillMenuEntries.add(new SkillMenuItem(717, "10", "Giant Carp - Fishing Rod and Red vine worms"));
-			skillMenuEntries.add(new SkillMenuItem(361, "10", "Herring - Fishing Rod and Bait"));
-			skillMenuEntries.add(new SkillMenuItem(351, "15", "Anchovies - Small Fishing Net"));
-			skillMenuEntries.add(new SkillMenuItem(552, "16", "Mackerel - Big Fishing Net"));
-			skillMenuEntries.add(new SkillMenuItem(358, "20", "Trout - Fly Fishing Rod and Feathers"));
-			skillMenuEntries.add(new SkillMenuItem(550, "23", "Cod - Big Fishing Net"));
-			skillMenuEntries.add(new SkillMenuItem(363, "25", "Pike - Fishing Rod and Bait"));
-			skillMenuEntries.add(new SkillMenuItem(356, "30", "Salmon - Fly Fishing Rod and Feathers"));
-			skillMenuEntries.add(new SkillMenuItem(366, "35", "Tuna - Harpoon"));
-			skillMenuEntries.add(new SkillMenuItem(372, "40", "Lobster - Lobster Pot"));
-			skillMenuEntries.add(new SkillMenuItem(554, "46", "Bass - Big Fishing Net"));
-			skillMenuEntries.add(new SkillMenuItem(369, "50", "Swordfish - Harpoon"));
-			skillMenuEntries.add(new SkillMenuItem(545, "76", "Sharks - Harpoon"));
-			skillMenuEntries.add(new SkillMenuItem(1192, "79", "Sea Turtle - Fishing Trawler"));
-			skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
+			if (curTab == 0) {
+				skillMenuEntries.add(new SkillMenuItem(349, "1", "Shrimp - Small Fishing Net"));
+				skillMenuEntries.add(new SkillMenuItem(354, "5", "Sardine - Fishing Rod and Bait"));
+				skillMenuEntries.add(new SkillMenuItem(717, "10", "Giant Carp - Fishing Rod and Red vine worms"));
+				skillMenuEntries.add(new SkillMenuItem(361, "10", "Herring - Fishing Rod and Bait"));
+				skillMenuEntries.add(new SkillMenuItem(351, "15", "Anchovies - Small Fishing Net"));
+				skillMenuEntries.add(new SkillMenuItem(552, "16", "Mackerel - Big Fishing Net"));
+				skillMenuEntries.add(new SkillMenuItem(358, "20", "Trout - Fly Fishing Rod and Feathers"));
+				skillMenuEntries.add(new SkillMenuItem(550, "23", "Cod - Big Fishing Net"));
+				skillMenuEntries.add(new SkillMenuItem(363, "25", "Pike - Fishing Rod and Bait"));
+				skillMenuEntries.add(new SkillMenuItem(356, "30", "Salmon - Fly Fishing Rod and Feathers"));
+				skillMenuEntries.add(new SkillMenuItem(366, "35", "Tuna - Harpoon"));
+				skillMenuEntries.add(new SkillMenuItem(372, "40", "Lobster - Lobster Pot"));
+				skillMenuEntries.add(new SkillMenuItem(554, "46", "Bass - Big Fishing Net"));
+				skillMenuEntries.add(new SkillMenuItem(369, "50", "Swordfish - Harpoon"));
+				skillMenuEntries.add(new SkillMenuItem(545, "76", "Sharks - Harpoon"));
+				skillMenuEntries.add(new SkillMenuItem(1192, "79", "Sea Turtle - Fishing Trawler"));
+				skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
+			} else if (curTab == 1) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2103, "99", "Cape"));
+				}
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Firemaking")) {
 			skillMenuEntries.add(new SkillMenuItem(14, "1", "Normal logs"));
@@ -591,6 +614,11 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(618, "58", "Battlestaff of Earth"));
 				skillMenuEntries.add(new SkillMenuItem(615, "62", "Battlestaff of Fire"));
 				skillMenuEntries.add(new SkillMenuItem(617, "66", "Battlestaff of Air"));
+			} else if (curTab == 7) {
+				skillMenuEntries.add(new SkillMenuItem(779, "34", "Oyster Pearls"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2355, "90", "King Black Dragon Scale"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Smithing")) {
@@ -603,6 +631,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(173, "50", "Mithril - 4 Coal & 1 mithril ore"));
 				skillMenuEntries.add(new SkillMenuItem(174, "70", "Adamant - 6 Coal & 1 adamantite ore"));
 				skillMenuEntries.add(new SkillMenuItem(408, "85", "Runite - 8 Coal & 1 runite ore"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2388, "90", "Dragon - 1 dragon axe or 1 dragon sword"));
+				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(62, "1", "Bronze Daggers - 1 Bar"));
 				skillMenuEntries.add(new SkillMenuItem(87, "1", "Bronze Axes - 1 Bar"));
@@ -750,6 +781,10 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1260, "21", "Mithril Pickaxe"));
 				skillMenuEntries.add(new SkillMenuItem(1261, "31", "Adamant Pickaxe"));
 				skillMenuEntries.add(new SkillMenuItem(1262, "41", "Rune Pickaxe"));
+			} else if (curTab == 2) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2403, "99", "Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Herblaw")) {
@@ -860,96 +895,100 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(444, "46", "Ardougne Chaos Druid Tower"));
 				skillMenuEntries.add(new SkillMenuItem(545, "61", "Ardougne Castle upstairs"));
 				skillMenuEntries.add(new SkillMenuItem(714, "82", "Yanille Agility Dungeon"));
+			} else if (curTab == 4) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2401, "99", "Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equalsIgnoreCase("Runecrafting")) {
 			if (curTab == 0) {
-				skillMenuEntries.add(new SkillMenuItem(33, "1","Air Rune"));
-				skillMenuEntries.add(new SkillMenuItem(35, "1","Mind Rune"));
-				skillMenuEntries.add(new SkillMenuItem(32, "5","Water Rune"));
-				skillMenuEntries.add(new SkillMenuItem(34, "9","Earth Rune"));
-				skillMenuEntries.add(new SkillMenuItem(31, "14","Fire Rune"));
-				skillMenuEntries.add(new SkillMenuItem(36, "20","Body Rune"));
-				skillMenuEntries.add(new SkillMenuItem(46, "27","Cosmic Rune"));
-				skillMenuEntries.add(new SkillMenuItem(41, "35","Chaos Rune"));
-				skillMenuEntries.add(new SkillMenuItem(40, "44","Nature Rune"));
+				skillMenuEntries.add(new SkillMenuItem(33, "1", "Air Rune"));
+				skillMenuEntries.add(new SkillMenuItem(35, "1", "Mind Rune"));
+				skillMenuEntries.add(new SkillMenuItem(32, "5", "Water Rune"));
+				skillMenuEntries.add(new SkillMenuItem(34, "9", "Earth Rune"));
+				skillMenuEntries.add(new SkillMenuItem(31, "14", "Fire Rune"));
+				skillMenuEntries.add(new SkillMenuItem(36, "20", "Body Rune"));
+				skillMenuEntries.add(new SkillMenuItem(46, "27", "Cosmic Rune"));
+				skillMenuEntries.add(new SkillMenuItem(41, "35", "Chaos Rune"));
+				skillMenuEntries.add(new SkillMenuItem(40, "44", "Nature Rune"));
 				//skillItems.add(new SkillItem(42, "54","Law Rune"));
 				//skillItems.add(new SkillItem(38, "65","Death Rune"));
 				//skillItems.add(new SkillItem(619, "77","Blood Rune"));
 			} else if (curTab == 1) {
-				skillMenuEntries.add(new SkillMenuItem(33, "11","Air Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(35, "14","Mind Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(32, "19","Water Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(33, "22","Air Rune x3"));
-				skillMenuEntries.add(new SkillMenuItem(34, "26","Earth Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(35, "28","Mind Rune x3"));
-				skillMenuEntries.add(new SkillMenuItem(33, "33","Air Rune x4"));
-				skillMenuEntries.add(new SkillMenuItem(31, "35","Fire Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(32, "38","Water Rune x3"));
-				skillMenuEntries.add(new SkillMenuItem(35, "42","Mind Rune x4"));
-				skillMenuEntries.add(new SkillMenuItem(33, "44","Air Rune x5"));
-				skillMenuEntries.add(new SkillMenuItem(36, "46","Body Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(34, "52","Earth Rune x3"));
-				skillMenuEntries.add(new SkillMenuItem(33, "55","Air Rune x6"));
-				skillMenuEntries.add(new SkillMenuItem(35, "56","Mind Rune x5"));
-				skillMenuEntries.add(new SkillMenuItem(32, "57","Water Rune x4"));
-				skillMenuEntries.add(new SkillMenuItem(46, "59","Cosmic Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(33, "66","Air Rune x7"));
-				skillMenuEntries.add(new SkillMenuItem(35, "70","Mind Rune x6"));
-				skillMenuEntries.add(new SkillMenuItem(31, "70","Fire Rune x3"));
-				skillMenuEntries.add(new SkillMenuItem(41, "74","Chaos Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(32, "76","Water Rune x5"));
-				skillMenuEntries.add(new SkillMenuItem(33, "77","Air Rune x8"));
-				skillMenuEntries.add(new SkillMenuItem(34, "78","Earth Rune x4"));
-				skillMenuEntries.add(new SkillMenuItem(35, "84","Mind Rune x7"));
-				skillMenuEntries.add(new SkillMenuItem(33, "88","Air Rune x9"));
-				skillMenuEntries.add(new SkillMenuItem(40, "91","Nature Rune x2"));
-				skillMenuEntries.add(new SkillMenuItem(36, "92","Body Rune x3"));
-				skillMenuEntries.add(new SkillMenuItem(32, "95","Water Rune x6"));
-				skillMenuEntries.add(new SkillMenuItem(35, "98","Mind Rune x8"));
-				skillMenuEntries.add(new SkillMenuItem(33, "99","Air Rune x10"));
+				skillMenuEntries.add(new SkillMenuItem(33, "11", "Air Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(35, "14", "Mind Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(32, "19", "Water Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(33, "22", "Air Rune x3"));
+				skillMenuEntries.add(new SkillMenuItem(34, "26", "Earth Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(35, "28", "Mind Rune x3"));
+				skillMenuEntries.add(new SkillMenuItem(33, "33", "Air Rune x4"));
+				skillMenuEntries.add(new SkillMenuItem(31, "35", "Fire Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(32, "38", "Water Rune x3"));
+				skillMenuEntries.add(new SkillMenuItem(35, "42", "Mind Rune x4"));
+				skillMenuEntries.add(new SkillMenuItem(33, "44", "Air Rune x5"));
+				skillMenuEntries.add(new SkillMenuItem(36, "46", "Body Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(34, "52", "Earth Rune x3"));
+				skillMenuEntries.add(new SkillMenuItem(33, "55", "Air Rune x6"));
+				skillMenuEntries.add(new SkillMenuItem(35, "56", "Mind Rune x5"));
+				skillMenuEntries.add(new SkillMenuItem(32, "57", "Water Rune x4"));
+				skillMenuEntries.add(new SkillMenuItem(46, "59", "Cosmic Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(33, "66", "Air Rune x7"));
+				skillMenuEntries.add(new SkillMenuItem(35, "70", "Mind Rune x6"));
+				skillMenuEntries.add(new SkillMenuItem(31, "70", "Fire Rune x3"));
+				skillMenuEntries.add(new SkillMenuItem(41, "74", "Chaos Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(32, "76", "Water Rune x5"));
+				skillMenuEntries.add(new SkillMenuItem(33, "77", "Air Rune x8"));
+				skillMenuEntries.add(new SkillMenuItem(34, "78", "Earth Rune x4"));
+				skillMenuEntries.add(new SkillMenuItem(35, "84", "Mind Rune x7"));
+				skillMenuEntries.add(new SkillMenuItem(33, "88", "Air Rune x9"));
+				skillMenuEntries.add(new SkillMenuItem(40, "91", "Nature Rune x2"));
+				skillMenuEntries.add(new SkillMenuItem(36, "92", "Body Rune x3"));
+				skillMenuEntries.add(new SkillMenuItem(32, "95", "Water Rune x6"));
+				skillMenuEntries.add(new SkillMenuItem(35, "98", "Mind Rune x8"));
+				skillMenuEntries.add(new SkillMenuItem(33, "99", "Air Rune x10"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equalsIgnoreCase("Harvesting")) {
 			if (curTab == 0) {
-				skillMenuEntries.add(new SkillMenuItem(348, "1","Potato"));
-				skillMenuEntries.add(new SkillMenuItem(241, "5","Onion"));
-				skillMenuEntries.add(new SkillMenuItem(18, "7","Cabbage"));
-				skillMenuEntries.add(new SkillMenuItem(218, "9","Garlic"));
-				skillMenuEntries.add(new SkillMenuItem(320, "12","Tomato"));
-				skillMenuEntries.add(new SkillMenuItem(2367, "20","Corn"));
-				skillMenuEntries.add(new SkillMenuItem(2365, "30","Red Cabbage"));
-				skillMenuEntries.add(new SkillMenuItem(2369, "47","White Pumpkin"));
+				skillMenuEntries.add(new SkillMenuItem(348, "1", "Potato"));
+				skillMenuEntries.add(new SkillMenuItem(241, "5", "Onion"));
+				skillMenuEntries.add(new SkillMenuItem(18, "7", "Cabbage"));
+				skillMenuEntries.add(new SkillMenuItem(218, "9", "Garlic"));
+				skillMenuEntries.add(new SkillMenuItem(320, "12", "Tomato"));
+				skillMenuEntries.add(new SkillMenuItem(2367, "20", "Corn"));
+				skillMenuEntries.add(new SkillMenuItem(2365, "30", "Red Cabbage"));
+				skillMenuEntries.add(new SkillMenuItem(2369, "47", "White Pumpkin"));
 			} else if (curTab == 1) {
-				skillMenuEntries.add(new SkillMenuItem(855, "15","Lemon Tree"));
-				skillMenuEntries.add(new SkillMenuItem(863, "21","Lime Tree"));
-				skillMenuEntries.add(new SkillMenuItem(2357, "27","Apple Tree"));
-				skillMenuEntries.add(new SkillMenuItem(249, "33","Banana Palm"));
-				skillMenuEntries.add(new SkillMenuItem(857, "39","Orange Tree"));
-				skillMenuEntries.add(new SkillMenuItem(2359, "46","Grapefruit Tree"));
-				skillMenuEntries.add(new SkillMenuItem(861, "51","Pineapple Plant"));
-				skillMenuEntries.add(new SkillMenuItem(2361, "57","Papaya Palm"));
-				skillMenuEntries.add(new SkillMenuItem(2363, "68","Coconut Palm"));
+				skillMenuEntries.add(new SkillMenuItem(855, "15", "Lemon Tree"));
+				skillMenuEntries.add(new SkillMenuItem(863, "21", "Lime Tree"));
+				skillMenuEntries.add(new SkillMenuItem(2357, "27", "Apple Tree"));
+				skillMenuEntries.add(new SkillMenuItem(249, "33", "Banana Palm"));
+				skillMenuEntries.add(new SkillMenuItem(857, "39", "Orange Tree"));
+				skillMenuEntries.add(new SkillMenuItem(2359, "46", "Grapefruit Tree"));
+				skillMenuEntries.add(new SkillMenuItem(861, "51", "Pineapple Plant"));
+				skillMenuEntries.add(new SkillMenuItem(2361, "57", "Papaya Palm"));
+				skillMenuEntries.add(new SkillMenuItem(2363, "68", "Coconut Palm"));
 			} else if (curTab == 2) {
-				skillMenuEntries.add(new SkillMenuItem(236, "10","Redberry Bush"));
-				skillMenuEntries.add(new SkillMenuItem(55, "22","Cadavaberry Bush"));
-				skillMenuEntries.add(new SkillMenuItem(765, "36","Dwellberry Bush"));
-				skillMenuEntries.add(new SkillMenuItem(936, "48","Jangerberry Bush"));
-				skillMenuEntries.add(new SkillMenuItem(471, "59","Whiteberry Bush"));
+				skillMenuEntries.add(new SkillMenuItem(236, "10", "Redberry Bush"));
+				skillMenuEntries.add(new SkillMenuItem(55, "22", "Cadavaberry Bush"));
+				skillMenuEntries.add(new SkillMenuItem(765, "36", "Dwellberry Bush"));
+				skillMenuEntries.add(new SkillMenuItem(936, "48", "Jangerberry Bush"));
+				skillMenuEntries.add(new SkillMenuItem(471, "59", "Whiteberry Bush"));
 			} else if (curTab == 3) {
-				skillMenuEntries.add(new SkillMenuItem(165, "9","Herb - Guam (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(435, "14","Herb - Marrentil (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(436, "19","Herb - Tarromin (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(622, "23","Sea weed"));
-				skillMenuEntries.add(new SkillMenuItem(437, "26","Herb - Harralander (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(438, "32","Herb - Ranarr Weed (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(220, "42","Limpwurt Root"));
-				skillMenuEntries.add(new SkillMenuItem(439, "44","Herb - Irit Leaf (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(440, "50","Herb - Avantoe (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(441, "56","Herb - Kwuarm (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(469, "61","Snape Grass"));
-				skillMenuEntries.add(new SkillMenuItem(442, "67","Herb - Cadantine (chance)"));
-				skillMenuEntries.add(new SkillMenuItem(443, "79","Herb - Dwarf Weed (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(165, "9", "Herb - Guam (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(435, "14", "Herb - Marrentil (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(436, "19", "Herb - Tarromin (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(622, "23", "Sea weed"));
+				skillMenuEntries.add(new SkillMenuItem(437, "26", "Herb - Harralander (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(438, "32", "Herb - Ranarr Weed (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(220, "42", "Limpwurt Root"));
+				skillMenuEntries.add(new SkillMenuItem(439, "44", "Herb - Irit Leaf (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(440, "50", "Herb - Avantoe (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(441, "56", "Herb - Kwuarm (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(469, "61", "Snape Grass"));
+				skillMenuEntries.add(new SkillMenuItem(442, "67", "Herb - Cadantine (chance)"));
+				skillMenuEntries.add(new SkillMenuItem(443, "79", "Herb - Dwarf Weed (chance)"));
 			}
 		}
 	}

@@ -13040,7 +13040,7 @@ public final class mudclient implements Runnable {
 						workspace = unpacker.unpackArchive(pack);
 						for (Subspace subspace : workspace.getSubspaces()) {
 							Map<String, orsc.graphics.two.SpriteArchive.Entry> entries = getSurface().spriteTree.get(subspace.getName());
-							for (orsc.graphics.two.SpriteArchive.Entry entry: subspace.getEntryList()) {
+							for (orsc.graphics.two.SpriteArchive.Entry entry : subspace.getEntryList()) {
 								entries.put(entry.getID(), entry);
 							}
 						}
@@ -16253,6 +16253,9 @@ public final class mudclient implements Runnable {
 		skillGuideChosenTabs = new ArrayList<String>();
 		if (skillGuideChosen.equalsIgnoreCase("Attack")) {
 			skillGuideChosenTabs.add("Weapons");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Defense")) {
 			skillGuideChosenTabs.add("Armour");
 		} else if (skillGuideChosen.equalsIgnoreCase("Hits")) {
@@ -16283,8 +16286,14 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Ammo");
 			skillGuideChosenTabs.add("Bows");
 			skillGuideChosenTabs.add("Darts");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Fishing")) {
 			skillGuideChosenTabs.add("Catches");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Firemaking")) {
 			skillGuideChosenTabs.add("Burning");
 		} else if (skillGuideChosen.equalsIgnoreCase("Crafting")) {
@@ -16295,6 +16304,7 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Spinning");
 			skillGuideChosenTabs.add("Glass");
 			skillGuideChosenTabs.add("Battlestaves");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Smithing")) {
 			skillGuideChosenTabs.add("Smelting");
 			skillGuideChosenTabs.add("Bronze");
@@ -16303,10 +16313,11 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Mithril");
 			skillGuideChosenTabs.add("Adamantite");
 			skillGuideChosenTabs.add("Runite");
-			skillGuideChosenTabs.add("Other");
+			skillGuideChosenTabs.add("Dragon");
 		} else if (skillGuideChosen.equalsIgnoreCase("Mining")) {
 			skillGuideChosenTabs.add("Ores");
 			skillGuideChosenTabs.add("Pickaxes");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Herblaw")) {
 			skillGuideChosenTabs.add("Herbs");
 			skillGuideChosenTabs.add("Potions");
@@ -16318,6 +16329,9 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Stalls");
 			skillGuideChosenTabs.add("Chests");
 			skillGuideChosenTabs.add("Doors");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
@@ -16603,7 +16617,9 @@ public final class mudclient implements Runnable {
 		C_CUSTOM_UI = b;
 	}
 
-	public void setHideLoginBox(boolean b) { C_HIDE_LOGIN_BOX = b; }
+	public void setHideLoginBox(boolean b) {
+		C_HIDE_LOGIN_BOX = b;
+	}
 
 	public void setBlockPartyInv(boolean b) {
 		C_PARTY_INV = b;
