@@ -199,7 +199,7 @@ public class CacheUpdater extends Activity {
                         return;
                     case 1: // Open RSC
                         String ip_openrsc = "androidcheck.openrsc.com";
-                        String port_openrsc = "43594";
+                        String port_openrsc = "43596";
                         FileOutputStream fileout_openrsc;
                         try {
                             fileout_openrsc = new FileOutputStream(realPath.get() + "ip.txt");
@@ -224,7 +224,7 @@ public class CacheUpdater extends Activity {
                         return;
                     /*case 2: // RSC Preservation
                         String ip_preservation = "androidcheck.openrsc.com";
-                        String port_preservation = "43596";
+                        String port_preservation = "43594";
                         FileOutputStream fileout_preservation;
                         try {
                             fileout_preservation = new FileOutputStream(realPath.get() + "ip.txt");
