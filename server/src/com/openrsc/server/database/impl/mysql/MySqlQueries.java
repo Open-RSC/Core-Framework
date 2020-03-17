@@ -14,6 +14,7 @@ public class MySqlQueries {
 	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_BankPresetAdd, save_BankPresetRemove;
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
+	public final String save_Password, save_PreviousPasswords, previousPassword;
 	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, userToId, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate;
 	public final String dropLogSelect, dropLogInsert, dropLogUpdate, npcDrops, banPlayer, unbanPlayer;
@@ -98,6 +99,9 @@ public class MySqlQueries {
 		save_AddQuest = "INSERT INTO `" + PREFIX + "quests` (`playerID`, `id`, `stage`) VALUES(?, ?, ?)";
 		save_AddAchievement = "INSERT INTO `" + PREFIX + "achievement_status` (`playerID`, `id`, `status`) VALUES(?, ?, ?)";
 		save_AddCache = "INSERT INTO `" + PREFIX + "player_cache` (`playerID`, `type`, `key`, `value`) VALUES(?,?,?,?)";
+		save_Password = "UPDATE `" + PREFIX + "players` SET `pass`=? WHERE `playerID`=?";
+		save_PreviousPasswords = "UPDATE `" + PREFIX + "player_recovery` SET `previous_pass`=?, `earlier_pass`=? WHERE `player_ID`=?";
+		previousPassword = "SELECT `previous_pass` FROM `" + PREFIX + "player_recovery` WHERE `playerID`=?";
 		playerLoginData = "SELECT `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
 		playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, " +
 			"`question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, " +

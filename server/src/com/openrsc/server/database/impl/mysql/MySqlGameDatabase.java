@@ -587,6 +587,31 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected String queryPreviousPassword(int playerId) throws GameDatabaseException {
+		String returnVal = "";
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().previousPassword);
+			statement.setInt(1, playerId);
+			try {
+				final ResultSet result = statement.executeQuery();
+				if(!result.next()) {
+					result.close();
+				}
+				returnVal = result.getString("previous_pass");
+				result.close();
+			} finally {
+				statement.close();
+
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+
+		return returnVal;
+	}
+
+	@Override
 	protected void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_UpdateBasicInfo);
@@ -621,6 +646,41 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(29, playerData.oneMouse ? 1 : 0);
 			statement.setInt(30, playerData.soundOff ? 1 : 0);
 			statement.setInt(31, playerId);
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySavePassword(int playerId, String newPassword) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_Password);
+			statement.setString(1, newPassword);
+			statement.setInt(2, playerId);
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySavePreviousPasswords(int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_PreviousPasswords);
+			statement.setString(1, newLastPass);
+			statement.setString(2, newEarlierPass);
+			statement.setInt(3, playerId);
 			try {
 				statement.executeUpdate();
 			} finally {
@@ -1092,6 +1152,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		}
 	}
+
 //	@Override
 //	protected void querySavePlayerInventoryAdd(int playerId, PlayerInventory invItem) throws GameDatabaseException {
 //		try {

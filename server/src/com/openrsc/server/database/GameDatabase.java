@@ -79,6 +79,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract PlayerNpcKills[] queryLoadPlayerNpcKills(Player player) throws GameDatabaseException;
 	protected abstract PlayerSkills[] queryLoadPlayerSkills(Player player) throws GameDatabaseException;
 	protected abstract PlayerExperience[] queryLoadPlayerExperience(Player player) throws GameDatabaseException;
+	protected abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
@@ -93,6 +94,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void querySavePlayerNpcKills(int playerId, PlayerNpcKills[] kills) throws GameDatabaseException;
 	protected abstract void querySavePlayerSkills(int playerId, PlayerSkills[] currSkillLevels) throws GameDatabaseException;
 	protected abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
+	protected abstract void querySavePassword(int playerId, String newPassword) throws GameDatabaseException;
+	protected abstract void querySavePreviousPasswords(int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException;
 
 	//Item and Container operations
 	protected abstract void queryItemCreate(Item item) throws GameDatabaseException;
@@ -289,6 +292,30 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	public void bankRemoveFromPlayer(final Player player, final Item item) throws GameDatabaseException {
 		queryBankRemove(player, item);
+	}
+
+	public String getSalt(final Player player) throws GameDatabaseException {
+		PlayerData playerData = new PlayerData();
+		playerData = queryLoadPlayerData(player);
+		return playerData.salt;
+	}
+
+	public String getPassword(final Player player) throws GameDatabaseException {
+		PlayerData playerData = new PlayerData();
+		playerData = queryLoadPlayerData(player);
+		return playerData.pass;
+	}
+
+	public void saveNewPassword(final int playerId, String newPassword) throws GameDatabaseException {
+		querySavePassword(playerId, newPassword);
+	}
+
+	public void savePreviousPasswords(final int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException {
+
+	}
+
+	public String getPreviousPassword(final int playerId) throws GameDatabaseException {
+		return queryPreviousPassword(playerId);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {

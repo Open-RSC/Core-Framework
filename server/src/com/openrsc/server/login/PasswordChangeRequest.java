@@ -1,23 +1,20 @@
 package com.openrsc.server.login;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.database.impl.mysql.queries.logging.SecurityChangeLog;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.database.impl.mysql.queries.logging.SecurityChangeLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 /**
  * Used to run change password functionality on the Login thread
  *
  * @author Kenix
  */
-public class PasswordChangeRequest extends LoginExecutorProcess{
+public class PasswordChangeRequest extends LoginExecutorProcess {
 
 	/**
 	 * The asynchronous logger.
@@ -71,63 +68,35 @@ public class PasswordChangeRequest extends LoginExecutorProcess{
 	}
 
 	protected void processInternal() {
+		LOGGER.info("Password change attempt from: " + getPlayer().getCurrentIP());
+
 		try {
-			LOGGER.info("Password change attempt from: " + getPlayer().getCurrentIP());
-			PreparedStatement statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT id, pass, salt FROM " + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
-			statement.setString(1, getPlayer().getUsername());
-			ResultSet result = statement.executeQuery();
-			try {
-				if (!result.next()) {
-					LOGGER.info(getPlayer().getCurrentIP() + " - Pass change failed: Could not find player info in database.");
-					return;
-				}
-				String lastDBPass = result.getString("pass");
-				String DBsalt = result.getString("salt");
-				String newDBPass;
-				int playerID = result.getInt("id");
-				if (!DataConversions.checkPassword(getOldPassword(), DBsalt, lastDBPass)) {
-					LOGGER.info(getPlayer().getCurrentIP() + " - Pass change failed: The current password did not match players record.");
-					ActionSender.sendMessage(getPlayer(), "No changes made, your current password did not match");
-					return;
-				}
-				newDBPass = DataConversions.hashPassword(getNewPassword(), DBsalt);
-
-				statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement(
-					"UPDATE `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "players` SET `pass`=? WHERE `id`=?");
-				statement.setString(1, newDBPass);
-				statement.setInt(2, playerID);
-				try{statement.executeUpdate();}
-				finally{statement.close();}
-
-				statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT previous_pass FROM " + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
-				statement.setInt(1, playerID);
-				result = statement.executeQuery();
-				String lastPw, earlierPw;
-				if (result.next()) {
-					//move passwords one step down and update table
-					try {
-						earlierPw = result.getString("previous_pass");
-					} catch(Exception e) {
-						earlierPw = "";
-					}
-					lastPw = lastDBPass;
-
-					statement = getPlayer().getWorld().getServer().getDatabase().getConnection().prepareStatement(
-						"UPDATE `" + getPlayer().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_recovery` SET `previous_pass`=?, `earlier_pass`=? WHERE `playerID`=?");
-					statement.setString(1, lastPw);
-					statement.setString(2, earlierPw);
-					statement.setInt(3, playerID);
-					statement.executeUpdate();
-				}
-
-				getPlayer().getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.PASSWORD_CHANGE,
-					"From: " + lastDBPass + ", To: " + newDBPass));
-				ActionSender.sendMessage(getPlayer(), "Your password was successfully changed!");
-				LOGGER.info(getPlayer().getCurrentIP() + " - Password change successful");
-			} finally {
-				statement.close();
-				result.close();
+			String lastDBPass = getPlayer().getWorld().getServer().getDatabase().getPassword(player);
+			String DBsalt = getPlayer().getWorld().getServer().getDatabase().getSalt(player);
+			String newDBPass;
+			int playerID = getPlayer().getID();
+			if (!DataConversions.checkPassword(getOldPassword(), DBsalt, lastDBPass)) {
+				LOGGER.info(getPlayer().getCurrentIP() + " - Pass change failed: The current password did not match players record.");
+				ActionSender.sendMessage(getPlayer(), "No changes made, your current password did not match");
+				return;
 			}
+			newDBPass = DataConversions.hashPassword(getNewPassword(), DBsalt);
+			getPlayer().getWorld().getServer().getDatabase().saveNewPassword(playerID, newDBPass);
+
+			String lastPw, earlierPw;
+			try {
+				earlierPw = getPlayer().getWorld().getServer().getDatabase().getPreviousPassword(playerID);
+			} catch (Exception e) {
+				earlierPw = "";
+			}
+			lastPw = lastDBPass;
+
+			getPlayer().getWorld().getServer().getDatabase().savePreviousPasswords(playerID, lastPw, earlierPw);
+
+			getPlayer().getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.PASSWORD_CHANGE,
+				"From: " + lastDBPass + ", To: " + newDBPass));
+			ActionSender.sendMessage(getPlayer(), "Your password was successfully changed!");
+			LOGGER.info(getPlayer().getCurrentIP() + " - Password change successful");
 
 		} catch (Exception e) {
 			LOGGER.catching(e);
