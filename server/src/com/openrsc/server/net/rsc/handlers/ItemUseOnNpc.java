@@ -49,12 +49,6 @@ public class ItemUseOnNpc implements PacketHandler {
 					new Object[]{getPlayer(), affectedNpc, item}, this))
 					return;
 
-				switch (affectedNpc.getID()) {
-
-					default:
-						getPlayer().message("Nothing interesting happens");
-						break;
-				}
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
 					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
