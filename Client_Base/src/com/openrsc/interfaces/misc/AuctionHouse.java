@@ -2,17 +2,16 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-
 import orsc.Config;
 import orsc.enumerations.MessageType;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 
 public final class AuctionHouse {
 	public int auctionScrollHandle;
@@ -789,7 +788,8 @@ public final class AuctionHouse {
 				}
 
 				graphics.drawString(mc.ellipsize(def.getName(), 22), listX + 50, listY + boxHeight / 2, 0xffffff, 2);
-				graphics.drawString(getTime(ahItem) + " hours", listX + 200, listY + boxHeight / 2, 0xffffff, 2);
+				// graphics.drawString(getTime(ahItem) + " hours", listX + 200, listY + boxHeight / 2, 0xffffff, 2);
+				graphics.drawString("Never", listX + 200, listY + boxHeight / 2, 0xffffff, 2);
 				graphics.drawString(basicNumber(priceEach) + " gp (ea)", listX + 295, listY + boxHeight / 2 - 8, 0xffffff, 0);
 				graphics.drawString(basicNumber(price) + " gp (all)", listX + 295, listY + boxHeight / 2 + 10 - 4, 0xffffff, 0);
 				graphics.drawBoxAlpha(listX - 3, listY - 4, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
