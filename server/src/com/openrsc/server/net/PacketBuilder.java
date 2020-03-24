@@ -187,7 +187,7 @@ public class PacketBuilder {
 		for (; numBits > offset; offset = 8) {
 			b = payload.getByte(bytePos);
 			payload.setByte(bytePos, (byte) (b & ~BIT_MASK_OUT[offset]));
-			payload.setByte(bytePos, (byte) (b | (value >> (numBits - offset)) & BIT_MASK_OUT[offset]));
+			payload.setByte(bytePos, (byte) (b | value >> numBits - offset & BIT_MASK_OUT[offset]));
 			bytePos++;
 			numBits -= offset;
 		}
@@ -210,6 +210,11 @@ public class PacketBuilder {
 	 */
 	public PacketBuilder write(final ByteBuf buf) {
 		payload.writeBytes(buf);
+		return this;
+	}
+
+	public PacketBuilder setShort(int index, short val) {
+		payload.setShort(index, val);
 		return this;
 	}
 

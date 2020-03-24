@@ -1204,10 +1204,10 @@ public class PacketHandler {
 				int updateType = packetsIncoming.getBitMask(1);
 				if (updateType != 0) {
 					int needsNextSprite = packetsIncoming.getBitMask(2);
-					if (needsNextSprite == 3) {
+					if (needsNextSprite == 0b11) {
 						continue;
 					}
-					playerToShow.animationNext = packetsIncoming.getBitMask(2) + (needsNextSprite << 2);
+					playerToShow.animationNext = (needsNextSprite << 2) | packetsIncoming.getBitMask(2);
 				} else {
 					int modelIndex = packetsIncoming.getBitMask(3);
 					int var33 = playerToShow.waypointIndexCurrent;
@@ -1240,17 +1240,16 @@ public class PacketHandler {
 
 		while (length * 8 > packetsIncoming.getBitHead() + 24) {
 			int var9 = packetsIncoming.getBitMask(11);
-			int var10 = packetsIncoming.getBitMask(6);
-			if (var10 > 31) {
-				var10 -= 64;
-			}
+			int var10 = packetsIncoming.getBitMask(5);
+			if (var10 > 0xF)
+				var10 -= 0x20;
 
-			int var11 = packetsIncoming.getBitMask(6);
-			if (var11 > 31) {
-				var11 -= 64;
-			}
+			int var11 = packetsIncoming.getBitMask(5);
+			if (var11 > 0xF)
+				var11 -= 0x20;
 
 			direction = packetsIncoming.getBitMask(4);
+			packetsIncoming.getBitMask(1); // Have we seen them recently flag
 			currentZ = (mc.getLocalPlayerZ() + var11) * tileSize + 64;
 			currentX = (mc.getLocalPlayerX() + var10) * tileSize + 64;
 			mc.createPlayer(currentZ, var9, currentX, 1, ORSCharacterDirection.lookup(direction));
@@ -1529,11 +1528,9 @@ public class PacketHandler {
 				var12 = packetsIncoming.getBitMask(1);
 				if (var12 != 0) {
 					int nextSpriteOffset = packetsIncoming.getBitMask(2);
-					if (nextSpriteOffset == 3) {
+					if (nextSpriteOffset == 0b11)
 						continue;
-					}
-					npc.animationNext = (nextSpriteOffset << 2)
-						+ packetsIncoming.getBitMask(2);
+					npc.animationNext = (nextSpriteOffset << 2) | packetsIncoming.getBitMask(2);
 				} else {
 					rsDir = packetsIncoming.getBitMask(3);
 					waypointCurrentIndex = npc.waypointIndexCurrent;
@@ -1568,14 +1565,12 @@ public class PacketHandler {
 
 		while (length * 8 > packetsIncoming.getBitHead() + 34) {
 			i = packetsIncoming.getBitMask(12);
-			int var6 = packetsIncoming.getBitMask(6);
-			if (var6 > 31) {
-				var6 -= 64;
-			}
-			int var7 = packetsIncoming.getBitMask(6);
-			if (var7 > 31) {
-				var7 -= 64;
-			}
+			int var6 = packetsIncoming.getBitMask(5);
+			if (var6 > 0xF)
+				var6 -= 0x20;
+			int var7 = packetsIncoming.getBitMask(5);
+			if (var7 > 0xF)
+				var7 -= 0x20;
 			var12 = packetsIncoming.getBitMask(4);
 			rsDir = (var6 + mc.getLocalPlayerX()) * tileSize + 64;
 			waypointCurrentIndex = (var7 + mc.getLocalPlayerZ()) * tileSize + 64;
