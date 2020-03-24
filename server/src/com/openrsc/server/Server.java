@@ -33,6 +33,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -296,6 +297,13 @@ public class Server implements Runnable {
 		}
 	}
 
+
+	public static long bench(Runnable r) {
+		long start = System.currentTimeMillis();
+		r.run();
+		return System.currentTimeMillis() - start;
+	}
+
 	public void run() {
 		synchronized (running) {
 			try {
@@ -305,19 +313,19 @@ public class Server implements Runnable {
 					this.timeLate -= getConfig().GAME_TICK;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
-					final long tickStart = System.currentTimeMillis();
-					final long lastIncomingPacketsDuration = processIncomingPackets();
-					final long lastEventsDuration = runGameEvents();
-					final long lastGameStateDuration = runGameStateUpdate();
-					final long lastOutgoingPacketsDuration = processOutgoingPackets();
-					final long tickEnd = System.currentTimeMillis();
-					final long lastTickDuration = tickEnd - tickStart;
-
-					this.lastIncomingPacketsDuration = lastIncomingPacketsDuration;
-					this.lastEventsDuration = lastEventsDuration;
-					this.lastGameStateDuration = lastGameStateDuration;
-					this.lastOutgoingPacketsDuration = lastOutgoingPacketsDuration;
-					this.lastTickDuration = lastTickDuration;
+					this.lastTickDuration = bench(() -> {
+						try {
+							this.lastIncomingPacketsDuration = this.lastOutgoingPacketsDuration = 0L;
+							for (Player player : getWorld().getPlayers())
+								this.lastIncomingPacketsDuration += bench(player::processIncomingPackets);
+							this.lastEventsDuration = getGameEventHandler().runGameEvents();
+							this.lastGameStateDuration = getGameUpdater().doUpdates();
+							for (Player player : getWorld().getPlayers())
+								this.lastOutgoingPacketsDuration += bench(player::processOutgoingPackets);
+						} catch (Throwable t) {
+							LOGGER.catching(t);
+						}
+					});
 
 					monitoring.run();
 				} else {
@@ -336,37 +344,7 @@ public class Server implements Runnable {
 			} catch (Throwable t) {
 				LOGGER.catching(t);
 			}
-			//if (PathValidation.DEBUG)
-			//	panel.repaint();
 		}
-	}
-
-	protected final long runGameEvents() {
-		return getGameEventHandler().runGameEvents();
-	}
-
-	protected final long runGameStateUpdate() throws Exception {
-		return getGameUpdater().doUpdates();
-	}
-
-	protected final long processIncomingPackets() {
-		final long processPacketsStart = System.currentTimeMillis();
-		for (Player p : getWorld().getPlayers()) {
-			p.processIncomingPackets();
-		}
-		final long processPacketsEnd = System.currentTimeMillis();
-
-		return processPacketsEnd - processPacketsStart;
-	}
-
-	protected long processOutgoingPackets() {
-		final long processPacketsStart = System.currentTimeMillis();
-		for (Player p : getWorld().getPlayers()) {
-			p.processOutgoingPackets();
-		}
-		final long processPacketsEnd = System.currentTimeMillis();
-
-		return processPacketsEnd - processPacketsStart;
 	}
 
 	public boolean shutdownForUpdate(int seconds) {
