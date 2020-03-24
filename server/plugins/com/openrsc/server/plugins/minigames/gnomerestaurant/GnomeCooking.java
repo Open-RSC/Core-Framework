@@ -38,7 +38,7 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		p.playSound("cooking");
 		if (p.getInventory().remove(item) > -1) {
 			message(p, 3000, gc.messages[0]);
-			if (!burnFood(p, gc.requiredLevel, p.getSkills().getLevel(Skills.COOKING))) {
+			if (!burnFood(p, item.getID(), p.getSkills().getLevel(Skills.COOKING))) {
 				if (inArray(item.getID(), ItemId.GNOMEBATTA_DOUGH.id(), ItemId.GNOMEBOWL_DOUGH.id(),
 						ItemId.GNOMECRUNCHIE_DOUGH.id())) {
 					p.message(gc.messages[1]);
@@ -120,8 +120,8 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 	}
 
 	private boolean mouldDough(Item item, Player p) {
-		if (hasItem(p, ItemId.GNOMEBATTA_DOUGH.id()) || hasItem(p, ItemId.GNOMEBOWL_DOUGH.id()) 
-				|| hasItem(p, ItemId.GNOMECRUNCHIE_DOUGH.id()) || hasItem(p, ItemId.GNOMEBATTA.id()) 
+		if (hasItem(p, ItemId.GNOMEBATTA_DOUGH.id()) || hasItem(p, ItemId.GNOMEBOWL_DOUGH.id())
+				|| hasItem(p, ItemId.GNOMECRUNCHIE_DOUGH.id()) || hasItem(p, ItemId.GNOMEBATTA.id())
 				|| hasItem(p, ItemId.GNOMEBOWL.id()) || hasItem(p, ItemId.GNOMECRUNCHIE.id())) {
 			message(p, "you need to finish, eat or drop the unfinished dish you hold");
 			p.message("before you can make another - giannes rules");
@@ -198,8 +198,8 @@ public class GnomeCooking implements InvActionListener, InvActionExecutiveListen
 		handleGnomeCooking(item, p, obj);
 	}
 
-	private boolean burnFood(Player p, int reqLvl, int myCookingLvl) {
-		return Formulae.burnFood(p, ItemId.GIANNE_DOUGH.id(), myCookingLvl);
+	private boolean burnFood(Player p, int itemId, int myCookingLvl) {
+		return Formulae.burnFood(p, itemId, myCookingLvl);
 	}
 
 	enum GnomeCook {
