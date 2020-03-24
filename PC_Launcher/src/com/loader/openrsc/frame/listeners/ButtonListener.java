@@ -72,7 +72,7 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "dev": {
-				String ip = "game.openrsc.com";
+				String ip = "orsc.dev";
 				String port = "43599";
 				set(ip, port);
 				launch();
