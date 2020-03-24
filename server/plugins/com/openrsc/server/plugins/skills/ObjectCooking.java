@@ -206,6 +206,12 @@ public class ObjectCooking implements InvUseOnObjectListener, InvUseOnObjectExec
 		if (item.getID() == ItemId.POISON.id() && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
 			return true;
 		}
+		// Gnome Cooking Items
+		if (item.getID() == ItemId.GNOMEBATTA_DOUGH.id() || item.getID() == ItemId.GNOMEBOWL_DOUGH.id()
+			|| item.getID() == ItemId.GNOMECRUNCHIE_DOUGH.id() || item.getID() == ItemId.GNOMEBATTA.id()
+			|| item.getID() == ItemId.GNOMEBOWL.id() || item.getID() == ItemId.GNOMECRUNCHIE.id()) {
+			return false;
+		}
 		final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;
 	}
