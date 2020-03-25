@@ -16524,7 +16524,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public void addXpNotification(int skill, int receivedXp, boolean b) {
-		XPNotification n = new XPNotification(skill, receivedXp, false);
+		XPNotification n = new XPNotification(skill, receivedXp, b);
 		this.xpNotifications.add(n);
 	}
 

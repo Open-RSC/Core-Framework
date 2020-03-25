@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,8 +13,8 @@ public class Bones implements InvActionListener, InvActionExecutiveListener {
 		owner.message("You bury the "
 			+ item.getDef(owner.getWorld()).getName().toLowerCase());
 
-		owner.playSound("dropobject");
-		
+		owner.playSound("takeobject");
+
 		switch (ItemId.getById(item.getID())) {
 			case BONES:
 				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75

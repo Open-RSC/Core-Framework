@@ -57,14 +57,14 @@ public final class GameStateUpdater {
 		// TODO: Should be private
 		try {
 			updatePlayers(p);
-			updatePlayerAppearances(p); // why seperate?
+			updatePlayerAppearances(p);
 			updateNpcs(p);
-			updateNpcAppearances(p); // why seperate?
+			updateNpcAppearances(p);
 			updateGameObjects(p);
 			updateWallObjects(p);
 			updateGroundItems(p);
 			sendClearLocations(p);
-			updateTimeouts(p); // maybe do this first?
+			updateTimeouts(p);
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			p.unregister(true, "Exception while updating player " + p.getUsername());
@@ -111,56 +111,39 @@ public final class GameStateUpdater {
 		packet.startBitAccess();
 		packet.writeBits(playerToUpdate.getLocalNpcs().size(), 8);
 		for (Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
-			// If you change the order of these blocks, bad things will probably occur.
 			Npc localNpc = it$.next();
 
-			// all the client cares about here is these next 4 bits are flipped on, even though it reads in 6 bits
-			// the leftover 2 bits that get tacked on to the value it reads end up getting masked out for the check
 			if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isTeleporting() || localNpc.inCombat()) {
-				packet.writeBits(1, 1);
-				packet.writeBits(1, 1);
-				packet.writeBits(0b11, 2);
 				it$.remove();
-				continue;
-			}
-
-			// This has a different block of code to the removal and sprite updates, because valid movement
-			// sprite changes will fit into just 3 bits, and the other code block reads 4 bits for that value
-			if (localNpc.hasMoved()) {
-				packet.writeBits(1, 1);
-				packet.writeBits(0, 1);
-				packet.writeBits(localNpc.getSprite(), 3);
-				continue;
-			}
-
-			// The reason this sprite value is larger than movements is because while all possible directions fit
-			// into a 3-bit value, all possible character sprites do not.
-			if (localNpc.spriteChanged()) {
 				packet.writeBits(1, 1);
 				packet.writeBits(1, 1);
-				packet.writeBits(localNpc.getSprite(), 4);
-				continue;
+				packet.writeBits(3, 2);
+			} else {
+				if (localNpc.hasMoved()) {
+					packet.writeBits(1, 1);
+					packet.writeBits(0, 1);
+					packet.writeBits(localNpc.getSprite(), 3);
+				} else if (localNpc.spriteChanged()) {
+					packet.writeBits(1, 1);
+					packet.writeBits(1, 1);
+					packet.writeBits(localNpc.getSprite(), 4);
+				} else {
+					packet.writeBits(0, 1);
+				}
 			}
-
-			// nothing changed.
-			packet.writeBits(0, 1);
 		}
 		for (Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
-			if (playerToUpdate.getLocalNpcs().size() >= 255) {
-                break;
-            }
-
-			// FIXME: Use Entity.isInvisibleTo for ned_hired check  Needs override in Npc class
-			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.isRemoved()
+			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved()
 				|| newNPC.getID() == 194 && !playerToUpdate.getCache().hasKey("ned_hired")
 				|| !playerToUpdate.withinRange(newNPC, (getServer().getConfig().VIEW_DISTANCE * 8) - 1) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
 				continue;
+			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
+				break;
 			}
-
 			byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 			packet.writeBits(newNPC.getIndex(), 12);
-			packet.writeBits(offsets[0], 5);
-			packet.writeBits(offsets[1], 5);
+			packet.writeBits(offsets[0], 6);
+			packet.writeBits(offsets[1], 6);
 			packet.writeBits(newNPC.getSprite(), 4);
 			packet.writeBits(newNPC.getID(), 10);
 
@@ -171,6 +154,7 @@ public final class GameStateUpdater {
 	}
 
 	protected void updatePlayers(Player playerToUpdate) throws Exception {
+
 		com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
 		positionBuilder.setID(191);
 		positionBuilder.startBitAccess();
@@ -181,67 +165,51 @@ public final class GameStateUpdater {
 
 		if (playerToUpdate.loggedIn()) {
 			for (Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
-				// If you change the order of these blocks, bad things will probably occur.
 				Player otherPlayer = it$.next();
 
-				// all the client cares about here is these next 4 bits are flipped on, even though it reads in 6 bits
-				// the leftover 2 bits that get tacked on to the value it reads end up getting masked out for the check
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 					|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
 					|| otherPlayer.inCombat() || otherPlayer.hasMoved()) {
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(0b11, 2);
+					positionBuilder.writeBits(1, 1); //Needs Update
+					positionBuilder.writeBits(1, 1); //Update Type
+					positionBuilder.writeBits(3, 2); //???
 					it$.remove();
 					playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
-					continue;
+				} else {
+					if (!otherPlayer.hasMoved() && !otherPlayer.spriteChanged()) {
+						positionBuilder.writeBits(0, 1); //Needs Update
+					} else {
+						// The player is actually going to be updated
+						if (otherPlayer.hasMoved()) {
+							positionBuilder.writeBits(1, 1); //Needs Update
+							positionBuilder.writeBits(0, 1); //Update Type
+							positionBuilder.writeBits(otherPlayer.getSprite(), 3);
+						} else if (otherPlayer.spriteChanged()) {
+							positionBuilder.writeBits(1, 1); //Needs Update
+							positionBuilder.writeBits(1, 1); //Update Type
+							positionBuilder.writeBits(otherPlayer.getSprite(), 4);
+						}
+					}
 				}
-
-				// This has a different block of code to the removal and sprite updates, because valid movement
-				// sprite changes will fit into just 3 bits, and the other code block reads 4 bits for that value
-				if (otherPlayer.hasMoved()) {
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(0, 1);
-					positionBuilder.writeBits(otherPlayer.getSprite(), 3);
-					continue;
-				}
-
-				// The reason this sprite value is larger than movements is because while all possible directions
-				// fit into a 3-bit value, all possible character sprites do not.
-				if(otherPlayer.spriteChanged()) {
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(1, 1);
-					positionBuilder.writeBits(otherPlayer.getSprite(), 4);
-					continue;
-				}
-
-				// nothing changed
-				positionBuilder.writeBits(0, 1);
 			}
 
 			for (Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
-				if (playerToUpdate.getLocalPlayers().size() >= 255) {
-                    break;
-                }
-
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
 					|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
 					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
-
 				byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 					playerToUpdate.getLocation());
 				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
-				positionBuilder.writeBits(offsets[0], 5);
-				positionBuilder.writeBits(offsets[1], 5);
+				positionBuilder.writeBits(offsets[0], 6);
+				positionBuilder.writeBits(offsets[1], 6);
 				positionBuilder.writeBits(otherPlayer.getSprite(), 4);
-				// previously seen flag. Conditionally triggers client to send us all the appearance tickets its seen
-				positionBuilder.writeBits(playerToUpdate.getKnownPlayerAppearanceIDs().containsKey(
-					otherPlayer.getUsernameHash()) ? 1 : 0, 1);
-
 				playerToUpdate.getLocalPlayers().add(otherPlayer);
+				if (playerToUpdate.getLocalPlayers().size() >= 255) {
+					break;
+				}
 			}
 		}
 		positionBuilder.finishBitAccess();
@@ -249,72 +217,102 @@ public final class GameStateUpdater {
 	}
 
 	public void updateNpcAppearances(Player player) {
-		int updateSize = 0;
-		PacketBuilder npcAppearancePacket = new PacketBuilder();
-		npcAppearancePacket.setID(104);
-		npcAppearancePacket.writeShort(0);
+		ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<Skull> npcSkullsNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<Wield> npcWieldsNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		ConcurrentLinkedQueue<BubbleNpc> npcBubblesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+
 		for (Npc npc : player.getLocalNpcs()) {
-			if (npc.getUpdateFlags().hasChatMessage()) {
-				ChatMessage chatMessage = npc.getUpdateFlags().getChatMessage();
+			UpdateFlags updateFlags = npc.getUpdateFlags();
+			if (updateFlags.hasChatMessage()) {
+				ChatMessage chatMessage = updateFlags.getChatMessage();
+				npcMessagesNeedingDisplayed.add(chatMessage);
+			}
+			if (updateFlags.hasSkulled()) {
+				Skull skull = updateFlags.getSkull().get();
+				npcSkullsNeedingDisplayed.add(skull);
+			}
+			if (updateFlags.changedWield()) {
+				Wield wield = updateFlags.getWield().get();
+				npcWieldsNeedingDisplayed.add(wield);
+			}
+			if (updateFlags.changedWield2()) {
+				Wield wield2 = updateFlags.getWield2().get();
+				npcWieldsNeedingDisplayed.add(wield2);
+			}
+			if (updateFlags.hasTakenDamage()) {
+				Damage damage = updateFlags.getDamage().get();
+				npcsNeedingHitsUpdate.add(damage);
+			}
+			if (updateFlags.hasFiredProjectile()) {
+				Projectile projectileFired = updateFlags.getProjectile().get();
+				npcProjectilesNeedingDisplayed.add(projectileFired);
+			}
+			if (updateFlags.hasBubbleNpc()) {
+					BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
+					npcBubblesNeedingDisplayed.add(bubble);
+			}
+		}
+		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
+			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
+		if (updateSize > 0) {
+			PacketBuilder npcAppearancePacket = new PacketBuilder();
+			npcAppearancePacket.setID(104);
+			npcAppearancePacket.writeShort(updateSize);
+
+			ChatMessage chatMessage;
+			while ((chatMessage = npcMessagesNeedingDisplayed.poll()) != null) {
 				npcAppearancePacket.writeShort(chatMessage.getSender().getIndex());
 				npcAppearancePacket.writeByte((byte) 1);
 				npcAppearancePacket.writeShort(chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex());
 				npcAppearancePacket.writeString(chatMessage.getMessageString());
-				updateSize++;
 			}
-			if (npc.getUpdateFlags().hasTakenDamage()) {
-				Damage damage = npc.getUpdateFlags().getDamage().get();
-				npcAppearancePacket.writeShort(damage.getIndex());
+			Damage npcNeedingHitsUpdate;
+			while ((npcNeedingHitsUpdate = npcsNeedingHitsUpdate.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingHitsUpdate.getIndex());
 				npcAppearancePacket.writeByte((byte) 2);
-				npcAppearancePacket.writeByte((byte) damage.getDamage());
-				npcAppearancePacket.writeByte((byte) damage.getCurHits());
-				npcAppearancePacket.writeByte((byte) damage.getMaxHits());
-				updateSize++;
+				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getDamage());
+				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getCurHits());
+				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getMaxHits());
 			}
-			if (npc.getUpdateFlags().hasFiredProjectile()) {
-				Projectile projectile = npc.getUpdateFlags().getProjectile().get();
-				npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+			Projectile projectile;
+			while ((projectile = npcProjectilesNeedingDisplayed.poll()) != null) {
 				Entity victim = projectile.getVictim();
-				npcAppearancePacket.writeByte(victim.isNpc() ? (byte) 3 : (byte) 4);
-				npcAppearancePacket.writeShort(projectile.getType());
-				npcAppearancePacket.writeShort(victim.getIndex());
-				updateSize++;
+				if (victim.isNpc()) {
+					npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+					npcAppearancePacket.writeByte((byte) 3);
+					npcAppearancePacket.writeShort(projectile.getType());
+					npcAppearancePacket.writeShort(((Npc) victim).getIndex());
+				} else if (victim.isPlayer()) {
+					npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+					npcAppearancePacket.writeByte((byte) 4);
+					npcAppearancePacket.writeShort(projectile.getType());
+					npcAppearancePacket.writeShort(((Player) victim).getIndex());
+				}
 			}
-			if (npc.getUpdateFlags().hasSkulled()) {
-				Skull skull = npc.getUpdateFlags().getSkull().get();
-				npcAppearancePacket.writeShort(skull.getIndex());
+			Skull npcNeedingSkullUpdate;
+			while ((npcNeedingSkullUpdate = npcSkullsNeedingDisplayed.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingSkullUpdate.getIndex());
 				npcAppearancePacket.writeByte((byte) 5);
-				npcAppearancePacket.writeByte((byte) skull.getSkull());
-				updateSize++;
+				npcAppearancePacket.writeByte((byte) npcNeedingSkullUpdate.getSkull());
 			}
-			if (npc.getUpdateFlags().changedWield()) {
-				Wield wield = npc.getUpdateFlags().getWield().get();
-				npcAppearancePacket.writeShort(wield.getIndex());
+			Wield npcNeedingWieldUpdate;
+			while ((npcNeedingWieldUpdate = npcWieldsNeedingDisplayed.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingWieldUpdate.getIndex());
 				npcAppearancePacket.writeByte((byte) 6);
-				npcAppearancePacket.writeByte((byte) wield.getWield());
-				npcAppearancePacket.writeByte((byte) wield.getWield2());
-				updateSize++;
+				npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield());
+				npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield2());
 			}
-			if (npc.getUpdateFlags().changedWield2()) {
-				Wield wield2 = npc.getUpdateFlags().getWield2().get();
-				npcAppearancePacket.writeShort(wield2.getIndex());
-				npcAppearancePacket.writeByte((byte) 6);
-				npcAppearancePacket.writeByte((byte) wield2.getWield());
-				npcAppearancePacket.writeByte((byte) wield2.getWield2());
-				updateSize++;
-			}
-			if (npc.getUpdateFlags().hasBubbleNpc()) {
-				BubbleNpc bubble = npc.getUpdateFlags().getActionBubbleNpc().get();
-				npcAppearancePacket.writeShort(bubble.getOwner().getIndex());
+			BubbleNpc npcNeedingBubbleUpdate;
+			while ((npcNeedingBubbleUpdate = npcBubblesNeedingDisplayed.poll()) != null) {
+				npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getOwner().getIndex());
 				npcAppearancePacket.writeByte((byte) 7);
-				npcAppearancePacket.writeShort(bubble.getID());
-				updateSize++;
+				npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getID());
 			}
+			player.write(npcAppearancePacket.toPacket());
 		}
-		if (updateSize == 0)
-			return;
-		npcAppearancePacket.setShort(0, (short) updateSize);
-		player.write(npcAppearancePacket.toPacket());
 	}
 
 	/**
@@ -323,15 +321,13 @@ public final class GameStateUpdater {
 	 * @param player
 	 */
 	public void updatePlayerAppearances(Player player) {
+
 		ArrayDeque<Bubble> bubblesNeedingDisplayed = new ArrayDeque<>();
 		ArrayDeque<ChatMessage> chatMessagesNeedingDisplayed = new ArrayDeque<>();
 		ArrayDeque<Projectile> projectilesNeedingDisplayed = new ArrayDeque<>();
 		ArrayDeque<Damage> playersNeedingDamageUpdate = new ArrayDeque<>();
 		ArrayDeque<HpUpdate> playersNeedingHpUpdate = new ArrayDeque<HpUpdate>();
 		ArrayDeque<Player> playersNeedingAppearanceUpdate = new ArrayDeque<>();
-
-		// TODO: Wasting cycles doing so much looping when in practice, it could be done with one loop over local
-		// players followed by changing the packet buffer at the offset containing the update size after we're done
 
 		if (player.getUpdateFlags().hasBubble()) {
 			Bubble bubble = player.getUpdateFlags().getActionBubble().get();
@@ -357,6 +353,7 @@ public final class GameStateUpdater {
 			playersNeedingAppearanceUpdate.add(player);
 		}
 		for (Player otherPlayer : player.getLocalPlayers()) {
+
 			UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
 
 			if(otherPlayer.getUsername().trim().equalsIgnoreCase("kenix") && player.getUsername().trim().equalsIgnoreCase("kenix")) {
@@ -567,18 +564,20 @@ public final class GameStateUpdater {
 					packet.writeByte(255);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
+					//System.out.println("Removing " + groundItem + " with grounditem remove: " + offsetX + ", " + offsetY);
 					it$.remove();
 					changed = true;
 				} else {
 					playerToUpdate.getLocationsToClear().add(groundItem.getLocation());
+					//System.out.println("Removing " + groundItem + " with region remove");
 					it$.remove();
 					changed = true;
 				}
 			} else if (groundItem.isRemoved() || groundItem.isInvisibleTo(playerToUpdate)) {
-				// flip 15th bit
-				packet.writeShort(groundItem.getID() | 0x8000);
+				packet.writeShort(groundItem.getID() + 32768);
 				packet.writeByte(offsetX);
 				packet.writeByte(offsetY);
+				//System.out.println("Removing " + groundItem + " with isRemoved() remove: " + offsetX + ", " + offsetY);
 				it$.remove();
 				changed = true;
 			}
@@ -767,11 +766,6 @@ public final class GameStateUpdater {
 	 */
 	protected final long processMessageQueues() {
 		final long processMessageQueuesStart	= System.currentTimeMillis();
-		// I notice a common theme where iteration is duplicated in this class without reason, often in places that I
-		// can't see as negligible.  Should go through and redesign what is possible to improve.
-		// TODO: Consolidate this method to use less loops.  Actually, isn't it better to make it a part of the
-		// updatePlayers method, and leave this maybe just for global chat queue?  I almost feel global queue needs
-		// redesign to just have global message queue per player and post these during updatePlayers too.
 		for (Player p : players) {
 			PrivateMessage pm = p.getNextPrivateMessage();
 			if (pm != null) {
@@ -794,7 +788,8 @@ public final class GameStateUpdater {
 			for (Player p : players) {
 				if (p == gm.getPlayer()) {
 					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
-				} else if (!p.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
+				}
+				else if (!p.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
 						&& !p.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
 					ActionSender.sendPrivateMessageReceived(p, gm.getPlayer(), gm.getMessage(), true);
 				}

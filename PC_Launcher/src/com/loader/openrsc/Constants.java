@@ -14,7 +14,7 @@ public class Constants {
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String OPENPK_FILENAME = "Open_PK_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/";
-	public static final Double VERSION_NUMBER = 20200315.184500; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20200324.130000; //YYYYMMDD.HHMMSS format
 	public static final String VERSION_UPDATE_URL = "https://orsc.dev/open-rsc/Game/raw/master/PC_Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "http://game.openrsc.com/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";
