@@ -201,6 +201,10 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			final PlayerLoginData loginData = new PlayerLoginData();
 
+			if (!playerSet.first()) {
+				return null;
+			}
+
 			try {
 				loginData.groupId = playerSet.getInt("group_id");
 				loginData.password = playerSet.getString("pass");
@@ -1649,7 +1653,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		return retVal;
 	}
 
-	public boolean isConnected() {
+	private boolean isConnected() {
 		return getConnection().isConnected();
 	}
 
@@ -1659,7 +1663,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	// Should be private
-	private MySqlQueries getQueries() {
+	public MySqlQueries getQueries() {
 		return queries;
 	}
 

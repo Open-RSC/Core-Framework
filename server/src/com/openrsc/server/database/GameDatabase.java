@@ -301,18 +301,6 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		queryBankRemove(player, item);
 	}
 
-	public String getSalt(final Player player) throws GameDatabaseException {
-		PlayerData playerData = new PlayerData();
-		playerData = queryLoadPlayerData(player);
-		return playerData.salt;
-	}
-
-	public String getPassword(final Player player) throws GameDatabaseException {
-		PlayerData playerData = new PlayerData();
-		playerData = queryLoadPlayerData(player);
-		return playerData.pass;
-	}
-
 	public void saveNewPassword(final int playerId, String newPassword) throws GameDatabaseException {
 		querySavePassword(playerId, newPassword);
 	}

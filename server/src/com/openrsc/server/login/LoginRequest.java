@@ -1,6 +1,8 @@
 package com.openrsc.server.login;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.struct.PlayerLoginData;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,9 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public abstract class LoginRequest extends LoginExecutorProcess{
 	/**
@@ -112,87 +111,77 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	}
 
 	public byte validateLogin() {
-		PreparedStatement statement = null;
-		ResultSet playerSet = null;
+		PlayerLoginData playerData;
 		int groupId = Group.USER;
 		try {
 			if(!getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
-			statement = getServer().getDatabase().getConnection().prepareStatement(
-				getServer().getDatabase().getQueries().playerLoginData
-			);
-			statement.setString(1, getUsername());
-			playerSet = statement.executeQuery();
+			playerData = getServer().getDatabase().getPlayerLoginData(username);
 
-			try {
-				boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
-				if(playerSet.first()) {
-					groupId = playerSet.getInt("group_id");
-					isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
-				}
+			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
+			if (playerData != null) {
+				groupId = playerData.groupId;
+				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
+			}
 
-				if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
-					return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
-				}
+			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
+				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
+			}
 
-				if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
-					return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
-				}
+			if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
+				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+			}
 
-				if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
-					return (byte) LoginResponse.CLIENT_UPDATED;
-				}
+			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
+				return (byte) LoginResponse.CLIENT_UPDATED;
+			}
 
-				final long i = getServer().timeTillShutdown();
-				if (i > 0 && i < 30000 && !isAdmin) {
-					return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
-				}
+			final long i = getServer().timeTillShutdown();
+			if (i > 0 && i < 30000 && !isAdmin) {
+				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
+			}
 
-				if (!playerSet.first()) {
-					server.getPacketFilter().addPasswordAttempt(getIpAddress());
-					return (byte) LoginResponse.INVALID_CREDENTIALS;
-				}
+			if (playerData == null) {
+				server.getPacketFilter().addPasswordAttempt(getIpAddress());
+				return (byte) LoginResponse.INVALID_CREDENTIALS;
+			}
 
-				if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
-					return (byte) LoginResponse.WORLD_IS_FULL;
-				}
+			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
+				return (byte) LoginResponse.WORLD_IS_FULL;
+			}
 
-				if (getServer().getWorld().getPlayer(getUsernameHash()) != null) {
-					return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
-				}
+			if (getServer().getWorld().getPlayer(getUsernameHash()) != null) {
+				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
+			}
 
-				if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
-					return (byte) LoginResponse.IP_IN_USE;
-				}
+			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+				return (byte) LoginResponse.IP_IN_USE;
+			}
 
-				final long banExpires = playerSet.getLong("banned");
-				if (banExpires == -1 && !isAdmin) {
-					return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
-				}
+			final long banExpires = playerData.banned;
+			if (banExpires == -1 && !isAdmin) {
+				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
+			}
 
-				final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
-				if (timeBanLeft >= 1 && !isAdmin) {
-					return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
-				}
+			final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
+			if (timeBanLeft >= 1 && !isAdmin) {
+				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+			}
 
-				if (!DataConversions.checkPassword(getPassword(), playerSet.getString("salt"), playerSet.getString("pass"))) {
-					server.getPacketFilter().addPasswordAttempt(getIpAddress());
-					return (byte) LoginResponse.INVALID_CREDENTIALS;
-				}
+			if (!DataConversions.checkPassword(getPassword(), playerData.salt, playerData.password)) {
+				server.getPacketFilter().addPasswordAttempt(getIpAddress());
+				return (byte) LoginResponse.INVALID_CREDENTIALS;
+			}
 
-				// Doing this at end because we only want to flag the host as an admin _IF_ they know the password.
-				if(isAdmin) {
-					getServer().getPacketFilter().addAdminHost(getIpAddress());
-				}
-			} finally {
-				statement.close();
-				playerSet.close();
+			// Doing this at end because we only want to flag the host as an admin _IF_ they know the password.
+			if(isAdmin) {
+				getServer().getPacketFilter().addAdminHost(getIpAddress());
 			}
 
 
-		} catch (SQLException e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 			return (byte) LoginResponse.LOGIN_INSUCCESSFUL;
 		}
