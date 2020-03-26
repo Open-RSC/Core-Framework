@@ -1658,7 +1658,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	// Should be private
-	private MySqlGameDatabaseConnection getConnection() {
+	public MySqlGameDatabaseConnection getConnection() {
 		return connection;
 	}
 
