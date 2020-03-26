@@ -642,7 +642,8 @@ public class MySqlGameDatabase extends GameDatabase {
 		return loadedAchievements;
 	}
 
-	private ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException {
+	@Override
+	protected ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException {
 		ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
 
 		try {
@@ -669,7 +670,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		return rewards;
 	}
 
-	private ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException {
+	protected ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException {
 		ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
 
 		try {

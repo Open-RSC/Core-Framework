@@ -2,6 +2,8 @@ package com.openrsc.server.database;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.Achievement;
+import com.openrsc.server.content.achievement.AchievementReward;
+import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
@@ -83,6 +85,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract PlayerExperience[] queryLoadPlayerExperience(Player player) throws GameDatabaseException;
 	protected abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
 	protected abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
+	protected abstract ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException;
+	protected abstract ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
