@@ -1,6 +1,9 @@
 package com.openrsc.server.database.impl.mysql;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.content.achievement.Achievement;
+import com.openrsc.server.content.achievement.AchievementReward;
+import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.*;
@@ -609,6 +612,86 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 
 		return returnVal;
+	}
+
+	@Override
+	protected LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException {
+		LinkedList<Achievement> loadedAchievements = new LinkedList<Achievement>();
+		try {
+			PreparedStatement fetchAchievement = getConnection().prepareStatement(getQueries().achievements);
+
+			ResultSet result = fetchAchievement.executeQuery();
+			try {
+				while (result.next()) {
+					ArrayList<AchievementReward> rewards = queryLoadAchievementRewards(result.getInt("id"));
+					ArrayList<AchievementTask> tasks = queryLoadAchievementTasks(result.getInt("id"));
+
+					Achievement achievement = new Achievement(tasks, rewards, result.getInt("id"),
+						result.getString("name"), result.getString("description"), result.getString("extra"));
+					loadedAchievements.add(achievement);
+				}
+			} finally {
+				fetchAchievement.close();
+				result.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+
+		return loadedAchievements;
+	}
+
+	private ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException {
+		ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
+
+		try {
+			PreparedStatement fetchRewards = getConnection()
+				.prepareStatement(getQueries().rewards);
+			fetchRewards.setInt(1, achievementId);
+
+			ResultSet rewardResult = fetchRewards.executeQuery();
+			try {
+				while (rewardResult.next()) {
+					Achievement.TaskReward rewardType = Achievement.TaskReward.valueOf(Achievement.TaskReward.class, rewardResult.getString("reward_type"));
+					rewards.add(new AchievementReward(rewardType, rewardResult.getInt("item_id"), rewardResult.getInt("amount"),
+						rewardResult.getInt("guaranteed") == 1 ? true : false));
+				}
+			} finally {
+				fetchRewards.close();
+				rewardResult.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+
+		return rewards;
+	}
+
+	private ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException {
+		ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
+
+		try {
+			PreparedStatement fetchTasks = getConnection().prepareStatement(getQueries().tasks);
+			fetchTasks.setInt(1, achievementId);
+
+			ResultSet taskResult = fetchTasks.executeQuery();
+			try {
+				while (taskResult.next()) {
+					Achievement.TaskType type = Achievement.TaskType.valueOf(Achievement.TaskType.class, taskResult.getString("type"));
+					tasks.add(new AchievementTask(type, taskResult.getInt("do_id"), taskResult.getInt("do_amount")));
+				}
+			} finally {
+				fetchTasks.close();
+				taskResult.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+
+		return tasks;
 	}
 
 	@Override
@@ -1570,12 +1653,12 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	// Should be private
-	public MySqlGameDatabaseConnection getConnection() {
+	private MySqlGameDatabaseConnection getConnection() {
 		return connection;
 	}
 
 	// Should be private
-	public MySqlQueries getQueries() {
+	private MySqlQueries getQueries() {
 		return queries;
 	}
 

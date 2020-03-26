@@ -1,8 +1,8 @@
 package com.openrsc.server.content.achievement;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.content.achievement.Achievement.TaskReward;
 import com.openrsc.server.content.achievement.Achievement.TaskType;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,9 +12,6 @@ import com.openrsc.server.model.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -24,7 +21,7 @@ public class AchievementSystem {
 	private static final int ACHIEVEMENT_COMPLETED = 2;
 	private static final int ACHIEVEMENT_STARTED = 1;
 
-	private final LinkedList<Achievement> loadedAchievements = new LinkedList<Achievement>();
+	private LinkedList<Achievement> loadedAchievements = new LinkedList<Achievement>();
 
 	private final Server server;
 
@@ -36,48 +33,8 @@ public class AchievementSystem {
 		loadedAchievements.clear();
 
 		try {
-			PreparedStatement fetchAchievement = getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievements` ORDER BY `id` ASC");
-			PreparedStatement fetchRewards = getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_reward` WHERE `achievement_id` = ?");
-			PreparedStatement fetchTasks = getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `type`, `do_id`, `do_amount` FROM `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "achievement_task` WHERE `achievement_id` = ?");
-
-			ResultSet result = fetchAchievement.executeQuery();
-			try {
-				while (result.next()) {
-					ArrayList<AchievementReward> rewards = new ArrayList<AchievementReward>();
-					fetchRewards.setInt(1, result.getInt("id"));
-
-					ResultSet rewardResult = fetchRewards.executeQuery();
-					while (rewardResult.next()) {
-						TaskReward rewardType = TaskReward.valueOf(TaskReward.class, rewardResult.getString("reward_type"));
-						rewards.add(new AchievementReward(rewardType, rewardResult.getInt("item_id"), rewardResult.getInt("amount"),
-							rewardResult.getInt("guaranteed") == 1 ? true : false));
-					}
-					rewardResult.close();
-
-					ArrayList<AchievementTask> tasks = new ArrayList<AchievementTask>();
-					fetchTasks.setInt(1, result.getInt("id"));
-
-					ResultSet taskResult = fetchTasks.executeQuery();
-					while (taskResult.next()) {
-						TaskType type = TaskType.valueOf(TaskType.class, taskResult.getString("type"));
-						tasks.add(new AchievementTask(type, taskResult.getInt("do_id"), taskResult.getInt("do_amount")));
-					}
-					taskResult.close();
-
-					Achievement achievement = new Achievement(tasks, rewards, result.getInt("id"),
-						result.getString("name"), result.getString("description"), result.getString("extra"));
-					loadedAchievements.add(achievement);
-				}
-			} finally {
-				fetchAchievement.close();
-				fetchRewards.close();
-				fetchTasks.close();
-				result.close();
-			}
-		} catch (SQLException e) {
+			loadedAchievements = getServer().getDatabase().getAchievements();
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
 	}

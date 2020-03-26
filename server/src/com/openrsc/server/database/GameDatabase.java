@@ -1,6 +1,7 @@
 package com.openrsc.server.database;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
@@ -22,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -80,6 +82,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract PlayerSkills[] queryLoadPlayerSkills(Player player) throws GameDatabaseException;
 	protected abstract PlayerExperience[] queryLoadPlayerExperience(Player player) throws GameDatabaseException;
 	protected abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
+	protected abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
 
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
@@ -311,11 +314,15 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public void savePreviousPasswords(final int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException {
-
+		querySavePreviousPasswords(playerId, newLastPass, newEarlierPass);
 	}
 
 	public String getPreviousPassword(final int playerId) throws GameDatabaseException {
 		return queryPreviousPassword(playerId);
+	}
+
+	public LinkedList<Achievement> getAchievements() throws GameDatabaseException {
+		return queryLoadAchievements();
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {
