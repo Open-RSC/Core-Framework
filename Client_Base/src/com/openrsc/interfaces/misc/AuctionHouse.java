@@ -849,7 +849,8 @@ public final class AuctionHouse {
 				def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 			graphics.drawString(String.valueOf(ahItem.getAmount()), selectX + 10, selectY + 22 + 11, 65280, 1);
 
-			graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);
+			// #TIMELIMIT
+			// graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);
 
 			graphics.drawString("Quantity: " + method74(ahItem.getAmount()), selectX + 200, selectY + 32, 0xffffff, 2);
 			graphics.drawString("Total: " + method74(price) + "gp", selectX + 200, selectY + 32 + 14, 0xffffff, 2);
