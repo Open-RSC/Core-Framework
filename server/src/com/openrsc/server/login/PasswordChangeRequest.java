@@ -72,7 +72,7 @@ public class PasswordChangeRequest extends LoginExecutorProcess {
 		LOGGER.info("Password change attempt from: " + getPlayer().getCurrentIP());
 
 		try {
-			PlayerLoginData playerData = getServer().getDatabase().getPlayerLoginData(player.getUsername());
+			PlayerLoginData playerData = getPlayer().getWorld().getServer().getDatabase().getPlayerLoginData(player.getUsername());
 			String lastDBPass = playerData.password;
 			String DBsalt = playerData.salt;
 			String newDBPass;
@@ -83,7 +83,7 @@ public class PasswordChangeRequest extends LoginExecutorProcess {
 				return;
 			}
 			newDBPass = DataConversions.hashPassword(getNewPassword(), DBsalt);
-			getServer().getDatabase().saveNewPassword(playerID, newDBPass);
+			getPlayer().getWorld().getServer().getDatabase().saveNewPassword(playerID, newDBPass);
 
 			String lastPw, earlierPw;
 			try {
@@ -93,9 +93,9 @@ public class PasswordChangeRequest extends LoginExecutorProcess {
 			}
 			lastPw = lastDBPass;
 
-			getServer().getDatabase().savePreviousPasswords(playerID, lastPw, earlierPw);
+			getPlayer().getWorld().getServer().getDatabase().savePreviousPasswords(playerID, lastPw, earlierPw);
 
-			getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.PASSWORD_CHANGE,
+			getPlayer().getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(getPlayer(), SecurityChangeLog.ChangeEvent.PASSWORD_CHANGE,
 				"From: " + lastDBPass + ", To: " + newDBPass));
 			ActionSender.sendMessage(getPlayer(), "Your password was successfully changed!");
 			LOGGER.info(getPlayer().getCurrentIP() + " - Password change successful");
