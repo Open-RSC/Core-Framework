@@ -4558,7 +4558,7 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.sleepingStatusText,
 							0xFF0000, 0, 5, 260 - (isAndroid() ? 110 : 0));
 					} else {
-						this.getSurface().drawSprite(getSurface().spriteVerts[2], this.halfGameWidth() - 127, 230 - (isAndroid() ? 110 : 0));
+						this.getSurface().drawSprite(getSurface().spriteVerts[3], this.halfGameWidth() - 127, 230 - (isAndroid() ? 110 : 0));
 					}
 
 					this.getSurface().drawBoxBorder(this.halfGameWidth() - 128, 257, 229 - (isAndroid() ? 110 : 0), 42, 0xFFFFFF);
