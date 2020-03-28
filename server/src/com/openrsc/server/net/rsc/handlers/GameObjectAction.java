@@ -46,16 +46,14 @@ public class GameObjectAction implements PacketHandler {
 				getPlayer().resetAll();
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
-				if(!command.equalsIgnoreCase("chop")){
-					getPlayer().face(object.getX(), object.getY());
-				}
 
+				int playerDirection = getPlayer().getSprite();
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"ObjectAction",
 					new Object[]{object, command, getPlayer()},
 					this)) {
-
+					getPlayer().setSprite(playerDirection);
 					return;
 				}
 			}
