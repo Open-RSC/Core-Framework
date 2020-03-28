@@ -11301,15 +11301,24 @@ public final class mudclient implements Runnable {
 				if (loginScreenNumber == 1) {
 					menuNewUser.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 						this.lastMouseButtonDown);
-					if (menuNewUser.isClicked(menuNewUserUsername))
+					if (menuNewUser.isClicked(menuNewUserUsername)) {
+						enterPressed = false;
 						menuNewUser.setFocus(menuNewUserPassword);
-					if (menuNewUser.isClicked(menuNewUserPassword))
-						menuNewUser.setFocus(menuNewUserEmail);
+					}
+					if (menuNewUser.isClicked(menuNewUserPassword)) {
+						if (wantEmail()) {
+							enterPressed = false;
+							menuNewUser.setFocus(menuNewUserEmail);
+						}
+						else
+							menuNewUser.setFocus(menuNewUserSubmit);
+					}
 					if (menuNewUser.isClicked(menuNewUserEmail))
 						menuNewUser.setFocus(menuNewUserSubmit);
 					if (menuNewUser.isClicked(menuNewUserCancel))
 						loginScreenNumber = 0;
-					if (menuNewUser.isClicked(menuNewUserSubmit)) {
+					else if (menuNewUser.isClicked(menuNewUserSubmit) || this.enterPressed) {
+						enterPressed = false;
 						if (wantEmail()) {
 							if (menuNewUser.getControlText(menuNewUserUsername) != null
 								&& menuNewUser.getControlText(menuNewUserUsername).length() == 0
@@ -11579,6 +11588,9 @@ public final class mudclient implements Runnable {
 				}
 			}
 
+			if (this.enterPressed)
+				this.enterPressed = false;
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.BA(" + var1 + ')');
 		}
@@ -11647,8 +11659,8 @@ public final class mudclient implements Runnable {
 
 			System.out.println("Registration response:" + registerResponse);
 			if (registerResponse == 0) {
-				panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
-				panelLogin.setText(controlLoginPass, password);
+				// panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
+				// panelLogin.setText(controlLoginPass, password);
 
 				showLoginScreenStatus("Account created", "you can now login with your user");
 				return;
@@ -11686,7 +11698,6 @@ public final class mudclient implements Runnable {
 			this.showLoginScreenStatus("Sorry! Unable to connect.", "Check internet settings");
 			e.printStackTrace();
 		}
-
 	}
 
 	private void handleMenuItemClicked(boolean var1, int item) {
