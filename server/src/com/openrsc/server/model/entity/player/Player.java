@@ -87,7 +87,6 @@ public final class Player extends Mob {
 	private volatile WalkToAction walkToAction;
 	private volatile WalkToAction lastExecutedWalkToAction;
 	private Trade trade;
-	private int databaseID;
 	private Clan clan;
 	private Party party;
 	private ClanInvite activeClanInvitation;
@@ -2807,11 +2806,11 @@ public final class Player extends Mob {
 	}*/
 
 	public int getDatabaseID() {
-		return databaseID;
+		return super.getID();
 	}
 
 	public void setDatabaseID(final int i) {
-		this.databaseID = i;
+		super.setID(i);
 	}
 
 	public Party getParty() {

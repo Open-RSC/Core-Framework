@@ -99,6 +99,10 @@ public abstract class Mob extends Entity {
 	 */
 	private Mob following;
 	/**
+	 * The related mob (owner, in the case of pets)
+	 */
+	public Mob relatedMob;
+	/**
 	 * How many times we have hit our opponent
 	 */
 	private int hitsMade = 0;

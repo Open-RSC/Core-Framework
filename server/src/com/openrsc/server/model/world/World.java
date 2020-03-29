@@ -274,6 +274,15 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return null;
 	}
 
+	public Npc getNpcByUUID(String id) {
+		for (Npc npc : getNpcs()) {
+			if (npc.getUUID() == id) {
+				return npc;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Gets the list of npcs on the server
 	 */
@@ -307,11 +316,23 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	/**
-	 * Gets a player by their username hash
+	 * Gets a player by their ID
 	 */
 	public Player getPlayerID(int databaseID) {
 		for (Player p : getPlayers()) {
 			if (p.getDatabaseID() == databaseID) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Gets a player by their UUID
+	 */
+	public Player getPlayerUUID(String uuid) {
+		for (Player p : getPlayers()) {
+			if (p.getUUID().equals(uuid)) {
 				return p;
 			}
 		}
