@@ -391,28 +391,28 @@ public class Npc extends Mob {
 	}
 
 	private void calculateCustomKingBlackDragonDrop(Player owner) {
-		boolean ringOfWealth = Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id());
+		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
 		if (getWorld().kbdTable.rollAccess(this.getID(), ringOfWealth)) {
 			Item kbdSpecificLoot = getWorld().kbdTable.rollItem(ringOfWealth, owner);
 			if (kbdSpecificLoot != null) {
-				GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getID(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
+				GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getCatalogId(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
 				try {
 
 					getWorld().getServer().getDatabase().addDropLog(
-						owner, this, kbdSpecificLoot.getID(), kbdSpecificLoot.getAmount());
+						owner, this, kbdSpecificLoot.getCatalogId(), kbdSpecificLoot.getAmount());
 				} catch (final GameDatabaseException ex) {
 					LOGGER.catching(ex);
 				}
-				if (kbdSpecificLoot.getID() == ItemId.DRAGON_2_HANDED_SWORD.id())
+				if (kbdSpecificLoot.getCatalogId() == ItemId.DRAGON_2_HANDED_SWORD.id())
 					owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
 			}
 		}
 	}
 
 	private boolean rollForCustomRareItem(Player owner) {
-		boolean ringOfWealth = Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id());
+		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
 
 		Item rare = null;
 		if (getWorld().standardTable.rollAccess(this.getID(), ringOfWealth)) {
@@ -423,14 +423,14 @@ public class Npc extends Mob {
 
 		if (rare != null) {
 			if (!handleRingOfAvarice(owner, rare)) {
-				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
+				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner);
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
 			}
 
 			try {
 				getWorld().getServer().getDatabase().addDropLog(
-					owner, this, rare.getID(), rare.getAmount());
+					owner, this, rare.getCatalogId(), rare.getAmount());
 			} catch (final GameDatabaseException ex) {
 				LOGGER.catching(ex);
 			}
@@ -456,7 +456,7 @@ public class Npc extends Mob {
 			amount = Formulae.calculateGoldDrop(
 				GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
 			);
-			if (Functions.isWielding(owner, com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
+			if (owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_SPLENDOR.id())) {
 				amount += Formulae.getSplendorBoost(amount);
 				owner.message("Your ring of splendor shines brightly!");
 			}
