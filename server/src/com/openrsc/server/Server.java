@@ -307,9 +307,9 @@ public class Server implements Runnable {
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					final long tickStart = System.currentTimeMillis();
 					final long lastIncomingPacketsDuration = processIncomingPackets();
-					final long lastEventsDuration = runGameEvents();
 					final long lastGameStateDuration = runGameStateUpdate();
 					final long lastOutgoingPacketsDuration = processOutgoingPackets();
+					final long lastEventsDuration = runGameEvents();
 					final long tickEnd = System.currentTimeMillis();
 					final long lastTickDuration = tickEnd - tickStart;
 

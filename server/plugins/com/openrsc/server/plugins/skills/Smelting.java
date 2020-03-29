@@ -98,7 +98,7 @@ public class Smelting implements InvUseOnObjectListener,
 						}
 					});
 				} else { // No mould
-					p.message("You heat the steel bar");
+					p.message("you heat the steel bar");
 				}
 			} else {
 				handleRegularSmelting(item, p, obj);

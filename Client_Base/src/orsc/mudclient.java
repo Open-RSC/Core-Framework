@@ -11383,6 +11383,7 @@ public final class mudclient implements Runnable {
 
 
 					if (this.panelLogin.isClicked(this.controlLoginUser)) {
+						this.enterPressed = false;
 						this.panelLogin.setFocus(this.controlLoginPass);
 					}
 
@@ -11392,6 +11393,8 @@ public final class mudclient implements Runnable {
 
 						this.setUsername(this.panelLogin.getControlText(this.controlLoginUser));
 						this.password = this.panelLogin.getControlText(this.controlLoginPass);
+						if (this.password.equals("")) return;
+
 						this.autoLoginTimeout = 2;
 						this.login(-12, this.password, this.getUsername(), false);
 					}

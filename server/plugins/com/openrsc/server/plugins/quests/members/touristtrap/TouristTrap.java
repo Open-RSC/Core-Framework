@@ -1861,7 +1861,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 					break;
 				case Siad.PUNISHED:
 					message(p, "The Guards search you!");
-					if (hasItem(p, ItemId.METAL_KEY.id())) {
+					int rand = DataConversions.random(0, 3);
+					if (hasItem(p, ItemId.CELL_DOOR_KEY.id()) && rand == 0) {
+						p.message("The guards find the cell door key and remove it!");
+						removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
+					}
+					if (hasItem(p, ItemId.METAL_KEY.id()) && rand == 1) {
 						p.message("The guards find the main gate key and remove it!");
 						removeItem(p, ItemId.METAL_KEY.id(), 1);
 					}
@@ -2095,6 +2100,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 				npcN.startCombat(p);
 				message(p, "The Guards search you!");
 				if (hasItem(p, ItemId.CELL_DOOR_KEY.id())) {
+					p.message("The guards find the cell door key and remove it!");
 					removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
 				}
 				message(p, "Some guards rush to help their comrade.",
@@ -2516,7 +2522,12 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 						return;
 					}
 					message(p, "The Guards search you!");
-					if (hasItem(p, ItemId.METAL_KEY.id())) {
+					int rand = DataConversions.random(0, 3);
+					if (hasItem(p, ItemId.CELL_DOOR_KEY.id()) && rand == 0) {
+						p.message("The guards find the cell door key and remove it!");
+						removeItem(p, ItemId.CELL_DOOR_KEY.id(), 1);
+					}
+					if (hasItem(p, ItemId.METAL_KEY.id()) && rand == 1) {
 						p.message("The guards find the main gate key and remove it!");
 						removeItem(p, ItemId.METAL_KEY.id(), 1);
 					}
@@ -2640,7 +2651,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerAttackNpc(Player p, Npc n) {
-		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
@@ -2651,7 +2662,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
@@ -2662,7 +2673,7 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 
 	@Override
 	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
@@ -2672,7 +2683,20 @@ public class TouristTrap implements QuestInterface, TalkToNpcListener, TalkToNpc
 	}
 
 	private void tryToAttackMercenarys(Player p, Npc affectedmob) {
-		if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id() || affectedmob.getID() == NpcId.MERCENARY.id() || affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+		if (affectedmob.getID() == NpcId.CAPTAIN_SIAD.id()) {
+			p.message("Captain Siad looks pretty aggressive.");
+			p.message("Are you sure you want to attack him?");
+			int menu = showMenu(p,
+				"Yes, I want to attack him.",
+				"Nope, I've changed my mind.");
+			if (menu == 0) {
+				npcTalk(p, affectedmob, "Guards! Guards!");
+				affectedmob.startCombat(p);
+				captainSiadDialogue(p, affectedmob, Siad.PUNISHED, null);
+			} else if (menu == 1) {
+				p.message("You change your mind about attacking the Captain.");
+			}
+		} else if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id() || affectedmob.getID() == NpcId.MERCENARY.id() || affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			p.message("This guard looks fearsome and very aggressive.");
 			p.message("Are you sure you want to attack him?");
 			int menu = showMenu(p,
