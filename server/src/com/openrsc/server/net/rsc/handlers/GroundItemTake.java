@@ -70,7 +70,7 @@ public class GroundItemTake implements PacketHandler {
 
 				getPlayer().resetAll();
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "Pickup", new Object[]{getPlayer(), item}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TakeObj", new Object[]{getPlayer(), item}, this);
 			}
 		});
 	}

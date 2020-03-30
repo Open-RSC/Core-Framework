@@ -68,6 +68,6 @@ public class ItemActionHandler implements PacketHandler {
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "InvAction", new Object[]{item, player, command});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "OpInv", new Object[]{item, player, command});
 	}
 }

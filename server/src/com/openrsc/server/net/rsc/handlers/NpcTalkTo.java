@@ -61,7 +61,7 @@ public final class NpcTalkTo implements PacketHandler {
 					}
 				}
 
-				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkToNpc", new Object[]{getPlayer(), n}, this)) {
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n}, this)) {
 					getPlayer().face(n);
 					n.face(getPlayer());
 					getPlayer().setInteractingNpc(n);

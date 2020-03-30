@@ -1,6 +1,7 @@
 package com.openrsc.server.model.world;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.avatargenerator.AvatarGenerator;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -11,6 +12,8 @@ import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.content.party.PartyManager;
+import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
+import com.openrsc.server.database.impl.mysql.queries.player.login.PlayerOnlineFlagQuery;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -18,7 +21,6 @@ import com.openrsc.server.io.WorldLoader;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -29,9 +31,6 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.database.impl.mysql.queries.player.login.PlayerOnlineFlagQuery;
-import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
-import com.openrsc.server.avatargenerator.AvatarGenerator;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.IPTracker;
 import com.openrsc.server.util.SimpleSubscriber;
@@ -649,6 +648,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 		for (MiniGameInterface m : getMiniGames()) {
 			if (m.getMiniGameId() == minigame.getMiniGameId()) {
+				System.out.println(minigame.getMiniGameId());
 				throw new IllegalArgumentException("MiniGame ID must be unique");
 			}
 		}

@@ -1,14 +1,11 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public final class ItemDropHandler implements PacketHandler {
 
@@ -78,7 +75,7 @@ public final class ItemDropHandler implements PacketHandler {
 					return;
 				}
 
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Drop", new Object[]{player, item, fromInventory});
+				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, item, fromInventory});
 				player.setStatus(Action.IDLE);
 			} else {
 				player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 640, "Player Batch Drop") {
@@ -106,7 +103,7 @@ public final class ItemDropHandler implements PacketHandler {
 							player.setStatus(Action.IDLE);
 							return;
 						}
-						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Drop", new Object[]{player, item, fromInventory})) {
+						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, item, fromInventory})) {
 							stop();
 							player.setStatus(Action.IDLE);
 							return;

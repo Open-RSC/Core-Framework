@@ -169,36 +169,35 @@ public final class PluginHandler {
 							getServer().getGameEventHandler().add(new ShopRestockEvent(getServer().getWorld(), s));
 						}
 					}
-
-					if (instance instanceof MiniGameInterface) {
-						final MiniGameInterface m = (MiniGameInterface) instance;
-						try {
-							getServer().getWorld().registerMiniGame(m);
-						} catch (final Exception e) {
-							LOGGER.error("Error registering minigame " + m.getMiniGameName());
-							LOGGER.catching(e);
-							continue;
-						}
-					}
 				}
 			}
 		}
 
-		//Look for quests specifically
-		final Class<?> interfce = QuestInterface.class;
-		for (final Class<?> plugin : loadedClassFiles) {
-			if (!interfce.isAssignableFrom(plugin)) {
-				continue;
-			}
-			final Object instance = plugin.getConstructor().newInstance();
-
-			if (Arrays.asList(instance.getClass().getInterfaces()).contains(QuestInterface.class)) {
-				final QuestInterface q = (QuestInterface) instance;
-				try {
-					getServer().getWorld().registerQuest((QuestInterface) instance);
-				} catch (final Exception e) {
-					LOGGER.catching(e);
+		//Look for quests/minigames specifically
+		final Class<?>[] interfces = {QuestInterface.class, MiniGameInterface.class};
+		for (final Class<?> interfce : interfces) {
+			for (final Class<?> plugin : loadedClassFiles) {
+				if (!interfce.isAssignableFrom(plugin)) {
 					continue;
+				}
+				final Object instance = plugin.getConstructor().newInstance();
+
+				if (Arrays.asList(instance.getClass().getInterfaces()).contains(QuestInterface.class)) {
+					final QuestInterface q = (QuestInterface) instance;
+					try {
+						getServer().getWorld().registerQuest(q);
+					} catch (final Exception e) {
+						LOGGER.catching(e);
+						continue;
+					}
+				} else if (Arrays.asList(instance.getClass().getInterfaces()).contains(MiniGameInterface.class)) {
+					final MiniGameInterface m = (MiniGameInterface) instance;
+					try {
+						getServer().getWorld().registerMiniGame(m);
+					} catch (final Exception e) {
+						LOGGER.catching(e);
+						continue;
+					}
 				}
 			}
 		}

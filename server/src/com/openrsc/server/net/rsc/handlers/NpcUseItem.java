@@ -39,7 +39,7 @@ public class NpcUseItem implements PacketHandler {
 
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
-					"InvUseOnNpc",
+					"UseNpc",
 					new Object[]{getPlayer(), affectedNpc, item}, this))
 					return;
 

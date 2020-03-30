@@ -51,7 +51,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 					return;
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "InvUseOnPlayer", new Object[]{getPlayer(), affectedPlayer, item}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UsePlayer", new Object[]{getPlayer(), affectedPlayer, item}, this);
 			}
 		});
 	}

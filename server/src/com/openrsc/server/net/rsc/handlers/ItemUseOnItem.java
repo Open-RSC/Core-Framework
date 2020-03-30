@@ -44,6 +44,6 @@ public final class ItemUseOnItem implements PacketHandler {
 		// GenericLog(player.getUsername() + " used item " + item1 + " on item "
 		// + item2 + " at " + player.getLocation()));
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "InvUseOnItem", new Object[]{player, item1, item2});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UseInv", new Object[]{player, item1, item2});
 	}
 }

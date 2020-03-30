@@ -856,7 +856,7 @@ public final class Player extends Mob {
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getCarriedItems().getEquipment().get(slot) != null) {
-					getWorld().getServer().getPluginHandler().handlePlugin(this, "Drop", new Object[]{this, item, false});
+					getWorld().getServer().getPluginHandler().handlePlugin(this, "DropObj", new Object[]{this, item, false});
 				}
 			}
 

@@ -41,7 +41,7 @@ public final class NpcCommand implements PacketHandler {
 				String command = (click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 				affectedNpc.resetPath();
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "NpcCommand", new Object[]{affectedNpc, command, getPlayer()}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "OpNpc", new Object[]{affectedNpc, command, getPlayer()}, this);
 			}
 		});
 		return;

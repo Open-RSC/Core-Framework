@@ -36,7 +36,7 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
-					"InvUseOnWallObject",
+					"UseBound",
 					new Object[]{object, item, getPlayer()}, this))
 					return;
 			}
@@ -50,7 +50,7 @@ public class ItemUseOnObject implements PacketHandler {
 			player.resetPath();
 			player.resetAll();
 			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
-				player, "InvUseOnObject", new Object[]{object, item, player}))
+				player, "UseLoc", new Object[]{object, item, player}))
 				return;
 		}
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
@@ -73,7 +73,7 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler()
-					.handlePlugin(getPlayer(), "InvUseOnObject",
+					.handlePlugin(getPlayer(), "UseLoc",
 						new Object[]{(GameObject) object, item, getPlayer()}, this))
 					return;
 			}

@@ -52,7 +52,7 @@ public class GameObjectAction implements PacketHandler {
 
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
-					"ObjectAction",
+					"OpLoc",
 					new Object[]{object, command, getPlayer()},
 					this)) {
 

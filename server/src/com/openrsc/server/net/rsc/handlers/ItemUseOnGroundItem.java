@@ -69,7 +69,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 					return;
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "InvUseOnGroundItem", new Object[]{myItem, item, getPlayer()}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UseObj", new Object[]{myItem, item, getPlayer()}, this);
 			}
 		});
 
