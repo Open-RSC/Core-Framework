@@ -434,8 +434,8 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
-
+	public boolean blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
+		return false;
 	}
 
 	@Override

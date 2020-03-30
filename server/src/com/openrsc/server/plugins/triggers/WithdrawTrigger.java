@@ -10,5 +10,5 @@ public interface WithdrawTrigger {
 	/**
 	 * Return true if you wish to prevent a user from withdrawing an item
 	 */
-	void blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes);
+	boolean blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes);
 }

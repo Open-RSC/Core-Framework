@@ -656,6 +656,7 @@ public class Bank {
 				if (depositAmount < adjustedRequestedAmount)
 					return depositItemFromInventory(depositItem.getCatalogId(), adjustedRequestedAmount - depositAmount, updateClient);
 				else {
+					ActionSender.sendInventory(player);
 					return true;
 				}
 			}
