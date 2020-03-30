@@ -170,7 +170,7 @@ public final class ExperienceConfigInterface {
 			void handle() {
 				mc.totalXpGainedStartTime = 0;
 				mc.setPlayerXpGainedTotal(0);
-				if (Config.C_EXPERIENCE_COUNTER_MODE == 0)
+				if (mc.getRecentSkill() >= 0)
 					mc.setPlayerStatXpGained(mc.getRecentSkill(),0);
 				if (mc.selectedSkill >= 0)
 					mc.setPlayerStatXpGained(mc.selectedSkill, 0);
