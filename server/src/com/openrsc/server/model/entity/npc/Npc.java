@@ -945,6 +945,8 @@ public class Npc extends Mob {
 	}
 
 	public void remove() {
+		double respawnMult = getWorld().getServer().getConfig().NPC_RESPAWN_MULTIPLIER;
+
 		this.setLastOpponent(null);
 		if (getCombatEvent() != null) {
 			getCombatEvent().resetCombat();
@@ -952,7 +954,7 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
 			teleport(0, 0);
-			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, def.respawnTime() * 1000, "Respawn NPC") {
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
 					setRespawning(false);
 					teleport(loc.startX, loc.startY);

@@ -59,6 +59,7 @@ public class ServerConfiguration {
 	public double SKILLING_EXP_RATE;
 	public double WILDERNESS_BOOST;
 	public double SKULL_BOOST;
+	public double NPC_RESPAWN_MULTIPLIER;
 	public int VIEW_DISTANCE;
 	public String LOGO_SPRITE_ID;
 	public int NPC_BLOCKING;
@@ -290,6 +291,7 @@ public class ServerConfiguration {
 		WILDERNESS_BOOST = tryReadDouble("wilderness_boost").orElse(0.0);
 		SKULL_BOOST = tryReadDouble("skull_boost").orElse(0.0);
 		IS_DOUBLE_EXP = tryReadBool("double_exp").orElse(false);
+		NPC_RESPAWN_MULTIPLIER = tryReadDouble("npc_respawn_multiplier").orElse(1.0);
 		HMAC_PRIVATE_KEY = tryReadString("HMAC_PRIVATE_KEY").orElse("root");
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
