@@ -341,7 +341,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected PlayerBankPreset[] queryLoadPlayerBankPresets(Player player) throws GameDatabaseException {
 		try {
-			ArrayList<PlayerBankPreset> bankPresets = new ArrayList<>();
+			ArrayList<PlayerBankPreset> list = new ArrayList<>();
 
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
 				final ResultSet result = resultSetFromInteger(getQueries().playerBankPresets, player.getDatabaseID());
@@ -373,13 +373,13 @@ public class MySqlGameDatabase extends GameDatabase {
 					readBlob.close();
 					bankPreset.equipment = buffer.toByteArray();
 
-					bankPresets.add(bankPreset);
+					list.add(bankPreset);
 				}
 
 				result.close();
 			}
 
-			return bankPresets.toArray(new PlayerBankPreset[bankPresets.size()]);
+			return list.toArray(new PlayerBankPreset[list.size()]);
 		} catch (final SQLException | IOException ex) {
 			// We want to trigger a rollback so sending out the GameDatabaseException
 			// Convert SQLException to a general usage exception
@@ -673,29 +673,17 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerBankPresets(int playerId, PlayerBankPreset[] bankPreset) throws GameDatabaseException {
 		try {
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
-				final PreparedStatement deleteStatement = getConnection().prepareStatement(getQueries().save_DeleteBankPresets);
 				final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddBankPreset);
 
 				for(int i = 0; i < bankPreset.length; i++) {
-					deleteStatement.setInt(1, playerId);
-					deleteStatement.setInt(2, bankPreset[i].slot);
-
 					statement.setInt(1, playerId);
 					statement.setInt(2, bankPreset[i].slot);
 					statement.setBlob(3, new javax.sql.rowset.serial.SerialBlob(bankPreset[i].inventory));
 					statement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(bankPreset[i].equipment));
 					statement.addBatch();
 				}
-				try{
-					// Delete old preset
-					deleteStatement.executeUpdate();
-					// Save new
-					statement.executeBatch();
-				}
-				finally{
-					deleteStatement.close();
-					statement.close();
-				}
+				try{statement.executeBatch();}
+				finally{statement.close();}
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
