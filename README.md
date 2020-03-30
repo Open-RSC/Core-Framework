@@ -1,3 +1,5 @@
+[![pipeline status](https://orsc.dev/open-rsc/Game/badges/master/pipeline.svg)](https://orsc.dev/open-rsc/Game/-/commits/master)
+
 # Open RuneScape Classic
 
 # Table of contents <a name="top"></a>
