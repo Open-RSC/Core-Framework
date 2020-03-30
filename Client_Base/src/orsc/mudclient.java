@@ -15090,6 +15090,10 @@ public final class mudclient implements Runnable {
 		this.recentSkill = stat;
 	}
 
+	public int getRecentSkill() {
+		return this.recentSkill;
+	}
+
 	public void setPlayerStatXpGained(int stat, long exp) {
 		this.playerStatXpGained[stat] = exp;
 	}
