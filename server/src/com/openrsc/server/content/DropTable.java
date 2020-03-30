@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class DropTable {
 					return null;
 				else if (drop.type == dropType.ITEM) {
 					if (ringOfWealth && p != null)
-						p.message("Your ring of wealth shines brightly!");
+						p.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
 					return new Item(drop.id, drop.amount);
 				} else if (drop.type == dropType.TABLE) {
 					return drop.table.rollItem(ringOfWealth, p);
