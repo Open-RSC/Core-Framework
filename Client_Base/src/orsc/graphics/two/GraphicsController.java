@@ -298,7 +298,7 @@ public class GraphicsController {
 				this.plot_tran_scale(var19, var11, width, (byte) -61, scaleY, spriteWidth, scaleX, height, var14,
 					sprite.getPixels(), 0, var10, var15, var7, this.pixelData);
 			} catch (Exception var17) {
-				System.out.println("error in sprite clipping routine");
+				System.out.println("spriteClipping: error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var18) {
@@ -489,7 +489,7 @@ public class GraphicsController {
 				this.a(var11, var12, var7, var10, var15, sprite.getPixels(), var14, this.pixelData, 0,
 					spriteWidth, false, var13, var5, var2, var19);
 			} catch (Exception var17) {
-				System.out.println("error in sprite clipping routine");
+				System.out.println("spriteClip3: error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var18) {
@@ -2279,7 +2279,7 @@ public class GraphicsController {
 					this.pixelData, (byte) 78, scaleY, destHeight, srcStartX, destRowStride, destWidth, spriteWidth,
 					destHead);
 			} catch (Exception var16) {
-				System.out.println("error in sprite clipping routine");
+				System.out.println("drawSprite: error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var17) {
@@ -2570,7 +2570,7 @@ public class GraphicsController {
 						skipEveryOther, srcStartY, spriteWidth, colorMask, height, destRowHead, colourTransform, blueMask);
 				}
 			} catch (Exception var24) {
-				System.out.println("error in sprite clipping routine");
+				System.out.println("drawSpriteClipping: error in sprite clipping routine");
 			}
 
 		} catch (RuntimeException var25) {

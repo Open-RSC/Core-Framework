@@ -13094,6 +13094,10 @@ public final class mudclient implements Runnable {
 		loadSprite(spriteMedia + 25, "media", 2);
 		loadSprite(spriteMedia + 27, "media", 2);
 		loadSprite(spriteMedia + 30, "media", 1);
+
+		// Notes (custom)
+		loadSprite(spriteMedia + 588, "media", 1);
+
 		loadSprite(spriteUtil, "media", 2);
 		loadSprite(spriteUtil + 2, "media", 4);
 		loadSprite(spriteUtil + 6, "media", 2);
