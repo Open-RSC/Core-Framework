@@ -145,6 +145,7 @@ public class CombatEvent extends GameTickEvent {
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
 			Player p = ((Player) hitter);
+			damage = Math.min(damage, n.getLevel(Skills.HITPOINTS));
 			n.addCombatDamage(p, damage);
 		}
 

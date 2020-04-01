@@ -133,11 +133,15 @@ public class ProjectileEvent extends SingleTickEvent {
 		if (caster.isPlayer()) {
 			Player casterPlayer = (Player) caster;
 			if (opponent.isNpc()) {
-				Npc npcc = (Npc) opponent;
-				if (type == 1 || type == 4)
-					npcc.addMageDamage(casterPlayer, damage);
-				else if (type == 2 || type == 5)
-					npcc.addRangeDamage(casterPlayer, damage);
+				Npc npc = (Npc) opponent;
+				if (type == 1 || type == 4) {
+					damage = Math.min(damage, npc.getLevel(Skills.HITPOINTS));
+					npc.addMageDamage(casterPlayer, damage);
+				}
+				else if (type == 2 || type == 5) {
+					damage = Math.min(damage, npc.getLevel(Skills.HITPOINTS));
+					npc.addRangeDamage(casterPlayer, damage);
+				}
 			}
 		} else if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;

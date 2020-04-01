@@ -715,6 +715,10 @@ public abstract class Mob extends Entity {
 	/**
 	 * SETTERS/GETTERS
 	 */
+	public int getLevel(int skillID) {
+		return skills.getLevel(skillID);
+	}
+
 	public boolean finishedPath() {
 		return getWalkingQueue().finished();
 	}
