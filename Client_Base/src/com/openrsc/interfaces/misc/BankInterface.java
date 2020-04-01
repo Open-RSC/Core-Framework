@@ -37,6 +37,7 @@ public class BankInterface {
 	private int selectedBankSlotItemID = -2;
 	private int mouseOverBankPageText;
 	private ArrayList<Item> currentItems = new ArrayList<>();
+	private ArrayList<Integer> currentItemIDs = new ArrayList<>();
 
 	public boolean onRender() {
 		int currMouseX = mc.getMouseX();
@@ -50,15 +51,19 @@ public class BankInterface {
 
 		// Create current bank state
 		currentItems.clear();
+		currentItemIDs.clear();
 		for (BankItem item : bankItems) {
 			// Add bank items
 			currentItems.add(item.getItem());
 		}
 		// Add inventory items
 		for (Item item : mc.getInventory()) {
-			if (item.getCatalogID() == -1) continue;
-			if (getBankItemByID(item.getCatalogID()) != null) continue;
+			Integer itemID = item.getCatalogID();
+			if (itemID == -1) continue;
+			if (getBankItemByID(itemID) != null) continue;
+			if (currentItemIDs.contains(itemID)) continue;
 			currentItems.add(item);
+			currentItemIDs.add(itemID);
 		}
 
 		// Set Bank Page
