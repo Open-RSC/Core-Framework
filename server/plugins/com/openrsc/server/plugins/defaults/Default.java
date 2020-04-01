@@ -424,8 +424,8 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void blockWearObj(EquipRequest request) {
-
+	public boolean blockWearObj(EquipRequest request) {
+		return false;
 	}
 
 	@Override

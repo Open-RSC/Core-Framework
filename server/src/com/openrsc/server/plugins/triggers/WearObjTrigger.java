@@ -9,5 +9,5 @@ public interface WearObjTrigger {
 	/**
 	 * Return true if you wish to prevent a user from wielding an item
 	 */
-	void blockWearObj(EquipRequest request);
+	boolean blockWearObj(EquipRequest request);
 }

@@ -77,7 +77,7 @@ public final class ItemEquip implements PacketHandler {
 			}
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Equip", new Object[]{request});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "WearObj", new Object[]{request});
 	}
 
 
