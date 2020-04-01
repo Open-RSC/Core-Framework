@@ -959,6 +959,7 @@ public class Npc extends Mob {
 					setRespawning(false);
 					teleport(loc.startX, loc.startY);
 					getSkills().normalize();
+					tryResyncHitEvent();
 
 					running = false;
 					mageDamagers.clear();
