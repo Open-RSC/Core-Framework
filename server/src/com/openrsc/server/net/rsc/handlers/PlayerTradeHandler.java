@@ -291,6 +291,7 @@ public class PlayerTradeHandler implements PacketHandler {
 
 							affectedPlayer.message("Trade completed successfully");
 							player.getTrade().resetAll();
+							affectedPlayer.getTrade().resetAll();
 						}
 					}
 				}
