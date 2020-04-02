@@ -78,7 +78,7 @@ public class ItemUnequip implements PacketHandler {
 			return;
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Unequip", new Object[]{request});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "RemoveObj", new Object[]{request});
 	}
 
 	private void correctIndex(UnequipRequest request) {

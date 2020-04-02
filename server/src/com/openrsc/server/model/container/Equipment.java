@@ -207,6 +207,7 @@ public class Equipment {
 
 		//Send the new stats to client
 		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+		ActionSender.sendInventory(player);
 		return true;
 	}
 
