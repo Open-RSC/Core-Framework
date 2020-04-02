@@ -32,7 +32,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	}
 
 	@Override
-	public void channelInactive(final ChannelHandlerContext ctx)  {
+	public void channelInactive(final ChannelHandlerContext ctx) {
 		ctx.channel().close();
 	}
 
@@ -40,7 +40,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
 		final Channel channel = ctx.channel();
 
-		if(message instanceof Packet) {
+		if (message instanceof Packet) {
 
 			final Packet packet = (Packet) message;
 			Player player = null;
@@ -78,11 +78,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public void channelRegistered(final ChannelHandlerContext ctx) {
 		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
 
-		if(!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
+		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
 			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
 			ctx.channel().close();
-
-			return;
 		}
 
 		//final ConnectionAttachment att = new ConnectionAttachment();
@@ -107,8 +105,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	}
 
 	@Override
-	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e)  {
-		if (!getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
+	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e) {
+		if (getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().noneMatch($it -> Objects.equal($it, e.getMessage()))) {
 			final Channel channel = ctx.channel();
 			final ConnectionAttachment att = channel.attr(attachment).get();
 			LOGGER.error("Exception caught in Network I/O : Remote address " + channel.remoteAddress() + " : isOpen " + channel.isOpen() + " : isActive " + channel.isActive() + " : isWritable " + channel.isWritable() + (att == null ? "" : " : Attached Player " + att.player.get()));
