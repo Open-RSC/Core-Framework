@@ -7,6 +7,7 @@ public class MySqlQueries {
 	public final String PREFIX;
 
 	public String updateExperience, updateStats, playerExp, playerCurExp;
+	public final String createPlayer, recentlyRegistered, initStats, initExp;
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
 	public final String playerExists, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
@@ -51,6 +52,12 @@ public class MySqlQueries {
 		updateStats = updateStats + "WHERE `playerID`=?";
 		playerExp = playerExp + "FROM `" + PREFIX + "experience` WHERE `playerID`=?";
 		playerCurExp = playerCurExp + "FROM `" + PREFIX + "curstats` WHERE `playerID`=?";
+
+		createPlayer = "INSERT INTO `" + PREFIX + "players` (`username`, `email`, `pass`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?)";
+		recentlyRegistered = "SELECT 1 FROM `" + PREFIX + "players` WHERE `creation_ip`=?" +
+			" AND `creation_date` > ?";
+		initStats = "INSERT INTO `" + PREFIX + "curstats` (`playerID`) VALUES (?)";
+		initExp = "INSERT INTO `" + PREFIX + "experience` (`playerID`) VALUES (?)";
 
 		save_AddFriends = "INSERT INTO `" + PREFIX + "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";
 		save_DeleteFriends = "DELETE FROM `" + PREFIX + "friends` WHERE `playerID` = ?";

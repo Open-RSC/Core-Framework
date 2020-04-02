@@ -6,10 +6,7 @@ import com.openrsc.server.content.achievement.AchievementReward;
 import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.*;
-import com.openrsc.server.external.GameObjectLoc;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.*;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
@@ -56,6 +53,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void initializeOnlinePlayers() throws GameDatabaseException;
 	protected abstract boolean queryPlayerExists(int playerId) throws GameDatabaseException;
 	protected abstract boolean queryPlayerExists(String username) throws GameDatabaseException;
+	protected abstract int queryPlayerIdFromUsername(String username) throws GameDatabaseException;
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
 	protected abstract NpcDrop[] queryNpcDrops() throws GameDatabaseException;
 	protected abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
@@ -69,6 +67,11 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void queryDeleteObjectSpawn(GameObjectLoc loc) throws GameDatabaseException;
 	protected abstract void queryInsertItemSpawn(ItemLoc loc) throws GameDatabaseException;
 	protected abstract void queryDeleteItemSpawn(ItemLoc loc) throws GameDatabaseException;
+
+	protected abstract void queryCreatePlayer(String username, String email, String password, long creationDate, String ip) throws GameDatabaseException;
+	protected abstract boolean queryRecentlyRegistered(String ipAddress) throws GameDatabaseException;
+	protected abstract void queryInitializeStats(int playerId) throws GameDatabaseException;
+	protected abstract void queryInitializeExp(int playerId) throws GameDatabaseException;
 
 	protected abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
 	protected abstract PlayerInventory[] queryLoadPlayerInvItems(Player player) throws GameDatabaseException;
@@ -133,6 +136,47 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			closeInternal();
 			open = false;
 		}
+	}
+
+	// Creates a new player. If successful, will return the new player's ID. Otherwise, returns -1.
+	public int createPlayer(String username, String email, String password, long creationDate, String ip) throws GameDatabaseException {
+		queryCreatePlayer(username, email, password, creationDate, ip);
+
+		int playerId = queryPlayerIdFromUsername(username);
+		if (playerId != -1) {
+			queryInitializeStats(playerId);
+			queryInitializeExp(playerId);
+
+			//Don't rely on the default values of the database.
+			//Update the stats based on their StatDef-----------------------------------------------
+			final int skillsSize = getServer().getConstants().getSkills().getSkillsCount();
+			final PlayerSkills[] skills = new PlayerSkills[skillsSize];
+			final PlayerExperience[] experiences = new PlayerExperience[skillsSize];
+
+			for(int i = 0; i < skillsSize; i++) {
+				SkillDef skill = getServer().getConstants().getSkills().getSkill(i);
+
+				skills[i] = new PlayerSkills();
+				skills[i].skillId = i;
+				skills[i].skillCurLevel = skill.getMinLevel();
+
+				experiences[i] = new PlayerExperience();
+				experiences[i].skillId = i;
+				if (skill.getMinLevel() == 1)
+					experiences[i].experience = 0;
+				else
+					experiences[i].experience = getServer().getConstants().getSkills().experienceCurves.get(skill.getExpCurve())[skill.getMinLevel() - 2];
+			}
+			querySavePlayerSkills(playerId, skills);
+			querySavePlayerExperience(playerId, experiences);
+			//---------------------------------------------------------------------------------------
+		}
+
+		return playerId;
+	}
+
+	public boolean checkRecentlyRegistered(String ipAddress) throws GameDatabaseException {
+		return queryRecentlyRegistered(ipAddress);
 	}
 
 	public Player loadPlayer(final LoginRequest rq) {

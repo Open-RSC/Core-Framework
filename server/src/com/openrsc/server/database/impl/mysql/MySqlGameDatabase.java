@@ -98,13 +98,28 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected boolean queryPlayerExists(String username) throws GameDatabaseException {
 		try {
 			final ResultSet result = resultSetFromString(getQueries().userToId, username);
-			boolean playerExists = !result.isBeforeFirst();
+			boolean playerExists = result.isBeforeFirst();
 			result.close();
 			return playerExists;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
+	}
+
+	@Override
+	protected int queryPlayerIdFromUsername(String username) throws GameDatabaseException {
+		try {
+			ResultSet result = resultSetFromString(getQueries().userToId, username);
+			if (result.next()) {
+				return result.getInt("id");
+			}
+			result.close();
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return -1;
 	}
 
 	@Override
@@ -218,6 +233,77 @@ public class MySqlGameDatabase extends GameDatabase {
 			return loginData;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryCreatePlayer(String username, String email, String password, long creationDate, String ip) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().createPlayer);
+			statement.setString(1, username);
+			statement.setString(2, email);
+			statement.setString(3, password);
+			statement.setLong(4, System.currentTimeMillis() / 1000);
+			statement.setString(5, ip);
+
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected boolean queryRecentlyRegistered(String ipAddress) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().recentlyRegistered);
+			statement.setString(1, ipAddress);
+			statement.setLong(2, (System.currentTimeMillis() / 1000) - 60);
+
+			ResultSet result = statement.executeQuery();
+
+			try {
+				if (result.next()) {
+					return true;
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return false;
+	}
+
+	@Override
+	protected void queryInitializeStats(int playerId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().initStats);
+			statement.setInt(1, playerId);
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryInitializeExp(int playerId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().initExp);
+			statement.setInt(1, playerId);
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
+		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}
@@ -1663,7 +1749,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	// Should be private
-	public MySqlQueries getQueries() {
+	private MySqlQueries getQueries() {
 		return queries;
 	}
 
