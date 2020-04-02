@@ -2,21 +2,23 @@ package com.openrsc.server.net;
 
 import com.google.common.base.Objects;
 import com.openrsc.server.Server;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import io.netty.util.AttributeMap;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 
-public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements ChannelHandler {
+public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements AttributeMap {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
@@ -79,12 +81,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
 
 		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
-			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
+			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + ServerConfiguration.NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
 			ctx.channel().close();
 		}
-
-		//final ConnectionAttachment att = new ConnectionAttachment();
-		//ctx.channel().attr(attachment).set(att);
 	}
 
 	@Override
@@ -124,5 +123,15 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	public final Server getServer() {
 		return server;
+	}
+
+	@Override
+	public <T> Attribute<T> attr(AttributeKey<T> attributeKey) {
+		return null;
+	}
+
+	@Override
+	public <T> boolean hasAttr(AttributeKey<T> attributeKey) {
+		return false;
 	}
 }

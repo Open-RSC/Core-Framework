@@ -1,22 +1,22 @@
 package com.openrsc.server.net;
 
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
+import io.netty.util.AttributeMap;
+
+import java.util.List;
 
 /**
  * @author Imposter
  */
-public final class RSCProtocolDecoder extends ByteToMessageDecoder implements ChannelHandler {
+public final class RSCProtocolDecoder extends ByteToMessageDecoder implements AttributeMap {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
-//		ConnectionAttachment attachment = ((ConnectionAttachment) ctx.channel().getAttachment());
-
 		if (buffer.readableBytes() > 2) {
 			buffer.markReaderIndex();
 			int length = buffer.readUnsignedShort();
@@ -33,4 +33,13 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements Ch
 		}
 	}
 
+	@Override
+	public <T> Attribute<T> attr(AttributeKey<T> attributeKey) {
+		return null;
+	}
+
+	@Override
+	public <T> boolean hasAttr(AttributeKey<T> attributeKey) {
+		return false;
+	}
 }

@@ -2,16 +2,18 @@ package com.openrsc.server.net;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
+import io.netty.util.AttributeMap;
 
 /*
  *
  * @author Imposter
  *
  */
-public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> implements ChannelHandler {
+public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> implements AttributeMap {
 
 	@Override
 	protected void encode(ChannelHandlerContext arg0, Packet message, ByteBuf outBuffer) throws Exception {
@@ -27,5 +29,15 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 		} else {
 			outBuffer.writeBytes(message.getBuffer());
 		}
+	}
+
+	@Override
+	public <T> Attribute<T> attr(AttributeKey<T> attributeKey) {
+		return null;
+	}
+
+	@Override
+	public <T> boolean hasAttr(AttributeKey<T> attributeKey) {
+		return false;
 	}
 }
