@@ -38,6 +38,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		boolean restoredStats = false;
 		boolean restoredHits = false;
+		long deltaCycles;
 
 		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < numberSkills; skillIndex++) {
@@ -48,17 +49,18 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		// Check for Hits
 		if (restoringHits.get()) {
-			long delay = 64000; // 64 seconds
+			long delay = 100 * getWorld().getServer().getConfig().GAME_TICK; // 64 seconds in authentic rate
 			if (getOwner().isPlayer()) {
 				Player player = (Player) getOwner();
 				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_HEAL)) {
-					delay = 32000;
+					delay = 50 * getWorld().getServer().getConfig().GAME_TICK;
 				}
 			}
-			if (System.currentTimeMillis() - this.lastHitRestoration > delay) {
+			deltaCycles = (System.currentTimeMillis() - this.lastHitRestoration) / delay;
+			if (System.currentTimeMillis() - this.lastHitRestoration > delay && getOwner().isPlayer()) {
 				normalizeLevel(Skills.HITS);
 				restoredHits = true;
-				if (getOwner().isPlayer() && ((Player) getOwner()).getParty() != null) {
+				if (((Player) getOwner()).getParty() != null) {
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
 					if (getWorld().getServer().getConfig().WANT_PARTIES) {
 						if (((Player) getOwner()).getParty() != null) {
@@ -66,6 +68,10 @@ public class StatRestorationEvent extends GameTickEvent {
 						}
 					}
 				}
+			} else if (!getOwner().isPlayer() &&
+				(System.currentTimeMillis() - (this.lastHitRestoration + deltaCycles * delay)) / (delay / 100) == 1) {
+				// npc only gets heal cycle sync on (re)spawn
+				normalizeLevel(Skills.HITS);
 			}
 		}
 
@@ -76,11 +82,11 @@ public class StatRestorationEvent extends GameTickEvent {
 			Entry<Integer, Integer> set = it.next();
 			int stat = set.getKey();
 
-			long delay = 64000; // 64 seconds
+			long delay = 100 * getWorld().getServer().getConfig().GAME_TICK; // 64 seconds in authentic rate
 			if (getOwner().isPlayer()) {
 				Player player = (Player) getOwner();
 				if (player.getPrayers().isPrayerActivated(Prayers.RAPID_RESTORE)) {
-					delay = 32000;
+					delay = 50 * getWorld().getServer().getConfig().GAME_TICK;
 				}
 			}
 			if (System.currentTimeMillis() - this.lastStatRestoration > delay) {
@@ -133,10 +139,14 @@ public class StatRestorationEvent extends GameTickEvent {
 		}
 	}
 
-	private void checkAndStartRestoration(int id) {
+	private boolean needsRestore(int id) {
 		int curStat = getOwner().getSkills().getLevel(id);
 		int maxStat = getOwner().getSkills().getMaxStat(id);
-		boolean toRestore = curStat > maxStat || curStat < maxStat;
+		return curStat > maxStat || curStat < maxStat;
+	}
+
+	private void checkAndStartRestoration(int id) {
+		boolean toRestore = needsRestore(id);
 
 		if (id == Skills.HITS) {
 			if (restoringHits.get()) {
@@ -158,6 +168,15 @@ public class StatRestorationEvent extends GameTickEvent {
 	public void tryResyncStat() {
 		if (restoringStats.size() == 0) {
 			this.lastStatRestoration = System.currentTimeMillis();
+		}
+	}
+
+	public void tryResyncHit() {
+		boolean toRestore = needsRestore(Skills.HITS);
+
+		if (!toRestore) {
+			this.lastHitRestoration = System.currentTimeMillis();
+			restoringHits.set(false);
 		}
 	}
 }

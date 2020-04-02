@@ -4558,7 +4558,7 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.sleepingStatusText,
 							0xFF0000, 0, 5, 260 - (isAndroid() ? 110 : 0));
 					} else {
-						this.getSurface().drawSprite(getSurface().spriteVerts[2], this.halfGameWidth() - 127, 230 - (isAndroid() ? 110 : 0));
+						this.getSurface().drawSprite(getSurface().spriteVerts[3], this.halfGameWidth() - 127, 230 - (isAndroid() ? 110 : 0));
 					}
 
 					this.getSurface().drawBoxBorder(this.halfGameWidth() - 128, 257, 229 - (isAndroid() ? 110 : 0), 42, 0xFFFFFF);
@@ -11301,15 +11301,24 @@ public final class mudclient implements Runnable {
 				if (loginScreenNumber == 1) {
 					menuNewUser.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 						this.lastMouseButtonDown);
-					if (menuNewUser.isClicked(menuNewUserUsername))
+					if (menuNewUser.isClicked(menuNewUserUsername)) {
+						enterPressed = false;
 						menuNewUser.setFocus(menuNewUserPassword);
-					if (menuNewUser.isClicked(menuNewUserPassword))
-						menuNewUser.setFocus(menuNewUserEmail);
+					}
+					if (menuNewUser.isClicked(menuNewUserPassword)) {
+						if (wantEmail()) {
+							enterPressed = false;
+							menuNewUser.setFocus(menuNewUserEmail);
+						}
+						else
+							menuNewUser.setFocus(menuNewUserSubmit);
+					}
 					if (menuNewUser.isClicked(menuNewUserEmail))
 						menuNewUser.setFocus(menuNewUserSubmit);
 					if (menuNewUser.isClicked(menuNewUserCancel))
 						loginScreenNumber = 0;
-					if (menuNewUser.isClicked(menuNewUserSubmit)) {
+					else if (menuNewUser.isClicked(menuNewUserSubmit) || this.enterPressed) {
+						enterPressed = false;
 						if (wantEmail()) {
 							if (menuNewUser.getControlText(menuNewUserUsername) != null
 								&& menuNewUser.getControlText(menuNewUserUsername).length() == 0
@@ -11374,6 +11383,7 @@ public final class mudclient implements Runnable {
 
 
 					if (this.panelLogin.isClicked(this.controlLoginUser)) {
+						this.enterPressed = false;
 						this.panelLogin.setFocus(this.controlLoginPass);
 					}
 
@@ -11383,6 +11393,8 @@ public final class mudclient implements Runnable {
 
 						this.setUsername(this.panelLogin.getControlText(this.controlLoginUser));
 						this.password = this.panelLogin.getControlText(this.controlLoginPass);
+						if (this.password.equals("")) return;
+
 						this.autoLoginTimeout = 2;
 						this.login(-12, this.password, this.getUsername(), false);
 					}
@@ -11579,6 +11591,9 @@ public final class mudclient implements Runnable {
 				}
 			}
 
+			if (this.enterPressed)
+				this.enterPressed = false;
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.BA(" + var1 + ')');
 		}
@@ -11647,8 +11662,8 @@ public final class mudclient implements Runnable {
 
 			System.out.println("Registration response:" + registerResponse);
 			if (registerResponse == 0) {
-				panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
-				panelLogin.setText(controlLoginPass, password);
+				// panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
+				// panelLogin.setText(controlLoginPass, password);
 
 				showLoginScreenStatus("Account created", "you can now login with your user");
 				return;
@@ -11686,7 +11701,6 @@ public final class mudclient implements Runnable {
 			this.showLoginScreenStatus("Sorry! Unable to connect.", "Check internet settings");
 			e.printStackTrace();
 		}
-
 	}
 
 	private void handleMenuItemClicked(boolean var1, int item) {
@@ -15074,6 +15088,10 @@ public final class mudclient implements Runnable {
 
 	public void setRecentSkill(int stat) {
 		this.recentSkill = stat;
+	}
+
+	public int getRecentSkill() {
+		return this.recentSkill;
 	}
 
 	public void setPlayerStatXpGained(int stat, long exp) {

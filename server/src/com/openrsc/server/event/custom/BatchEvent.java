@@ -11,16 +11,19 @@ public abstract class BatchEvent extends DelayedEvent {
 	private long repeatFor;
 	private int repeated;
 	private boolean gathering;
+	private boolean batchProgression;
 
 	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
 		super(world, owner, delay, descriptor);
 		owner.resetPath();
 		owner.setBusyTimer(delay + 200);
 		this.gathering = gathering;
-		if (getWorld().getServer().getConfig().BATCH_PROGRESSION) this.repeatFor = repeatFor;
+		this.batchProgression = getWorld().getServer().getConfig().BATCH_PROGRESSION;
+		if (this.batchProgression) this.repeatFor = repeatFor;
 		else if (repeatFor > 1000) this.repeatFor = repeatFor - 1000; // Mining default
 		else this.repeatFor = 1; // Always 1, otherwise.
-		ActionSender.sendProgressBar(owner, delay, repeatFor);
+
+		if (this.batchProgression) ActionSender.sendProgressBar(owner, delay, repeatFor);
 	}
 
 	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor) {
@@ -42,7 +45,7 @@ public abstract class BatchEvent extends DelayedEvent {
 				interrupt();
 				return;
 			}
-			ActionSender.sendUpdateProgressBar(getOwner(), repeated);
+			if (this.batchProgression) ActionSender.sendUpdateProgressBar(getOwner(), repeated);
 			/*if (owner.getInventory().full() && gathering) { // this is a PITA to have to drop inventory items too keep going so Marwolf comments this out
 				interrupt();
 				if (getServer().getConfig().BATCH_PROGRESSION) owner.message("Your Inventory is too full to continue.");
@@ -57,7 +60,7 @@ public abstract class BatchEvent extends DelayedEvent {
 	}
 
 	public void interrupt() {
-		ActionSender.sendRemoveProgressBar(getOwner());
+		if (this.batchProgression) ActionSender.sendRemoveProgressBar(getOwner());
 		getOwner().setBusyTimer(0);
 		getOwner().setBatchEvent(null);
 		super.stop();
