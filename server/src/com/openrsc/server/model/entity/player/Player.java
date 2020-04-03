@@ -310,7 +310,7 @@ public final class Player extends Mob {
 	 */
 	private long sessionStart;
 
-	/**
+	/*
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
 	/*public void unwieldMembersItems() {
@@ -483,9 +483,8 @@ public final class Player extends Mob {
 				if (entry.getValue() != p.getAppearanceID()) {
 					knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
 					return true;
-				} else {
-					return false;
 				}
+				return false;
 			}
 		}
 		knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
@@ -493,15 +492,9 @@ public final class Player extends Mob {
 	}
 
 	public boolean requiresAppearanceUpdateForPeek(final Player p) {
-		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
-			if (entry.getKey() == p.getUsernameHash()) {
-				if (entry.getValue() != p.getAppearanceID()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
+		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet())
+			if (entry.getKey() == p.getUsernameHash())
+				return entry.getValue() != p.getAppearanceID();
 		return true;
 	}
 
@@ -558,7 +551,6 @@ public final class Player extends Mob {
 	public void addSkull(final long timeLeft) {
 		if (skullEvent == null) {
 			skullEvent = new DelayedEvent(getWorld(), this, timeLeft, "Player Add Skull") {
-
 				@Override
 				public void run() {
 					removeSkull();
@@ -751,10 +743,8 @@ public final class Player extends Mob {
 					if (getOwner().canLogout() || (!(getOwner().inCombat() && getOwner().getDuel().isDuelActive())
 						&& System.currentTimeMillis() - startDestroy > 60000)) {
 						getOwner().unregister(true, reason);
-						running = false;
-					} else {
-						running = false;
 					}
+					running = false;
 				}
 			};
 			getWorld().getServer().getGameEventHandler().add(unregisterEvent);
@@ -1288,8 +1278,6 @@ public final class Player extends Mob {
 			return getCache().getLong("skull_remaining");
 		if (!getCache().hasKey("skull_remaining"))
 			getSkullTime();
-		else
-			return 0;
 		return 0;
 	}
 
@@ -1299,9 +1287,8 @@ public final class Player extends Mob {
 	}
 
 	public long getChargeTime() {
-		if (isCharged()) {
+		if (isCharged())
 			return chargeEvent.timeTillNextRun();
-		}
 		return 0;
 	}
 
@@ -1310,8 +1297,6 @@ public final class Player extends Mob {
 			return getCache().getLong("charge_remaining");
 		if (!getCache().hasKey("charge_remaining"))
 			getChargeTime();
-		else
-			return 0;
 		return 0;
 	}
 
@@ -1344,9 +1329,8 @@ public final class Player extends Mob {
 	}
 
 	public long getUsernameHash() {
-		if (getAttribute("fakeuser", null) != null) {
-			return DataConversions.usernameToHash((String) getAttribute("fakeuser", null));
-		}
+		if (getAttribute("fakeuser", null) != null)
+			return DataConversions.usernameToHash(getAttribute("fakeuser", null));
 		return usernameHash;
 	}
 
@@ -1398,9 +1382,8 @@ public final class Player extends Mob {
 
 	public void incQuestExp(final int i, final int amount) {
 		int appliedAmount = amount;
-		if (!isOneXp()) {
+		if (!isOneXp())
 			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
-		}
 		if (isExperienceFrozen()) {
 			ActionSender.sendMessage(this, "You passed on " + appliedAmount/4 + " " +
 				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
@@ -1493,7 +1476,7 @@ public final class Player extends Mob {
 				//}
 				if (skill >= 4) {
 					fatigue += skillXP * 8;
-				} else if (skill >= 0 && skill <= 3) {
+				} else if (skill >= 0) {
 					fatigue += skillXP * 5;
 				}
 				if (fatigue > this.MAX_FATIGUE) {
@@ -1738,11 +1721,10 @@ public final class Player extends Mob {
 	}
 
 	public int getSkullType() {
-		int type = 0;
 		if (isSkulled()) {
-			type = 1;
+			return 1;
 		}
-		return type;
+		return 0;
 	}
 
 	public boolean isSleeping() {
@@ -1775,10 +1757,9 @@ public final class Player extends Mob {
 		ActionSender.sendSound(this, "death");
 		ActionSender.sendDied(this);
 
-		if (getAttribute("projectile", null) != null) {
-			ProjectileEvent projectileEvent = getAttribute("projectile");
+		ProjectileEvent projectileEvent = getAttribute("projectile");
+		if (projectileEvent != null)
 			projectileEvent.setCanceled(true);
-		}
 		getSettings().getAttackedBy().clear();
 
 		getCache().store("last_death", System.currentTimeMillis());
@@ -1899,8 +1880,7 @@ public final class Player extends Mob {
 		ping();
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPacketLock) {
-				if (!incomingPackets.containsKey(e.getID()))
-					incomingPackets.put(e.getID(), e);
+				incomingPackets.put(e.getID(), e);
 			}
 		}
 	}
@@ -2123,7 +2103,7 @@ public final class Player extends Mob {
 
 		save();
 
-		/** IP Tracking in wilderness removal */
+		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
 		{
 			wildernessIPTracker.remove(player.getCurrentIP());
@@ -2174,13 +2154,10 @@ public final class Player extends Mob {
 
 	public void setBatchEvent(final BatchEvent batchEvent) {
 		if (batchEvent != null && batchEvent.getOwner() != null) {
-			Player player = (Player) batchEvent.getOwner();
-			player.checkAndInterruptBatchEvent();
-			this.batchEvent = batchEvent;
+			batchEvent.getOwner().checkAndInterruptBatchEvent();
 			getWorld().getServer().getGameEventHandler().add(batchEvent);
-		} else {
-			this.batchEvent = null;
 		}
+		this.batchEvent = batchEvent;
 	}
 
 	public void setCastTimer(final long timer) {
@@ -2324,14 +2301,11 @@ public final class Player extends Mob {
 
 	@Override
 	public void setLocation(final Point p, final boolean teleported) {
-		if (!teleported) {
-			if (getSkullType() == 2)
-				getUpdateFlags().setAppearanceChanged(true);
-			else if (getSkullType() == 0)
-				getUpdateFlags().setAppearanceChanged(true);
-		} else {
-			setTeleporting(true);
+		if (teleported || getSkullType() == 2 || getSkullType() == 0) {
+			// Inappropriate place for this to be getting set at for skulls, to me.
 			getUpdateFlags().setAppearanceChanged(true);
+			if (teleported)
+				setTeleporting(true);
 		}
 
 		super.setLocation(p, teleported);
@@ -2570,6 +2544,15 @@ public final class Player extends Mob {
 		}
 	}
 
+	public Boolean getHideLoginBox() {
+		if (getWorld().getServer().getConfig().HIDE_LOGIN_BOX_TOGGLE) {
+			if (getCache().hasKey("setting_hide_login_box")) {
+				return getCache().getBoolean("setting_hide_login_box");
+			}
+		}
+		return false;
+	}
+
 	public Boolean getHideSideMenu() {
 		if (getWorld().getServer().getConfig().SIDE_MENU_TOGGLE) {
 			if (getCache().hasKey("setting_side_menu")) {
@@ -2774,15 +2757,15 @@ public final class Player extends Mob {
 				return 0x03FFFFFF;
 
 			return 0;
-		} else {
-			if (isAdmin())
-				return 0x02FFFFFF;
-
-			if (isMod())
-				return 0x03FFFFFF;
-
-			return 0;
 		}
+
+		if (isAdmin())
+			return 0x02FFFFFF;
+
+		if (isMod())
+			return 0x03FFFFFF;
+
+		return 0;
 	}
 
 	public Trade getTrade() {
@@ -2856,16 +2839,10 @@ public final class Player extends Mob {
 	}
 
 	public void addNpcKill(final Npc n, final boolean sendUpdate) {
-		int kills = 1;
-		if (getKillCache().containsKey(n.getID())) {
-			kills = getKillCache().get(n.getID()) + 1;
-
-		}
+		int kills = getKillCache().containsKey(n.getID()) ? getKillCache().get(n.getID()) + 1 : 1;
 		getKillCache().put(n.getID(), kills);
 		setKillCacheUpdated(true);
-		if (sendUpdate) {
-			message("Your " + n.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
-		}
+		if (sendUpdate) message("Your " + n.getDef().getName() + " kill count is: @red@" + kills + "@whi@.");
 	}
 
 	public boolean hasHigherRankThan(final Entity observer) {

@@ -111,7 +111,7 @@ public class HalloweenCracker implements UsePlayerTrigger {
 	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
+				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
 				return;
 			}
 

@@ -1,1 +1,1 @@
-game.openrsc.com
+localhost

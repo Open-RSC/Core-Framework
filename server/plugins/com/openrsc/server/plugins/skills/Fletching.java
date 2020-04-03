@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemArrowHeadDef;
 import com.openrsc.server.external.ItemBowStringDef;
@@ -171,8 +172,10 @@ public class Fletching implements UseInvTrigger {
 					}
 					if (getOwner().getCarriedItems().remove(headlessArrows.getCatalogId(), 1) > -1
 						&& getOwner().getCarriedItems().remove(arrowHeads.getCatalogId(), 1) > -1) {
-						getOwner().getCarriedItems().getInventory().add(new Item(headDef.getArrowID(), 1));
-						getOwner().incExp(Skills.FLETCHING, headDef.getExp(), true);
+						//Successful make attempt
+						int skillCapeMultiplier = SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE) ? 2 : 1;
+						getOwner().getCarriedItems().getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
+						getOwner().incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
 					} else {
 						interrupt();
 						return;
@@ -406,8 +409,10 @@ public class Fletching implements UseInvTrigger {
 					}
 					if (getOwner().getCarriedItems().remove(bolt, 1) > -1
 						&& getOwner().getCarriedItems().remove(tip, 1) > -1) {
-						getOwner().getCarriedItems().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), 1));
-						getOwner().incExp(Skills.FLETCHING, 25, true);
+						//Successful bolt make
+						int skillCapeMultiplier = SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE) ? 2 : 1;
+						getOwner().getCarriedItems().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
+						getOwner().incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
 					} else interrupt();
 				}
 			}

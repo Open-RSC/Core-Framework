@@ -42,6 +42,11 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/../../../../Client_Base'
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "openrsc.apk"
+        }
+    }
 }
 
 dependencies {

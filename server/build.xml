@@ -10,7 +10,8 @@
         <delete file="plugins.jar"/>
         <delete dir="buildplugins"/>
         <mkdir dir="buildplugins"/>
-        <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false" target="${javac.target}" source="${javac.source}">
+        <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false" target="${javac.target}"
+               source="${javac.source}">
             <classpath>
                 <pathelement location="core.jar"/>
                 <pathelement path="${java.class.path}/"/>
@@ -29,7 +30,8 @@
         <delete file="${jar}"/>
         <delete dir="${build}"/>
         <mkdir dir="${build}"/>
-        <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}" source="${javac.source}">
+        <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}"
+               source="${javac.source}">
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.33.Final.jar"/>
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
@@ -50,7 +52,7 @@
             <compilerarg line="-Xlint:deprecation"/>
         </javac>
         <jar basedir="${build}" destfile="${jar}">
-            <zipgroupfileset dir="lib" includes="*.jar" />
+            <zipgroupfileset dir="lib" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="com.openrsc.server.Server"/>
             </manifest>
@@ -60,7 +62,11 @@
 
     <target name="runserver">
         <java classname="com.openrsc.server.Server" fork="true">
+            <!-- Comment out the below default.conf reference to disable default loading and instead run multiple worlds on the same server process -->
             <arg value="default.conf"/>
+            <!-- Uncomment the below section to run multiple worlds on the same server process (comment out default.conf above first)-->
+            <!--<arg value="openrsc.conf"/>
+            <arg value="rsccabbage.conf"/>-->
             <jvmarg line="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>

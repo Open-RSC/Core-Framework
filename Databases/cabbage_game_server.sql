@@ -301,7 +301,7 @@ VALUES (471, 133, 211, 1, 5, 1),
        (167, 543, 576, 1, 25, 276),
        (16, 116, 710, 1, 37, 589),
        (164, 171, 161, 1, 603, 716),
-       (46, 333, 145, 3, 610, 796),
+       (46, 333, 145, 3, 608, 796),
        (40, 67, 177, 3, 120, 803),
        (40, 69, 178, 4, 120, 802),
        (11, 212, 367, 4, 20, 282),
@@ -4821,7 +4821,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2104, 0, -1, 'Fishing hood', 'Fishing skillcape hood', '', 0, 0, 0, 1, 1, 312, 33, 0, 99, 10, 0, 0, 0, 0, 0,
         99000),
        (2105, 0, -1, 'Cooking cape', 'The cape worn by the world\'s best chefs', '', 0, 0, 0, 1, 1, 311, 2048, 11, 99,
-        7, 0, 0, 0, 0, 0, 99000),
+        7, 6, 0, 0, 0, 0, 99000),
        (2106, 0, -1, 'Experience Elixir', 'A mysterious experience elixir once produced by hetty', 'Drink', 0, 0, 1, 1,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2250),
        (2107, 0, -1, 'Teleport Stone', 'Teleports you to any town', 'Teleport', 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -4832,7 +4832,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         0, 0, 0, 0, 0, 0, 0, 0, 3075),
        (2110, 0, -1, 'Spotted cape', 'A dark brown spotted cape', '', 0, 0, 0, 1, 1, 314, 2048, 11, 1, 1, 2, 0, 0, 0, 0,
         2),
-       (2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 243, 2048, 11, 99, 0, 0, 0,
+       (2111, 0, -1, 'Attack cape', 'The cape worn by masters of attack', '', 0, 0, 0, 1, 1, 315, 2048, 11, 99, 0, 6, 0,
         0, 0, 0, 99000),
        (2112, 0, -1, 'Blood egg', 'Happy Easter', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 10),
        (2113, 0, -1, 'Easter egg', 'A cracked open easter egg - Happy Easter!', 'eat', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1,
@@ -5196,7 +5196,7 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
         17625),
        (2297, -1, 2296, 'Ring of avarice', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 17625),
-       (2298, 2297, -1, 'Dwarven ring', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0,
+       (2298, 2299, -1, 'Dwarven ring', 'An uncharged ring.', 'Check,Break', 0, 1, 0, 0, 1, 0, 1200, 13, 0, 0, 0, 0, 0,
         0, 0, 400),
        (2299, -1, 2298, 'Dwarven ring', 'Swap this note at any bank for the equivalent item.', '', 0, 0, 1, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 400),
@@ -5342,7 +5342,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2397, 2398, -1, 'Leather top', 'A stylish leather top', '', 1, 0, 0, 0, 1, 427, 322, 1, 1, 1, 10, 0, 0, 0, 0, 21),
        (2398, -1, 2397, 'Leather top', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
        (2399, 2400, -1, 'Leather skirt', 'A ladies skirt made of leather', '', 0, 0, 0, 0, 1, 428, 128, 7, 1, 1, 3, 0, 0, 0, 0, 14),
-       (2400, -1, 2393, 'Leather skirt', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14);
+       (2400, -1, 2393, 'Leather skirt', 'Swap this note at any bank for the equivalent item.', '', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14),
+       (2401, 0, -1, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 6, 0, 0, 0, 0, 99000),
+       (2402, 0, -1, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000),
+       (2403, 0, -1, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
@@ -6204,7 +6207,8 @@ INSERT INTO `openrsc_npcdef` (`primary_id`, `id`, `name`, `description`, `comman
 (809, 808, 'Dwarven Smithy', 'A master of metals', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0),
 (810, 809, 'Dwarven Youth', 'He is upset', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0),
 (811, 810, 'Balrog', 'A massive black demon', '', '', 999, 250, 500, 80, NULL, 217, 1, 1, 1, 73, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, -1),
-(812, 811, 'Silicius', 'A Peaceful monk', '', '', 12, 13, 15, 12, NULL, 13, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 0);
+(812, 811, 'Silicius', 'A Peaceful monk', '', '', 12, 13, 15, 12, NULL, 13, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(813, 812, 'Robin Banks', 'A master thief', '', '', 34, 32, 37, 33, NULL, 34, 1, 0, 0, 61, 6, 1, 2, -1, 50, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, 0, -1);
 
 DROP TABLE IF EXISTS `openrsc_npcdrops`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdrops`
@@ -12059,7 +12063,8 @@ VALUES (47, 109, 104, 114, 415, 410, 420, 3816),
        (290, 295, 290, 303, 3417, 3414, 3419, 7607),
        (290, 300, 290, 303, 3414, 3414, 3419, 7608),
        (810, 314, 314, 314, 3422, 3422, 3422, 7609),
-       (811, 419, 418, 421, 562, 561, 563, 7610);
+       (811, 419, 418, 421, 562, 561, 563, 7610),
+       (812, 615, 613, 618, 3496, 3494, 3498, 7611);
 
 DROP TABLE IF EXISTS `openrsc_objects`;
 CREATE TABLE IF NOT EXISTS `openrsc_objects`

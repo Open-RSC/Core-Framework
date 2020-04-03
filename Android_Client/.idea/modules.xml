@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Android_Client.iml" filepath="$PROJECT_DIR$/Android_Client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" filepath="$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android_Client.iml" filepath="$PROJECT_DIR$/Android_Client.iml" group="Android_Client" />
+      <module fileurl="file://$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" filepath="$PROJECT_DIR$/Open RSC Android Client/Open RSC Android Client.iml" group="Android_Client/Open RSC Android Client" />
     </modules>
   </component>
 </project>

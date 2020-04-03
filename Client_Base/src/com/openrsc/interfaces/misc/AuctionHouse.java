@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 
 import com.openrsc.client.entityhandling.instances.Item;
+
 import orsc.Config;
 import orsc.enumerations.MessageType;
 import orsc.graphics.gui.Panel;
@@ -355,7 +356,8 @@ public final class AuctionHouse {
 
 			graphics.drawString("Item", listX - 68, listY - 14, 0xffffff, 1);
 			graphics.drawString("Name / Sale Prices", listX - 18, listY - 14, 0xffffff, 1);
-			graphics.drawString("Time Left", listX + 208, listY - 14, 0xffffff, 1);
+			// #TIMELIMIT
+			// graphics.drawString("Time Left", listX + 208, listY - 14, 0xffffff, 1);
 
 			int listStartPoint = myAuctions.getScrollPosition(myAuctionScrollHandle);
 			int listEndPoint = listStartPoint + 4;
@@ -395,7 +397,8 @@ public final class AuctionHouse {
 				graphics.drawString(basicNumber(price) + " gp", listX + 21, listY + boxHeight / 2 + 10 - 8, 0xffffff, 0);
 
 				graphics.drawString(basicNumber(priceEach) + " gp ea", listX + 118, listY + boxHeight / 2 + 10 - 8, 0xffffff, 0);
-				graphics.drawString(getTime(ahItem) + "h", listX + 240, listY + boxHeight / 2 - 14, 0xffffff, 2);
+				// #TIMELIMIT
+				// graphics.drawString(getTime(ahItem) + "h", listX + 240, listY + boxHeight / 2 - 14, 0xffffff, 2);
 
 				graphics.drawBoxAlpha(listX - 72, listY - 10, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
 
@@ -794,7 +797,8 @@ public final class AuctionHouse {
 				}
 
 				graphics.drawString(mc.ellipsize(def.getName(), 22), listX + 50, listY + boxHeight / 2, 0xffffff, 2);
-				graphics.drawString(getTime(ahItem) + " hours", listX + 200, listY + boxHeight / 2, 0xffffff, 2);
+				// #TIMELIMIT
+				// graphics.drawString(getTime(ahItem) + " hours", listX + 200, listY + boxHeight / 2, 0xffffff, 2);
 				graphics.drawString(basicNumber(priceEach) + " gp (ea)", listX + 295, listY + boxHeight / 2 - 8, 0xffffff, 0);
 				graphics.drawString(basicNumber(price) + " gp (all)", listX + 295, listY + boxHeight / 2 + 10 - 4, 0xffffff, 0);
 				graphics.drawBoxAlpha(listX - 3, listY - 4, boxWidth + 1, boxHeight - 1, 0xfffffff, 128);
@@ -807,7 +811,8 @@ public final class AuctionHouse {
 			}
 			graphics.drawString("Showing: " + (showing) + "/" + (filteredList.size()) + " items", listX + 49, y + 75,
 				0xffffff, 1);
-			graphics.drawString("Expires in", listX + 201, y + 75, 0xffffff, 1);
+			// #TIMELIMIT
+			// graphics.drawString("Expires in", listX + 201, y + 75, 0xffffff, 1);
 		}
 
 		if (selectedAuction != -1 && selectedAuction < filteredList.size()) {
@@ -851,7 +856,8 @@ public final class AuctionHouse {
 				def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 			graphics.drawString(String.valueOf(ahItem.getAmount()), selectX + 10, selectY + 22 + 11, 65280, 1);
 
-			graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);
+			// #TIMELIMIT
+			// graphics.drawString(getTime(ahItem) + "h left", selectX + 60, selectY + 32, 0xffffff, 2);
 
 			graphics.drawString("Quantity: " + method74(ahItem.getAmount()), selectX + 200, selectY + 32, 0xffffff, 2);
 			graphics.drawString("Total: " + method74(price) + "gp", selectX + 200, selectY + 32 + 14, 0xffffff, 2);

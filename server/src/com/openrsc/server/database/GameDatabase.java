@@ -741,7 +741,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 				final PlayerBankPreset[] presets = list.toArray(new PlayerBankPreset[list.size()]);
 
-				querySavePlayerBankPresets(player.getDatabaseID(), presets);
+				if (presets.length > 0)
+					querySavePlayerBankPresets(player.getDatabaseID(), presets);
 			}
 		} catch (final IOException ex) {
 			// Convert SQLException to a general usage exception

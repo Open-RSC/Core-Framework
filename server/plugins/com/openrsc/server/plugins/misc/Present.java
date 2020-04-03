@@ -260,7 +260,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		if (item.getCatalogId() == ItemId.PRESENT.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. They stand alone.");
+				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
 				return;
 			}
 

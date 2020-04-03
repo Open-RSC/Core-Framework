@@ -76,6 +76,8 @@ public final class GameSettingHandler implements PacketHandler {
 				player.getCache().store("show_npc_kc", p.readByte() == 1);
 			} else if (idx == 39) {
 				player.getCache().store("custom_ui", p.readByte() == 1);
+			} else if (idx == 40) {
+				player.getCache().store("setting_hide_login_box", p.readByte() == 1);
 			}
 			return;
 		}

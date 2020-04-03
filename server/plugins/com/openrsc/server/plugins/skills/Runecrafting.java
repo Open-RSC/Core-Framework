@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import java.util.Optional;
+import com.openrsc.server.net.rsc.ActionSender;
 
 import static com.openrsc.server.plugins.Functions.*;
 public class Runecrafting implements OpLocTrigger, UseLocTrigger {
@@ -19,28 +20,35 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 
 	@Override
 	public boolean blockOpLoc(GameObject obj, String command, Player player) {
-		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
-		if (def == null)
+		if (obj.getID() < 1190 || obj.getID() > 1213)
 			return false;
 
-		switch (ItemId.getById(def.getRuneId()))
-		{
-			case AIR_RUNE:
-			case MIND_RUNE:
-			case WATER_RUNE:
-			case EARTH_RUNE:
-			case FIRE_RUNE:
-			case BODY_RUNE:
-			case COSMIC_RUNE:
-			case CHAOS_RUNE:
-			case NATURE_RUNE:
-			case LAW_RUNE:
-			case DEATH_RUNE:
-			case BLOOD_RUNE:
+		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
+
+		if (def != null) {
+			switch (ItemId.getById(def.getRuneId()))
+			{
+				case AIR_RUNE:
+				case MIND_RUNE:
+				case WATER_RUNE:
+				case EARTH_RUNE:
+				case FIRE_RUNE:
+				case BODY_RUNE:
+				case COSMIC_RUNE:
+				case CHAOS_RUNE:
+				case NATURE_RUNE:
+				case LAW_RUNE:
+				case DEATH_RUNE:
+				case BLOOD_RUNE:
+					return true;
+				default:
+					return false;
+			}
+		} else {
+			if (command.equalsIgnoreCase("enter"))
 				return true;
-			default:
-				return false;
 		}
+		return false;
 	}
 
 	@Override
@@ -48,40 +56,81 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 
 		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
 
-		if (def == null) {
-			return;
-		}
+		if (command.equalsIgnoreCase("enter")) {
+			int requiredTalisman = -1;
+			switch (obj.getID()) {
+				case 1190:
+					requiredTalisman = ItemId.AIR_TALISMAN.id();
+					break;
+				case 1192:
+					requiredTalisman = ItemId.MIND_TALISMAN.id();
+					break;
+				case 1194:
+					requiredTalisman = ItemId.WATER_TALISMAN.id();
+					break;
+				case 1196:
+					requiredTalisman = ItemId.EARTH_TALISMAN.id();
+					break;
+				case 1198:
+					requiredTalisman = ItemId.FIRE_TALISMAN.id();
+					break;
+				case 1200:
+					requiredTalisman = ItemId.BODY_TALISMAN.id();
+					break;
+				case 1202:
+					requiredTalisman = ItemId.COSMIC_TALISMAN.id();
+					break;
+				case 1204:
+					requiredTalisman = ItemId.CHAOS_TALISMAN.id();
+					break;
+				case 1206:
+					requiredTalisman = ItemId.NATURE_TALISMAN.id();
+					break;
+				case 1208:
+					requiredTalisman = ItemId.LAW_TALISMAN.id();
+					break;
+				case 1210:
+					requiredTalisman = ItemId.DEATH_TALISMAN.id();
+					break;
+				case 1212:
+					requiredTalisman = ItemId.BLOOD_TALISMAN.id();
+					break;
+			}
 
-		if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
-		{
-			player.message("You need to complete Rune Mysteries first. How did you get here?");
-			return;
-		}
-
-		if (!player.getCarriedItems().hasCatalogID(ItemId.RUNE_ESSENCE.id(), Optional.of(false))){
-			player.message("You have no rune essence to bind.");
-			return;
-		}
-		else {
-			if (player.getSkills().getLevel(Skills.RUNECRAFTING) < def.getRequiredLvl()) {
-				player.message("You require more skill to use this altar.");
+			if (player.getCarriedItems().hasCatalogID(requiredTalisman, Optional.of(false))) {
+				this.onUseLoc(obj, new Item(requiredTalisman, 1), player);
+			} else {
+				player.message("You can't enter this place");
+			}
+		} else if (def != null) {
+			if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
+			{
+				player.message("You need to complete Rune Mysteries first. How did you get here?");
 				return;
 			}
-			player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
-		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 100, "Binding runes", player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id()), false) {
-			@Override
-			public void action() {
-				if (!getOwner().getCarriedItems().hasCatalogID(ItemId.RUNE_ESSENCE.id(), Optional.of(false))) {
-					interrupt();
+
+			if (!player.getCarriedItems().hasCatalogID(ItemId.RUNE_ESSENCE.id(), Optional.of(false))){
+				player.message("You have no rune essence to bind.");
+				return;
+			}
+			else {
+				if (player.getSkills().getLevel(Skills.RUNECRAFTING) < def.getRequiredLvl()) {
+					player.message("You require more skill to use this altar.");
 					return;
 				}
-				remove(getOwner(), ItemId.RUNE_ESSENCE.id(), 1);
-				give(getOwner(), def.getRuneId(), getRuneMultiplier(getOwner(), def.getRuneId()));
-				getOwner().incExp(Skills.RUNECRAFTING, def.getExp(), true);
+				player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
 			}
-		});
-
+			int successCount = 0;
+			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id());
+			for (int loop = 0; loop < repeatTimes; ++loop) {
+				if (player.getCarriedItems().getInventory().remove(ItemId.RUNE_ESSENCE.id(), 1, false) != -1) {
+					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())),false);
+					++successCount;
+				}
+			}
+			ActionSender.sendInventory(player);
+			player.incExp(Skills.RUNECRAFTING, def.getExp() * successCount, true);
+		}
 	}
 
 	@Override

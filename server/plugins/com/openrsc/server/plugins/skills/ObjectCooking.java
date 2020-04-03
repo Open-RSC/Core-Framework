@@ -131,11 +131,13 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 			// Some need a RANGE not a FIRE
 			boolean needOven = false;
-			int timeToCook = 1800;
+			int timeToCook = p.getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (isOvenFood(item)) {
 				needOven = true;
-				timeToCook = 3000;
+				timeToCook = p.getWorld().getServer().getConfig().GAME_TICK * 5;
 			}
+			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id()))
+				timeToCook *= 0.7;
 			if ((object.getID() == 97 || object.getID() == 274) && needOven) {
 				p.playerServerMessage(MessageType.QUEST, "You need a proper oven to cook this");
 				return;
@@ -204,6 +206,12 @@ public class ObjectCooking implements UseLocTrigger {
 		}
 		if (item.getCatalogId() == ItemId.POISON.id() && obj.getID() == 435 && obj.getX() == 618 && obj.getY() == 3453) {
 			return true;
+		}
+		// Gnome Cooking Items
+		if (item.getCatalogId() == ItemId.GNOMEBATTA_DOUGH.id() || item.getCatalogId() == ItemId.GNOMEBOWL_DOUGH.id()
+			|| item.getCatalogId() == ItemId.GNOMECRUNCHIE_DOUGH.id() || item.getCatalogId() == ItemId.GNOMEBATTA.id()
+			|| item.getCatalogId() == ItemId.GNOMEBOWL.id() || item.getCatalogId() == ItemId.GNOMECRUNCHIE.id()) {
+			return false;
 		}
 		final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;

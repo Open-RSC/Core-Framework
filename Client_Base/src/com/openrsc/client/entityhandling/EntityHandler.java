@@ -562,7 +562,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Sir Prysin", "One of the king's knights", "", 30, 60, 50, 20, false, sprites, 1, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Traiborn the wizard", "An old wizard", "", 20, 15, 3, 10, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, 314};
+		} else {
+			sprites = new int[]{0, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Captain Rovin", "The head of the palace guard", "", 40, 70, 65, 30, false, sprites, 11167296, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Rat", "Overgrown vermin", "", 10, 10, 5, 10, true, sprites, 0, 0, 0, 0, 346, 136, 7, 7, 45, i++));
@@ -792,7 +796,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Brian", "An axe seller", "", 0, 0, 3, 0, false, sprites, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1};
 		npcs.add(new NPCDef("squire", "A young squire", "", 0, 0, 3, 0, false, sprites, 14535800, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, 310};
+		} else {
+			sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
+		}
 		npcs.add(new NPCDef("Head chef", "He looks after the chef's guild", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thurgo", "A short angry guy", "", 20, 17, 16, 20, false, sprites, 15658734, 8409200, 8409120, 13415270, 121, 176, 6, 6, 5, i++));
@@ -1135,7 +1143,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Merlin", "An old wizard", "", 20, 15, 3, 10, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{124, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thrantax", "A freshly summoned demon", "", 90, 90, 90, 90, false, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 429};
+		} else {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Hickton", "The owner of the archery store", "", 0, 0, 3, 0, false, sprites, 8409136, 14483456, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Black Demon", "A big scary jet black demon", "", 155, 157, 157, 158, true, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));
@@ -2103,7 +2115,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Dwarf commander", "He guards the mines", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		sprites = new int[]{-1, 1, 2, 122, -1, 77, 76, 81, 155, -1, -1, 64};
 		npcs.add(new NPCDef("Viyeldi", "The spirit of a dead sorcerer", "", 80, 80, 80, 80, true, sprites, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 430};
+		} else {
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Nurmof", "He sells pickaxes", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Fatigue expert", "He looks wide awake", "", 10, 10, 13, 8, false, sprites, 16760880, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
@@ -2188,7 +2204,12 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Balrog", "A massive black demon", "", 999, 250, 80, 200, true, sprites, 0, 0, 0, 0, 450, 480, 11, 11, 30, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Silicius", "A Peaceful monk", "", 12, 13, 15, 12, false, sprites, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, i++));
-
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{3, 4, 2, -1, -1, -1, 426, -1, 46, -1, -1, 428};
+		} else {
+			sprites = new int[]{3, 4, 2, -1, -1, -1, 426, -1, 46, -1, -1, -1};
+		}
+		npcs.add(new NPCDef("Robin Banks", "A master thief", "", 34, 32, 37, 33, false, sprites, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3703,6 +3724,13 @@ public class EntityHandler {
 		items.add(new ItemDef("Leather chaps", "They seem like decent protection", "", 14, -1, "items:512", false, true, 644, 0, false, false, 1370));
 		items.add(new ItemDef("Leather top", "Stylish leather top", "", 21, -1, "items:511", false, true, 322, 0, false, false, 1371));
 		items.add(new ItemDef("Leather skirt", "A ladies skirt made of leather", "", 14, -1, "items:513", false, true, 128, 0, false, false, 1372));
+
+		//Skill Cape Batch One
+		items.add(new ItemDef("Cooking cape", "The cape worn by the world's best chefs", "", 99000, -1, "items:481", false, true, 2048, 0, false, true, 1373));
+		items.add(new ItemDef("Attack cape", "The cape worn by masters of attack", "", 99000, -1, "items:480", false, true, 2048, 0, false, true, 1374));
+		items.add(new ItemDef("Thieving cape", "The cape worn by masters of thieving", "", 99000, -1, "items:496", false, true, 2048, 0, false, false, 1375));
+		items.add(new ItemDef("Fletching cape", "The cape worn by masters of fletching", "", 99000, -1, "items:486", false, true, 2048, 0, false, false, 1376));
+		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, 1377));
 	}
 
 	// Bank note items
@@ -4516,128 +4544,128 @@ public class EntityHandler {
 
 	private static void loadAnimationDefinitions() {
 		animations.add(new AnimationDef("head1", "player", 1, 13, true, false, 0));
-		animations.add(new AnimationDef("body1", "player",2, 6, true, false, 0));
-		animations.add(new AnimationDef("legs1", "player",3, 15, true, false, 0));
-		animations.add(new AnimationDef("fhead1", "player",1, 13, true, false, 0));
-		animations.add(new AnimationDef("fbody1", "player",2, 10, true, false, 0));
-		animations.add(new AnimationDef("head2", "player",1, 13, true, false, 0));
-		animations.add(new AnimationDef("head3", "player",1, 13, true, false, 0)); // allow shemales.
-		animations.add(new AnimationDef("head4", "player",1, 13, true, false, 0));
+		animations.add(new AnimationDef("body1", "player", 2, 6, true, false, 0));
+		animations.add(new AnimationDef("legs1", "player", 3, 15, true, false, 0));
+		animations.add(new AnimationDef("fhead1", "player", 1, 13, true, false, 0));
+		animations.add(new AnimationDef("fbody1", "player", 2, 10, true, false, 0));
+		animations.add(new AnimationDef("head2", "player", 1, 13, true, false, 0));
+		animations.add(new AnimationDef("head3", "player", 1, 13, true, false, 0)); // allow shemales.
+		animations.add(new AnimationDef("head4", "player", 1, 13, true, false, 0));
 		animations.add(new AnimationDef("chefshat", "equipment", 16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("apron", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("apron", "equipment",9789488, 0, true, false, 0));//10
-		animations.add(new AnimationDef("boots", "equipment",5592405, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fullhelm", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",16737817, 0, true, false, 0));//20
-		animations.add(new AnimationDef("chainmail", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",10072780, 0, true, false, 0));//30
-		animations.add(new AnimationDef("platemailtop", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("platemailtop", "equipment",10083839, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",11717785, 0, true, false, 0));//40
-		animations.add(new AnimationDef("platemaillegs", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",4210752, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("platemaillegs", "equipment",10083839, 0, true, false, 0));
-		animations.add(new AnimationDef("leatherarmour", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("leathergloves", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",10072780, 0, true, false, 0));//50
-		animations.add(new AnimationDef("sword", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",3158064, 0, true, false, 0));//60
-		animations.add(new AnimationDef("apron", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",16711680, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",2434341, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",4210926, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",4246592, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",15658560, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",15636736, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",11141341, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",15654365, 0, true, false, 0));//70
-		animations.add(new AnimationDef("mediumhelm", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",255, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",255, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",4210752, 0, true, false, 0));
-		animations.add(new AnimationDef("necklace", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("necklace", "equipment",16763980, 0, true, false, 0));//80
-		animations.add(new AnimationDef("skirt", "equipment",255, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",4210752, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",10510400, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",15609904, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",10510400, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",4210752, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",16036851, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",15609904, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",8400921, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",7824998, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",7829367, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",2245205, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",4347170, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",26214, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",56797, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",16750896, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",11363121, 0, true, false, 0));
-		animations.add(new AnimationDef("crossbow", "equipment",0, 0, false, false, 0));
-		animations.add(new AnimationDef("longbow", "equipment",0, 0, false, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",16737817, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",15654365, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",15658734, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",10072780, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",11717785, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",65535, 0, true, false, 0));
-		animations.add(new AnimationDef("mace", "equipment",3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("staff", "equipment",0, 0, true, false, 0));
+		animations.add(new AnimationDef("apron", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("apron", "equipment", 9789488, 0, true, false, 0));//10
+		animations.add(new AnimationDef("boots", "equipment", 5592405, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("fullhelm", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 16737817, 0, true, false, 0));//20
+		animations.add(new AnimationDef("chainmail", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 10072780, 0, true, false, 0));//30
+		animations.add(new AnimationDef("platemailtop", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("platemailtop", "equipment", 10083839, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 11717785, 0, true, false, 0));//40
+		animations.add(new AnimationDef("platemaillegs", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 4210752, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("platemaillegs", "equipment", 10083839, 0, true, false, 0));
+		animations.add(new AnimationDef("leatherarmour", "equipment", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("leathergloves", "equipment", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 10072780, 0, true, false, 0));//50
+		animations.add(new AnimationDef("sword", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 3158064, 0, true, false, 0));//60
+		animations.add(new AnimationDef("apron", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 16711680, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 2434341, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 4210926, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 4246592, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 15658560, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 15636736, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 11141341, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 15654365, 0, true, false, 0));//70
+		animations.add(new AnimationDef("mediumhelm", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 255, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 255, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 4210752, 0, true, false, 0));
+		animations.add(new AnimationDef("necklace", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("necklace", "equipment", 16763980, 0, true, false, 0));//80
+		animations.add(new AnimationDef("skirt", "equipment", 255, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 4210752, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 10510400, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 15609904, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 10510400, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 4210752, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 16036851, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 15609904, 0, true, false, 0));//90
+		animations.add(new AnimationDef("skirt", "equipment", 8400921, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 7824998, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 7829367, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 2245205, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 4347170, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 26214, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 10072780, 0, true, false, 0));//100
+		animations.add(new AnimationDef("squareshield", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 56797, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 16750896, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 11363121, 0, true, false, 0));
+		animations.add(new AnimationDef("crossbow", "equipment", 0, 0, false, false, 0));
+		animations.add(new AnimationDef("longbow", "equipment", 0, 0, false, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 10072780, 0, true, false, 0));//110
+		animations.add(new AnimationDef("battleaxe", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 16737817, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 15654365, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 15658734, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 10072780, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 11717785, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 65535, 0, true, false, 0));
+		animations.add(new AnimationDef("mace", "equipment", 3158064, 0, true, false, 0));//120
+		animations.add(new AnimationDef("staff", "equipment", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("rat", "npc", 4805259, 0, true, false, 0));
 		animations.add(new AnimationDef("demon", "npc", 16384000, 0, true, false, 0));
 		animations.add(new AnimationDef("spider", "npc", 13408576, 0, true, false, 0));
@@ -4647,7 +4675,7 @@ public class EntityHandler {
 		animations.add(new AnimationDef("sheep", "npc", 0, 0, false, false, 0));
 		animations.add(new AnimationDef("unicorn", "npc", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("bear", "npc", 0, 0, true, false, 0));
-		animations.add(new AnimationDef("chicken", "npc", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("chicken", "npc", 0, 0, true, false, 0));//130
 		animations.add(new AnimationDef("skeleton", "npc", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("skelweap", "npc", 0, 0, true, true, 0));
 		animations.add(new AnimationDef("zombie", "npc", 0, 0, true, false, 0));
@@ -4658,92 +4686,92 @@ public class EntityHandler {
 		animations.add(new AnimationDef("goblin", "npc", 16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("goblin", "npc", 47872, 0, true, false, 0));
 		animations.add(new AnimationDef("gobweap", "npc", 65535, 0, true, true, 0));
-		animations.add(new AnimationDef("scorpion", "npc", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("scorpion", "npc", 0, 0, true, false, 0));//140
 		animations.add(new AnimationDef("dragon", "npc", 65280, 0, true, false, 0));
 		animations.add(new AnimationDef("dragon", "npc", 16711680, 0, true, false, 0));
 		animations.add(new AnimationDef("dragon", "npc", 21981, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 10066329, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",16711680, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",16776960, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",255, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",65280, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",16711935, 0, true, false, 0));
-		animations.add(new AnimationDef("partyhat", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("leathergloves", "equipment",11202303, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment", 16711680, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment", 16776960, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment", 255, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment", 65280, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment", 16711935, 0, true, false, 0));
+		animations.add(new AnimationDef("partyhat", "equipment", 16777215, 0, true, false, 0));//150
+		animations.add(new AnimationDef("leathergloves", "equipment", 11202303, 0, true, false, 0));
 		animations.add(new AnimationDef("chicken", "npc", 16711680, 0, true, false, 0));
-		animations.add(new AnimationDef("fplatemailtop", "equipment",10083839, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",1118481, 0, true, false, 0));
+		animations.add(new AnimationDef("fplatemailtop", "equipment", 10083839, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 1118481, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 9789488, 0, true, false, 0));
 		animations.add(new AnimationDef("spider", "npc", 65535, 0, true, false, 0));
-		animations.add(new AnimationDef("battleaxe", "equipment",16711748, 0, true, false, 0));
-		animations.add(new AnimationDef("sword", "equipment",16711748, 0, true, false, 0));
-		animations.add(new AnimationDef("eyepatch", "equipment",0, 0, true, true, 0));
+		animations.add(new AnimationDef("battleaxe", "equipment", 16711748, 0, true, false, 0));
+		animations.add(new AnimationDef("sword", "equipment", 16711748, 0, true, false, 0));
+		animations.add(new AnimationDef("eyepatch", "equipment", 0, 0, true, true, 0));
 		animations.add(new AnimationDef("demon", "npc", 3158064, 0, true, false, 0));
-		animations.add(new AnimationDef("dragon", "npc", 3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("dragon", "npc", 3158064, 0, true, false, 0));//160
 		animations.add(new AnimationDef("spider", "npc", 14535680, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 2236962, 0, true, false, 0));
 		animations.add(new AnimationDef("unicorn", "npc", 2236962, 0, true, false, 0));
 		animations.add(new AnimationDef("demon", "npc", 6291456, 0, true, false, 0));
 		animations.add(new AnimationDef("spider", "npc", 2236962, 0, true, false, 0));
-		animations.add(new AnimationDef("necklace", "equipment",3158064, 0, true, false, 0));
+		animations.add(new AnimationDef("necklace", "equipment", 3158064, 0, true, false, 0));
 		animations.add(new AnimationDef("rat", "npc", 11184810, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",11250603, 0, true, false, 0));
-		animations.add(new AnimationDef("chainmail", "equipment",11250603, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",16711680, 0, true, false, 0));
-		animations.add(new AnimationDef("legs1", "player", 9785408, 0, true, false, 0));
-		animations.add(new AnimationDef("gasmask", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("mediumhelm", "equipment",16711748, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 11250603, 0, true, false, 0));
+		animations.add(new AnimationDef("chainmail", "equipment", 11250603, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 16711680, 0, true, false, 0));
+		animations.add(new AnimationDef("legs1", "player", 9785408, 0, true, false, 0));//170
+		animations.add(new AnimationDef("gasmask", "equipment", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("mediumhelm", "equipment", 16711748, 0, true, false, 0));
 		animations.add(new AnimationDef("spider", "npc", 3852326, 0, true, false, 0));
-		animations.add(new AnimationDef("spear", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("halloweenmask", "equipment",52224, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",1052688, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",1052688, 0, true, false, 0));
-		animations.add(new AnimationDef("halloweenmask", "equipment",16711680, 0, true, false, 0));
-		animations.add(new AnimationDef("halloweenmask", "equipment",255, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",16755370, 15, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",11206570, 15, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",11184895, 15, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",16777164, 15, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",13434879, 15, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",16755370, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",11206570, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",11184895, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",16777164, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardshat", "equipment",13434879, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",16755370, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",11206570, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",11184895, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",16777164, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",13434879, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",3978097, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",3978097, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",16755370, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",11206570, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",11184895, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",16777164, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",13434879, 0, true, false, 0));
-		animations.add(new AnimationDef("santahat", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("ibanstaff", "equipment",0, 0, true, false, 0));
+		animations.add(new AnimationDef("spear", "equipment", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("halloweenmask", "equipment", 52224, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 1052688, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 1052688, 0, true, false, 0));
+		animations.add(new AnimationDef("halloweenmask", "equipment", 16711680, 0, true, false, 0));
+		animations.add(new AnimationDef("halloweenmask", "equipment", 255, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 16755370, 15, true, false, 0));//180
+		animations.add(new AnimationDef("skirt", "equipment", 11206570, 15, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 11184895, 15, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 16777164, 15, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 13434879, 15, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 16755370, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 11206570, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 11184895, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 16777164, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardshat", "equipment", 13434879, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 16755370, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 11206570, 0, true, false, 0));//190
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 11184895, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 16777164, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 13434879, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 3978097, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 3978097, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 16755370, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 11206570, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 11184895, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 16777164, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 13434879, 0, true, false, 0));//200
+		animations.add(new AnimationDef("santahat", "equipment", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("ibanstaff", "equipment", 0, 0, true, false, 0));
 		animations.add(new AnimationDef("souless", "npc", 0, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("legs1", "player", 16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",8421376, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",8421376, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 8421376, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 8421376, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 16777215, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 13420580, 0, true, false, 0));
-		animations.add(new AnimationDef("bunnyears", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("saradominstaff", "equipment",0, 0, true, false, 0));
-		animations.add(new AnimationDef("spear", "equipment",56797, 0, true, false, 0));
-		animations.add(new AnimationDef("skirt", "equipment",1392384, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",1392384, 0, true, false, 0));
+		animations.add(new AnimationDef("bunnyears", "equipment", 0, 0, true, false, 0));
+		animations.add(new AnimationDef("saradominstaff", "equipment", 0, 0, true, false, 0));//210
+		animations.add(new AnimationDef("spear", "equipment", 56797, 0, true, false, 0));
+		animations.add(new AnimationDef("skirt", "equipment", 1392384, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 1392384, 0, true, false, 0));
 		animations.add(new AnimationDef("wolf", "npc", 5585408, 0, true, false, 0));
 		animations.add(new AnimationDef("chicken", "npc", 6893315, 0, true, false, 0));
-		animations.add(new AnimationDef("squareshield", "equipment",13500416, 0, true, false, 0));
-		animations.add(new AnimationDef("cape", "equipment",16777215, 0, true, false, 0));
-		animations.add(new AnimationDef("boots", "equipment",1118481, 0, true, false, 0));
-		animations.add(new AnimationDef("wizardsrobe", "equipment",1118481, 0, true, false, 0));
-		animations.add(new AnimationDef("scythe", "equipment",0, 0, true, false, 0));
+		animations.add(new AnimationDef("squareshield", "equipment", 13500416, 0, true, false, 0));
+		animations.add(new AnimationDef("cape", "equipment", 16777215, 0, true, false, 0));
+		animations.add(new AnimationDef("boots", "equipment", 1118481, 0, true, false, 0));
+		animations.add(new AnimationDef("wizardsrobe", "equipment", 1118481, 0, true, false, 0));
+		animations.add(new AnimationDef("scythe", "equipment", 0, 0, true, false, 0));//229
 		/*
 		  Add custom animation below.
 		 */
@@ -4968,21 +4996,21 @@ public class EntityHandler {
 			animations.add(new AnimationDef("spear", "equipment", 48059, 0, true, false, 0)); //393 - rune spear
 
 			// Xmas
-			animations.add(new AnimationDef("xmasapron", "equipment",0, 0, true, false, 0)); //394
-			animations.add(new AnimationDef("xmascape", "equipment",0, 0, true, false, 0)); //395
-			animations.add(new AnimationDef("santabody", "equipment",0, 0, true, false, 0)); //396
-			animations.add(new AnimationDef("santalegs", "equipment",0, 0, true, false, 0)); //397
-			animations.add(new AnimationDef("santahat2", "equipment",0, 0, true, false, 0)); //398
-			animations.add(new AnimationDef("santamittens", "equipment",0, 0, true, false, 0)); //399
-			animations.add(new AnimationDef("satansgloveswht", "equipment",0, 0, true, false, 0)); //400
-			animations.add(new AnimationDef("greensantahat", "equipment",0, 0, true, false, 0)); //401
-			animations.add(new AnimationDef("antlers", "equipment",0, 0, true, false, 0)); //402
+			animations.add(new AnimationDef("xmasapron", "equipment", 0, 0, true, false, 0)); //394
+			animations.add(new AnimationDef("xmascape", "equipment", 0, 0, true, false, 0)); //395
+			animations.add(new AnimationDef("santabody", "equipment", 0, 0, true, false, 0)); //396
+			animations.add(new AnimationDef("santalegs", "equipment", 0, 0, true, false, 0)); //397
+			animations.add(new AnimationDef("santahat2", "equipment", 0, 0, true, false, 0)); //398
+			animations.add(new AnimationDef("santamittens", "equipment", 0, 0, true, false, 0)); //399
+			animations.add(new AnimationDef("satansgloveswht", "equipment", 0, 0, true, false, 0)); //400
+			animations.add(new AnimationDef("greensantahat", "equipment", 0, 0, true, false, 0)); //401
+			animations.add(new AnimationDef("antlers", "equipment", 0, 0, true, false, 0)); //402
 
 			//Dragon 2H
 			animations.add(new AnimationDef("2hander", "equipment", 16711748, 0, true, false, 0)); //403 d2h
 
 			//Dragon Scale Mail
-			animations.add(new AnimationDef("dragonscalemail", "equipment",0, 0, true, false, 0));//404
+			animations.add(new AnimationDef("dragonscalemail", "equipment", 0, 0, true, false, 0));//404
 
 			//Updated Necklaces and Amulets
 			//Sapphire
@@ -5030,6 +5058,13 @@ public class EntityHandler {
 			animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
 			//Female Skirt
 			animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
+
+			//Skill Cape Batch One
+			//animations.add(new AnimationDef("attackcape", "equipment", 0, 0, true, false, 0)); //315
+			//animations.add(new AnimationDef("cookingcape", "equipment", 0, 0, true, false, 0)); //311
+			animations.add(new AnimationDef("thievingcape", "equipment", 0, 0, true, false, 0)); //429
+			animations.add(new AnimationDef("fletchingcape", "equipment", 0, 0, true, false, 0)); //430
+			animations.add(new AnimationDef("miningcape", "equipment", 0, 0, true, false, 0)); //431
 		}
 	}
 
@@ -6981,29 +7016,29 @@ public class EntityHandler {
 
 		//Runecrafting Objects
 		if (Config.S_WANT_RUNECRAFTING) {
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
 			objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Air
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
 			objects.add(new GameObjectDef("Mind Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Mind
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
 			objects.add(new GameObjectDef("Water Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Water
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
 			objects.add(new GameObjectDef("Earth Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Earth
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
 			objects.add(new GameObjectDef("Fire Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Fire
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
 			objects.add(new GameObjectDef("Body Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Body
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
 			objects.add(new GameObjectDef("Cosmic Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Cosmic
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
 			objects.add(new GameObjectDef("Chaos Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Chaos
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature 1206
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature 1206
 			objects.add(new GameObjectDef("Nature Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Nature
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
 			objects.add(new GameObjectDef("Law Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Law
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
 			objects.add(new GameObjectDef("Death Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Death
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "WalkTo", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
+			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
 			objects.add(new GameObjectDef("Blood Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Blood
 			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//air altar 1214
 			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//mind altar

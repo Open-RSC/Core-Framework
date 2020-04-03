@@ -2,21 +2,23 @@ package com.openrsc.server.net;
 
 import com.google.common.base.Objects;
 import com.openrsc.server.Server;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import io.netty.util.AttributeMap;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jboss.netty.channel.ChannelHandler;
 
 import java.net.InetSocketAddress;
 
-public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements ChannelHandler {
+public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implements AttributeMap {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
@@ -32,7 +34,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	}
 
 	@Override
-	public void channelInactive(final ChannelHandlerContext ctx)  {
+	public void channelInactive(final ChannelHandlerContext ctx) {
 		ctx.channel().close();
 	}
 
@@ -40,7 +42,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
 		final Channel channel = ctx.channel();
 
-		if(message instanceof Packet) {
+		if (message instanceof Packet) {
 
 			final Packet packet = (Packet) message;
 			Player player = null;
@@ -78,15 +80,10 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	public void channelRegistered(final ChannelHandlerContext ctx) {
 		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
 
-		if(!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
-			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
+		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
+			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + ServerConfiguration.NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
 			ctx.channel().close();
-
-			return;
 		}
-
-		//final ConnectionAttachment att = new ConnectionAttachment();
-		//ctx.channel().attr(attachment).set(att);
 	}
 
 	@Override
@@ -107,8 +104,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	}
 
 	@Override
-	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e)  {
-		if (!getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().anyMatch($it -> Objects.equal($it, e.getMessage()))) {
+	public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable e) {
+		if (getServer().getConfig().IGNORED_NETWORK_EXCEPTIONS.stream().noneMatch($it -> Objects.equal($it, e.getMessage()))) {
 			final Channel channel = ctx.channel();
 			final ConnectionAttachment att = channel.attr(attachment).get();
 			LOGGER.error("Exception caught in Network I/O : Remote address " + channel.remoteAddress() + " : isOpen " + channel.isOpen() + " : isActive " + channel.isActive() + " : isWritable " + channel.isWritable() + (att == null ? "" : " : Attached Player " + att.player.get()));
@@ -126,5 +123,15 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	public final Server getServer() {
 		return server;
+	}
+
+	@Override
+	public <T> Attribute<T> attr(AttributeKey<T> attributeKey) {
+		return null;
+	}
+
+	@Override
+	public <T> boolean hasAttr(AttributeKey<T> attributeKey) {
+		return false;
 	}
 }

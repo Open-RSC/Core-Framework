@@ -20,64 +20,31 @@ docker-install:
 get-updates:
 	`pwd`/Deployment_Scripts/get-updates.sh
 
-#---------------------------------------------------------------
-
-# Section for Building the Docker image and pushing to DockerHub
-build-and-push:
-	docker-compose -f docker-compose-game.yml build
-	docker push openrsc/openrsc_service:latest
-
-#---------------------------------------------------------------
-
-# OpenRSC-only server container control section
-start-game:
-	docker-compose -f docker-compose-game.yml up -d
-
-stop-game:
-	docker-compose -f docker-compose-game.yml down -v
-
-restart-game:
-	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-game.yml up -d
-
-logs-game:
-	docker-compose -f docker-compose-game.yml logs -f
+compile:
+	`pwd`/Deployment_Scripts/get-updates.sh
 
 #---------------------------------------------------------------
 
 # MariaDB-only server container control section
-start-db:
-	docker-compose -f docker-compose-db.yml up -d
+start:
+	docker-compose -f docker-compose.yml up -d
 
-stop-db:
-	docker-compose -f docker-compose-db.yml down -v
+stop:
+	docker-compose -f docker-compose.yml down -v
 
-restart-db:
-	docker-compose -f docker-compose-db.yml down -v
-	docker-compose -f docker-compose-db.yml up -d
+restart:
+	docker-compose -f docker-compose.yml down -v
+	docker-compose -f docker-compose.yml up -d
 
-logs-db:
-	docker-compose -f docker-compose-db.yml logs -f
-
-#---------------------------------------------------------------
-
-# Compiles the game server, client, and launcher before restarting the game server
-# Note: Mac Terminal has an error and will not complete the copy-files.sh script command, this only works on Linux.
-compile:
-	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-compile.yml up
-	docker-compose -f docker-compose-compile.yml down -v
-	chmod +x Deployment_Scripts/copy-files.sh
-	./Deployment_Scripts/copy-files.sh
-	docker-compose -f docker-compose-game.yml down -v
-	docker-compose -f docker-compose-game.yml up -d
+logs:
+	docker-compose -f docker-compose.yml logs -f
 
 #---------------------------------------------------------------
 
 # Sets a specified username to be in a specified group in a specified database
 # Call via "make rank db=cabbage group=0 username=wolf"
 rank:
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; UPDATE openrsc_players SET group_id = '${group}' WHERE openrsc_players.username = '${username}';"
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; UPDATE ${PREFIX}players SET group_id = '${group}' WHERE ${PREFIX}players.username = '${username}';"
 
 # Creates a database that the user specifies the name of
 # Call via "make create db=cabbage"

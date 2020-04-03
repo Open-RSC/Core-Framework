@@ -14,6 +14,9 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DemonSlayer implements QuestInterface,
@@ -136,28 +139,53 @@ public class DemonSlayer implements QuestInterface,
 	private void captainRovinDialogue(Player p, Npc n, int cID) {
 		int questStage = p.getQuestStage(this);
 		if (cID == -1) {
+			List<String> choices = new ArrayList<>();
 			npcsay(p, n, "What are you doing up here?",
 				"Only the palace guards are allowed up here");
-			String[] choices = new String[]{
-				"I am one of the palace guards",
-				"What about the king?"
-			};
-			if (questStage >= 2)
-				choices = new String[]{"I am one of the palace guards",
-					"What about the king?",
-					"Yes I know but this important"
-				};
+			choices.add("I am one of the palace guards");
+			choices.add("What about the king?");
 
-			int choice = multi(p, n, false, choices); // Do not send choice to client
+			if (questStage >= 2)
+				choices.add("Yes I know but this important");
+
+			if (p.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+				&& getMaxLevel(p, Skills.ATTACK) >= 99)
+				choices.add("Attack Skillcape");
+
+			int choice = multi(p, n, false, choices.toArray(new String[0])); // Do not send choice to client
 			if (choice == 0) {
 				say(p, n, "I am one of the palace guard");
 				captainRovinDialogue(p, n, CaptainRovin.PALACE);
 			} else if (choice == 1) {
 				say(p, n, "What about the king?");
 				captainRovinDialogue(p, n, CaptainRovin.KING);
-			} else if (choice == 2 && questStage > 1) {
-				say(p, n, "Yes I know but this important");
-				captainRovinDialogue(p, n, CaptainRovin.IMPORTANT);
+			} else {
+				if (choices.get(choice).equalsIgnoreCase("Attack Skillcape")) {
+					if (getMaxLevel(p, Skills.ATTACK) >= 99) {
+						npcsay(p, n, "I see you too are a master of attack",
+							"You are worthy to wield the Attack Skillcape",
+							"The cost is 99,000 coins");
+						int choice2 = multi(p, n, true, "I'll buy one", "Not at the moment");
+						if (choice2 == 0) {
+							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+								if (p.getCarriedItems().remove(ItemId.COINS.id(), 99000) > -1) {
+									give(p, ItemId.ATTACK_CAPE.id(), 1);
+									npcsay(p, n, "Congratulations",
+										"Wearing this cape in battle",
+										"will increase to your accuracy");
+								}
+							} else {
+								npcsay(p, n, "You don't have the money?",
+									"Get lost");
+							}
+						}
+					}
+				} else if (choices.get(choice).equalsIgnoreCase("Yes I know but this important")) {
+					if (questStage > 1) {
+						say(p, n, "Yes I know but this important");
+						captainRovinDialogue(p, n, CaptainRovin.IMPORTANT);
+					}
+				}
 			}
 		}
 

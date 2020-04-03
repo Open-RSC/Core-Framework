@@ -213,7 +213,8 @@ public final class mudclient implements Runnable {
 			|| S_MENU_COMBAT_STYLE_TOGGLE
 			|| S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
 			|| S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
-			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU);
+			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU
+			|| S_HIDE_LOGIN_BOX);
 	public long totalXpGainedStartTime = 0;
 	public String[] achievementNames = new String[500];
 	public String[] achievementTitles = new String[500];
@@ -4584,7 +4585,7 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawColoredStringCentered(this.halfGameWidth(), this.sleepingStatusText,
 							0xFF0000, 0, 5, 260 - (isAndroid() ? 110 : 0));
 					} else {
-						this.getSurface().drawSprite(getSurface().spriteVerts[2], this.halfGameWidth() - 127, 230 - (isAndroid() ? 110 : 0));
+						this.getSurface().drawSprite(getSurface().spriteVerts[3], this.halfGameWidth() - 127, 230 - (isAndroid() ? 110 : 0));
 					}
 
 					this.getSurface().drawBoxBorder(this.halfGameWidth() - 128, 257, 229 - (isAndroid() ? 110 : 0), 42, 0xFFFFFF);
@@ -5067,8 +5068,10 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString(
 							"Prayer: " + this.playerStatCurrent[5] + "@gre@/@whi@" + this.playerStatBase[5], 7, i, 0xffffff, 1);
 						i += 14;
-						this.getSurface().drawString(
-							"Kills: " + this.statKills2 + "@whi@", 7, i, 0xffffff, 1);
+						if (C_NPC_KC) {
+							this.getSurface().drawString(
+								"Kills: " + this.statKills2 + "@whi@", 7, i, 0xffffff, 1);
+						}
 						if (Config.S_WANT_FATIGUE) {
 							i += 14;
 							this.getSurface().drawString(
@@ -5714,10 +5717,52 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	public final void drawNPCDef(NPCDef def, int x, int y, int width1, int height) {
+		int var11 = 0;
+		for (int var15 = 0; var15 < 12; ++var15) {
+			int var16 = this.getAnimDirLayer_To_CharLayer()[var11][var15];
+
+			int animID = def.getSprite(var16);
+			AnimationDef animationDef = EntityHandler.getAnimationDef(animID);
+			if (animID >= 0) {
+				byte spriteOffsetX = 0;
+				byte spriteOffsetY = 0;
+
+				if (animationDef.hasA()) {
+					//int sprite = variant + animationDef.getNumber();
+					Sprite sprite = spriteSelect(animationDef, 0);
+					int something1 = sprite.getSomething1();
+					int something2 = sprite.getSomething2();
+					if (something1 != 0 && something2 != 0) {
+						int xOffset = (spriteOffsetX * width1) / something1;
+						int yOffset = (spriteOffsetY * height) / something2;
+						int colorVariant = animationDef.getCharColour();// CacheValues.animationCharacterColour[animID];
+						int baseColor = 0;
+						if (colorVariant == 1) {
+							baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+							colorVariant = def.getHairColour();// CacheValues.npcColourHair[npc.npcId];
+						} else if (animID >= 230 && Config.S_WANT_CUSTOM_SPRITES) {
+							baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+						} else if (colorVariant != 2) {
+							if (colorVariant == 3) {
+								baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+								colorVariant = def.getBottomColour();// CacheValues.npcColourBottom[npc.npcId];
+							}
+						} else {
+							colorVariant = def.getTopColour();// CacheValues.npcColourTop[npc.npcId];
+							baseColor = def.getSkinColour();// CacheValues.npcColourSkin[npc.npcId];
+						}
+						this.getSurface().drawSpriteClipping(sprite, xOffset + x, yOffset + y, width1, height,
+							colorVariant, baseColor, 0, false, 0, 1);
+					}
+				}
+			}
+		}
+	}
+
 	public final void drawNPC(int npcIndex, int x, int y, int width1, int height, int topPixelSkew, int var3,
 							  int overlayMovement) {
 		try {
-
 			ORSCharacter npc = this.npcs[npcIndex];
 			NPCDef def = EntityHandler.getNpcDef(npc.npcId);
 			int var11 = 7 & npc.direction.rsDir + (this.cameraRotation + 16) / 32;
@@ -8868,6 +8913,17 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		// Hide Login Box
+		if (S_HIDE_LOGIN_BOX) {
+			if (C_HIDE_LOGIN_BOX) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Hide Login Box - @gre@Yes", 20, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Hide Login Box - @red@No", 20, null, null);
+			}
+		}
+
 		// if clans are enabled
 		if (S_WANT_CLANS) {
 			// if floating name tags are enabled
@@ -9203,6 +9259,16 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(34);
 			boolean setting = C_INV_COUNT;
+			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
+		// Show Login Box - byte index 40
+		if (settingIndex == 20 && this.mouseButtonClick == 1 && S_HIDE_LOGIN_BOX) {
+			C_HIDE_LOGIN_BOX = !C_HIDE_LOGIN_BOX;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().bufferBits.putByte(40);
+			boolean setting = C_HIDE_LOGIN_BOX;
 			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
@@ -11277,15 +11343,24 @@ public final class mudclient implements Runnable {
 				if (loginScreenNumber == 1) {
 					menuNewUser.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 						this.lastMouseButtonDown);
-					if (menuNewUser.isClicked(menuNewUserUsername))
+					if (menuNewUser.isClicked(menuNewUserUsername)) {
+						enterPressed = false;
 						menuNewUser.setFocus(menuNewUserPassword);
-					if (menuNewUser.isClicked(menuNewUserPassword))
-						menuNewUser.setFocus(menuNewUserEmail);
+					}
+					if (menuNewUser.isClicked(menuNewUserPassword)) {
+						if (wantEmail()) {
+							enterPressed = false;
+							menuNewUser.setFocus(menuNewUserEmail);
+						}
+						else
+							menuNewUser.setFocus(menuNewUserSubmit);
+					}
 					if (menuNewUser.isClicked(menuNewUserEmail))
 						menuNewUser.setFocus(menuNewUserSubmit);
 					if (menuNewUser.isClicked(menuNewUserCancel))
 						loginScreenNumber = 0;
-					if (menuNewUser.isClicked(menuNewUserSubmit)) {
+					else if (menuNewUser.isClicked(menuNewUserSubmit) || this.enterPressed) {
+						enterPressed = false;
 						if (wantEmail()) {
 							if (menuNewUser.getControlText(menuNewUserUsername) != null
 								&& menuNewUser.getControlText(menuNewUserUsername).length() == 0
@@ -11350,6 +11425,7 @@ public final class mudclient implements Runnable {
 
 
 					if (this.panelLogin.isClicked(this.controlLoginUser)) {
+						this.enterPressed = false;
 						this.panelLogin.setFocus(this.controlLoginPass);
 					}
 
@@ -11359,6 +11435,8 @@ public final class mudclient implements Runnable {
 
 						this.setUsername(this.panelLogin.getControlText(this.controlLoginUser));
 						this.password = this.panelLogin.getControlText(this.controlLoginPass);
+						if (this.password.equals("")) return;
+
 						this.autoLoginTimeout = 2;
 						this.login(-12, this.password, this.getUsername(), false);
 					}
@@ -11555,6 +11633,9 @@ public final class mudclient implements Runnable {
 				}
 			}
 
+			if (this.enterPressed)
+				this.enterPressed = false;
+
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.BA(" + var1 + ')');
 		}
@@ -11623,8 +11704,8 @@ public final class mudclient implements Runnable {
 
 			System.out.println("Registration response:" + registerResponse);
 			if (registerResponse == 0) {
-				panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
-				panelLogin.setText(controlLoginPass, password);
+				// panelLogin.setText(controlLoginUser, username.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ").trim());
+				// panelLogin.setText(controlLoginPass, password);
 
 				showLoginScreenStatus("Account created", "you can now login with your user");
 				return;
@@ -11662,7 +11743,6 @@ public final class mudclient implements Runnable {
 			this.showLoginScreenStatus("Sorry! Unable to connect.", "Check internet settings");
 			e.printStackTrace();
 		}
-
 	}
 
 	private void handleMenuItemClicked(boolean var1, int item) {
@@ -13016,7 +13096,7 @@ public final class mudclient implements Runnable {
 						workspace = unpacker.unpackArchive(pack);
 						for (Subspace subspace : workspace.getSubspaces()) {
 							Map<String, orsc.graphics.two.SpriteArchive.Entry> entries = getSurface().spriteTree.get(subspace.getName());
-							for (orsc.graphics.two.SpriteArchive.Entry entry: subspace.getEntryList()) {
+							for (orsc.graphics.two.SpriteArchive.Entry entry : subspace.getEntryList()) {
 								entries.put(entry.getID(), entry);
 							}
 						}
@@ -15066,6 +15146,10 @@ public final class mudclient implements Runnable {
 		this.recentSkill = stat;
 	}
 
+	public int getRecentSkill() {
+		return this.recentSkill;
+	}
+
 	public void setPlayerStatXpGained(int stat, long exp) {
 		this.playerStatXpGained[stat] = exp;
 	}
@@ -16225,6 +16309,9 @@ public final class mudclient implements Runnable {
 		skillGuideChosenTabs = new ArrayList<String>();
 		if (skillGuideChosen.equalsIgnoreCase("Attack")) {
 			skillGuideChosenTabs.add("Weapons");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Defense")) {
 			skillGuideChosenTabs.add("Armour");
 		} else if (skillGuideChosen.equalsIgnoreCase("Hits")) {
@@ -16255,8 +16342,14 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Ammo");
 			skillGuideChosenTabs.add("Bows");
 			skillGuideChosenTabs.add("Darts");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Fishing")) {
 			skillGuideChosenTabs.add("Catches");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Firemaking")) {
 			skillGuideChosenTabs.add("Burning");
 		} else if (skillGuideChosen.equalsIgnoreCase("Crafting")) {
@@ -16267,6 +16360,7 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Spinning");
 			skillGuideChosenTabs.add("Glass");
 			skillGuideChosenTabs.add("Battlestaves");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Smithing")) {
 			skillGuideChosenTabs.add("Smelting");
 			skillGuideChosenTabs.add("Bronze");
@@ -16275,10 +16369,11 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Mithril");
 			skillGuideChosenTabs.add("Adamantite");
 			skillGuideChosenTabs.add("Runite");
-			skillGuideChosenTabs.add("Other");
+			skillGuideChosenTabs.add("Dragon");
 		} else if (skillGuideChosen.equalsIgnoreCase("Mining")) {
 			skillGuideChosenTabs.add("Ores");
 			skillGuideChosenTabs.add("Pickaxes");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Herblaw")) {
 			skillGuideChosenTabs.add("Herbs");
 			skillGuideChosenTabs.add("Potions");
@@ -16290,6 +16385,9 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Stalls");
 			skillGuideChosenTabs.add("Chests");
 			skillGuideChosenTabs.add("Doors");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
@@ -16482,7 +16580,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public void addXpNotification(int skill, int receivedXp, boolean b) {
-		XPNotification n = new XPNotification(skill, receivedXp, false);
+		XPNotification n = new XPNotification(skill, receivedXp, b);
 		this.xpNotifications.add(n);
 	}
 
@@ -16573,6 +16671,10 @@ public final class mudclient implements Runnable {
 
 	public void setCustomUI(boolean b) {
 		C_CUSTOM_UI = b;
+	}
+
+	public void setHideLoginBox(boolean b) {
+		C_HIDE_LOGIN_BOX = b;
 	}
 
 	public void setBlockPartyInv(boolean b) {

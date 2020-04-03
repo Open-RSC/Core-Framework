@@ -67,11 +67,13 @@ public class GameEventHandler {
 
 	private void processEvents() {
 		if (eventsToAdd.size() > 0) {
-			for (Iterator<Map.Entry<String, GameTickEvent>> iter = eventsToAdd.entrySet().iterator(); iter.hasNext(); ) {
-				Map.Entry<String, GameTickEvent> e = iter.next();
-				events.merge(e.getKey(), e.getValue(), (oldEvent, newEvent) -> newEvent);
-				iter.remove();
-			}
+			events.putAll(eventsToAdd);
+			eventsToAdd.clear();
+//			for (Iterator<Map.Entry<String, GameTickEvent>> iter = eventsToAdd.entrySet().iterator(); iter.hasNext(); ) {
+//				Map.Entry<String, GameTickEvent> e = iter.next();
+//				events.merge(e.getKey(), e.getValue(), (oldEvent, newEvent) -> newEvent);
+//				iter.remove();
+//			}
 		}
 
 		// Sorting for unused Notify and State Events
@@ -79,63 +81,76 @@ public class GameEventHandler {
 		ArrayList<Callable<Integer>> stateEvents = new ArrayList<Callable<Integer>>();
 		ArrayList<Callable<Integer>> tickEvents = new ArrayList<Callable<Integer>>();*/
 
-		ArrayList<Callable<Integer>> callables = new ArrayList<Callable<Integer>>();
-
-		for (final Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
-			GameTickEvent event = it.next().getValue();
-			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
-				it.remove();
-			}
-
-			callables.add(event);
-			// Doing this in stages to ensure that GameNotifyEvents are processed before GameStateEvents and GameStateEvents before all other events
-			/*if(event instanceof GameNotifyEvent) {
-				notifyEvents.add(event);
-			} else if (event instanceof GameStateEvent) {
-				stateEvents.add(event);
-			} else {
-				tickEvents.add(event);
-			}*/
-		}
-
+//		ArrayList<Callable<Integer>> callables = new ArrayList<>();
 		try {
-			executor.invokeAll(callables);
-			// Sorting for unused Notify and State Events
-			/*executor.invokeAll(notifyEvents);
-			executor.invokeAll(stateEvents);
-			executor.invokeAll(tickEvents);*/
-
-			/*List<Future<Integer>> futures = executor.invokeAll(callables);
-			for (int i = 0; i < futures.size(); i++) {
-				Future<Integer> future = futures.get(i);
-				final int returnCode = future.get();
-			}*/
+			executor.invokeAll(events.values());
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
-
+//		for (final Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
+//			GameTickEvent event = it.next().getValue();
+//			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
+//				it.remove();
+//			}
+//
+//			callables.add(event);
+//			// Doing this in stages to ensure that GameNotifyEvents are processed before GameStateEvents and GameStateEvents before all other events
+//			/*if(event instanceof GameNotifyEvent) {
+//				notifyEvents.add(event);
+//			} else if (event instanceof GameStateEvent) {
+//				stateEvents.add(event);
+//			} else {
+//				tickEvents.add(event);
+//			}*/
+//		}
+//
+//		try {
+//			executor.invokeAll(callables);
+//			// Sorting for unused Notify and State Events
+//			/*executor.invokeAll(notifyEvents);
+//			executor.invokeAll(stateEvents);
+//			executor.invokeAll(tickEvents);*/
+//
+//			/*List<Future<Integer>> futures = executor.invokeAll(callables);
+//			for (int i = 0; i < futures.size(); i++) {
+//				Future<Integer> future = futures.get(i);
+//				final int returnCode = future.get();
+//			}*/
+//		} catch (Exception e) {
+//			LOGGER.catching(e);
+//		}
+//
 		eventsCounts.clear();
 		eventsDurations.clear();
 
-		for (final Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
-			GameTickEvent event = it.next().getValue();
+		events.entrySet().removeIf((eventBox) -> {
+			GameTickEvent event = eventBox.getValue();
+			eventsCounts.put(event.getDescriptor(),
+				eventsCounts.containsKey(event.getDescriptor()) ?
+					eventsCounts.get(event.getDescriptor()) + 1 :
+					1);
+			eventsDurations.put(event.getDescriptor(),
+				eventsDurations.containsKey(event.getDescriptor()) ?
+					eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
+					event.getLastEventDuration());
 
-			if (!eventsCounts.containsKey(event.getDescriptor())) {
-				eventsCounts.put(event.getDescriptor(), 1);
-			} else {
-				eventsCounts.put(event.getDescriptor(), eventsCounts.get(event.getDescriptor()) + 1);
-			}
-
-			if (!eventsDurations.containsKey(event.getDescriptor())) {
-				eventsDurations.put(event.getDescriptor(), event.getLastEventDuration());
-			} else {
-				eventsDurations.put(event.getDescriptor(), eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration());
-			}
-
-			if (event.shouldRemove()) {
-				it.remove();
-			}
-		}
+			return event.shouldRemove();
+		});
+//		for (final Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
+//			GameTickEvent event = it.next().getValue();
+//
+//			eventsCounts.put(event.getDescriptor(),
+//				eventsCounts.containsKey(event.getDescriptor()) ?
+//					eventsCounts.get(event.getDescriptor()) + 1 :
+//					1);
+//			eventsDurations.put(event.getDescriptor(),
+//				eventsDurations.containsKey(event.getDescriptor()) ?
+//					eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
+//					event.getLastEventDuration());
+//
+//			if (event.shouldRemove())
+//				it.remove();
+//		}
 	}
 
 	public long runGameEvents() {
@@ -156,49 +171,42 @@ public class GameEventHandler {
 		final HashMap<String, Long> eventsDurations = getEventsDurations();
 
 		// Calculate Totals
-		for (Map.Entry<String, Integer> eventEntry : eventsCounts.entrySet()) {
+		for (Map.Entry<String, Integer> eventEntry : eventsCounts.entrySet())
 			countAllEvents += eventEntry.getValue();
-		}
-		for (Map.Entry<String, Long> eventEntry : eventsDurations.entrySet()) {
-			durationAllEvents += eventEntry.getValue();
-		}
+//		for (Map.Entry<String, Long> eventEntry : eventsDurations.entrySet())
+//			durationAllEvents += eventEntry.getValue();
 
 		// Sort the Events Hashmap
-		List list = new LinkedList(eventsDurations.entrySet());
-		Collections.sort(list, (Object o1, Object o2) -> {
-			int o1EventCount = eventsCounts.get(((Map.Entry) (o1)).getKey());
-			int o2EventCount = eventsCounts.get(((Map.Entry) (o2)).getKey());
-			long o1EventDuration = eventsDurations.get(((Map.Entry) (o1)).getKey());
-			long o2EventDuration = eventsDurations.get(((Map.Entry) (o2)).getKey());
+		List<Map.Entry<String,Long>> mapEntries = new LinkedList<>(eventsDurations.entrySet());
+		mapEntries.sort((prev, next) -> {
+			long prevDuration = eventsDurations.get(prev.getKey());
+			long nextDuration = eventsDurations.get(next.getKey());
 
-			if(o1EventDuration == o2EventDuration) {
-				if(o1EventCount == o2EventCount) {
+			if (prevDuration == nextDuration) {
+				int prevCount = eventsCounts.get(prev.getKey());
+				int nextCount = eventsCounts.get(next.getKey());
+
+				if (prevCount == nextCount)
 					return 0;
-				}
-				return o1EventCount < o2EventCount ? 1 : -1;
-			} else {
-				return o1EventDuration < o2EventDuration ? 1 : -1;
+				return prevCount < nextCount ? 1 : -1;
 			}
+			return prevDuration < nextDuration ? 1 : -1;
 		});
-		HashMap sortedHashMap = new LinkedHashMap();
-		for (Iterator it = list.iterator(); it.hasNext(); ) {
-			Map.Entry entry = (Map.Entry) it.next();
-			sortedHashMap.put(entry.getKey(), entry.getValue());
-		}
 		eventsDurations.clear();
-		eventsDurations.putAll(sortedHashMap);
+//		HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
+		for (Map.Entry<String, Long> entry : mapEntries)
+			eventsDurations.put(entry.getKey(), entry.getValue());
+//		eventsDurations.clear();
+//		eventsDurations.putAll(sortedHashMap);
 
-		int i = 0;
 		StringBuilder s = new StringBuilder();
+		int idx = 0;
 		for (Map.Entry<String, Long> entry : eventsDurations.entrySet()) {
-			if (forInGame && i >= 16) // Only display first 17 elements of the hashmap
+			if (forInGame && idx++ >= 16) // Only display first 17 elements of the hashmap
 				break;
-
-			String name = entry.getKey();
-			Long duration = entry.getValue();
-			Integer count = eventsCounts.get(entry.getKey());
-			s.append(name).append(" : ").append(duration).append("ms").append(" : ").append(count).append(newLine);
-			++i;
+			s.append(entry.getKey()).append(" : ");
+			s.append(entry.getValue()).append("ms").append(" : ");
+			s.append(eventsCounts.get(entry.getKey())).append(newLine);
 		}
 
 		String returnString = (
@@ -207,18 +215,17 @@ public class GameEventHandler {
 				"Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
 				"Threads: " + Thread.activeCount() + ", Total: " + DataConversions.formatBytes(Runtime.getRuntime().totalMemory()) + ", Free: " +  DataConversions.formatBytes(Runtime.getRuntime().freeMemory()) + ", Used: " + DataConversions.formatBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + newLine +
 				/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/
-				s
+				s.toString()
 		);
 
-		if(!forInGame) {
+		if(!forInGame)
 			LOGGER.info(returnString);
-		}
 
-		return returnString.substring(0, returnString.length() > 1999 ? 1999 : returnString.length()); // Limit to 2000 characters for Discord.
+		return returnString.substring(0, Math.min(returnString.length(), 1999)); // Limit to 2000 characters for Discord.
 	}
 
 	public HashMap<String, GameTickEvent> getEvents() {
-		return new LinkedHashMap<String, GameTickEvent>(events);
+		return new LinkedHashMap<>(events);
 	}
 
 	public void remove(GameTickEvent event) {
@@ -240,11 +247,11 @@ public class GameEventHandler {
 	}
 
 	public HashMap<String, Integer> getEventsCounts() {
-		return new LinkedHashMap<String, Integer>(eventsCounts);
+		return new LinkedHashMap<>(eventsCounts);
 	}
 
 	public HashMap<String, Long> getEventsDurations() {
-		return new LinkedHashMap<String, Long>(eventsDurations);
+		return new LinkedHashMap<>(eventsDurations);
 	}
 
 	public final Server getServer() {

@@ -1,4 +1,4 @@
-### Guide for running Open RSC on MacOS
+### Guide for running Open RuneScape Classic on MacOS
 
 ## Step 1
 

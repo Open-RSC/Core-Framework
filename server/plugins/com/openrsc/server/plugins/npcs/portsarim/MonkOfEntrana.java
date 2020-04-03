@@ -22,10 +22,11 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 	private String[] blockedItems = new String[]{
 		"arrow", "axe", "staff", "bow", "mail", "plate",
-		"bolts", "cannon", "helmet", "mace", "simitar",
+		"bolts", "cannon", "helmet", "mace", "scimitar",
 		"shield", "spear", "2-handed", "long", "short",
 		"amulet", "ring", "cape", "gauntlet", "boot",
-		"necklace", "silverlight", "excalibur"
+		"necklace", "silverlight", "excalibur", "dagger",
+		"throwing"
 	};
 
 	private boolean CHECK_ITEM(String itemName) {

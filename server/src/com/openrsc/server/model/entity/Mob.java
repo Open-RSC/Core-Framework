@@ -822,6 +822,8 @@ public abstract class Mob extends Entity {
 
 	public void tryResyncStatEvent() { statRestorationEvent.tryResyncStat(); }
 
+	public void tryResyncHitEvent() { statRestorationEvent.tryResyncHit(); }
+
 	public UpdateFlags getUpdateFlags() {
 		return updateFlags;
 	}

@@ -8,7 +8,6 @@ import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.content.party.PartyPlayer;
-import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.BankPreset;
@@ -370,26 +369,16 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 20, "Send Friends List") {
-			int currentFriend = 0;
-
-			@Override
-			public void run() {
-				if (currentFriend == player.getSocial().getFriendListEntry().size() + 1) {
-					stop();
-					return;
+		for (int currentFriend = 0; currentFriend < player.getSocial().getFriendListEntry().size() + 1; ++currentFriend) {
+			int iteratorIndex = 0;
+			for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
+				if (iteratorIndex == currentFriend) {
+					sendFriendUpdate(player, entry.getKey());
+					break;
 				}
-				int iteratorindex = 0;
-				for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
-					if (iteratorindex == currentFriend) {
-						sendFriendUpdate(player, entry.getKey());
-						break;
-					}
-					iteratorindex++;
-				}
-				currentFriend++;
+				iteratorIndex++;
 			}
-		});
+		}
 	}
 
 	/**
@@ -468,6 +457,7 @@ public class ActionSender {
 		s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
 		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
 		s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
+		s.writeByte((byte) (player.getHideLoginBox() ? 1 : 0)); // 40
 		player.write(s.toPacket());
 	}
 
@@ -549,6 +539,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().SKILLING_EXP_RATE + " 72");
 			LOGGER.info(server.getConfig().WANT_PK_BOTS + " 73");
 			LOGGER.info(server.getConfig().WANT_HARVESTING + " 74");
+			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 75");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -645,6 +636,7 @@ public class ActionSender {
 		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //72
 		s.writeByte((byte) (server.getConfig().WANT_PK_BOTS ? 1 : 0)); // 73
 		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
+		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 75
 		return s;
 	}
 
@@ -1325,6 +1317,7 @@ public class ActionSender {
 				}
 
 				sendWakeUp(p, false, true);
+				sendGameSettings(p);
 				sendLoginBox(p);
 
 				for (Npc n : p.getWorld().getNpcs()) {
@@ -1355,7 +1348,6 @@ public class ActionSender {
 					sendBox(p, "@gre@Welcome to the " + p.getWorld().getServer().getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				sendGameSettings(p);
 				sendPrivacySettings(p);
 
 				sendStats(p);

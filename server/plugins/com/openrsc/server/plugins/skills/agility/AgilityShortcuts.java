@@ -37,6 +37,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 	private static final int GREW_ISLAND_SWING_BACK = 664;
 	private static final int EAST_KARAMJA_LOG = 692;
 	private static final int EAST_KARAMJA_STONES = 701;
+	private static final int YANILLE_CLIMBING_ROCKS = 1029;
 	private static final int YANILLE_WATCHTOWER_HANDHOLDS = 658;
 	private static final int TAVERLY_PIPE = 1236;
 	private static final int TAVERLY_PIPE_RETURN = 1237;
@@ -60,6 +61,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 			GREW_ISLAND_SWING_BACK,
 			EAST_KARAMJA_LOG,
 			EAST_KARAMJA_STONES,
+			YANILLE_CLIMBING_ROCKS,
 			YANILLE_WATCHTOWER_HANDHOLDS,
 			SHILO_VILLAGE_ROCKS_TO_BRIDGE,
 			SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP,
@@ -502,6 +504,23 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("And cross the water without problems.");
 				p.incExp(Skills.AGILITY, 10, true);
+				break;
+			case YANILLE_CLIMBING_ROCKS:
+				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (p.getFatigue() >= p.MAX_FATIGUE) {
+						p.message("You are too tired to climb up the wall");
+						p.setBusy(false);
+						return;
+					}
+				}
+				if (getCurrentLevel(p, Skills.AGILITY) < 15) {
+					p.message("You need an agility level of 15 to climb the wall");
+					p.setBusy(false);
+					return;
+				}
+				p.message("You climb over the wall");
+				teleport(p, 624, 741);
+				p.incExp(Skills.AGILITY, 40, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
 				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {

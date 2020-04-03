@@ -77,36 +77,38 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			public void action() {
 				if (Formulae.lightLogs(getOwner().getSkills().getLevel(Skills.FIREMAKING))) {
 
-					getOwner().getWorld().getServer().getGameEventHandler().add(
-						new SingleEvent(getOwner().getWorld(), getOwner(), 1200, "Light Logs") {
-							@Override
-							public void action() {
-								getOwner().playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
-								getWorld().unregisterItem(gItem);
+					if (!gItem.isRemoved()) {
+						getOwner().getWorld().getServer().getGameEventHandler().add(
+							new SingleEvent(getOwner().getWorld(), getOwner(), 1200, "Light Logs") {
+								@Override
+								public void action() {
+									getOwner().playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
+									getWorld().unregisterItem(gItem);
 
-								final GameObject fire = new GameObject(getWorld(), gItem.getLocation(), 97, 0, 0);
-								getWorld().registerGameObject(fire);
+									final GameObject fire = new GameObject(getWorld(), gItem.getLocation(), 97, 0, 0);
+									getWorld().registerGameObject(fire);
 
-								getWorld().getServer().getGameEventHandler().add(
-									new SingleEvent(getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
-										@Override
-										public void action() {
-											if (fire != null) {
-												getWorld().registerItem(new GroundItem(
-													getWorld(),
-													ItemId.ASHES.id(),
-													fire.getX(),
-													fire.getY(),
-													1, (Player) null));
-												getWorld().unregisterGameObject(fire);
+									getWorld().getServer().getGameEventHandler().add(
+										new SingleEvent(getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
+											@Override
+											public void action() {
+												if (fire != null) {
+													getWorld().registerItem(new GroundItem(
+														getWorld(),
+														ItemId.ASHES.id(),
+														fire.getX(),
+														fire.getY(),
+														1, (Player) null));
+													getWorld().unregisterGameObject(fire);
+												}
 											}
 										}
-									}
-								);
-								getOwner().incExp(Skills.FIREMAKING, getExp(getOwner().getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+									);
+									getOwner().incExp(Skills.FIREMAKING, getExp(getOwner().getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+								}
 							}
-						}
-					);
+						);
+					}
 				} else {
 					getOwner().playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 					getOwner().getUpdateFlags().setActionBubble(new Bubble(getOwner(), TINDERBOX));

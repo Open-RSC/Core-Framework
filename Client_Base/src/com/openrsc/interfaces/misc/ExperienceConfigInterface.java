@@ -169,6 +169,11 @@ public final class ExperienceConfigInterface {
 			@Override
 			void handle() {
 				mc.totalXpGainedStartTime = 0;
+				mc.setPlayerXpGainedTotal(0);
+				if (mc.getRecentSkill() >= 0)
+					mc.setPlayerStatXpGained(mc.getRecentSkill(),0);
+				if (mc.selectedSkill >= 0)
+					mc.setPlayerStatXpGained(mc.selectedSkill, 0);
 			}
 		});
 		this.drawButton(x + 200, y + 165, 60, 20, "Submenu", 2, Config.C_EXPERIENCE_CONFIG_SUBMENU, new ButtonHandler() {

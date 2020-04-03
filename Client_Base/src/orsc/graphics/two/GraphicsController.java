@@ -43,7 +43,7 @@ public class GraphicsController {
 	public int[] pixelData;
 	public int width2;
 	public Sprite[] sprites;
-	public Sprite[] spriteVerts = new Sprite[3];
+	public Sprite[] spriteVerts = new Sprite[4];
 	public Sprite minimapSprite = new Sprite();
 	private int clipTop = 0;
 	private int iconSpriteIndex;
@@ -2421,7 +2421,7 @@ public class GraphicsController {
 	public final void createCaptchaSprite(Sprite s) {
 		try {
 
-			spriteVerts[2] = s;
+			spriteVerts[3] = s;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

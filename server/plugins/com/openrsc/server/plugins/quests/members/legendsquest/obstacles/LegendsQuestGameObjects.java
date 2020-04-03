@@ -167,7 +167,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					int rnd = DataConversions.random(0, 4);
 					if (rnd == 0) {
 						mes(p, 1300, "but fear stabs at your heart...",
-								"and you lose concentration,");
+								"and you lose concentration,",
+							"you slip and fall....");
 						p.damage(DataConversions.random(10, 15));
 					}
 					else {

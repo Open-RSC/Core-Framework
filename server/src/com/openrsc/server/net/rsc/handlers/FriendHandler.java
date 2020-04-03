@@ -61,8 +61,10 @@ public final class FriendHandler implements PacketHandler {
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");
+				ActionSender.sendIgnoreList(player);
 				return;
 			}
+			player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
 			ActionSender.sendIgnoreList(player);
 		} else if (pID == packetFour) { // Remove ignore
 			player.getSocial().removeIgnore(friend);

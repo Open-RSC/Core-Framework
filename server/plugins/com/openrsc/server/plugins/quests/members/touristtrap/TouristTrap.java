@@ -1874,7 +1874,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					break;
 				case Siad.PUNISHED:
 					Functions.mes(p, "The Guards search you!");
-					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
+					int rand = DataConversions.random(0, 3);
+					if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
+						p.message("The guards find the cell door key and remove it!");
+						remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
+					}
+					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) && rand == 1) {
 						p.message("The guards find the main gate key and remove it!");
 						remove(p, ItemId.METAL_KEY.id(), 1);
 					}
@@ -2108,6 +2113,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				npcN.startCombat(p);
 				Functions.mes(p, "The Guards search you!");
 				if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
+					Functions.mes(p, "The guards find the cell door key and remove it!");
 					remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
 				}
 				Functions.mes(p, "Some guards rush to help their comrade.",
@@ -2529,7 +2535,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						return;
 					}
 					Functions.mes(p, "The Guards search you!");
-					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
+					int rand = DataConversions.random(0, 3);
+					if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
+						p.message("The guards find the cell door key and remove it!");
+						remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
+					}
+					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) && rand == 1) {
 						p.message("The guards find the main gate key and remove it!");
 						remove(p, ItemId.METAL_KEY.id(), 1);
 					}
@@ -2654,7 +2665,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 
 	@Override
 	public boolean blockAttackNpc(Player p, Npc n) {
-		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
@@ -2665,7 +2676,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
@@ -2676,7 +2687,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 
 	@Override
 	public boolean blockSpellNpc(Player p, Npc n) {
-		return n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && p.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
 	}
 
@@ -2686,7 +2697,20 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	}
 
 	private void tryToAttackMercenarys(Player p, Npc affectedmob) {
-		if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id() || affectedmob.getID() == NpcId.MERCENARY.id() || affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+		if (affectedmob.getID() == NpcId.CAPTAIN_SIAD.id()) {
+			p.message("Captain Siad looks pretty aggressive.");
+			p.message("Are you sure you want to attack him?");
+			int menu = multi(p,
+				"Yes, I want to attack him.",
+				"Nope, I've changed my mind.");
+			if (menu == 0) {
+				npcsay(p, affectedmob, "Guards! Guards!");
+				affectedmob.startCombat(p);
+				captainSiadDialogue(p, affectedmob, Siad.PUNISHED, null);
+			} else if (menu == 1) {
+				p.message("You change your mind about attacking the Captain.");
+			}
+		} else if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id() || affectedmob.getID() == NpcId.MERCENARY.id() || affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			p.message("This guard looks fearsome and very aggressive.");
 			p.message("Are you sure you want to attack him?");
 			int menu = multi(p,

@@ -1262,23 +1262,7 @@ public class Functions {
 	}
 
 	public static void resetGnomeCooking(Player p) {
-		String[] caches = {
-			"cheese_on_batta", "tomato_on_batta", "tomato_cheese_batta", "leaves_on_batta",
-			"complete_dish", "chocolate_on_bowl", "leaves_on_bowl", "chocolate_bomb", "cream_on_bowl",
-			"choco_dust_on_bowl", "aqua_toad_legs", "gnomespice_toad_legs", "toadlegs_on_batta",
-			"kingworms_on_bowl", "onions_on_bowl", "gnomespice_on_bowl", "wormhole", "gnomespice_on_dough",
-			"toadlegs_on_dough", "gnomecrunchie_dough", "gnome_crunchie_cooked", "gnomespice_on_worm",
-			"worm_on_batta", "worm_batta", "onion_on_batta", "cabbage_on_batta", "dwell_on_batta",
-			"veg_batta_no_cheese", "veg_batta_with_cheese", "chocolate_on_dough", "choco_dust_on_crunchies",
-			"potato_on_bowl", "vegball", "toadlegs_on_bowl", "cheese_on_bowl", "dwell_on_bowl", "kingworm_on_dough",
-			"leaves_on_dough", "spice_over_crunchies", "batta_cooked_leaves", "diced_orange_on_batta", "lime_on_batta",
-			"pine_apple_batta", "spice_over_batta"
-		};
-		for (String s : caches) {
-			if (p.getCache().hasKey(s)) {
-				p.getCache().remove(s);
-			}
-		}
+		p.getCache().remove("gnome_recipe");
 	}
 
 	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) {
