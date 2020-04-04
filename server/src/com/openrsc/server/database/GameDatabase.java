@@ -55,7 +55,9 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract boolean queryPlayerExists(String username) throws GameDatabaseException;
 	protected abstract int queryPlayerIdFromUsername(String username) throws GameDatabaseException;
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
+	protected abstract NpcDef[] queryNpcDefs() throws GameDatabaseException;
 	protected abstract NpcDrop[] queryNpcDrops() throws GameDatabaseException;
+	protected abstract ItemDef[] queryItemDefs() throws GameDatabaseException;
 	protected abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
 	protected abstract PlayerLoginData queryPlayerLoginData(String username) throws GameDatabaseException;
 	protected abstract PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException;
@@ -305,8 +307,16 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		return queryPlayerLoginData(username);
 	}
 
+	public NpcDef[] getNpcDefs() throws GameDatabaseException {
+		return queryNpcDefs();
+	}
+
 	public NpcDrop[] getNpcDrops() throws GameDatabaseException {
 		return queryNpcDrops();
+	}
+
+	public ItemDef[] getItemDefs() throws GameDatabaseException {
+		return queryItemDefs();
 	}
 
 	public void itemCreate(final Item item) throws GameDatabaseException {
