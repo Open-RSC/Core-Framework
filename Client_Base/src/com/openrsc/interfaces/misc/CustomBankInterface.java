@@ -607,6 +607,7 @@ public final class CustomBankInterface extends BankInterface {
 						ItemDef def = mc.getInventoryItem(inventorySlot).getItemDef();
 
 						if (mc.getInventoryItem(inventorySlot).getNoted()) { // Noted items
+							def = ItemDef.asNote(def);
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
 								EntityHandler.noteDef.getPictureMask(), 0,
 								EntityHandler.noteDef.getBlueMask(),false, 0, 1);

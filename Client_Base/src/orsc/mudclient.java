@@ -7407,6 +7407,7 @@ public final class mudclient implements Runnable {
 						ItemDef def = item.getItemDef();
 
 						if (item.getNoted()) {
+							def = ItemDef.asNote(def);
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(EntityHandler.noteDef),
 								var5, id, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
@@ -7421,7 +7422,7 @@ public final class mudclient implements Runnable {
 								def.getBlueMask(), false, 0, var1 ^ -15251);
 						}
 
-						if (EntityHandler.getItemDef(getInventoryItemID(var4)).isStackable()) {
+						if (def.isStackable()) {
 							this.getSurface().drawString("" + getInventoryItemSize(var4), 1 + var5,
 								id + 10, 0xFFFF00, 1);
 						}
@@ -10401,7 +10402,8 @@ public final class mudclient implements Runnable {
 
 			for (int index = 0; this.inventoryItemCount > index; ++index) {
 				if (getInventoryItemID(index) == id) {
-					if (EntityHandler.getItemDef(getInventoryItemID(index)).isStackable()) {
+					if (EntityHandler.getItemDef(getInventoryItemID(index)).isStackable()
+					|| getInventoryItem(index).getNoted()) {
 						count += getInventoryItemSize(index);
 					} else {
 						++count;
