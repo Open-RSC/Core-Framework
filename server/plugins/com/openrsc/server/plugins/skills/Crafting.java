@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
@@ -8,6 +9,8 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.CarriedItems;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -49,26 +52,30 @@ public class Crafting implements UseInvTrigger,
 
 	@Override
 	public void onUseInv(Player player, Item item1, Item item2) {
-		if (item1.getCatalogId() == ItemId.CHISEL.id()) {
+		int item1ID = item1.getCatalogId();
+		int item2ID = item2.getCatalogId();
+		CarriedItems carriedItems = player.getCarriedItems();
+		Inventory inventory = carriedItems.getInventory();
+		if (item1ID == ItemId.CHISEL.id()) {
 			doCutGem(player, item1, item2);
 			return;
-		} else if (item2.getCatalogId() == ItemId.CHISEL.id()) {
+		} else if (item2ID == ItemId.CHISEL.id()) {
 			doCutGem(player, item2, item1);
 			return;
-		} else if (item1.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item1ID == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item1, item2);
-		} else if (item2.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item2ID == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item2, item1);
-		} else if (item1.getCatalogId() == ItemId.NEEDLE.id()) {
-			if (item2.getCatalogId() == ItemId.TEDDY_HEAD.id() || item2.getCatalogId() == ItemId.TEDDY_BOTTOM.id()) {
-				if (player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
-					&& player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())
-					&& player.getCarriedItems().getInventory().hasInInventory(ItemId.THREAD.id())) {
+		} else if (item1ID == ItemId.NEEDLE.id()) {
+			if (item2ID == ItemId.TEDDY_HEAD.id() || item2ID == ItemId.TEDDY_BOTTOM.id()) {
+				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
+					&& inventory.hasInInventory(ItemId.THREAD.id())) {
 					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
-						player.getCarriedItems().remove(ItemId.TEDDY_HEAD.id(), 1);
-						player.getCarriedItems().remove(ItemId.TEDDY_BOTTOM.id(), 1);
-						player.getCarriedItems().remove(ItemId.THREAD.id(), 1);
-						player.getCarriedItems().getInventory().add(new Item(ItemId.TEDDY.id(), 1));
+						carriedItems.remove(ItemId.TEDDY_HEAD.id(), 1);
+						carriedItems.remove(ItemId.TEDDY_BOTTOM.id(), 1);
+						carriedItems.remove(ItemId.THREAD.id(), 1);
+						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
 						player.message("You stitch together the teddy parts");
 					} else
 						player.message("You need level 15 crafting to fix the teddy");
@@ -77,16 +84,16 @@ public class Crafting implements UseInvTrigger,
 			} else
 				makeLeather(player, item1, item2);
 			return;
-		} else if (item2.getCatalogId() == ItemId.NEEDLE.id()) {
-			if (item1.getCatalogId() == ItemId.TEDDY_HEAD.id() || item1.getCatalogId() == ItemId.TEDDY_BOTTOM.id()) {
-				if (player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
-					&& player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())
-					&& player.getCarriedItems().getInventory().hasInInventory(ItemId.THREAD.id())) {
+		} else if (item2ID == ItemId.NEEDLE.id()) {
+			if (item1ID == ItemId.TEDDY_HEAD.id() || item1ID == ItemId.TEDDY_BOTTOM.id()) {
+				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
+					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
+					&& inventory.hasInInventory(ItemId.THREAD.id())) {
 					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
-						player.getCarriedItems().remove(ItemId.TEDDY_HEAD.id(), 1);
-						player.getCarriedItems().remove(ItemId.TEDDY_BOTTOM.id(), 1);
-						player.getCarriedItems().remove(ItemId.THREAD.id(), 1);
-						player.getCarriedItems().getInventory().add(new Item(ItemId.TEDDY.id(), 1));
+						carriedItems.remove(ItemId.TEDDY_HEAD.id(), 1);
+						carriedItems.remove(ItemId.TEDDY_BOTTOM.id(), 1);
+						carriedItems.remove(ItemId.THREAD.id(), 1);
+						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
 						player.message("You stitch together the teddy parts");
 					} else
 						player.message("You need level 15 crafting to fix the teddy");
@@ -95,24 +102,24 @@ public class Crafting implements UseInvTrigger,
 			} else
 				makeLeather(player, item2, item1);
 			return;
-		} else if (item1.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item1ID == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item1, item2);
-		} else if (item2.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item2ID == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item2, item1);
-		} else if ((item1.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item1.getCatalogId() == ItemId.JUG_OF_WATER.id() || item1.getCatalogId() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
+		} else if ((item1ID == ItemId.BUCKET_OF_WATER.id() || item1ID == ItemId.JUG_OF_WATER.id() || item1ID == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
 			return;
-		} else if ((item2.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item2.getCatalogId() == ItemId.JUG_OF_WATER.id() || item2.getCatalogId() == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
+		} else if ((item2ID == ItemId.BUCKET_OF_WATER.id() || item2ID == ItemId.JUG_OF_WATER.id() || item2ID == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
 			return;
-		} else if (item1.getCatalogId() == ItemId.MOLTEN_GLASS.id() && item2.getCatalogId() == ItemId.LENS_MOULD.id() || item1.getCatalogId() == ItemId.LENS_MOULD.id() && item2.getCatalogId() == ItemId.MOLTEN_GLASS.id()) {
+		} else if (item1ID == ItemId.MOLTEN_GLASS.id() && item2ID == ItemId.LENS_MOULD.id() || item1ID == ItemId.LENS_MOULD.id() && item2ID == ItemId.MOLTEN_GLASS.id()) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 10) {
 				player.message("You need a crafting level of 10 to make the lens");
 				return;
 			}
-			if (player.getCarriedItems().remove(new Item(ItemId.MOLTEN_GLASS.id())) > -1) {
+			if (carriedItems.remove(new Item(ItemId.MOLTEN_GLASS.id())) > -1) {
 				player.message("You pour the molten glass into the mould");
 				player.message("And clasp it together");
 				player.message("It produces a small convex glass disc");
-				player.getCarriedItems().getInventory().add(new Item(ItemId.LENS.id()));
+				inventory.add(new Item(ItemId.LENS.id()));
 			}
 			return;
 		}
@@ -275,7 +282,7 @@ public class Crafting implements UseInvTrigger,
 			retrytimes = 1;
 		} else {
 			if (gem != 0) {
-				retrytimes = player.getCarriedItems().getInventory().countId(gems[gem]) < retrytimes ? player.getCarriedItems().getInventory().countId(gems[gem]) : retrytimes;
+				retrytimes = Math.min(player.getCarriedItems().getInventory().countId(gems[gem]), retrytimes);
 			}
 			if (retrytimes <= 0) {
 				if (gem != 0 && player.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
@@ -285,28 +292,29 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Gold Jewelry", retrytimes, false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Craft Gold Jewelry", retrytimes, false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
+				Player owner = getOwner();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
+					owner.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 					interrupt();
 					return;
 				}
-				if (gem != 0 && getOwner().getCarriedItems().getInventory().countId(gems[gem]) < 1) {
-					getOwner().message("You don't have a " + reply.get() + ".");
+				if (gem != 0 && owner.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
+					owner.message("You don't have a " + reply.get() + ".");
 					interrupt();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(item) > -1 && (gem == 0 || getOwner().getCarriedItems().remove(gems[gem], 1) > -1)) {
+				if (owner.getCarriedItems().remove(item) > -1 && (gem == 0 || owner.getCarriedItems().remove(gems[gem], 1) > -1)) {
 					thinkbubble(getOwner(), item);
 					Item result;
 					if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
@@ -316,11 +324,11 @@ public class Crafting implements UseInvTrigger,
 					} else {
 						result = new Item(def.getItemID(), 1);
 					}
-					getOwner().playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
-					getOwner().getCarriedItems().getInventory().add(result);
-					getOwner().incExp(Skills.CRAFTING, def.getExp(), true);
+					owner.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
+					owner.getCarriedItems().getInventory().add(result);
+					owner.incExp(Skills.CRAFTING, def.getExp(), true);
 				} else {
-					getOwner().message("You don't have a " + reply.get() + ".");
+					owner.message("You don't have a " + reply.get() + ".");
 					interrupt();
 				}
 			}
@@ -354,28 +362,29 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Craft Silver Jewelry", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Craft Silver Jewelry", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < 16) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
+				Player owner = getOwner();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < 16) {
+					owner.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 					interrupt();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(item) > -1) {
-					thinkbubble(getOwner(), item);
+				if (owner.getCarriedItems().remove(item) > -1) {
+					thinkbubble(owner, item);
 					Item result = new Item(results[type]);
-					getOwner().playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
-					getOwner().getCarriedItems().getInventory().add(result);
-					getOwner().incExp(Skills.CRAFTING, 200, true);
+					owner.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
+					owner.getCarriedItems().getInventory().add(result);
+					owner.incExp(Skills.CRAFTING, 200, true);
 				} else {
 					interrupt();
 				}
@@ -418,27 +427,28 @@ public class Crafting implements UseInvTrigger,
 				return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+				Player owner = getOwner();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 					interrupt();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(item) > -1) {
-					thinkbubble(getOwner(), item);
-					getOwner().playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(getWorld()).getName()));
-					getOwner().getCarriedItems().getInventory().add(result);
-					getOwner().incExp(Skills.CRAFTING, exp, true);
+				if (owner.getCarriedItems().remove(item) > -1) {
+					thinkbubble(owner, item);
+					owner.playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(getWorld()).getName()));
+					owner.getCarriedItems().getInventory().add(result);
+					owner.incExp(Skills.CRAFTING, exp, true);
 				} else {
 					interrupt();
 				}
@@ -480,38 +490,39 @@ public class Crafting implements UseInvTrigger,
 		thinkbubble(player, item);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+				Player owner = getOwner();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 					interrupt();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				thinkbubble(getOwner(), item);
-				if (getOwner().getCarriedItems().remove(item) > -1) {
+				thinkbubble(owner, item);
+				if (owner.getCarriedItems().remove(item) > -1) {
 					if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING))) {
-						getOwner().playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
+						owner.playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
 							+ potteryItem + " cracks in the oven, you throw it away.");
 					} else {
-						getOwner().playerServerMessage(MessageType.QUEST, "the "
+						owner.playerServerMessage(MessageType.QUEST, "the "
 							+ potteryItem + " hardens in the oven");
-						getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), getOwner(), 1800, "Remove Clay From Oven") {
+						getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), owner, 1800, "Remove Clay From Oven") {
 							@Override
 							public void action() {
-								getOwner().playerServerMessage(MessageType.QUEST, "You remove a "
+								owner.playerServerMessage(MessageType.QUEST, "You remove a "
 									+ result.getDef(getWorld()).getName().toLowerCase()
 									+ " from the oven");
-								getOwner().getCarriedItems().getInventory().add(result);
-								getOwner().incExp(Skills.CRAFTING, exp, true);
+								owner.getCarriedItems().getInventory().add(result);
+								owner.incExp(Skills.CRAFTING, exp, true);
 							}
 
 						});
@@ -526,38 +537,40 @@ public class Crafting implements UseInvTrigger,
 	private void doGlassMaking(final Item item, final Player player) {
 		int otherItem = item.getCatalogId() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
 		int repeatTimes = player.getCarriedItems().getInventory().countId(item.getCatalogId());
-		repeatTimes = player.getCarriedItems().getInventory().countId(otherItem) < repeatTimes ? player.getCarriedItems().getInventory().countId(otherItem) : repeatTimes;
+		repeatTimes = Math.min(player.getCarriedItems().getInventory().countId(otherItem), repeatTimes);
 
 		thinkbubble(player, item);
 		player.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
 			public void action() {
-				if (getOwner().getCarriedItems().getInventory().countId(otherItem) < 1 ||
-						getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) < 1) {
+				Player owner = getOwner();
+				Inventory inventory = owner.getCarriedItems().getInventory();
+				if (inventory.countId(otherItem) < 1 ||
+					inventory.countId(item.getCatalogId()) < 1) {
 					interrupt();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(otherItem, 1) > -1
-						&& getOwner().getCarriedItems().remove(item) > -1) {
-					getOwner().getCarriedItems().getInventory().add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
-					getOwner().getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id(), 1));
-					getOwner().incExp(Skills.CRAFTING, 80, true);
+				if (owner.getCarriedItems().remove(otherItem, 1) > -1
+						&& owner.getCarriedItems().remove(item) > -1) {
+					inventory.add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
+					inventory.add(new Item(ItemId.BUCKET.id(), 1));
+					owner.incExp(Skills.CRAFTING, 80, true);
 				} else {
 					interrupt();
 					return;
 				}
 
 				if (!isCompleted()) {
-					thinkbubble(getOwner(), item);
-					getOwner().playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
+					thinkbubble(owner, item);
+					owner.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
 				}
 			}
 		});
@@ -581,12 +594,13 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Cut Gem", player.getCarriedItems().getInventory().countId(gem.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Cut Gem", player.getCarriedItems().getInventory().countId(gem.getCatalogId()), false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
+				Player owner = getOwner();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
 					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
-					getOwner().playerServerMessage(MessageType.QUEST,
+					owner.playerServerMessage(MessageType.QUEST,
 						"you need a crafting level of " + gemDef.getReqLevel()
 							+ " to cut " + (gem.getDef(getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 					interrupt();
@@ -594,33 +608,33 @@ public class Crafting implements UseInvTrigger,
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(gem.getCatalogId(), 1, true) > -1) {
+				if (owner.getCarriedItems().remove(gem.getCatalogId(), 1, true) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail
 
 					if (DataConversions.inArray(gemsThatFail, gem.getCatalogId()) &&
-						Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), getOwner().getSkills().getLevel(Skills.CRAFTING))) {
-						getOwner().message("You miss hit the chisel and smash the " + cutGem.getDef(getWorld()).getName() + " to pieces!");
-						getOwner().getCarriedItems().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
+						Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), owner.getSkills().getLevel(Skills.CRAFTING))) {
+						owner.message("You miss hit the chisel and smash the " + cutGem.getDef(getWorld()).getName() + " to pieces!");
+						owner.getCarriedItems().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
 
 						if (gem.getCatalogId() == ItemId.UNCUT_RED_TOPAZ.id()) {
-							getOwner().incExp(Skills.CRAFTING, 25, true);
+							owner.incExp(Skills.CRAFTING, 25, true);
 						} else if (gem.getCatalogId() == ItemId.UNCUT_JADE.id()) {
-							getOwner().incExp(Skills.CRAFTING, 20, true);
+							owner.incExp(Skills.CRAFTING, 20, true);
 						} else {
-							getOwner().incExp(Skills.CRAFTING, 15, true);
+							owner.incExp(Skills.CRAFTING, 15, true);
 						}
 					} else {
-						getOwner().getCarriedItems().getInventory().add(cutGem, true);
-						getOwner().message("You cut the " + cutGem.getDef(getWorld()).getName().toLowerCase());
-						getOwner().playSound("chisel");
-						getOwner().incExp(Skills.CRAFTING, gemDef.getExp(), true);
+						owner.getCarriedItems().getInventory().add(cutGem, true);
+						owner.message("You cut the " + cutGem.getDef(getWorld()).getName().toLowerCase());
+						owner.playSound("chisel");
+						owner.incExp(Skills.CRAFTING, gemDef.getExp(), true);
 					}
 				}
 				else {
@@ -674,32 +688,35 @@ public class Crafting implements UseInvTrigger,
 			default:
 				return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Glass Blowing", player.getCarriedItems().getInventory().countId(glass.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Glass Blowing", player.getCarriedItems().getInventory().countId(glass.getCatalogId()), false) {
 			@Override
 			public void action() {
 				final Item resultClone = result.clone();
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					getOwner().message(
+				Player owner = getOwner();
+				Inventory inventory = owner.getCarriedItems().getInventory();
+				ServerConfiguration config = getWorld().getServer().getConfig();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					owner.message(
 						"You need a crafting level of " + reqLvl + " to make " + resultGen);
 					interrupt();
 					return;
 				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+				if (config.WANT_FATIGUE) {
+					if (config.STOP_SKILLING_FATIGUED >= 2
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(glass) > -1) {
+				if (owner.getCarriedItems().remove(glass) > -1) {
 					String message = "You make a " + resultClone.getDef(getWorld()).getName();
 
 					//Special handling for vials
 					if (result.getCatalogId() == ItemId.EMPTY_VIAL.id()) {
-						if (getOwner().getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+						if (config.WANT_CUSTOM_QUESTS) {
 							int amnt = 0;
-							double breakChance = 91.66667 - getCurrentLevel(getOwner(), Skills.CRAFTING)/1.32;
+							double breakChance = 91.66667 - getCurrentLevel(owner, Skills.CRAFTING)/1.32;
 							for (int loop = 0; loop < 6; ++loop) {
 								double hit = numGen.nextDouble() * 99;
 								if (hit > breakChance) {
@@ -708,34 +725,34 @@ public class Crafting implements UseInvTrigger,
 							}
 							message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
 							resultClone.getItemStatus().setAmount(amnt);
-							if (getOwner().getLocation().inBounds(418, 559, 421,563)) {
+							if (owner.getLocation().inBounds(418, 559, 421,563)) {
 								resultClone.getItemStatus().setNoted(true);
 							}
 						}
 					}
 
-					getOwner().playerServerMessage(MessageType.QUEST, message);
+					owner.playerServerMessage(MessageType.QUEST, message);
 
-					if (!resultClone.getDef(getOwner().getWorld()).isStackable() && resultClone.getAmount() > 1) {
+					if (!resultClone.getDef(owner.getWorld()).isStackable() && resultClone.getAmount() > 1) {
 						int owedVials = resultClone.getAmount() - 1;
-						int space = getOwner().getCarriedItems().getInventory().getFreeSlots();
+						int space = inventory.getFreeSlots();
 						while (owedVials > 0) {
 							if (space > 0) {
-								getOwner().getCarriedItems().getInventory().add(resultClone);
+								inventory.add(resultClone);
 								--space;
 							} else {
 								getOwner().getWorld().registerItem(
-									new GroundItem(getOwner().getWorld(), resultClone.getCatalogId(), getOwner().getX(), getOwner().getY(), 1, getOwner()),
+									new GroundItem(owner.getWorld(), resultClone.getCatalogId(), owner.getX(), owner.getY(), 1, owner),
 									94000);
-								getOwner().getWorld().getServer().getGameLogger().addQuery(new GenericLog(getOwner().getWorld(), getOwner().getUsername() + " dropped(inventory full) "
-									+ resultClone.getCatalogId() + " x" + "1" + " at " + getOwner().getLocation().toString()));
+								owner.getWorld().getServer().getGameLogger().addQuery(new GenericLog(owner.getWorld(), owner.getUsername() + " dropped(inventory full) "
+									+ resultClone.getCatalogId() + " x" + "1" + " at " + owner.getLocation().toString()));
 							}
 							--owedVials;
 						}
 					}
 
-					getOwner().getCarriedItems().getInventory().add(resultClone);
-					getOwner().incExp(Skills.CRAFTING, exp, true);
+					inventory.add(resultClone);
+					owner.incExp(Skills.CRAFTING, exp, true);
 				}
 			}
 		});
@@ -786,37 +803,38 @@ public class Crafting implements UseInvTrigger,
 				return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft Leather", player.getCarriedItems().getInventory().countId(leather.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Leather", player.getCarriedItems().getInventory().countId(leather.getCatalogId()), false) {
 			@Override
 			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
+				Player owner = getOwner();
+				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
 					interrupt();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to craft");
+						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
+						owner.message("You are too tired to craft");
 						interrupt();
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(leather) > -1) {
-					getOwner().message("You make some " + result.getDef(getWorld()).getName());
-					getOwner().getCarriedItems().getInventory().add(result);
-					getOwner().incExp(Skills.CRAFTING, exp, true);
+				if (owner.getCarriedItems().remove(leather) > -1) {
+					owner.message("You make some " + result.getDef(getWorld()).getName());
+					owner.getCarriedItems().getInventory().add(result);
+					owner.incExp(Skills.CRAFTING, exp, true);
 					//a reel of thread accounts for 5 uses
-					if (!getOwner().getCache().hasKey("part_reel_thread")) {
-						getOwner().getCache().set("part_reel_thread", 1);
+					if (!owner.getCache().hasKey("part_reel_thread")) {
+						owner.getCache().set("part_reel_thread", 1);
 					} else {
-						int parts = getOwner().getCache().getInt("part_reel_thread");
+						int parts = owner.getCache().getInt("part_reel_thread");
 						if (parts >= 4) {
-							getOwner().message("You use up one of your reels of thread");
-							getOwner().getCarriedItems().remove(ItemId.THREAD.id(), 1);
-							getOwner().getCache().remove("part_reel_thread");
+							owner.message("You use up one of your reels of thread");
+							owner.getCarriedItems().remove(ItemId.THREAD.id(), 1);
+							owner.getCache().remove("part_reel_thread");
 						} else {
-							getOwner().getCache().put("part_reel_thread", parts + 1);
+							owner.getCache().put("part_reel_thread", parts + 1);
 						}
 					}
 				}
@@ -858,17 +876,18 @@ public class Crafting implements UseInvTrigger,
 		int woolAmount = player.getCarriedItems().getInventory().countId(woolBall.getCatalogId());
 		int amuletAmount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Craft String Amulet",
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft String Amulet",
 			woolAmount < amuletAmount ? woolAmount : amuletAmount, false) {
 
 			public void action() {
-				if (getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) <= 0 || getOwner().getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
+				Player owner = getOwner();
+				if (owner.getCarriedItems().getInventory().countId(item.getCatalogId()) <= 0 || owner.getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
 					interrupt();
 					return;
 				}
-				if (getOwner().getCarriedItems().remove(woolBall) > -1 && getOwner().getCarriedItems().remove(item) > -1) {
-					getOwner().message("You put some string on your " + item.getDef(getWorld()).getName().toLowerCase());
-					getOwner().getCarriedItems().getInventory().add(new Item(newId, 1));
+				if (owner.getCarriedItems().remove(woolBall) > -1 && owner.getCarriedItems().remove(item) > -1) {
+					owner.message("You put some string on your " + item.getDef(getWorld()).getName().toLowerCase());
+					owner.getCarriedItems().getInventory().add(new Item(newId, 1));
 				} else {
 					interrupt();
 					return;
@@ -909,32 +928,34 @@ public class Crafting implements UseInvTrigger,
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(item1.getCatalogId());
 		ItemGemDef gemDef2 = player.getWorld().getServer().getEntityHandler().getItemGemDef(item2.getCatalogId());
-		if (item1.getCatalogId() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
+		int item1ID = item1.getCatalogId();
+		int item2ID = item2.getCatalogId();
+		if (item1ID == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
 			return true;
-		} else if (item2.getCatalogId() == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
+		} else if (item2ID == ItemId.CHISEL.id() && (gemDef != null || gemDef2 != null)) {
 			return true;
-		} else if (item1.getCatalogId() == ItemId.CHISEL.id() && item2.getCatalogId() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
+		} else if (item1ID == ItemId.CHISEL.id() && item2ID == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
 			return true;
-		} else if (item2.getCatalogId() == ItemId.CHISEL.id() && item1.getCatalogId() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
+		} else if (item2ID == ItemId.CHISEL.id() && item1ID == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
 			return true;
-		} else if (item1.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item1ID == ItemId.GLASSBLOWING_PIPE.id()) {
 			return true;
-		} else if (item2.getCatalogId() == ItemId.GLASSBLOWING_PIPE.id()) {
+		} else if (item2ID == ItemId.GLASSBLOWING_PIPE.id()) {
 			return true;
-		} else if (item1.getCatalogId() == ItemId.NEEDLE.id()) {
+		} else if (item1ID == ItemId.NEEDLE.id()) {
 			return true;
-		} else if (item2.getCatalogId() == ItemId.NEEDLE.id()) {
+		} else if (item2ID == ItemId.NEEDLE.id()) {
 			return true;
-		} else if (item1.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item1ID == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if (item2.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
+		} else if (item2ID == ItemId.BALL_OF_WOOL.id()) {
 			return true;
-		} else if ((item1.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item1.getCatalogId() == ItemId.JUG_OF_WATER.id()) && item2.getCatalogId() == ItemId.CLAY.id()) {
+		} else if ((item1ID == ItemId.BUCKET_OF_WATER.id() || item1ID == ItemId.JUG_OF_WATER.id()) && item2ID == ItemId.CLAY.id()) {
 			return true;
-		} else if ((item2.getCatalogId() == ItemId.BUCKET_OF_WATER.id() || item2.getCatalogId() == ItemId.JUG_OF_WATER.id()) && item1.getCatalogId() == ItemId.CLAY.id()) {
+		} else if ((item2ID == ItemId.BUCKET_OF_WATER.id() || item2ID == ItemId.JUG_OF_WATER.id()) && item1ID == ItemId.CLAY.id()) {
 			return true;
 		} else
-			return item1.getCatalogId() == ItemId.MOLTEN_GLASS.id() && item2.getCatalogId() == ItemId.LENS_MOULD.id() || item1.getCatalogId() == ItemId.LENS_MOULD.id() && item2.getCatalogId() == ItemId.MOLTEN_GLASS.id();
+			return item1ID == ItemId.MOLTEN_GLASS.id() && item2ID == ItemId.LENS_MOULD.id() || item1ID == ItemId.LENS_MOULD.id() && item2ID == ItemId.MOLTEN_GLASS.id();
 	}
 
 	@Override
