@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.skills;
 
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
@@ -8,14 +9,15 @@ import com.openrsc.server.external.ItemArrowHeadDef;
 import com.openrsc.server.external.ItemBowStringDef;
 import com.openrsc.server.external.ItemDartTipDef;
 import com.openrsc.server.external.ItemLogCutDef;
+import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.multi;
 
 public class Fletching implements UseInvTrigger {
 
@@ -30,36 +32,38 @@ public class Fletching implements UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
-		if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
+		int item1ID = item1.getCatalogId();
+		int item2ID = item2.getCatalogId();
+		if (item1ID == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
 			return true;
-		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
+		} else if (item2ID == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item2, item1)) {
 			return true;
-		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
+		} else if (item1ID == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item1, item2)) {
 			return true;
-		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
+		} else if (item2ID == com.openrsc.server.constants.ItemId.BOW_STRING.id() && doBowString(player, item2, item1)) {
 			return true;
-		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
+		} else if (item1ID == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item1, item2)) {
 			return true;
-		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
+		} else if (item2ID == com.openrsc.server.constants.ItemId.HEADLESS_ARROWS.id() && doArrowHeads(player, item2, item1)) {
 			return true;
-		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
+		} else if (item1ID == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
 			return true;
-		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
+		} else if (item2ID == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
 			return true;
-		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item2.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item2.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
+		} else if (item1ID == com.openrsc.server.constants.ItemId.CHISEL.id() && (item2.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item2.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item1, item2)) {
 			return true;
-		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.CHISEL.id() && (item1.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item1.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
+		} else if (item2ID == com.openrsc.server.constants.ItemId.CHISEL.id() && (item1.getCatalogId() == com.openrsc.server.constants.ItemId.QUEST_OYSTER_PEARLS.id() || item1.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARLS.id()) && doPearlCut(player, item2, item1)) {
 			return true;
-		} else if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
+		} else if (item1ID == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item2, item1)) {
 			return true;
-		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
+		} else if (item2ID == com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id() && doBoltMake(player, item1, item2)) {
 			return true;
 		}
 		return false;
 	}
 
 	private boolean attachFeathers(Player player, final Item feathers,
-								   final Item item) {
+								   final Item attachment) {
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return true;
@@ -70,17 +74,18 @@ public class Fletching implements UseInvTrigger {
 		if (feathers.getAmount() < amount) {
 			amount = feathers.getAmount();
 		}
-		if (item.getAmount() < amount) {
-			amount = item.getAmount();
+		if (attachment.getAmount() < amount) {
+			amount = attachment.getAmount();
 		}
 
 		// Determine EXP based on amount + item
 		final int itemID;
 		int experience = 4;
 		ItemDartTipDef tipDef = null;
-		if (item.getCatalogId() == ItemId.ARROW_SHAFTS.id()) {
+		int attachmentID = attachment.getCatalogId();
+		if (attachmentID == ItemId.ARROW_SHAFTS.id()) {
 			itemID = ItemId.HEADLESS_ARROWS.id();
-		} else if ((tipDef = player.getWorld().getServer().getEntityHandler().getItemDartTipDef(item.getCatalogId())) != null) {
+		} else if ((tipDef = player.getWorld().getServer().getEntityHandler().getItemDartTipDef(attachmentID)) != null) {
 			itemID = tipDef.getDartID(); // Dart ID
 			experience = tipDef.getExp();
 		} else {
@@ -88,32 +93,45 @@ public class Fletching implements UseInvTrigger {
 		}
 
 		player.message("You attach feathers to some of your "
-			+ item.getDef(player.getWorld()).getName());
+			+ attachment.getDef(player.getWorld()).getName());
 		final int exp = experience;
-		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 5 : 1001;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Attach Feathers", retrytimes, false) {
+		int retryTimes = 1001; // 1 + 1000 for authentic behaviour
+		boolean allowDuplicateEvents = true;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			retryTimes = 5;
+			allowDuplicateEvents = false;
+		}
+
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
+				player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Attach Feathers",
+				retryTimes, false, allowDuplicateEvents) {
 			@Override
 			public void action() {
+				ServerConfiguration config = getWorld().getServer().getConfig();
+				Player owner = getOwner();
+				CarriedItems ci = owner.getCarriedItems();
+				int featherID = feathers.getCatalogId();
 				for (int i = 0; i < 10; ++i) {
-					if (getOwner().getCarriedItems().getInventory().countId(feathers.getCatalogId()) < 1
-						|| getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) < 1) {
+					if (ci.getInventory().countId(featherID) < 1
+						|| ci.getInventory().countId(attachmentID) < 1) {
 						interrupt();
 						return;
 					}
-					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-							if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2) {
-								getOwner().message("You are too tired to gain experience, get some rest!");
+					if (config.WANT_FATIGUE) {
+						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+							if (config.STOP_SKILLING_FATIGUED >= 2) {
+								owner.message("You are too tired to gain experience, get some rest!");
 								interrupt();
 								return;
 							}
 						}
 
 					}
-					if (getOwner().getCarriedItems().remove(feathers.getCatalogId(), 1) > -1
-						&& getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
-						getOwner().getCarriedItems().getInventory().add(new Item(itemID, 1));
-						getOwner().incExp(Skills.FLETCHING, exp, true);
+					if (ci.remove(featherID, 1, false) > -1
+						&& ci.remove(attachmentID, 1, false) > -1) {
+						ci.getInventory().add(new Item(itemID, 1), false);
+						owner.incExp(Skills.FLETCHING, exp, true);
+						ActionSender.sendInventory(owner);
 					} else {
 						interrupt();
 					}
@@ -144,38 +162,51 @@ public class Fletching implements UseInvTrigger {
 		player.message("You attach "
 			+ arrowHeads.getDef(player.getWorld()).getName().toLowerCase()
 			+ " to some of your arrows");
-		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 5 : 1001;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Attach Arrowheads", retrytimes, false) {
+		int retryTimes = 1001; // 1 + 1000 for authentic behaviour
+		boolean allowDuplicateEvents = true;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			retryTimes = 5;
+			allowDuplicateEvents = false;
+		}
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
+			player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Attach Arrowheads",
+			retryTimes, false, allowDuplicateEvents) {
 			@Override
 			public void action() {
+				ServerConfiguration config = getWorld().getServer().getConfig();
+				Player owner = getOwner();
+				CarriedItems ci = owner.getCarriedItems();
+				int arrowHeadsID = arrowHeads.getCatalogId();
+				int headlessArrowsID = headlessArrows.getCatalogId();
 				for (int i = 0; i < 10; ++i) {
-					if (getOwner().getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
-						getOwner().message("You need a fletching skill of "
+					if (owner.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
+						owner.message("You need a fletching skill of "
 							+ headDef.getReqLevel() + " or above to do that");
 						interrupt();
 						return;
 					}
-					if (getOwner().getCarriedItems().getInventory().countId(arrowHeads.getCatalogId()) < 1
-						|| getOwner().getCarriedItems().getInventory().countId(headlessArrows.getCatalogId()) < 1) {
+					if (ci.getInventory().countId(arrowHeadsID) < 1
+						|| ci.getInventory().countId(headlessArrowsID) < 1) {
 						interrupt();
 						return;
 					}
-					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-							if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2) {
-								getOwner().message("You are too tired to gain experience, get some rest!");
+					if (config.WANT_FATIGUE) {
+						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+							if (config.STOP_SKILLING_FATIGUED >= 2) {
+								owner.message("You are too tired to gain experience, get some rest!");
 								interrupt();
 								return;
 							}
 						}
 
 					}
-					if (getOwner().getCarriedItems().remove(headlessArrows.getCatalogId(), 1) > -1
-						&& getOwner().getCarriedItems().remove(arrowHeads.getCatalogId(), 1) > -1) {
+					if (ci.remove(headlessArrowsID, 1, false) > -1
+						&& ci.remove(arrowHeadsID, 1, false) > -1) {
 						//Successful make attempt
-						int skillCapeMultiplier = SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE) ? 2 : 1;
-						getOwner().getCarriedItems().getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
-						getOwner().incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
+						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
+						ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
+						owner.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
+						ActionSender.sendInventory(owner);
 					} else {
 						interrupt();
 						return;
@@ -200,7 +231,7 @@ public class Fletching implements UseInvTrigger {
 		int bowtimes = player.getCarriedItems().getInventory().countId(bow.getCatalogId());
 		int stringtimes = player.getCarriedItems().getInventory().countId(bowString.getCatalogId());
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching String Bow",
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching String Bow",
 			bowtimes < stringtimes ? bowtimes : stringtimes, false) {
 			@Override
 			public void action() {
@@ -290,7 +321,7 @@ public class Fletching implements UseInvTrigger {
 		final int amt = amount;
 		final String cutMessages = cutMessage;
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Make Bow",
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Make Bow",
 				player.getCarriedItems().getInventory().countId(log.getCatalogId()), false) {
 			@Override
 			public void action() {
@@ -337,7 +368,7 @@ public class Fletching implements UseInvTrigger {
 		final int amt = amount;
 		final int exp = 25;
 		final int pearlID = pearl.getCatalogId();
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fletching Pearl Cut",
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Pearl Cut",
 			player.getCarriedItems().getInventory().countId(pearlID), false) {
 			@Override
 			public void action() {
@@ -382,37 +413,47 @@ public class Fletching implements UseInvTrigger {
 			amount = player.getCarriedItems().getInventory().countId(bolt);
 		if (player.getCarriedItems().getInventory().countId(tip) < amount)
 			amount = player.getCarriedItems().getInventory().countId(tip);
-		int retrytimes = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 5 : 1001;
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Make Bolt", retrytimes, false) {
+		int retryTimes = 1001; // 1 + 1000 for authentic behaviour
+		boolean allowDuplicateEvents = true;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			retryTimes = 5;
+			allowDuplicateEvents = false;
+		}
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
+			player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Make Bolt",
+			retryTimes, false, allowDuplicateEvents) {
 			@Override
 			public void action() {
+				ServerConfiguration config = getWorld().getServer().getConfig();
+				Player owner = getOwner();
+				CarriedItems ci = owner.getCarriedItems();
 				for (int i = 0; i < 10; ++i) {
-					if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
-						getOwner().message("You need a fletching skill of 34 to do that");
+					if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
+						owner.message("You need a fletching skill of 34 to do that");
 						interrupt();
 						return;
 					}
-					if (getOwner().getCarriedItems().getInventory().countId(bolt) < 1
-						|| getOwner().getCarriedItems().getInventory().countId(tip) < 1) {
+					if (ci.getInventory().countId(bolt) < 1
+						|| ci.getInventory().countId(tip) < 1) {
 						interrupt();
 						return;
 					}
-					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-							if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2) {
-								getOwner().message("You are too tired to gain experience, get some rest!");
+					if (config.WANT_FATIGUE) {
+						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
+							if (config.STOP_SKILLING_FATIGUED >= 2) {
+								owner.message("You are too tired to gain experience, get some rest!");
 								interrupt();
 								return;
 							}
 						}
 
 					}
-					if (getOwner().getCarriedItems().remove(bolt, 1) > -1
-						&& getOwner().getCarriedItems().remove(tip, 1) > -1) {
+					if (ci.remove(bolt, 1) > -1
+						&& ci.remove(tip, 1) > -1) {
 						//Successful bolt make
-						int skillCapeMultiplier = SkillCapes.shouldActivate(getOwner(), ItemId.FLETCHING_CAPE) ? 2 : 1;
-						getOwner().getCarriedItems().getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
-						getOwner().incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
+						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
+						ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
+						owner.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
 					} else interrupt();
 				}
 			}

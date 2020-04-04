@@ -13,8 +13,9 @@ public abstract class BatchEvent extends DelayedEvent {
 	private boolean gathering;
 	private boolean batchProgression;
 
-	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
-		super(world, owner, delay, descriptor);
+	public BatchEvent(World world, Player owner, int delay, String descriptor,
+					  int repeatFor, boolean gathering, boolean allowDuplicateEvents) {
+		super(world, owner, delay, descriptor, allowDuplicateEvents);
 		owner.resetPath();
 		owner.setBusyTimer(delay + 200);
 		this.gathering = gathering;
@@ -24,6 +25,10 @@ public abstract class BatchEvent extends DelayedEvent {
 		else this.repeatFor = 1; // Always 1, otherwise.
 
 		if (this.batchProgression) ActionSender.sendProgressBar(owner, delay, repeatFor);
+	}
+
+	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {
+		this(world, owner, delay, descriptor, repeatFor, gathering, false);
 	}
 
 	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor) {
