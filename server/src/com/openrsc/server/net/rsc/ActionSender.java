@@ -9,7 +9,6 @@ import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.model.Shop;
-import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -1034,12 +1033,16 @@ public class ActionSender {
 		s.writeString(with.getUsername());
 		s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
 		for (Item item : with.getTrade().getTradeOffer().getItems()) {
-			s.writeShort(item.getCatalogId());
+			s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+				"'noted': " + item.getNoted() + "}").getBytes()));
+			//s.writeShort(item.getCatalogId());
 			s.writeInt(item.getAmount());
 		}
 		s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
 		for (Item item : player.getTrade().getTradeOffer().getItems()) {
-			s.writeShort(item.getCatalogId());
+			s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+				"'noted': " + item.getNoted() + "}").getBytes()));
+			//s.writeShort(item.getCatalogId());
 			s.writeInt(item.getAmount());
 		}
 		player.write(s.toPacket());
@@ -1080,7 +1083,9 @@ public class ActionSender {
 			// Other player's items first
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
+				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+					"'noted': " + item.getNoted() + "}").getBytes()));
+				//s.writeShort(item.getCatalogId());
 				s.writeInt(item.getAmount());
 			}
 
@@ -1088,7 +1093,9 @@ public class ActionSender {
 			items = player.getTrade().getTradeOffer().getItems();
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
+				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+					"'noted': " + item.getNoted() + "}").getBytes()));
+				//s.writeShort(item.getCatalogId());
 				s.writeInt(item.getAmount());
 			}
 

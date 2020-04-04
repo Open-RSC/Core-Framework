@@ -159,7 +159,7 @@ public class PlayerTradeHandler implements PacketHandler {
 				player.getTrade().resetOffer();
 				int count = (int) packet.readByte();
 				for (int slot = 0; slot < count; slot++) {
-					Item tItem = new Item(packet.readShort(), packet.readInt());
+					Item tItem = new Item(packet.readShort(), packet.readInt(), packet.readShort() == 1);
 
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "item less than 0");

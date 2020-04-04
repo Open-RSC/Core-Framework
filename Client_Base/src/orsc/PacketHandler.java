@@ -4,7 +4,6 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.instances.Item;
 import com.openrsc.client.model.Sprite;
-import com.openrsc.interfaces.misc.CustomBankInterface;
 import org.json.JSONObject;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
@@ -2218,14 +2217,36 @@ public class PacketHandler {
 		mc.setTradeRecipientItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeRecipientItemsCount(); ++var4) {
-			mc.setTradeRecipientItem(var4, packetsIncoming.getShort());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setTradeRecipientItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setTradeRecipientItem(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getTradeRecipientItem(var4).setNoted(true);
+			} else {
+				mc.getTradeRecipientItem(var4).setNoted(false);
+			}
 			mc.setTradeRecipientItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setTradeItemCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeItemCount(); ++var4) {
-			mc.setTradeItemID(var4, packetsIncoming.getShort());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setTradeItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setTradeItemID(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getTradeItem(var4).setNoted(true);
+			} else {
+				mc.getTradeItem(var4).setNoted(false);
+			}
 			mc.setTradeItemSize(var4, packetsIncoming.get32());
 		}
 

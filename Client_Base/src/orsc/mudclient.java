@@ -148,12 +148,14 @@ public final class mudclient implements Runnable {
 	private final int tileSize = 128;
 	private final int[] tradeConfirmItems = new int[14];
 	private final int[] tradeConfirmItemsCount1 = new int[14];
-	private final int[] tradeItemID = new int[14];
-	private final int[] tradeItemSize = new int[14];
+	private final Item[] trade = new Item[14];
+	//private final int[] tradeItemID = new int[14];
+	//private final int[] tradeItemSize = new int[14];
 	private final int[] tradeRecipientConfirmItemCount = new int[14];
 	private final int[] tradeRecipientConfirmItems = new int[14];
-	private final int[] tradeRecipientItem = new int[14];
-	private final int[] tradeRecipientItemCount = new int[14];
+	private final Item[] tradeRecipient = new Item[14];
+	//private final int[] tradeRecipientItem = new int[14];
+	//private final int[] tradeRecipientItemCount = new int[14];
 	private final boolean[] wallObjectInstance_Arg1 = new boolean[500];
 	private final int[] wallObjectInstanceDir = new int[500];
 	private final int[] wallObjectInstanceID = new int[500];
@@ -640,6 +642,10 @@ public final class mudclient implements Runnable {
 
 		for (int i = 0; i < S_PLAYER_INVENTORY_SLOTS; ++i) {
 			inventory[i] = new Item();
+		}
+		for (int i = 0; i < 14; ++i) {
+			trade[i] = new Item();
+			tradeRecipient[i] = new Item();
 		}
 
 		initConfig();
@@ -3128,6 +3134,7 @@ public final class mudclient implements Runnable {
 						Item item = getInventoryItem(itm);
 						ItemDef def = item.getItemDef();
 						if (item.getNoted()) {
+							def = ItemDef.asNote(def);
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(EntityHandler.noteDef), xI,
 								yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
@@ -3912,7 +3919,7 @@ public final class mudclient implements Runnable {
 							if (mouseLX > 8 && mouseLY > 30 && mouseLX < 205 && mouseLY < 133) {
 								int slot = (mouseLX - 9) / 49 + (mouseLY - 31) / 34 * 4;
 								if (slot >= 0 && slot < this.tradeItemCount) {
-									int id = this.tradeItemID[slot];
+									int id = getTradeItemID(slot);
 									this.menuTrade_Visible = true;
 									this.menuTrade.recalculateSize(0);
 									this.menuTrade.addCharacterItem_WithID(id,
@@ -3994,13 +4001,13 @@ public final class mudclient implements Runnable {
 					}
 				} else {
 					for (int tradeIdx = 0; tradeIdx < this.tradeItemCount; ++tradeIdx) {
-						if (itemID == this.tradeItemID[tradeIdx]) {
+						if (itemID == getTradeItemID(tradeIdx)) {
 							if (firstSlot < 0) {
 								firstSlot = tradeIdx;
 							}
 
 							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = this.tradeItemSize[tradeIdx];
+								itemCount = getTradeItemID(tradeIdx);
 								break;
 							}
 
@@ -4100,6 +4107,7 @@ public final class mudclient implements Runnable {
 					ItemDef def = item.getItemDef();
 
 					if (item.getNoted()) {
+						def = ItemDef.asNote(def);
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(EntityHandler.noteDef), sX,
 							sY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
@@ -4117,7 +4125,7 @@ public final class mudclient implements Runnable {
 							0, 1);
 					}
 
-					if (EntityHandler.getItemDef(getInventoryItemID(slot)).isStackable()) {
+					if (def.isStackable()) {
 						this.getSurface().drawString("" + getInventoryItemSize(slot), 1 + sX,
 							10 + sY, 0xFFFF00, 1);
 					}
@@ -4126,29 +4134,37 @@ public final class mudclient implements Runnable {
 				for (int slot = 0; this.tradeItemCount > slot; ++slot) {
 					int sx = slot % 4 * 49 + 9 + xr;
 					int sy = slot / 4 * 34 + yr + 31;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.tradeItemID[slot])), sx, sy,
-						48, 32, EntityHandler.getItemDef(this.tradeItemID[slot]).getPictureMask(), 0,
-						EntityHandler.getItemDef(this.tradeItemID[slot]).getBlueMask(), false, 0, 1);
+					Item item = getTradeItem(slot);
+					ItemDef def = item.getItemDef();
 
-					//TODO: need to switch trade item ID to new item class, add noted boolean
-					if (EntityHandler.getItemDef(this.tradeItemID[slot]).isStackable()) {
-						this.getSurface().drawString("" + this.tradeItemSize[slot], sx + 1, 10 + sy,
-							0xFFFF00, 1);
+					if (item.getNoted()) {
+						def = ItemDef.asNote(def);
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.noteDef), sx,
+							sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+							EntityHandler.noteDef.getBlueMask(), false,
+							0, 1);
+
+						getSurface().drawSpriteClipping(spriteSelect(def), sx + 7, sy + 4,
+							33, 23, def.getPictureMask(), 0,
+							def.getBlueMask(), false, 0, 1);
+					} else {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(def), sx,
+							sy, 48, 32, def.getPictureMask(), 0,
+							def.getBlueMask(), false,
+							0, 1);
 					}
 
-					ItemDef def = EntityHandler.getItemDef(this.tradeItemID[slot]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7, sy + 4,
-							33, 23, originalDef.getPictureMask(), 0,
-							originalDef.getBlueMask(), false, 0, 1);
+					if (def.isStackable()) {
+						this.getSurface().drawString("" + getTradeItemSize(slot), 1 + sx,
+							10 + sy, 0xFFFF00, 1);
 					}
 
 					if (sx < this.mouseX && 48 + sx > this.mouseX && sy < this.mouseY && this.mouseY < sy + 32) {
 						this.getSurface().drawString(
-							EntityHandler.getItemDef(this.tradeItemID[slot]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(this.tradeItemID[slot]).getDescription(),
+							def.getName() + ": @whi@"
+								+ def.getDescription(),
 							8 + xr, 273 + yr, 0xFFFF00, 1);
 					}
 				}
@@ -4156,28 +4172,37 @@ public final class mudclient implements Runnable {
 				for (int slot = 0; this.tradeRecipientItemsCount > slot; ++slot) {
 					int sx = xr + 9 + slot % 4 * 49;
 					int sy = yr + 156 + slot / 4 * 34;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.tradeRecipientItem[slot])),
-						sx, sy, 48, 32, EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getPictureMask(), 0,
-						EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getBlueMask(), false, 0, 1);
+					Item item = getTradeRecipientItem(slot);
+					ItemDef def = item.getItemDef();
 
-					ItemDef def = EntityHandler.getItemDef(this.tradeRecipientItem[slot]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7, sy + 4,
-							33, 23, originalDef.getPictureMask(), 0, originalDef.getBlueMask()
-							, false, 0, 1);
+					if (item.getNoted()) {
+						def = ItemDef.asNote(def);
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.noteDef), sx,
+							sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+							EntityHandler.noteDef.getBlueMask(), false,
+							0, 1);
+
+						getSurface().drawSpriteClipping(spriteSelect(def), sx + 7, sy + 4,
+							33, 23, def.getPictureMask(), 0,
+							def.getBlueMask(), false, 0, 1);
+					} else {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(def), sx,
+							sy, 48, 32, def.getPictureMask(), 0,
+							def.getBlueMask(), false,
+							0, 1);
 					}
 
-					if (EntityHandler.getItemDef(this.tradeRecipientItem[slot]).isStackable()) {
-						this.getSurface().drawString("" + this.tradeRecipientItemCount[slot], sx + 1, 10 + sy, 0xFFFF00,
-							1);
+					if (def.isStackable()) {
+						this.getSurface().drawString("" + getTradeRecipientItemCount(slot), 1 + sx,
+							10 + sy, 0xFFFF00, 1);
 					}
 
 					if (sx < this.mouseX && this.mouseX < sx + 48 && this.mouseY > sy && sy + 32 > this.mouseY) {
 						this.getSurface().drawString(
-							EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(this.tradeRecipientItem[slot]).getDescription(),
+							def.getName() + ": @whi@"
+								+ def.getDescription(),
 							xr + 8, yr + 273, 0xFFFF00, 1);
 					}
 				}
@@ -10396,6 +10421,10 @@ public final class mudclient implements Runnable {
 	}
 
 	public final int getInventoryCount(int id) {
+		return getInventoryCount(id, false);
+	}
+
+	public final int getInventoryCount(int id, boolean excludeNote) {
 		try {
 
 			int count = 0;
@@ -10403,7 +10432,7 @@ public final class mudclient implements Runnable {
 			for (int index = 0; this.inventoryItemCount > index; ++index) {
 				if (getInventoryItemID(index) == id) {
 					if (EntityHandler.getItemDef(getInventoryItemID(index)).isStackable()
-					|| getInventoryItem(index).getNoted()) {
+						|| (!excludeNote && getInventoryItem(index).getNoted())) {
 						count += getInventoryItemSize(index);
 					} else {
 						++count;
@@ -14884,12 +14913,23 @@ public final class mudclient implements Runnable {
 		this.tradeRecipientItemsCount = i;
 	}
 
-	public void setTradeRecipientItem(int i, int n) {
-		this.tradeRecipientItem[i] = n;
+	public void setTradeRecipientItemID(int i, int n) {
+		this.tradeRecipient[i].setItemDef(n);
+	}
+
+	public int getTradeRecipientItemID(int index) {
+		if (this.tradeRecipient[index].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.tradeRecipient[index].getItemDef().id;
 	}
 
 	public void setTradeRecipientItemCount(int i, int n) {
-		this.tradeRecipientItemCount[i] = n;
+		this.tradeRecipient[i].setAmount(n);
+	}
+
+	public int getTradeRecipientItemCount(int i) {
+		return tradeRecipient[i].getAmount();
 	}
 
 	public int getTradeItemCount() {
@@ -14905,11 +14945,22 @@ public final class mudclient implements Runnable {
 		}*/
 
 	public void setTradeItemID(int i, int n) {
-		this.tradeItemID[i] = n;
+		this.trade[i].setItemDef(n);
+	}
+
+	public int getTradeItemID(int index) {
+		if (this.trade[index].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.trade[index].getItemDef().id;
 	}
 
 	public void setTradeItemSize(int i, int n) {
-		this.tradeItemSize[i] = n;
+		this.trade[i].setAmount(n);
+	}
+
+	public int getTradeItemSize(int i) {
+		return trade[i].getAmount();
 	}
 
 	public void setTradeAccepted(boolean accepted) {
@@ -15757,23 +15808,25 @@ public final class mudclient implements Runnable {
 
 			boolean offerSuccess = false;
 			int offered = 0;
+			Item item = getInventoryItem(slot);
+			ItemDef def = item.getItemDef();
 			int id = getInventoryItemID(slot);
 
 			for (int tSlot = 0; this.tradeItemCount > tSlot; ++tSlot) {
-				if (id == this.tradeItemID[tSlot]) {
-					if (EntityHandler.getItemDef(id).isStackable()) {
+				if (id == getTradeItemID(tSlot)) {
+					if (def.isStackable() || item.getNoted()) {
 						if (count >= 0) {
-							this.tradeItemSize[tSlot] += count;
-							if (this.tradeItemSize[tSlot] > getInventoryItemSize(slot)) {
-								this.tradeItemSize[tSlot] = getInventoryItemSize(slot);
+							setTradeItemSize(tSlot, getTradeItemSize(tSlot) + count);
+							if (getTradeItemSize(tSlot) > getInventoryItemSize(slot)) {
+								setTradeItemSize(tSlot, getInventoryItemSize(slot));
 							}
 
 							offerSuccess = true;
 						} else {
 							for (int j = 0; j < this.mouseButtonItemCountIncrement; ++j) {
 								offerSuccess = true;
-								if (this.getInventoryItemSize(slot) > this.tradeItemSize[tSlot]) {
-									++this.tradeItemSize[tSlot];
+								if (this.getInventoryItemSize(slot) > this.getTradeItemSize(tSlot)) {
+									setTradeItemSize(tSlot, getTradeItemSize(tSlot) + 1);
 								}
 							}
 						}
@@ -15783,12 +15836,12 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			int invAvailable = this.getInventoryCount(id);
+			int invAvailable = this.getInventoryCount(id, true);
 			if (invAvailable <= offered) {
 				offerSuccess = true;
 			}
 
-			if (EntityHandler.getItemDef(id).quest && !localPlayer.isAdmin()) {
+			if (def.quest && !localPlayer.isAdmin()) {
 				offerSuccess = true;
 				this.showMessage(false, null, "This object cannot be traded with other players",
 					MessageType.GAME, 0, null);
@@ -15797,21 +15850,22 @@ public final class mudclient implements Runnable {
 			if (!offerSuccess) {
 				if (count < 0) {
 					if (this.tradeItemCount < 12) {
-						this.tradeItemID[this.tradeItemCount] = id;
-						this.tradeItemSize[this.tradeItemCount] = 1;
+						setTradeItemID(this.tradeItemCount, id);
+						setTradeItemSize(this.tradeItemCount, 1);
+						getTradeItem(this.tradeItemCount).setNoted(item.getNoted());
 						offerSuccess = true;
 						++this.tradeItemCount;
 					}
 				} else {
 					for (int l = 0; l < count && this.tradeItemCount < 12 && invAvailable > offered; ++l) {
-						this.tradeItemID[this.tradeItemCount] = id;
-						this.tradeItemSize[this.tradeItemCount] = 1;
+						setTradeItemID(this.tradeItemCount, id);
+						setTradeItemSize(this.tradeItemCount, 1);
+						getTradeItem(this.tradeItemCount).setNoted(item.getNoted());
 						offerSuccess = true;
 						++offered;
 						++this.tradeItemCount;
-						if (l == 0 && EntityHandler.getItemDef(id).isStackable()) {
-							this.tradeItemSize[this.tradeItemCount - 1] = count <= getInventoryItemSize(slot) ? count
-								: getInventoryItemSize(slot);
+						if (l == 0 && (def.isStackable() || item.getNoted())) {
+							setTradeItemSize(this.tradeItemCount - 1, Math.min(count, getInventoryItemSize(slot)));
 							break;
 						}
 					}
@@ -15823,8 +15877,9 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().bufferBits.putByte(this.tradeItemCount);
 
 				for (int i = 0; this.tradeItemCount > i; ++i) {
-					this.packetHandler.getClientStream().bufferBits.putShort(this.tradeItemID[i]);
-					this.packetHandler.getClientStream().bufferBits.putInt(this.tradeItemSize[i]);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItemID(i));
+					this.packetHandler.getClientStream().bufferBits.putInt(this.getTradeItemSize(i));
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItem(i).getNoted() ? 1 : 0);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -15840,32 +15895,32 @@ public final class mudclient implements Runnable {
 	private void tradeRemove(int var1, byte var2, int var3) {
 		try {
 
-			int var4 = this.tradeItemID[var3];
+			int var4 = this.getTradeItemID(var3);
 			int var5 = var1 < 0 ? this.mouseButtonItemCountIncrement : var1;
 			int var6;
 			if (!EntityHandler.getItemDef(var4).isStackable()) {
 				var6 = 0;
 				for (int var7 = 0; var7 < this.tradeItemCount && var6 < var5; ++var7) {
-					if (var4 == this.tradeItemID[var7]) {
+					if (var4 == this.getTradeItemID(var7)) {
 						++var6;
 						--this.tradeItemCount;
 
 						for (int var8 = var7; this.tradeItemCount > var8; ++var8) {
-							this.tradeItemID[var8] = this.tradeItemID[var8 + 1];
-							this.tradeItemSize[var8] = this.tradeItemSize[var8 + 1];
+							this.setTradeItemID(var8, this.getTradeItemID(var8 + 1));
+							this.setTradeItemSize(var8, this.getTradeItemSize(var8 + 1));
 						}
 
 						--var7;
 					}
 				}
 			} else {
-				this.tradeItemSize[var3] -= var5;
-				if (this.tradeItemSize[var3] <= 0) {
+				this.setTradeItemSize(var3, this.getTradeItemSize(var3) - var5);
+				if (this.getTradeItemSize(var3) <= 0) {
 					--this.tradeItemCount;
 
 					for (var6 = var3; var6 < this.tradeItemCount; ++var6) {
-						this.tradeItemID[var6] = this.tradeItemID[1 + var6];
-						this.tradeItemSize[var6] = this.tradeItemSize[var6 + 1];
+						this.setTradeItemID(var6, this.getTradeItemID(1 + var6));
+						this.setTradeItemSize(var6, this.getTradeItemSize(var6 + 1));
 					}
 				}
 			}
@@ -15875,8 +15930,8 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().bufferBits.putByte(this.tradeItemCount);
 
 				for (var6 = 0; var6 < this.tradeItemCount; ++var6) {
-					this.packetHandler.getClientStream().bufferBits.putShort(this.tradeItemID[var6]);
-					this.packetHandler.getClientStream().bufferBits.putInt(this.tradeItemSize[var6]);
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItemID(var6));
+					this.packetHandler.getClientStream().bufferBits.putInt(this.getTradeItemSize(var6));
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -16725,6 +16780,14 @@ public final class mudclient implements Runnable {
 
 	public int getFrameCounter() {
 		return frameCounter;
+	}
+
+	public Item getTradeItem(int index) {
+		return trade[index];
+	}
+
+	public Item getTradeRecipientItem(int index) {
+		return tradeRecipient[index];
 	}
 
 	class XPNotification {
