@@ -877,7 +877,7 @@ public class Crafting implements UseInvTrigger,
 		int amuletAmount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft String Amulet",
-			woolAmount < amuletAmount ? woolAmount : amuletAmount, false) {
+			Math.min(woolAmount, amuletAmount), false) {
 
 			public void action() {
 				Player owner = getOwner();
@@ -905,10 +905,10 @@ public class Crafting implements UseInvTrigger,
 		if (item.getCatalogId() == ItemId.CLAY.id() && water.getCatalogId() != ItemId.BOWL_OF_WATER.id()) {
 			if (player.getCarriedItems().remove(water) > -1
 				&& player.getCarriedItems().remove(item) > -1) {
-				mes(player, 1200, "You mix the clay and water");
-				player.message("You now have some soft workable clay");
 				player.getCarriedItems().getInventory().add(new Item(jugID, 1));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id(), 1));
+				mes(player, 1200, "You mix the clay and water");
+				player.message("You now have some soft workable clay");
 			}
 		} else {
 			return false;
