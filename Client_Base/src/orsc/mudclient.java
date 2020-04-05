@@ -84,13 +84,15 @@ public final class mudclient implements Runnable {
 	private final int[] characterDialogY = new int[150];
 	private final int[] characterHealthX = new int[150];
 	private final int[] characterHealthY = new int[150];
-	private final int[] duelItemCounts = new int[8];
-	private final int[] duelOfferItemID = new int[8];
-	private final int[] duelOfferItemSize = new int[8];
-	private final int[] duelOpponentItemCount = new int[8];
-	private final int[] duelOpponentItemCounts = new int[8];
-	private final int[] duelOpponentItemId = new int[8];
-	private final int[] duelOpponentItems = new int[8];
+	private final int[] duelConfirmItemCount = new int[8];
+	private final Item[] duel = new Item[8];
+	//private final int[] duelOfferItemID = new int[8];
+	//private final int[] duelOfferItemSize = new int[8];
+	private final Item[] duelOpponent = new Item[8];
+	//private final int[] duelOpponentItemCount = new int[8];
+	private final int[] duelOpponentConfirmItemCount = new int[8];
+	//private final int[] duelOpponentItemId = new int[8];
+	private final int[] duelOpponentConfirmItem = new int[8];
 	private boolean stakeOfferEquipMode = false;
 	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
 		"Prayer"};
@@ -290,13 +292,13 @@ public final class mudclient implements Runnable {
 	private String duelConfirmOpponentName = "";
 	private int duelDoX_Slot;
 	private int dropInventorySlot = -1;
-	private int[] duelItems = new int[8];
-	private int duelItemsCount = 0;
+	private int[] duelConfirmItem = new int[8];
+	private int duelConfirmItemsCount = 0;
 	private boolean duelOfferAccepted = false;
-	private int duelOfferItemCount = 0;
+	private int duelOfferItemsCount = 0;
 	private boolean duelOffsetOpponentAccepted = false;
-	private int duelOffsetOpponentItemCount = 0;
 	private int duelOpponentItemsCount = 0;
+	private int duelOpponentConfirmItemsCount = 0;
 	private String duelOpponentName;
 	private int duelOptionMagic;
 	private int duelOptionPrayer;
@@ -650,6 +652,11 @@ public final class mudclient implements Runnable {
 			tradeRecipient[i] = new Item();
 			tradeConfirm[i] = new Item();
 			tradeRecipientConfirm[i] = new Item();
+		}
+
+		for (int i = 0; i < 8; ++i) {
+			duel[i] = new Item();
+			duelOpponent[i] = new Item();
 		}
 
 		initConfig();
@@ -2774,14 +2781,14 @@ public final class mudclient implements Runnable {
 				int firstItemIndex = -1;
 				int itemCount = 0;
 				if (act != MenuItemAction.DUEL_STAKE) {
-					for (int duelIdx = 0; this.duelOfferItemCount > duelIdx; ++duelIdx) {
-						if (this.duelOfferItemID[duelIdx] == itemID) {
+					for (int duelIdx = 0; this.duelOfferItemsCount > duelIdx; ++duelIdx) {
+						if (getDuelItemID(duelIdx) == itemID) {
 							if (firstItemIndex < 0) {
 								firstItemIndex = duelIdx;
 							}
 
 							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = this.duelOfferItemSize[duelIdx];
+								itemCount = getDuelItemSize(duelIdx);
 								break;
 							}
 
@@ -2858,7 +2865,7 @@ public final class mudclient implements Runnable {
 
 						if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 129) {
 							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
-							if (slot >= 0 && slot < this.duelOfferItemCount) {
+							if (slot >= 0 && slot < this.duelOfferItemsCount) {
 								this.duelRemoveItem(slot, -1);
 							}
 						}
@@ -2992,8 +2999,8 @@ public final class mudclient implements Runnable {
 
 						if (mouseX_Local > 8 && mouseY_Local > 30 && mouseX_Local < 205 && mouseY_Local < 133) {
 							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
-							if (slot >= 0 && this.duelOfferItemCount > slot) {
-								int id = this.duelOfferItemID[slot];
+							if (slot >= 0 && this.duelOfferItemsCount > slot) {
+								int id = getDuelItemID(slot);
 								this.menuDuel_Visible = true;
 								this.menuDuel.recalculateSize(0);
 								this.menuDuel.addCharacterItem_WithID(id,
@@ -3195,65 +3202,78 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawColoredStringCentered(252 + xr, "other player", 0xFFFFFF, 0, 1, 256 + yr);
 				}
 
-				//TODO: Need to change duel offer items to new Item class,
-				//TODO: and allow notes
-				for (int itmOffer = 0; this.duelOfferItemCount > itmOffer; ++itmOffer) {
+				for (int itmOffer = 0; this.duelOfferItemsCount > itmOffer; ++itmOffer) {
 					int xI = xr + 9 + itmOffer % 4 * 49;
 					int yI = yr + 31 + itmOffer / 4 * 34;
+					Item item = getDuelItem(itmOffer);
+					ItemDef def = item.getItemDef();
 
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.duelOfferItemID[itmOffer])),
-						xI, yI, 48, 32, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getPictureMask(),
-						0, EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getBlueMask(), false, 0, 1);
+					if (item.getNoted()) {
+						def = ItemDef.asNote(def);
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.noteDef), xI,
+							yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+							EntityHandler.noteDef.getBlueMask(), false,
+							0, 1);
 
-					ItemDef def = EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0,
-							originalDef.getBlueMask(), false, 0, 1);
+						getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
+							33, 23, def.getPictureMask(), 0,
+							def.getBlueMask(), false, 0, 1);
+					} else {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(def), xI,
+							yI, 48, 32, def.getPictureMask(), 0,
+							def.getBlueMask(), false,
+							0, 1);
 					}
 
-					if (EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).isStackable()) {
-						this.getSurface().drawString("" + this.duelOfferItemSize[itmOffer], 1 + xI, 10 + yI, 0xFFFF00,
-							1);
+					if (def.isStackable()) {
+						this.getSurface().drawString("" + getDuelItemSize(itmOffer), 1 + xI,
+							10 + yI, 0xFFFF00, 1);
 					}
 
 					if (xI < this.mouseX && this.mouseX < 48 + xI && yI < this.mouseY && 32 + yI > this.mouseY) {
 						this.getSurface().drawString(
-							EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(this.duelOfferItemID[itmOffer]).getDescription(),
+							def.getName() + ": @whi@"
+								+ def.getDescription(),
 							8 + xr, yr + 273, 0xFFFF00, 1);
 					}
 				}
 
-				for (int itmOffer = 0; itmOffer < this.duelOffsetOpponentItemCount; ++itmOffer) {
+				for (int itmOffer = 0; itmOffer < this.duelOpponentItemsCount; ++itmOffer) {
 					int xI = itmOffer % 4 * 49 + 9 + xr;
 					int yI = itmOffer / 4 * 34 + 124 + yr;
-					this.getSurface().drawSpriteClipping(
-						spriteSelect(EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer])),
-						xI, yI, 48, 32,
-						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getPictureMask(), 0,
-						EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getBlueMask(), false, 0,
-						1);
+					Item item = getDuelOpponentItem(itmOffer);
+					ItemDef def = item.getItemDef();
 
-					ItemDef def = EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]);
-					if (def.getNotedFormOf() >= 0) {
-						ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-						getSurface().drawSpriteClipping(spriteSelect(originalDef), xI + 7, yI + 4,
-							33, 23, originalDef.getPictureMask(), 0,
-							originalDef.getBlueMask(), false, 0, 1);
+					if (item.getNoted()) {
+						def = ItemDef.asNote(def);
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(EntityHandler.noteDef), xI,
+							yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+							EntityHandler.noteDef.getBlueMask(), false,
+							0, 1);
+
+						getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
+							33, 23, def.getPictureMask(), 0,
+							def.getBlueMask(), false, 0, 1);
+					} else {
+						this.getSurface().drawSpriteClipping(
+							spriteSelect(def), xI,
+							yI, 48, 32, def.getPictureMask(), 0,
+							def.getBlueMask(), false,
+							0, 1);
 					}
 
-					if (EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).isStackable()) {
-						this.getSurface().drawString("" + this.duelOpponentItemCount[itmOffer], 1 + xI, 10 + yI,
-							0xFFFF00, 1);
+					if (def.isStackable()) {
+						this.getSurface().drawString("" + getDuelOpponentItemCount(itmOffer), 1 + xI,
+							10 + yI, 0xFFFF00, 1);
 					}
 
 					if (this.mouseX > xI && 48 + xI > this.mouseX && yI < this.mouseY && this.mouseY < yI + 32) {
 						this.getSurface().drawString(
-							EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getName() + ": @whi@"
-								+ EntityHandler.getItemDef(this.duelOpponentItemId[itmOffer]).getDescription(),
+							def.getName() + ": @whi@"
+								+ def.getDescription(),
 							xr + 8, 273 + yr, 0xFFFF00, 1);
 					}
 				}
@@ -3280,31 +3300,31 @@ public final class mudclient implements Runnable {
 				"Please confirm your duel with @yel@" + this.duelOpponentName, 0xFFFFFF, 0, 1, yr + 12);
 			this.getSurface().drawColoredStringCentered(xr + 117, "Your stake:", 0xFFFF00, 0, 1, yr + 30);
 
-			for (int var5 = 0; this.duelItemsCount > var5; ++var5) {
-				String var6 = EntityHandler.getItemDef(this.duelItems[var5]).getName();
-				if (EntityHandler.getItemDef(this.duelItems[var5]).isStackable()) {
-					var6 = var6 + " x " + StringUtil.formatItemCount(this.duelItemCounts[var5]);
+			for (int var5 = 0; this.duelConfirmItemsCount > var5; ++var5) {
+				String var6 = EntityHandler.getItemDef(this.duelConfirmItem[var5]).getName();
+				if (EntityHandler.getItemDef(this.duelConfirmItem[var5]).isStackable()) {
+					var6 = var6 + " x " + StringUtil.formatItemCount(this.duelConfirmItemCount[var5]);
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 117, var6, 0xFFFFFF, 0, 1, 42 + yr + var5 * 12);
 			}
 
-			if (this.duelItemsCount == 0) {
+			if (this.duelConfirmItemsCount == 0) {
 				this.getSurface().drawColoredStringCentered(xr + 117, "Nothing!", 0xFFFFFF, 0, 1, 42 + yr);
 			}
 
 			this.getSurface().drawColoredStringCentered(351 + xr, "Your opponent\'s stake:", 0xFFFF00, 0, 1, 30 + yr);
 
-			for (int var5 = 0; var5 < this.duelOpponentItemsCount; ++var5) {
-				String var6 = EntityHandler.getItemDef(this.duelOpponentItems[var5]).getName();
-				if (EntityHandler.getItemDef(this.duelOpponentItems[var5]).isStackable()) {
-					var6 = var6 + " x " + StringUtil.formatItemCount(this.duelOpponentItemCounts[var5]);
+			for (int var5 = 0; var5 < this.duelOpponentConfirmItemsCount; ++var5) {
+				String var6 = EntityHandler.getItemDef(this.duelOpponentConfirmItem[var5]).getName();
+				if (EntityHandler.getItemDef(this.duelOpponentConfirmItem[var5]).isStackable()) {
+					var6 = var6 + " x " + StringUtil.formatItemCount(this.duelOpponentConfirmItemCount[var5]);
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 351, var6, 0xFFFFFF, 0, 1, var5 * 12 + 42 + yr);
 			}
 
-			if (this.duelOpponentItemsCount == 0) {
+			if (this.duelOpponentConfirmItemsCount == 0) {
 				this.getSurface().drawColoredStringCentered(351 + xr, "Nothing!", 0xFFFFFF, 0, 1, 42 + yr);
 			}
 
@@ -3995,7 +4015,7 @@ public final class mudclient implements Runnable {
 								firstSlot = invIdx;
 							}
 
-							if (EntityHandler.getItemDef(itemID).isStackable()) {
+							if (EntityHandler.getItemDef(itemID).isStackable() || getInventoryItem(invIdx).getNoted()) {
 								itemCount = getInventoryItemSize(invIdx);
 								break;
 							}
@@ -4011,7 +4031,7 @@ public final class mudclient implements Runnable {
 							}
 
 							if (EntityHandler.getItemDef(itemID).isStackable()) {
-								itemCount = getTradeItemID(tradeIdx);
+								itemCount = getTradeItemSize(tradeIdx);
 								break;
 							}
 
@@ -10169,30 +10189,34 @@ public final class mudclient implements Runnable {
 
 	private void duelRemoveItem(int itemIndex, int removeCount) {
 		try {
+			Item item = getDuelItem(itemIndex);
+			ItemDef def = item.getItemDef();
+			int itemID = getDuelItemID(itemIndex);
 
-			int itemID = this.duelOfferItemID[itemIndex];
 			int count = removeCount >= 0 ? removeCount : this.mouseButtonItemCountIncrement;
-			if (EntityHandler.getItemDef(itemID).isStackable()) {
-				this.duelOfferItemSize[itemIndex] -= count;
-				if (this.duelOfferItemSize[itemIndex] <= 0) {
-					--this.duelOfferItemCount;
+			if (def.isStackable() || item.getNoted()) {
+				this.setDuelItemSize(itemIndex, this.getDuelItemSize(itemIndex) - count);
+				if (this.getDuelItemSize(itemIndex) <= 0) {
+					--this.duelOfferItemsCount;
 
-					for (int i = itemIndex; i < this.duelOfferItemCount; ++i) {
-						this.duelOfferItemID[i] = this.duelOfferItemID[i + 1];
-						this.duelOfferItemSize[i] = this.duelOfferItemSize[i + 1];
+					for (int i = itemIndex; i < this.duelOfferItemsCount; ++i) {
+						this.setDuelItemID(i, this.getDuelItemID(i + 1));
+						this.setDuelItemSize(i, this.getDuelItemSize(i + 1));
+						this.getDuelItem(i).setNoted(item.getNoted());
 					}
 				}
 			} else {
 				int removed = 0;
 
-				for (int j = 0; j < this.duelOfferItemCount && removed < count; ++j) {
-					if (this.duelOfferItemID[j] == itemID) {
-						--this.duelOfferItemCount;
+				for (int j = 0; j < this.duelOfferItemsCount && removed < count; ++j) {
+					if (getDuelItemID(j) == itemID) {
+						--this.duelOfferItemsCount;
 						++removed;
 
-						for (int i = j; this.duelOfferItemCount > i; ++i) {
-							this.duelOfferItemID[i] = this.duelOfferItemID[1 + i];
-							this.duelOfferItemSize[i] = this.duelOfferItemSize[1 + i];
+						for (int i = j; this.duelOfferItemsCount > i; ++i) {
+							this.setDuelItemID(i, this.getDuelItemID(i + 1));
+							this.setDuelItemSize(i, this.getDuelItemSize(i + 1));
+							this.getDuelItem(i).setNoted(item.getNoted());
 						}
 
 						--j;
@@ -10201,11 +10225,12 @@ public final class mudclient implements Runnable {
 			}
 
 			this.packetHandler.getClientStream().newPacket(33);
-			this.packetHandler.getClientStream().bufferBits.putByte(this.duelOfferItemCount);
+			this.packetHandler.getClientStream().bufferBits.putByte(this.duelOfferItemsCount);
 
-			for (int i = 0; this.duelOfferItemCount > i; ++i) {
-				this.packetHandler.getClientStream().bufferBits.putShort(this.duelOfferItemID[i]);
-				this.packetHandler.getClientStream().bufferBits.putInt(this.duelOfferItemSize[i]);
+			for (int i = 0; this.duelOfferItemsCount > i; ++i) {
+				this.packetHandler.getClientStream().bufferBits.putShort(this.getDuelItemID(i));
+				this.packetHandler.getClientStream().bufferBits.putInt(this.getDuelItemSize(i));
+				this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItem(i).getNoted() ? 1 : 0);
 			}
 
 			this.packetHandler.getClientStream().finishPacket();
@@ -10256,21 +10281,21 @@ public final class mudclient implements Runnable {
 			}
 
 
-			for (int duelIdx = 0; duelIdx < this.duelOfferItemCount; ++duelIdx) {
-				if (this.duelOfferItemID[duelIdx] == andStakeInvID) {
+			for (int duelIdx = 0; duelIdx < this.duelOfferItemsCount; ++duelIdx) {
+				if (getDuelItemID(duelIdx) == andStakeInvID) {
 					if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
 						if (andStakeCount < 0) {
 							for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
-								if (this.duelOfferItemSize[duelIdx] < itemAmountArray[andStakeInvIndex]) {
-									++this.duelOfferItemSize[duelIdx];
+								if (getDuelItemSize(duelIdx) < itemAmountArray[andStakeInvIndex]) {
+									setDuelItemSize(duelIdx, getDuelItemSize(duelIdx) + 1);
 								}
 
 								andStakeSuccess = true;
 							}
 						} else {
-							this.duelOfferItemSize[duelIdx] += andStakeCount;
-							if (itemAmountArray[andStakeInvIndex] < this.duelOfferItemSize[duelIdx]) {
-								this.duelOfferItemSize[duelIdx] = itemAmountArray[andStakeInvIndex];
+							setDuelItemSize(duelIdx, getDuelItemSize(duelIdx) + andStakeCount);
+							if (itemAmountArray[andStakeInvIndex] < getDuelItemSize(duelIdx)) {
+								setDuelItemSize(duelIdx, itemAmountArray[andStakeInvIndex]);
 							}
 
 							andStakeSuccess = true;
@@ -10294,24 +10319,23 @@ public final class mudclient implements Runnable {
 
 			if (!andStakeSuccess) {
 				if (andStakeCount < 0) {
-					if (this.duelOfferItemCount < 8) {
-						this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
-						this.duelOfferItemSize[this.duelOfferItemCount] = 1;
-						++this.duelOfferItemCount;
+					if (this.duelOfferItemsCount < 8) {
+						setDuelItemID(this.duelOfferItemsCount, andStakeInvID);
+						setDuelItemSize(this.duelOfferItemsCount, 1);
+						++this.duelOfferItemsCount;
 						andStakeSuccess = true;
 					}
 				} else {
-					for (int var8 = 0; andStakeCount > var8 && this.duelOfferItemCount < 8
+					for (int var8 = 0; andStakeCount > var8 && this.duelOfferItemsCount < 8
 						&& hitStakeStacks < invCount; ++var8) {
-						this.duelOfferItemID[this.duelOfferItemCount] = andStakeInvID;
-						this.duelOfferItemSize[this.duelOfferItemCount] = 1;
+						setDuelItemID(this.duelOfferItemsCount, andStakeInvID);
+						setDuelItemSize(this.duelOfferItemsCount, 1);
 						++hitStakeStacks;
-						++this.duelOfferItemCount;
+						++this.duelOfferItemsCount;
 						andStakeSuccess = true;
 						if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
-							this.duelOfferItemSize[this.duelOfferItemCount
-								- 1] = itemAmountArray[andStakeInvIndex] < andStakeCount
-								? itemAmountArray[andStakeInvIndex] : andStakeCount;
+							setDuelItemSize(this.duelOfferItemsCount
+								- 1, Math.min(itemAmountArray[andStakeInvIndex], andStakeCount));
 							break;
 						}
 					}
@@ -10320,11 +10344,12 @@ public final class mudclient implements Runnable {
 
 			if (andStakeSuccess) {
 				this.packetHandler.getClientStream().newPacket(33);
-				this.packetHandler.getClientStream().bufferBits.putByte(this.duelOfferItemCount);
+				this.packetHandler.getClientStream().bufferBits.putByte(this.duelOfferItemsCount);
 
-				for (int i = 0; this.duelOfferItemCount > i; ++i) {
-					this.packetHandler.getClientStream().bufferBits.putShort(this.duelOfferItemID[i]);
-					this.packetHandler.getClientStream().bufferBits.putInt(this.duelOfferItemSize[i]);
+				for (int i = 0; this.duelOfferItemsCount > i; ++i) {
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getDuelItemID(i));
+					this.packetHandler.getClientStream().bufferBits.putInt(this.getDuelItemSize(i));
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getDuelItem(i).getNoted() ? 1 : 0);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -15123,20 +15148,31 @@ public final class mudclient implements Runnable {
 		this.showDialogDuelConfirm = show;
 	}
 
-	public int getDuelOffsetOpponentItemCount() {
-		return this.duelOffsetOpponentItemCount;
+	public int getDuelOpponentItemsCount() {
+		return this.duelOpponentItemsCount;
 	}
 
-	public void setDuelOffsetOpponentItemCount(int i) {
-		this.duelOffsetOpponentItemCount = i;
+	public void setDuelOpponentItemsCount(int i) {
+		this.duelOpponentItemsCount = i;
 	}
 
-	public void setDuelOpponentItemId(int i, int n) {
-		this.duelOpponentItemId[i] = n;
+	public void setDuelOpponentItemID(int i, int n) {
+		this.duelOpponent[i].setItemDef(n);
+	}
+
+	public int getDuelOpponentItemID(int index) {
+		if (this.duelOpponent[index].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.duelOpponent[index].getItemDef().id;
 	}
 
 	public void setDuelOpponentItemCount(int i, int n) {
-		this.duelOpponentItemCount[i] = n;
+		this.duelOpponent[i].setAmount(n);
+	}
+
+	public int getDuelOpponentItemCount(int i) {
+		return duelOpponent[i].getAmount();
 	}
 
 	public void setDuelOfferAccepted(boolean accepted) {
@@ -15187,40 +15223,59 @@ public final class mudclient implements Runnable {
 		this.duelOpponentName = n;
 	}
 
-	public int getDuelOpponentItemsCount() {
-		return this.duelOpponentItemsCount;
+	public int getDuelOpponentConfirmItemsCount() {
+		return this.duelOpponentConfirmItemsCount;
 	}
 
-	public void setDuelOpponentItemsCount(int n) {
-		this.duelOpponentItemsCount = n;
+	public void setDuelOpponentConfirmItemsCount(int n) {
+		this.duelOpponentConfirmItemsCount = n;
 	}
 
-	public void setDuelOpponentItems(int i, int n) {
-		this.duelOpponentItems[i] = n;
+	public void setDuelOpponentConfirmItem(int i, int n) {
+		this.duelOpponentConfirmItem[i] = n;
 	}
 
-	public void setDuelOpponentItemCounts(int i, int n) {
-		this.duelOpponentItemCounts[i] = n;
+	public void setDuelOpponentConfirmItemCount(int i, int n) {
+		this.duelOpponentConfirmItemCount[i] = n;
 	}
 
-	public int getDuelItemsCount() {
-		return this.duelItemsCount;
+	public int getDuelConfirmItemsCount() {
+		return this.duelConfirmItemsCount;
 	}
 
-	public void setDuelItemsCount(int i) {
-		this.duelItemsCount = i;
+	public void setDuelConfirmItemsCount(int i) {
+		this.duelConfirmItemsCount = i;
 	}
 
-	public void setDuelItems(int i, int n) {
-		this.duelItems[i] = n;
+	public void setDuelConfirmItem(int i, int n) {
+		this.duelConfirmItem[i] = n;
 	}
 
-	public void setDuelItemCounts(int i, int n) {
-		this.duelItemCounts[i] = n;
+	public void setDuelConfirmItemCount(int i, int n) {
+		this.duelConfirmItemCount[i] = n;
 	}
 
-	public void setDuelOfferItemCount(int i) {
-		this.duelOfferItemCount = i;
+	public void setDuelItemID(int i, int n) {
+		this.duel[i].setItemDef(n);
+	}
+
+	public int getDuelItemID(int index) {
+		if (this.duel[index].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.duel[index].getItemDef().id;
+	}
+
+	public void setDuelItemSize(int i, int n) {
+		this.duel[i].setAmount(n);
+	}
+
+	public int getDuelItemSize(int i) {
+		return duel[i].getAmount();
+	}
+
+	public void setDuelOfferItemsCount(int i) {
+		this.duelOfferItemsCount = i;
 	}
 
 	public void setDuelConfirmOpponentName(String s) {
@@ -16833,6 +16888,14 @@ public final class mudclient implements Runnable {
 
 	public Item getTradeRecipientConfirmItem(int index) {
 		return tradeRecipientConfirm[index];
+	}
+
+	public Item getDuelItem(int index) {
+		return duel[index];
+	}
+
+	public Item getDuelOpponentItem(int index) {
+		return duelOpponent[index];
 	}
 
 	class XPNotification {

@@ -1987,10 +1987,10 @@ public class PacketHandler {
 	}
 
 	private void showDuelItems() {
-		mc.setDuelOffsetOpponentItemCount(packetsIncoming.getUnsignedByte());
+		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
 
-		for (int var4 = 0; mc.getDuelOffsetOpponentItemCount() > var4; ++var4) {
-			mc.setDuelOpponentItemId(var4, packetsIncoming.getShort());
+		for (int var4 = 0; mc.getDuelOpponentItemsCount() > var4; ++var4) {
+			mc.setDuelOpponentItemID(var4, packetsIncoming.getShort());
 			mc.setDuelOpponentItemCount(var4, packetsIncoming.get32());
 		}
 
@@ -2079,17 +2079,17 @@ public class PacketHandler {
 		mc.setShowDialogDuelConfirm(true);
 		mc.setShowDialogDuel(false);
 		mc.setDuelOpponentName(packetsIncoming.readString());
-		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
-		for (int var4 = 0; var4 < mc.getDuelOpponentItemsCount(); ++var4) {
-			mc.setDuelOpponentItems(var4, packetsIncoming.getShort());
-			mc.setDuelOpponentItemCounts(var4, packetsIncoming.get32());
+		mc.setDuelOpponentConfirmItemsCount(packetsIncoming.getUnsignedByte());
+		for (int var4 = 0; var4 < mc.getDuelOpponentConfirmItemsCount(); ++var4) {
+			mc.setDuelOpponentConfirmItem(var4, packetsIncoming.getShort());
+			mc.setDuelOpponentConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
-		mc.setDuelItemsCount(packetsIncoming.getUnsignedByte());
+		mc.setDuelConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
-		for (int var4 = 0; mc.getDuelItemsCount() > var4; ++var4) {
-			mc.setDuelItems(var4, packetsIncoming.getShort());
-			mc.setDuelItemCounts(var4, packetsIncoming.get32());
+		for (int var4 = 0; mc.getDuelConfirmItemsCount() > var4; ++var4) {
+			mc.setDuelConfirmItem(var4, packetsIncoming.getShort());
+			mc.setDuelConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setDuelOptionRetreat(packetsIncoming.getUnsignedByte());
@@ -2179,8 +2179,8 @@ public class PacketHandler {
 		mc.setDuelSettingsRetreat(false);
 		mc.setShowDialogDuel(true);
 		mc.setDuelSettingsMagic(false);
-		mc.setDuelOffsetOpponentItemCount(0);
-		mc.setDuelOfferItemCount(0);
+		mc.setDuelOpponentItemsCount(0);
+		mc.setDuelOfferItemsCount(0);
 	}
 
 	private void showShopDialog() {

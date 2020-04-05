@@ -330,7 +330,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			player.getDuel().resetDuelOffer();
 			int count = (int) p.readByte();
 			for (int slot = 0; slot < count; slot++) {
-				Item tItem = new Item(p.readShort(), p.readInt());
+				Item tItem = new Item(p.readShort(), p.readInt(), p.readShort() == 1);
 				if (tItem.getAmount() < 1) {
 					player.setSuspiciousPlayer(true, "duel item amount < 1");
 					continue;
