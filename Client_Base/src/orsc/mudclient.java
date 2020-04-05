@@ -2782,16 +2782,21 @@ public final class mudclient implements Runnable {
 				this.menuDuel_Visible = false;
 				MenuItemAction act = this.menuDuel.getItemAction(clickedIndex);
 				int itemID = this.menuDuel.getItemIndexOrX(clickedIndex);
+				boolean noted = false;
+				if (itemID < 0) {
+					itemID = (itemID + 1) * -1;
+					noted = true;
+				}
 				int firstItemIndex = -1;
 				int itemCount = 0;
 				if (act != MenuItemAction.DUEL_STAKE) {
 					for (int duelIdx = 0; this.duelOfferItemsCount > duelIdx; ++duelIdx) {
-						if (getDuelItemID(duelIdx) == itemID) {
+						if (getDuelItemID(duelIdx) == itemID && getDuelItem(duelIdx).getNoted() == noted) {
 							if (firstItemIndex < 0) {
 								firstItemIndex = duelIdx;
 							}
 
-							if (EntityHandler.getItemDef(itemID).isStackable()) {
+							if (EntityHandler.getItemDef(itemID).isStackable() || getDuelItem(duelIdx).getNoted()) {
 								itemCount = getDuelItemSize(duelIdx);
 								break;
 							}
@@ -2801,12 +2806,12 @@ public final class mudclient implements Runnable {
 					}
 				} else {
 					for (int invIdx = 0; this.inventoryItemCount > invIdx; ++invIdx) {
-						if (itemID == getInventoryItemID(invIdx)) {
+						if (itemID == getInventoryItemID(invIdx) && getInventoryItem(invIdx).getNoted() == noted) {
 							if (firstItemIndex < 0) {
 								firstItemIndex = invIdx;
 							}
 
-							if (EntityHandler.getItemDef(itemID).isStackable()) {
+							if (EntityHandler.getItemDef(itemID).isStackable() || getInventoryItem(invIdx).getNoted()) {
 								itemCount = getInventoryItemSize(invIdx);
 								break;
 							}
@@ -2954,29 +2959,32 @@ public final class mudclient implements Runnable {
 										this.menuDuel_Visible = true;
 										this.menuDuel.recalculateSize(0);
 										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake", 1);
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(),
+											MenuItemAction.DUEL_STAKE, "Stake", 1);
 									}
 								} else {
 									if (this.inventoryItemCount > invIndex) {
 										int itemID = getInventoryItemID(invIndex);
+										if (getInventoryItem(invIndex).getNoted()) {
+											itemID = (itemID + 1) * -1;
+										}
 										this.menuDuel_Visible = true;
 										this.menuDuel.recalculateSize(0);
 										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake 1", 1);
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(),
+											MenuItemAction.DUEL_STAKE, "Stake 1", 1);
 										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake 5", 5);
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(),
+											MenuItemAction.DUEL_STAKE, "Stake 5", 5);
 										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake 10", 10);
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(),
+											MenuItemAction.DUEL_STAKE, "Stake 10", 10);
 										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake All", -1);
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(),
+											MenuItemAction.DUEL_STAKE, "Stake All", -1);
 										this.menuDuel.addCharacterItem_WithID(itemID,
-											"@lre@" + EntityHandler.getItemDef(itemID).getName(), MenuItemAction.DUEL_STAKE,
-											"Stake X", -2);
+											"@lre@" + EntityHandler.getItemDef(itemID).getName(),
+											MenuItemAction.DUEL_STAKE, "Stake X", -2);
 									}
 								}
 								int width = this.menuDuel.getWidth();
@@ -3005,23 +3013,26 @@ public final class mudclient implements Runnable {
 							int slot = (mouseX_Local - 9) / 49 + (mouseY_Local - 31) / 34 * 4;
 							if (slot >= 0 && this.duelOfferItemsCount > slot) {
 								int id = getDuelItemID(slot);
+								if (getDuelItem(slot).getNoted()) {
+									id = (id + 1) * -1;
+								}
 								this.menuDuel_Visible = true;
 								this.menuDuel.recalculateSize(0);
 								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove 1", 1);
+									"@lre@" + EntityHandler.getItemDef(id).getName(),
+									MenuItemAction.DUEL_REMOVE, "Remove 1", 1);
 								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove 5", 5);
+									"@lre@" + EntityHandler.getItemDef(id).getName(),
+									MenuItemAction.DUEL_REMOVE, "Remove 5", 5);
 								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove 10", 10);
+									"@lre@" + EntityHandler.getItemDef(id).getName(),
+									MenuItemAction.DUEL_REMOVE, "Remove 10", 10);
 								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove All", -1);
+									"@lre@" + EntityHandler.getItemDef(id).getName(),
+									MenuItemAction.DUEL_REMOVE, "Remove All", -1);
 								this.menuDuel.addCharacterItem_WithID(id,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.DUEL_REMOVE,
-									"Remove X", -2);
+									"@lre@" + EntityHandler.getItemDef(id).getName(),
+									MenuItemAction.DUEL_REMOVE, "Remove X", -2);
 								int w = this.menuDuel.getWidth();
 								int h = this.menuDuel.getHeight();
 								this.menuDuelY = this.mouseY - 7;
@@ -3912,6 +3923,9 @@ public final class mudclient implements Runnable {
 								int slot = (mouseLY - 31) / 34 * 5 + (mouseLX - 217) / 49;
 								if (slot >= 0 && this.inventoryItemCount > slot) {
 									int id = getInventoryItemID(slot);
+									if (getInventoryItem(slot).getNoted()) {
+										id = (id + 1) * -1;
+									}
 									this.menuTrade_Visible = true;
 									this.menuTrade.recalculateSize(0);
 									this.menuTrade.addCharacterItem_WithID(id,
@@ -3955,6 +3969,9 @@ public final class mudclient implements Runnable {
 								int slot = (mouseLX - 9) / 49 + (mouseLY - 31) / 34 * 4;
 								if (slot >= 0 && slot < this.tradeItemCount) {
 									int id = getTradeItemID(slot);
+									if (getTradeItem(slot).getNoted()) {
+										id = (id + 1) * -1;
+									}
 									this.menuTrade_Visible = true;
 									this.menuTrade.recalculateSize(0);
 									this.menuTrade.addCharacterItem_WithID(id,
@@ -4017,11 +4034,16 @@ public final class mudclient implements Runnable {
 				this.mouseButtonClick = 0;
 				MenuItemAction act = this.menuTrade.getItemAction(clickOp);
 				int itemID = this.menuTrade.getItemIndexOrX(clickOp);
+				boolean noted = false;
+				if (itemID < 0) {
+					itemID = (itemID + 1) * -1;
+					noted = true;
+				}
 				int firstSlot = -1;
 				int itemCount = 0;
 				if (act == MenuItemAction.TRADE_OFFER) {
 					for (int invIdx = 0; invIdx < this.inventoryItemCount; ++invIdx) {
-						if (getInventoryItemID(invIdx) == itemID) {
+						if (getInventoryItemID(invIdx) == itemID && getInventoryItem(invIdx).getNoted() == noted) {
 							if (firstSlot < 0) {
 								firstSlot = invIdx;
 							}
@@ -4036,7 +4058,7 @@ public final class mudclient implements Runnable {
 					}
 				} else {
 					for (int tradeIdx = 0; tradeIdx < this.tradeItemCount; ++tradeIdx) {
-						if (itemID == getTradeItemID(tradeIdx)) {
+						if (itemID == getTradeItemID(tradeIdx) && getTradeItem(tradeIdx).getNoted() == noted) {
 							if (firstSlot < 0) {
 								firstSlot = tradeIdx;
 							}
@@ -10213,21 +10235,21 @@ public final class mudclient implements Runnable {
 					for (int i = itemIndex; i < this.duelOfferItemsCount; ++i) {
 						this.setDuelItemID(i, this.getDuelItemID(i + 1));
 						this.setDuelItemSize(i, this.getDuelItemSize(i + 1));
-						this.getDuelItem(i).setNoted(item.getNoted());
+						this.getDuelItem(i).setNoted(this.getDuelItem(i + 1).getNoted());
 					}
 				}
 			} else {
 				int removed = 0;
 
 				for (int j = 0; j < this.duelOfferItemsCount && removed < count; ++j) {
-					if (getDuelItemID(j) == itemID && this.getDuelItem(j).getNoted() == item.getNoted()) {
+					if (getDuelItemID(j) == itemID && !this.getDuelItem(j).getNoted()) {
 						--this.duelOfferItemsCount;
 						++removed;
 
 						for (int i = j; this.duelOfferItemsCount > i; ++i) {
 							this.setDuelItemID(i, this.getDuelItemID(i + 1));
 							this.setDuelItemSize(i, this.getDuelItemSize(i + 1));
-							this.getDuelItem(i).setNoted(item.getNoted());
+							this.getDuelItem(i).setNoted(this.getDuelItem(i + 1).getNoted());
 						}
 
 						--j;
@@ -10241,7 +10263,7 @@ public final class mudclient implements Runnable {
 			for (int i = 0; this.duelOfferItemsCount > i; ++i) {
 				this.packetHandler.getClientStream().bufferBits.putShort(this.getDuelItemID(i));
 				this.packetHandler.getClientStream().bufferBits.putInt(this.getDuelItemSize(i));
-				this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItem(i).getNoted() ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putShort(this.getDuelItem(i).getNoted() ? 1 : 0);
 			}
 
 			this.packetHandler.getClientStream().finishPacket();
@@ -16023,39 +16045,39 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private void tradeRemove(int var1, byte var2, int var3) {
+	private void tradeRemove(int count, byte var2, int slot) {
 		try {
-			Item item = getTradeItem(var3);
+			Item item = getTradeItem(slot);
 			ItemDef def = item.getItemDef();
-			int var4 = this.getTradeItemID(var3);
+			int id = this.getTradeItemID(slot);
 
-			int var5 = var1 < 0 ? this.mouseButtonItemCountIncrement : var1;
-			int var6;
+			int removeCount = count < 0 ? this.mouseButtonItemCountIncrement : count;
+			int iC;
 			if (!def.isStackable() && !item.getNoted()) {
-				var6 = 0;
-				for (int var7 = 0; var7 < this.tradeItemCount && var6 < var5; ++var7) {
-					if (var4 == this.getTradeItemID(var7) && item.getNoted() == this.getTradeItem(var7).getNoted()) {
-						++var6;
+				iC = 0;
+				for (int j = 0; j < this.tradeItemCount && iC < removeCount; ++j) {
+					if (id == this.getTradeItemID(j) && !this.getTradeItem(j).getNoted()) {
+						++iC;
 						--this.tradeItemCount;
 
-						for (int var8 = var7; this.tradeItemCount > var8; ++var8) {
-							this.setTradeItemID(var8, this.getTradeItemID(var8 + 1));
-							this.setTradeItemSize(var8, this.getTradeItemSize(var8 + 1));
-							this.getTradeItem(var8).setNoted(item.getNoted());
+						for (int i = j; this.tradeItemCount > i; ++i) {
+							this.setTradeItemID(i, this.getTradeItemID(i + 1));
+							this.setTradeItemSize(i, this.getTradeItemSize(i + 1));
+							this.getTradeItem(i).setNoted(this.getTradeItem(i + 1).getNoted());
 						}
 
-						--var7;
+						--j;
 					}
 				}
 			} else {
-				this.setTradeItemSize(var3, this.getTradeItemSize(var3) - var5);
-				if (this.getTradeItemSize(var3) <= 0) {
+				this.setTradeItemSize(slot, this.getTradeItemSize(slot) - removeCount);
+				if (this.getTradeItemSize(slot) <= 0) {
 					--this.tradeItemCount;
 
-					for (var6 = var3; var6 < this.tradeItemCount; ++var6) {
-						this.setTradeItemID(var6, this.getTradeItemID(1 + var6));
-						this.setTradeItemSize(var6, this.getTradeItemSize(var6 + 1));
-						this.getTradeItem(var6).setNoted(item.getNoted());
+					for (iC = slot; iC < this.tradeItemCount; ++iC) {
+						this.setTradeItemID(iC, this.getTradeItemID(1 + iC));
+						this.setTradeItemSize(iC, this.getTradeItemSize(iC + 1));
+						this.getTradeItem(iC).setNoted(this.getTradeItem(iC + 1).getNoted());
 					}
 				}
 			}
@@ -16064,10 +16086,10 @@ public final class mudclient implements Runnable {
 			if (var2 > 120) {
 				this.packetHandler.getClientStream().bufferBits.putByte(this.tradeItemCount);
 
-				for (var6 = 0; var6 < this.tradeItemCount; ++var6) {
-					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItemID(var6));
-					this.packetHandler.getClientStream().bufferBits.putInt(this.getTradeItemSize(var6));
-					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItem(var6).getNoted() ? 1 : 0);
+				for (iC = 0; iC < this.tradeItemCount; ++iC) {
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItemID(iC));
+					this.packetHandler.getClientStream().bufferBits.putInt(this.getTradeItemSize(iC));
+					this.packetHandler.getClientStream().bufferBits.putShort(this.getTradeItem(iC).getNoted() ? 1 : 0);
 				}
 
 				this.packetHandler.getClientStream().finishPacket();
@@ -16075,7 +16097,7 @@ public final class mudclient implements Runnable {
 				this.tradeRecipientAccepted = false;
 			}
 		} catch (RuntimeException var9) {
-			throw GenUtil.makeThrowable(var9, "client.A(" + var1 + ',' + var2 + ',' + var3 + ')');
+			throw GenUtil.makeThrowable(var9, "client.A(" + count + ',' + var2 + ',' + slot + ')');
 		}
 	}
 
