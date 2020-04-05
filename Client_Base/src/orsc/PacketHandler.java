@@ -1952,15 +1952,37 @@ public class PacketHandler {
 		mc.setTradeRecipientConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getTradeRecipientConfirmItemsCount() > var4; ++var4) {
-			mc.setTradeRecipientConfirmItems(var4, packetsIncoming.getShort());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setTradeRecipientConfirmItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setTradeRecipientConfirmItems(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getTradeRecipientConfirmItem(var4).setNoted(true);
+			} else {
+				mc.getTradeRecipientConfirmItem(var4).setNoted(false);
+			}
 			mc.setTradeRecipientConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setTradeConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeConfirmItemsCount(); ++var4) {
-			mc.setTradeConfirmItems(var4, packetsIncoming.getShort());
-			mc.setTradeConfirmItemsCount1(var4, packetsIncoming.get32());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setTradeConfirmItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setTradeConfirmItems(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getTradeConfirmItem(var4).setNoted(true);
+			} else {
+				mc.getTradeConfirmItem(var4).setNoted(false);
+			}
+			mc.setTradeConfirmItemsCount(var4, packetsIncoming.get32());
 		}
 	}
 
