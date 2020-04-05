@@ -30,51 +30,73 @@ public class NpcBehavior {
 	protected Mob target;
 	private State state = State.ROAM;
 
+	private boolean draynorManorSkeleton;
+	private boolean blackKnightsFortress;
+
 	NpcBehavior(final Npc npc) {
 		this.npc = npc;
+		this.blackKnightsFortress = npc.getLoc().startX() > 274 && npc.getLoc().startX() < 283
+			&& npc.getLoc().startY() > 432 && npc.getLoc().startY() < 441;
+		this.draynorManorSkeleton = npc.getID() == NpcId.SKELETON_LVL21.id()
+			&& npc.getLoc().startX() >= 208 && npc.getLoc().startX() <= 211
+			&& npc.getLoc().startY() >= 545 && npc.getLoc().startY() <= 546;
 	}
 
 	public void tick() {
-		Mob lastTarget;
 		if (state == State.ROAM) {
-			if (npc.inCombat()) {
-				state = State.COMBAT;
-				return;
-			} else if (npc.isBusy()) {
-				return;
-			}
+			handleRoam();
+		} else if (state == State.AGGRO) {
+			handleAggro();
+		} else if (state == State.COMBAT) {
+			handleCombat();
+		} else if (state == State.TACKLE) {
+			handleTackle();
+		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
+			if (npc.finishedPath()) setRoaming();
+		}
+	}
 
-			target = null;
-			if (System.currentTimeMillis() - lastMovement > 3000
-				&& System.currentTimeMillis() - npc.getCombatTimer() > 3000
-				&& npc.finishedPath()) {
-				lastMovement = System.currentTimeMillis();
-				lastTarget = null;
-				int rand = DataConversions.random(0, 1);
-				if (!npc.isBusy() && rand == 1 && !npc.isRemoved()) {
-					//Plagued sheep shouldn't roam
-					if (npc.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() ||
-						npc.getID() == NpcId.SECOND_PLAGUE_SHEEP.id() ||
-						npc.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() ||
-						npc.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id())
-						return;
-					int newX = DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX());
-					int newY = DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY());
-					if (!grandTreeGnome(npc) || npc.getLocation().equals(new Point(0, 0))) {
-						npc.walk(newX, newY);
-					} else {
-						Point p = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
-							Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
-						npc.walk(p.getX(), p.getY());
-					}
+	private void handleRoam() {
+		Mob lastTarget;
+
+		// NPC is in combat or busy, do not set them to ROAM.
+		if (npc.inCombat()) {
+			state = State.COMBAT;
+			return;
+		} else if (npc.isBusy()) {
+			return;
+		}
+
+		// If NPC has not moved in 3 seconds, and is out of combat 3 seconds
+		// and are finished our previous path.
+		target = null;
+		if (System.currentTimeMillis() - lastMovement > 3000
+			&& System.currentTimeMillis() - npc.getCombatTimer() > 3000
+			&& npc.finishedPath()) {
+			lastMovement = System.currentTimeMillis();
+			lastTarget = null;
+			int rand = DataConversions.random(0, 1);
+
+			// NPC is not busy, and we rolled to move (50% chance)
+			if (!npc.isBusy() && rand == 1 && !npc.isRemoved() && !npc.getLocation().equals(new Point(0, 0))) {
+				//Plagued sheep shouldn't roam
+				if (npc.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() ||
+					npc.getID() == NpcId.SECOND_PLAGUE_SHEEP.id() ||
+					npc.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() ||
+					npc.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
+					return;
 				}
+				Point p = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
+					Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
+				npc.walk(p.getX(), p.getY());
 			}
-			if (System.currentTimeMillis() - npc.getCombatTimer() > 3000
-				&& ((npc.getDef().isAggressive()
-				&& !(npc.getID() == NpcId.SKELETON_LVL21.id() && npc.getX() >= 208 && npc.getX() <= 211 && npc.getY() >= 545 && npc.getY() <= 546)) // Skeleton in draynor manor
-				|| (npc.getLocation().inWilderness()))
-				|| (npc.getX() > 274 && npc.getX() < 283 && npc.getY() > 432 && npc.getY() < 441) // Black Knight's Fortress
-			) {
+		}
+
+		// NPC can aggro a target
+		else if (System.currentTimeMillis() - npc.getCombatTimer() > 3000) {
+			if ((npc.getDef().isAggressive() && !draynorManorSkeleton)
+				|| npc.getLocation().inWilderness()
+				|| (blackKnightsFortress)) {
 
 				// We loop through all players in view.
 				for (Player p : npc.getViewArea().getPlayersInView()) {
@@ -82,13 +104,10 @@ public class NpcBehavior {
 					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
 					switch (NpcId.getById(npc.getID())) {
 						case BANDIT_AGGRESSIVE:
-							range = 5;
+							range = 2;
 							break;
 						case BLACK_KNIGHT:
 							range = 10;
-							break;
-						default:
-							break;
 					}
 
 					if (!canAggro(p) || !p.withinRange(npc, range))
@@ -97,116 +116,138 @@ public class NpcBehavior {
 					state = State.AGGRO;
 					target = p;
 
+					// Remove the opponent if the player has not been engaged in > 10 seconds
 					if (npc.getLastOpponent() == p && (p.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
 						npc.setLastOpponent(null);
 						setRoaming();
+
+					// AggroEvent, as NPC should target this player.
 					} else {
-						//aggro behavior if any
 						new AggroEvent(npc.getWorld(), npc, p);
 					}
 
 					break;
 				}
 			}
-			if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
-				npc.getDef().getName().toLowerCase().equals("gnome baller")
-				&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
-				for (Player p : npc.getViewArea().getPlayersInView()) {
-					int range = 1;
-					if (!p.withinRange(npc, range) || !p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
-						|| !inArray(p.getAttribute("gnomeball_npc", -1), -1, 0))
-						continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
+		}
 
-					//set tackle
-					state = State.TACKLE;
-					target = p;
-				}
+		else if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
+			npc.getDef().getName().toLowerCase().equals("gnome baller")
+			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
+			for (Player p : npc.getViewArea().getPlayersInView()) {
+				int range = 1;
+				if (!p.withinRange(npc, range) || !p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
+					|| !inArray(p.getAttribute("gnomeball_npc", -1), -1, 0))
+					continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
+
+				//set tackle
+				state = State.TACKLE;
+				target = p;
 			}
-		} else if (state == State.AGGRO) {
+		}
+	}
 
-			// There should not be combat or aggro. Let's resume roaming.
-			if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) && !npc.isFollowing()) {
-				setRoaming();
+	private void handleAggro() {
+		// There should not be combat or aggro. Let's resume roaming.
+		if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) && !npc.isFollowing()) {
+			setRoaming();
+		}
+
+		// Target is not in range.
+		else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
+			|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
+
+			// Send the NPC back to its original spawn point.
+			if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING) {
+				Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
+				npc.walkToEntityAStar(origin.getX(), origin.getY());
+				npc.getSkills().normalize();
+				npc.cure();
 			}
+			setRoaming();
+		}
 
-			// Target is not in range.
-			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
-				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
-				if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING) {
-					Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
-					npc.walkToEntityAStar(origin.getX(), origin.getY());
-					npc.getSkills().normalize();
-					npc.cure();
-				}
-				setRoaming();
-			}
+		// Combat with another target - set state.
+		else {
 
-			// Combat with another target - set state.
-			else {
-				if (npc.inCombat() && npc.getOpponent() != target) {
-					npc.setLastOpponent(null);
-					target = npc.getOpponent();
-					state = State.COMBAT;
-				}
-
-				lastMovement = System.currentTimeMillis();
-				if (!checkTargetCombatTimer()) {
-					if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
-						npc.walkToEntityAStar(target.getX(), target.getY());
-					else
-						npc.walkToEntity(target.getX(), target.getY());
-
-					if (npc.withinRange(target, 1)
-						&& npc.canReach(target)
-						&& !target.inCombat()) {
-						setFighting(target);
-					}
-				}
+			// Reset the target if the wrong one is focused
+			if (npc.inCombat() && npc.getOpponent() != target) {
+				npc.setLastOpponent(null);
+				target = npc.getOpponent();
+				state = State.COMBAT;
 			}
 
-		} else if (state == State.COMBAT) {
-			lastTarget = target;
-			target = npc.getOpponent();
-			if (target == null || npc.isRemoved() || target.isRemoved()) {
-				setRoaming();
-			}
-			if (npc.inCombat()) {
-				if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
-					&& npc.getOpponent().getHitsMade() >= 3) {
-					retreat();
+			// If target is not waiting for "run away" timer, send them chasing
+			lastMovement = System.currentTimeMillis();
+			if (!checkTargetCombatTimer()) {
+				if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
+					npc.walkToEntityAStar(target.getX(), target.getY());
+				else
+					npc.walkToEntity(target.getX(), target.getY());
+
+				// Fight the target when in range
+				if (npc.withinRange(target, 1)
+					&& npc.canReach(target)
+					&& !target.inCombat()) {
+					setFighting(target);
 				}
-			} else if (!npc.inCombat()) {
-				npc.setExecutedAggroScript(false);
-				if (npc.getDef().isAggressive() &&
-					(lastTarget != null &&
-						(lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) ||
+			}
+		}
+	}
+
+	private void handleCombat() {
+		Mob lastTarget = target;
+		target = npc.getOpponent();
+
+		// No target, return to roaming.
+		if (target == null || npc.isRemoved() || target.isRemoved()) {
+			setRoaming();
+		}
+
+		// Current NPC is in combat
+		else if (npc.inCombat()) {
+
+			// Retreat if NPC hits remaining and > round 3
+			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
+				&& npc.getOpponent().getHitsMade() >= 3) {
+				retreat();
+			}
+
+		// NPC is not in combat
+		} else if (!npc.inCombat()) {
+			npc.setExecutedAggroScript(false);
+
+			// If there is a valid target and NPC is aggressive, set AGGRO and target.
+			if (npc.getDef().isAggressive() &&
+				(lastTarget != null &&
+					(lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) ||
 						(lastTarget.getLocation().inWilderness() && npc.getLocation().inWilderness()))
 				)) {
-					state = State.AGGRO;
-					if (lastTarget != null)
-						target = lastTarget;
-				} else {
-					if (!npc.isFollowing())
-						setRoaming();
-				}
-			}
+				state = State.AGGRO;
+				if (lastTarget != null)
+					target = lastTarget;
 
-		} else if (state == State.TACKLE) {
-			// There should not be tackle. Let's resume roaming.
-			if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat() || target.isBusy()) {
-				setRoaming();
+			// Otherwise, set roaming if NPC is not already following something
+			} else {
+				if (!npc.isFollowing())
+					setRoaming();
 			}
-			// Target is not in range.
-			else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
-				|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
-				setRoaming();
-			}
-			if (target.isPlayer()) {
-				attemptTackle(npc, (Player) target);
-				tackle_retreat();
-			}
-		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
-			if (npc.finishedPath()) setRoaming();
+		}
+	}
+
+	private void handleTackle() {
+		// There should not be tackle. Let's resume roaming.
+		if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved() || target.inCombat() || target.isBusy()) {
+			setRoaming();
+		}
+		// Target is not in range.
+		else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
+			|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
+			setRoaming();
+		}
+		if (target.isPlayer()) {
+			attemptTackle(npc, (Player) target);
+			tackle_retreat();
 		}
 	}
 
