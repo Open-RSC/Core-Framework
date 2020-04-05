@@ -169,14 +169,18 @@ public class ActionSender {
 		synchronized(with.getDuel().getDuelOffer().getItems()) {
 			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
-				s.writeShort(item.getCatalogId());
+				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+					"'noted': " + item.getNoted() + "}").getBytes()));
+				//s.writeShort(item.getCatalogId());
 				s.writeInt(item.getAmount());
 			}
 		}
 		synchronized(player.getDuel().getDuelOffer().getItems()) {
 			s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
-				s.writeShort(item.getCatalogId());
+				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+					"'noted': " + item.getNoted() + "}").getBytes()));
+				//s.writeShort(item.getCatalogId());
 				s.writeInt(item.getAmount());
 			}
 		}
@@ -233,7 +237,9 @@ public class ActionSender {
 			s.setID(Opcode.SEND_DUEL_OPPONENTS_ITEMS.opcode);
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
+				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
+					"'noted': " + item.getNoted() + "}").getBytes()));
+				//s.writeShort(item.getCatalogId());
 				s.writeInt(item.getAmount());
 			}
 

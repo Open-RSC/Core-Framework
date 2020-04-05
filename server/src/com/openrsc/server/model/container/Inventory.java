@@ -602,6 +602,18 @@ public class Inventory {
 		}
 	}
 
+	public int countId(long id, boolean noted) {
+		synchronized (list) {
+			int temp = 0;
+			for (Item i : list) {
+				if (i.getCatalogId() == id && i.getNoted() == noted) {
+					temp += i.getAmount();
+				}
+			}
+			return temp;
+		}
+	}
+
 	public int getLastIndexById(int id) {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {

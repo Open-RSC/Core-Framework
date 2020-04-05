@@ -84,15 +84,17 @@ public final class mudclient implements Runnable {
 	private final int[] characterDialogY = new int[150];
 	private final int[] characterHealthX = new int[150];
 	private final int[] characterHealthY = new int[150];
-	private final int[] duelConfirmItemCount = new int[8];
+	private final Item[] duelConfirm = new Item[8];
+	//private final int[] duelConfirmItemCount = new int[8];
 	private final Item[] duel = new Item[8];
 	//private final int[] duelOfferItemID = new int[8];
 	//private final int[] duelOfferItemSize = new int[8];
 	private final Item[] duelOpponent = new Item[8];
 	//private final int[] duelOpponentItemCount = new int[8];
-	private final int[] duelOpponentConfirmItemCount = new int[8];
+	private final Item[] duelOpponentConfirm = new Item[8];
+	//private final int[] duelOpponentConfirmItemCount = new int[8];
 	//private final int[] duelOpponentItemId = new int[8];
-	private final int[] duelOpponentConfirmItem = new int[8];
+	//private final int[] duelOpponentConfirmItem = new int[8];
 	private boolean stakeOfferEquipMode = false;
 	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
 		"Prayer"};
@@ -292,7 +294,7 @@ public final class mudclient implements Runnable {
 	private String duelConfirmOpponentName = "";
 	private int duelDoX_Slot;
 	private int dropInventorySlot = -1;
-	private int[] duelConfirmItem = new int[8];
+	//private int[] duelConfirmItem = new int[8];
 	private int duelConfirmItemsCount = 0;
 	private boolean duelOfferAccepted = false;
 	private int duelOfferItemsCount = 0;
@@ -657,6 +659,8 @@ public final class mudclient implements Runnable {
 		for (int i = 0; i < 8; ++i) {
 			duel[i] = new Item();
 			duelOpponent[i] = new Item();
+			duelConfirm[i] = new Item();
+			duelOpponentConfirm[i] = new Item();
 		}
 
 		initConfig();
@@ -3300,10 +3304,15 @@ public final class mudclient implements Runnable {
 				"Please confirm your duel with @yel@" + this.duelOpponentName, 0xFFFFFF, 0, 1, yr + 12);
 			this.getSurface().drawColoredStringCentered(xr + 117, "Your stake:", 0xFFFF00, 0, 1, yr + 30);
 
+			String var6;
+			Item item;
+			ItemDef def;
 			for (int var5 = 0; this.duelConfirmItemsCount > var5; ++var5) {
-				String var6 = EntityHandler.getItemDef(this.duelConfirmItem[var5]).getName();
-				if (EntityHandler.getItemDef(this.duelConfirmItem[var5]).isStackable()) {
-					var6 = var6 + " x " + StringUtil.formatItemCount(this.duelConfirmItemCount[var5]);
+				item = this.getDuelConfirmItem(var5);
+				def = item.getItemDef();
+				var6 = def.getName();
+				if (def.isStackable() || item.getNoted()) {
+					var6 = var6 + (item.getNoted() ? " (Noted)" : "") + " x " + StringUtil.formatItemCount(this.getDuelConfirmItemCount(var5));
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 117, var6, 0xFFFFFF, 0, 1, 42 + yr + var5 * 12);
@@ -3316,9 +3325,11 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawColoredStringCentered(351 + xr, "Your opponent\'s stake:", 0xFFFF00, 0, 1, 30 + yr);
 
 			for (int var5 = 0; var5 < this.duelOpponentConfirmItemsCount; ++var5) {
-				String var6 = EntityHandler.getItemDef(this.duelOpponentConfirmItem[var5]).getName();
-				if (EntityHandler.getItemDef(this.duelOpponentConfirmItem[var5]).isStackable()) {
-					var6 = var6 + " x " + StringUtil.formatItemCount(this.duelOpponentConfirmItemCount[var5]);
+				item = this.getDuelOpponentConfirmItem(var5);
+				def = item.getItemDef();
+				var6 = def.getName();
+				if (def.isStackable() || item.getNoted()) {
+					var6 = var6 + (item.getNoted() ? " (Noted)" : "") + " x " + StringUtil.formatItemCount(this.getDuelOpponentConfirmItemCount(var5));
 				}
 
 				this.getSurface().drawColoredStringCentered(xr + 351, var6, 0xFFFFFF, 0, 1, var5 * 12 + 42 + yr);
@@ -4030,7 +4041,7 @@ public final class mudclient implements Runnable {
 								firstSlot = tradeIdx;
 							}
 
-							if (EntityHandler.getItemDef(itemID).isStackable()) {
+							if (EntityHandler.getItemDef(itemID).isStackable() || getTradeItem(tradeIdx).getNoted()) {
 								itemCount = getTradeItemSize(tradeIdx);
 								break;
 							}
@@ -10209,7 +10220,7 @@ public final class mudclient implements Runnable {
 				int removed = 0;
 
 				for (int j = 0; j < this.duelOfferItemsCount && removed < count; ++j) {
-					if (getDuelItemID(j) == itemID) {
+					if (getDuelItemID(j) == itemID && this.getDuelItem(j).getNoted() == item.getNoted()) {
 						--this.duelOfferItemsCount;
 						++removed;
 
@@ -10247,6 +10258,7 @@ public final class mudclient implements Runnable {
 
 			int hitStakeStacks = 0;
 			int[] itemIdArray, itemAmountArray;
+			boolean[] itemNotedArray = null;
 			Object[] thang = getEquipmentItems();
 			if (stakeOfferEquipMode) {
 				if (thang == null)
@@ -10258,13 +10270,20 @@ public final class mudclient implements Runnable {
 			} else {
 				itemIdArray = new int[getInventory().length];
 				itemAmountArray = new int[getInventory().length];
+				itemNotedArray = new boolean[getInventory().length];
 				for (int i = 0; i < itemIdArray.length; ++i) {
 					itemIdArray[i] = getInventoryItemID(i);
 					itemAmountArray[i] = getInventoryItemAmount(i);
+					itemNotedArray[i] = getInventoryItem(i).getNoted();
 				}
 
 			}
-			int invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex]);
+			int invCount = 0;
+			if (itemNotedArray != null) {
+				invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex], itemNotedArray[andStakeInvIndex]);
+			} else {
+				invCount = this.getInventoryCount(itemIdArray[andStakeInvIndex], false);
+			}
 			if (S_WANT_EQUIPMENT_TAB && thang != null) {
 				for (int itemid : ((int[]) thang[0])) {
 					if (itemid == itemIdArray[andStakeInvIndex]) {
@@ -10275,6 +10294,7 @@ public final class mudclient implements Runnable {
 			}
 
 			int andStakeInvID = itemIdArray[andStakeInvIndex];
+			boolean isNoteStake = itemNotedArray != null && itemNotedArray[andStakeInvIndex];
 			if (S_WANT_EQUIPMENT_TAB && EntityHandler.getItemDef(andStakeInvID).isStackable() && stakeOfferEquipMode) {
 				this.showMessage(false, null, "You can't stake stackables from your equipment.", MessageType.GAME, 0, null);
 				return;
@@ -10282,8 +10302,8 @@ public final class mudclient implements Runnable {
 
 
 			for (int duelIdx = 0; duelIdx < this.duelOfferItemsCount; ++duelIdx) {
-				if (getDuelItemID(duelIdx) == andStakeInvID) {
-					if (EntityHandler.getItemDef(andStakeInvID).isStackable()) {
+				if (getDuelItemID(duelIdx) == andStakeInvID && getDuelItem(duelIdx).getNoted() == isNoteStake) {
+					if (EntityHandler.getItemDef(andStakeInvID).isStackable() || getDuelItem(duelIdx).getNoted()) {
 						if (andStakeCount < 0) {
 							for (int invIdx = 0; invIdx < this.mouseButtonItemCountIncrement; ++invIdx) {
 								if (getDuelItemSize(duelIdx) < itemAmountArray[andStakeInvIndex]) {
@@ -10322,6 +10342,7 @@ public final class mudclient implements Runnable {
 					if (this.duelOfferItemsCount < 8) {
 						setDuelItemID(this.duelOfferItemsCount, andStakeInvID);
 						setDuelItemSize(this.duelOfferItemsCount, 1);
+						getDuelItem(this.duelOfferItemsCount).setNoted(isNoteStake);
 						++this.duelOfferItemsCount;
 						andStakeSuccess = true;
 					}
@@ -10330,10 +10351,11 @@ public final class mudclient implements Runnable {
 						&& hitStakeStacks < invCount; ++var8) {
 						setDuelItemID(this.duelOfferItemsCount, andStakeInvID);
 						setDuelItemSize(this.duelOfferItemsCount, 1);
+						getDuelItem(this.duelOfferItemsCount).setNoted(isNoteStake);
 						++hitStakeStacks;
 						++this.duelOfferItemsCount;
 						andStakeSuccess = true;
-						if (var8 == 0 && EntityHandler.getItemDef(andStakeInvID).isStackable()) {
+						if (var8 == 0 && (EntityHandler.getItemDef(andStakeInvID).isStackable() || isNoteStake)) {
 							setDuelItemSize(this.duelOfferItemsCount
 								- 1, Math.min(itemAmountArray[andStakeInvIndex], andStakeCount));
 							break;
@@ -10456,18 +10478,18 @@ public final class mudclient implements Runnable {
 	}
 
 	public final int getInventoryCount(int id) {
-		return getInventoryCount(id, false);
+		return getInventoryCount(id, null);
 	}
 
-	public final int getInventoryCount(int id, boolean excludeNote) {
+	public final int getInventoryCount(int id, Boolean isNote) {
 		try {
 
 			int count = 0;
 
 			for (int index = 0; this.inventoryItemCount > index; ++index) {
-				if (getInventoryItemID(index) == id) {
+				if (getInventoryItemID(index) == id && (isNote == null || isNote == getInventoryItem(index).getNoted())) {
 					if (EntityHandler.getItemDef(getInventoryItemID(index)).isStackable()
-						|| (!excludeNote && getInventoryItem(index).getNoted())) {
+						|| getInventoryItem(index).getNoted()) {
 						count += getInventoryItemSize(index);
 					} else {
 						++count;
@@ -15231,12 +15253,23 @@ public final class mudclient implements Runnable {
 		this.duelOpponentConfirmItemsCount = n;
 	}
 
-	public void setDuelOpponentConfirmItem(int i, int n) {
-		this.duelOpponentConfirmItem[i] = n;
+	public void setDuelOpponentConfirmItemID(int i, int n) {
+		this.duelOpponentConfirm[i].setItemDef(n);
+	}
+
+	public int getDuelOpponentConfirmItemID(int index) {
+		if (this.duelOpponentConfirm[index].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.duelOpponentConfirm[index].getItemDef().id;
 	}
 
 	public void setDuelOpponentConfirmItemCount(int i, int n) {
-		this.duelOpponentConfirmItemCount[i] = n;
+		this.duelOpponentConfirm[i].setAmount(n);
+	}
+
+	public int getDuelOpponentConfirmItemCount(int i) {
+		return duelOpponentConfirm[i].getAmount();
 	}
 
 	public int getDuelConfirmItemsCount() {
@@ -15247,12 +15280,23 @@ public final class mudclient implements Runnable {
 		this.duelConfirmItemsCount = i;
 	}
 
-	public void setDuelConfirmItem(int i, int n) {
-		this.duelConfirmItem[i] = n;
+	public void setDuelConfirmItemID(int i, int n) {
+		this.duelConfirm[i].setItemDef(n);
+	}
+
+	public int getDuelConfirmItemID(int index) {
+		if (this.duelConfirm[index].getItemDef() == null)
+			return Item.ID_NOTHING;
+		else
+			return this.duelConfirm[index].getItemDef().id;
 	}
 
 	public void setDuelConfirmItemCount(int i, int n) {
-		this.duelConfirmItemCount[i] = n;
+		this.duelConfirm[i].setAmount(n);
+	}
+
+	public int getDuelConfirmItemCount(int i) {
+		return duelConfirm[i].getAmount();
 	}
 
 	public void setDuelItemID(int i, int n) {
@@ -15900,7 +15944,7 @@ public final class mudclient implements Runnable {
 			int id = getInventoryItemID(slot);
 
 			for (int tSlot = 0; this.tradeItemCount > tSlot; ++tSlot) {
-				if (id == getTradeItemID(tSlot)) {
+				if (id == getTradeItemID(tSlot) && item.getNoted() == getTradeItem(tSlot).getNoted()) {
 					if (def.isStackable() || item.getNoted()) {
 						if (count >= 0) {
 							setTradeItemSize(tSlot, getTradeItemSize(tSlot) + count);
@@ -15923,7 +15967,7 @@ public final class mudclient implements Runnable {
 				}
 			}
 
-			int invAvailable = this.getInventoryCount(id, true);
+			int invAvailable = this.getInventoryCount(id, item.getNoted());
 			if (invAvailable <= offered) {
 				offerSuccess = true;
 			}
@@ -15990,7 +16034,7 @@ public final class mudclient implements Runnable {
 			if (!def.isStackable() && !item.getNoted()) {
 				var6 = 0;
 				for (int var7 = 0; var7 < this.tradeItemCount && var6 < var5; ++var7) {
-					if (var4 == this.getTradeItemID(var7)) {
+					if (var4 == this.getTradeItemID(var7) && item.getNoted() == this.getTradeItem(var7).getNoted()) {
 						++var6;
 						--this.tradeItemCount;
 
@@ -16882,9 +16926,7 @@ public final class mudclient implements Runnable {
 		return tradeRecipient[index];
 	}
 
-	public Item getTradeConfirmItem(int index) {
-		return tradeConfirm[index];
-	}
+	public Item getTradeConfirmItem(int index) { return tradeConfirm[index]; }
 
 	public Item getTradeRecipientConfirmItem(int index) {
 		return tradeRecipientConfirm[index];
@@ -16896,6 +16938,12 @@ public final class mudclient implements Runnable {
 
 	public Item getDuelOpponentItem(int index) {
 		return duelOpponent[index];
+	}
+
+	public Item getDuelConfirmItem(int index) { return duelConfirm[index]; }
+
+	public Item getDuelOpponentConfirmItem(int index) {
+		return duelOpponentConfirm[index];
 	}
 
 	class XPNotification {

@@ -1990,7 +1990,18 @@ public class PacketHandler {
 		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getDuelOpponentItemsCount() > var4; ++var4) {
-			mc.setDuelOpponentItemID(var4, packetsIncoming.getShort());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setDuelOpponentItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setDuelOpponentItemID(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getDuelOpponentItem(var4).setNoted(true);
+			} else {
+				mc.getDuelOpponentItem(var4).setNoted(false);
+			}
 			mc.setDuelOpponentItemCount(var4, packetsIncoming.get32());
 		}
 
@@ -2081,14 +2092,36 @@ public class PacketHandler {
 		mc.setDuelOpponentName(packetsIncoming.readString());
 		mc.setDuelOpponentConfirmItemsCount(packetsIncoming.getUnsignedByte());
 		for (int var4 = 0; var4 < mc.getDuelOpponentConfirmItemsCount(); ++var4) {
-			mc.setDuelOpponentConfirmItem(var4, packetsIncoming.getShort());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setDuelOpponentConfirmItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setDuelOpponentConfirmItemID(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getDuelOpponentConfirmItem(var4).setNoted(true);
+			} else {
+				mc.getDuelOpponentConfirmItem(var4).setNoted(false);
+			}
 			mc.setDuelOpponentConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setDuelConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getDuelConfirmItemsCount() > var4; ++var4) {
-			mc.setDuelConfirmItem(var4, packetsIncoming.getShort());
+			String b64item = packetsIncoming.readString();
+			String jsonString = new String(Base64.getDecoder().decode(b64item));
+			JSONObject itemInfo = new JSONObject(jsonString);
+			int itemID = (int)itemInfo.get("id");
+			mc.setDuelConfirmItemID(var4, itemID);
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			//mc.setDuelConfirmItemID(var4, packetsIncoming.getShort());
+			if (isNote.orElse(false)) {
+				mc.getDuelConfirmItem(var4).setNoted(true);
+			} else {
+				mc.getDuelConfirmItem(var4).setNoted(false);
+			}
 			mc.setDuelConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
