@@ -17,7 +17,7 @@ public abstract class BatchEvent extends DelayedEvent {
 					  int repeatFor, boolean gathering, boolean allowDuplicateEvents) {
 		super(world, owner, delay, descriptor, allowDuplicateEvents);
 		owner.resetPath();
-		owner.setBusyTimer(delay + 200);
+		owner.setBusyTimer(delay);// + 200);
 		this.gathering = gathering;
 		this.batchProgression = getWorld().getServer().getConfig().BATCH_PROGRESSION;
 		if (this.batchProgression) this.repeatFor = repeatFor;

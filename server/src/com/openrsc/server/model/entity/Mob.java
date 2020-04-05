@@ -34,7 +34,7 @@ public abstract class Mob extends Entity {
 	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
 	private int killType = 0;
-	private int combatStyle = 0;
+	private int combatStyle = com.openrsc.server.constants.Skills.CONTROLLED_MODE;
 	private int poisonDamage = 0;
 	private Action status = Action.IDLE;
 	private RangeEventNpc rangeEventNpc;
