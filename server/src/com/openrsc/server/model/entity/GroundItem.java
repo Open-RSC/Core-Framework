@@ -18,6 +18,11 @@ public class GroundItem extends Entity {
 	private int amount;
 
 	/**
+	 * Is item noted?
+	 */
+	private boolean noted;
+
+	/**
 	 * Location definition of the item
 	 */
 	private ItemLoc loc = null;
@@ -43,9 +48,18 @@ public class GroundItem extends Entity {
 		this(world, id, x, y, amount, null, spawnTime);
 	}
 
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final boolean noted) {
+		this(world, id, x, y, amount, owner, System.currentTimeMillis(), noted);
+	}
+
 	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime) {
+		this(world, id, x, y, amount, owner, spawnTime, false);
+	}
+
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime, final boolean noted) {
 		super(world);
 		setID(id);
+		setNoted(noted);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawnTime;
@@ -135,13 +149,19 @@ public class GroundItem extends Entity {
 		return ownerUsernameHash;
 	}
 
+	public boolean getNoted() { return noted; }
+
+	public void setNoted(final boolean noted) {
+		this.noted = noted;
+	}
+
 	public int getAmount() {
 		return amount;
 	}
 
 	public void setAmount(final int amount) {
 		if (getDef() != null) {
-			if (getDef().isStackable()) {
+			if (getDef().isStackable() || getNoted()) {
 				this.amount = amount;
 			} else {
 				this.amount = 1;

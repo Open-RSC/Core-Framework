@@ -7533,6 +7533,10 @@ public final class mudclient implements Runnable {
 							id = getInventoryItemID(var5);
 							Item item = getInventoryItem(var5);
 							ItemDef def = item.getItemDef();
+							int vId = id;
+							if (item.getNoted()) {
+								vId = (vId + 1) * -1;
+							}
 							if (this.selectedSpell >= 0) {
 								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
 									this.menuCommon.addCharacterItem_WithID(var5,
@@ -7582,7 +7586,7 @@ public final class mudclient implements Runnable {
 									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
 										"@lre@" + EntityHandler.getItemDef(id).getName());
 								}
-								this.menuCommon.addCharacterItem(id, MenuItemAction.ITEM_EXAMINE, "Examine",
+								this.menuCommon.addCharacterItem(vId, MenuItemAction.ITEM_EXAMINE, "Examine",
 									"@lre@" + EntityHandler.getItemDef(id).getName()
 										+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
 							} else {

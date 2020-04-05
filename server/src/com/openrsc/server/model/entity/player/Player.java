@@ -3043,7 +3043,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean groundItemTake(final GroundItem item) {
-		Item itemFinal = new Item(item.getID(), item.getAmount());
+		Item itemFinal = new Item(item.getID(), item.getAmount(), item.getNoted());
 		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
 			itemFinal.setAttribute("npcdrop", true);
 		}

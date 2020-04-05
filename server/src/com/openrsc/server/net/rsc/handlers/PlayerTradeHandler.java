@@ -249,7 +249,7 @@ public class PlayerTradeHandler implements PacketHandler {
 								}
 
 								Item removed = affectedItem.split(player.getWorld().getServer().getDatabase(), item.getAmount());
-								if (removed.getAmount() == affectedItem.getAmount())
+								if (removed.getAmount() == affectedItem.getAmount() && removed.getNoted() == affectedItem.getNoted())
 									player.getCarriedItems().remove(removed);
 
 								item.getItemStatus().setAmount(removed.getAmount());
@@ -269,7 +269,7 @@ public class PlayerTradeHandler implements PacketHandler {
 
 								Item removed = affectedItem.split(affectedPlayer.getWorld().getServer().getDatabase(), item.getAmount());
 
-								if (removed.getAmount() == affectedItem.getAmount())
+								if (removed.getAmount() == affectedItem.getAmount() && removed.getNoted() == affectedItem.getNoted())
 									affectedPlayer.getCarriedItems().remove(removed);
 
 								item.getItemStatus().setAmount(removed.getAmount());
