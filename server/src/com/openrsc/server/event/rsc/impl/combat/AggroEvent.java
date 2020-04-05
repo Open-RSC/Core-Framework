@@ -9,7 +9,7 @@ import com.openrsc.server.model.world.World;
 public class AggroEvent extends GameTickEvent {
 	private final Npc npc;
 	private final Mob mob;
-	
+
 	public AggroEvent(World world, Npc npc, Mob mob) {
 		super(world,null, 0, "Aggro Event");
 		this.npc = npc;
@@ -20,6 +20,6 @@ public class AggroEvent extends GameTickEvent {
 
 	@Override
 	public void run() {
-		setDelayTicks(2);
+		/*setDelayTicks(2);*/
 	}
 }
