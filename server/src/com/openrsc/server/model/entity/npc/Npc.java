@@ -97,8 +97,8 @@ public class Npc extends Mob {
 			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
 				+ loc.startX() + ", " + loc.startY() + ")");
 		}
-		this.setNpcBehavior(new NpcBehavior(this));
 		this.loc = loc;
+		this.setNpcBehavior(new NpcBehavior(this));
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
