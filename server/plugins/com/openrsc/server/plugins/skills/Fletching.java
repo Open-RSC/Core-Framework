@@ -127,11 +127,11 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					if (ci.remove(featherID, 1, false) > -1
-						&& ci.remove(attachmentID, 1, false) > -1) {
-						ci.getInventory().add(new Item(itemID, 1), false);
+					if (ci.remove(featherID, 1, true) > -1
+						&& ci.remove(attachmentID, 1, true) > -1) {
+						ci.getInventory().add(new Item(itemID, 1), true);
 						owner.incExp(Skills.FLETCHING, exp, true);
-						ActionSender.sendInventory(owner);
+						// ActionSender.sendInventory(owner);
 					} else {
 						interrupt();
 					}
@@ -200,8 +200,8 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					if (ci.remove(headlessArrowsID, 1, false) > -1
-						&& ci.remove(arrowHeadsID, 1, false) > -1) {
+					if (ci.remove(headlessArrowsID, 1, true) > -1
+						&& ci.remove(arrowHeadsID, 1, true) > -1) {
 						//Successful make attempt
 						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
 						ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
