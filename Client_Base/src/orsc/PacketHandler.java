@@ -2048,22 +2048,26 @@ public class PacketHandler {
 
 	private void updateExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
-		mc.setRecentSkill(skill);
-		int oldXp = mc.getPlayerExperience(skill);
-		int oldLvl = mc.getPlayerStatBase(skill);
+		updateExperienceTracker(skill, mc.getPlayerExperience(skill), mc.getPlayerStatBase(skill));
 		mc.setPlayerStatCurrent(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+	}
 
+	private void updateExperienceTracker(int skill, int oldXp, int oldLvl) {
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
-		receivedXp = receivedXp < 0 ? 0 : receivedXp;
-		mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained(skill) + receivedXp);
-		if (mc.getXpGainedStartTime(skill) == 0) {
-			mc.setXpGainedStartTime(skill, System.currentTimeMillis());
-		}
-		mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long) receivedXp);
-		if (mc.totalXpGainedStartTime == 0) {
-			mc.totalXpGainedStartTime = System.currentTimeMillis();
+		receivedXp = Math.min(receivedXp, 0);
+
+		if (Config.S_EXPERIENCE_COUNTER_TOGGLE) {
+			mc.setRecentSkill(skill);
+			mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained(skill) + receivedXp);
+			if (mc.getXpGainedStartTime(skill) == 0) {
+				mc.setXpGainedStartTime(skill, System.currentTimeMillis());
+			}
+			mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long) receivedXp);
+			if (mc.totalXpGainedStartTime == 0) {
+				mc.totalXpGainedStartTime = System.currentTimeMillis();
+			}
 		}
 
 		if (Config.S_EXPERIENCE_DROPS_TOGGLE && Config.C_EXPERIENCE_DROPS) {
