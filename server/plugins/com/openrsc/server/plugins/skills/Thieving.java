@@ -339,7 +339,6 @@ public class Thieving extends Functions
 	}
 
 	public void doPickpocket(final Player player, final Npc npc, final Pickpocket pickpocket) {
-		player.face(npc);
 		if (npc.inCombat()) {
 			player.message("I can't get close enough");
 			return;
@@ -360,11 +359,13 @@ public class Thieving extends Functions
 			});
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Thieving Pickpocket", Formulae.getRepeatTimes(player, Skills.THIEVING), true) {
+		int repeatTimes = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION)
+			repeatTimes = Formulae.getRepeatTimes(player, Skills.THIEVING);
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Thieving Pickpocket", repeatTimes, true) {
 			@Override
 			public void action() {
-				getOwner().setBusyTimer(1200);
-				npc.setBusyTimer(1200 * 2);
+				getOwner().setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (npc.inCombat()) {
 					interrupt();
 					return;
@@ -417,7 +418,6 @@ public class Thieving extends Functions
 						getOwner().getCarriedItems().getInventory().add(selectedLoot);
 					}
 				} else {
-					getOwner().face(npc);
 					getOwner().setBusyTimer(0);
 					npc.setBusyTimer(0);
 					setDelayTicks(1);
