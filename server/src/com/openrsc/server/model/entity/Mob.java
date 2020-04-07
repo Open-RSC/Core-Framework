@@ -485,6 +485,7 @@ public abstract class Mob extends Entity {
 	 */
 	public void startCombat(final Mob victim) {
 		synchronized (victim) {
+			if (this.inCombat() || victim.inCombat()) return;
 			boolean gotUnderAttack = false;
 
 			if (this.isPlayer()) {
