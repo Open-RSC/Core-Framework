@@ -1367,12 +1367,14 @@ public class PacketHandler {
 	private void updateInventory() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
+		boolean noted = packetsIncoming.getShort() == 1;
 		int stackSize = 1;
-		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable()) {
+		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable() || noted) {
 			stackSize = packetsIncoming.get32();
 		}
 		mc.setInventoryItemID(slot, FastMath.bitwiseAnd(itemID, 32767));
 		mc.setInventoryItemEquipped(slot, itemID / '\u8000');
+		mc.getInventoryItem(slot).setNoted(noted);
 		mc.setInventoryItemSize(slot, stackSize);
 		if (slot >= mc.getInventoryItemCount()) {
 			mc.setInventoryItemCount(1 + slot);
