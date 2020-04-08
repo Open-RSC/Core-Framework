@@ -112,7 +112,7 @@ public class Party {
 					messagePartyInfo(member.getUsername() + " has been put back to " + PartyRank.getRankFor(newRank).name().toLowerCase() + " rank.");
 				}
 				member.setRank(setRank);
-				getWorld().getPartyManager().updatePartyRankPlayer(member);
+				// getWorld().getPartyManager().updatePartyRankPlayer(member);
 			}
 			updatePartyGUI();
 			if (member.isOnline()) {
