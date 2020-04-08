@@ -985,7 +985,16 @@ VALUES (471, 133, 211, 1, 5, 1),
        (20, 664, 3619, 1, 25, 1113),
        (20, 665, 3618, 1, 25, 1114),
        (20, 665, 3620, 1, 25, 1115),
-       (20, 666, 3617, 1, 25, 1116);
+       (20, 666, 3617, 1, 25, 1116),
+       (20, 692, 686, 1, 60, 1118),
+       (20, 696, 684, 1, 60, 1119),
+       (20, 694, 684, 1, 60, 1120),
+       (20, 695, 683, 1, 60, 1121),
+       (20, 695, 681, 1, 60, 1122),
+       (20, 698, 683, 1, 60, 1123),
+       (20, 700, 681, 1, 60, 1124),
+       (412, 694, 680, 1, 60, 1125),
+       (568, 698, 687, 1, 120, 1126);
 
 DROP TABLE IF EXISTS `openrsc_itemdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_itemdef`
@@ -38369,7 +38378,7 @@ VALUES (1, 'Where were you born?'),
        (16, 'What is your favourite book?'),
        (17, 'What is your favourite food?'),
        (18, 'What is your favourite movie?');
-	   
+
 DROP TABLE IF EXISTS `openrsc_reindexer`;
 CREATE TABLE IF NOT EXISTS `openrsc_reindexer`
 (
