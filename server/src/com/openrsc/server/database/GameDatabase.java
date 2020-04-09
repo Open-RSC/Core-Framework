@@ -92,6 +92,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
 	protected abstract ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException;
 	protected abstract ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException;
+	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId) throws GameDatabaseException;
+	protected abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
@@ -108,6 +110,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
 	protected abstract void querySavePassword(int playerId, String newPassword) throws GameDatabaseException;
 	protected abstract void querySavePreviousPasswords(int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException;
+	protected abstract void querySaveLastRecoveryTryId(final int playerId, final int lastRecoveryTryId) throws GameDatabaseException;
 
 	//Item and Container operations
 	protected abstract void queryItemCreate(Item item) throws GameDatabaseException;
@@ -359,6 +362,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		querySavePassword(playerId, newPassword);
 	}
 
+	public void saveLastRecoveryTryId(final int playerId, final int lastRecoveryTryId) throws GameDatabaseException {
+		querySaveLastRecoveryTryId(playerId, lastRecoveryTryId);
+	}
+
 	public void savePreviousPasswords(final int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException {
 		querySavePreviousPasswords(playerId, newLastPass, newEarlierPass);
 	}
@@ -369,6 +376,15 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	public LinkedList<Achievement> getAchievements() throws GameDatabaseException {
 		return queryLoadAchievements();
+	}
+
+	public PlayerRecoveryQuestions getPlayerRecoveryData(int playerId) throws GameDatabaseException {
+		return queryPlayerRecoveryData(playerId);
+	}
+
+	// Inserts a new recovery attempt into the database and returns the database index of the attempt.
+	public int newRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException {
+		return queryInsertRecoveryAttempt(playerId, username, time, ip);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {

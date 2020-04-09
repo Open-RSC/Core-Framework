@@ -315,6 +315,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 
 			try {
+				loginData.id = playerSet.getInt("id");
 				loginData.groupId = playerSet.getInt("group_id");
 				loginData.password = playerSet.getString("pass");
 				loginData.salt = playerSet.getString("salt");
@@ -880,6 +881,66 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId) throws GameDatabaseException {
+		try {
+			PlayerRecoveryQuestions recoveryQuestions = new PlayerRecoveryQuestions();
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().playerRecoveryInfo);
+			statement.setInt(1, playerId);
+			final ResultSet resultSet = statement.executeQuery();
+
+			try {
+				if (resultSet.next()) {
+					recoveryQuestions.username = resultSet.getString("username");
+					recoveryQuestions.question1 = resultSet.getString("question1");
+					recoveryQuestions.question2 = resultSet.getString("question2");
+					recoveryQuestions.question3 = resultSet.getString("question3");
+					recoveryQuestions.question4 = resultSet.getString("question4");
+					recoveryQuestions.question5 = resultSet.getString("question5");
+					for (int i = 0; i < 5; i++) {
+						recoveryQuestions.answers[i] = resultSet.getString("answer" + (i+1));
+					}
+					recoveryQuestions.dateSet = resultSet.getInt("date_set");
+					recoveryQuestions.ipSet = resultSet.getString("ip_set");
+					recoveryQuestions.previousPass = resultSet.getString("previous_pass");
+					recoveryQuestions.earlierPass = resultSet.getString("earlier_pass");
+
+					return recoveryQuestions;
+				}
+				return null;
+			} finally {
+				statement.close();
+				resultSet.close();
+			}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().playerRecoveryAttempt, new String[]{"dbid"});
+			statement.setInt(1, playerId);
+			statement.setString(2, username);
+			statement.setLong(3, time);
+			statement.setString(4, ip);
+			statement.executeUpdate();
+			final ResultSet resultSet = statement.getGeneratedKeys();
+			try {
+				if (resultSet.next()) {
+					return resultSet.getInt(1);
+				}
+				return -1;
+			} finally {
+				statement.close();
+				resultSet.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_UpdateBasicInfo);
@@ -956,6 +1017,19 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySaveLastRecoveryTryId(int playerId, int lastRecoveryTryId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().playerLastRecoveryTryId);
+			statement.setInt(1, lastRecoveryTryId);
+			statement.setInt(2, playerId);
+			try { statement.executeUpdate(); }
+			finally { statement.close(); }
+		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}
@@ -1530,11 +1604,9 @@ public class MySqlGameDatabase extends GameDatabase {
 			while (result.next()) {
 				PlayerRecoveryQuestions questions = new PlayerRecoveryQuestions();
 				questions.dateSet = result.getLong("date_set");
-				questions.answer1 = result.getString("answer1");
-				questions.answer2 = result.getString("answer2");
-				questions.answer3 = result.getString("answer3");
-				questions.answer4 = result.getString("answer4");
-				questions.answer5 = result.getString("answer5");
+				for (int i = 0; i < 5; i++) {
+					questions.answers[i] = result.getString("answer" + (i+1));
+				}
 				questions.ipSet = result.getString("ip_set");
 				questions.question1 = result.getString("question1");
 				questions.question2 = result.getString("question2");
@@ -1842,7 +1914,6 @@ public class MySqlGameDatabase extends GameDatabase {
 		return connection;
 	}
 
-	// Should be private
 	private MySqlQueries getQueries() {
 		return queries;
 	}
