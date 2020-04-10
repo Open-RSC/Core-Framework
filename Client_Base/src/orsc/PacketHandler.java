@@ -827,6 +827,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
+		int globalFriendChat;
 
 		String logoSpriteID;
 
@@ -906,6 +907,7 @@ public class PacketHandler {
 			wantPkBots = this.getClientStream().getUnsignedByte(); // 73
 			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
 			hideLoginBox = this.getClientStream().getUnsignedByte(); // 75
+			globalFriendChat = this.getClientStream().getUnsignedByte(); // 76
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -982,6 +984,7 @@ public class PacketHandler {
 			wantPkBots = packetsIncoming.getUnsignedByte(); // 73
 			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
 			hideLoginBox = packetsIncoming.getUnsignedByte(); // 75
+			globalFriendChat = packetsIncoming.getUnsignedByte(); // 76
 		}
 
 		if (Config.DEBUG) {
@@ -1060,7 +1063,8 @@ public class PacketHandler {
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
 					"\nS_WANT_PK_BOTS " + wantPkBots + // 73
 					"\nS_WANT_HARVESTING " + wantHarvesting  + // 74
-					"\nS_HIDE_LOGIN_BOX " + hideLoginBox // 75
+					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat // 76
 					);
 		}
 
@@ -1141,6 +1145,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_PK_BOTS", wantPkBots == 1 ? "true" : "false"); // 73
 		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
 		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
+		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1153,7 +1158,7 @@ public class PacketHandler {
 				|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
 				|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
 				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU
-				|| Config.S_HIDE_LOGIN_BOX);
+				|| Config.S_HIDE_LOGIN_BOX || Config.S_WANT_GLOBAL_FRIEND);
 
 
 		if (!mc.gotInitialConfigs) {
@@ -1889,6 +1894,7 @@ public class PacketHandler {
 		mc.setShowNPCKC(packetsIncoming.getUnsignedByte() == 1); // 38
 		mc.setCustomUI(packetsIncoming.getUnsignedByte() == 1); //39
 		mc.setHideLoginBox(packetsIncoming.getUnsignedByte() == 1); // 40
+		mc.setBlockGlobalFriend(packetsIncoming.getUnsignedByte() == 1); // 41
 	}
 
 	private void togglePrayer(int length) {

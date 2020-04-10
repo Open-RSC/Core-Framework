@@ -51,6 +51,7 @@ public class Config {
 	public static int C_ZOOM;
 	public static boolean C_CUSTOM_UI = false; // Enables a osrs style UI
 	public static boolean C_HIDE_LOGIN_BOX = false;
+	public static boolean C_BLOCK_GLOBAL_FRIEND = false;
 	public static int C_MOVE_PER_FRAME = 4;
 
 	/* Experience Config Menu */
@@ -109,6 +110,7 @@ public class Config {
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
+	public static boolean S_WANT_GLOBAL_FRIEND = false;
 	public static boolean S_WANT_HIDE_IP = false;
 	public static boolean S_WANT_REMEMBER = false;
 	public static boolean S_WANT_FIXED_OVERHEAD_CHAT = false;
