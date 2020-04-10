@@ -211,7 +211,7 @@ public final class mudclient implements Runnable {
 			|| S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
 			|| S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
 			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU
-			|| S_HIDE_LOGIN_BOX);
+			|| S_HIDE_LOGIN_BOX || S_WANT_GLOBAL_FRIEND);
 	public long totalXpGainedStartTime = 0;
 	public String[] achievementNames = new String[500];
 	public String[] achievementTitles = new String[500];
@@ -8616,8 +8616,18 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		}
 
-		// if global chat enabled, block global
+		// If global friend chat enabled, block global friend
 		y += 15;
+		if (S_WANT_GLOBAL_FRIEND) {
+			if (!C_BLOCK_GLOBAL_FRIEND) {
+				this.getSurface().drawString("Block global messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			} else {
+				this.getSurface().drawString("Block global messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+			}
+			y += 15;
+		}
+
+		// if global chat enabled, block global
 		if (S_WANT_GLOBAL_CHAT) {
 			if (this.settingsBlockGlobal == 1) {
 				this.getSurface().drawString("Block global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
@@ -9373,8 +9383,21 @@ public final class mudclient implements Runnable {
 			var11 = true;
 		}
 
-		// block global chat toggle
+		// Block global friend chat toggle
 		yFromTopDistance += 15;
+		if (S_WANT_GLOBAL_FRIEND) {
+			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
+				&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
+				C_BLOCK_GLOBAL_FRIEND = !C_BLOCK_GLOBAL_FRIEND;
+				this.packetHandler.getClientStream().newPacket(111);
+				this.packetHandler.getClientStream().bufferBits.putByte(41);
+				this.packetHandler.getClientStream().bufferBits.putByte(C_BLOCK_GLOBAL_FRIEND ? 1 : 0);
+				this.packetHandler.getClientStream().finishPacket();
+			}
+			yFromTopDistance += 15;
+		}
+
+		// block global chat toggle
 		if (S_WANT_GLOBAL_CHAT) {
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 				&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
@@ -16635,9 +16658,9 @@ public final class mudclient implements Runnable {
 		C_CUSTOM_UI = b;
 	}
 
-	public void setHideLoginBox(boolean b) {
-		C_HIDE_LOGIN_BOX = b;
-	}
+	public void setHideLoginBox(boolean b) { C_HIDE_LOGIN_BOX = b; }
+
+	public void setBlockGlobalFriend(boolean b) { C_BLOCK_GLOBAL_FRIEND = b; }
 
 	public void setBlockPartyInv(boolean b) {
 		C_PARTY_INV = b;
