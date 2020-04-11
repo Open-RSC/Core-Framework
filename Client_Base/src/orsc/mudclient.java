@@ -9519,8 +9519,8 @@ public final class mudclient implements Runnable {
 				&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
 				C_BLOCK_GLOBAL_FRIEND = !C_BLOCK_GLOBAL_FRIEND;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(41);
-				this.packetHandler.getClientStream().writeBuffer1.putByte(C_BLOCK_GLOBAL_FRIEND ? 1 : 0);
+				this.packetHandler.getClientStream().bufferBits.putByte(41);
+				this.packetHandler.getClientStream().bufferBits.putByte(C_BLOCK_GLOBAL_FRIEND ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
 		}
