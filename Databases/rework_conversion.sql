@@ -27,20 +27,17 @@ SELECT '3. Items updated in openrsc_itemstatuses.' AS '';
 
 DELETE FROM `openrsc_invitems`;
 
-ALTER TABLE `openrsc_invitems`
-DROP COLUMN `dbid`;
+ALTER TABLE `openrsc_invitems` DROP COLUMN `dbid`;
+ALTER TABLE `openrsc_invitems` DROP COLUMN `amount`;
+ALTER TABLE `openrsc_invitems` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
+--ALTER TABLE `openrsc_invitems` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
 
-ALTER TABLE `openrsc_invitems`
-DROP COLUMN `amount`;
-
-ALTER TABLE `openrsc_invitems`
-DROP COLUMN `id`;
-
-ALTER TABLE `openrsc_invitems`
-ADD COLUMN `itemID` int(10) UNSIGNED    NOT NULL;
+ALTER TABLE `openrsc_bank` DROP COLUMN `dbid`;
+ALTER TABLE `openrsc_bank` DROP COLUMN `amount`;
+ALTER TABLE `openrsc_bank` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 
 -- CABBAGE -- UNCOMMENT FOR RUNNING ON CABBAGE!!!!!!!!!!!!
-ALTER TABLE `openrsc_equipped` DROP COLUMN `id`;
+ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 ALTER TABLE `openrsc_equipped` DROP COLUMN `amount`;
 ALTER TABLE `openrsc_equipped` DROP COLUMN `dbid`;
-ALTER TABLE `openrsc_equipped` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
+--ALTER TABLE `openrsc_equipped` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
