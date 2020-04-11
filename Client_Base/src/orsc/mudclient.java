@@ -8616,19 +8616,16 @@ public final class mudclient implements Runnable {
 			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		}
 
-		// If global friend chat enabled, block global friend
-		y += 15;
-		if (S_WANT_GLOBAL_FRIEND) {
+		// if global chat enabled, block global friend as only one should be toggled on at a time
+		if (S_WANT_GLOBAL_FRIEND && !S_WANT_GLOBAL_CHAT) {
+			y += 15;
 			if (!C_BLOCK_GLOBAL_FRIEND) {
 				this.getSurface().drawString("Block global messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 			} else {
 				this.getSurface().drawString("Block global messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
+		} else if (S_WANT_GLOBAL_CHAT && !S_WANT_GLOBAL_FRIEND) {
 			y += 15;
-		}
-
-		// if global chat enabled, block global
-		if (S_WANT_GLOBAL_CHAT) {
 			if (this.settingsBlockGlobal == 1) {
 				this.getSurface().drawString("Block global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 2) {
@@ -8638,10 +8635,10 @@ public final class mudclient implements Runnable {
 			} else if (this.settingsBlockGlobal == 4) {
 				this.getSurface().drawString("Block global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
 			}
-			y += 15;
 		}
 
 		// block trade
+		y += 15;
 		if (this.settingsBlockTrade != 0) {
 			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
@@ -8668,15 +8665,13 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawString("Display online list", (baseX + 3), y, textColor, 1);
 		}
 		if (party.inParty()) {
-			if (!this.insideTutorial) {
-				y += 14;
-				int textColor = 0xFFFFFF;
-				if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
-					&& this.mouseY < y + 4) {
-					textColor = 0xFFFF00;
-				}
-				this.getSurface().drawString("Leave Party", (baseX + 3), y, textColor, 1);
+			y += 14;
+			int textColor = 0xFFFFFF;
+			if (this.mouseX > x && this.mouseX < x + boxWidth && this.mouseY > y - 12
+				&& this.mouseY < y + 4) {
+				textColor = 0xFFFF00;
 			}
+			this.getSurface().drawString("Leave Party", (baseX + 3), y, textColor, 1);
 		}
 
 		// skip tutorial or exit the black hole menu option
@@ -9367,8 +9362,11 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
+		// privacy divider text
+		yFromTopDistance += 17;
+
 		// block chat toggle
-		yFromTopDistance += 24;
+		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			this.settingsBlockChat = 1 - this.settingsBlockChat;
@@ -9384,21 +9382,21 @@ public final class mudclient implements Runnable {
 		}
 
 		// Block global friend chat toggle
-		yFromTopDistance += 15;
-		if (S_WANT_GLOBAL_FRIEND) {
+		if (S_WANT_GLOBAL_FRIEND && !S_WANT_GLOBAL_CHAT) {
+			yFromTopDistance += 15;
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 				&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
 				C_BLOCK_GLOBAL_FRIEND = !C_BLOCK_GLOBAL_FRIEND;
 				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().bufferBits.putByte(41);
-				this.packetHandler.getClientStream().bufferBits.putByte(C_BLOCK_GLOBAL_FRIEND ? 1 : 0);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(41);
+				this.packetHandler.getClientStream().writeBuffer1.putByte(C_BLOCK_GLOBAL_FRIEND ? 1 : 0);
 				this.packetHandler.getClientStream().finishPacket();
 			}
-			yFromTopDistance += 15;
 		}
 
 		// block global chat toggle
-		if (S_WANT_GLOBAL_CHAT) {
+		if (S_WANT_GLOBAL_CHAT && !S_WANT_GLOBAL_FRIEND) {
+			yFromTopDistance += 15;
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 				&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
 				if (this.settingsBlockGlobal >= 4) {
@@ -9410,10 +9408,10 @@ public final class mudclient implements Runnable {
 				this.packetHandler.getClientStream().writeBuffer1.putByte(this.settingsBlockGlobal);
 				this.packetHandler.getClientStream().finishPacket();
 			}
-			yFromTopDistance += 15;
 		}
 
 		// block trade toggle
+		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5 && yFromTopDistance - 12 < this.mouseY
 			&& this.mouseY < 4 + yFromTopDistance && this.mouseButtonClick == 1) {
 			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
@@ -9434,8 +9432,8 @@ public final class mudclient implements Runnable {
 				this.settingsBlockTrade, this.settingsBlockDuel);
 		}
 
-		if (S_WANT_PLAYER_COMMANDS) {
-			//Handle online list click
+		// handle online list click
+		if (S_WANT_PLAYER_COMMANDS && !this.insideTutorial) {
 			yFromTopDistance += 25;
 			if (this.mouseX > var6 && this.mouseX < var6 + var5
 				&& yFromTopDistance - 6 < this.mouseY && this.mouseY < yFromTopDistance + 9 && this.mouseButtonClick == 1) {
@@ -9443,6 +9441,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		// handle leave party click
 		if (S_WANT_PARTIES) {
 			if (party.inParty()) {
 				yFromTopDistance += 14;
@@ -11332,8 +11331,7 @@ public final class mudclient implements Runnable {
 						if (wantEmail()) {
 							enterPressed = false;
 							menuNewUser.setFocus(menuNewUserEmail);
-						}
-						else
+						} else
 							menuNewUser.setFocus(menuNewUserSubmit);
 					}
 					if (menuNewUser.isClicked(menuNewUserEmail))
@@ -16658,9 +16656,13 @@ public final class mudclient implements Runnable {
 		C_CUSTOM_UI = b;
 	}
 
-	public void setHideLoginBox(boolean b) { C_HIDE_LOGIN_BOX = b; }
+	public void setHideLoginBox(boolean b) {
+		C_HIDE_LOGIN_BOX = b;
+	}
 
-	public void setBlockGlobalFriend(boolean b) { C_BLOCK_GLOBAL_FRIEND = b; }
+	public void setBlockGlobalFriend(boolean b) {
+		C_BLOCK_GLOBAL_FRIEND = b;
+	}
 
 	public void setBlockPartyInv(boolean b) {
 		C_PARTY_INV = b;
