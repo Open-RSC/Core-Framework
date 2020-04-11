@@ -108,13 +108,13 @@ public class StringUtil {
 				return colour + sender + ": " + colour + msg;
 			case PRIVATE_RECIEVE:
 				if (sender.toLowerCase().contains("global$")) {
-					return colour + sender.substring(7) + colour + " tells: " + msg;
+					return colour + sender.substring(7) + colour + " tells [everyone]: " + msg;
 				} else {
 					return colour + sender + colour + " tells you: " + msg;
 				}
 			case PRIVATE_SEND:
 				if (sender.toLowerCase().equals("global$")) {
-					return colour + "You tell" + colour + ": " + msg;
+					return colour + "You tell [everyone]" + colour + ": " + msg;
 				} else {
 					return colour + "You tell " + sender + colour + ": " + msg;
 				}

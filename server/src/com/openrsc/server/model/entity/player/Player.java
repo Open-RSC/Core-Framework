@@ -2624,6 +2624,15 @@ public final class Player extends Mob {
 		return false;
 	}
 
+	public Boolean getBlockGlobalFriend() {
+		if (getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			if (getCache().hasKey("setting_block_global_friend")) {
+				return getCache().getBoolean("setting_block_global_friend");
+			}
+		}
+		return false;
+	}
+
 	public Boolean getHideSideMenu() {
 		if (getWorld().getServer().getConfig().SIDE_MENU_TOGGLE) {
 			if (getCache().hasKey("setting_side_menu")) {

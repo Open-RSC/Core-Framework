@@ -455,6 +455,7 @@ public class ActionSender {
 		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
 		s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
 		s.writeByte((byte) (player.getHideLoginBox() ? 1 : 0)); // 40
+		s.writeByte((byte) (player.getBlockGlobalFriend() ? 1 : 0)); //41
 		player.write(s.toPacket());
 	}
 
@@ -537,6 +538,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_PK_BOTS + " 73");
 			LOGGER.info(server.getConfig().WANT_HARVESTING + " 74");
 			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 75");
+			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 76");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -634,6 +636,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_PK_BOTS ? 1 : 0)); // 73
 		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
 		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 75
+		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 76
 		return s;
 	}
 
@@ -888,6 +891,9 @@ public class ActionSender {
 			s.writeString(sender.getUsername());// former name
 		}
 		else {
+			if (player.getBlockGlobalFriend())
+				return;
+
 			s.writeString("Global$" + sender.getUsername());
 			s.writeString("Global$" + sender.getUsername());
 		}
