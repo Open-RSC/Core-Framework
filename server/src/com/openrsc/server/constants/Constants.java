@@ -39,7 +39,7 @@ public final class Constants {
 		return quests;
 	}
 
-	public final int[] STARTER_ITEMS = {87, 166, 132};
+	public final int[] STARTER_ITEMS = {ItemId.BRONZE_AXE.id(), ItemId.TINDERBOX.id(), ItemId.COOKEDMEAT.id()};
 
 	/**
 	 * Strikes, Bolts & Blast Spells.
