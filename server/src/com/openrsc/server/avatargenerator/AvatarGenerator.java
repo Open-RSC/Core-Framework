@@ -9,7 +9,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -547,6 +550,10 @@ public final class AvatarGenerator {
 		animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
 		//Female Skirt
 		animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
+
+		// April Fools Items
+		animations.add(new AnimationDef("rubberchicken", "equipment", 0, 0, 0, true, false, 0)); //429
+		animations.add(new AnimationDef("coronamask", "equipment", 0, 0, 0, true, false, 0)); //430
 
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");

@@ -3953,6 +3953,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Thieving cape", "The cape worn by masters of thieving", "", 99000, -1, "items:496", false, true, 2048, 0, false, false, -1, -1, 2401));
 		items.add(new ItemDef("Fletching cape", "The cape worn by masters of fletching", "", 99000, -1, "items:486", false, true, 2048, 0, false, false, -1, -1, 2402));
 		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, -1, -1, 2403));
+
+		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 0, -1, "items:555", false, true, 32, 0, false, false, 2405, -1, 2404));
+		items.add(new ItemDef("Pestilence Mask", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438", true, false, 0, 0, false, false, -1, 2404, 2405));
+		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 0, -1, "items:548", false, true, 32, 0, false, false, 2407, -1, 2406));
+		items.add(new ItemDef("Rubber Chicken Cap", "Swap this note at any bank for the equivalent item.", "", 0, -1, "items:438", true, false, 0, 0, false, false, -1, 2406, 2407));
 	}
 
 	// Bank note items
@@ -4759,6 +4764,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Bailing Bucket", "Swap this note at any bank for the equivalent item.", "bail with ", 10, 438, "items:438", true, false, 0, 0, true, false, -1, 1282, 2089));
 		items.add(new ItemDef("Plank", "Swap this note at any bank for the equivalent item.", "", 1, 438, "items:438", true, false, 0, 0, true, false, -1, 1283, 2090));
 		items.add(new ItemDef("display tea", "Swap this note at any bank for the equivalent item.", "", 10, 438, "items:438", true, false, 0, 0, true, false, -1, 1285, 2091));
+
 	}
 
 	private static void loadAnimationDefinitions() {
@@ -5284,6 +5290,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("thievingcape", "equipment", 0, 0, true, false, 0)); //429
 			animations.add(new AnimationDef("fletchingcape", "equipment", 0, 0, true, false, 0)); //430
 			animations.add(new AnimationDef("miningcape", "equipment", 0, 0, true, false, 0)); //431
+
+			// April Fools Items
+			animations.add(new AnimationDef("coronamask", "equipment", 0, 0, true, false, 0)); // 432
+			animations.add(new AnimationDef("rubberchicken", "equipment", 0, 0, true, false, 0)); // 433
 		}
 	}
 
