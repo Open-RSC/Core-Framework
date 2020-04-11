@@ -5346,10 +5346,10 @@ VALUES (1957, -1, 914, 'Spice crunchies', 'Swap this note at any bank for the eq
        (2401, 0, -1, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 6, 0, 0, 0, 0, 99000),
        (2402, 0, -1, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000),
        (2403, 0, -1, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000),
-	   (2404, 2405, -1, "Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 0, 0, 0, 0, 1, 432, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0),
-	   (2405, -1, 2404, "Pestilence Mask", "Swap this note at any bank for the equivalent item.", "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-	   (2406, 2407, -1, "Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0),
-	   (2407, -1, 2406, "Rubber Chicken Cap", "Swap this note at any bank for the equivalent item.", "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	   (2404, 2405, -1, 'Pestilence Mask', 'You wouldn\'t want to be seen in this! Stay the cabbage home!', "", 0, 0, 0, 0, 1, 432, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0),
+	   (2405, -1, 2404, 'Pestilence Mask', 'Swap this note at any bank for the equivalent item.', "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+	   (2406, 2407, -1, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', "", 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0),
+	   (2407, -1, 2406, 'Rubber Chicken Cap', 'Swap this note at any bank for the equivalent item.', "", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `openrsc_npcdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_npcdef`
@@ -40381,7 +40381,7 @@ VALUES (312, 3348, 223, 0, 0, 28501),
        (320, 3424, 1284, 0, 0, 29495),
        (322, 3422, 1285, 0, 0, 29496),
        (434, 550, 1286, 2, 0, 29497);
-       
+
 DROP TABLE IF EXISTS `openrsc_recovery_questions`;
 CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions`
 (
