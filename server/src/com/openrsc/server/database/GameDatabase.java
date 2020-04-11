@@ -113,7 +113,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void querySaveLastRecoveryTryId(final int playerId, final int lastRecoveryTryId) throws GameDatabaseException;
 
 	//Item and Container operations
-	protected abstract void queryItemCreate(Item item) throws GameDatabaseException;
+	protected abstract int queryItemCreate(Item item) throws GameDatabaseException;
 	protected abstract void queryItemPurge(Item item) throws GameDatabaseException;
 	protected abstract void queryItemUpdate(Item item) throws GameDatabaseException;
 	protected abstract void queryInventoryAdd(int playerId, Item item) throws GameDatabaseException;
@@ -322,8 +322,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		return queryItemDefs();
 	}
 
-	public void itemCreate(final Item item) throws GameDatabaseException {
-		queryItemCreate(item);
+	public int itemCreate(final Item item) throws GameDatabaseException {
+		return queryItemCreate(item);
 	}
 
 	public void itemPurge(final Item item) throws GameDatabaseException {

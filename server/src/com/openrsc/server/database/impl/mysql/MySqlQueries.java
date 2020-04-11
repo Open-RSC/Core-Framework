@@ -82,7 +82,7 @@ public class MySqlQueries {
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
 		save_DeleteBank = "DELETE i,i2 FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
-		save_ItemCreate = "INSERT INTO `" + PREFIX + "itemstatuses`(`itemID`, `catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?, ?)";
+		save_ItemCreate = "INSERT INTO `" + PREFIX + "itemstatuses`(`catalogID`, `amount`, `noted`, `durability`) VALUES(?, ?, ?, ?)";
 		save_ItemPurge = "DELETE FROM `" + PREFIX + "itemstatuses` WHERE `itemID`=?";
 		save_ItemUpdate = "UPDATE `" + PREFIX + "itemstatuses` SET `amount`=?, `noted`=?, `durability`=? WHERE `itemID`=?";
 		save_BankAdd = "INSERT INTO `" + PREFIX + "bank`(`playerID`, `itemID`, `slot`) VALUES(?, ?, ?)";
