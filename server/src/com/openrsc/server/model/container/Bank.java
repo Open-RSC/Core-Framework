@@ -71,7 +71,7 @@ public class Bank {
 						return false;
 
 					//Update the database and make sure the item ID is set
-					player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd);
+					player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size());
 
 					list.add(itemToAdd);
 
@@ -103,7 +103,7 @@ public class Bank {
 						itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
 
 						//Update the database and assign a new item ID
-						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd);
+						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size());
 
 						list.add(itemToAdd);
 

@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Inventory;
@@ -43,14 +44,16 @@ public class ItemUseOnGroundItem implements PacketHandler {
 
 		final GroundItem item = getItem(groundItemId, location, player);
 
-		if (item == null || myItem == null) {
+		if (item == null) {
 			player.setSuspiciousPlayer(true, "item use on ground item null item");
 			player.resetPath();
 			return;
 		}
+
+		boolean firemaking = myItem.getCatalogId() == ItemId.TINDERBOX.id();
 		player.setStatus(Action.USING_Item_ON_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player,
-			item.getLocation(), 1) {
+			item.getLocation(), firemaking ? 0 : 1) {
 			public void executeInternal() {
 				if (getPlayer().isBusy()
 					|| getPlayer().isRanging()

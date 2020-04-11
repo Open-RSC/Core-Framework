@@ -131,7 +131,7 @@ public class Inventory {
 						return false;
 
 					//Update the database and make sure the item ID is set
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
 
 					list.add(itemToAdd);
 
@@ -163,7 +163,7 @@ public class Inventory {
 						itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
 
 						//Update the database and assign a new item ID
-						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
+						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
 
 						list.add(itemToAdd);
 
@@ -182,47 +182,6 @@ public class Inventory {
 			return true;
 		}
 	}
-
-
-//				if (itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getItemStatus().getNoted()) {
-//					for (int index = 0; index < list.size(); index++) {
-//						Item existingStack = list.get(index);
-//						if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-//							existingStack.setAmount(player.getWorld().getServer().getDatabase(), existingStack.getAmount() + itemToAdd.getAmount());
-//							if (sendInventory)
-//								ActionSender.sendInventoryUpdateItem(player, index);
-//							return true;
-//						}
-//					}
-//				} else if (itemToAdd.getAmount() > 1 && (!itemToAdd.getDef(player.getWorld()).isStackable() || itemToAdd.getNoted())) {
-//					itemToAdd.setAmount(player.getWorld().getServer().getDatabase(),1);
-//				}
-//
-//
-//				if (this.full()) {
-//					if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
-//						player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
-//					}
-//					player.getWorld().registerItem(
-//						new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
-//						94000);
-//					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
-//						+ itemToAdd.getCatalogId() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
-//					return true;
-//				}
-//
-//				//Update the database
-//				player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd);
-//
-//				list.add(itemToAdd);
-//				if (sendInventory) {
-//					ActionSender.sendInventory(player);
-//				}
-//				return true;
-//			} catch (GameDatabaseException ex) {
-//				LOGGER.error(ex.getMessage());
-//				return false;
-//			}
 
 	public void remove(int index) {
 		synchronized (list) {
