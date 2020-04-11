@@ -1388,7 +1388,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryInventoryAdd(final int playerId, final Item item) throws GameDatabaseException {
+	protected void queryInventoryAdd(final int playerId, final Item item, int slot) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
 				int itemId = -1;
@@ -1400,7 +1400,7 @@ public class MySqlGameDatabase extends GameDatabase {
 					statement.setInt(1, playerId);
 					statement.setInt(2, itemId);
 					statement.setInt(3, item.isWielded() ? 1 : 0);
-					statement.setInt(4, 0);
+					statement.setInt(4, slot);
 					statement.executeUpdate();
 				}
 			} catch (SQLException ex) {
@@ -1468,7 +1468,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryBankAdd(final int playerId, final Item item) throws GameDatabaseException {
+	protected void queryBankAdd(final int playerId, final Item item, int slot) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
 				int itemId = -1;
@@ -1479,7 +1479,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankAdd);) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, itemId);
-					statement.setInt(3, 0);
+					statement.setInt(3, slot);
 					statement.executeUpdate();
 				}
 			} catch (SQLException ex) {
@@ -1503,107 +1503,6 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		}
 	}
-
-//	@Override
-//	protected void querySavePlayerInventoryAdd(int playerId, PlayerInventory invItem) throws GameDatabaseException {
-//		try {
-//			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddInvStatus, new String[]{"itemID"});
-//			statement.setInt(1, invItem.item.getCatalogId());
-//			statement.setInt(2, invItem.item.getAmount());
-//			statement.setInt(3, invItem.item.getItemStatus().getNoted() ? 1 : 0);
-//			statement.setInt(4, invItem.item.getItemStatus().getDurability());
-//
-//			statement.executeUpdate();
-//			ResultSet rs = statement.getGeneratedKeys();
-//			try {
-//				int itemID = -1;
-//				if (rs != null && rs.next()) {
-//					itemID = rs.getInt(1);
-//					statement = getConnection().prepareStatement(getQueries().save_AddInvItem);
-//					statement.setInt(1, playerId);
-//					statement.setInt(2, itemID);
-//					statement.setInt(3, invItem.wielded ? 1 : 0);
-//					statement.setInt(4, invItem.slot);
-//					statement.executeUpdate();
-//				}
-//			} finally {
-//				statement.close();
-//				rs.close();
-//			}
-//
-//		} catch (final SQLException ex) {
-//			// Convert SQLException to a general usage exception
-//			throw new GameDatabaseException(this, ex.getMessage());
-//		}
-//	}
-//
-//	@Override
-//	protected void querySavePlayerItemUpdateAmount(int playerId, int itemId, int amount) throws GameDatabaseException {
-//		try {
-//			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_UpdateInvStatusAmount);
-//			statement.setInt(1, amount);
-//			statement.setInt(2, itemId);
-//			try {
-//				statement.executeUpdate();
-//			} finally {
-//				statement.close();
-//			}
-//		} catch (final SQLException ex) {
-//			// Convert SQLException to a general usage exception
-//			throw new GameDatabaseException(this, ex.getMessage());
-//		}
-//	}
-//
-//	@Override
-//	protected void querySavePlayerInventoryDelete(int playerId, int itemId) throws GameDatabaseException {
-//		try {
-//			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_DelInvItem);
-//			statement.setInt(1, itemId);
-//			statement.setInt(2, playerId);
-//			try {
-//				statement.executeUpdate();
-//			} finally {
-//				statement.close();
-//			}
-//		} catch (final SQLException ex) {
-//			// Convert SQLException to a general usage exception
-//			throw new GameDatabaseException(this, ex.getMessage());
-//		}
-//	}
-//
-//	@Override
-//	protected void querySavePlayerEquipmentAdd(int playerId, PlayerInventory invItem) throws GameDatabaseException {
-//		try {
-//			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddEquipItem);
-//			statement.setInt(1, playerId);
-//			statement.setInt(2, invItem.item.getItemId());
-//			try {
-//				statement.executeUpdate();
-//			} finally {
-//				statement.close();
-//			}
-//		} catch (final SQLException ex) {
-//			// Convert SQLException to a general usage exception
-//			throw new GameDatabaseException(this, ex.getMessage());
-//		}
-//	}
-//
-//	@Override
-//	protected void querySavePlayerEquipmentDelete(int playerId, int itemId) throws GameDatabaseException {
-//		try {
-//			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_DelEquipItem);
-//			statement.setInt(1, playerId);
-//			statement.setInt(2, itemId);
-//			try {
-//				statement.executeUpdate();
-//			} finally {
-//				statement.close();
-//			}
-//		} catch (final SQLException ex) {
-//			// Convert SQLException to a general usage exception
-//			throw new GameDatabaseException(this, ex.getMessage());
-//		}
-//	}
 
 	@Override
 	protected PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException {
