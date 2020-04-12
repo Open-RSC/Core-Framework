@@ -3358,7 +3358,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Powering crystal3", "An intricately cut gemstone", "", 0, 357, "items:357", false, false, 0, 6750207, true, true, -1, -1, 1153));
 		items.add(new ItemDef("Powering crystal4", "An intricately cut gemstone", "", 0, 357, "items:357", false, false, 0, 3407667, true, true, -1, -1, 1154));
 		items.add(new ItemDef("Old boot", "that's been here some time", "", 1, 391, "items:391", false, false, 0, 4194304, true, true, -1, -1, 1155));
-		items.add(new ItemDef("Bunny ears", "Get another from the clothes shop if you die", "", 1, 392, "items:392", false, true, 32, 4194304, false, true, 2133, -1, 1156));
+		items.add(new ItemDef("Bunny ears", "Get another from the clothes shop if you die", "", 1, 392, "items:392", false, true, 32, 4194304, false, true, Config.S_WANT_CUSTOM_SPRITES ? 2133 : 2092, -1, 1156));
 		items.add(new ItemDef("Damaged armour", "that's been here some time", "", 1, 393, "items:393", false, false, 0, 4194304, true, true, -1, -1, 1157));
 		items.add(new ItemDef("Damaged armour", "that's been here some time", "", 1, 394, "items:394", false, false, 0, 4194304, true, true, -1, -1, 1158));
 		items.add(new ItemDef("Rusty sword", "that's been here some time", "", 1, 395, "items:395", false, false, 0, 4194304, true, true, -1, -1, 1159));
@@ -3491,7 +3491,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Blessed Golden Bowl with plain water", "A golden bowl filled with plain water", "Empty", 1000, 405, "items:405", false, false, 0, 8454143, true, true, -1, -1, 1286));
 		items.add(new ItemDef("Golden Bowl with plain water", "A golden bowl filled with plain water", "Empty", 1000, 405, "items:405", false, false, 0, 8454143, true, true, -1, -1, 1287));
 		items.add(new ItemDef("Cape of legends", "Shows I am a member of the legends guild", "", 450, 59, "items:59", false, true, 2048, 16777215, true, true, -1, -1, 1288));
-		items.add(new ItemDef("Scythe", "Get another from the clothes shop if you die", "", 15, 434, "items:434", false, true, 8216, 0, false, true, 2134, -1, 1289));
+		items.add(new ItemDef("Scythe", "Get another from the clothes shop if you die", "", 15, 434, "items:434", false, true, 8216, 0, false, true, Config.S_WANT_CUSTOM_SPRITES ? 2134 : 2093, -1, 1289));
 		loadNoteDefinitions();
 
 		//Load custom sprites
@@ -4764,7 +4764,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Bailing Bucket", "Swap this note at any bank for the equivalent item.", "bail with ", 10, 438, "items:438", true, false, 0, 0, true, false, -1, 1282, 2089));
 		items.add(new ItemDef("Plank", "Swap this note at any bank for the equivalent item.", "", 1, 438, "items:438", true, false, 0, 0, true, false, -1, 1283, 2090));
 		items.add(new ItemDef("display tea", "Swap this note at any bank for the equivalent item.", "", 10, 438, "items:438", true, false, 0, 0, true, false, -1, 1285, 2091));
-
+		if (!Config.S_WANT_CUSTOM_SPRITES) {
+			// Noted bunny ears and scythe
+			items.add(new ItemDef("Bunny ears", "Swap this note at any bank for the equivalent item.", "", 2, 438, "items:438", true, false, 0, 0, false, false, -1, 1156, 2092));
+			items.add(new ItemDef("Scythe", "Swap this note at any bank for the equivalent item.", "", 15, 438, "items:438", true, false, 0, 0, false, false, -1, 1289, 2093));
+		}
 	}
 
 	private static void loadAnimationDefinitions() {
