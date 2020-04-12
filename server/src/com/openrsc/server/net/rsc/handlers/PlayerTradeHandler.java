@@ -248,12 +248,14 @@ public class PlayerTradeHandler implements PacketHandler {
 									player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 								}
 
-								Item removed = affectedItem.split(player.getWorld().getServer().getDatabase(), item.getAmount());
-								if (removed.getAmount() == affectedItem.getAmount() && removed.getNoted() == affectedItem.getNoted())
-									player.getCarriedItems().remove(removed);
+								// Create item to be traded.
+								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
 
-								item.getItemStatus().setAmount(removed.getAmount());
-								item.setItemId(player.getWorld().getServer().getDatabase(), removed.getItemId());
+								// Remove item to be traded quantity from inventory.
+								item = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted());
+
+								// Remove item to be traded quanti:qty from inventory.
+								player.getCarriedItems().remove(item);
 							}
 
 							for (Item item : theirOffer) {
@@ -267,13 +269,13 @@ public class PlayerTradeHandler implements PacketHandler {
 									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 								}
 
-								Item removed = affectedItem.split(affectedPlayer.getWorld().getServer().getDatabase(), item.getAmount());
+								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
 
-								if (removed.getAmount() == affectedItem.getAmount() && removed.getNoted() == affectedItem.getNoted())
-									affectedPlayer.getCarriedItems().remove(removed);
+								// Create item to be traded.
+								item = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted());
 
-								item.getItemStatus().setAmount(removed.getAmount());
-								item.setItemId(player.getWorld().getServer().getDatabase(), removed.getItemId());
+								// Remove item to be traded quantity from inventory.
+								affectedPlayer.getCarriedItems().remove(item);
 							}
 
 							for (Item item : myOffer) {

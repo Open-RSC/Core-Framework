@@ -233,8 +233,8 @@ public class Item implements Comparable<Item> {
 		return fail;
 	}
 
-	public Item split(GameDatabase database, int amount) throws GameDatabaseException{
-		//Check the stack holds the requested amount
+	public Item split(GameDatabase database, int amount) throws GameDatabaseException {
+		// Check the stack holds the requested amount
 		if (this.getAmount() < amount)
 			amount = this.getAmount();
 
