@@ -133,7 +133,7 @@ public class Inventory {
 					if (list.size() >= MAX_SIZE) return false;
 
 					// TODO: Durability
-					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted());
 
 					// Update the Database - Add to the last slot and create a new itemID
 					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());

@@ -462,11 +462,6 @@ public class Bank {
 					return false;
 				}
 
-				if (withdrawNoted) {
-					try{withdrawItem.setNoted(player.getWorld().getServer().getDatabase(), true);}
-					catch (GameDatabaseException ex) { LOGGER.error(ex.getMessage()); return false;}
-				}
-
 				withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted);
 
 				// Remove the item from the bank (or fail out).

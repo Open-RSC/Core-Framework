@@ -232,19 +232,4 @@ public class Item implements Comparable<Item> {
 		}
 		return fail;
 	}
-
-	public Item split(GameDatabase database, int amount) throws GameDatabaseException {
-		// Check the stack holds the requested amount
-		if (this.getAmount() < amount)
-			amount = this.getAmount();
-
-		//Check if the stack needs to be split
-		if (this.getAmount() > amount) { /**Stack does need to be split*/
-			this.changeAmount(database, -amount);
-
-			return new Item(this.getCatalogId(), amount, this.getNoted());
-		} else { /**Stack does not need to be split*/
-			return this;
-		}
-	}
 }
