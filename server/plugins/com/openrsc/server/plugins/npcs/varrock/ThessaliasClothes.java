@@ -48,8 +48,16 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 
 		String[] options;
 		int extraOptions = 0;
-		boolean ears = p.getInventory().hasItemId(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0;
-		boolean scythe = p.getInventory().hasItemId(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0;
+		boolean customSprites = p.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES;
+
+		boolean ears = p.getInventory().hasItemId(ItemId.BUNNY_EARS.id())
+			|| p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0
+			|| p.getInventory().hasItemId(customSprites ? 2133 : 2092); // Bank note ids
+
+		boolean scythe = p.getInventory().hasItemId(ItemId.SCYTHE.id())
+			|| p.getBank().countId(ItemId.SCYTHE.id()) > 0
+			|| p.getInventory().hasItemId(customSprites ? 2134 : 2093); // Bank note ids
+
 		if (p.getCache().hasKey("bunny_ears") && p.getCache().hasKey("scythe") && !scythe && !ears) {
 			options = new String[]{
 				"I have lost my scythe can I get another one please?",
@@ -118,7 +126,11 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 	public void onPickup(Player p, GroundItem i) {
 		if (i.getID() == ItemId.BUNNY_EARS.id()) {
 			if(!p.isAdmin()) {
-				if (p.getInventory().hasItemId(ItemId.BUNNY_EARS.id()) || p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0) {
+				boolean customSprites = p.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES;
+				if (p.getInventory().hasItemId(ItemId.BUNNY_EARS.id())
+					|| p.getBank().countId(ItemId.BUNNY_EARS.id()) > 0
+					|| p.getInventory().hasItemId(customSprites ? 2133 : 2092)) { // Bank note id for bunny ears
+
 					p.message("You don't need another set of bunny ears");
 					p.message("You only have one head");
 					return;
@@ -130,7 +142,11 @@ public final class ThessaliasClothes implements PickupListener, PickupExecutiveL
 		}
 		else if (i.getID() == ItemId.SCYTHE.id()) {
 			if(!p.isAdmin()) {
-				if (p.getInventory().hasItemId(ItemId.SCYTHE.id()) || p.getBank().countId(ItemId.SCYTHE.id()) > 0) {
+				boolean customSprites = p.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES;
+				if (p.getInventory().hasItemId(ItemId.SCYTHE.id())
+					|| p.getBank().countId(ItemId.SCYTHE.id()) > 0
+					|| p.getInventory().hasItemId(customSprites ? 2134 : 2093)) { // Bank note ids for scythe
+					
 					p.message("You don't need another scythe");
 					p.message("You already have one");
 					return;
