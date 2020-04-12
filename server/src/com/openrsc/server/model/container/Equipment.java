@@ -166,7 +166,7 @@ public class Equipment {
 						if (remove(request.item.getCatalogId(), request.item.getAmount()) == -1)
 							return false;
 						request.item.setWielded(false);
-						player.getCarriedItems().getInventory().add(request.item, true, false);
+						player.getCarriedItems().getInventory().add(request.item, true);
 
 					}
 				}
@@ -182,7 +182,7 @@ public class Equipment {
 						if (remove(request.item.getCatalogId(), request.item.getAmount()) == -1)
 							return false;
 						request.item.setWielded(false);
-						player.getBank().add(request.item, false);
+						player.getBank().add(request.item);
 						ActionSender.showBank(player);
 					}
 				}

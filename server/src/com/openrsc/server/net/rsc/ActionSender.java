@@ -1329,7 +1329,7 @@ public class ActionSender {
 					sendAppearanceScreen(p);
 					for (int itemId : p.getWorld().getServer().getConstants().STARTER_ITEMS) {
 						Item i = new Item(itemId);
-						p.getCarriedItems().getInventory().add(i, false, true);
+						p.getCarriedItems().getInventory().add(i, false);
 					}
 					//Block PK chat by default.
 					p.getCache().set("setting_block_global", 3);

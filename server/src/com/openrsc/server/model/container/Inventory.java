@@ -86,27 +86,24 @@ public class Inventory {
 	//----------------------------------------------------------------
 	//Methods that can change the contents of list--------------------
 	public Boolean add(Item item) {
-		return add(item, true, true);
+		return add(item, true);
 	}
 
 	public Boolean add(Item itemToAdd, boolean sendInventory) {
-		return add(itemToAdd, sendInventory, true);
-	}
-
-	public Boolean add(Item itemToAdd, boolean sendInventory, boolean newItem) {
 		synchronized (list) {
 			try {
-				//Bounds check on the amount
+
+				// Confirm we aren't attempting to add 0 or less of the item.
 				if (itemToAdd.getAmount() <= 0) {
 					return false;
 				}
 
-				//Check the itemDef
+				// Confirm the ItemDef exists.
 				ItemDefinition itemDef = itemToAdd.getDef(player.getWorld());
 				if (itemDef == null)
 					return false;
 
-				//Check if there's an existing slot in the inventory that can hold the item
+				// Confirm an existing stack to add the item to, if item is stackable.
 				Item existingStack = null;
 				int index = -1;
 				if (itemDef.isStackable() || itemToAdd.getNoted()) {
@@ -129,47 +126,63 @@ public class Inventory {
 					}
 				}
 
-				if (existingStack == null) { /**We need to add a new item to the list*/
-					//Make sure they have room in the inventory
-					if (list.size() >= MAX_SIZE)
-						return false;
+				// There is no existing stack in the inventory (or the item is not a STACK)
+				if (existingStack == null) {
 
-					//Update the database and make sure the item ID is set
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size(), newItem);
+					// Make sure they have room in the inventory
+					if (list.size() >= MAX_SIZE) return false;
 
+					// TODO: Durability
+					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount());
+
+					// Update the Database - Add to the last slot and create a new itemID
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+
+					// Update the server inventory
 					list.add(itemToAdd);
 
 					//Update the client
 					if (sendInventory)
 						ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
-				} else { /**There is an existing stack that can be added to*/
-					//Check if the existing stack has enough room to hold the amount
+
+				// There is an existing stack in the inventory on which to add this item.
+				} else {
+
+					// Determine if the existing stack will overflow.
 					int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
-					if (remainingSize >= itemToAdd.getAmount()) { /**The existing stack can take the entire deposit*/
-						//Change the existing stack amount
+
+					// The added items will not overflow the stack, add them to it normally.
+					if (remainingSize >= itemToAdd.getAmount()) {
+
+						// Update the Database and Server Inventory
 						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
 
-						//Update the client
+						//Update the Client
 						if (sendInventory)
 							ActionSender.sendInventoryUpdateItem(player, index);
-					} else { /**The existing stack will overflow*/
-						//Make sure they have room in the inventory
+
+					// The added items will overflow the stack, create a second stack to hold the remainder.
+					} else {
+
+						// Make sure they have room in the inventory for the second stack.
 						if (list.size() >= MAX_SIZE)
 							return false;
 
-						//Determine how much is left over
-						itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
-						itemToAdd.setItemId(player.getWorld().getServer().getDatabase(), Item.ITEM_ID_UNASSIGNED);
 
-						//Update the database and assign a new item ID
-						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size(), newItem);
-
-						list.add(itemToAdd);
-
-						//Update the existing stack amount to max value
+						// Update the existing stack amount to max value
 						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
 
-						//Update the client
+						// Determine how much is left over
+						// TODO: Durability
+						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
+
+						// Update the Database - Add new stack to the last slot and create a new itemID
+						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+
+						// Update the server inventory
+						list.add(itemToAdd);
+
+						// Update the Client - Both stacks
 						ActionSender.sendInventoryUpdateItem(player, index);
 						ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
 					}
@@ -188,67 +201,80 @@ public class Inventory {
 			if (item == null) {
 				return;
 			}
-			remove(item.getCatalogId(), item.getAmount(), true, true);
+			remove(item.getCatalogId(), item.getAmount(), true);
 		}
 	}
 
-	public int remove(int catalogId, int amount, boolean sendInventory, boolean removeStatus) {
+	public int remove(int catalogId, int amount, boolean sendInventory) {
 		synchronized (list) {
 			try {
-				//Check if the inventory is empty
+				// Confirm items exist in the inventory
 				if (list.isEmpty())
 					return -1;
 
+
 				int size = list.size();
 				ListIterator<Item> iterator = list.listIterator(size);
-
 				for (int index = size - 1; iterator.hasPrevious(); --index) {
 					Item inventoryItem = iterator.previous();
 
-					//Check the itemDef
+					// Loop until we have the correct item.
+					if (inventoryItem.getCatalogId() != catalogId)
+						continue;
+
+					// Confirm itemDef exists.
 					ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
 					if (inventoryDef == null)
 						continue;
 
-					//Match catalog ID
-					if (inventoryItem.getCatalogId() != catalogId)
-						continue;
+					if (inventoryDef.isStackable() || inventoryItem.getNoted()) {
 
-					if (inventoryDef.isStackable() || inventoryItem.getNoted()) { /**Stackable Items*/
-						//Make sure there's enough in the stack
+						// Make sure there's enough in the stack
 						if (inventoryItem.getAmount() < amount)
 							return -1;
 
-						//Check if we need to split the stack
-						if (inventoryItem.getAmount() == amount) { /**Don't need to split the stack*/
+						// If we remove the entire stack, remove the item status.
+						if (inventoryItem.getAmount() == amount) {
+
+							// Update the Database - Remove item status
+							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+
+							// Update the Server Bank
 							iterator.remove();
 
-							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem, removeStatus);
-
-							//Update the client
+							// Update the Client
 							if (sendInventory)
 								ActionSender.sendRemoveItem(player, index);
-						} else { /**Need to split the stack*/
+
+						// Removing only part of the stack
+						} else {
+
+							// Update the Database and Server Bank
 							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
 
-							//Update the client
+							// Update the Client
 							if (sendInventory)
 								ActionSender.sendInventoryUpdateItem(player, index);
 						}
 
 						return inventoryItem.getItemId();
-					} else { /**Non-stackable items*/
 
-						//There needs to be a check here if the noted version should be allowed
+					// Non-stacking items
+					} else {
 
-						//Unequip if necessary
+						// TODO: There needs to be a check here if the noted version should be allowed
+
+						// Unequip if necessary (only non-stacking items equip currently)
 						if (inventoryItem.isWielded())
-							player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, inventoryItem, UnequipRequest.RequestType.FROM_INVENTORY, false));
+							player.getCarriedItems().getEquipment().unequipItem(
+								new UnequipRequest(player, inventoryItem, UnequipRequest.RequestType.FROM_INVENTORY, false)
+							);
 
+						// Update the Server Bank
 						iterator.remove();
 
-						//Update the database
-						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem, removeStatus);
+						// Update the Database
+						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
 						//Update the client
 						if (sendInventory)
@@ -303,8 +329,8 @@ public class Inventory {
 				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
 			ActionSender.sendEquipmentStats(player);
 		} else {
-			if (remove(i, 1, false, true) != -1);
-			add(new Item(j), false, false);
+			if (remove(i, 1, false) != -1);
+			add(new Item(j), false);
 			if (sendInventory)
 				ActionSender.sendInventory(player);
 		}
@@ -501,14 +527,14 @@ public class Inventory {
 		//Add the remaining items to the players inventory
 		list.clear();
 		for (Item returnItem : deathItemsList) {
-			add(returnItem, false, false);
+			add(returnItem, false);
 			if (oldEquippedList.contains(returnItem)) {
 				player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
 			}
 		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
 			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
-			add(new Item(fam_gloves, 1), false, false);
+			add(new Item(fam_gloves, 1), false);
 		}
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);

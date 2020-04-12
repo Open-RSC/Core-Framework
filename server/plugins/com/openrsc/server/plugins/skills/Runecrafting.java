@@ -123,7 +123,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 			int successCount = 0;
 			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id());
 			for (int loop = 0; loop < repeatTimes; ++loop) {
-				if (player.getCarriedItems().getInventory().remove(ItemId.RUNE_ESSENCE.id(), 1, false, true) != -1) {
+				if (player.getCarriedItems().getInventory().remove(ItemId.RUNE_ESSENCE.id(), 1, false) != -1) {
 					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())),false);
 					++successCount;
 				}
