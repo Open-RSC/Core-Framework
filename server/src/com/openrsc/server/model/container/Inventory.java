@@ -86,10 +86,14 @@ public class Inventory {
 	//----------------------------------------------------------------
 	//Methods that can change the contents of list--------------------
 	public Boolean add(Item item) {
-		return add(item, true);
+		return add(item, true, true);
 	}
 
 	public Boolean add(Item itemToAdd, boolean sendInventory) {
+		return add(itemToAdd, sendInventory, true);
+	}
+
+	public Boolean add(Item itemToAdd, boolean sendInventory, boolean newItem) {
 		synchronized (list) {
 			try {
 				//Bounds check on the amount
@@ -131,7 +135,7 @@ public class Inventory {
 						return false;
 
 					//Update the database and make sure the item ID is set
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size(), newItem);
 
 					list.add(itemToAdd);
 
@@ -145,11 +149,6 @@ public class Inventory {
 						//Change the existing stack amount
 						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
 
-						//Check if this is a stack join
-						if (itemToAdd.getItemId() != Item.ITEM_ID_UNASSIGNED) {
-							player.getWorld().getServer().getDatabase().itemPurge(itemToAdd);
-						}
-
 						//Update the client
 						if (sendInventory)
 							ActionSender.sendInventoryUpdateItem(player, index);
@@ -160,10 +159,10 @@ public class Inventory {
 
 						//Determine how much is left over
 						itemToAdd.getItemStatus().setAmount(itemToAdd.getAmount() - remainingSize);
-						itemToAdd.setItemId(Item.ITEM_ID_UNASSIGNED);
+						itemToAdd.setItemId(player.getWorld().getServer().getDatabase(), Item.ITEM_ID_UNASSIGNED);
 
 						//Update the database and assign a new item ID
-						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size(), newItem);
 
 						list.add(itemToAdd);
 
@@ -189,11 +188,11 @@ public class Inventory {
 			if (item == null) {
 				return;
 			}
-			remove(item.getCatalogId(), item.getAmount(), true);
+			remove(item.getCatalogId(), item.getAmount(), true, true);
 		}
 	}
 
-	public int remove(int catalogId, int amount, boolean sendInventory) {
+	public int remove(int catalogId, int amount, boolean sendInventory, boolean removeStatus) {
 		synchronized (list) {
 			try {
 				//Check if the inventory is empty
@@ -224,7 +223,7 @@ public class Inventory {
 						if (inventoryItem.getAmount() == amount) { /**Don't need to split the stack*/
 							iterator.remove();
 
-							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem, removeStatus);
 
 							//Update the client
 							if (sendInventory)
@@ -249,7 +248,7 @@ public class Inventory {
 						iterator.remove();
 
 						//Update the database
-						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem, removeStatus);
 
 						//Update the client
 						if (sendInventory)
@@ -265,17 +264,23 @@ public class Inventory {
 		return -1;
 	}
 
+	/*
 	public int remove(int id, int amount) {
 		return remove(id, amount, true);
 	}
+	*/
 
+	/*
 	public int remove(Item item, boolean updatePlayer) {
 		return remove(item.getCatalogId(), item.getAmount(), updatePlayer);
 	}
+	*/
 
+	/*
 	public int remove(Item item) {
 		return remove(item.getCatalogId(), item.getAmount(), true);
 	}
+	*/
 
 	public void replace(int i, int j) {
 		this.replace(i, j, true);
@@ -298,8 +303,8 @@ public class Inventory {
 				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
 			ActionSender.sendEquipmentStats(player);
 		} else {
-			if (remove(i, 1, false) != -1);
-			add(new Item(j), false);
+			if (remove(i, 1, false, true) != -1);
+			add(new Item(j), false, false);
 			if (sendInventory)
 				ActionSender.sendInventory(player);
 		}
@@ -492,17 +497,18 @@ public class Inventory {
 				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
 				break;
 		}
+		// TODO: Remove items from inventory properly. (must update in DB)
 		//Add the remaining items to the players inventory
 		list.clear();
 		for (Item returnItem : deathItemsList) {
-			add(returnItem, false);
+			add(returnItem, false, false);
 			if (oldEquippedList.contains(returnItem)) {
 				player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
 			}
 		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
 			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
-			add(new Item(fam_gloves, 1));
+			add(new Item(fam_gloves, 1), false, false);
 		}
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);

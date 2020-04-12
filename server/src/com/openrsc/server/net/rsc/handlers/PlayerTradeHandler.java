@@ -253,7 +253,7 @@ public class PlayerTradeHandler implements PacketHandler {
 									player.getCarriedItems().remove(removed);
 
 								item.getItemStatus().setAmount(removed.getAmount());
-								item.setItemId(removed.getItemId());
+								item.setItemId(player.getWorld().getServer().getDatabase(), removed.getItemId());
 							}
 
 							for (Item item : theirOffer) {
@@ -273,7 +273,7 @@ public class PlayerTradeHandler implements PacketHandler {
 									affectedPlayer.getCarriedItems().remove(removed);
 
 								item.getItemStatus().setAmount(removed.getAmount());
-								item.setItemId(removed.getItemId());
+								item.setItemId(player.getWorld().getServer().getDatabase(), removed.getItemId());
 							}
 
 							for (Item item : myOffer) {

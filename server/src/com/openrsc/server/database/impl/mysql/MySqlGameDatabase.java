@@ -1035,20 +1035,10 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException {
+	protected void querySavePlayerInventory(int playerId, PlayerInventory[] inventory, boolean removeStatus) throws GameDatabaseException {
 		try {
 			updateLongs(getQueries().save_DeleteInv, playerId);
-			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemCreate, new String[]{"`itemID`"});
-			for (PlayerInventory invItem : inventory) {
-				statement.setInt(1, invItem.item.getItemStatus().getCatalogId());
-				statement.setInt(2, invItem.item.getItemStatus().getAmount());
-				statement.setInt(3, invItem.item.getItemStatus().getNoted() ? 1 : 0);
-				statement.setInt(4, invItem.item.getItemStatus().getDurability());
-				statement.addBatch();
-			}
-			statement.executeBatch();
-
-			statement = getConnection().prepareStatement(getQueries().save_InventoryAdd);
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryAdd);
 			for (PlayerInventory item : inventory) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
@@ -1071,17 +1061,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException {
 		try {
 			updateLongs(getQueries().save_DeleteEquip, playerId);
-			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemCreate, new String[]{"`itemID`"});
-			for (PlayerEquipped item : equipment) {
-				statement.setInt(1, item.itemStatus.getCatalogId());
-				statement.setInt(2, item.itemStatus.getAmount());
-				statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
-				statement.setInt(4, item.itemStatus.getDurability());
-				statement.addBatch();
-			}
-			statement.executeBatch();
-
-			statement = getConnection().prepareStatement(getQueries().save_EquipmentAdd);
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentAdd);
 			for (PlayerEquipped item : equipment) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
@@ -1103,17 +1083,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			updateLongs(getQueries().save_DeleteBank, playerId);
 			if (bank.length > 0) {
-				PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemCreate, new String[]{"`itemID`"});
-				for (PlayerBank item : bank) {
-					statement.setInt(1, item.itemStatus.getCatalogId());
-					statement.setInt(2, item.itemStatus.getAmount());
-					statement.setInt(3, item.itemStatus.getNoted() ? 1 : 0);
-					statement.setInt(4, item.itemStatus.getDurability());
-					statement.addBatch();
-				}
-				statement.executeBatch();
-
-				statement = getConnection().prepareStatement(getQueries().save_BankAdd);
+				PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankAdd);
 				int slot = 0;
 				for (PlayerBank item : bank) {
 					statement.setInt(1, playerId);
@@ -1388,11 +1358,11 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryInventoryAdd(final int playerId, final Item item, int slot) throws GameDatabaseException {
+	protected void queryInventoryAdd(final int playerId, final Item item, int slot, boolean newItem) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
 				int itemId = -1;
-				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+				if (newItem && item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
 					itemId = assignItemID(item);
 				}
 				else itemId = item.getItemId();
@@ -1431,14 +1401,14 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryEquipmentAdd(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
-				int itemId = -1;
+				/*int itemId = -1;
 				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
 					itemId = assignItemID(item);
 				}
-				else itemId = item.getItemId();
+				else itemId = item.getItemId();*/
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentAdd);) {
 					statement.setInt(1, playerId);
-					statement.setInt(2, itemId);
+					statement.setInt(2, item.getItemId());
 					statement.executeUpdate();
 				}
 			} catch (SQLException ex) {
@@ -1468,11 +1438,12 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryBankAdd(final int playerId, final Item item, int slot) throws GameDatabaseException {
+	protected void queryBankAdd(final int playerId, final Item item, int slot, boolean newItem) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
 				int itemId = -1;
-				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+				if (newItem && item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+					System.out.println("GETTING NEW ID FOR: " + item.getItemId() + "and catalog: " + item.getItemStatus().getCatalogId());
 					itemId = assignItemID(item);
 				}
 				else itemId = item.getItemId();
@@ -1833,7 +1804,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	public int assignItemID(Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			int itemId = itemCreate(item);
-			item.setItemId(itemId);
+			item.setItemId(this, itemId);
 			itemIDList.add(itemId);
 			return itemId;
 		}

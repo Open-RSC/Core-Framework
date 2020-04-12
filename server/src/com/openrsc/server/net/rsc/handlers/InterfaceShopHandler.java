@@ -100,9 +100,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			player.getCarriedItems().remove(ItemId.COINS.id(), totalMoneySpent);
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
-				player.getCarriedItems().getInventory().add(new Item(itemID, 1), false);
-    			// TODO: Does the authentic code send an update per item?
-    			ActionSender.sendInventory(player);
+				player.getCarriedItems().getInventory().add(new Item(itemID, 1));
 			}
 
 			player.playSound("coins");

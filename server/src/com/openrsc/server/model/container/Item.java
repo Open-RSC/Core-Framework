@@ -4,6 +4,7 @@ import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.world.World;
+import org.w3c.dom.CDATASection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,12 +73,16 @@ public class Item implements Comparable<Item> {
 	}
 
 	public Item(int catalogId, int amount, boolean noted) {
+		this(catalogId, amount, noted, ITEM_ID_UNASSIGNED);
+	}
+
+	public Item(int catalogId, int amount, boolean noted, int itemId) {
 		itemStatus = new ItemStatus();
 		itemStatus.setCatalogId(catalogId);
 		itemStatus.setAmount(amount);
 		itemStatus.setNoted(noted);
 		itemStatus.setDurability(100);
-		this.itemId = ITEM_ID_UNASSIGNED;
+		this.itemId = itemId;
 	}
 
 	public Item(int itemId, ItemStatus itemStatus) {
@@ -86,8 +91,9 @@ public class Item implements Comparable<Item> {
 	}
 	//--------------------------------------------------------------
 	//Class member modifiers----------------------------------------
-	public final void setItemId(int itemId) throws GameDatabaseException {
+	public final void setItemId(GameDatabase database, int itemId) throws GameDatabaseException {
 		this.itemId = itemId;
+		database.itemUpdate(this);
 	}
 
 	public void setAmount(GameDatabase database, int amount) throws GameDatabaseException{
