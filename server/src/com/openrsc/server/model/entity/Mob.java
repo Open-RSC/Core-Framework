@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity;
 
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -7,6 +8,8 @@ import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
+import com.openrsc.server.model.container.CarriedItems;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
@@ -969,5 +972,80 @@ public abstract class Mob extends Entity {
 
 	public void setPoisonDamage(int poisonDamage) {
 		this.poisonDamage = poisonDamage;
+	}
+
+	/**
+	 * Function used to drop an item after walking completes.
+	 */
+	protected Item dropItemEvent = null;
+
+	public void setDropItemEvent(Item item) {
+		this.dropItemEvent = item;
+	}
+
+	public Item getDropItemEvent() {
+		return this.dropItemEvent;
+	}
+
+	public void runDropEvent(boolean fromInventory) {
+		// TODO: Allow npcs to use this code for drop parties?
+		if (!this.isPlayer()) return;
+		Player p = (Player) this;
+		Item item = p.getDropItemEvent();
+		if (item == null) return;
+		int finalAmount = item.getAmount();
+		if (item.getDef(p.getWorld()).isStackable() || item.getItemStatus().getNoted() || finalAmount == 1) {
+			int dropAmount = finalAmount;
+			if (!(item.getDef(p.getWorld()).isStackable() || item.getItemStatus().getNoted())) {
+				dropAmount = 1;
+			}
+
+			p.setStatus(Action.DROPPING_GITEM);
+			item.getItemStatus().setAmount(dropAmount);
+
+			if ((!p.getCarriedItems().getInventory().contains(item) && fromInventory)  || p.getStatus() != Action.DROPPING_GITEM) {
+				p.setStatus(Action.IDLE);
+				return;
+			}
+
+			p.getWorld().getServer().getPluginHandler().handlePlugin(p, "DropObj", new Object[]{p, item, fromInventory});
+			p.setStatus(Action.IDLE);
+		} else {
+			p.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(p.getWorld(), p, 640, "Player Batch Drop") {
+				int dropCount = 0;
+
+				public void run() {
+					if ((!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) || getOwner().getStatus() != Action.DROPPING_GITEM) {
+						stop();
+						getOwner().setStatus(Action.IDLE);
+						return;
+					}
+					if (getOwner().hasMoved()) {
+						stop();
+						getOwner().setStatus(Action.IDLE);
+						return;
+					}
+					if (dropCount >= finalAmount) {
+						stop();
+						getOwner().setStatus(Action.IDLE);
+						return;
+					}
+					if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId())) ||
+						(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
+						getOwner().message("You don't have the entered amount to drop");
+						stop();
+						getOwner().setStatus(Action.IDLE);
+						return;
+					}
+					if (getOwner().getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "DropObj", new Object[]{getOwner(), item, fromInventory})) {
+						stop();
+						getOwner().setStatus(Action.IDLE);
+						return;
+					}
+					dropCount++;
+					getOwner().message("Dropped " + dropCount + "/" + finalAmount);
+				}
+			});
+		}
 	}
 }

@@ -1987,6 +1987,7 @@ public final class Player extends Mob {
 		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
 		getDuel().resetAll();
+		dropItemEvent = null;
 	}
 
 	public void resetAllExceptBank() {

@@ -59,60 +59,16 @@ public final class ItemDropHandler implements PacketHandler {
 
 		final int finalAmount = amount;
 		final boolean fromInventory = idx != -1;
-		if (player.finishedPath()) {
-			player.setStatus(Action.DROPPING_GITEM);
 
-			if (item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted() || finalAmount == 1) {
-				int dropAmount = finalAmount;
-				if(!(item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted())) {
-					dropAmount = 1;
-				}
+		// Set temporary amount until event executes and double checks.
+		item.getItemStatus().setAmount(amount);
 
-				item.getItemStatus().setAmount(dropAmount);
-
-				if ((!player.getCarriedItems().getInventory().contains(item) && fromInventory)  || player.getStatus() != Action.DROPPING_GITEM) {
-					player.setStatus(Action.IDLE);
-					return;
-				}
-
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, item, fromInventory});
-				player.setStatus(Action.IDLE);
-			} else {
-				player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, 640, "Player Batch Drop") {
-					int dropCount = 0;
-					public void run() {
-						if ((!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) || getOwner().getStatus() != Action.DROPPING_GITEM) {
-							stop();
-							player.setStatus(Action.IDLE);
-							return;
-						}
-						if (getOwner().hasMoved()) {
-							stop();
-							player.setStatus(Action.IDLE);
-							return;
-						}
-						if (dropCount >= finalAmount) {
-							stop();
-							player.setStatus(Action.IDLE);
-							return;
-						}
-						if ((fromInventory && !player.getCarriedItems().hasCatalogID(item.getCatalogId())) ||
-							(!fromInventory && (player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
-							player.message("You don't have the entered amount to drop");
-							stop();
-							player.setStatus(Action.IDLE);
-							return;
-						}
-						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, item, fromInventory})) {
-							stop();
-							player.setStatus(Action.IDLE);
-							return;
-						}
-						dropCount++;
-						player.message("Dropped " + dropCount + "/" + finalAmount);
-					}
-				});
-			}
+		// Set up our player to drop an item after walking
+		if (!player.getWalkingQueue().finished()) {
+			player.setDropItemEvent(item);
+		}
+		else {
+			player.runDropEvent(fromInventory);
 		}
 	}
 }
