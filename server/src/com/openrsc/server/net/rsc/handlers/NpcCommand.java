@@ -26,7 +26,8 @@ public final class NpcCommand implements PacketHandler {
 		final Npc affectedNpc = player.getWorld().getNpc(serverIndex);
 		if (affectedNpc == null) return;
 		int radius = 1;
-		if (click && player.withinRange(affectedNpc, 1)) {
+		if (click && player.withinRange(affectedNpc, 1)
+			&& affectedNpc.getDef().getCommand1().equalsIgnoreCase("pickpocket")) {
 			radius = 0;
 		}
 		player.setFollowing(affectedNpc, 0);
