@@ -135,11 +135,11 @@ public class Inventory {
 					// TODO: Durability
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted());
 
-					// Update the Database - Add to the last slot and create a new itemID
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
-
 					// Update the server inventory
 					list.add(itemToAdd);
+
+					// Update the Database - Add to the last slot and create a new itemID
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
 
 					//Update the client
 					if (sendInventory)
@@ -176,11 +176,11 @@ public class Inventory {
 						// TODO: Durability
 						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
 
-						// Update the Database - Add new stack to the last slot and create a new itemID
-						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
-
 						// Update the server inventory
 						list.add(itemToAdd);
+
+						// Update the Database - Add new stack to the last slot and create a new itemID
+						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
 
 						// Update the Client - Both stacks
 						ActionSender.sendInventoryUpdateItem(player, index);
@@ -236,26 +236,22 @@ public class Inventory {
 						// If we remove the entire stack, remove the item status.
 						if (inventoryItem.getAmount() == amount) {
 
-							// Update the Database - Remove item status
-							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
-
 							// Update the Server Bank
 							iterator.remove();
 
-							// Update the Client
-							if (sendInventory)
-								ActionSender.sendRemoveItem(player, index);
+							// Update the Database - Remove item status
+							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
 						// Removing only part of the stack
 						} else {
 
 							// Update the Database and Server Bank
 							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
-
-							// Update the Client
-							if (sendInventory)
-								ActionSender.sendInventoryUpdateItem(player, index);
 						}
+
+						// Update the Client
+						if (sendInventory)
+							ActionSender.sendInventory(player);
 
 						return inventoryItem.getItemId();
 
@@ -278,7 +274,7 @@ public class Inventory {
 
 						//Update the client
 						if (sendInventory)
-							ActionSender.sendRemoveItem(player, index);
+							ActionSender.sendInventory(player);
 
 						return inventoryItem.getItemId();
 					}

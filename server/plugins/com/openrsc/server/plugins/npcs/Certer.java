@@ -181,7 +181,8 @@ public class Certer implements TalkNpcTrigger {
 				p.message("You don't have any " + names[index] + " to cert");
 				return;
 			}
-			if (p.getBank().remove(itemID, itemAmount) > -1) {
+			// TODO: itemId is wrong here?
+			if (p.getBank().remove(itemID, itemAmount, -1) > -1) {
 				p.message("You exchange the " + certerDef.getType() + ", "
 					+ itemAmount + " "
 					+ p.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName()

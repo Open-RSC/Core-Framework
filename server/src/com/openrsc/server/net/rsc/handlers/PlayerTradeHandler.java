@@ -72,7 +72,7 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.message("That person is already trading");
 					return;
 				}
-				if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
+				if (affectedPlayer.getDuel().isDuelActive()
 					|| player.getTrade().isTradeActive()) {
 					player.getTrade().resetAll();
 					return;

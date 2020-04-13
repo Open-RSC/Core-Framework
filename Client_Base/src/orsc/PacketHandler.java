@@ -2050,7 +2050,6 @@ public class PacketHandler {
 		int slot = packetsIncoming.getUnsignedByte();
 		int item = packetsIncoming.getShort();
 		int itemCount = packetsIncoming.get32();
-
 		mc.getBank().updateBank(slot, item, itemCount);
 	}
 

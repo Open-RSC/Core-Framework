@@ -1137,11 +1137,17 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY_UPDATEITEM.opcode);
 		s.writeByte((byte) slot);
-		s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
-		s.writeShort(item.getNoted() ? 1 : 0);
-
-		if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
-			s.writeInt(item.getAmount());
+		if (item != null) {
+			s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
+			s.writeShort(item.getNoted() ? 1 : 0);
+			if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
+				s.writeInt(item.getAmount());
+			}
+		}
+		else {
+			s.writeShort(0);
+			s.writeShort(0);
+			s.writeInt(0);
 		}
 		player.write(s.toPacket());
 	}

@@ -308,7 +308,7 @@ public class Equipment {
 				int originalAmount = player.getBank().countId(request.item.getCatalogId());
 
 				if (!itemDef.isStackable()) { /**Not a stackable item*/
-					if (player.getBank().remove(request.item.getCatalogId(), 1) == -1)
+					if (player.getBank().remove(request.item.getCatalogId(), 1, request.item.getItemId()) == -1)
 						return false;
 
 					if (originalAmount > 1) { /**Need to split the stack*/
@@ -317,7 +317,7 @@ public class Equipment {
 						add(request.item);
 					}
 				} else { /**Stackable item*/
-					if (player.getBank().remove(request.item.getCatalogId(), request.item.getAmount()) == -1)
+					if (player.getBank().remove(request.item.getCatalogId(), request.item.getAmount(), request.item.getItemId()) == -1)
 						return false;
 
 					if (originalAmount > request.item.getAmount()) { /**Need to split the stack*/
