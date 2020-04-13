@@ -68,6 +68,7 @@ public final class ItemDropHandler implements PacketHandler {
 			player.setDropItemEvent(item);
 		}
 		else {
+			player.setDropItemEvent(item);
 			player.runDropEvent(fromInventory);
 		}
 	}
