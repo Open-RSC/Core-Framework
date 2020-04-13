@@ -12,7 +12,8 @@ public class Bones implements OpInvTrigger {
 		owner.message("You bury the "
 			+ item.getDef(owner.getWorld()).getName().toLowerCase());
 
-		owner.playSound("takeobject");
+		// TODO: Config for custom sounds.
+		//owner.playSound("takeobject");
 
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
