@@ -1213,35 +1213,37 @@ public class Functions {
 		addloc(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
 
 		int dir = object.getDirection();
+		int pdir = p.getSprite();
 		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
-			teleport(p, destination.getX(), destination.getY());
+			p.setLocation(Point.location(destination.getX(), destination.getY()));
 		} else if (dir == 0) {
 			if (p.getX() >= object.getX()) {
-				teleport(p, object.getX() - 1, object.getY());
+				p.setLocation(Point.location(object.getX() - 1, object.getY()));
 			} else {
-				teleport(p, object.getX(), object.getY());
+				p.setLocation(Point.location(object.getX(), object.getY()));
 			}
 		} else if (dir == 2) {
 			if (p.getY() <= object.getY()) {
-				teleport(p, object.getX(), object.getY() + 1);
+				p.setLocation(Point.location(object.getX(), object.getY() + 1));
 			} else {
-				teleport(p, object.getX(), object.getY());
+				p.setLocation(Point.location(object.getX(), object.getY()));
 			}
 		} else if (dir == 4) {
 			if (p.getX() > object.getX()) {
-				teleport(p, object.getX(), object.getY());
+				p.setLocation(Point.location(object.getX(), object.getY()));
 			} else {
-				teleport(p, object.getX() + 1, object.getY());
+				p.setLocation(Point.location(object.getX() + 1, object.getY()));
 			}
 		} else if (dir == 6) {
 			if (p.getY() >= object.getY()) {
-				teleport(p, object.getX(), object.getY() - 1);
+				p.setLocation(Point.location(object.getX(), object.getY() - 1));
 			} else {
-				teleport(p, object.getX(), object.getY());
+				p.setLocation(Point.location(object.getX(), object.getY()));
 			}
 		} else {
 			p.message("Failure - Contact an administrator");
 		}
+		p.setSprite(pdir);
 		delay(1000);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
