@@ -90,7 +90,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				return;
 			}
 
-			if (!affectedPlayer.withinRange(player.getLocation(), 4)) {
+			if (!affectedPlayer.withinRange(player.getLocation(), 4) || !player.canReach(affectedPlayer)) {
 				player.message("I'm not near enough");
 				player.getDuel().resetAll();
 				return;
