@@ -133,7 +133,7 @@ public class RangeEvent extends GameTickEvent {
 						return;
 					}
 				} else if(target.isPlayer()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Npc)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
