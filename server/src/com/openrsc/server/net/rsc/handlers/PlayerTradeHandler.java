@@ -238,7 +238,6 @@ public class PlayerTradeHandler implements PacketHandler {
 							}
 
 							for (Item item : myOffer) {
-								System.out.println(item.getCatalogId() + " " + item.getAmount() + " " + item.getNoted() + " " + item.getItemId());
 								Item affectedItem = player.getCarriedItems().getInventory().get(item);
 								if (affectedItem == null) {
 									player.setSuspiciousPlayer(true, "trade item is null");
