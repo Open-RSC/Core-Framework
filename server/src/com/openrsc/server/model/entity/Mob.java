@@ -992,6 +992,7 @@ public abstract class Mob extends Entity {
 		if (!this.isPlayer()) return;
 		Player p = (Player) this;
 		Item item = p.getDropItemEvent();
+		this.setDropItemEvent(null);
 		if (item == null) return;
 		int finalAmount = item.getAmount();
 		if (item.getDef(p.getWorld()).isStackable() || item.getItemStatus().getNoted() || finalAmount == 1) {
@@ -1048,4 +1049,23 @@ public abstract class Mob extends Entity {
 			});
 		}
 	}
+
+	protected Player talkToNpcEvent = null;
+
+	public void setTalkToNpcEvent(Player p) {
+		this.talkToNpcEvent = p;
+	}
+
+	public Player getTalkToNpcEvent() {
+		return this.talkToNpcEvent;
+	}
+
+	public void runTalkToNpcEvent() {
+		Player p = getTalkToNpcEvent();
+		setTalkToNpcEvent(null);
+		if (p.getWorld().getServer().getPluginHandler().handlePlugin(p, "TalkNpc", new Object[]{p, this})) {
+			p.setInteractingNpc((Npc) this);
+		}
+	}
+
 }

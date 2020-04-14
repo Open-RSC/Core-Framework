@@ -9,6 +9,9 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.plugins.Functions;
+
+import java.util.concurrent.Future;
 
 public final class NpcTalkTo implements PacketHandler {
 
@@ -27,7 +30,7 @@ public final class NpcTalkTo implements PacketHandler {
 		if (n == null) {
 			return;
 		}
-		player.setFollowing(n, 0);
+		player.setFollowing(n, 1);
 		player.setStatus(Action.TALKING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
@@ -54,18 +57,15 @@ public final class NpcTalkTo implements PacketHandler {
 								continue;
 							Point destination = canWalk(getPlayer().getWorld(), getPlayer().getX() - x, getPlayer().getY() - y);
 							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
-								n.teleport(destination.getX(), destination.getY());
-								break;
+								n.walk(destination.getX(), destination.getY());
+								n.setTalkToNpcEvent(getPlayer());
+								return;
 							}
 						}
 					}
 				}
-
-				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n}, this)) {
-					getPlayer().face(n);
-					n.face(getPlayer());
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n})) {
 					getPlayer().setInteractingNpc(n);
-					return;
 				}
 			}
 

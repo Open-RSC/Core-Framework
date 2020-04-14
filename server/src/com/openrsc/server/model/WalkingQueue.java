@@ -232,8 +232,13 @@ public class WalkingQueue {
 
 	public void reset() {
 		path = null;
-		if (this.mob.isPlayer() && this.mob.getDropItemEvent() != null) {
-			this.mob.runDropEvent(true);
+		if (this.mob.isPlayer()) {
+			if (this.mob.getDropItemEvent() != null) {
+				this.mob.runDropEvent(true);
+			}
+		}
+		if (this.mob.getTalkToNpcEvent() != null) {
+			this.mob.runTalkToNpcEvent();
 		}
 	}
 

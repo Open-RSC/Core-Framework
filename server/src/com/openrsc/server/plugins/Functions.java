@@ -422,28 +422,35 @@ public class Functions {
 	 * @param messages - String array of npc dialogue lines.
 	 */
 	public static void npcsay(final Player player, final Npc npc, final int delay, final String... messages) {
+
+		// Reset the walk action on the Npc (stop them from walking).
+		npc.resetPath();
+		player.resetPath();
+
+		// Set NPC to busy while they talk.
+		npc.setBusy(true);
+		player.setBusy(true);
+
+		// Face the player, face the npc.
+		npc.face(player);
+		if (!player.inCombat()) {
+			player.face(npc);
+		}
+
+		// Send each message with a delay between.
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc.isRemoved()) {
 					player.setBusy(false);
 					return;
 				}
-				npc.setBusy(true);
-				player.setBusy(true);
-				npc.resetPath();
-				player.resetPath();
-
 				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
-
-				npc.face(player);
-				if (!player.inCombat()) {
-					player.face(npc);
-				}
 			}
 
 			delay(delay);
 
 		}
+
 		npc.setBusy(false);
 		player.setBusy(false);
 	}
