@@ -2,14 +2,14 @@
 DROP TABLE IF EXISTS `openrsc_reindexer`;
 CREATE TABLE IF NOT EXISTS `openrsc_reindexer`
 (
-    `old_catalogId`      int(10) UNSIGNED DEFAULT NULL,
-    `catalogId`       int(10) UNSIGNED DEFAULT NULL,
+    `old_catalogID`      int(10) UNSIGNED DEFAULT NULL,
+    `catalogID`       int(10) UNSIGNED DEFAULT NULL,
     `noted`       tinyint(1) UNSIGNED DEFAULT 0,
-	PRIMARY KEY (`old_catalogId`)
+	PRIMARY KEY (`old_catalogID`)
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
-INSERT INTO `openrsc_reindexer` (`old_catalogId`, `catalogId`, `noted`)
+INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)
 VALUES (0, 0, 0),
        (1, 1, 0),
        (2, 2, 0),
@@ -510,7 +510,7 @@ VALUES (0, 0, 0),
        (497, 497, 0),
        (498, 498, 0),
        (499, 499, 0);
-INSERT INTO `openrsc_reindexer` (`old_catalogId`, `catalogId`, `noted`)
+INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)
 VALUES (500, 500, 0),
        (501, 501, 0),
        (502, 502, 0),
@@ -1011,7 +1011,7 @@ VALUES (500, 500, 0),
        (997, 997, 0),
        (998, 998, 0),
        (999, 999, 0);
-INSERT INTO `openrsc_reindexer` (`old_catalogId`, `catalogId`, `noted`)
+INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)
 VALUES (1000, 1000, 0),
        (1001, 1001, 0),
        (1002, 1002, 0),
@@ -1512,7 +1512,7 @@ VALUES (1000, 1000, 0),
        (1497, 239, 1),
        (1498, 241, 1),
        (1499, 243, 1);
-INSERT INTO `openrsc_reindexer` (`old_catalogId`, `catalogId`, `noted`)
+INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)
 VALUES (1500, 246, 1),
        (1501, 248, 1),
        (1502, 249, 1),
@@ -2013,7 +2013,7 @@ VALUES (1500, 246, 1),
        (1997, 969, 1),
        (1998, 970, 1),
        (1999, 971, 1);
-INSERT INTO `openrsc_reindexer` (`old_catalogId`, `catalogId`, `noted`)
+INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)
 VALUES (2000, 975, 1),
        (2001, 978, 1),
        (2002, 979, 1),
@@ -2278,11 +2278,12 @@ ALTER TABLE `openrsc_itemdef`
 
 DROP TABLE IF EXISTS `openrsc_itemstatuses`;
 CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses` (
-    `itemID` int(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
-    `catalogID`       int(10) UNSIGNED    NOT NULL,
-    `amount`   int(10) UNSIGNED NOT NULL DEFAULT 1,
-    `noted`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
-    `durability`     int(5) UNSIGNED NOT NULL DEFAULT 0,
+    `itemID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `catalogID` int(10) UNSIGNED NOT NULL,
+    `amount` int(10) UNSIGNED NOT NULL DEFAULT 1,
+    `noted` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+    `durability` int(5) UNSIGNED NOT NULL DEFAULT 0,
+    `playerID` int(10) UNSIGNED NOT NULL,
     PRIMARY KEY (`itemID`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -2292,18 +2293,18 @@ SELECT '1. openrsc_itemstatuses created.' AS '';
 -- Update current bank stacks with inventory NOTES
 UPDATE `openrsc_bank`
 JOIN `openrsc_invitems` ON openrsc_invitems.id = openrsc_bank.id
-JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 SET openrsc_bank.playerID = openrsc_bank.playerID,
-    openrsc_bank.id = openrsc_reindexer.catalogId,
+    openrsc_bank.id = openrsc_reindexer.catalogID,
     openrsc_bank.amount = openrsc_bank.amount + openrsc_invitems.amount
 WHERE openrsc_reindexer.noted = 1
 AND openrsc_invitems.playerID = openrsc_bank.playerID;
 
 -- Add new bank stacks for rest of inventory NOTES
 INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`)
-SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogId, openrsc_invitems.amount
+SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogID, openrsc_invitems.amount
 FROM `openrsc_invitems`
-JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 WHERE openrsc_reindexer.noted = 1
 AND NOT EXISTS (
     SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
@@ -2312,29 +2313,37 @@ AND NOT EXISTS (
 -- Update current bank stacks with inventory ITEMS
 UPDATE `openrsc_bank`
 JOIN `openrsc_invitems` ON openrsc_invitems.id = openrsc_bank.id
-JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 SET openrsc_bank.playerID = openrsc_bank.playerID,
-    openrsc_bank.id = openrsc_reindexer.catalogId,
+    openrsc_bank.id = openrsc_reindexer.catalogID,
     openrsc_bank.amount = openrsc_bank.amount + openrsc_invitems.amount
 WHERE openrsc_reindexer.noted = 0
 AND openrsc_invitems.playerID = openrsc_bank.playerID;
 
 -- Add new bank stacks for the rest of inventory ITEMS
 INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`)
-SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogId, openrsc_invitems.amount
+SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogID, openrsc_invitems.amount
 FROM `openrsc_invitems`
 JOIN `openrsc_reindexer`
-ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 WHERE openrsc_reindexer.noted = 0
 AND NOT EXISTS (
     SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
 );
 
+DROP TABLE `openrsc_reindexer`;
+
 SELECT '2. Items moved from openrsc_invitems to openrsc_bank.' AS '';
 
-INSERT INTO `openrsc_itemstatuses` (`catalogID`, `amount`)
-SELECT `id`, `amount`
+INSERT INTO `openrsc_itemstatuses` (`catalogID`, `amount`, `playerID`)
+SELECT `id`, `amount`, `playerID`
 FROM `openrsc_bank`;
+
+UPDATE `openrsc_bank`
+JOIN `openrsc_itemstatuses`
+    ON openrsc_bank.playerID = openrsc_itemstatuses.playerID
+    AND openrsc_bank.id = openrsc_itemstatuses.catalogID
+SET openrsc_bank.id = openrsc_itemstatuses.itemID;
 
 SELECT '3. Items updated in openrsc_itemstatuses.' AS '';
 
@@ -2347,6 +2356,8 @@ ALTER TABLE `openrsc_invitems` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 ALTER TABLE `openrsc_bank` DROP COLUMN `dbid`;
 ALTER TABLE `openrsc_bank` DROP COLUMN `amount`;
 ALTER TABLE `openrsc_bank` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
+
+ALTER TABLE `openrsc_itemstatuses` DROP COLUMN `playerID`;
 
 -- CABBAGE -- UNCOMMENT FOR RUNNING ON CABBAGE!!!!!!!!!!!!
 ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
