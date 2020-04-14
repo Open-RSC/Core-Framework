@@ -2289,9 +2289,46 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses` (
 
 SELECT '1. openrsc_itemstatuses created.' AS '';
 
+-- Update current bank stacks with inventory NOTES
+UPDATE `openrsc_bank`
+JOIN `openrsc_invitems` ON openrsc_invitems.id = openrsc_bank.id
+JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+SET openrsc_bank.playerID = openrsc_bank.playerID,
+    openrsc_bank.id = openrsc_reindexer.catalogId,
+    openrsc_bank.amount = openrsc_bank.amount + openrsc_invitems.amount
+WHERE openrsc_reindexer.noted = 1
+AND openrsc_invitems.playerID = openrsc_bank.playerID;
+
+-- Add new bank stacks for rest of inventory NOTES
 INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`)
-SELECT `playerID`, `id`, `amount`
-FROM `openrsc_invitems`;
+SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogId, openrsc_invitems.amount
+FROM `openrsc_invitems`
+JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+WHERE openrsc_reindexer.noted = 1
+AND NOT EXISTS (
+    SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
+);
+
+-- Update current bank stacks with inventory ITEMS
+UPDATE `openrsc_bank`
+JOIN `openrsc_invitems` ON openrsc_invitems.id = openrsc_bank.id
+JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+SET openrsc_bank.playerID = openrsc_bank.playerID,
+    openrsc_bank.id = openrsc_reindexer.catalogId,
+    openrsc_bank.amount = openrsc_bank.amount + openrsc_invitems.amount
+WHERE openrsc_reindexer.noted = 0
+AND openrsc_invitems.playerID = openrsc_bank.playerID;
+
+-- Add new bank stacks for the rest of inventory ITEMS
+INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`)
+SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogId, openrsc_invitems.amount
+FROM `openrsc_invitems`
+JOIN `openrsc_reindexer`
+ON openrsc_invitems.id = openrsc_reindexer.old_catalogId
+WHERE openrsc_reindexer.noted = 0
+AND NOT EXISTS (
+    SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
+);
 
 SELECT '2. Items moved from openrsc_invitems to openrsc_bank.' AS '';
 
@@ -2306,10 +2343,6 @@ DELETE FROM `openrsc_invitems`;
 ALTER TABLE `openrsc_invitems` DROP COLUMN `dbid`;
 ALTER TABLE `openrsc_invitems` DROP COLUMN `amount`;
 ALTER TABLE `openrsc_invitems` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
-<<<<<<< HEAD
--- ALTER TABLE `openrsc_invitems` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
-=======
->>>>>>> Add reindexer to rework_conversion.sql. It is not properly implemented yet, however.
 
 ALTER TABLE `openrsc_bank` DROP COLUMN `dbid`;
 ALTER TABLE `openrsc_bank` DROP COLUMN `amount`;
@@ -2319,9 +2352,5 @@ ALTER TABLE `openrsc_bank` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 ALTER TABLE `openrsc_equipped` DROP COLUMN `amount`;
 ALTER TABLE `openrsc_equipped` DROP COLUMN `dbid`;
-<<<<<<< HEAD
--- ALTER TABLE `openrsc_equipped` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
-=======
 ALTER TABLE `openrsc_curstats` ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
 ALTER TABLE `openrsc_experience` ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;
->>>>>>> Add reindexer to rework_conversion.sql. It is not properly implemented yet, however.
