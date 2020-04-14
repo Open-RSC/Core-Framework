@@ -40417,15 +40417,4 @@ VALUES (1, 'Where were you born?'),
        (17, 'What is your favourite food?'),
        (18, 'What is your favourite movie?');
 
-ALTER TABLE `openrsc_players`
-    DROP COLUMN IF EXISTS `skulled`;
-ALTER TABLE `openrsc_players`
-    DROP COLUMN IF EXISTS `charged`;
-ALTER TABLE `openrsc_players`
-    DROP COLUMN IF EXISTS `onexp_mode`;
-ALTER TABLE `openrsc_players`
-    DROP COLUMN IF EXISTS `forum_active`;
-ALTER TABLE `openrsc_curstats`
-    ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
-ALTER TABLE `openrsc_experience`
-    ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;
+

@@ -30,7 +30,7 @@ DELETE FROM `openrsc_invitems`;
 ALTER TABLE `openrsc_invitems` DROP COLUMN `dbid`;
 ALTER TABLE `openrsc_invitems` DROP COLUMN `amount`;
 ALTER TABLE `openrsc_invitems` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
---ALTER TABLE `openrsc_invitems` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
+-- ALTER TABLE `openrsc_invitems` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
 
 ALTER TABLE `openrsc_bank` DROP COLUMN `dbid`;
 ALTER TABLE `openrsc_bank` DROP COLUMN `amount`;
@@ -40,4 +40,4 @@ ALTER TABLE `openrsc_bank` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 ALTER TABLE `openrsc_equipped` DROP COLUMN `amount`;
 ALTER TABLE `openrsc_equipped` DROP COLUMN `dbid`;
---ALTER TABLE `openrsc_equipped` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
+-- ALTER TABLE `openrsc_equipped` ADD COLUMN `itemID` int(10) UNSIGNED NOT NULL;
