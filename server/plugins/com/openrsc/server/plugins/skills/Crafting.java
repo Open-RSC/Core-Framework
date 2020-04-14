@@ -614,7 +614,10 @@ public class Crafting implements UseInvTrigger,
 						return;
 					}
 				}
-				if (owner.getCarriedItems().remove(gem.getCatalogId(), 1, true) > -1) {
+				Item item = owner.getCarriedItems().getInventory().get(
+					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId()));
+				if (item.getItemStatus().getNoted()) return;
+				if (owner.getCarriedItems().remove(item, true) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail
 

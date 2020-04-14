@@ -178,7 +178,7 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().resetRange();
 						return;
 					}
-					getPlayerOwner().getCarriedItems().getEquipment().remove(ammo.getCatalogId(), 1);
+					getPlayerOwner().getCarriedItems().getEquipment().remove(ammo, 1);
 					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
 				} else {
 					for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
@@ -230,8 +230,8 @@ public class RangeEvent extends GameTickEvent {
 								return;
 							}
 						}
-
-						getPlayerOwner().getCarriedItems().remove(arrow.getCatalogId(), 1, true);
+						Item toRemove = new Item(arrow.getCatalogId(), 1, false, arrow.getItemId());
+						getPlayerOwner().getCarriedItems().remove(toRemove, true);
 						break;
 					}
 				}

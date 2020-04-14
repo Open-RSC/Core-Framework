@@ -413,6 +413,8 @@ public class Bank {
 				// Check if the bank is empty
 				if (list.isEmpty()) return false;
 
+				Item item = list.get(getFirstIndexById(catalogID));
+
 				// Cap the max requestedAmount
 				requestedAmount = Math.min(requestedAmount, countId(catalogID));
 
@@ -423,7 +425,7 @@ public class Bank {
 				Item withdrawItem = null;
 
 				for (Item iteratedItem : list) {
-					if (iteratedItem.getCatalogId() == catalogID) {
+					if (iteratedItem.getItemId() == item.getItemId()) {
 						withdrawItem = iteratedItem;
 						break;
 					}
@@ -516,12 +518,15 @@ public class Bank {
 					return false;
 				}
 
+				Item item = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(catalogID));
+
 				// Find inventory slot that contains the requested catalogID
 				Item depositItem = null;
 				ListIterator<Item> playerItems = items.listIterator(items.size());
 				while (playerItems.hasPrevious()) {
 					Item i = playerItems.previous();
-					if (i.getCatalogId() == catalogID) {
+					if (i.getItemId() == item.getItemId()) {
 						depositItem = i;
 						break;
 					}
@@ -555,15 +560,10 @@ public class Bank {
 					return false;
 				}
 
-				// Player's shouldn't be able to bank notes
-				if (depositItem.getNoted()) {
-					try{depositItem.setNoted(player.getWorld().getServer().getDatabase(), false);}
-					catch (GameDatabaseException ex) { LOGGER.error(ex.getMessage()); return false; }
-				}
-
 				// Attempt to remove the item from the inventory.
 				// Remove the item's status entry if none will be left in the inventory.
-				if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), depositAmount, updateClient) == -1) {
+				Item toRemove = new Item(depositItem.getCatalogId(), depositAmount, depositItem.getNoted(), depositItem.getItemId());
+				if (player.getCarriedItems().getInventory().remove(toRemove, updateClient) == -1) {
 					System.out.println(player.getUsername() + " failed to remove item from inventory: " + catalogID);
 					return false;
 				}

@@ -41,7 +41,7 @@ public final class ItemDropHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true, "item drop null item");
 			return;
 		}
-		final Item item = tempitem.clone();
+		final Item item = new Item(tempitem.getCatalogId(), amount, tempitem.getNoted(), tempitem.getItemId());
 
 		if (amount <= 0) {
 			return;

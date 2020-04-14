@@ -257,7 +257,10 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.STAKE.id()) && p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id())) {
-				p.getCarriedItems().remove(ItemId.STAKE.id(), 1, true);
+				Item item = p.getCarriedItems().getInventory().get(
+					p.getCarriedItems().getInventory().getLastIndexById(ItemId.STAKE.id()));
+				if (item.getItemStatus().getNoted()) return;
+				p.getCarriedItems().remove(item, true);
 				p.message("You hammer the stake in to the vampires chest!");
 				n.killedBy(p);
 				n.remove();

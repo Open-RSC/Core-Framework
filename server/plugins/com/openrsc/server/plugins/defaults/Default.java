@@ -137,7 +137,7 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (fromInventory) {
-			if (p.getCarriedItems().remove(i.getCatalogId(), i.getAmount()) < 0) {
+			if (p.getCarriedItems().remove(i) < 0) {
 				p.setStatus(Action.IDLE);
 				return;
 			}
@@ -147,7 +147,7 @@ public class Default implements DefaultHandler,
 				p.setStatus(Action.IDLE);
 				return;
 			}
-			p.getCarriedItems().getEquipment().remove(i.getCatalogId(), i.getAmount());
+			p.getCarriedItems().getEquipment().remove(i, i.getAmount());
 			ActionSender.sendEquipmentStats(p);
 			if (i.getDef(p.getWorld()).getWieldPosition() < 12)
 				p.updateWornItems(i.getDef(p.getWorld()).getWieldPosition(), p.getSettings().getAppearance().getSprite(i.getDef(p.getWorld()).getWieldPosition()));

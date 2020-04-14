@@ -127,8 +127,14 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					if (ci.remove(featherID, 1, true) > -1
-						&& ci.remove(attachmentID, 1, true) > -1) {
+					Item item = ci.getInventory().get(
+						ci.getInventory().getLastIndexById(featherID));
+					Item featherToRemove = new Item(featherID, 1, false, item.getItemId());
+					item = ci.getInventory().get(
+						ci.getInventory().getLastIndexById(attachmentID));
+					Item attachmentToRemove = new Item(attachmentID, 1, false, item.getItemId());
+					if (ci.remove(featherToRemove, true) > -1
+						&& ci.remove(attachmentToRemove, true) > -1) {
 						ci.getInventory().add(new Item(itemID, 1), true);
 						owner.incExp(Skills.FLETCHING, exp, true);
 						// ActionSender.sendInventory(owner);
@@ -200,8 +206,14 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					if (ci.remove(headlessArrowsID, 1, true) > -1
-						&& ci.remove(arrowHeadsID, 1, true) > -1) {
+					Item item = ci.getInventory().get(
+						ci.getInventory().getLastIndexById(headlessArrowsID));
+					Item headlessToRemove = new Item(headlessArrowsID, 1, false, item.getItemId());
+					item = ci.getInventory().get(
+						ci.getInventory().getLastIndexById(arrowHeadsID));
+					Item arrowHeadsToRemove = new Item(arrowHeadsID, 1, false, item.getItemId());
+					if (ci.remove(headlessToRemove, true) > -1
+						&& ci.remove(arrowHeadsToRemove, true) > -1) {
 						//Successful make attempt
 						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
 						ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));

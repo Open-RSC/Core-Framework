@@ -21,22 +21,26 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 		SpellDef spellDef = p.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
 		if (spellDef == null)
 			return;
+		Item item = p.getCarriedItems().getInventory().get(
+			p.getCarriedItems().getInventory().getLastIndexById(ItemId.DRAGONSTONE_RING.id()));
+		if (item.getItemStatus().getNoted()) return;
 
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
 			p.message("What type of dragonstone ring would you like to make?");
 			delay(600);
 			int choice = Functions.multi(p, "Ring of Wealth", "Ring of Avarice");
-			int item;
+			int i;
 			if (choice == 0) {
-				item = ItemId.RING_OF_WEALTH.id();
+				i = ItemId.RING_OF_WEALTH.id();
 			} else if (choice == 1) {
-				item = ItemId.RING_OF_AVARICE.id();
+				i = ItemId.RING_OF_AVARICE.id();
 			} else {
 				return;
 			}
 			SpellHandler.checkAndRemoveRunes(p,spellDef);
-			p.getCarriedItems().remove(ItemId.DRAGONSTONE_RING.id(), 1, false);
-			p.getCarriedItems().getInventory().add(new Item(item));
+			Item toRemove = new Item(item.getCatalogId(), 1, false, item.getItemId());
+			p.getCarriedItems().remove(toRemove, false);
+			p.getCarriedItems().getInventory().add(new Item(i));
 			SpellHandler.finalizeSpell(p, spellDef, "You succesfully enchant the ring");
 		}
 	}

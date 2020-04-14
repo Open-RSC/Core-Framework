@@ -238,6 +238,7 @@ public class PlayerTradeHandler implements PacketHandler {
 							}
 
 							for (Item item : myOffer) {
+								System.out.println(item.getCatalogId() + " " + item.getAmount() + " " + item.getNoted() + " " + item.getItemId());
 								Item affectedItem = player.getCarriedItems().getInventory().get(item);
 								if (affectedItem == null) {
 									player.setSuspiciousPlayer(true, "trade item is null");
@@ -251,11 +252,11 @@ public class PlayerTradeHandler implements PacketHandler {
 								// Create item to be traded.
 								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
 
-								// Remove item to be traded quantity from inventory.
-								item = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted());
+								// Create item to be traded.
+								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
-								// Remove item to be traded quanti:qty from inventory.
-								player.getCarriedItems().remove(item);
+								// Remove item to be traded quantity from inventory.
+								player.getCarriedItems().remove(affectedItem);
 							}
 
 							for (Item item : theirOffer) {
@@ -272,16 +273,18 @@ public class PlayerTradeHandler implements PacketHandler {
 								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
 
 								// Create item to be traded.
-								item = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted());
+								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
 								// Remove item to be traded quantity from inventory.
-								affectedPlayer.getCarriedItems().remove(item);
+								affectedPlayer.getCarriedItems().remove(affectedItem);
 							}
 
 							for (Item item : myOffer) {
+								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 								affectedPlayer.getCarriedItems().getInventory().add(item);
 							}
 							for (Item item : theirOffer) {
+								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 								player.getCarriedItems().getInventory().add(item);
 							}
 

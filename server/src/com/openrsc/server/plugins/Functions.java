@@ -302,11 +302,8 @@ public class Functions {
 		}
 
 		final Item item = new Item(id, 1);
-		if (!item.getDef(p.getWorld()).isStackable()) {
-			p.getCarriedItems().remove(id, 1, true);
-		} else {
-			p.getCarriedItems().remove(id, amt, true);
-		}
+		final int amount = item.getDef(p.getWorld()).isStackable() ? amt : 1;
+		p.getCarriedItems().remove(new Item(id, amount, false, item.getItemId()), true);
 		return true;
 	}
 

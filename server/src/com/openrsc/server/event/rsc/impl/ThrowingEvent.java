@@ -136,7 +136,7 @@ public class ThrowingEvent extends GameTickEvent {
 					if (rangeType == null)
 						return;
 
-					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType.getCatalogId(), 1);
+					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType, 1);
 				} else {
 					slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(throwingID);
 					if (slot < 0) {
@@ -146,7 +146,8 @@ public class ThrowingEvent extends GameTickEvent {
 					if (rangeType == null) { // This shouldn't happen
 						return;
 					}
-					getPlayerOwner().getCarriedItems().remove(rangeType.getCatalogId(), 1, true);
+					Item toRemove = new Item(rangeType.getCatalogId(), 1, false, rangeType.getItemId());
+					getPlayerOwner().getCarriedItems().remove(toRemove, true);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {

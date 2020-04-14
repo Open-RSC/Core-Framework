@@ -964,7 +964,7 @@ public final class Admins implements CommandTrigger {
 					if (equipped == null)
 						continue;
 					wearableId = p.getCarriedItems().getEquipment().get(i).getDef(player.getWorld()).getWearableId();
-					p.getCarriedItems().getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
+					p.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
 					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
 							wearableId, false);
 				}

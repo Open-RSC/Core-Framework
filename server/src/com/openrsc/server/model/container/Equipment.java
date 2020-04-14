@@ -91,16 +91,17 @@ public class Equipment {
 	/**
 	 * Removes an item from the equipment container. Updates the database instantly.
 	 */
-	public int remove(int id, int amount) {
+	public int remove(Item item, int amount) {
 		synchronized (list) {
 			try {
+				int itemId = item.getItemId();
 				for (int i = 0; i < SLOT_COUNT; i++) {
 					Item curEquip = list[i];
 					if (curEquip == null || curEquip.getDef(player.getWorld()) == null)
 						continue;
 					ItemDefinition curEquipDef = curEquip.getDef(player.getWorld());
 
-					if (curEquip.getCatalogId() == id) {
+					if (curEquip.getItemId() == itemId) {
 						int curAmount = curEquip.getAmount();
 						if (!curEquipDef.isStackable() && amount > 1)
 							return -1;
@@ -163,7 +164,7 @@ public class Equipment {
 							player.message("You need more inventory space to unequip that.");
 							return false;
 						}
-						if (remove(request.item.getCatalogId(), request.item.getAmount()) == -1)
+						if (remove(request.item, request.item.getAmount()) == -1)
 							return false;
 						request.item.setWielded(false);
 						player.getCarriedItems().getInventory().add(request.item, true);
@@ -179,7 +180,7 @@ public class Equipment {
 							player.message("You need more inventory space to unequip that.");
 							return false;
 						}
-						if (remove(request.item.getCatalogId(), request.item.getAmount()) == -1)
+						if (remove(request.item, request.item.getAmount()) == -1)
 							return false;
 						request.item.setWielded(false);
 						player.getBank().add(request.item);
