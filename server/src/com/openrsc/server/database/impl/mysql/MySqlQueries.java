@@ -20,6 +20,7 @@ public class MySqlQueries {
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate, playerLastRecoveryTryId;
 	public final String dropLogSelect, dropLogInsert, dropLogUpdate, npcDefs, npcDrops, itemDefs, banPlayer, unbanPlayer;
 	public final String addNpcSpawn, removeNpcSpawn, addObjectSpawn, removeObjectSpawn, addItemSpawn, removeItemSpawn;
+	public final String clans, clanMembers, newClan, newClanMember;
 
 	private final Server server;
 
@@ -149,6 +150,11 @@ public class MySqlQueries {
 		removeObjectSpawn = "DELETE FROM `" + PREFIX + "objects` WHERE x=? AND y=? AND id=? AND direction=? AND type=?";
 		addItemSpawn = "INSERT INTO `" + PREFIX + "grounditems`(`id`, `x`, `y`, `amount`, `respawn`) VALUES (?, ?, ?, ?, ?)";
 		removeItemSpawn = "DELETE FROM `" + PREFIX + "grounditems` WHERE id=? AND x=? AND y=?";
+
+		clans = "SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `clan_points` FROM `" + PREFIX + "clan`";
+		clanMembers = "SELECT `username`, `rank`, `kills`, `deaths` FROM `\" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + \"clan_players` WHERE `clan_id`=?";
+		newClan = "INSERT INTO `" + PREFIX + "clan`(`name`, `tag`, `leader`) VALUES (?,?,?)";
+		newClanMember = "INSERT INTO `" + PREFIX + "clan_players`(`clan_id`, `username`, `rank`) VALUES (?,?,?)";
 
 		//unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 		//teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";

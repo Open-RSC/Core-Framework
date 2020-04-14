@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 /**
@@ -936,6 +937,109 @@ public class MySqlGameDatabase extends GameDatabase {
 				resultSet.close();
 			}
 		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected ClanDef[] queryClans() throws GameDatabaseException {
+		try {
+			final ArrayList<ClanDef> clans = new ArrayList<>();
+
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().clans);
+			final ResultSet resultSet = statement.executeQuery();
+
+			try {
+				while (resultSet.next()) {
+					ClanDef clan = new ClanDef();
+					clan.id = resultSet.getInt("id");
+					clan.name = resultSet.getString("name");
+					clan.tag = resultSet.getString("tag");
+					clan.kick_setting = resultSet.getInt("kick_setting");
+					clan.invite_setting = resultSet.getInt("invite_setting");
+					clan.allow_search_join = resultSet.getInt("allow_search_join");
+					clan.clan_points = resultSet.getInt("clan_points");
+
+					clans.add(clan);
+				}
+				return clans.toArray(new ClanDef[clans.size()]);
+			} finally {
+				statement.close();
+				resultSet.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected ClanMember[] queryClanMembers(int clanId) throws GameDatabaseException {
+		try {
+			final ArrayList<ClanMember> clanMembers = new ArrayList<>();
+
+			final PreparedStatement preparedStatement = getConnection().prepareStatement(getQueries().clanMembers);
+			preparedStatement.setInt(1, clanId);
+			final ResultSet resultSet = preparedStatement.executeQuery();
+
+			try {
+				while (resultSet.next()) {
+					ClanMember clanMember = new ClanMember();
+					clanMember.username = resultSet.getString("username");
+					clanMember.rank = resultSet.getInt("rank");
+					clanMember.kills = resultSet.getInt("kills");
+					clanMember.deaths = resultSet.getInt("deaths");
+
+					clanMembers.add(clanMember);
+				}
+				return clanMembers.toArray(new ClanMember[clanMembers.size()]);
+			} finally {
+				preparedStatement.close();
+				resultSet.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected int queryNewClan(String name, String tag, String leader) throws GameDatabaseException {
+		try {
+			final PreparedStatement preparedStatement = getConnection().prepareStatement(getQueries().newClan, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, tag);
+			preparedStatement.setString(3, leader);
+			preparedStatement.executeUpdate();
+
+			final ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+			try {
+				if (resultSet.next()) {
+					return resultSet.getInt(1);
+				}
+				return -1;
+			} finally {
+				preparedStatement.close();
+				resultSet.close();
+			}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryNewClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newClanMember);
+			for (ClanMember clanMember : clanMembers) {
+				statement.setInt(1, clanId);
+				statement.setString(2, clanMember.username);
+				statement.setInt(3, clanMember.rank);
+				statement.addBatch();
+			}
+			try { statement.executeBatch(); }
+			finally { statement.close(); }
+
+		} catch (SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}

@@ -95,6 +95,11 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId) throws GameDatabaseException;
 	protected abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
 
+	protected abstract ClanDef[] queryClans() throws GameDatabaseException;
+	protected abstract ClanMember[] queryClanMembers(final int clanId) throws GameDatabaseException;
+	protected abstract int queryNewClan(final String name, final String tag, final String leader) throws GameDatabaseException;
+	protected abstract void queryNewClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException;
+
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
 	protected abstract void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException;
@@ -388,6 +393,22 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	// Inserts a new recovery attempt into the database and returns the database index of the attempt.
 	public int newRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException {
 		return queryInsertRecoveryAttempt(playerId, username, time, ip);
+	}
+
+	public ClanDef[] getClans() throws GameDatabaseException {
+		return queryClans();
+	}
+
+	public ClanMember[] getClanMembers(final int clanId) throws GameDatabaseException {
+		return queryClanMembers(clanId);
+	}
+
+	public int newClan(final String name, final String tag, final String leader) throws GameDatabaseException {
+		return queryNewClan(name, tag, leader);
+	}
+
+	public void newClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException {
+		queryNewClanMembers(clanId, clanMembers);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {
