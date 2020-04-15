@@ -19,7 +19,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		player.resetAll();
 		final Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
 		final Item item = player.getCarriedItems().getInventory().get(p.readShort());
-		if (affectedPlayer == null || item == null) {
+		if (affectedPlayer == null || item == null || item.getItemStatus().getNoted()) {
 			return;
 		}
 		if (System.currentTimeMillis() - affectedPlayer.getLastRun() < 2000) {
