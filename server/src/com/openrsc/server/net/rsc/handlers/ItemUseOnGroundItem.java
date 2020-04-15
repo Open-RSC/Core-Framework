@@ -50,6 +50,11 @@ public class ItemUseOnGroundItem implements PacketHandler {
 			return;
 		}
 
+		if (myItem.getItemStatus().getNoted() || myItem.getItemStatus().getNoted()) {
+			player.message("Nothing interesting happens");
+			return;
+		}
+
 		boolean firemaking = myItem.getCatalogId() == ItemId.TINDERBOX.id();
 		player.setStatus(Action.USING_Item_ON_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player,
