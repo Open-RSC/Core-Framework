@@ -114,7 +114,7 @@ public class ItemUseOnObject implements PacketHandler {
 					return;
 			} else
 				item = player.getCarriedItems().getInventory().get(slotID);
-			if (object == null || object.getType() == 0 || item == null) { // This
+			if (object.getType() == 0 || item == null || item.getItemStatus().getNoted()) { // This
 				player.setSuspiciousPlayer(true, "item on null equipment slot or something");
 				return;
 			}
@@ -131,7 +131,7 @@ public class ItemUseOnObject implements PacketHandler {
 				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
 				item = player.getCarriedItems().getInventory().get(slotID);
-			if (object == null || object.getType() == 1 || item == null) { // This
+			if (object.getType() == 1 || item == null || item.getItemStatus().getNoted()) { // This
 				player.setSuspiciousPlayer(true, "null item or object");
 				return;
 			}
