@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
@@ -26,6 +23,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.snapshot.Chatlog;
+import com.openrsc.server.model.struct.EquipRequest;
+import com.openrsc.server.model.struct.EquipRequest.RequestType;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -41,6 +40,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 
 import static com.openrsc.server.plugins.Functions.*;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -77,10 +78,10 @@ public final class Admins implements CommandTrigger {
 
 	@Override
 	public void onCommand(String cmd, String[] args, final Player player) {
-		if(messagePrefix == null) {
+		if (messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}
-		if(badSyntaxPrefix == null) {
+		if (badSyntaxPrefix == null) {
 			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
 		}
 
@@ -136,7 +137,7 @@ public final class Admins implements CommandTrigger {
 			try {
 				minute = Integer.parseInt(args[1]);
 
-				if(minute < 0 || minute > 60) {
+				if (minute < 0 || minute > 60) {
 					player.message(messagePrefix + "The minute of the hour must be between 0 and 60");
 				}
 			} catch (NumberFormatException ex) {
@@ -293,16 +294,14 @@ public final class Admins implements CommandTrigger {
 								if (rareDrops.containsKey(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase())) {
 									int amount = rareDrops.get(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase());
 									rareDrops.put(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase(), amount + kbdSpecificLoot.getAmount());
-								} else
-								{
+								} else {
 									rareDrops.put(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase(), kbdSpecificLoot.getAmount());
 								}
 							} else {
 								if (rareDrops.containsKey("miss")) {
 									int amount = rareDrops.get("miss");
 									rareDrops.put("miss", amount + 1);
-								} else
-								{
+								} else {
 									rareDrops.put("miss", 1);
 								}
 							}
@@ -325,16 +324,14 @@ public final class Admins implements CommandTrigger {
 						if (rareDrops.containsKey("miss")) {
 							int amount = rareDrops.get("miss");
 							rareDrops.put("miss", amount + 1);
-						} else
-						{
+						} else {
 							rareDrops.put("miss", 1);
 						}
 					} else {
 						if (rareDrops.containsKey(rare.getDef(player.getWorld()).getName().toLowerCase())) {
 							int amount = rareDrops.get(rare.getDef(player.getWorld()).getName().toLowerCase());
 							rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), amount + rare.getAmount());
-						} else
-						{
+						} else {
 							rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), rare.getAmount());
 						}
 					}
@@ -346,8 +343,7 @@ public final class Admins implements CommandTrigger {
 				Map.Entry<String, Integer> entry = itr.next();
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
-		}
-		else if (cmd.equalsIgnoreCase("simulatedrop")) {
+		} else if (cmd.equalsIgnoreCase("simulatedrop")) {
 			if (args.length < 2 || args.length == 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] [max_attempts]");
 				return;
@@ -768,6 +764,35 @@ public final class Admins implements CommandTrigger {
 		} else if (cmd.equalsIgnoreCase("quickbank")) { // Show the bank screen to yourself
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
+		} else if (cmd.equals("beastmode")) {
+			if (player.getCarriedItems().getInventory().full()) {
+				player.message("Need at least one free inventory space.");
+			} else {
+				List<Integer> questsToComplete = newArrayList(
+					Quests.LEGENDS_QUEST,
+					Quests.HEROS_QUEST,
+					Quests.DRAGON_SLAYER
+				);
+				List<Item> beastItems = newArrayList(
+					new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
+					new Item(ItemId.DRAGON_SQUARE_SHIELD.id()),
+					new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
+					new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
+					new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
+					new Item(ItemId.CAPE_OF_LEGENDS.id()),
+					new Item(ItemId.DRAGON_AXE.id())
+				);
+				for (Integer quest : questsToComplete) {
+					if (player.getQuestStage(quest) != Quests.QUEST_STAGE_COMPLETED) {
+						player.updateQuestStage(quest, Quests.QUEST_STAGE_COMPLETED);
+						player.message(String.format("Congratulations, you completed quest %s.", quest)); //TODO: use quest name instead
+					}
+				}
+				for (Item item : beastItems) {
+					player.getCarriedItems().getInventory().add(item);
+					player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, item, RequestType.FROM_INVENTORY, false));
+				}
+			}
 		} else if (cmd.equalsIgnoreCase("heal")) {
 			Player p = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
@@ -967,7 +992,7 @@ public final class Admins implements CommandTrigger {
 					wearableId = p.getCarriedItems().getEquipment().get(i).getDef(player.getWorld()).getWearableId();
 					p.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
 					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
-							wearableId, false);
+						wearableId, false);
 				}
 			}
 
@@ -978,7 +1003,7 @@ public final class Admins implements CommandTrigger {
 				if (i.isWielded()) {
 					i.setWielded(false);
 					p.updateWornItems(i.getDef(player.getWorld()).getWieldPosition(), i.getDef(player.getWorld()).getAppearanceId(),
-							i.getDef(player.getWorld()).getWearableId(), false);
+						i.getDef(player.getWorld()).getWearableId(), false);
 				}
 				iterator.remove();
 			}
@@ -1007,7 +1032,7 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			synchronized(p.getBank().getItems()) {
+			synchronized (p.getBank().getItems()) {
 				p.getBank().getItems().clear();
 			}
 			if (p.getUsernameHash() != player.getUsernameHash()) {
@@ -1938,9 +1963,8 @@ public final class Admins implements CommandTrigger {
 			});
 
 			player.message(messagePrefix + "You have spawned " + player.getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
-		}
-		else if(cmd.equalsIgnoreCase("holidayevent") || cmd.equalsIgnoreCase("toggleholiday")) {
-			GameObjectLoc[] locs = new GameObjectLoc[] {
+		} else if (cmd.equalsIgnoreCase("holidayevent") || cmd.equalsIgnoreCase("toggleholiday")) {
+			GameObjectLoc[] locs = new GameObjectLoc[]{
 				new GameObjectLoc(1238, new Point(127, 648), 1, 0),
 				new GameObjectLoc(1238, new Point(123, 656), 2, 0),
 				new GameObjectLoc(1238, new Point(126, 656), 2, 0),
@@ -1963,22 +1987,22 @@ public final class Admins implements CommandTrigger {
 
 			final GameObject existingObject = player.getViewArea().getGameObject(locs[0].getLocation());
 
-			if(existingObject != null && existingObject.getType() != 1 && (existingObject.getID() != 1238 && existingObject.getID() != 1239)) {
+			if (existingObject != null && existingObject.getType() != 1 && (existingObject.getID() != 1238 && existingObject.getID() != 1239)) {
 				player.message(messagePrefix + "Could not enable christmas trees because object exists: " + existingObject.getGameObjectDef().getName());
 				return;
 			}
 
 			boolean remove = existingObject != null && existingObject.getType() != 1 && (existingObject.getID() == 1238 || existingObject.getID() == 1239);
 
-			for(int i = 0; i < locs.length; i++) {
+			for (int i = 0; i < locs.length; i++) {
 				GameObjectLoc loc = locs[i];
 				GameObject object = player.getViewArea().getGameObject(loc.getLocation());
 
-				if(object != null) {
+				if (object != null) {
 					player.getWorld().unregisterGameObject(object);
 				}
 
-				if(!remove) {
+				if (!remove) {
 					GameObject newObject = new GameObject(player.getWorld(), loc);
 					player.getWorld().registerGameObject(newObject);
 				}
