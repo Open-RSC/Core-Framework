@@ -1027,13 +1027,15 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryNewClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException {
+	protected void querySaveClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException {
 		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newClanMember);
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().saveClanMember);
 			for (ClanMember clanMember : clanMembers) {
 				statement.setInt(1, clanId);
 				statement.setString(2, clanMember.username);
 				statement.setInt(3, clanMember.rank);
+				statement.setInt(4, clanMember.kills);
+				statement.setInt(5, clanMember.deaths);
 				statement.addBatch();
 			}
 			try { statement.executeBatch(); }
@@ -1041,6 +1043,64 @@ public class MySqlGameDatabase extends GameDatabase {
 
 		} catch (SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryDeleteClan(int clanId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().deleteClan);
+			statement.setInt(1, clanId);
+
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryDeleteClanMembers(int clanId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().deleteClanMembers);
+			statement.setInt(1, clanId);
+
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryUpdateClan(ClanDef clan) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateClan);
+			statement.setString(1, clan.name);
+			statement.setString(2, clan.tag);
+			statement.setString(3, clan.leader);
+			statement.setInt(4, clan.kick_setting);
+			statement.setInt(5, clan.invite_setting);
+			statement.setInt(6, clan.allow_search_join);
+			statement.setInt(7, clan.clan_points);
+			statement.setInt(8, clan.id);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException e) {
+			throw new GameDatabaseException(this, e.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryUpdateClanMember(ClanMember clanMember) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateClanMember);
+			statement.setInt(1, clanMember.rank);
+			statement.setString(2, clanMember.username);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException e) {
+			throw new GameDatabaseException(this, e.getMessage());
 		}
 	}
 
