@@ -45,8 +45,8 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 					"We'll split the reward");
 				npcsay(p, n, "Oh ok");
 				Functions.mes(p, "You hand over the shield parts");
-				remove(p, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
-				remove(p, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()));
+				p.getCarriedItems().remove(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()));
 				Functions.mes(p, "The curator writes out two certificates");
 				give(p, ItemId.CERTIFICATE.id(), 1);
 				give(p, ItemId.CERTIFICATE.id(), 1);
@@ -111,7 +111,7 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 					"Normally I wouldn't do this",
 					"But in this instance I don't see why not",
 					"There you go, good luck student...");
-				remove(p, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id()));
 				give(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
 				npcsay(p, n, "Be sure to come back and show me your certificates",
 					"I would like to see how you get on");
@@ -120,14 +120,14 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 				npcsay(p, n, "No, I don't want it back, thankyou");
 			} else if (item.getCatalogId() == ItemId.LEVEL_1_CERTIFICATE.id()) {
 				say(p, n, "Look what I have been awarded");
-				remove(p, ItemId.LEVEL_1_CERTIFICATE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.LEVEL_1_CERTIFICATE.id()));
 				npcsay(p, n, "Well that's great, well done",
 					"I'll take that for safekeeping",
 					"Come and tell me when you are the next level");
 			} else if (item.getCatalogId() == ItemId.LEVEL_2_CERTIFICATE.id()) {
 				say(p, n, "Look, I am level 2 now...");
 				npcsay(p, n, "Excellent work!");
-				remove(p, ItemId.LEVEL_2_CERTIFICATE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.LEVEL_2_CERTIFICATE.id()));
 				npcsay(p, n, "I'll take that for safekeeping",
 					"Remember to come and see me when you have graduated");
 			} else if (item.getCatalogId() == ItemId.LEVEL_3_CERTIFICATE.id()) {
@@ -140,12 +140,12 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 					"Something to eat please",
 					"Something to drink please");
 				if (menu == 0) {
-					remove(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LEVEL_3_CERTIFICATE.id()));
 					npcsay(p, n, "Very good, come and eat this cake I baked");
 					say(p, n, "Yum, thanks!");
 					give(p, ItemId.CHOCOLATE_CAKE.id(), 1);
 				} else if (menu == 1) {
-					remove(p, ItemId.LEVEL_3_CERTIFICATE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LEVEL_3_CERTIFICATE.id()));
 					npcsay(p, n, "Certainly, have this...");
 					give(p, ItemId.FRUIT_BLAST.id(), 1);
 					say(p, n, "A cocktail ?");

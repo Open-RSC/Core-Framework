@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.portsarim;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -68,16 +69,16 @@ public final class NedInShip implements
 					if (p.getCarriedItems().hasCatalogID(ItemId.MAP.id(), Optional.of(false))) {
 						Functions.mes(p, "You give the map to ned");
 						say(p, n, "Here it is");
-						remove(p, ItemId.MAP.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.MAP.id()));
 						gave_map = true;
 					} else if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
 						Functions.mes(p, "You give the parts of the map to ned");
 						say(p, n, "Here it is");
-						remove(p, ItemId.MAP_PIECE_1.id(), 1);
-						remove(p, ItemId.MAP_PIECE_2.id(), 1);
-						remove(p, ItemId.MAP_PIECE_3.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_1.id()));
+						p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_2.id()));
+						p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_3.id()));
 						gave_map = true;
 					}
 					if (gave_map) {

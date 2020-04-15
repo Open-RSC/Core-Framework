@@ -10,7 +10,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.give;
 import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.remove;
 
 public class BattlestaffCrafting implements UseInvTrigger {
 
@@ -35,7 +34,8 @@ public class BattlestaffCrafting implements UseInvTrigger {
 			p.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
-		if (Functions.remove(p, combine.itemID, 1) && Functions.remove(p, combine.itemIDOther, 1)) {
+		if (p.getCarriedItems().remove(new Item(combine.itemID)) != -1
+			&& p.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
 			if (combine.messages.length > 1)
 				mes(p, combine.messages[0]);
 			else

@@ -119,7 +119,7 @@ public class Smelting implements UseLocTrigger {
 				p.message("90 smithing is required to use this forge");
 				return;
 			}
-			if (p.getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
+			if (p.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
 				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
 				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
@@ -228,12 +228,12 @@ public class Smelting implements UseLocTrigger {
 				thinkbubble(getOwner(), item);
 				if (getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) > 0) {
 					if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id())
-						remove(getOwner(), ItemId.GOLD_FAMILYCREST.id(), 1);
+						getOwner().getCarriedItems().remove(new Item(ItemId.GOLD_FAMILYCREST.id()));
 					else
-						getOwner().getCarriedItems().remove(smelt.getID(), smelt.getOreAmount());
+						getOwner().getCarriedItems().remove(new Item(smelt.getID(), smelt.getOreAmount()));
 
 					if (smelt.getReqOreAmount() > 0)
-						getOwner().getCarriedItems().remove(smelt.getReqOreId(), smelt.getReqOreAmount());
+						getOwner().getCarriedItems().remove(new Item(smelt.getReqOreId(), smelt.getReqOreAmount()));
 
 					if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
 						if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {

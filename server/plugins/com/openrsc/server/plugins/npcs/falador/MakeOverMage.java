@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.falador;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -21,7 +22,7 @@ public class MakeOverMage implements TalkNpcTrigger {
 			if (!ifheld(p, ItemId.COINS.id(), 3000)) {
 				say(p, n, "I'll just go and get the cash");
 			} else {
-				remove(p, ItemId.COINS.id(), 3000);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3000));
 				p.setChangingAppearance(true);
 				ActionSender.sendAppearanceScreen(p);
 			}

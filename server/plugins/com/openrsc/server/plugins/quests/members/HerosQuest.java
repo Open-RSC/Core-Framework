@@ -180,7 +180,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				say(p, n, "Oh dear I don't have that with me any more");
 			} else {
 				p.message("You hand your I.D paper to grip");
-				remove(p, ItemId.ID_PAPER.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.ID_PAPER.id()));
 				p.getCache().store("talked_grip", true);
 				int menu = multi(p, n,
 					"So can I guard the treasure room please",
@@ -297,9 +297,9 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 						&& p.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))) {
 						say(p, n, "I have all the things needed");
-						remove(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
-						remove(p, ItemId.LAVA_EEL.id(), 1);
-						remove(p, ItemId.RED_FIREBIRD_FEATHER.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.MASTER_THIEF_ARMBAND.id()));
+						p.getCarriedItems().remove(new Item(ItemId.LAVA_EEL.id()));
+						p.getCarriedItems().remove(new Item(ItemId.RED_FIREBIRD_FEATHER.id()));
 						p.sendQuestComplete(Quests.HEROS_QUEST);
 					} else {
 						say(p, n, "It's tough, I've not done it yet");

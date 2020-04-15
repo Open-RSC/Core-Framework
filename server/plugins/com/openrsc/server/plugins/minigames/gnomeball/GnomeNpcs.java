@@ -240,7 +240,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 						}
 					});
 					p.message("you pass the ball to the gnome");
-					remove(p, ItemId.GNOME_BALL.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 					npcsay(p, n, 100, "run long..");
 					delay(5000);
 					p.message("the gnome throws you a long ball");

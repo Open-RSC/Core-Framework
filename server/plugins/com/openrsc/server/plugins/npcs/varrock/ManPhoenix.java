@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -58,7 +59,7 @@ public class ManPhoenix implements
 				npcsay(p, n, "Hmm not a bad job",
 					"Let's see it, make sure it's genuine");
 				p.message("You hand Straven the candlestick");
-				remove(p, ItemId.CANDLESTICK.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CANDLESTICK.id()));
 				say(p, n, "So is this enough to get me a master thieves armband?");
 				npcsay(p, n, "Hmm I dunno",
 					"I suppose I'm in a generous mood today");
@@ -96,7 +97,7 @@ public class ManPhoenix implements
 				say(p, n, "I have the intelligence report");
 				npcsay(p, n, "Lets see it then");
 				Functions.mes(p, "You hand over the report");
-				remove(p, ItemId.SCROLL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.SCROLL.id()));
 				Functions.mes(p, "The man reads the report");
 				npcsay(p, n, "Yes this is very good",
 					"Ok you can join the phoenix gang",

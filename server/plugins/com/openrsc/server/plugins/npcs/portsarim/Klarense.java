@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.portsarim;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -82,16 +83,14 @@ public class Klarense implements TalkNpcTrigger {
 				"I'm sure the work needed to do on it wouldn't be too expensive",
 				"How does 2000 gold sound for a price?"
 			);
-			int choice = multi(p, n, new String[]{
-				"Yep sounds good",
-				"I'm not paying that much for a broken boat"
-			});
+			int choice = multi(p, n, "Yep sounds good",
+				"I'm not paying that much for a broken boat");
 			if (choice == 0) {
 				if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 2000) {
 					npcsay(p, n,
 						"Ok she's all yours");
 					p.getCache().store("owns_ship", true);
-					p.getCarriedItems().remove(ItemId.COINS.id(), 2000);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2000));
 				} else {
 					say(p, n, "Except I don't have that much money on me");
 				}

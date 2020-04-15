@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.digsite;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -81,7 +82,7 @@ public class DigsiteExaminer implements TalkNpcTrigger {
 						npcsay(p, n, "Hello again");
 						if (p.getCarriedItems().hasCatalogID(ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), Optional.of(false))) {
 							say(p, n, "Here is the stamped letter you asked for");
-							remove(p, ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.STAMPED_LETTER_OF_RECOMMENDATION.id()));
 							p.updateQuestStage(Quests.DIGSITE, 2);
 							npcsay(p, n, "Good good, we will begin the exam...");
 							digsiteExaminerDialogue(p, n, ExaminerNPC.START_EXAM_AND_MENU_ONE);

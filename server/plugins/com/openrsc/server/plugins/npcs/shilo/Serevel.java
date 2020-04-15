@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -26,7 +27,7 @@ public class Serevel implements TalkNpcTrigger {
 				"No thanks.");
 			if (menu == 0) {
 				if (ifheld(p, ItemId.COINS.id(), 100)) {
-					remove(p, ItemId.COINS.id(), 100);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
 					npcsay(p, n, "Great, nice doing business with you.");
 					give(p, ItemId.SHIP_TICKET.id(), 1);
 				} else {

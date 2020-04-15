@@ -35,7 +35,7 @@ public class Tanner implements TalkNpcTrigger {
 						//message possibly non kosher
 						say(p, n, "I don't have any coins left now");
 						break;
-					} else if (p.getCarriedItems().remove(new Item(ItemId.COW_HIDE.id())) > -1 && p.getCarriedItems().remove(ItemId.COINS.id(), 1) > -1) {
+					} else if (p.getCarriedItems().remove(new Item(ItemId.COW_HIDE.id())) > -1 && p.getCarriedItems().remove(new Item(ItemId.COINS.id())) > -1) {
 						p.message("You swap a cow hide for a piece of leather");
 						give(p, ItemId.LEATHER.id(), 1);
 					} else {

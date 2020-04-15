@@ -129,7 +129,7 @@ public class Cannon implements OpLocTrigger,
 			player.setBusy(true);
 			player.message("you place the cannon base on the ground");
 			delay(1500);
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_BASE.id()));
 
 			GameObject cannonBase = new GameObject(
 				player.getWorld(),
@@ -154,7 +154,7 @@ public class Cannon implements OpLocTrigger,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
 			player.setBusy(true);
 			player.message("you add the stand");
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_STAND.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_STAND.id()));
 
 			player.getCache().set("cannon_stage", 2);
 			player.getWorld().unregisterGameObject(object);
@@ -171,7 +171,7 @@ public class Cannon implements OpLocTrigger,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
 			player.setBusy(true);
 			player.message("you add the barrels");
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
 
 			player.getWorld().unregisterGameObject(object);
 			GameObject cannonBarrels = new GameObject(player.getWorld(), object.getLocation(),
@@ -189,7 +189,7 @@ public class Cannon implements OpLocTrigger,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
 			player.setBusy(true);
 			player.message("you add the furnace");
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
 
 			player.getWorld().unregisterGameObject(object);
 			GameObject cannonFurnace = new GameObject(player.getWorld(), object.getLocation(),

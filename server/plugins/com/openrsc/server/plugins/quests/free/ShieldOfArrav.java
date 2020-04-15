@@ -179,7 +179,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					npcsay(p, n, "Have you got those crossbows for me yet?");
 					say(p, n, "Yes I have");
 					p.message("You give the crossbows to katrine");
-					p.getCarriedItems().remove(ItemId.PHOENIX_CROSSBOW.id(), 2);
+					p.getCarriedItems().remove(new Item(ItemId.PHOENIX_CROSSBOW.id(), 2));
 					npcsay(p, n,
 						"Ok you can join our gang now",
 						"Feel free to enter any the rooms of the ganghouse");
@@ -231,7 +231,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 						} else if (choice3 == 1) {
 							npcsay(p, n, "Wow is it really it?");
 							p.message("Katrine takes hold of the candlestick and examines it");
-							remove(p, ItemId.CANDLESTICK.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.CANDLESTICK.id()));
 							npcsay(p, n,
 								"This really is a fine bit of thievery",
 								"Thieves have been trying to get hold of this 1 for a while",

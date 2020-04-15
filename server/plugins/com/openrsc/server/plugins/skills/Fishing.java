@@ -155,7 +155,7 @@ public class Fishing implements OpLocTrigger {
 								Item bait = getOwner().getCarriedItems().getInventory().get(idx);
 								int newCount = bait.getAmount() - 1;
 								if (newCount <= 0) {
-									getOwner().getCarriedItems().getInventory().remove(idx);
+									getOwner().getCarriedItems().remove(new Item(idx));
 								} else {
 									bait.changeAmount(getOwner().getWorld().getServer().getDatabase(),-1);
 								}

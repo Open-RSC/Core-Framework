@@ -711,7 +711,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_1.id()) {
 						if (!p.getCache().hasKey("plagueremain1st")) {
 							p.getCache().store("plagueremain1st", true);
-							remove(p, ItemId.PLAGUED_SHEEP_REMAINS_1.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_1.id()));
 						} else {
 							Functions.mes(p, "You need to kill this sheep yourself");
 							return;
@@ -719,7 +719,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_2.id()) {
 						if (!p.getCache().hasKey("plagueremain2nd")) {
 							p.getCache().store("plagueremain2nd", true);
-							remove(p, ItemId.PLAGUED_SHEEP_REMAINS_2.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_2.id()));
 						} else {
 							Functions.mes(p, "You need to kill this sheep yourself");
 							return;
@@ -727,7 +727,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_3.id()) {
 						if (!p.getCache().hasKey("plagueremain3th")) {
 							p.getCache().store("plagueremain3th", true);
-							remove(p, ItemId.PLAGUED_SHEEP_REMAINS_3.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_3.id()));
 						} else {
 							Functions.mes(p, "You need to kill this sheep yourself");
 							return;
@@ -735,7 +735,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_4.id()) {
 						if (!p.getCache().hasKey("plagueremain4th")) {
 							p.getCache().store("plagueremain4th", true);
-							remove(p, ItemId.PLAGUED_SHEEP_REMAINS_4.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_4.id()));
 						} else {
 							Functions.mes(p, "You need to kill this sheep yourself");
 							return;

@@ -99,7 +99,7 @@ public class ShantayPassNpcs implements ShopInterface,
 						delay(1000);
 						npcsay(p, npc, "Can I see your Shantay Desert Pass please.");
 						p.message("You hand over a Shantay Pass.");
-						remove(p, SHANTAY_PASS, 1);
+						p.getCarriedItems().remove(new Item(SHANTAY_PASS));
 						say(p, npc, "Sure, here you go!");
 						if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 							npcsay(p, npc, "Here, have a disclaimer...",
@@ -192,7 +192,7 @@ public class ShantayPassNpcs implements ShopInterface,
 							"Great Effendi, now please try to keep the peace.");
 						Functions.mes(p,
 							"The assistant unlocks the door to the cell.");
-						remove(p, ItemId.COINS.id(), 5);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						inJail = false;
 					} else {
 						npcsay(p,
@@ -240,7 +240,7 @@ public class ShantayPassNpcs implements ShopInterface,
 								"Great Effendi, now please try to keep the peace.");
 							Functions.mes(p,
 								"The assistant unlocks the door to the cell.");
-							remove(p, ItemId.COINS.id(), 5);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 							inJail = false;
 						} else {
 							npcsay(p,
@@ -429,7 +429,7 @@ public class ShantayPassNpcs implements ShopInterface,
 						if (shantayGuard != null) {
 							npcsay(p, shantayGuard, "Can I see your Shantay Desert Pass please.");
 							p.message("You hand over a Shantay Pass.");
-							remove(p, SHANTAY_PASS, 1);
+							p.getCarriedItems().remove(new Item(SHANTAY_PASS));
 							say(p, shantayGuard, "Sure, here you go!");
 							if (!p.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
 								npcsay(p, shantayGuard, "Here, have a disclaimer...",

@@ -165,7 +165,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						} else {
 							npcsay(p, n, "Hey, great you've found Ana!");
 							Functions.mes(p, "You show Irena the barrel with Ana in it.");
-							remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 							p.updateQuestStage(this, 10);
 							Npc Ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 							Ana.teleport(p.getX(), p.getY() + 1);
@@ -424,7 +424,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 								if (opts == 0) {
 									say(p, n, "Yeah, ok, I'll give you 20 gold.");
 									if (ifheld(p, ItemId.COINS.id(), 20)) {
-										remove(p, ItemId.COINS.id(), 20);
+										p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 										npcsay(p, n, "Good! Seeya, we have some cleaning to do.");
 										completed = true;
 									} else {
@@ -436,7 +436,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 								} else if (opts == 1) {
 									say(p, n, "I'll give you 15, that's all you're gettin'");
 									if (ifheld(p, ItemId.COINS.id(), 15)) {
-										remove(p, ItemId.COINS.id(), 15);
+										p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
 										npcsay(p, n, "Ok, we'll take fifteen, you push a hard bargain!");
 										completed = true;
 									} else {
@@ -532,7 +532,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					if (p.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcsay(p, n, "You won't be needing that water any more!");
 						Functions.mes(p, "The guards throw your water away...");
-						remove(p, ItemId.BOWL_OF_WATER.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
 					p.teleport(121, 803);
 					Functions.mes(p, "The guards move off in the cart leaving you stranded in the desert.");
@@ -546,7 +546,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						npcsay(p, n, "It certainly will!");
 						if (ifheld(p, ItemId.COINS.id(), 5)) {
 							p.message("The guard takes the five gold coins.");
-							remove(p, ItemId.COINS.id(), 5);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 							npcsay(p, n, "Now then, what did you want to know?");
 							int secondMenu = multi(p, n,
 								"What is this place?",
@@ -688,7 +688,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 									if (ifheld(p, ItemId.COINS.id(), betAmount)) {
 										npcsay(p, n, "Great, I'll take that bet.");
 										p.message("You hand over " + betAmount + " gold coins.");
-										remove(p, ItemId.COINS.id(), betAmount);
+										p.getCarriedItems().remove(new Item(ItemId.COINS.id(), betAmount));
 										npcsay(p, n, "Ok, if you win, you'll get " + recvAmount + "gold back.");
 										p.getCache().set("mercenary_bet", betAmount);
 									}
@@ -722,7 +722,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						if (ifheld(p, ItemId.COINS.id(), 5)) {
 							npcsay(p, n, "Well, it certainly will help...");
 							p.message("The guard takes the five gold coins.");
-							remove(p, ItemId.COINS.id(), 5);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 							npcsay(p, n, "Now then, what did you want to know?");
 							int knowMenu = multi(p, n,
 								"What is this place?",
@@ -766,7 +766,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						npcsay(p, n, "Hmm, it might help!");
 						if (ifheld(p, ItemId.COINS.id(), 5)) {
 							p.message("The guards takes the five gold coins.");
-							remove(p, ItemId.COINS.id(), 5);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 							npcsay(p, n, "Now then, what did you want to know?");
 							int anaMenu = multi(p, n,
 								"I'm looking for a woman called Ana, have you seen her?",
@@ -1043,7 +1043,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 								npcN.startCombat(p);
 								Functions.mes(p, "The Guards search you!");
 								if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
-									remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
+									p.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 								}
 								Functions.mes(p, "Some guards rush to help their comrade.",
 									"You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -1230,7 +1230,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				"The slave gives you his muddy, sweat soaked shirt.");
 			p.getCarriedItems().getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
 			p.getCarriedItems().getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
-			remove(p, ItemId.DESERT_BOOTS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.DESERT_BOOTS.id()));
 			Npc newSlave = changenpc(n, NpcId.ESCAPING_MINING_SLAVE.id(), true);
 			delay(1000);
 			delayedReturnSlave(p, newSlave);
@@ -1410,7 +1410,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				case BedabinNomad.BUCKETOFWATER:
 					if (ifheld(p, ItemId.COINS.id(), 20)) {
 						Functions.mes(p, "You hand over 20 gold pieces.");
-						remove(p, ItemId.COINS.id(), 20);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 						npcsay(p, n, "Very well Effendi!");
 						Functions.mes(p, "You recieve a bucket of water.");
 						give(p, ItemId.BUCKET_OF_WATER.id(), 1);
@@ -1440,7 +1440,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				case BedabinNomad.FULLWATERSKIN:
 					if (ifheld(p, ItemId.COINS.id(), 25)) {
 						Functions.mes(p, "You hand over 25 gold pieces.");
-						remove(p, ItemId.COINS.id(), 25);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 25));
 						npcsay(p, n, "Very well Effendi!");
 						Functions.mes(p, "You recieve a full waterskin.");
 						give(p, ItemId.FULL_WATER_SKIN.id(), 1);
@@ -1469,7 +1469,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				case BedabinNomad.JUGOFWATER:
 					if (ifheld(p, ItemId.COINS.id(), 5)) {
 						Functions.mes(p, "You hand over 5 gold pieces.");
-						remove(p, ItemId.COINS.id(), 5);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						npcsay(p, n, "Very well Effendi!");
 						Functions.mes(p, "You recieve a jug full or water.");
 						give(p, ItemId.JUG_OF_WATER.id(), 1);
@@ -1645,7 +1645,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 								"Wonderful, I see you have made the new weapon!",
 								"Where did you get this from Effendi!",
 								"I'll have to confiscate this for your own safety!");
-							remove(p, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 							return;
 						}
 						if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
@@ -1761,11 +1761,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				case AlShabim.MADE_WEAPON:
 					npcsay(p, n, "Wonderful, I see you have made the new weapon!");
 					Functions.mes(p, "You show Al Shabim the prototype dart.");
-					remove(p, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 					npcsay(p, n, "This is truly fantastic Effendi!");
 					if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 						npcsay(p, n, "We will take the technical plans for the weapon as well.");
-						remove(p, ItemId.TECHNICAL_PLANS.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.TECHNICAL_PLANS.id()));
 						Functions.mes(p, "You hand over the technical plans for the weapon.");
 					}
 					npcsay(p, n, "We are forever grateful for this gift.",
@@ -1778,7 +1778,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					give(p, ItemId.BRONZE_THROWING_DART.id(), 6);
 					if (p.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))) {
 						npcsay(p, n, "I'll take that key off your hands as well effendi!");
-						remove(p, ItemId.BEDOBIN_COPY_KEY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.BEDOBIN_COPY_KEY.id()));
 						npcsay(p, n, "Many thanks!");
 					}
 					p.message("");
@@ -1877,11 +1877,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					int rand = DataConversions.random(0, 3);
 					if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
 						p.message("The guards find the cell door key and remove it!");
-						remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 					}
 					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) && rand == 1) {
 						p.message("The guards find the main gate key and remove it!");
-						remove(p, ItemId.METAL_KEY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
 					}
 					Functions.mes(p, "Some guards rush to help the captain.",
 						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -2114,7 +2114,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				Functions.mes(p, "The Guards search you!");
 				if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
 					Functions.mes(p, "The guards find the cell door key and remove it!");
-					remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 				}
 				Functions.mes(p, "Some guards rush to help their comrade.",
 					"You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -2287,7 +2287,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						npcsay(p, guard, "I heard that! So you used a key did you?! ");
 						if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 							npcsay(p, guard, "Right, we'll have that key off you!");
-							remove(p, ItemId.METAL_KEY.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
 						}
 						npcsay(p, guard, "Guards! Guards!");
 						guard.startCombat(p);
@@ -2346,7 +2346,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						"But thanks for your help to the Bedabin people.");
 					if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 						npcsay(p, n, "And we'll take those plans off your hands as well!");
-						remove(p, ItemId.TECHNICAL_PLANS.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.TECHNICAL_PLANS.id()));
 					}
 					break;
 				default:
@@ -2412,7 +2412,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					if (p.getQuestStage(this) == 9) {
 						Functions.mes(p, "Ana looks out of the barrel...");
 						Functions.mes(p, "@gre@Ana: Hey great, we're at the Shantay Pass!");
-						remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 						p.updateQuestStage(this, 10);
 						Npc Ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 						Ana.teleport(p.getX(), p.getY() + 1);
@@ -2436,7 +2436,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					}
 					//should not have an ana in barrel in other stages
 					else {
-						remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 					}
 				}
 			} else if (command.equals("look")) {
@@ -2538,11 +2538,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					int rand = DataConversions.random(0, 3);
 					if (p.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
 						p.message("The guards find the cell door key and remove it!");
-						remove(p, ItemId.CELL_DOOR_KEY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 					}
 					if (p.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) && rand == 1) {
 						p.message("The guards find the main gate key and remove it!");
-						remove(p, ItemId.METAL_KEY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
 					}
 					Functions.mes(p, "More guards rush to catch you.",
 						"You are roughed up a bit by the guards as you're manhandlded to a cell.");
@@ -2737,7 +2737,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					if (p.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcsay(p, affectedmob, "You won't be needing that water any more!");
 						Functions.mes(p, "The guards throw your water away...");
-						remove(p, ItemId.BOWL_OF_WATER.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
 					Functions.mes(p, "The guards move off in the cart leaving you stranded in the desert.");
 					p.teleport(121, 743);
@@ -2808,7 +2808,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				"You should know that they go out on the cart!",
 				"We'd better check this out!");
 			p.message("The guards prize the lid off the barrel.");
-			remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 			npcsay(p, n, "Blimey! It's a jail break!",
 				"They're making a break for it!");
 			Npc ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 30000);
@@ -2897,7 +2897,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 							"But thanks for your help to the Bedabin people.");
 						if (p.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 							npcsay(p, n, "And we'll take those plans off your hands as well!");
-							remove(p, ItemId.TECHNICAL_PLANS.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.TECHNICAL_PLANS.id()));
 						}
 						break;
 					default:
@@ -2925,7 +2925,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 							"You can go back and work with the other slaves then!");
 					} else {
 						say(p, n, "Hey, I have your rocks here, let me out.");
-						remove(p, ItemId.ROCKS.id(), 15);
+						p.getCarriedItems().remove(new Item(ItemId.ROCKS.id(), 15));
 						npcsay(p, n, "Ok, ok, come on out.");
 						p.teleport(71, 3626);
 						p.message("The guard unlocks the gate and lets you out.");
@@ -3098,7 +3098,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 			} else if (player.getQuestStage(this) > 7 || player.getQuestStage(this) == -1) {
 				npcsay(player, npc, "Where did you get this from Effendi!",
 					"I'll have to confiscate this for your own safety!");
-				remove(player, ItemId.PROTOTYPE_THROWING_DART.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 			}
 		}
 	}

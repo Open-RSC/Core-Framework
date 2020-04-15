@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.ardougne.west;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -44,8 +45,8 @@ public class DarkMage implements TalkNpcTrigger {
 					} else {
 						Functions.mes(p, "you give the mage 200,000 coins",
 							"and the staff of iban");
-						remove(p, ItemId.COINS.id(), 200000);
-						remove(p, ItemId.STAFF_OF_IBAN_BROKEN.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
+						p.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));
 						p.message("the mage fixes the staff and returns it to you");
 						give(p, ItemId.STAFF_OF_IBAN.id(), 1);
 						say(p, n, "thanks mage");

@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -124,7 +125,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 						&& !p.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 							npcsay(p, n, "Aha, I see you have completed your task. ",
 								"I'll take that dagger from you now.");
-							remove(p, ItemId.GLOWING_DARK_DAGGER.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.GLOWING_DARK_DAGGER.id()));
 							if (!p.getCache().hasKey("gave_glowing_dagger")) {
 								p.getCache().store("gave_glowing_dagger", true);
 							}

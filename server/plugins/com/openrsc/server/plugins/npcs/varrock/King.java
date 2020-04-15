@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -34,7 +35,7 @@ public class King implements TalkNpcTrigger {
 					"So that would come to 600 gold coins");
 				Functions.mes(p, "You hand over a certificate",
 					"The king gives you 600 coins");
-				remove(p, ItemId.CERTIFICATE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CERTIFICATE.id()));
 				p.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
 				if (isBlackArmGang(p))
 					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, -2);

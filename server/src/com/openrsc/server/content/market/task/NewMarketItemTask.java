@@ -58,8 +58,8 @@ public class NewMarketItemTask extends MarketTask {
 		}*/
 
 		if (!def.isStackable())
-			for (int i = 0; i < newItem.getAmount(); i++) owner.getCarriedItems().remove(newItem.getItemID(), 1);
-		else owner.getCarriedItems().remove(newItem.getItemID(), newItem.getAmount());
+			for (int i = 0; i < newItem.getAmount(); i++) owner.getCarriedItems().remove(new Item(newItem.getItemID()));
+		else owner.getCarriedItems().remove(new Item(newItem.getItemID(), newItem.getAmount()));
 
 		if (def.getOriginalItemID() != -1) newItem.setItemID(def.getOriginalItemID());
 

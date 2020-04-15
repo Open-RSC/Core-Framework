@@ -171,7 +171,7 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 			for (int i = 0; i < p.getCarriedItems().getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
-				remove(p, ItemId.YOMMI_TREE_SEED.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.YOMMI_TREE_SEED.id()));
 				give(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
 			}
 			p.message("You place the seeds in the pure sacred water...");

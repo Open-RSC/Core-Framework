@@ -195,7 +195,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 100) {
 								say(p, n, "thanks");
 								Functions.mes(p, "gertrude gives you another kitten");
-								p.getCarriedItems().remove(ItemId.COINS.id(), 100);
+								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
 								p.getCarriedItems().getInventory().add(new Item(ItemId.KITTEN.id()));
 							} else {
 								say(p, n,
@@ -266,7 +266,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 									"well, you'll have to find a broken fence to get in",
 									"i'm sure you can manage that");
 								Functions.mes(p, "you give the lad 100 coins");
-								p.getCarriedItems().remove(ItemId.COINS.id(), 100);
+								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
 
 								p.updateQuestStage(getQuestId(), 2);
 							} else {
@@ -386,7 +386,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 			Functions.mes(p, "you give the cat some milk", "she really enjoys it",
 				"but she now seems to be hungry");
 			p.getCache().store("cat_milk", true);
-			p.getCarriedItems().remove(ItemId.MILK.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.MILK.id()));
 
 		}
 		else if (myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
@@ -395,7 +395,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 					"the cat gobbles it up",
 					"she still seems scared of leaving");
 				p.getCache().store("cat_sardine", true);
-				p.getCarriedItems().remove(ItemId.SEASONED_SARDINE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.SEASONED_SARDINE.id()));
 
 			}
 		}
@@ -403,7 +403,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 			Functions.mes(p, "you place the kittens by their mother",
 				"she purrs at you appreciatively",
 				"and then runs off home with her kittens");
-			remove(p, ItemId.KITTENS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.KITTENS.id()));
 			p.updateQuestStage(getQuestId(), 3);
 			p.getCache().remove("cat_milk");
 			p.getCache().remove("cat_sardine");
@@ -420,7 +420,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
 			Functions.mes(p, "you rub the doogle leaves over the sardine");
-			p.getCarriedItems().remove(ItemId.DOOGLE_LEAVES.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.DOOGLE_LEAVES.id()));
 			p.getCarriedItems().getInventory().replace(ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id());
 		}
 	}
@@ -471,7 +471,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTENS.id()) {
 			Functions.mes(p, "you drop the kittens", "they run back to the crate");
-			remove(p, ItemId.KITTENS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.KITTENS.id()));
 		}
 	}
 }

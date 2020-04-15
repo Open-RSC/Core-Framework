@@ -19,10 +19,6 @@ import static com.openrsc.server.plugins.Functions.give;
 import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
 import static com.openrsc.server.plugins.Functions.mes;
 import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.remove;
-import static com.openrsc.server.plugins.Functions.thinkbubble;
-import static com.openrsc.server.plugins.Functions.multi;
 import static com.openrsc.server.plugins.Functions.delay;
 
 public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpInvTrigger {
@@ -136,7 +132,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 						"You can't beat a good cuppa...",
 						"You're free to pan all you want");
 					Functions.say(p, npc, "Thanks");
-					Functions.remove(p, ItemId.CUP_OF_TEA.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.CUP_OF_TEA.id()));
 					p.getCache().store("unlocked_panning", true);
 				}
 			}

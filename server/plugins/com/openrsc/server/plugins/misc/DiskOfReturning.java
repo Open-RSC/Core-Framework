@@ -17,7 +17,7 @@ public class DiskOfReturning implements OpInvTrigger {
 			if (player.getLocation().onBlackHole()) {
 				player.message("You spin your disk of returning");
 				player.teleport(311, 3348, true);
-				player.getCarriedItems().remove(ItemId.DISK_OF_RETURNING.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.DISK_OF_RETURNING.id()));
 			} else {
 				player.message("The disk will only work from in Thordur's black hole");
 			}

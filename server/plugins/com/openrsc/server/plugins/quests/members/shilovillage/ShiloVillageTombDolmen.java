@@ -160,8 +160,8 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 						}
 						Functions.mes(p, "You use the charcoal and the Papyrus to make some new notes.");
 						p.message("You collect the notes together as a scroll.");
-						remove(p, ItemId.PAPYRUS.id(), 1);
-						remove(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
+						p.getCarriedItems().remove(new Item(ItemId.A_LUMP_OF_CHARCOAL.id()));
 						give(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 					}
 					break;
@@ -183,7 +183,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 							Functions.mes(p, "Without warning the spirit of Rashiliyia disapears.");
 							rash.remove();
 						}
-						remove(p, ItemId.RASHILIYA_CORPSE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));
 						p.sendQuestComplete(Quests.SHILO_VILLAGE);
 						p.setBusy(false);
 					}

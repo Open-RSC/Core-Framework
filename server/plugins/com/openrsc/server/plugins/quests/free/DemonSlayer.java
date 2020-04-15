@@ -168,7 +168,7 @@ public class DemonSlayer implements QuestInterface,
 						int choice2 = multi(p, n, true, "I'll buy one", "Not at the moment");
 						if (choice2 == 0) {
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-								if (p.getCarriedItems().remove(ItemId.COINS.id(), 99000) > -1) {
+								if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 									give(p, ItemId.ATTACK_CAPE.id(), 1);
 									npcsay(p, n, "Congratulations",
 										"Wearing this cape in battle",
@@ -628,9 +628,9 @@ public class DemonSlayer implements QuestInterface,
 			case SirPrysin.GOT_THEM:
 				npcsay(p, n, "Excellent. Now I can give you Silverlight");
 				Functions.mes(p, "You give all three keys to Sir Prysin");
-				remove(p, ItemId.SILVERLIGHT_KEY_1.id(), 1);
-				remove(p, ItemId.SILVERLIGHT_KEY_2.id(), 1);
-				remove(p, ItemId.SILVERLIGHT_KEY_3.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_1.id()));
+				p.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_2.id()));
+				p.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_3.id()));
 				Functions.mes(p, "Sir Prysin unlocks a long thin box",
 					"Prysin hands you an impressive looking sword");
 				give(p, ItemId.SILVERLIGHT.id(), 1);
@@ -924,7 +924,7 @@ public class DemonSlayer implements QuestInterface,
 				break;
 			case GypsyConversation.QUEST_START:// Quest Start
 				if (p.getCarriedItems().hasCatalogID(ItemId.COINS.id()))
-					p.getCarriedItems().remove(ItemId.COINS.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id()));
 				else {
 					say(p, n, "Oh dear. I don't have any money");
 					break;

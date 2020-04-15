@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.ardougne.east;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -48,7 +49,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 					if (moreMenu == 0) {
 						// NOTHING
 					} else if (moreMenu == 1) {
-						if (remove(p, ItemId.COINS.id(), 100)) {
+						if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
 							Functions.mes(p, "you give doctor orbon 100 coins",
 								"doctor orbon gives you a protective suit");
 							give(p, ItemId.PROTECTIVE_TROUSERS.id(), 1);
@@ -81,7 +82,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 				if (menu == 0) {
 					// NOTHING
 				} else if (menu == 1) {
-					if (remove(p, ItemId.COINS.id(), 100)) {
+					if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
 						Functions.mes(p, "you give doctor orbon 100 coins",
 							"doctor orbon gives you a protective suit");
 						give(p, ItemId.PROTECTIVE_TROUSERS.id(), 1);

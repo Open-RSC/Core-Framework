@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.lostcity;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -34,9 +35,9 @@ public class FairyLunderwin implements TalkNpcTrigger {
 						|| p.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {
 						mes(p, 60, "You sell a cabbage");
 						if (p.getCarriedItems().hasCatalogID(ItemId.CABBAGE.id(), Optional.of(false))) {
-							remove(p, ItemId.CABBAGE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.CABBAGE.id(), 1));
 						} else if (p.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {
-							remove(p, ItemId.SPECIAL_DEFENSE_CABBAGE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), 1));
 						}
 						give(p, ItemId.COINS.id(), 100);
 					}

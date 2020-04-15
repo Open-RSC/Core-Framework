@@ -76,7 +76,7 @@ public class SpinningWheel implements UseLocTrigger {
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
+				if (getOwner().getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
 					Functions.thinkbubble(getOwner(), item);
 					getOwner().playSound("mechanical");
 					getOwner().message("You " + verb + " the "

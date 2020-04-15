@@ -48,7 +48,7 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			String itemLower, changedItemLower;
 			itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
-			if (remove(player, item.getCatalogId(), 1)) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) != -1) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
 					Functions.mes(player, npc, 1300, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");

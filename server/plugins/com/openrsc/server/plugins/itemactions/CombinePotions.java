@@ -32,6 +32,9 @@ public class CombinePotions implements UseInvTrigger {
 			return;
 		}
 
+		if (item1.getItemStatus().getNoted() || item2.getItemStatus().getNoted())
+			return;
+
 		/** Regular Strength Potions **/
 		// 1 dose on 2 dose str = 3 dose
 		if (item1.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() || item1.getCatalogId() == ItemId.TWO_STRENGTH_POTION.id() && item2.getCatalogId() == ItemId.ONE_STRENGTH_POTION.id()) {

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.watchtower;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -401,7 +402,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 								npcsay(p, n, "It's got it, good good",
 									"That should annoy gorad wonderfully",
 									"Heheheheh!");
-								remove(p, ItemId.OGRE_TOOTH.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.OGRE_TOOTH.id()));
 								npcsay(p, n, "Heres a token of my gratitude");
 								give(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
 								npcsay(p, n, "Some old gem I stole from Gorad...",
@@ -489,7 +490,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 									npcsay(p, n, "Well well, the little rat has got it!",
 										"take this to show the little rat is a friend to the ogres",
 										"Hahahahaha!");
-									remove(p, ItemId.STOLEN_GOLD.id(), 1);
+									p.getCarriedItems().remove(new Item(ItemId.STOLEN_GOLD.id()));
 									p.message("The ogre gives you part of a horrible statue");
 									give(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
 									p.getCache().remove("ogre_og");
@@ -582,7 +583,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 								"Did you bring the dragon bone ?");
 							if (p.getCarriedItems().hasCatalogID(ItemId.DRAGON_BONES.id(), Optional.of(false))) {
 								say(p, n, "When I say I will get something I get it!");
-								remove(p, ItemId.DRAGON_BONES.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.DRAGON_BONES.id()));
 								npcsay(p, n, "Ha ha ha! small thing has done it",
 									"Toban is glad, take this...");
 								p.message("The ogre gives you part of a statue");
@@ -728,7 +729,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 							"Did you find anything of interest ?");
 						if (p.getCarriedItems().hasCatalogID(ItemId.FINGERNAILS.id(), Optional.of(false))) {
 							say(p, n, "Have a look at these");
-							remove(p, ItemId.FINGERNAILS.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.FINGERNAILS.id()));
 							npcsay(p, n, "Interesting, very interesting",
 								"Long nails...grey in colour",
 								"Well chewed...",
@@ -884,7 +885,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 							say(p, n, "Yes I have made the potion");
 							npcsay(p, n, "That's great news, let me infuse it with magic...");
 							p.message("The wizard mutters strange words over the liquid");
-							remove(p, ItemId.OGRE_POTION.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.OGRE_POTION.id()));
 							give(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
 							if (p.getQuestStage(Quests.WATCHTOWER) == 7) {
 								p.updateQuestStage(Quests.WATCHTOWER, 8);

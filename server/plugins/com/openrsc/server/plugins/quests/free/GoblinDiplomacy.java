@@ -98,7 +98,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 				if (p.getCarriedItems().hasCatalogID(ItemId.ORANGE_GOBLIN_ARMOUR.id())) {
 					say(p, n, "I have some orange armour");
 					Functions.mes(p, "You give some goblin armour to the goblins");
-					p.getCarriedItems().remove(ItemId.ORANGE_GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.ORANGE_GOBLIN_ARMOUR.id()));
 					npcsay(p, n, "No I don't like that much");
 					npcsay(p, otherGoblin, "It clashes with my skin colour");
 					npcsay(p, n, "Try bringing us dark blue armour");
@@ -113,7 +113,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 				if (p.getCarriedItems().hasCatalogID(ItemId.BLUE_GOBLIN_ARMOUR.id())) {
 					say(p, n, "I have some dark blue armour");
 					Functions.mes(p, "You give some goblin armour to the goblins");
-					p.getCarriedItems().remove(ItemId.BLUE_GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.BLUE_GOBLIN_ARMOUR.id()));
 					npcsay(p, n, "Doesn't seem quite right");
 					npcsay(p, otherGoblin, "maybe if it was a bit lighter");
 					npcsay(p, n, "Yeah try light blue");
@@ -130,7 +130,7 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 				if (p.getCarriedItems().hasCatalogID(ItemId.GOBLIN_ARMOUR.id())) {
 					say(p, n, "Ok I've got light blue armour");
 					Functions.mes(p, "You give some goblin armour to the goblins");
-					p.getCarriedItems().remove(ItemId.GOBLIN_ARMOUR.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.GOBLIN_ARMOUR.id()));
 					npcsay(p, n, "That is rather nice");
 					npcsay(p, otherGoblin,
 						"Yes I could see myself wearing somethin' like that");

@@ -440,10 +440,10 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 				Point location = Point.location(p.getX(), p.getY());
 				doDoor(obj, p);
 				if (!p.getLocation().equals(location)) {
-					remove(p, ItemId.WIZARDS_MIND_BOMB.id(), 1);
-					remove(p, ItemId.SILK.id(), 1);
-					remove(p, ItemId.LOBSTER_POT.id(), 1);
-					remove(p, ItemId.UNFIRED_BOWL.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.WIZARDS_MIND_BOMB.id()));
+					p.getCarriedItems().remove(new Item(ItemId.SILK.id()));
+					p.getCarriedItems().remove(new Item(ItemId.LOBSTER_POT.id()));
+					p.getCarriedItems().remove(new Item(ItemId.UNFIRED_BOWL.id()));
 					p.getCache().store("dwarven_unlocked", true);
 				}
 			} else if (p.getX() <= 258) {
@@ -494,9 +494,9 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 			if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
 				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
 				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
-				remove(p, ItemId.MAP_PIECE_1.id(), 1);
-				remove(p, ItemId.MAP_PIECE_2.id(), 1);
-				remove(p, ItemId.MAP_PIECE_3.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_1.id()));
+				p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_2.id()));
+				p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_3.id()));
 				give(p, ItemId.MAP.id(), 1);
 			}
 		}
@@ -521,14 +521,14 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					&& p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					p.message("You hammer the plank over the hole");
 					p.message("You still need more planks to close the hole completely");
-					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
-					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.NAILS.id(), 4));
+					p.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
 					p.getCache().set("ship_repair", 1);
 				} else if (ifheld(p, ItemId.NAILS.id(), 4) && p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
 					int planks_added = p.getCache().getInt("ship_repair");
 					p.message("You hammer the plank over the hole");
-					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
-					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.NAILS.id(), 4));
+					p.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
 					if (planks_added + 1 == 3) {
 						p.getCache().remove("ship_repair");
 						p.getCache().store("ship_fixed", true);

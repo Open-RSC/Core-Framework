@@ -41,7 +41,7 @@ public class UndergroundPassIban implements UseLocTrigger {
 				}
 				else {
 					Functions.mes(p, "you throw the doll of iban into the pit");
-					remove(p, new Item(ItemId.A_DOLL_OF_IBAN.id(), 1));
+					p.getCarriedItems().remove(new Item(ItemId.A_DOLL_OF_IBAN.id()));
 					defeated = true;
 					p.setAttribute("iban_bubble_show", true);
 					npcsay(p, iban, "what's happening?, it's dark here...so dark",

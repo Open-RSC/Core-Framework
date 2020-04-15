@@ -191,7 +191,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
 			p.message("you use the key in the chest");
 			p.message("you open the chest");
-			remove(p, ItemId.DIGSITE_CHEST_KEY.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.DIGSITE_CHEST_KEY.id()));
 			say(p, null, "Oops I dropped the key",
 				"Never mind it's open now...");
 		}
@@ -251,7 +251,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case EXPLOSIVE_COMPOUND:
 					p.message("You pour the compound over the bricks");
-					remove(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
 					say(p, null, "I need some way to ignite this compound...");
 					if (!p.getCache().hasKey("brick_ignite")) {
 						p.getCache().store("brick_ignite", true);

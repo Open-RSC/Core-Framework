@@ -233,7 +233,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				say(p, n, "could i take this old pebble?");
 				npcsay(p, n, "oh that, yes have it",
 					"it's just some old elven junk i believe");
-				remove(p, ItemId.LARGE_KEY.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.LARGE_KEY.id()));
 				Functions.mes(p, "you give golrie the key");
 				npcsay(p, n, "well thanks again for the key",
 					"i think i'll wait in here until those goblins get bored and leave");
@@ -250,7 +250,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 					"my grandad gave me all sorts of old junk");
 				say(p, n, "do you mind if i have a look?");
 				npcsay(p, n, "no, of course not");
-				remove(p, ItemId.LARGE_KEY.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.LARGE_KEY.id()));
 				Functions.mes(p, "you find nothing of interest",
 					"you give golrie the key");
 				npcsay(p, n, "thanks a lot for the key traveller",
@@ -697,7 +697,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				p.message("the rune stone crumbles into dust");
 				p.getCache().store(
 					"waterfall_" + obj.getID() + "_" + item.getCatalogId(), true);
-				p.getCarriedItems().remove(item.getCatalogId(), 1);
+				p.getCarriedItems().remove(new Item(item.getCatalogId()));
 
 			} else {
 				p.message("you have already placed " + article(item.getDef(p.getWorld()).getName()) + item.getDef(p.getWorld()).getName()
@@ -727,7 +727,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				"the chalice remains standing",
 				"inside you find a mithril case", "containing 40 seeds",
 				"two diamond's and two gold bars");
-			remove(p, ItemId.GLARIALS_URN.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.GLARIALS_URN.id()));
 			p.sendQuestComplete(getQuestId());
 		}
 	}
@@ -754,7 +754,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				p.message("you can't plant a tree here");
 				return;
 			}
-			remove(p, ItemId.MITHRIL_SEED.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.MITHRIL_SEED.id()));
 			Functions.mes(p, "and drop a seed by your feet");
 			GameObject object = new GameObject(p.getWorld(), Point.location(p.getX(), p.getY()), 490, 0, 0);
 			p.getWorld().registerGameObject(object);

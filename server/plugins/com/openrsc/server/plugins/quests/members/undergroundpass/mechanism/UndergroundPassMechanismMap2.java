@@ -48,7 +48,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 		else if (item.getCatalogId() == ItemId.PLANK.id() && obj.getID() == UndergroundPassObstaclesMap2.PASSAGE) {
 			p.message("you carefully place the planks over the pressure triggers");
 			p.message("you walk across the wooden planks");
-			remove(p, ItemId.PLANK.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
 			p.teleport(735, 3489);
 			delay(850);
 			if (obj.getX() == 737) {
@@ -87,7 +87,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 					}
 				}
 			}
-			remove(p, item.getCatalogId(), 1);
+			p.getCarriedItems().remove(new Item(item.getCatalogId()));
 			p.message("you hear a howl in the distance");
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {

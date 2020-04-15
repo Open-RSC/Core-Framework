@@ -175,7 +175,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 		switch (obj.getID()) {
 			case HOLE:
 				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
-					if (remove(player, ItemId.CABBAGE.id(), 1)) {
+					if (player.getCarriedItems().remove(new Item(ItemId.CABBAGE.id())) != -1) {
 						Functions.mes(player,
 							"You drop a cabbage down the hole.",
 							"The cabbage lands in the cauldron below.",

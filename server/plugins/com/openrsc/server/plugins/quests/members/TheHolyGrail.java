@@ -474,7 +474,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		if (p.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
 			Functions.mes(p, "You give a whistle to Sir Percival",
 				"You tell sir Percival what to do with the whistle");
-			remove(p, ItemId.MAGIC_WHISTLE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.MAGIC_WHISTLE.id()));
 			npcsay(p, percival, "Ok I will see you there then");
 			p.updateQuestStage(this, 5);
 		} else {

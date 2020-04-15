@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -120,10 +121,10 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 			if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 				p.message("The magic forcefield activates");
 				p.teleport(492, 3521);
-				remove(p, ItemId.POWERING_CRYSTAL1.id(), 1);
-				remove(p, ItemId.POWERING_CRYSTAL2.id(), 1);
-				remove(p, ItemId.POWERING_CRYSTAL3.id(), 1);
-				remove(p, ItemId.POWERING_CRYSTAL4.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.POWERING_CRYSTAL1.id()));
+				p.getCarriedItems().remove(new Item(ItemId.POWERING_CRYSTAL2.id()));
+				p.getCarriedItems().remove(new Item(ItemId.POWERING_CRYSTAL3.id()));
+				p.getCarriedItems().remove(new Item(ItemId.POWERING_CRYSTAL4.id()));
 				Npc wizard = ifnearvisnpc(p, NpcId.WATCHTOWER_WIZARD.id(), 6);
 				if (wizard != null) {
 					p.message("@gre@You haved gained 4 quest points!");
@@ -247,7 +248,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 		else if (obj.getID() == TOBAN_CHEST_CLOSED) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.KEY.id(), Optional.of(false))) {
 				p.message("You use the key Og gave you");
-				remove(p, ItemId.KEY.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.KEY.id()));
 				openChest(obj, 2000, TOBAN_CHEST_OPEN);
 				if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
 					Functions.mes(p, "You have already got the stolen gold");
@@ -346,7 +347,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 								npcsay(p, ogre_guard, "And where is your money ? Grrrr!",
 									"Do you want to get hurt or something ?");
 							} else {
-								remove(p, ItemId.COINS.id(), 20);
+								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 								if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
 									if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 										&& p.getFatigue() >= p.MAX_FATIGUE) {
@@ -454,7 +455,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_CAKE.id(), Optional.of(false))) {
 							say(p, ogre_guard, "How about this ?");
 							p.message("You give the guard a rock cake");
-							remove(p, ItemId.ROCK_CAKE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ROCK_CAKE.id()));
 							npcsay(p, ogre_guard, "Well well, looks at this",
 								"My favourite, rock cake!",
 								"Okay we will let it through");

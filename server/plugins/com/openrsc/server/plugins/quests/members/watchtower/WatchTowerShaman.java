@@ -68,7 +68,7 @@ public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 					p.message("The shaman dissolves before your eyes!");
 					p.message("A crystal drops from the hand of the dissappearing ogre!");
 					p.message("You snatch it up quickly");
-					remove(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.MAGIC_OGRE_POTION.id()));
 					give(p, ItemId.EMPTY_VIAL.id(), 1);
 					give(p, ItemId.POWERING_CRYSTAL3.id(), 1);
 					if (p.getQuestStage(Quests.WATCHTOWER) == 8) {

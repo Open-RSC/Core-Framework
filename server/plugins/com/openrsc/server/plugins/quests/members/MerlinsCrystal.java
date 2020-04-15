@@ -205,7 +205,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				if (p.getCache().hasKey("squirt")) {
 					Functions.mes(p, "You get some wax from the hive",
 						"The bees fly back to the hive as the repellant wears off");
-					remove(p, ItemId.BUCKET.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.BUCKET.id()));
 					give(p, ItemId.WAX_BUCKET.id(), 1);
 					p.getCache().remove("squirt");
 				} else {
@@ -264,7 +264,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 							beggar.remove();
 						} else {
 							Functions.mes(p, "You give the bread to the beggar");
-							remove(p, ItemId.BREAD.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.BREAD.id()));
 							npcsay(p, beggar, "Thankyou very much");
 							if (p.getCache().hasKey("lady_test")) {
 								p.message("The beggar has turned into the lady of the lake!");
@@ -327,7 +327,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		}
 		n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", p));
 		if (p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))) {
-			remove(p, ItemId.LIT_BLACK_CANDLE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.LIT_BLACK_CANDLE.id()));
 		}
 		n.startCombat(p);
 	}
@@ -350,7 +350,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.HOLY_GRAIL.id(), Optional.of(false))) {
 						say(p, n, "I have retrieved the grail");
 						npcsay(p, n, "wow incredible you truly are a splendid knight");
-						remove(p, ItemId.HOLY_GRAIL.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.HOLY_GRAIL.id()));
 						p.sendQuestComplete(Quests.THE_HOLY_GRAIL);
 					} else {
 						say(p, n, "I am making progress",

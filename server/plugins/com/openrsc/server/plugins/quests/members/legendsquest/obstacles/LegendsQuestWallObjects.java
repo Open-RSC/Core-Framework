@@ -258,7 +258,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (!p.getCache().hasKey("ancient_wall_runes")) {
-						remove(p, ItemId.SOUL_RUNE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.SOUL_RUNE.id()));
 						mes(p, 1300, "You slide the Soul-Rune into the first depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'S' appears where the Soul-Rune merged with the door.");
@@ -271,7 +271,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 1) {
-						remove(p, ItemId.MIND_RUNE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.MIND_RUNE.id()));
 						mes(p, 1300, "You slide the Mind-Rune into the second slot depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'M' appears where the Mind-Rune merged with the door.");
@@ -284,7 +284,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 2) {
-						remove(p, ItemId.EARTH_RUNE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.EARTH_RUNE.id()));
 						mes(p, 1300, "You slide the Earth-Rune into the third depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'E' appears where the Earth-Rune merged with the door.");
@@ -298,7 +298,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						ancientDoorWalkThrough(p, obj);
 					} else if (p.getCache().hasKey("ancient_wall_runes") && (p.getCache().getInt("ancient_wall_runes") == 3 || p.getCache().getInt("ancient_wall_runes") == 4)) {
 						int getRuneCount = p.getCache().getInt("ancient_wall_runes");
-						remove(p, ItemId.LAW_RUNE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.LAW_RUNE.id()));
 						if (getRuneCount == 4) {
 							p.getCache().put("ancient_wall_runes", 5);
 							mes(p, 1300, "You slide the Law-Rune into the fifth depression...",
@@ -348,7 +348,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 	private void runesFail(Player p, Item item) {
 		p.message("The rune stone burns red hot in your hand, you drop it to the floor.");
 		p.damage(DataConversions.random(1, 5));
-		remove(p, item.getCatalogId(), 1);
+		p.getCarriedItems().remove(new Item(item.getCatalogId()));
 		addobject(item.getCatalogId(), 1, p.getX(), p.getY(), p);
 	}
 }

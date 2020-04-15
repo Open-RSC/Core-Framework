@@ -4,6 +4,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -43,7 +44,7 @@ public final class PortSarimSailor implements OpLocTrigger,
 			npcsay(p, n, "No I need to stay alive",
 				"I have a wife and family to support");
 		} else if (option == 1) {
-			if (p.getCarriedItems().remove(ItemId.COINS.id(), 30) > -1) {
+			if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) > -1) {
 				Functions.mes(p, "You pay 30 gold", "You board the ship");
 				p.teleport(324, 713, false);
 				delay(1000);

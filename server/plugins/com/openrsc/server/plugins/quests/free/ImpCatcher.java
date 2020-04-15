@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -66,10 +67,10 @@ public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 						"It was hard work I can tell you");
 					npcsay(p, n, "Give them here and I'll sort out a reward");
 					Functions.mes(p, "You give four coloured beads to Wizard Mizgog");
-					remove(p, ItemId.RED_BEAD.id(), 1);
-					remove(p, ItemId.YELLOW_BEAD.id(), 1);
-					remove(p, ItemId.BLACK_BEAD.id(), 1);
-					remove(p, ItemId.WHITE_BEAD.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.RED_BEAD.id()));
+					p.getCarriedItems().remove(new Item(ItemId.YELLOW_BEAD.id()));
+					p.getCarriedItems().remove(new Item(ItemId.BLACK_BEAD.id()));
+					p.getCarriedItems().remove(new Item(ItemId.WHITE_BEAD.id()));
 					npcsay(p, n, "Here's you're reward then",
 						"An Amulet of accuracy");
 					Functions.mes(p, "The Wizard hands you an amulet");

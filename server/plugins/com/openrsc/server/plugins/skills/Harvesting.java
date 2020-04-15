@@ -433,7 +433,7 @@ public final class Harvesting implements OpLocTrigger {
 		} else {
 			int uses = p.getCache().getInt("uses_wcan");
 			if (uses >= 4) {
-				p.getCarriedItems().remove(ItemId.WATERING_CAN.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.WATERING_CAN.id()));
 				p.getCache().remove("uses_wcan");
 			} else {
 				p.getCache().put("uses_wcan", uses + 1);

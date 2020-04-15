@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.alkharid;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -33,7 +34,7 @@ public final class KebabSeller implements TalkNpcTrigger {
 		if (option == 0) {
 			//nothing
 		} else if (option == 1) {
-			if (remove(p, ItemId.COINS.id(), 1)) {
+			if (p.getCarriedItems().remove(new Item(ItemId.COINS.id())) != -1) {
 				p.message("You buy a kebab");
 				give(p, ItemId.KEBAB.id(), 1);
 			} else {

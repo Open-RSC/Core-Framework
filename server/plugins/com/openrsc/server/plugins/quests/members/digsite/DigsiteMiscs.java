@@ -22,7 +22,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			p.message("bang!");
-			remove(p, ItemId.UNIDENTIFIED_LIQUID.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.3D + 5));
 			say(p, null, "Ow!");
 			p.message("The liquid exploded!");
@@ -30,7 +30,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 		}
 		else if (i.getCatalogId() == ItemId.MIXED_CHEMICALS_1.id() || i.getCatalogId() == ItemId.MIXED_CHEMICALS_2.id()) {
 			p.message("bang!");
-			remove(p, i.getCatalogId(), 1);
+			p.getCarriedItems().remove(new Item(i.getCatalogId()));
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 2 + 6));
 			say(p, null, "Ow!");
 			p.message("The chemicals exploded!");
@@ -38,7 +38,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 		}
 		else if (i.getCatalogId() == ItemId.NITROGLYCERIN.id()) {
 			p.message("bang!");
-			remove(p, ItemId.NITROGLYCERIN.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.NITROGLYCERIN.id()));
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 2 - 3));
 			say(p, null, "Ow!");
 			p.message("The nitroglycerin exploded!");
@@ -46,7 +46,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 		}
 		else if (i.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
 			Functions.mes(p, "bang!");
-			remove(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
 			p.damage(61);
 			say(p, null, "Ow!");
 			p.message("The compound exploded!");

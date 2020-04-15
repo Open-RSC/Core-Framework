@@ -238,10 +238,10 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 						&& p.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_BEEF.id(), Optional.of(false))) {
 						say(p, n, "Yes I have everything");
 						Functions.mes(p, "You give the meats to Sanfew");
-						remove(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
-						remove(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
-						remove(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
-						remove(p, ItemId.ENCHANTED_BEEF.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.ENCHANTED_CHICKEN_MEAT.id()));
+						p.getCarriedItems().remove(new Item(ItemId.ENCHANTED_BEAR_MEAT.id()));
+						p.getCarriedItems().remove(new Item(ItemId.ENCHANTED_RAT_MEAT.id()));
+						p.getCarriedItems().remove(new Item(ItemId.ENCHANTED_BEEF.id()));
 						npcsay(p,
 							n,
 							"thank you, that has brought us much closer to reclaiming our stone circle",
@@ -336,25 +336,25 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 
 			if (item.getCatalogId() == ItemId.RAW_CHICKEN.id()) {
 				Functions.mes(p, "You dip the chicken in the cauldron");
-				p.getCarriedItems().remove(ItemId.RAW_CHICKEN.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RAW_CHICKEN.id()));
 
 				give(p, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id()) {
 				Functions.mes(p, "You dip the bear meat in the cauldron");
-				p.getCarriedItems().remove(ItemId.RAW_BEAR_MEAT.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RAW_BEAR_MEAT.id()));
 
 				give(p, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
 				Functions.mes(p, "You dip the rat meat in the cauldron");
-				p.getCarriedItems().remove(ItemId.RAW_RAT_MEAT.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 
 				give(p, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_BEEF.id()) {
 				Functions.mes(p, "You dip the beef in the cauldron");
-				p.getCarriedItems().remove(ItemId.RAW_BEEF.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RAW_BEEF.id()));
 
 				give(p, ItemId.ENCHANTED_BEEF.id(), 1);
 			}

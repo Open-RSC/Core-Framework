@@ -112,16 +112,16 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.FAMILY_CREST.id(), Optional.of(false))) {
 						say(p, n, "I have retrieved your crest");
 						p.message("You give the crest to Dimintheis");
-						remove(p, ItemId.FAMILY_CREST.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.FAMILY_CREST.id()));
 						gave_crest = true;
 					} else if (p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_THREE.id(), Optional.of(false))) {
 						say(p, n, "I have retrieved your crest");
 						p.message("You give the parts of the crest to Dimintheis");
-						remove(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
-						remove(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
-						remove(p, ItemId.CREST_FRAGMENT_THREE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.CREST_FRAGMENT_ONE.id()));
+						p.getCarriedItems().remove(new Item(ItemId.CREST_FRAGMENT_TWO.id()));
+						p.getCarriedItems().remove(new Item(ItemId.CREST_FRAGMENT_THREE.id()));
 						gave_crest = true;
 					}
 					if (gave_crest) {
@@ -287,8 +287,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 						say(p, n, "I have it");
 						npcsay(p, n, "These are brilliant");
 						p.message("You exchange the jewellry for a piece of crest");
-						remove(p, ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-						remove(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.RUBY_RING_FAMILYCREST.id()));
+						p.getCarriedItems().remove(new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id()));
 						give(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
 						npcsay(p,
 							n,
@@ -569,7 +569,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (p.getQuestStage(this) == 7) {
 				Functions.mes(p, "You feed your potion to Johnathon");
-				remove(p, ItemId.FULL_CURE_POISON_POTION.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.FULL_CURE_POISON_POTION.id()));
 				p.updateQuestStage(this, 8);
 				npcsay(p, n, "Wow I'm feeling a lot better now",
 					"Thankyou, what can I do for you?");

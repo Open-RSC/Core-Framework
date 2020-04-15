@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -28,7 +29,7 @@ public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 			"No thanks!");
 		if (menu == 0) {
 			if (ifheld(p, ItemId.COINS.id(), 20)) {
-				remove(p, ItemId.COINS.id(), 20);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 				npcsay(p, n, "Thanks Bwana!",
 					"Enjoy the facilities!");
 				p.teleport(400, 844);

@@ -284,7 +284,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					npcsay(p, n,
 						"I really shouldn't... ok then, just the one",
 						"this stuff looks good");
-					remove(p, ItemId.KHALI_BREW.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.KHALI_BREW.id()));
 					Functions.mes(p, "the guard takes a mouthful of drink");
 					npcsay(p, n, "blimey this stuff is pretty good",
 						"it's not too strong is it?");

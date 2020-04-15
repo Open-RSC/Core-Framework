@@ -429,7 +429,7 @@ public class DoorAction {
 					p.message("The door won't open");
 					npcsay(p, ted, "Go away we don't want any");
 					if (p.getY() >= 569) {
-						if (remove(p, ItemId.PLAGUE_CITY_BOOK.id(), 1)) {
+						if (p.getCarriedItems().remove(new Item(ItemId.PLAGUE_CITY_BOOK.id())) != -1) {
 							say(p, ted,
 								"I have come to return a book from Jethick");
 							npcsay(p, ted, "Ok I guess you can come in then");
@@ -714,7 +714,7 @@ public class DoorAction {
 									"I haven't brought my diamonds with me");
 							} else {
 								p.message("You give the doorman a diamond");
-								remove(p, ItemId.DIAMOND.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.DIAMOND.id()));
 								doDoor(obj, p);
 							}
 						} else if (m == 1) {
@@ -739,7 +739,7 @@ public class DoorAction {
 									"I haven't brought my diamonds with me");
 							} else {
 								p.message("You give the doorman a diamond");
-								remove(p, ItemId.DIAMOND.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.DIAMOND.id()));
 								doDoor(obj, p);
 							}
 						} else if (m == 1) {
@@ -962,7 +962,7 @@ public class DoorAction {
 			player.message("you go through the door");
 			if (remove) {
 				player.message("Your " + item.getDef(player.getWorld()).getName().toLowerCase() + " has gone!");
-				player.getCarriedItems().remove(keyItem, 1);
+				player.getCarriedItems().remove(new Item(keyItem));
 				if (obj.getID() == 52) {
 					player.getCache().store("melzar_unlocked", true);
 				}
@@ -1205,15 +1205,15 @@ public class DoorAction {
 								"There have been reports of a someone bringing a virus into Varrock");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
-							player.getCarriedItems().remove(ItemId.ETHENEA.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
 							player.message("He takes the vial of ethenea from you");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.SULPHURIC_BROLINE.id(), Optional.of(false))) {
-							player.getCarriedItems().remove(ItemId.SULPHURIC_BROLINE.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
 							player.message("He takes the vial of sulphuric broline from you");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
-							player.getCarriedItems().remove(ItemId.LIQUID_HONEY.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
 							player.message("He takes the vial of liquid honey from you");
 						}
 					}

@@ -271,7 +271,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 								n,
 								"Well done, I can start the tripod construction now",
 								"Now for the bronze");
-							p.getCarriedItems().remove(ItemId.PLANK.id(), 3);
+							p.getCarriedItems().remove(new Item(ItemId.PLANK.id(), 3));
 
 							p.updateQuestStage(getQuestId(), 2);
 						} else {
@@ -290,7 +290,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 						if (p.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
 							npcsay(p, n, "Great, now all I need is the lens made",
 								"Next on the list is molten glass");
-							p.getCarriedItems().remove(ItemId.BRONZE_BAR.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 
 							p.updateQuestStage(getQuestId(), 3);
 						} else {
@@ -376,13 +376,13 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 						"I haven't finished it yet");
 					if (finished == 0) {
 						if (p.getCarriedItems().getInventory().countId(ItemId.LENS.id()) >= 1) {
-							remove(p, ItemId.LENS.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.LENS.id()));
 							npcsay(p, n,
 								"Wonderful, at last I can fix the telescope");
 							if (p.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
 								npcsay(p, n,
 									"I'll take back that mould for use again");
-								remove(p, ItemId.LENS_MOULD.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.LENS_MOULD.id()));
 							}
 							npcsay(p, n, "Meet me at the Observatory later...");
 							p.updateQuestStage(getQuestId(), 6);
@@ -717,7 +717,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 			if (guard != null) {
 				p.message("The gate unlocks");
 				p.message("The keep key is broken - I'll discard it");
-				remove(p, ItemId.KEEP_KEY.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.KEEP_KEY.id()));
 				if (!p.getCache().hasKey("keep_key_gate")) {
 					p.getCache().store("keep_key_gate", true);
 				}

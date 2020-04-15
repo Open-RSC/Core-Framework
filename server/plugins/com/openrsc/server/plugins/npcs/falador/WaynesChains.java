@@ -95,9 +95,9 @@ public final class WaynesChains implements ShopInterface,
 							npcsay(p, n, "get the money and return to me");
 							return;
 						}
-						if (p.getCarriedItems().remove(ItemId.CHIPPED_DRAGON_SCALE.id(), 150) > -1) {
-							if (p.getCarriedItems().remove(ItemId.DRAGON_METAL_CHAIN.id() ,500) > -1) {
-								if (p.getCarriedItems().remove(ItemId.COINS.id(), 500000) > -1) {
+						if (p.getCarriedItems().remove(new Item(ItemId.CHIPPED_DRAGON_SCALE.id(), 150)) > -1) {
+							if (p.getCarriedItems().remove(new Item(ItemId.DRAGON_METAL_CHAIN.id() ,500)) > -1) {
+								if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 500000)) > -1) {
 									p.message("you hand over the materials and money");
 									delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 									p.message("Wayne flashes a smile");

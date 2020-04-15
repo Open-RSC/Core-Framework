@@ -42,7 +42,7 @@ public class CandleMakerShop implements ShopInterface,
 			npcsay(p, n, "Have you got any wax yet?");
 			if (p.getCarriedItems().hasCatalogID(ItemId.WAX_BUCKET.id())) {
 				say(p, n, "Yes I have some now");
-				remove(p, ItemId.WAX_BUCKET.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.WAX_BUCKET.id()));
 				p.message("You exchange the wax with the candle maker for a black candle");
 				give(p, ItemId.UNLIT_BLACK_CANDLE.id(), 1);
 				p.getCache().remove("candlemaker");

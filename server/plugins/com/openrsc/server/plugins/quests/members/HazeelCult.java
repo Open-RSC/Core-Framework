@@ -160,7 +160,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 								"Look, I've found the armour");
 							npcsay(p, n, "well done i must say i am impressed");
 							Functions.mes(p, "you give ceril the family armour");
-							remove(p, ItemId.CARNILLEAN_ARMOUR.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.CARNILLEAN_ARMOUR.id()));
 							npcsay(p, n, "before we send you on your way",
 								"i'll get our butler jones",
 								"to whip you up some of his special broth");
@@ -1119,7 +1119,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 						say(p, n, "yes I have it here");
 						npcsay(p, n, "finally our lord hazeel can return");
 						Functions.mes(p, "alomone takes the hazeel script");
-						remove(p, ItemId.SCRIPT_OF_HAZEEL.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.SCRIPT_OF_HAZEEL.id()));
 						npcsay(p, n, "with these words our lord will return and save us all",
 							"come with me adventurer and let the ceromony begin");
 						p.teleport(580, 3419);

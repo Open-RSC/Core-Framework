@@ -91,7 +91,7 @@ public class TeleportStone implements OpInvTrigger {
 				case 12:
 					return;
 			}
-			remove(p, TELEPORT_STONE, 1);
+			p.getCarriedItems().remove(new Item(TELEPORT_STONE));
 			delay(650);
 			p.message("You landed in " + teleLoc[menu]);
 		}

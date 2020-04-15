@@ -177,7 +177,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					say(p, n, "I have the 20 limpwurt roots, now transport me please");
 					npcsay(p, n, "Oh marverlous",
 						"Brace yourself then");
-					p.getCarriedItems().remove(ItemId.LIMPWURT_ROOT.id(), 20);
+					p.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id(), 20));
 					p.teleport(557, 3290);
 					delay(650);
 					ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
@@ -429,7 +429,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					"No not yet");
 				if (menu == 0) {
 					Functions.mes(p, "You give the staff to Lucien");
-					remove(p, ItemId.STAFF_OF_ARMADYL.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.STAFF_OF_ARMADYL.id()));
 					npcsay(p, n, "Muhahahaha",
 						"Already I can feel the power of this staff running through my limbs",
 						"Soon I shall be exceedingly powerful",
@@ -577,7 +577,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET) {
 			p.message("You fit the lever into the bracket");
-			remove(p, ItemId.LEVER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.LEVER.id()));
 			p.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), COMPLETE_LEVER, obj.getDirection(), obj
 					.getType()));

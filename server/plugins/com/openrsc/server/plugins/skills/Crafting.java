@@ -72,10 +72,10 @@ public class Crafting implements UseInvTrigger,
 					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& inventory.hasInInventory(ItemId.THREAD.id())) {
 					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
-						carriedItems.remove(ItemId.TEDDY_HEAD.id(), 1);
-						carriedItems.remove(ItemId.TEDDY_BOTTOM.id(), 1);
-						carriedItems.remove(ItemId.THREAD.id(), 1);
-						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
+						carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
+						carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
+						carriedItems.remove(new Item(ItemId.THREAD.id()));
+						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
 						player.message("You stitch together the teddy parts");
 					} else
 						player.message("You need level 15 crafting to fix the teddy");
@@ -90,9 +90,9 @@ public class Crafting implements UseInvTrigger,
 					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& inventory.hasInInventory(ItemId.THREAD.id())) {
 					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
-						carriedItems.remove(ItemId.TEDDY_HEAD.id(), 1);
-						carriedItems.remove(ItemId.TEDDY_BOTTOM.id(), 1);
-						carriedItems.remove(ItemId.THREAD.id(), 1);
+						carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
+						carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
+						carriedItems.remove(new Item(ItemId.THREAD.id()));
 						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
 						player.message("You stitch together the teddy parts");
 					} else
@@ -137,6 +137,8 @@ public class Crafting implements UseInvTrigger,
 	private boolean craftingChecks(final GameObject obj, final Item item, final Player player) {
 		// allowed item on crafting game objects
 		if (!craftingTypeChecks(obj, item, player)) return false;
+
+		if (item.getItemStatus().getNoted()) return false;
 
 		if (obj.getLocation().equals(Point.location(399, 840))) {
 			// furnace in shilo village
@@ -314,7 +316,7 @@ public class Crafting implements UseInvTrigger,
 						return;
 					}
 				}
-				if (owner.getCarriedItems().remove(item) > -1 && (gem == 0 || owner.getCarriedItems().remove(gems[gem], 1) > -1)) {
+				if (owner.getCarriedItems().remove(item) > -1 && (gem == 0 || owner.getCarriedItems().remove(new Item(gems[gem])) > -1)) {
 					thinkbubble(getOwner(), item);
 					Item result;
 					if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
@@ -558,7 +560,7 @@ public class Crafting implements UseInvTrigger,
 						return;
 					}
 				}
-				if (owner.getCarriedItems().remove(otherItem, 1) > -1
+				if (owner.getCarriedItems().remove(new Item(otherItem)) > -1
 						&& owner.getCarriedItems().remove(item) > -1) {
 					inventory.add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
 					inventory.add(new Item(ItemId.BUCKET.id(), 1));
@@ -584,7 +586,7 @@ public class Crafting implements UseInvTrigger,
 					player.message("You need 90 crafting to split the scales");
 					return;
 				}
-				if (player.getCarriedItems().remove(ItemId.KING_BLACK_DRAGON_SCALE.id(),1) > -1) {
+				if (player.getCarriedItems().remove(new Item(ItemId.KING_BLACK_DRAGON_SCALE.id(),1)) > -1) {
 					player.message("You chip the massive scale into 5 pieces");
 					give(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
 					player.incExp(Skills.CRAFTING,1300,true);
@@ -617,7 +619,7 @@ public class Crafting implements UseInvTrigger,
 				Item item = owner.getCarriedItems().getInventory().get(
 					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId()));
 				if (item.getItemStatus().getNoted()) return;
-				if (owner.getCarriedItems().remove(item, true) > -1) {
+				if (owner.getCarriedItems().remove(item) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
 					// Jade, Opal and red topaz fail handler - 25% chance to fail
 
@@ -834,7 +836,7 @@ public class Crafting implements UseInvTrigger,
 						int parts = owner.getCache().getInt("part_reel_thread");
 						if (parts >= 4) {
 							owner.message("You use up one of your reels of thread");
-							owner.getCarriedItems().remove(ItemId.THREAD.id(), 1);
+							owner.getCarriedItems().remove(new Item(ItemId.THREAD.id()));
 							owner.getCache().remove("part_reel_thread");
 						} else {
 							owner.getCache().put("part_reel_thread", parts + 1);
@@ -890,7 +892,7 @@ public class Crafting implements UseInvTrigger,
 				}
 				if (owner.getCarriedItems().remove(woolBall) > -1 && owner.getCarriedItems().remove(item) > -1) {
 					owner.message("You put some string on your " + item.getDef(getWorld()).getName().toLowerCase());
-					owner.getCarriedItems().getInventory().add(new Item(newId, 1));
+					owner.getCarriedItems().getInventory().add(new Item(newId));
 				} else {
 					interrupt();
 					return;
@@ -908,8 +910,8 @@ public class Crafting implements UseInvTrigger,
 		if (item.getCatalogId() == ItemId.CLAY.id() && water.getCatalogId() != ItemId.BOWL_OF_WATER.id()) {
 			if (player.getCarriedItems().remove(water) > -1
 				&& player.getCarriedItems().remove(item) > -1) {
-				player.getCarriedItems().getInventory().add(new Item(jugID, 1));
-				player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id(), 1));
+				player.getCarriedItems().getInventory().add(new Item(jugID));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
 				mes(player, 1200, "You mix the clay and water");
 				player.message("You now have some soft workable clay");
 			}

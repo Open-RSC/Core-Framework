@@ -11,7 +11,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
-import static com.openrsc.server.plugins.Functions.remove;
 import static com.openrsc.server.plugins.Functions.changeloc;
 
 public class CrystalChest implements OpLocTrigger, UseLocTrigger {
@@ -44,7 +43,7 @@ public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 			changeloc(obj, respawnTime, CRYSTAL_CHEST_OPEN);
 			player.message("You find some treasure in the chest");
 
-			Functions.remove(player, ItemId.CRYSTAL_KEY.id(), 1); // remove the crystal key.
+			player.getCarriedItems().remove(new Item(ItemId.CRYSTAL_KEY.id())); // remove the crystal key.
 			ArrayList<Item> loot = new ArrayList<Item>();
 			loot.add(new Item(ItemId.UNCUT_DRAGONSTONE.id(), 1));
 			int percent = DataConversions.random(0, 10000);

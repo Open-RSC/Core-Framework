@@ -49,7 +49,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTEN.id()) {
-			remove(p, ItemId.KITTEN.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 			mes(p, 1200, "you drop the kitten");
 			mes(p, 0, "it's upset and runs away");
 		}
@@ -113,7 +113,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case RAW_SALMON:
 		case RAW_TUNA:
 		case TUNA:
-			remove(p, item.getCatalogId(), 1);
+			p.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if(!isGrown) {
 				Functions.mes(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
@@ -199,7 +199,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
-				p.getCarriedItems().remove(ItemId.KITTEN.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 			}
 			// kitten grows to cat - replace and reset counters

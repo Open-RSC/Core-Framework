@@ -173,7 +173,7 @@ public class DigsiteWorkman implements TalkNpcTrigger, UseNpcTrigger {
 				"Okay that's all in order, you may use the mineshafts now",
 				"I'll hang onto this scroll shall I ?");
 			say(p, n, "Thanks");
-			remove(p, ItemId.DIGSITE_SCROLL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.DIGSITE_SCROLL.id()));
 			if (!p.getCache().hasKey("digsite_winshaft") && p.getQuestStage(Quests.DIGSITE) == 5) {
 				p.getCache().store("digsite_winshaft", true);
 			}

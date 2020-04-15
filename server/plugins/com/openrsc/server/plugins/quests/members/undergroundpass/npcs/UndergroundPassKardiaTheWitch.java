@@ -56,7 +56,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 			} else if (click == 1) {
 				if (p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !p.getCache().hasKey("kardia_cat")) {
 					Functions.mes(p, "you place the cat by the door");
-					remove(p, ItemId.KARDIA_CAT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
 					p.teleport(776, 3535);
 					Functions.mes(p, "you knock on the door and hide around the corner");
 					p.message("the witch takes the cat inside");
@@ -97,7 +97,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
 			if (!p.getCache().hasKey("kardia_cat")) {
 				Functions.mes(p, "you place the cat by the door");
-				remove(p, ItemId.KARDIA_CAT.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
 				p.teleport(776, 3535);
 				Functions.mes(p, "you knock on the door and hide around the corner");
 				p.message("the witch takes the cat inside");

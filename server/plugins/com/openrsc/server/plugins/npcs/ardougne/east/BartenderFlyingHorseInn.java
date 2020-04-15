@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -30,7 +31,7 @@ public class BartenderFlyingHorseInn implements TalkNpcTrigger {
 			if (menu == 0) {
 				npcsay(p, n, "Ok, that'll be two coins");
 				if (ifheld(p, ItemId.COINS.id(), 2)) {
-					remove(p, ItemId.COINS.id(), 2);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 					give(p, ItemId.BEER.id(), 1);
 					p.message("You buy a pint of beer");
 				} else {

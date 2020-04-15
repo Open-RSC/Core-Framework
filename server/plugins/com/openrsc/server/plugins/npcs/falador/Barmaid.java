@@ -40,7 +40,7 @@ public final class Barmaid implements
 					"So it will cost you 70 coins");
 				if (ifheld(p, ItemId.COINS.id(), 70)) {
 					Functions.mes(p, "You buy a hand of death cocktail");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 70);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 70));
 					Functions.mes(p, "You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(p);
@@ -74,8 +74,8 @@ public final class Barmaid implements
 
 				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy an Asgarnian Ale");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
-					p.getCarriedItems().getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id(), 1));
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id()));
 				} else {
 					say(p, n, notEnoughMoney);
 				}
@@ -85,8 +85,8 @@ public final class Barmaid implements
 
 				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of Wizard's Mind Bomb");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
-					p.getCarriedItems().getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id(), 1));
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+					p.getCarriedItems().getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id()));
 				} else {
 					say(p, n, notEnoughMoney);
 				}
@@ -96,7 +96,7 @@ public final class Barmaid implements
 
 				if (ifheld(p, ItemId.COINS.id(), 3)) {
 					p.message("You buy a pint of Dwarven Stout");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 3);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3));
 					p.getCarriedItems().getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
 				} else {
 					say(p, n, notEnoughMoney);

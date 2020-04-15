@@ -65,7 +65,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 			}
 			else {
 				player.message("You throw the holy watervial at Ungadulu.");
-				remove(player, item.getCatalogId(), 1);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				player.playSound("projectile");
 				player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, ungadulu, 1) {
 					@Override

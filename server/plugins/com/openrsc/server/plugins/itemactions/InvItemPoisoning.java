@@ -53,7 +53,8 @@ public class InvItemPoisoning implements UseInvTrigger {
 		}
 		Item poisonedItem = getPoisonedItem(player.getWorld(), item.getDef(player.getWorld()).getName());
 		if (poisonedItem != null) {
-			if (remove(player, ItemId.WEAPON_POISON.id(), 1) && remove(player, item.getCatalogId(), makeAmount)) {
+			if (player.getCarriedItems().remove(new Item(ItemId.WEAPON_POISON.id())) != -1
+				&& player.getCarriedItems().remove(new Item(item.getCatalogId(), makeAmount)) != -1) {
 				player.message("You poison " + procItemName);
 				give(player, poisonedItem.getCatalogId(), makeAmount);
 			}

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -77,9 +78,9 @@ public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 							"Milk, flour, and an egg!");
 						npcsay(p, n, "I am saved thankyou!");
 						Functions.mes(p, "You give some milk, an egg and some flour to the cook");
-						p.getCarriedItems().remove(ItemId.EGG.id(), 1);
-						p.getCarriedItems().remove(ItemId.POT_OF_FLOUR.id(), 1);
-						p.getCarriedItems().remove(ItemId.MILK.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.EGG.id()));
+						p.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+						p.getCarriedItems().remove(new Item(ItemId.MILK.id()));
 						p.sendQuestComplete(Quests.COOKS_ASSISTANT);
 						p.updateQuestStage(getQuestId(), -1);
 

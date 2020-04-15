@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.portsarim;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -61,7 +62,7 @@ public final class WormBrain implements OpBoundTrigger {
 											@Override
 											public void action() {
 												if (ifheld(p, ItemId.COINS.id(), 10000)) {
-													remove(p, ItemId.COINS.id(), 10000);
+													p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10000));
 													p.message("You buy the map piece from Wormbrain");
 													npcsay(p, n, "Fank you very much! Now me can bribe da guards, hehehe");
 													give(p, ItemId.MAP_PIECE_1.id(), 1);

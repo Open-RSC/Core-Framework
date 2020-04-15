@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.dwarvenmine;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -117,7 +118,7 @@ public class Thordur implements TalkNpcTrigger {
 					say(p, n,
 						"Oh dear I don't actually seem to have enough money");
 				} else {
-					p.getCarriedItems().remove(ItemId.COINS.id(), 10);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
 					give(p, ItemId.DISK_OF_RETURNING.id(), 1);
 					p.message("Thordur hands you a special disk");
 					delay(1200);

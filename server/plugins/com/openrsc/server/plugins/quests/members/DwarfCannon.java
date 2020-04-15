@@ -130,7 +130,7 @@ public class DwarfCannon
 							}
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 750000) {
 								Functions.mes(p, "you give the Cannon engineer 750 000 coins");
-								p.getCarriedItems().remove(ItemId.COINS.id(), 750000);
+								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 750000));
 
 								Functions.mes(p, "he gives you the four parts that make the cannon");
 								give(p, ItemId.DWARF_CANNON_BASE.id(), 1);
@@ -297,7 +297,7 @@ public class DwarfCannon
 							npcsay(p, n, "please traveller, seek out the goblins base..", "...and return the lad to us",
 								"they must sleep somewhere!");
 							say(p, n, "ok, i'll see if i can find their hide out");
-							remove(p, ItemId.DWARF_REMAINS.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.DWARF_REMAINS.id()));
 							p.updateQuestStage(getQuestId(), 3);
 							p.getCache().remove("grabed_dwarf_remains");
 						} else {
@@ -394,8 +394,8 @@ public class DwarfCannon
 						npcsay(p, n, "hello traveller, any word from the Cannon engineer?");
 						say(p, n, "yes, i have spoken to him", "he gave me these to give to you");
 						Functions.mes(p, "you hand the Dwarf commander the mould and the notes");
-						remove(p, ItemId.NULODIONS_NOTES.id(), 1);
-						remove(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.NULODIONS_NOTES.id()));
+						p.getCarriedItems().remove(new Item(ItemId.CANNON_AMMO_MOULD.id()));
 						npcsay(p, n, "aah, of course, we make the ammo",
 							"this is great, now we will be able to defend ourselves", "i don't know how to thank you");
 						say(p, n, "you could give me a cannon");
@@ -459,7 +459,7 @@ public class DwarfCannon
 						say(p, n, "i do, and i fixed it");
 						p.message("You hand over the teddy");
 						p.getCache().set("miniquest_dwarf_youth_rescue", 2);
-						p.getCarriedItems().remove(ItemId.TEDDY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.TEDDY.id()));
 						npcsay(p, n, "yet again you've proven a friend to us",
 							"i will talk to our best smithy",
 							"he works at the new lava forge deep underground",
@@ -541,7 +541,7 @@ public class DwarfCannon
 				p.damage(DataConversions.random(2, 3));
 			} else {
 				Functions.mes(p, "you attempt to replace the missing railing", "you replace the railing with no problems");
-				p.getCarriedItems().remove(ItemId.RAILING_DWARF_CANNON.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RAILING_DWARF_CANNON.id()));
 
 				if (obj.getID() == 181) {
 					p.getCache().store("railone", true);

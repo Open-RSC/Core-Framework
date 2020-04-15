@@ -162,7 +162,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						npcsay(p, n, "Marvelous");
 						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 							p.message("You pay bonzo 5 coins");
-							remove(p, ItemId.COINS.id(), 5);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 							npcsay(p, n, "Ok we've got all the fishermen",
 								"It's time to roll",
 								"Ok nearly everyone is in there place already",
@@ -206,7 +206,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		Functions.mes(p, "You hand over your catch");
 		for (String aCatch : catches) {
 			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && p.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
-			remove(p, Integer.valueOf(aCatch), 1);
+			p.getCarriedItems().remove(new Item(Integer.valueOf(aCatch)));
 		}
 		p.getCache().remove("contest_catches");
 		p.getCache().remove("paid_contest_fee");
@@ -454,7 +454,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 					say(p, n, "I have it right here");
 					Functions.mes(p, "you give the trophy to the dwarf");
-					remove(p, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.HEMENSTER_FISHING_TROPHY.id()));
 					npcsay(p, n, "Okay we will let you in now");
 					p.sendQuestComplete(Quests.FISHING_CONTEST);
 				} else {
@@ -485,7 +485,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
 			Functions.mes(player, "You stash the garlic in the pipe");
-			player.getCarriedItems().remove(ItemId.GARLIC.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.GARLIC.id()));
 			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
 				npcsay(player, sinister,
 					"Arrgh what is that ghastly smell",
@@ -580,12 +580,12 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("You catch a sardine");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getCarriedItems().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.RED_VINE_WORMS.id()));
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					p.message("You catch some shrimps");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
-					p.getCarriedItems().remove(ItemId.FISHING_BAIT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.FISHING_BAIT.id()));
 					addCatchCache(p, ItemId.RAW_SHRIMP.id());
 				}
 
@@ -625,12 +625,12 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
 					p.message("You catch a giant carp");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
-					p.getCarriedItems().remove(ItemId.RED_VINE_WORMS.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.RED_VINE_WORMS.id()));
 					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					p.message("You catch a sardine");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getCarriedItems().remove(ItemId.FISHING_BAIT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.FISHING_BAIT.id()));
 					addCatchCache(p, ItemId.RAW_SARDINE.id());
 				}
 

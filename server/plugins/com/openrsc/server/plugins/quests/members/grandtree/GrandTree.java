@@ -339,7 +339,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				case 12:
 					say(p, n, "look, i found this at glough's home");
 					Functions.mes(p, "you give the king the strategic notes");
-					remove(p, ItemId.GLOUGHS_NOTES.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.GLOUGHS_NOTES.id()));
 					npcsay(p, n, "hmmm, these are interesting",
 						"but it's not proof, any one could have made these",
 						"traveller, i understand your concern",
@@ -429,7 +429,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					say(p, n, "hello");
 					if (p.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
 						Functions.mes(p, "you give the mage the bark sample");
-						remove(p, ItemId.BARK_SAMPLE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.BARK_SAMPLE.id()));
 						Functions.mes(p, "the mage speaks in a strange ancient tongue",
 							"he says....");
 						strangeTranslationBox(p);
@@ -868,7 +868,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 									"femi covers you with a sheet...",
 									"...and drags the cart to the gate");
 								Functions.mes(p, "you give femi 1000 gold coins");
-								remove(p, ItemId.COINS.id(), 1000);
+								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 1000));
 								Functions.mes(p,"femi pulls you into the stronghold");
 								smuggled = true;
 							} else {
@@ -954,7 +954,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						say(p, n, "is this it?");
 						npcsay(p, n, "yes, excellent, well done");
 						Functions.mes(p, "you give king shareem the daconia rock");
-						remove(p, ItemId.DACONIA_ROCK.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.DACONIA_ROCK.id()));
 						npcsay(p, n, "it's incredible, the tree's health is improving already",
 							"i don't what to say, we owe you so much",
 							"to think glough had me fooled all along");
@@ -1533,7 +1533,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			int menu = multi(player, "To the far left", "Centre left", "Centre right", "To the far right");
 			if (menu == 0) {
 				Functions.mes(player, "you place the pebble in the indent", "it crumbles into dust");
-				remove(player, item.getCatalogId(), 1);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_1.id()) { // HO
 					if (!player.getCache().hasKey("pebble_1")) {
 						player.getCache().store("pebble_1", true);
@@ -1541,7 +1541,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				}
 			} else if (menu == 1) {
 				Functions.mes(player, "you place the pebble in the indent", "it crumbles into dust");
-				remove(player, item.getCatalogId(), 1);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_2.id()) { // NI
 					if (!player.getCache().hasKey("pebble_2")) {
 						player.getCache().store("pebble_2", true);
@@ -1549,7 +1549,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				}
 			} else if (menu == 2) {
 				Functions.mes(player, "you place the pebble in the indent", "it crumbles into dust");
-				remove(player, item.getCatalogId(), 1);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_3.id()) { // :::
 					if (!player.getCache().hasKey("pebble_3")) {
 						player.getCache().store("pebble_3", true);
@@ -1557,7 +1557,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				}
 			} else if (menu == 3) {
 				Functions.mes(player, "you place the pebble in the indent", "it crumbles into dust");
-				remove(player, item.getCatalogId(), 1);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_4.id()) { // HA
 					if (!player.getCache().hasKey("pebble_4")) {
 						player.getCache().store("pebble_4", true);

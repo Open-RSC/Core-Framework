@@ -50,8 +50,8 @@ public class InvCooking implements UseInvTrigger {
 			if (player.getCarriedItems().getInventory().contains(item1)
 				&& player.getCarriedItems().getInventory().contains(item2)) {
 				player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
-				player.getCarriedItems().remove(ItemId.JUG_OF_WATER.id(), 1);
-				player.getCarriedItems().remove(ItemId.GRAPES.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
+				player.getCarriedItems().remove(new Item(ItemId.GRAPES.id()));
 
 				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
 					@Override
@@ -91,7 +91,8 @@ public class InvCooking implements UseInvTrigger {
 			} else if (option == 3) {
 				productID = ItemId.UNCOOKED_PITTA_BREAD.id();
 			}
-			if (remove(player, new Item(waterContainer), new Item(ItemId.POT_OF_FLOUR.id())) && productID > -1) {
+			if (player.getCarriedItems().remove(new Item(waterContainer)) != -1
+				&& player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) != -1 && productID > -1) {
 				int emptyContainer = 0;
 
 				if (waterContainer == ItemId.BUCKET_OF_WATER.id())
@@ -137,7 +138,8 @@ public class InvCooking implements UseInvTrigger {
 			}
 		}
 
-		if (remove(p, combine.itemID, 1) && remove(p, combine.itemIDOther, 1)) {
+		if (p.getCarriedItems().remove(new Item(combine.itemID)) != -1
+			&& p.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
 
 			// Check for tasty kebab failure
 			if (combine.resultItem == ItemId.TASTY_UGTHANKI_KEBAB.id() && DataConversions.random(0, 31) < 1) {

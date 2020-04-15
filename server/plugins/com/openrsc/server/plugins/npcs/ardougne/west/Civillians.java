@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.ardougne.west;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -97,7 +98,7 @@ public class Civillians implements TalkNpcTrigger {
 				npcsay(p, n, "well, i'm not giving you anymore");
 			} else if (sub_menu == 1) {
 				p.message("you hand over the cat");
-				remove(p, ItemId.CAT.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CAT.id()));
 				p.message("you are given 25 death runes");
 				give(p, ItemId.DEATH_RUNE.id(), 25);
 				npcsay(p, n, "great, thanks for that");

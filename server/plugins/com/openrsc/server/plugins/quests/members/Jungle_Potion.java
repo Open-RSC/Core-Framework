@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -186,7 +187,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"it is related to the palm and grows",
 									"to the East in its brother's shady profusion.");
 								p.message("You give the Snake Weed to Trufitus");
-								remove(p, ItemId.SNAKE_WEED.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.SNAKE_WEED.id()));
 								npcsay(p, n, "Many thanks for the 'Snake Weed'");
 								setQuestStage(p, this, 2);
 								p.getCache().store("got_ardigal", false);
@@ -218,7 +219,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"where the ground has been blackened",
 									"by the living flame.");
 								Functions.mes(p, "You give the Ardrigal to Trufitus");
-								remove(p, ItemId.ARDRIGAL.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.ARDRIGAL.id()));
 								setQuestStage(p, this, 3);
 								p.getCache().store("got_sito_foil", false);
 								//no longer needed
@@ -250,7 +251,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"And it clings to rocks for it's existence",
 									"It is difficult to see, so you must search for it well.");
 								Functions.mes(p, "You give the Sito Foil to Trufitus");
-								remove(p, ItemId.SITO_FOIL.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.SITO_FOIL.id()));
 								setQuestStage(p, this, 4);
 								p.getCache().store("got_volencia_moss", false);
 								//no longer needed
@@ -292,7 +293,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"The Northern cliffs of this land",
 									"Take care Bwana as it may be very dangerous");
 								Functions.mes(p, "You give the Volencia Moss to Trufitus");
-								remove(p, ItemId.VOLENCIA_MOSS.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.VOLENCIA_MOSS.id()));
 								setQuestStage(p, this, 5);
 								p.getCache().store("got_rogues_purse", false);
 								//no longer needed
@@ -328,7 +329,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"please excuse me while I make",
 									"the arrangements");
 								p.message("You give the Rogues Purse to Trufitus");
-								remove(p, ItemId.ROGUES_PURSE.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.ROGUES_PURSE.id()));
 								p.message("Trufitus shows you some techniques in Herblaw");
 								completeQuest(p, this); // COMPLETED AND FULLY WORKING
 								//no longer needed

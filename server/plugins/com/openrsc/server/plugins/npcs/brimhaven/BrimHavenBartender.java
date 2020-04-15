@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.brimhaven;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -37,7 +38,7 @@ public final class BrimHavenBartender implements
 			npcsay(p, n, "One grog coming right up", "That'll be 3 gold");
 			if (ifheld(p, ItemId.COINS.id(), 3)) {
 				p.message("You buy a pint of Grog");
-				p.getCarriedItems().remove(ItemId.COINS.id(), 3);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3));
 				give(p, ItemId.GROG.id(), 1);
 			} else {
 				say(p, n,
@@ -47,7 +48,7 @@ public final class BrimHavenBartender implements
 			npcsay(p, n, "That'll be 27 gold");
 			if (ifheld(p, ItemId.COINS.id(), 27)) {
 				p.message("You buy a bottle of rum");
-				p.getCarriedItems().remove(ItemId.COINS.id(), 27);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 27));
 				give(p, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
 				say(p, n,
@@ -57,7 +58,7 @@ public final class BrimHavenBartender implements
 			npcsay(p, n, "Haha time to be breaking out the old supergrog",
 				"That'll be 15 coins please");
 			if (ifheld(p, ItemId.COINS.id(), 15)) {
-				p.getCarriedItems().remove(ItemId.COINS.id(), 15);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
 				Functions.mes(p,
 					"The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");

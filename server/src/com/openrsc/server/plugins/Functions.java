@@ -290,44 +290,6 @@ public class Functions {
 	}
 
 	/**
-	 * Removes an item from players inventory.
-	 *
-	 * @param p
-	 * @param id
-	 * @param amt
-	 */
-	public static boolean remove(final Player p, final int id, final int amt) {
-		if (!ifheld(p, id, amt)) {
-			return false;
-		}
-
-		final Item item = new Item(id, 1);
-		final int amount = item.getDef(p.getWorld()).isStackable() ? amt : 1;
-		p.getCarriedItems().remove(new Item(id, amount, false, item.getItemId()), true);
-		return true;
-	}
-
-	/**
-	 * Removes an item from players inventory.
-	 *
-	 * @param p
-	 * @param items
-	 * @return
-	 */
-	public static boolean remove(final Player p, final Item... items) {
-		for (Item i : items) {
-			if (!p.getCarriedItems().getInventory().contains(i)) {
-				return false;
-			}
-		}
-
-		for (Item ir : items) {
-			p.getCarriedItems().remove(ir);
-		}
-		return true;
-	}
-
-	/**
 	 * Checks if player has an item, and returns true/false.
 	 *
 	 * @param p

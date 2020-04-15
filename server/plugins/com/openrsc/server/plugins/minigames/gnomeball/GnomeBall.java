@@ -107,7 +107,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 					//logic to try to score from 1xp
 					thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
 					Functions.mes(player, "you throw the ball at the goal");
-					remove(player, ItemId.GNOME_BALL.id(), 1);
+					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 					int random = DataConversions.random(0, 4);
 					if (random < 2 + (playerZone == Zone.ZONE_1XP_INNER ? 2 : 0)) {
 						Functions.mes(player, "it flys through the net...",
@@ -136,7 +136,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 					//logic to try to score from 2xp
 					thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
 					Functions.mes(player, "you throw the ball at the goal");
-					remove(player, ItemId.GNOME_BALL.id(), 1);
+					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 					int random = DataConversions.random(0, 9);
 					if (random < 4 + (playerZone == Zone.ZONE_2XP_INNER ? 2 : 0)) {
 						Functions.mes(player, "it flys through the net...",

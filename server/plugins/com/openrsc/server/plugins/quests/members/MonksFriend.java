@@ -90,7 +90,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 					say(p, n, "Hello ");
 					npcsay(p, n, "...yawn...oh, hello again...yawn..",
 						"..please tell me you have the blanket");
-					if (remove(p, ItemId.BLANKET.id(), 1)) {
+					if (p.getCarriedItems().remove(new Item(ItemId.BLANKET.id())) != -1) {
 						say(p, n,
 							"Yes I returned it from the clutches of the evil thieves");
 						npcsay(p, n, "Really, that's excellent, well done",
@@ -202,7 +202,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 						"No, not really");
 					if (cartMenu == 0) {
 						npcsay(p, n, "i need some wood");
-						if (remove(p, ItemId.LOGS.id(), 1)) {
+						if (p.getCarriedItems().remove(new Item(ItemId.LOGS.id())) != -1) {
 							say(p, n, "here you go..", "I've got some wood");
 							npcsay(p, n, "well done, now i'll fix this cart",
 								"you head back to Brother Omad",
@@ -256,7 +256,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 						"..more wine. It help's me think.");
 				} else if (waterMenu == 1) {
 					npcsay(player, npc, "i need some wood");
-					if (remove(player, ItemId.LOGS.id(), 1)) {
+					if (player.getCarriedItems().remove(new Item(ItemId.LOGS.id())) != -1) {
 						say(player, npc, "here you go..",
 							"I've got some wood");
 						npcsay(player, npc,

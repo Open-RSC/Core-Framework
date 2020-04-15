@@ -53,7 +53,7 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			if (dm.itemIDOther == ItemId.MILK.id()) {
 				p.getCarriedItems().getInventory().replace(ItemId.MILK.id(), ItemId.BUCKET.id());
 			} else {
-				remove(p, dm.itemIDOther, 1);
+				p.getCarriedItems().remove(new Item(dm.itemIDOther));
 			}
 			if (dm.messages.length > 1) {
 				p.message(dm.messages[1]);

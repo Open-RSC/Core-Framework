@@ -76,7 +76,7 @@ public class ObjectCooking implements UseLocTrigger {
 				mes(p, 1200, "You cook the meat on the fire...");
 			else
 				mes(p, 1200, "You cook the meat on the stove...");
-			remove(p, ItemId.RAW_OOMLIE_MEAT.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
 			give(p, ItemId.BURNTMEAT.id(), 1);
 			mes(p, 1200, "This meat is too delicate to cook like this.");
 			mes(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
@@ -87,7 +87,7 @@ public class ObjectCooking implements UseLocTrigger {
 			if (p.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
 				Functions.mes(p, "you poor the poison into the hot pot",
 					"the poison desolves into the soup");
-				remove(p, ItemId.POISON.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 				p.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
 			} else {
 				p.message("nothing interesting happens");
@@ -101,7 +101,7 @@ public class ObjectCooking implements UseLocTrigger {
 			if (p.getQuestStage(Quests.WITCHS_POTION) != -1) {
 				thinkbubble(p, item);
 				mes(p, 1800, cookingOnMessage(p, item, object, false));
-				remove(p, ItemId.COOKEDMEAT.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.COOKEDMEAT.id()));
 				give(p, ItemId.BURNTMEAT.id(), 1);
 				p.playerServerMessage(MessageType.QUEST, "you burn the meat");
 			} else {
@@ -226,7 +226,7 @@ public class ObjectCooking implements UseLocTrigger {
 						thinkbubble(p, new Item(itemID));
 					p.playSound("cooking");
 					Functions.mes(p, messages);
-					remove(p, itemID, 1);
+					p.getCarriedItems().remove(new Item(itemID));
 					give(p, product, 1);
 				} else {
 					p.message("You don't have all the ingredients");

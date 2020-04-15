@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.karamja;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -43,7 +44,7 @@ public final class BoatFromKaramja implements
 			if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
 				npcsay(p, n, "Aha trying to smuggle rum are we?");
 				Functions.mes(p, "The customs officer confiscates your rum");
-				remove(p, ItemId.KARAMJA_RUM.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			} else {
 				npcsay(p,
 					n,
@@ -51,7 +52,7 @@ public final class BoatFromKaramja implements
 					"Now you need to pay a boarding charge of 30 gold");
 				int pay_opt = multi(p, n, false, "Ok", "Oh, I'll not bother then");
 				if (pay_opt == 0) {
-					if (remove(p, ItemId.COINS.id(), 30)) {
+					if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) != -1) {
 						say(p, n, "Ok");
 						Functions.mes(p, "You pay 30 gold", "You board the ship");
 						teleport(p, 269, 648);

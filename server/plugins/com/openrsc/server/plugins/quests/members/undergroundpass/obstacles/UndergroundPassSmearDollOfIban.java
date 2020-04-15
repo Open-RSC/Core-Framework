@@ -8,7 +8,6 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.remove;
 
 public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 
@@ -28,7 +27,7 @@ public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 	public void onUseInv(Player p, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.IBANS_ASHES.id(), ItemId.A_DOLL_OF_IBAN.id())) {
 			p.message("you rub the ashes into the doll");
-			Functions.remove(p, ItemId.IBANS_ASHES.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.IBANS_ASHES.id()));
 			if (!p.getCache().hasKey("ash_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.getCache().store("ash_on_doll", true);
 			}
@@ -36,7 +35,7 @@ public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 		else if (Functions.compareItemsIds(item1, item2, ItemId.IBANS_CONSCIENCE.id(), ItemId.A_DOLL_OF_IBAN.id())) {
 			mes(p, "you crumble the doves skeleton into dust");
 			p.message("and rub it into the doll");
-			Functions.remove(p, ItemId.IBANS_CONSCIENCE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.IBANS_CONSCIENCE.id()));
 			if (!p.getCache().hasKey("cons_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.getCache().store("cons_on_doll", true);
 			}
@@ -44,7 +43,7 @@ public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 		else if (Functions.compareItemsIds(item1, item2, ItemId.IBANS_SHADOW.id(), ItemId.A_DOLL_OF_IBAN.id())) {
 			mes(p, "you pour the strange liquid over the doll");
 			p.message("it seeps into the cotton");
-			Functions.remove(p, ItemId.IBANS_SHADOW.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.IBANS_SHADOW.id()));
 			if (!p.getCache().hasKey("shadow_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				p.getCache().store("shadow_on_doll", true);
 			}

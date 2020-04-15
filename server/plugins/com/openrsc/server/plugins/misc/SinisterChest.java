@@ -42,7 +42,7 @@ public class SinisterChest implements OpLocTrigger, UseLocTrigger {
 			p.message("A foul gas seeps from the chest");
 			p.message("You find a lot of herbs in the chest");
 
-			remove(p, ItemId.SINISTER_KEY.id(), 1); // remove the sinister key.
+			p.getCarriedItems().remove(new Item(ItemId.SINISTER_KEY.id())); // remove the sinister key.
 			// ADD 9 HERB ITEMS FROM CHEST.
 			// they are always the same rewarded herbs (see replay, there's also a rsc vid of
 			// someone looting it)

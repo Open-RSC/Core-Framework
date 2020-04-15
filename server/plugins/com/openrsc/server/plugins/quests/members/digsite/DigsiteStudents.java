@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.digsite;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -46,7 +47,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 					} else if (p.getCache().hasKey("student_orange_s")) { // started orange student help
 						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_ORANGE.id(), Optional.of(false))) {
 							say(p, n, "Look what I found");
-							remove(p, ItemId.ROCK_SAMPLE_ORANGE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_ORANGE.id()));
 							p.getCache().store("student_orange_c", true); // store completed orange student help
 							p.getCache().remove("student_orange_s"); // remove started orange student help
 							npcsay(p, n, "Excellent!",
@@ -135,7 +136,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 
 						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_GREEN.id(), Optional.of(false))) {
 							say(p, n, "Hi, is this your rock sample ?");
-							remove(p, ItemId.ROCK_SAMPLE_GREEN.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_GREEN.id()));
 							p.getCache().store("student_green_c", true); // completed green student help
 							p.getCache().remove("student_green_s"); // remove started green student help
 							npcsay(p, n, "Oh wow! you've found it!",
@@ -225,7 +226,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 					} else if (p.getCache().hasKey("student_purple_s")) { // started purple student help
 						if (p.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_PURPLE.id(), Optional.of(false))) {
 							say(p, n, "Guess what I found ?");
-							remove(p, ItemId.ROCK_SAMPLE_PURPLE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_PURPLE.id()));
 							p.getCache().store("student_purple_c", true); // completed purple student help
 							p.getCache().remove("student_purple_s"); // remove started purple student help
 							npcsay(p, n, "Hey! my sample!",
@@ -285,7 +286,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 							"Did you bring me the opal ?");
 						if (p.getCarriedItems().hasCatalogID(ItemId.UNCUT_OPAL.id(), Optional.of(false))) { // OPAL
 							say(p, n, "Would that opal look like this by any chance ?");
-							remove(p, ItemId.UNCUT_OPAL.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.UNCUT_OPAL.id()));
 							p.getCache().store("student_purple_exam3", true); // completed purple student help
 							p.getCache().remove("student_purple_opal"); // remove started purple student help
 							npcsay(p, n, "Wow, great you've found one",

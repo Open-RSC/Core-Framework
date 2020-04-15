@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.shilo;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -30,7 +31,7 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 			if (ifheld(p, ItemId.COINS.id(), 500)) {
 				npcsay(p, n, "Great!",
 					"Just hop into the cart then and we'll go!");
-				remove(p, ItemId.COINS.id(), 500);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 500));
 				mes(p, 1000, "You Hop into the cart and the driver urges the horses on.");
 				p.teleport(468, 662);
 				mes(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");

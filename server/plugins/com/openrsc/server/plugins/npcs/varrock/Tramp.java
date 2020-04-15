@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -28,7 +29,7 @@ public class Tramp implements TalkNpcTrigger {
 		} else if (menu == 1) {
 			npcsay(p, n, "You startin?");
 		} else if (menu == 2) {
-			remove(p, ItemId.COINS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.COINS.id()));
 			npcsay(p, n, "Thankyou, thats great");
 			int sub_menu = multi(p, n, "No problem",
 				"So don't I get some sort of quest hint or something now");

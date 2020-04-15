@@ -165,7 +165,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		if (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
 			player.message("you carefully place the planks over the pressure triggers");
 			player.message("you walk across the wooden planks");
-			remove(player, ItemId.PLANK.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
 			GameObject object = new GameObject(player.getWorld(), Point.location(728, 3435), 827, 0, 0);
 			object.getWorld().registerGameObject(object);
 			object.getWorld().delayedRemoveObject(object, 3000);
@@ -180,7 +180,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		else if (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
 			Functions.mes(player, "you tie one end of the rope to the stalagmite",
 				"and the other around your waist");
-			remove(player, ItemId.ROPE.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 			if (!player.getCache().hasKey("stalagmite")) {
 				player.getCache().store("stalagmite", true);
 			}
@@ -190,7 +190,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			player.message("you throw the glowing orb into the furnace");
 			Functions.mes(player, "its light quickly dims and then dies");
 			player.message("you feel a cold shudder run down your spine");
-			remove(player, item.getCatalogId(), 1);
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (item.getCatalogId() == ItemId.ORB_OF_LIGHT_WHITE.id()) {
 					if (!player.getCache().hasKey("orb_of_light1")) {

@@ -232,7 +232,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) {
 			p.message("You pour the rat poison into the feeding trough");
-			remove(p, ItemId.RAT_POISON.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.RAT_POISON.id()));
 			p.getCache().store("foodtrough", true);
 		}
 		/** TOP PURPLE POLE OTHERWISE NOT FIT MESSAGE - 1st cog **/
@@ -241,7 +241,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 364 && obj.getX() == 581 && obj.getY() == 2525) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("1st_cog")) {
 					p.message("The cog fits perfectly");
-					remove(p, ItemId.LARGE_COG_PURPLE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LARGE_COG_PURPLE.id()));
 					p.getCache().store("1st_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("1st_cog")) {
@@ -257,7 +257,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 365 && obj.getX() == 581 && obj.getY() == 639) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("2nd_cog")) {
 					p.message("The cog fits perfectly");
-					remove(p, ItemId.LARGE_COG_BLACK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LARGE_COG_BLACK.id()));
 					p.getCache().store("2nd_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("2nd_cog")) {
@@ -273,7 +273,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 362 && obj.getX() == 580 && obj.getY() == 3470) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("3rd_cog")) {
 					p.message("The cog fits perfectly");
-					remove(p, ItemId.LARGE_COG_BLUE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LARGE_COG_BLUE.id()));
 					p.getCache().store("3rd_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("3rd_cog")) {
@@ -289,7 +289,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			if (obj.getID() == 363 && obj.getX() == 582 && obj.getY() == 1582) {
 				if (atQuestStage(p, this, 1) && !p.getCache().hasKey("4th_cog")) {
 					p.message("The cog fits perfectly");
-					remove(p, ItemId.LARGE_COG_RED.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LARGE_COG_RED.id()));
 					p.getCache().store("4th_cog", true);
 				} else if (atQuestStage(p, this, -1)
 					|| p.getCache().hasKey("4th_cog")) {
@@ -349,7 +349,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			} else {
 				p.message("You take the cog");
 				give(p, ItemId.LARGE_COG_BLACK.id(), 1);
-				remove(p, ItemId.BUCKET_OF_WATER.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 			}
 		}
 	}
@@ -398,7 +398,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 				} else {
 					p.message("You take the cog");
 					give(p, ItemId.LARGE_COG_BLACK.id(), 1);
-					remove(p, ItemId.BUCKET_OF_WATER.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 				}
 			} else {
 				Functions.mes(p,

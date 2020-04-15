@@ -623,7 +623,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("you tie the rope to the tree");
-			remove(p, ItemId.ROPE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 			p.getWorld().replaceGameObject(obj,
 				new GameObject(p.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
 					.getType()));

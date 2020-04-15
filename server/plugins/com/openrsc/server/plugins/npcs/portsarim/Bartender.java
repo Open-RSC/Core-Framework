@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.portsarim;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -28,7 +29,7 @@ public class Bartender implements TalkNpcTrigger {
 				npcsay(p, n, "Sure that will be 2 gold coins please");
 				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					say(p, n, "Ok here you go thanks");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 					p.message("you buy a pint of beer");
 					give(p, ItemId.BEER.id(), 1);
 				} else {
@@ -78,7 +79,7 @@ public class Bartender implements TalkNpcTrigger {
 					npcsay(p, n,
 						"Ok one black skull ale coming up, 8 coins please");
 					if (ifheld(p, ItemId.COINS.id(), 8)) {
-						p.getCarriedItems().remove(ItemId.COINS.id(), 8);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 8));
 						Functions.mes(p, "You buy a black skull ale",
 							"You drink your black skull ale",
 							"Your vision blurs",

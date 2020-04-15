@@ -116,8 +116,8 @@ public final class Ned implements TalkNpcTrigger {
 					say(p, n, "Okay, please sell me some Rope");
 					p.message("You hand Ned 15 coins");
 					npcsay(p, n, "There you go, finest rope in Runescape");
-					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					p.getCarriedItems().remove(ItemId.COINS.id(), 15);
+					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id()));
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
 					p.message("Ned gives you a coil of rope");
 				}
 			} else if (choice == 1) {
@@ -134,7 +134,7 @@ public final class Ned implements TalkNpcTrigger {
 					say(p, n, "I have some balls of wool. could you make me some Rope?");
 					npcsay(p, n, "Sure I can.");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 4);
+					p.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id(), 4));
 				}
 			}
 		} else if (option == 2) { // Prince Ali's Rescue
@@ -161,7 +161,7 @@ public final class Ned implements TalkNpcTrigger {
 						Functions.mes(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
-						p.getCarriedItems().remove(ItemId.BALL_OF_WOOL.id(), 3);
+						p.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id(), 3));
 						npcsay(p, n, "Here you go, hows that for a quick effort? Not bad I think!");
 						p.message("Ned gives you a pretty good wig");
 						give(p, ItemId.WOOL_WIG.id(), 1);

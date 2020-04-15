@@ -37,7 +37,7 @@ public final class Apothecary implements
 			} else {
 				npcsay(p, n, "Well done. You have the berries");
 				Functions.mes(p, "You hand over the berries");
-				p.getCarriedItems().remove(ItemId.CADAVABERRIES.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CADAVABERRIES.id()));
 				p.message("Which the apothecary shakes up in vial of strange liquid");
 				npcsay(p, n, "Here is what you need");
 				p.message("The apothecary gives you a Cadava potion");
@@ -90,9 +90,9 @@ public final class Apothecary implements
 								interrupt();
 								return;
 							}
-							remove(p, ItemId.COINS.id(), 5);
-							remove(p, ItemId.LIMPWURT_ROOT.id(), 1);
-							remove(p, ItemId.RED_SPIDERS_EGGS.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
+							p.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id()));
+							p.getCarriedItems().remove(new Item(ItemId.RED_SPIDERS_EGGS.id()));
 							p.message("The Apothecary brews you a potion");
 							p.message("The Apothecary gives you a strength potion");
 							give(p, ItemId.FULL_STRENGTH_POTION.id(), 1);
@@ -148,7 +148,7 @@ public final class Apothecary implements
 				if (ifheld(p, ItemId.COINS.id(), 5000)) {
 					say(p, n, "I have the 5,000 gold with me");
 					p.message("you give Apothecary 5,000 gold");
-					remove(p, ItemId.COINS.id(), 5000);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5000));
 					Functions.mes(p, "Apothecary: starts brewing and fixes to a elixir");
 					p.message("Apothecary gives you a mysterious experience elixir.");
 					//TODO: Determine if elixir will be added and indexed ID if so

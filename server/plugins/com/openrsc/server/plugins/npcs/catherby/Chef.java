@@ -4,6 +4,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -75,11 +76,11 @@ public class Chef implements TalkNpcTrigger {
 				} else {
 					say(p, n, "Yes i have all of that now");
 					Functions.mes(p, "You give all of the fish to Caleb");
-					remove(p, ItemId.SWORDFISH.id(), 1);
-					remove(p, ItemId.BASS.id(), 1);
-					remove(p, ItemId.TUNA.id(), 1);
-					remove(p, ItemId.SALMON.id(), 1);
-					remove(p, ItemId.SHRIMP.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.SWORDFISH.id()));
+					p.getCarriedItems().remove(new Item(ItemId.BASS.id()));
+					p.getCarriedItems().remove(new Item(ItemId.TUNA.id()));
+					p.getCarriedItems().remove(new Item(ItemId.SALMON.id()));
+					p.getCarriedItems().remove(new Item(ItemId.SHRIMP.id()));
 					p.message("Caleb gives you his piece of the crest");
 					give(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
 					p.getCache().store("skipped_menu", true);

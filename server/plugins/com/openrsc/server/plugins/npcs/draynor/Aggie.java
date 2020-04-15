@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.draynor;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -111,12 +112,14 @@ public final class Aggie implements TalkNpcTrigger {
 						Functions.mes(p,
 							"You hand ash, flour, water and redberries to Aggie",
 							"She tips it into a cauldron and mutters some words");
-						remove(p, ItemId.ASHES.id(), 1);
-						if (!remove(p, ItemId.POT_OF_FLOUR.id(), 1))
-							remove(p, ItemId.FLOUR.id(), 1);
-						if (!remove(p, ItemId.BUCKET_OF_WATER.id(), 1))
-							remove(p, ItemId.JUG_OF_WATER.id(), 1);
-						remove(p, ItemId.REDBERRIES.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.ASHES.id()));
+						if (p.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) == -1) {
+							p.getCarriedItems().remove(new Item(ItemId.FLOUR.id()));
+						}
+						if (p.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id())) == -1) {
+							p.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
+						}
+						p.getCarriedItems().remove(new Item(ItemId.REDBERRIES.id()));
 						npcsay(p, n,
 							"Tourniquet, Fenderbaum, Tottenham, MonsterMunch, MarbleArch");
 						Functions.mes(p, "Aggie hands you the skin paste");
@@ -153,12 +156,12 @@ public final class Aggie implements TalkNpcTrigger {
 				if (ifheld(p, ItemId.COINS.id(), 20)) {
 					Functions.mes(p,
 						"Aggie waves her hands about, and you seem to be 20 coins poorer");
-					remove(p, ItemId.COINS.id(), 20);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 					npcsay(p, n,
 						"Thats a fine for insulting a witch, you should learn some respect");
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false))) {
 					Functions.mes(p, "Aggie waves her hands near you, and you seem to have lost some flour");
-					remove(p, ItemId.POT_OF_FLOUR.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
 					npcsay(p, n, "Thankyou for your kind present of flour",
 						"I am sure you never meant to insult me");
 				} else {
@@ -205,8 +208,8 @@ public final class Aggie implements TalkNpcTrigger {
 					} else {
 						say(p, n, "Okay, make me some yellow dye please");
 						Functions.mes(p, "You hand the onions and payment to Aggie");
-						p.getCarriedItems().remove(ItemId.ONION.id(), 2);
-						remove(p, ItemId.COINS.id(), 5);
+						p.getCarriedItems().remove(new Item(ItemId.ONION.id(), 2));
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						Functions.mes(p, "she takes a yellow bottle from nowhere and hands it to you");
 						give(p, ItemId.YELLOWDYE.id(), 1);
 					}
@@ -232,8 +235,8 @@ public final class Aggie implements TalkNpcTrigger {
 					} else {
 						say(p, n, "Okay, make me some red dye please");
 						Functions.mes(p, "You hand the berries and payment to Aggie");
-						p.getCarriedItems().remove(ItemId.REDBERRIES.id(), 3);
-						remove(p, ItemId.COINS.id(), 5);
+						p.getCarriedItems().remove(new Item(ItemId.REDBERRIES.id(), 3));
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						Functions.mes(p, "she takes a red bottle from nowhere and hands it to you");
 						give(p, ItemId.REDDYE.id(), 1);
 					}
@@ -259,8 +262,8 @@ public final class Aggie implements TalkNpcTrigger {
 					} else {
 						say(p, n, "Okay, make me some blue dye please");
 						Functions.mes(p, "You hand the woad leaves and payment to Aggie");
-						p.getCarriedItems().remove(ItemId.WOAD_LEAF.id(), 2);
-						remove(p, ItemId.COINS.id(), 5);
+						p.getCarriedItems().remove(new Item(ItemId.WOAD_LEAF.id(), 2));
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						Functions.mes(p,
 							"she takes a blue bottle from nowhere and hands it to you");
 						give(p, ItemId.BLUEDYE.id(), 1);

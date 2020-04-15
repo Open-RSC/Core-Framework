@@ -98,7 +98,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				new GameObject(obj.getWorld(), obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
 					obj.getType()));
 			p.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
-			remove(p, ItemId.CHEST_KEY.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.CHEST_KEY.id()));
 			Functions.mes(p, "All that is in the chest is a message");
 			Functions.mes(p, "You take the message from the chest");
 			Functions.mes(p, "It says dig just behind the south bench in the park");
@@ -143,7 +143,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 					return;
 				}
 				say(p, n, "Yes I've got some");
-				p.getCarriedItems().remove(ItemId.KARAMJA_RUM.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 
 				Functions.mes(p, "Frank happily takes the rum");
 				npcsay(p,
@@ -344,7 +344,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	@Override
 	public void onTeleport(Player p) {
 		if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (p.getLocation().inKaramja())) {
-			p.getCarriedItems().getInventory().remove(ItemId.KARAMJA_RUM.id());
+			p.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 		}
 	}
 

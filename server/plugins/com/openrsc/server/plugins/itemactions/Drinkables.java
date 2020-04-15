@@ -19,7 +19,7 @@ public class Drinkables implements OpInvTrigger {
 
 	@Override
 	public void onOpInv(Item item, Player player, String command) {
-		if (player.cantConsume()) {
+		if (player.cantConsume() || item.getItemStatus().getNoted()) {
 			return;
 		}
 		int id = item.getCatalogId();

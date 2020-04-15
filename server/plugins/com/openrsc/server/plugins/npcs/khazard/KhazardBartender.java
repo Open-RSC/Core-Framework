@@ -24,7 +24,7 @@ public final class KhazardBartender implements
 			if (bar == 0) {
 				npcsay(p, n, "There you go, that's one gold coin");
 				p.getCarriedItems().getInventory().add(new Item(ItemId.BEER.id()));
-				p.getCarriedItems().remove(ItemId.COINS.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id()));
 			} else if (bar == 1) {
 				npcsay(p, n, "There you go", "No charge");
 				give(p, ItemId.KHALI_BREW.id(), 1);

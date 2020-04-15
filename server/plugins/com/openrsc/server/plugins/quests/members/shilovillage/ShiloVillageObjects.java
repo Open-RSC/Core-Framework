@@ -544,7 +544,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			if (!ifheld(p, ItemId.BONES.id(), 3)) {
 				p.message("You do not have enough bones for all the recesses.");
 			} else {
-				p.getCarriedItems().remove(ItemId.BONES.id(), 3);
+				p.getCarriedItems().remove(new Item(ItemId.BONES.id(), 3));
 				Functions.mes(p, "You fit the bones into the reccesses of the door.",
 					"The door seems to change slightly.",
 					"Two depictions of skeletal warriors turn their heads towards you.",
@@ -606,7 +606,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 							"You secure it well.");
 					p.message("A rope is already secured there");
 					p.getCache().store("SV_DIG_ROPE", true);
-					remove(p, ItemId.ROPE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 				}
 				else {
 					p.message("A rope is already secured there");
@@ -631,7 +631,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 						p.message("Some rope might help here");
 					}
 					p.getCache().store("SV_DIG_LIT", true);
-					remove(p, ItemId.LIT_CANDLE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.LIT_CANDLE.id()));
 				}
 				else {
 					//what's authentic behavior here?

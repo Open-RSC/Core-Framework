@@ -131,8 +131,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 				} else if (choice == 1) {
 					if (p.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 						p.message("You give a beer to Dr Harlow");
-						p.getCarriedItems().getInventory().remove(
-							p.getCarriedItems().getInventory().getLastIndexById(ItemId.BEER.id()));
+						p.getCarriedItems().remove(new Item(ItemId.BEER.id()));
 						npcsay(p, n, "Cheersh matey");
 					} else {
 						say(p, n, "I'll just go and buy one");
@@ -150,7 +149,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						if (p.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 							p.message("You give a beer to Dr Harlow");
 							npcsay(p, n, "Cheersh matey");
-							p.getCarriedItems().getInventory().remove(p.getCarriedItems().getInventory().getLastIndexById(ItemId.BEER.id()));
+							p.getCarriedItems().remove(new Item(ItemId.BEER.id()));
 							say(p, n, "So tell me how to kill vampires then");
 							npcsay(p, n,
 								"Yesh yesh vampires I was very good at killing em once");
@@ -260,7 +259,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 				Item item = p.getCarriedItems().getInventory().get(
 					p.getCarriedItems().getInventory().getLastIndexById(ItemId.STAKE.id()));
 				if (item.getItemStatus().getNoted()) return;
-				p.getCarriedItems().remove(item, true);
+				p.getCarriedItems().remove(item);
 				p.message("You hammer the stake in to the vampires chest!");
 				n.killedBy(p);
 				n.remove();

@@ -15,12 +15,9 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.ifheld;
 import static com.openrsc.server.plugins.Functions.incQuestReward;
 import static com.openrsc.server.plugins.Functions.mes;
 import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.remove;
 import static com.openrsc.server.plugins.Functions.multi;
 
 public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigger, UseNpcTrigger {
@@ -439,7 +436,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							"No, I won't pay for it.");
 						if (pay == 0) {
 							p.message("You hand over 30 gold coins.");
-							Functions.remove(p, ItemId.COINS.id(), 30);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30));
 							give(p, ItemId.RADIMUS_SCROLLS.id(), 1);
 							npcsay(p, n, "Ok, please don't lose this one..");
 						} else if (pay == 1) {
@@ -478,7 +475,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				} else {
 					Functions.mes(p, n, 1300, "Radimus Erkle orders some guards to take the totem pole,",
 						"into the main Legends Hall.");
-					Functions.remove(p, item.getCatalogId(), 1);
+					p.getCarriedItems().remove(new Item(item.getCatalogId()));
 					npcsay(p, n, "That will take pride of place in the Legends Guild ",
 						"As a reminder of your quest to gain entry.",
 						"And so that many other great adventurers can admire your bravery.",

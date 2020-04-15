@@ -25,7 +25,7 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 		}
 		thinkbubble(player, item);
 		obj.setAttribute("contains_item", item.getCatalogId());
-		remove(player, item);
+		player.getCarriedItems().remove(item);
 		player.message("You put the grain in the hopper");
 	}
 

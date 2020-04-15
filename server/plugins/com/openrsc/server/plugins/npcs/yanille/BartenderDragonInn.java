@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.yanille;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -34,7 +35,7 @@ public final class BartenderDragonInn implements
 					if (ifheld(p, ItemId.COINS.id(), 2)) {
 						p.message("You buy a pint of dragon bitter");
 						give(p, ItemId.DRAGON_BITTER.id(), 1);
-						remove(p, ItemId.COINS.id(), 2);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 					} else {
 						say(p, n, "Oh dear. I don't seem to have enough money");
 					}
@@ -47,7 +48,7 @@ public final class BartenderDragonInn implements
 					if (ifheld(p, ItemId.COINS.id(), 10)) {
 						p.message("You buy a pint of ale");
 						give(p, ItemId.GREENMANS_ALE.id(), 1);
-						remove(p, ItemId.COINS.id(), 10);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
 					} else {
 						say(p, n, "Oh dear. I don't seem to have enough money");
 					}

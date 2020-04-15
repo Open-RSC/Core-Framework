@@ -231,7 +231,7 @@ public class RangeEvent extends GameTickEvent {
 							}
 						}
 						Item toRemove = new Item(arrow.getCatalogId(), 1, false, arrow.getItemId());
-						getPlayerOwner().getCarriedItems().remove(toRemove, true);
+						getPlayerOwner().getCarriedItems().remove(toRemove);
 						break;
 					}
 				}

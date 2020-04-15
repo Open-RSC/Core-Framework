@@ -62,7 +62,7 @@ public final class Baraek implements
 				if (!ifheld(p, ItemId.COINS.id(), 20)) {
 					say(p, n, "Oops. I don't have 20 coins. Silly me.");
 				} else {
-					remove(p, ItemId.COINS.id(), 20);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 					npcsay(p, n,
 						"Cheers",
 						"Ok to get to the gang hideout",
@@ -97,7 +97,7 @@ public final class Baraek implements
 					bargained = true;
 				} else {
 					say(p, n, "Yeah okay here you go");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 20);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 					p.message("You buy a fur from Baraek");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}
@@ -120,7 +120,7 @@ public final class Baraek implements
 			if (opts == 0) {
 				Functions.mes(p, "You give Baraek a fur",
 					"And he gives you twelve coins");
-				remove(p, ItemId.FUR.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.FUR.id()));
 				give(p, ItemId.COINS.id(), 12);
 			} else if (opts == 1) {
 				npcsay(p, n, "Oh ok", "Didn't want it anyway");
@@ -137,7 +137,7 @@ public final class Baraek implements
 						"I have a family to feed");
 				} else {
 					say(p, n, "Okay here you go");
-					p.getCarriedItems().remove(ItemId.COINS.id(), 18);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
 					p.message("You buy a fur from Baraek");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}

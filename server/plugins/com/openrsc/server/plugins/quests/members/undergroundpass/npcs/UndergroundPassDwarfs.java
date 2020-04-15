@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.npcs;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -234,7 +235,7 @@ public class UndergroundPassDwarfs implements TalkNpcTrigger {
 						} else if (menu2 == 1) {
 							if (ifheld(p, ItemId.COINS.id(), 5000)) {
 								p.message("you give klank 5000 coins...");
-								remove(p, ItemId.COINS.id(), 5000);
+								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5000));
 								p.message("...and klank gives you a pair of guanletts");
 								give(p, ItemId.KLANKS_GAUNTLETS.id(), 1);
 								npcsay(p, n, "there you go..i hope they help");

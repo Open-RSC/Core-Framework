@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.edgeville;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -30,7 +31,7 @@ public class BrotherJered implements
 				int sub_option = multi(p, n, false, //do not send over
 						"Yes Please", "No thankyou");
 				if (sub_option == 0) {
-					remove(p, ItemId.UNBLESSED_HOLY_SYMBOL.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.UNBLESSED_HOLY_SYMBOL.id()));
 					say(p, n, "Yes Please");
 					Functions.mes(p, "You give Jered the symbol",
 							"Jered closes his eyes and places his hand on the symbol",

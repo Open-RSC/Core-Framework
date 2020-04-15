@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.seers;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -38,7 +39,7 @@ public final class SeersBartender implements
 						if (ifheld(p, ItemId.COINS.id(), 2)) {
 							p.message("You buy a pint of beer");
 							give(p, ItemId.BEER.id(), 1);
-							p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 						} else {
 							say(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -53,7 +54,7 @@ public final class SeersBartender implements
 						if (ifheld(p, ItemId.COINS.id(), 16)) {
 							p.message("You buy a nice hot meat pie");
 							give(p, ItemId.MEAT_PIE.id(), 1);
-							p.getCarriedItems().remove(ItemId.COINS.id(), 16);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 16));
 						} else {
 							say(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -69,7 +70,7 @@ public final class SeersBartender implements
 						if (ifheld(p, ItemId.COINS.id(), 20)) {
 							p.message("You buy a bowl of home made stew");
 							give(p, ItemId.STEW.id(), 1);
-							p.getCarriedItems().remove(ItemId.COINS.id(), 20);
+							p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 						} else {
 							say(p, n,
 								"Oh dear. I don't seem to have enough money");
@@ -94,7 +95,7 @@ public final class SeersBartender implements
 				if (ifheld(p, ItemId.COINS.id(), 2)) {
 					p.message("You buy a pint of beer");
 					give(p, ItemId.BEER.id(), 1);
-					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 				} else {
 					say(p, n,
 						"Oh dear. I don't seem to have enough money");
@@ -113,7 +114,7 @@ public final class SeersBartender implements
 						"Now which of these was the barrels contained the liverbane ale?",
 						"That'll be 18 coins please");
 					if (ifheld(p, ItemId.COINS.id(), 18)) {
-						p.getCarriedItems().remove(ItemId.COINS.id(), 18);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
 						Functions.mes(p,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",

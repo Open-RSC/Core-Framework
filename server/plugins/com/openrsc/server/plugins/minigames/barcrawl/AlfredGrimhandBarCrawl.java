@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.minigames.barcrawl;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -101,7 +102,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkNpcTrigger
 					say(p, n,
 						"I think I jusht about done them all, but I losht count");
 					Functions.mes(p, "You give the card to the barbarian");
-					remove(p, ItemId.BARCRAWL_CARD.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.BARCRAWL_CARD.id()));
 					npcsay(p,
 						n,
 						"Yep that seems fine",

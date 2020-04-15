@@ -23,7 +23,7 @@ public class Eating implements OpInvTrigger {
 	@Override
 	public void onOpInv(final Item item, final Player player, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
-			if (player.cantConsume())
+			if (player.cantConsume() || item.getItemStatus().getNoted())
 				return;
 
 			if (player.getCarriedItems().remove(item) == -1)

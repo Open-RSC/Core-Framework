@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.ardougne.east;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -32,17 +33,17 @@ public class SilkMerchant implements TalkNpcTrigger {
 			int menu = multi(p, n, "20 coins", "80 coins", "120 coins", "200 coins");
 			if (menu == 0) {
 				npcsay(p, n, "Ok that suits me");
-				remove(p, ItemId.SILK.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.SILK.id()));
 				give(p, ItemId.COINS.id(), 20);
 			} else if (menu == 1) {
 				npcsay(p, n, "80 coins that's a bit steep", "How about 40 coins");
 				int reply2 = multi(p, n, "Ok 40 sounds good", "50 and that's my final price", "No that is not enough");
 				if (reply2 == 0) {
-					remove(p, ItemId.SILK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.SILK.id()));
 					give(p, ItemId.COINS.id(), 40);
 				} else if (reply2 == 1) {
 					npcsay(p, n, "Done");
-					remove(p, ItemId.SILK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.SILK.id()));
 					give(p, ItemId.COINS.id(), 50);
 				}
 			} else if (menu == 2) {
@@ -51,12 +52,12 @@ public class SilkMerchant implements TalkNpcTrigger {
 				int reply = multi(p, n, false, "Ok I guess 50 will do", "I'll give it to you for 60", "No that is not enough");
 				if (reply == 0) {
 					say(p, n, "Ok I guess 50 will do");
-					remove(p, ItemId.SILK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.SILK.id()));
 					give(p, ItemId.COINS.id(), 50);
 				} else if (reply == 1) {
 					say(p, n, "I'll give it you for 60");
 					npcsay(p, n, "You drive a hard bargain", "but I guess that will have to do");
-					remove(p, ItemId.SILK.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.SILK.id()));
 					give(p, ItemId.COINS.id(), 60);
 				} else if (reply == 2) {
 					say(p, n, "No that is not enough");

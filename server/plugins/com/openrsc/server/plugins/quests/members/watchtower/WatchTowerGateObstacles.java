@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.watchtower;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -49,7 +50,7 @@ public class WatchTowerGateObstacles implements OpLocTrigger {
 							npcsay(p, ogre_guard, "Creature, did you bring me the gold ?");
 							if (p.getCarriedItems().hasCatalogID(ItemId.GOLD_BAR.id(), Optional.of(false))) {
 								say(p, ogre_guard, "Here it is");
-								remove(p, ItemId.GOLD_BAR.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
 								npcsay(p, ogre_guard, "It's brought it!",
 									"On your way");
 								p.getCache().remove("get_gold_ogre");

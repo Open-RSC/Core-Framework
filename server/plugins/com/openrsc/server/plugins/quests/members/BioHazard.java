@@ -139,7 +139,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						npcsay(p, n, "You have - that's great!",
 							"Now can you pass me those refraction agents please?");
 						Functions.mes(p, "You hand Elena the distillator and an assortment of vials");
-						remove(p, ItemId.DISTILLATOR.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.DISTILLATOR.id()));
 						say(p, n, "These look pretty fancy");
 						npcsay(p, n, "Well, yes and no. The liquid honey isn't worth so much",
 							"But the others are- especially this colourless ethenea",
@@ -534,7 +534,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("wrong_vial_hops")) {
 							p.getCache().store("wrong_vial_hops", true);
-							remove(p, ItemId.ETHENEA.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
 							p.message("You give him the vial of ethenea");
 							say(p, n, "OK. I'll see you in Varrock");
 							npcsay(p, n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
@@ -546,7 +546,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("wrong_vial_hops")) {
 							p.getCache().store("wrong_vial_hops", true);
-							remove(p, ItemId.LIQUID_HONEY.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
 							p.message("You give him the vial of liquid honey");
 							say(p, n, "OK. I'll see you in Varrock");
 							npcsay(p, n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
@@ -558,7 +558,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.SULPHURIC_BROLINE.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("vial_hops")) {
 							p.getCache().store("vial_hops", true);
-							remove(p, ItemId.SULPHURIC_BROLINE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
 							p.message("You give him the vial of sulphuric broline");
 							say(p, n, "OK. I'll see you in Varrock");
 							npcsay(p, n, "Sure. I'm a regular at the The dancing donkey inn as it happens");
@@ -590,7 +590,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("wrong_vial_chancy")) {
 							p.getCache().store("wrong_vial_chancy", true);
-							remove(p, ItemId.ETHENEA.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
 							Functions.mes(p, "You give him the vial of ethenea");
 							say(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcsay(p, n, "Be lucky");
@@ -602,7 +602,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("vial_chancy")) {
 							p.getCache().store("vial_chancy", true);
-							remove(p, ItemId.LIQUID_HONEY.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
 							Functions.mes(p, "You give him the vial of liquid honey");
 							say(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcsay(p, n, "Be lucky");
@@ -614,7 +614,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.SULPHURIC_BROLINE.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("wrong_vial_chancy")) {
 							p.getCache().store("wrong_vial_chancy", true);
-							remove(p, ItemId.SULPHURIC_BROLINE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
 							Functions.mes(p, "You give him the vial of sulphuric broline");
 							say(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcsay(p, n, "Be lucky");
@@ -653,7 +653,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					npcsay(p, n, "You idiot! A plague sample should be confined to a lab",
 						"I'm taking it off you- I'm afraid it's the only responsible thing to do");
 					p.message("He takes the plague sample from you");
-					remove(p, ItemId.PLAGUE_SAMPLE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				} else if (menu == 1) {
 					npcsay(p, n, "Oh, well that's different then. Must be pretty important to come all this way",
 						"How's everyone doing there anyway? Wasn't there was some plague scare");
@@ -664,7 +664,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						npcsay(p, n, "You idiot! A plague sample should be confined to a lab",
 							"I'm taking it off you- I'm afraid it's the only responsible thing to do");
 						p.message("He takes the plague sample from you");
-						remove(p, ItemId.PLAGUE_SAMPLE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 					} else if (lastMenu == 1) {
 						npcsay(p, n, "Guidor? This one's on me then- the poor guy. Sorry about the interrogation",
 							"It's just that there's been rumours of a man travelling with a plague on him",
@@ -711,7 +711,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.ETHENEA.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("vial_vinci")) {
 							p.getCache().store("vial_vinci", true);
-							remove(p, ItemId.ETHENEA.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
 							Functions.mes(p, "You give him the vial of ethenea");
 							npcsay(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							say(p, n, "That's right.");
@@ -723,7 +723,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("wrong_vial_vinci")) {
 							p.getCache().store("wrong_vial_vinci", true);
-							remove(p, ItemId.LIQUID_HONEY.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
 							Functions.mes(p, "You give him the vial of liquid honey");
 							npcsay(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							say(p, n, "That's right.");
@@ -735,7 +735,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.SULPHURIC_BROLINE.id(), Optional.of(false))) {
 						if (!p.getCache().hasKey("wrong_vial_vinci")) {
 							p.getCache().store("wrong_vial_vinci", true);
-							remove(p, ItemId.SULPHURIC_BROLINE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
 							Functions.mes(p, "You give him the vial of sulphuric broline");
 							npcsay(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							say(p, n, "That's right.");
@@ -941,11 +941,11 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 							&& p.getCarriedItems().hasCatalogID(ItemId.LIQUID_HONEY.id(), Optional.of(false))) {
 							if (p.getCarriedItems().hasCatalogID(ItemId.TOUCH_PAPER.id(), Optional.of(false))) {
 								p.message("You give him the vials and the touch paper");
-								remove(p, ItemId.TOUCH_PAPER.id(), 1);
-								remove(p, ItemId.PLAGUE_SAMPLE.id(), 1);
-								remove(p, ItemId.ETHENEA.id(), 1);
-								remove(p, ItemId.LIQUID_HONEY.id(), 1);
-								remove(p, ItemId.SULPHURIC_BROLINE.id(), 1);
+								p.getCarriedItems().remove(new Item(ItemId.TOUCH_PAPER.id()));
+								p.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+								p.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
+								p.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
+								p.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
 								npcsay(p, n, "Now I'll just apply these to the sample and...",
 									"I don't get it...the touch paper has remained the same");
 								p.updateQuestStage(this, 8);
@@ -1129,7 +1129,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 			if (p.getQuestStage(this) == 2) {
 				Functions.mes(p, "you throw a hand full of seeds onto the watch tower",
 					"the mourners do not seem to notice");
-				remove(p, ItemId.BIRD_FEED.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BIRD_FEED.id()));
 				if (!p.getCache().hasKey("bird_feed")) {
 					p.getCache().store("bird_feed", true);
 				}
@@ -1145,12 +1145,12 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 				if (!p.getCache().hasKey("rotten_apples")) {
 					p.getCache().store("rotten_apples", true);
 				}
-				remove(p, ItemId.ROTTEN_APPLES.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.ROTTEN_APPLES.id()));
 				return;
 			}
 			Functions.mes(p, "you place the rotten apples in the pot",
 				"that wasn't very nice");
-			remove(p, ItemId.ROTTEN_APPLES.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ROTTEN_APPLES.id()));
 		}
 		else if (item.getCatalogId() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE) {
 			Functions.mes(p, "the key fits the gate");

@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.varrock;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -51,7 +52,7 @@ public class DancingDonkeyInnBartender implements TalkNpcTrigger {
 		npcsay(p, n, "ok then, that's two gold coins please");
 		if (ifheld(p, ItemId.COINS.id(), 2)) {
 			p.message("you give two coins to the barman");
-			remove(p, ItemId.COINS.id(), 2);
+			p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 			p.message("he gives you a cold beer");
 			give(p, ItemId.BEER.id(), 1);
 			npcsay(p, n, "cheers");

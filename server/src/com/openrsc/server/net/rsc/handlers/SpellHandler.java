@@ -1,9 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
@@ -100,7 +97,7 @@ public class SpellHandler implements PacketHandler {
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
-			player.getCarriedItems().remove(e.getKey(), e.getValue());
+			player.getCarriedItems().remove(new Item(e.getKey(), e.getValue()));
 		}
 		/*
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
@@ -565,7 +562,7 @@ public class SpellHandler implements PacketHandler {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getCarriedItems().remove(affectedItem.getCatalogId(), 1) > -1) {
+					if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId())) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
 						player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
 					}
@@ -687,7 +684,7 @@ public class SpellHandler implements PacketHandler {
 					player.message("@gre@Ana: Don't you start casting spells on me!");
 					finalizeSpellNoMessage(player, spell);
 				} else {
-					if (player.getCarriedItems().remove(affectedItem.getCatalogId(), 1) > -1) {
+					if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId())) > -1) {
 						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
 						player.getCarriedItems().getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
 					}
@@ -1238,15 +1235,15 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		if (player.getLocation().inKaramja() || player.getLocation().inBrimhaven()) {
-			while (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()) > 0) {
-				player.getCarriedItems().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
+			while (player.getCarriedItems().getInventory().countId(ItemId.KARAMJA_RUM.id()) > 0) {
+				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			}
 		}
-		if (player.getCarriedItems().hasCatalogID(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id())) {
+		if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
-			while (player.getCarriedItems().getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				player.getCarriedItems().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
+			while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+				player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {

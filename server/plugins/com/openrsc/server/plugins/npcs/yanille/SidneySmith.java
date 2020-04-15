@@ -347,7 +347,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 				npcsay(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
-				if (p.getCarriedItems().remove(certificate.getCatalogId(), mainMenu) > -1) {
+				if (p.getCarriedItems().remove(new Item(certificate.getCatalogId(), mainMenu)) > -1) {
 					for (int x = 0; x < itemAmount; x++) {
 						p.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
 					}
@@ -358,7 +358,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
-					p.getCarriedItems().remove(i.getCatalogId(), 1);
+					p.getCarriedItems().remove(new Item(i.getCatalogId()));
 				}
 				p.getCarriedItems().getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
 				say(p, n, "Ok thanks.");

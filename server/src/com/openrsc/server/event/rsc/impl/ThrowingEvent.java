@@ -147,7 +147,7 @@ public class ThrowingEvent extends GameTickEvent {
 						return;
 					}
 					Item toRemove = new Item(rangeType.getCatalogId(), 1, false, rangeType.getItemId());
-					getPlayerOwner().getCarriedItems().remove(toRemove, true);
+					getPlayerOwner().getCarriedItems().remove(toRemove);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {

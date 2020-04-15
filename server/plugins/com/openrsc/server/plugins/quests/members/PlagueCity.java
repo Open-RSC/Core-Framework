@@ -139,7 +139,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						say(p, n, "Try this");
 						Functions.mes(p, "You give Bravek the hangover cure",
 							"Bravek gulps down the foul looking liquid");
-						remove(p, ItemId.HANGOVER_CURE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.HANGOVER_CURE.id()));
 						npcsay(p,
 							n,
 							"grruurgh",
@@ -435,7 +435,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						Functions.mes(p, "you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
 							"she then smears the paste over a strange mask");
-						p.getCarriedItems().remove(ItemId.DWELLBERRIES.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.DWELLBERRIES.id()));
 						give(p, ItemId.GASMASK.id(), 1);
 
 						npcsay(p,

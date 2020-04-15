@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.quests.members;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -176,11 +177,11 @@ public class RuneMysteries implements QuestInterface {
 								"south-east quarter. He will give you a special item -",
 								"bring it back to me and I will show you the mystery of runes.");
 
-								remove(p, ItemId.AIR_TALISMAN.id(), 1);
-								Functions.mes(p, "The head wizard gives you a research package.");
-								give(p, ItemId.RESEARCH_PACKAGE.id(), 1);
-								npcsay(p, n, "Best of luck with your quest, " + p.getUsername());
-								p.setQuestStage(Quests.RUNE_MYSTERIES, 2);
+							p.getCarriedItems().remove(new Item(ItemId.AIR_TALISMAN.id()));
+							Functions.mes(p, "The head wizard gives you a research package.");
+							give(p, ItemId.RESEARCH_PACKAGE.id(), 1);
+							npcsay(p, n, "Best of luck with your quest, " + p.getUsername());
+							p.setQuestStage(Quests.RUNE_MYSTERIES, 2);
 						}
 						break;
 				}
@@ -279,7 +280,7 @@ public class RuneMysteries implements QuestInterface {
 					"locate the Air Altar and use any further talismans",
 					"you find to locate the other altars.",
 					"Now, my research notes, please?");
-				remove(p, ItemId.RESEARCH_NOTES.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RESEARCH_NOTES.id()));
 				Functions.mes(p, "You hand Sedridor the research notes.");
 				give(p, ItemId.AIR_TALISMAN.id(), 1);
 				p.sendQuestComplete(Quests.RUNE_MYSTERIES);
@@ -303,7 +304,7 @@ public class RuneMysteries implements QuestInterface {
 					"of my research back to Sedridor in the basement of the",
 					"Wizards' Tower. He will know whether or not",
 					"to let you in on our little secret.");
-				remove(p, ItemId.RESEARCH_PACKAGE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RESEARCH_PACKAGE.id()));
 				give(p, ItemId.RESEARCH_NOTES.id(), 1);
 				p.setQuestStage(Quests.RUNE_MYSTERIES, 3);
 				Functions.mes(p, "Aubury gives you his research notes.");

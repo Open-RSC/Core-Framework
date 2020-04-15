@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -181,7 +182,11 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 								"Please, now consider yourself a friend of my people.",
 								"And visit us anytime.");
 							if (p.getCarriedItems().hasCatalogID(ItemId.GERMINATED_YOMMI_TREE_SEED.id(), Optional.of(false))) {
-								remove(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), p.getCarriedItems().getInventory().countId(ItemId.GERMINATED_YOMMI_TREE_SEED.id()));
+								p.getCarriedItems().remove(
+									new Item(
+										ItemId.GERMINATED_YOMMI_TREE_SEED.id(),
+										p.getCarriedItems().getInventory().countId(ItemId.GERMINATED_YOMMI_TREE_SEED.id())
+									));
 								npcsay(p, n, "I'll take those Germinated Yommi tree seeds to Ungadulu,",
 									"I'm sure he'll apreciate them.");
 							}

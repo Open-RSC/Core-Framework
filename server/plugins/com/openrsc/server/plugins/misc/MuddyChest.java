@@ -30,7 +30,7 @@ public class MuddyChest implements OpLocTrigger, UseLocTrigger {
 			Functions.changeloc(obj, respawnTime, MUDDY_CHEST_OPEN);
 			p.message("You find some treasure in the chest");
 
-			remove(p, ItemId.MUDDY_KEY.id(), 1); // remove the muddy key.
+			p.getCarriedItems().remove(new Item(ItemId.MUDDY_KEY.id())); // remove the muddy key.
 			give(p, ItemId.UNCUT_RUBY.id(), 1);
 			give(p, ItemId.MITHRIL_BAR.id(), 1);
 			give(p, ItemId.LAW_RUNE.id(), 2);

@@ -74,7 +74,7 @@ public final class NurmofPickaxe implements ShopInterface,
 				int choice2 = multi(p, n, true, "I'll buy one", "Not at the moment");
 				if (choice2 == 0) {
 					if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-						if (p.getCarriedItems().remove(ItemId.COINS.id(), 99000) > -1) {
+						if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 							give(p, ItemId.MINING_CAPE.id(), 1);
 							npcsay(p, n, "wearing this cape while mining",
 								"will sometimes let you find more ore",

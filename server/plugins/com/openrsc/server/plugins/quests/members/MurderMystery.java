@@ -542,7 +542,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 							//removes all
 							for (int itemId : itemIds) {
 								amt = Math.max(p.getCarriedItems().getInventory().countId(itemId), 0);
-								p.getCarriedItems().remove(itemId, amt);
+								p.getCarriedItems().remove(new Item(itemId, amt));
 							}
 							p.sendQuestComplete(Quests.MURDER_MYSTERY);
 							npcsay(p, n, "Please accept this reward from the family!");
@@ -1559,7 +1559,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of the murderers finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.A_SILVER_DAGGER.id());
 			give(p, ItemId.UNIDENTIFIED_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1574,7 +1574,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of Annas finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.ANNAS_SILVER_NECKLACE.id());
 			give(p, ItemId.ANNAS_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1589,7 +1589,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of Bobs finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.BOBS_SILVER_TEACUP.id());
 			give(p, ItemId.BOBS_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1604,7 +1604,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of Carols finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.CAROLS_SILVER_BOTTLE.id());
 			give(p, ItemId.CAROLS_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1619,7 +1619,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of Davids finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.DAVIDS_SILVER_BOOK.id());
 			give(p, ItemId.DAVIDS_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1634,7 +1634,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of Elizabeths finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.ELIZABETHS_SILVER_NEEDLE.id());
 			give(p, ItemId.ELIZABETHS_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1649,7 +1649,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.message("You have a clean impression of Franks finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FRANKS_SILVER_POT.id());
 			give(p, ItemId.FRANKS_FINGERPRINT.id(), 1);
-			remove(p, ItemId.FLYPAPER.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())) {
@@ -1672,7 +1672,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
-					remove(p, ItemId.DAVIDS_FINGERPRINT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.DAVIDS_FINGERPRINT.id()));
 					p.message("I guess that clears David of the crime");
 					delay(800);
 					p.message("You destroy the useless fingerprint");
@@ -1685,7 +1685,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
-					remove(p, ItemId.BOBS_FINGERPRINT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.BOBS_FINGERPRINT.id()));
 					p.message("I guess that clears Bob of the crime");
 					delay(800);
 					p.message("You destroy the useless fingerprint");
@@ -1698,7 +1698,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
-					remove(p, ItemId.ELIZABETHS_FINGERPRINT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.ELIZABETHS_FINGERPRINT.id()));
 					p.message("I guess that clears Elizabeth of the crime");
 					delay(800);
 					p.message("You destroy the useless fingerprint");
@@ -1711,7 +1711,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
-					remove(p, ItemId.ANNAS_FINGERPRINT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.ANNAS_FINGERPRINT.id()));
 					p.message("I guess that clears Anna of the crime");
 					delay(800);
 					p.message("You destroy the useless fingerprint");
@@ -1724,7 +1724,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
-					remove(p, ItemId.CAROLS_FINGERPRINT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.CAROLS_FINGERPRINT.id()));
 					p.message("I guess that clears Carol of the crime");
 					delay(800);
 					p.message("You destroy the useless fingerprint");
@@ -1737,7 +1737,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						p.getCache().store("culprit", true);
 				} else {
 					p.message("They don't seem to be the same");
-					remove(p, ItemId.FRANKS_FINGERPRINT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.FRANKS_FINGERPRINT.id()));
 					p.message("I guess that clears Frank of the crime");
 					delay(800);
 					p.message("You destroy the useless fingerprint");

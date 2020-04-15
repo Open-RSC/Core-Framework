@@ -156,7 +156,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				case OGRE_RELIC_PART_BODY:
 					say(p, npc, "I had this given to me");
 					if (!p.getCache().hasKey("wizard_relic_part_1")) {
-						remove(p, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.OGRE_RELIC_PART_BODY.id()));
 						npcsay(p, npc, "It's part of an ogre relic");
 						p.getCache().store("wizard_relic_part_1", true);
 						relicParts(p, npc);
@@ -167,7 +167,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				case OGRE_RELIC_PART_BASE:
 					say(p, npc, "I got given this by an ogre");
 					if (!p.getCache().hasKey("wizard_relic_part_2")) {
-						remove(p, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.OGRE_RELIC_PART_BASE.id()));
 						npcsay(p, npc, "Good good,a part of an ogre relic");
 						p.getCache().store("wizard_relic_part_2", true);
 						relicParts(p, npc);
@@ -178,7 +178,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				case OGRE_RELIC_PART_HEAD:
 					say(p, npc, "An ogre gave me this");
 					if (!p.getCache().hasKey("wizard_relic_part_3")) {
-						remove(p, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.OGRE_RELIC_PART_HEAD.id()));
 						npcsay(p, npc, "Ah, it's part of an old ogre statue");
 						p.getCache().store("wizard_relic_part_3", true);
 						relicParts(p, npc);
@@ -204,7 +204,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					say(p, npc, "Yes I have made the potion");
 					npcsay(p, npc, "That's great news, let me infuse it with magic...");
 					p.message("The wizard mutters strange words over the liquid");
-					remove(p, ItemId.OGRE_POTION.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.OGRE_POTION.id()));
 					give(p, ItemId.MAGIC_OGRE_POTION.id(), 1);
 					npcsay(p, npc, "Here it is, a dangerous substance",
 						"I must remind you that this potion can only be used",
@@ -226,7 +226,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 			if (p.getCache().hasKey("city_guard_riddle") || p.getQuestStage(Quests.WATCHTOWER) == -1) {
 				p.message("The guard is not listening to you");
 			} else {
-				remove(p, ItemId.DEATH_RUNE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.DEATH_RUNE.id()));
 				give(p, ItemId.SKAVID_MAP.id(), 1);
 				if (p.getQuestStage(Quests.WATCHTOWER) == 3) {
 					p.updateQuestStage(Quests.WATCHTOWER, 4);
@@ -246,7 +246,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				p.message("The guard is occupied at the moment");
 			} else {
 				p.playerServerMessage(MessageType.QUEST, "You give the guard some nightshade");
-				remove(p, ItemId.NIGHTSHADE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id()));
 				npcsay(p, npc, "What is this!!!",
 					"Arrrrgh! I cannot stand this plant!",
 					"Ahhh, it burns! it burns!!!");

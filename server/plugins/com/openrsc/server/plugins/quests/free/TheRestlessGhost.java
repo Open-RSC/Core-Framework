@@ -314,7 +314,7 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
 			addnpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
 			Functions.mes(player, "You put the skull in the coffin");
-			remove(player, ItemId.QUEST_SKULL.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.QUEST_SKULL.id()));
 			//on completion cache key no longer needed
 			player.getCache().remove("tried_grab_skull");
 			Npc npc = ifnearvisnpc(player, NpcId.GHOST_RESTLESS.id(), 8);

@@ -267,7 +267,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				}
 
 				thinkbubble(p, item);
-				remove(p, item.getCatalogId(), 1);
+				p.getCarriedItems().remove(new Item(item.getCatalogId()));
 				mes(p, 3000, "you attempt to mould the dough into a gnomebatta");
 				p.message("You manage to make some gnome batta dough");
 				give(p, ItemId.GNOMEBATTA_DOUGH.id(), 1);
@@ -283,7 +283,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				}
 
 				thinkbubble(p, item);
-				remove(p, item.getCatalogId(), 1);
+				p.getCarriedItems().remove(new Item(item.getCatalogId()));
 				mes(p, 3000, "you attempt to mould the dough into a gnome bowl");
 				p.message("You manage to make some gnome bowl dough");
 				give(p, ItemId.GNOMEBOWL_DOUGH.id(), 1);
@@ -299,7 +299,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				}
 
 				thinkbubble(p, item);
-				remove(p, item.getCatalogId(), 1);
+				p.getCarriedItems().remove(new Item(item.getCatalogId()));
 				mes(p, 3000, "you attempt to mould the dough into gnome crunchies");
 				p.message("You manage to make some gnome crunchies dough");
 				give(p, ItemId.GNOMECRUNCHIE_DOUGH.id(), 1);

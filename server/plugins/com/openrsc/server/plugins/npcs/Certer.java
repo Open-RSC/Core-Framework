@@ -142,7 +142,7 @@ public class Certer implements TalkNpcTrigger {
 				p.message("You don't have that many certificates");
 				return;
 			}
-			if (p.getCarriedItems().remove(certID, certAmount) > -1) {
+			if (p.getCarriedItems().remove(new Item(certID, certAmount)) > -1) {
 				p.message("You exchange your certificates for "
 					+ certerDef.getType() + ending);
 				for (int x = 0; x < itemAmount; x++) {
@@ -182,7 +182,7 @@ public class Certer implements TalkNpcTrigger {
 				return;
 			}
 			// TODO: itemId is wrong here?
-			if (p.getBank().remove(itemID, itemAmount, -1) > -1) {
+			if (p.getBank().remove(new Item(itemID, itemAmount)) > -1) {
 				p.message("You exchange the " + certerDef.getType() + ", "
 					+ itemAmount + " "
 					+ p.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName()
@@ -200,7 +200,7 @@ public class Certer implements TalkNpcTrigger {
 			p.message("You exchange your " + certerDef.getType() + ending
 				+ " for certificates");
 			for (int x = 0; x < itemAmount; x++) {
-				p.getCarriedItems().remove(itemID, 1);
+				p.getCarriedItems().remove(new Item(itemID));
 			}
 			p.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 		}

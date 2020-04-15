@@ -79,25 +79,19 @@ public class CarriedItems {
 
 	}
 
-	public int remove(int id, int amount) {
-		if (getInventory().hasCatalogID(id)) {
-			Item item = getInventory().get(
-				getInventory().getLastIndexById(id));
-			Item toRemove = new Item(item.getCatalogId(), amount, item.getNoted(), item.getItemId());
-			return remove(toRemove, true);
-		}
-		return -1;
-	}
-
 	public int remove(Item item) {
 		return remove(item, true);
 	}
 
 	//TODO: Add parameter allowNoted
 	public int remove(Item item, boolean updateClient) {
-		int result = getInventory().remove(item, updateClient);
+		if (item.getItemId() == -1) {
+			item = getInventory().get(getInventory().getLastIndexById(item.getCatalogId()));
+		}
+		Item toRemove = new Item(item.getCatalogId(), item.getAmount(), item.getNoted(), item.getItemId());
+		int result = getInventory().remove(toRemove, updateClient);
 		if (result == -1)
-			return getEquipment().remove(item, item.getAmount());
+			return getEquipment().remove(toRemove, toRemove.getAmount());
 
 		return result;
 	}

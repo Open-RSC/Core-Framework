@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.khazard;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -34,7 +35,7 @@ public class Docky implements TalkNpcTrigger {
 					say(p, n, "Ok");
 					if (ifheld(p, ItemId.COINS.id(), 30)) {
 						mes(p, 1900, "You pay 30 gold");
-						remove(p, ItemId.COINS.id(), 30);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30));
 						mes(p, 3000, "You board the ship");
 						p.teleport(467, 647);
 						delay(2000);

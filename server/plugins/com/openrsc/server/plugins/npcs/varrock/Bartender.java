@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -39,7 +40,7 @@ public class Bartender implements TalkNpcTrigger {
 			if (ifheld(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
 				give(p, ItemId.BEER.id(), 1);
-				p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 			} else
 				say(p, n, "Oh dear. I don't seem to have enough money");
 		} else if (reply == 1) {
@@ -83,7 +84,7 @@ public class Bartender implements TalkNpcTrigger {
 				"These barbarian barcrawls cause too much damage to my bar",
 				"You're going to have to pay 50 gold for the Uncle Humphrey's gutrot");
 			if (ifheld(p, ItemId.COINS.id(), 50)) {
-				p.getCarriedItems().remove(ItemId.COINS.id(), 50);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 50));
 				p.message("You buy some gutrot");
 				delay(800);
 				p.message("You drink the gutrot");

@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.edgeville;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -27,7 +28,7 @@ public class ScotRuth implements
 				if (Functions.ifheld(p, ItemId.COINS.id(), 200000)) {
 					Functions.npcsay(p, n, "Excellent. Keep in mind ye'll appear in the deep wilderness",
 						"and ye can't use this tunnel te come back");
-					Functions.remove(p, ItemId.COINS.id(), 200000);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
 					p.getCache().store("scotruth_to_chaos_altar", true);
 				} else {
 					Functions.npcsay(p, n, "Come back with the money and you've a deal, lad");

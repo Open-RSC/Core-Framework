@@ -330,7 +330,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 									"this evil spirit before it's too late.");
 							give(p, ItemId.HOLY_FORCE_SPELL.id(), 1);
 							npcsay(p, n, "I'll take that dagger from you now!");
-							remove(p, ItemId.GLOWING_DARK_DAGGER.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.GLOWING_DARK_DAGGER.id()));
 						}
 					} else if (reply4 == 2) {
 						ungaduluTalkToDialogue(p, n, Ungadulu.OK_THANKS);
@@ -907,7 +907,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 				"to reveal its true self.",
 				"Once activated, you will be able to attack it like",
 				"a normal creature.");
-			remove(p, item.getCatalogId(), 1);
+			p.getCarriedItems().remove(new Item(item.getCatalogId()));
 			give(p, ItemId.HOLY_FORCE_SPELL.id(), 1);
 			Functions.mes(p, npc, 1300, "The Shaman takes the dagger and gives you a folded piece of paper.");
 			npcsay(p, npc, "Use this spell on the Spirit.",
@@ -923,7 +923,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 				"is planning to use it for some vile purpose.",
 				"I will try to release Viyeldi's spirit from the dagger.",
 				"Here, you take this spell...");
-			remove(p, item.getCatalogId(), 1);
+			p.getCarriedItems().remove(new Item(item.getCatalogId()));
 			give(p, ItemId.HOLY_FORCE_SPELL.id(), 1);
 			Functions.mes(p, npc, 1300, "The Shaman takes the dagger and gives you a folded piece of paper.");
 			npcsay(p, npc, "Use this spell on the Spirit.",

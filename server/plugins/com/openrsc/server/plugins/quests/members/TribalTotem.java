@@ -174,7 +174,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 						p.sendQuestComplete(Quests.TRIBAL_TOTEM);
 						npcsay(p, n, "Here have some freshly cooked Karamja fish",
 							"Caught specially by our people");
-						remove(p, ItemId.TRIBAL_TOTEM.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.TRIBAL_TOTEM.id()));
 						give(p, ItemId.SWORDFISH.id(), 5);
 					} else {
 						say(p, n, "No it's not that easy");
@@ -420,7 +420,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 			} else {
 				p.message("You stick the label on the crate");
 				say(p, null, "Now I just need someone to deliver it for me");
-				remove(p, ItemId.ADDRESS_LABEL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.ADDRESS_LABEL.id()));
 				p.getCache().store("label", true);
 			}
 		}

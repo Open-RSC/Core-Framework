@@ -38,7 +38,8 @@ public class Cactus implements UseLocTrigger {
 			.add(new ShortEvent(player.getWorld(), player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
-						if (getOwner().getCarriedItems().remove(s, 1) > -1) {
+						Item toRemove = new Item(s, 1);
+						if (getOwner().getCarriedItems().remove(toRemove) > -1) {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								getOwner().message("You make a mistake and fail to fill your waterskin.");

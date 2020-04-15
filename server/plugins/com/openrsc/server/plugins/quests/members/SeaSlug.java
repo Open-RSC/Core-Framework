@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -357,7 +358,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 					say(p, n, "hello holgart");
 					npcsay(p, n, "hello m'hearty",
 						"did you manage to make some swamp paste?");
-					if (remove(p, ItemId.SWAMP_PASTE.id(), 1)) {
+					if (p.getCarriedItems().remove(new Item(ItemId.SWAMP_PASTE.id())) != -1) {
 						say(p, n, "yes i have some here");
 						p.message("you give holgart the swamp paste");
 						npcsay(p, n, "superb, this looks great");

@@ -90,43 +90,43 @@ public class Yanni implements TalkNpcTrigger, UseNpcTrigger {
 			switch (ItemId.getById(item.getCatalogId())) {
 			case BONE_KEY:
 				npcsay(p, npc, "Great item, here's 100 Gold for it.");
-				remove(p, ItemId.BONE_KEY.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BONE_KEY.id()));
 				give(p, ItemId.COINS.id(), 100);
 				p.message("You sell the Bone Key.");
 				break;
 			case STONE_PLAQUE:
 				npcsay(p, npc, "Great item, here's 100 Gold for it.");
-				remove(p, ItemId.STONE_PLAQUE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.STONE_PLAQUE.id()));
 				give(p, ItemId.COINS.id(), 100);
 				p.message("You sell the Stone Plaque.");
 				break;
 			case TATTERED_SCROLL:
 				npcsay(p, npc, "Great item, here's 100 Gold for it.");
-				remove(p, ItemId.TATTERED_SCROLL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.TATTERED_SCROLL.id()));
 				give(p, ItemId.COINS.id(), 100);
 				p.message("You sell the Tattered Scroll.");
 				break;
 			case CRUMPLED_SCROLL:
 				npcsay(p, npc, "Great item, here's 100 Gold for it.");
-				remove(p, ItemId.CRUMPLED_SCROLL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CRUMPLED_SCROLL.id()));
 				give(p, ItemId.COINS.id(), 100);
 				p.message("You sell the crumpled Scroll.");
 				break;
 			case BERVIRIUS_TOMB_NOTES:
 				npcsay(p, npc, "Great item, here's 100 Gold for it.");
-				remove(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BERVIRIUS_TOMB_NOTES.id()));
 				give(p, ItemId.COINS.id(), 100);
 				p.message("You sell the Bervirius Tomb Notes.");
 				break;
 			case LOCATING_CRYSTAL:
 				npcsay(p, npc, "Great item, here's 500 Gold for it.");
-				remove(p, ItemId.LOCATING_CRYSTAL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.LOCATING_CRYSTAL.id()));
 				give(p, ItemId.COINS.id(), 500);
 				p.message("You sell the Locating Crystal.");
 				break;
 			case BEADS_OF_THE_DEAD:
 				npcsay(p, npc, "Great item, here's 1000 Gold for it.");
-				remove(p, ItemId.BEADS_OF_THE_DEAD.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BEADS_OF_THE_DEAD.id()));
 				give(p, ItemId.COINS.id(), 1000);
 				p.message("You sell Beads of the Dead.");
 				break;

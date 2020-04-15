@@ -41,8 +41,8 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 				|| (itemArrow1.contains("arrows") && item2.getCatalogId() == ItemId.DAMP_CLOTH.id())) {
 			int idArrow = itemArrow2.contains("arrows") ? item2.getCatalogId() : item1.getCatalogId();
 			player.message("you wrap the damp cloth around the arrow head");
-			remove(player, ItemId.DAMP_CLOTH.id(), 1);
-			remove(player, idArrow, 1);
+			player.getCarriedItems().remove(new Item(ItemId.DAMP_CLOTH.id()));
+			player.getCarriedItems().remove(new Item(idArrow));
 			give(player, ItemId.ARROW.id(), 1);
 		}
 	}
@@ -59,12 +59,12 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (item.getCatalogId() == ItemId.ARROW.id() && obj.getID() == 97) {
 			player.message("you light the cloth wrapped arrow head");
-			remove(player, ItemId.ARROW.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.ARROW.id()));
 			give(player, ItemId.LIT_ARROW.id(), 1);
 		}
 		else if (item.getCatalogId() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
-				remove(player, ItemId.LIT_ARROW.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.LIT_ARROW.id()));
 				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					Functions.mes(player, "you fire the lit arrow at the bridge",
 						"it burns out and has little effect");
@@ -110,7 +110,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 		else if (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS) {
 			Functions.mes(player, "you throw the rocks onto the swamp");
 			player.message("and carefully tread from one to another");
-			remove(player, ItemId.ROCKS.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.ROCKS.id()));
 			GameObject object = new GameObject(player.getWorld(), Point.location(697, 3441), 774, 2, 0);
 			player.getWorld().registerGameObject(object);
 			player.getWorld().delayedRemoveObject(object, 10000);

@@ -121,7 +121,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 					say(p, n, "I have these gold nuggets");
 					if (ifheld(p, ItemId.GOLD_NUGGETS.id(), 3)) {
 						p.message("You give the nuggets to the expert");
-						p.getCarriedItems().remove(ItemId.GOLD_NUGGETS.id(), 3);
+						p.getCarriedItems().remove(new Item(ItemId.GOLD_NUGGETS.id(), 3));
 						give(p, ItemId.GOLD.id(), 1);
 						npcsay(p, n, "Good, that's 3, I can exchange them for normal gold now",
 							"You can get this refined and make a profit!");
@@ -229,7 +229,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 					}
 					if (p.getQuestStage(Quests.DIGSITE) == 6) {
 						say(p, n, "I found this in a hidden cavern beneath the digsite");
-						remove(p, ItemId.STONE_TABLET.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.STONE_TABLET.id()));
 						npcsay(p, n, "Incredible!");
 						say(p, n, "There is an altar down there",
 							"The place is crawling with skeletons!");

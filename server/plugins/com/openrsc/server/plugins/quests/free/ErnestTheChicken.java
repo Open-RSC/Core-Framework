@@ -62,7 +62,7 @@ public class ErnestTheChicken implements QuestInterface,
 			Functions.mes(p, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas drop dead and float to the surface");
-			remove(p, ItemId.POISONED_FISH_FOOD.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.POISONED_FISH_FOOD.id()));
 			if (!p.getCache().hasKey("poisoned_fountain")) {
 				p.getCache().store("poisoned_fountain", true);
 			}
@@ -71,7 +71,7 @@ public class ErnestTheChicken implements QuestInterface,
 			Functions.mes(p, "You pour the fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas seem hungrier than ever");
-			remove(p, ItemId.FISH_FOOD.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
 		}
 		//nothing happens every other item
 		else if (obj.getID() == QuestObjects.FOUNTAIN) {
@@ -292,9 +292,9 @@ public class ErnestTheChicken implements QuestInterface,
 							"Suddenly a ray shoots out of the machine at the chicken");
 						Npc chicken = ifnearvisnpc(p, NpcId.ERNEST_CHICKEN.id(), 20);
 						if (chicken != null) {
-							remove(p, ItemId.RUBBER_TUBE.id(), 1);
-							remove(p, ItemId.PRESSURE_GAUGE.id(), 1);
-							remove(p, ItemId.OIL_CAN.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.RUBBER_TUBE.id()));
+							p.getCarriedItems().remove(new Item(ItemId.PRESSURE_GAUGE.id()));
+							p.getCarriedItems().remove(new Item(ItemId.OIL_CAN.id()));
 							Npc ernest = changenpc(chicken, NpcId.ERNEST.id(), false);
 							npcsay(p, ernest, "Thank you sir",
 								"It was dreadfully irritating being a chicken",
@@ -630,8 +630,8 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public void onUseInv(Player player, Item item1, Item item2) {
 		if (Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
-			remove(player, ItemId.FISH_FOOD.id(), 1);
-			remove(player, ItemId.POISON.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
+			player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 			give(player, ItemId.POISONED_FISH_FOOD.id(), 1);
 			player.message("You poison the fish food");
 		}

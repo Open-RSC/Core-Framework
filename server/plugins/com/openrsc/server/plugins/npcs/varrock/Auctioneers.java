@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -56,7 +57,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 			int tMenu = multi(player, npc, "Teleport me", "I'll stay here");
 			if (tMenu == 0) {
 				if (ifheld(player, ItemId.COINS.id(), 1000)) {
-					remove(player, ItemId.COINS.id(), 1000);
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 1000));
 					player.teleport(133, 508);
 				} else {
 					player.message("You don't seem to have enough coins");
@@ -110,7 +111,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 				int yesOrNo = multi(p, "Yes please!", "No thanks.");
 				if (yesOrNo == 0) {
 					if (ifheld(p, ItemId.COINS.id(), 1000)) {
-						remove(p, ItemId.COINS.id(), 1000);
+						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 1000));
 						p.teleport(133, 508);
 						p.message("You have been teleported to the Varrock Centre");
 					} else {

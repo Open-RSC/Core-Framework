@@ -329,7 +329,7 @@ public class Inventory {
 				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
 			ActionSender.sendEquipmentStats(player);
 		} else {
-			if (remove(i) != -1);
+			if (remove(new Item(i), true) != -1);
 			add(new Item(j), false);
 			if (sendInventory)
 				ActionSender.sendInventory(player);
@@ -411,7 +411,7 @@ public class Inventory {
 			for (int i = 0; i < player.getCarriedItems().getInventory().size(); i++) {
 				Item item = player.getCarriedItems().getInventory().get(i);
 				if (item != null && item.getCatalogId() == itemID) {
-					player.getCarriedItems().getInventory().remove(i);
+					player.getCarriedItems().remove(new Item(i));
 					shattered = true;
 					break;
 				}

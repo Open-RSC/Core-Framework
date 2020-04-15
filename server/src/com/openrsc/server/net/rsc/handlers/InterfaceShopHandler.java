@@ -97,7 +97,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 
 			shop.removeShopItem(new Item(itemID, totalBought));
-			player.getCarriedItems().remove(ItemId.COINS.id(), totalMoneySpent);
+			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
 				player.getCarriedItems().getInventory().add(new Item(itemID, 1));
@@ -120,27 +120,26 @@ public final class InterfaceShopHandler implements PacketHandler {
 			int totalSold = 0;
 			for (int i = 0; i < amount; i++) {
 			    int sellAmount = 0;
-				/* If no noted version can be removed */
-				if (player.getCarriedItems().remove(def.getNoteID(), 1) == -1) {
-					/* Try removing with original item ID */
-					if (player.getCarriedItems().remove(itemID, 1) == -1) {
-						/* Break, player doesn't have anything. */
-						player.message("You don't have that many items");
-						break;
-					}
-					//}
 
-					totalSold++;
-					/* if we are selling noted item, calculate price from the original item */
-					if (def.getOriginalItemID() != -1) {
-						sellAmount += shop.getItemSellPrice(def.getOriginalItemID(),
-							player.getWorld().getServer().getEntityHandler().getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
-					} else {
-						sellAmount += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
-					}
-
-					totalMoney += sellAmount;
+				/* Try removing with original item ID */
+				if (player.getCarriedItems().remove(new Item(itemID)) == -1) {
+					/* Break, player doesn't have anything. */
+					player.message("You don't have that many items");
+					break;
 				}
+				//}
+
+				totalSold++;
+				/* if we are selling noted item, calculate price from the original item */
+				if (def.getOriginalItemID() != -1) {
+					sellAmount += shop.getItemSellPrice(def.getOriginalItemID(),
+						player.getWorld().getServer().getEntityHandler().getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
+				} else {
+					sellAmount += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
+				}
+
+				totalMoney += sellAmount;
+
 				if (sellAmount > 0) {
 					player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
 				}

@@ -140,7 +140,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You mix the nitrate powder into the liquid");
 			player.message("It has produced a foul mixture");
 			thinkbubble(player, new Item(ItemId.AMMONIUM_NITRATE.id()));
-			carriedItems.remove(ItemId.AMMONIUM_NITRATE.id(), 1);
+			carriedItems.remove(new Item(ItemId.AMMONIUM_NITRATE.id()));
 			carriedItems.getInventory().replace(ItemId.NITROGLYCERIN.id(), ItemId.MIXED_CHEMICALS_1.id());
 		} else if (usedWithID == ItemId.GROUND_CHARCOAL.id() && itemID == ItemId.MIXED_CHEMICALS_1.id()
 				|| usedWithID == ItemId.MIXED_CHEMICALS_1.id() && itemID == ItemId.GROUND_CHARCOAL.id()) {
@@ -156,7 +156,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You mix the charcoal into the liquid");
 			player.message("It has produced an even fouler mixture");
 			thinkbubble(player, new Item(ItemId.GROUND_CHARCOAL.id()));
-			carriedItems.remove(ItemId.GROUND_CHARCOAL.id(), 1);
+			carriedItems.remove(new Item(ItemId.GROUND_CHARCOAL.id()));
 			carriedItems.getInventory().replace(ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id());
 		} else if (usedWithID == ItemId.ARCENIA_ROOT.id() && itemID == ItemId.MIXED_CHEMICALS_2.id()
 				|| usedWithID == ItemId.MIXED_CHEMICALS_2.id() && itemID == ItemId.ARCENIA_ROOT.id()) {
@@ -172,7 +172,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("You mix the root into the mixture");
 			player.message("You produce a potentially explosive compound...");
 			thinkbubble(player, new Item(ItemId.ARCENIA_ROOT.id()));
-			carriedItems.remove(ItemId.ARCENIA_ROOT.id(), 1);
+			carriedItems.remove(new Item(ItemId.ARCENIA_ROOT.id()));
 			carriedItems.getInventory().replace(ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id());
 			say(player, null, "Excellent this looks just right");
 
@@ -189,7 +189,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			}
 			player.incExp(Skills.HERBLAW, 320, true);
 			player.message("You mix the slime into your potion");
-			carriedItems.remove(ItemId.UNFINISHED_HARRALANDER_POTION.id(), 1);
+			carriedItems.remove(new Item(ItemId.UNFINISHED_HARRALANDER_POTION.id()));
 			carriedItems.getInventory().replace(ItemId.BLAMISH_SNAIL_SLIME.id(), ItemId.BLAMISH_OIL.id());
 
 		// Snakes weed potion (Legends quest)
@@ -211,7 +211,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			}
 			player.message("You add the Ardrigal to the Snakesweed Solution.");
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
-			carriedItems.remove(ItemId.ARDRIGAL.id(), 1);
+			carriedItems.remove(new Item(ItemId.ARDRIGAL.id()));
 			carriedItems.getInventory().replace(ItemId.SNAKES_WEED_SOLUTION.id(), ItemId.GUJUO_POTION.id());
 		} else if (usedWithID == ItemId.ARDRIGAL_SOLUTION.id() && itemID == ItemId.SNAKE_WEED.id()
 				|| usedWithID == ItemId.SNAKE_WEED.id() && itemID == ItemId.ARDRIGAL_SOLUTION.id()) {
@@ -231,7 +231,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			}
 			player.message("You add the Snake Weed to the Ardrigal solution.");
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
-			carriedItems.remove(ItemId.SNAKE_WEED.id(), 1);
+			carriedItems.remove(new Item(ItemId.SNAKE_WEED.id()));
 			carriedItems.getInventory().replace(ItemId.ARDRIGAL_SOLUTION.id(), ItemId.GUJUO_POTION.id());
 		}
 	}
@@ -288,31 +288,31 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("Fizz!!!");
 			say(player, null, "Oh dear, the mixture has evaporated!",
 				"It's useless...");
-			carriedItems.remove(vialID, 1);
-			carriedItems.remove(herbID, 1);
+			carriedItems.remove(new Item(vialID));
+			carriedItems.remove(new Item(herbID));
 			carriedItems.getInventory().add(new Item(ItemId.EMPTY_VIAL.id(), 1));
 			return false;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.JANGERBERRIES.id()) {
 			player.message("You mix the berries into the water");
-			carriedItems.remove(vialID, 1);
-			carriedItems.remove(herbID, 1);
+			carriedItems.remove(new Item(vialID));
+			carriedItems.remove(new Item(herbID));
 			carriedItems.getInventory().add(new Item(ItemId.UNFINISHED_POTION.id(), 1));
 			return false;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.ARDRIGAL.id()) {
 			player.message("You put the ardrigal herb into the watervial.");
 			player.message("You make a solution of Ardrigal.");
-			carriedItems.remove(vialID, 1);
-			carriedItems.remove(herbID, 1);
+			carriedItems.remove(new Item(vialID));
+			carriedItems.remove(new Item(herbID));
 			carriedItems.getInventory().add(new Item(ItemId.ARDRIGAL_SOLUTION.id(), 1));
 			return false;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.SNAKE_WEED.id()) {
 			player.message("You put the Snake Weed herb into the watervial.");
 			player.message("You make a solution of Snake Weed.");
-			carriedItems.remove(vialID, 1);
-			carriedItems.remove(herbID, 1);
+			carriedItems.remove(new Item(vialID));
+			carriedItems.remove(new Item(herbID));
 			carriedItems.getInventory().add(new Item(ItemId.SNAKES_WEED_SOLUTION.id(), 1));
 			return false;
 		}
@@ -347,8 +347,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				}
 				if (ownerItems.hasCatalogID(vialID)
 					&& ownerItems.hasCatalogID(herbID)) {
-					ownerItems.remove(vialID, 1);
-					ownerItems.remove(herbID, 1);
+					ownerItems.remove(new Item(vialID));
+					ownerItems.remove(new Item(herbID));
 					owner.playSound("mix");
 					owner.playerServerMessage(MessageType.QUEST, "You put the " + herb.getDef(getWorld()).getName()
 						+ " into the vial of water");
@@ -429,8 +429,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 					owner.playSound("mix");
 					owner.playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(getWorld()).getName()
 						+ " into your potion");
-					carriedItems.remove(secondID, 1);
-					carriedItems.remove(unfinishedID, 1);
+					carriedItems.remove(new Item(secondID));
+					carriedItems.remove(new Item(unfinishedID));
 					carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 					owner.incExp(Skills.HERBLAW, def.getExp(), true);
 				} else
@@ -458,8 +458,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.damage(8);
 			say(player, null, "Ow!");
 			player.playerServerMessage(MessageType.QUEST, "You mixed this ingredients incorrectly and the mixture exploded!");
-			carriedItems.remove(unfinishedPotID, 1);
-			carriedItems.remove(ingredientID, 1);
+			carriedItems.remove(new Item(unfinishedPotID));
+			carriedItems.remove(new Item(ingredientID));
 			carriedItems.getInventory().add(new Item(ItemId.EMPTY_VIAL.id(), 1));
 			return false;
 		}
@@ -488,9 +488,9 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				player.playerServerMessage(MessageType.QUEST,
 					"You mix the " + ingredient.getDef(player.getWorld()).getName().toLowerCase() + " into the liquid");
 				player.playerServerMessage(MessageType.QUEST, "You produce a strong potion");
-				carriedItems.remove(ingredientID, 1);
-				carriedItems.remove(unfinishedPotID, 1);
-				carriedItems.getInventory().add(new Item(ItemId.OGRE_POTION.id(), 1));
+				carriedItems.remove(new Item(ingredientID));
+				carriedItems.remove(new Item(unfinishedPotID));
+				carriedItems.getInventory().add(new Item(ItemId.OGRE_POTION.id()));
 				//the other half has been done already
 				player.incExp(Skills.HERBLAW, 100, true);
 			}

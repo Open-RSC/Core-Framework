@@ -270,7 +270,7 @@ public class NpcBehavior {
 				return;
 			}
 			p.setAttribute("gnomeball_npc", npc.getID());
-			remove(p, ItemId.GNOME_BALL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
 			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITS) * 0.05)));

@@ -733,7 +733,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			}
 			// 1112, 1107
 			// 1172
-			remove(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.GERMINATED_YOMMI_TREE_SEED.id()));
 			if (DataConversions.random(0, 1) != 1) {
 				int objectX = obj.getX();
 				int objectY = obj.getY();
@@ -763,7 +763,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			mes(p, 1300, "You carefully place the glowing heart shaped crystal into ",
 				"the depression, it slots in perfectly and glows even brighter.",
 				"You hear a snapping sound coming from in front of the cave.");
-			remove(p, item.getCatalogId(), 1);
+			p.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if (!p.getCache().hasKey("cavernous_opening")) {
 				p.getCache().store("cavernous_opening", true);
 			}
@@ -786,7 +786,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					}
 					if (!p.getCache().hasKey(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"))) {
 						p.getCache().store(item.getDef(p.getWorld()).getName().toLowerCase().replace(" ", "_"), true);
-						remove(p, item.getCatalogId(), 1);
+						p.getCarriedItems().remove(new Item(item.getCatalogId()));
 						mes(p, 1300, "You carefully place the piece of crystal into ",
 							"a specially shaped compartment in the furnace.");
 					}
@@ -814,7 +814,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == WOODEN_BEAM && item.getCatalogId() == ItemId.ROPE.id()) {
 			p.message("You throw one end of the rope around the beam.");
-			remove(p, ItemId.ROPE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 			Functions.changeloc(obj, 5000, WOODEN_BEAM + 1);
 			if (!p.getCache().hasKey("legends_wooden_beam")) {
 				p.getCache().store("legends_wooden_beam", true);
@@ -857,7 +857,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						p.message("And then fades again...");
 					} else {
 						if (attachmentMode != -1 && !p.getCarriedItems().hasCatalogID(ItemId.BOOKING_OF_BINDING.id(), Optional.empty())) {
-							remove(p, item.getCatalogId(), 1);
+							p.getCarriedItems().remove(new Item(item.getCatalogId()));
 							p.message("You carefully move the gem closer to the rock.");
 							p.message("The " + item.getDef(p.getWorld()).getName() + " glows and starts spinning as it hovers above the rock.");
 							createGroundItemDelayedRemove(new GroundItem(p.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, p), 5000);
@@ -951,7 +951,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					mes(p, 1300, "You put some water in the " + p.getWorld().getServer().getEntityHandler().getItemDef(emptyID).getName().toLowerCase() + ".");
 					p.getCarriedItems().getInventory().replace(emptyID, refilledID);
 				}
-				remove(p, ItemId.CUT_REED_PLANT.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CUT_REED_PLANT.id()));
 				mes(p, 0, "The cut reed is soaked through with water and is now all soggy.");
 			} else {
 				mes(p, 1300, "You start to syphon some water up the tube...");
@@ -966,7 +966,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				p.updateQuestStage(Quests.LEGENDS_QUEST, 10);
 			}
 			Functions.changeloc(obj, 10000, 1170);
-			remove(p, ItemId.TOTEM_POLE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.TOTEM_POLE.id()));
 			Functions.mes(p, "You remove the evil totem pole.",
 				"And replace it with the one you carved yourself.",
 				"As you do so, you feel a lightness in the air,");

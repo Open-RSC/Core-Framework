@@ -427,7 +427,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					"You need a crafting level of 31");
 				return;
 			}
-			remove(p, ItemId.DRAMEN_BRANCH.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.DRAMEN_BRANCH.id()));
 			Functions.mes(p, "you carve the branch into a staff");
 			give(p, ItemId.DRAMEN_STAFF.id(), 1);
 		}

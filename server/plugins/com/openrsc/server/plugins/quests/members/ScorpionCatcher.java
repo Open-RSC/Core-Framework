@@ -239,7 +239,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 					} else if (p.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) { // full cage
 						say(p, n, "I have retrieved all your scorpions");
 						npcsay(p, n, "aha my little scorpions home at last");
-						remove(p, ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id()));
 						p.sendQuestComplete(Quests.SCORPION_CATCHER);
 					} else {
 						say(p, n, "I've not caught all the scorpions yet");
@@ -267,7 +267,8 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_FIRE.id(), 1))) {
+							if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 40000)) != -1
+								&& p.getCarriedItems().remove(new Item(ItemId.BATTLESTAFF_OF_FIRE.id())) != -1) {
 								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
@@ -280,7 +281,8 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_WATER.id(), 1))) {
+							if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 40000)) != -1
+								&& p.getCarriedItems().remove(new Item(ItemId.BATTLESTAFF_OF_WATER.id())) != -1) {
 								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
@@ -293,7 +295,8 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_AIR.id(), 1))) {
+							if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 40000)) != -1
+								&& p.getCarriedItems().remove(new Item(ItemId.BATTLESTAFF_OF_AIR.id())) != -1) {
 								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
@@ -306,7 +309,8 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								say(p, n, "I'll just get the money for you");
 								return;
 							}
-							if (remove(p, new Item(ItemId.COINS.id(), 40000), new Item(ItemId.BATTLESTAFF_OF_EARTH.id(), 1))) {
+							if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 40000)) != -1
+								&& p.getCarriedItems().remove(new Item(ItemId.BATTLESTAFF_OF_EARTH.id())) != -1) {
 								give(p, ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id(), 1);
 								p.message("Thormac enchants your staff");
 							}
@@ -501,7 +505,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 
 			p.message("You catch a scorpion");
 
-			if (toRemove > -1) remove(p, toRemove, 1);
+			if (toRemove > -1) p.getCarriedItems().remove(new Item(toRemove));
 			if (toAdd > -1) give(p, toAdd, 1);
 			delnpc(n, true);
 		} else

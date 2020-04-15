@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -43,7 +44,7 @@ public class LadyOfTheWaves implements OpLocTrigger {
 	private void sail(Player p, int option) {
 		p.setBusy(true);
 		if (p.getCarriedItems().hasCatalogID(ItemId.SHIP_TICKET.id(), Optional.of(false))) {
-			remove(p, ItemId.SHIP_TICKET.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.SHIP_TICKET.id()));
 			mes(p, 1200, "@yel@Captain: Thanks for the ticket, let's set sail!");
 			mes(p, 1200, "You board the ship and it sails off.");
 			if (option == 0) {

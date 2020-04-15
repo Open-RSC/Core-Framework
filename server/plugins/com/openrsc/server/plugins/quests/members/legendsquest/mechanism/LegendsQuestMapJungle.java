@@ -143,7 +143,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 	private void mapArea(Player p) {
 		int random = DataConversions.random(0, 100);
 		if (random <= 29) { // 30% succeed.
-			remove(p, ItemId.PAPYRUS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
 			mes(p, 1200, "You neatly add a new section to your map.");
 			if (JUNGLE_WEST_AREA(p)) {
 				if (!p.getCache().hasKey("JUNGLE_WEST")) {
@@ -175,14 +175,14 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 			}
 		} else if (random <= 50) { // 20 % fail both.
 			p.message("You fall over, landing on your charcoal and papyrus, destroying them both.");
-			remove(p, ItemId.PAPYRUS.id(), 1);
-			remove(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
+			p.getCarriedItems().remove(new Item(ItemId.A_LUMP_OF_CHARCOAL.id()));
 		} else if (random <= 70) { // 20% to fail papyrus
 			p.message("You make a mess of the map, the paper is totally ruined.");
-			remove(p, ItemId.PAPYRUS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
 		} else if (random <= 90) { // 20% to fail charcoal
 			p.message("You snap your stick of charcoal.");
-			remove(p, ItemId.A_LUMP_OF_CHARCOAL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.A_LUMP_OF_CHARCOAL.id()));
 		} else if (random <= 100) { // 10% to fail and save papyrus
 			p.message("You make a mess of the map, but are able to rescue the paper.");
 		}

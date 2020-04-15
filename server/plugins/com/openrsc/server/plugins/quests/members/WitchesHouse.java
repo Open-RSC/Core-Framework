@@ -101,7 +101,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 						say(p, n, "Hi I have got your ball back",
 							"It was harder than I thought it would be");
 						npcsay(p, n, "Thankyou very much");
-						remove(p, ItemId.BALL.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.BALL.id()));
 						if (p.getQuestStage(Quests.WITCHS_HOUSE) == 3) {
 							p.sendQuestComplete(Quests.WITCHS_HOUSE);
 						}
@@ -313,7 +313,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				Functions.delnpc(rat, false);
 				Functions.mes(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
-				p.getCarriedItems().remove(ItemId.MAGNET.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.MAGNET.id()));
 				p.updateQuestStage(getQuestId(), 2);
 			}
 		}

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -140,7 +141,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					say(p, n,
 						"I have found a picture of the sword I would like you to make");
 					p.message("You give the portrait to Thurgo");
-					remove(p, ItemId.PORTRAIT.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.PORTRAIT.id()));
 					Functions.mes(p, "Thurgo studies the portrait");
 					p.updateQuestStage(this, 5);
 					npcsay(p,
@@ -178,9 +179,9 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					say(p, n, "I have them all");
 					Functions.mes(p, "You give some blurite ore and two iron bars to Thurgo");
 
-					remove(p, ItemId.IRON_BAR.id(), 1);
-					remove(p, ItemId.IRON_BAR.id(), 1);
-					remove(p, ItemId.BLURITE_ORE.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
+					p.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
+					p.getCarriedItems().remove(new Item(ItemId.BLURITE_ORE.id()));
 					Functions.mes(p, "Thurgo starts making a sword",
 						"Thurgo hammers away",
 						"Thurgo hammers some more",
@@ -209,7 +210,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 			Functions.mes(p, "Thurgo does not look impressed");
 		} else {
 			Functions.mes(p, "You hand over the pie");
-			remove(p, ItemId.REDBERRY_PIE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.REDBERRY_PIE.id()));
 			p.updateQuestStage(this, 3);
 			Functions.mes(p, "Thurgo eats the pie", "Thurgo pats his stomach");
 			npcsay(p, n, "By Guthix that was good pie",
@@ -272,7 +273,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						npcsay(p, n, "Thankyou, Thankyou",
 							"I was seriously worried I'd have to own up to Sir Vyvin");
 						p.message("You give the sword to the squire");
-						remove(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.FALADIAN_KNIGHTS_SWORD.id()));
 						p.sendQuestComplete(getQuestId());
 					} else {
 						npcsay(p, n, "So how are you doing getting a sword?");

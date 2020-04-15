@@ -77,7 +77,7 @@ public class HicktonArcheryShop implements ShopInterface,
 				int choice2 = multi(p, n, true, "I'll buy one", "Not at the moment");
 				if (choice2 == 0) {
 					if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-						if (p.getCarriedItems().remove(ItemId.COINS.id(), 99000) > -1) {
+						if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 							give(p, ItemId.FLETCHING_CAPE.id(), 1);
 							Functions.npcsay(p, n, "while wearing this cape",
 								"fletching arrows, bolts and darts",

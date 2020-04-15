@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
@@ -41,7 +42,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 
 			if (ifheld(p, ItemId.COINS.id(), 2)) {
 				p.message("You buy a pint of beer");
-				p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 				give(p, ItemId.BEER.id(), 1);
 			} else {
 				say(p, n, "Oh dear. I don't seem to have enough money");
@@ -71,7 +72,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
 			if (ifheld(p, ItemId.COINS.id(), 10)) {
-				p.getCarriedItems().remove(ItemId.COINS.id(), 10);
+				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
 				Functions.mes(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");

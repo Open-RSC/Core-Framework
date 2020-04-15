@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -233,7 +234,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 					npcsay(p, n,
 						"hello again, we're still desperate for wood soldier");
 					if (ifheld(p, ItemId.LOGS.id(), 6)) {
-						p.getCarriedItems().remove(ItemId.LOGS.id(), 6);
+						p.getCarriedItems().remove(new Item(ItemId.LOGS.id(), 6));
 						say(p, n, "i have some here");
 						p.message("you give some wood to the commander");
 						npcsay(p,
@@ -457,7 +458,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 							p.message("A gnome guides you out of the maze");
 							p.teleport(624, 675, false);
 							p.updateQuestStage(getQuestId(), 6);
-							remove(p, ItemId.ORB_OF_PROTECTION.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.ORB_OF_PROTECTION.id()));
 						} else if (newOrbs == 1) {
 							say(p, n, "i'm sorry but i can't help");
 							npcsay(p, n, "i understand, this isn't your battle");
@@ -491,7 +492,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 							"They continue to chant",
 							"As the king gnome climbs the tree",
 							"placing the two Orbs at the peak of the spirit tree");
-						remove(p, ItemId.ORBS_OF_PROTECTION.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.ORBS_OF_PROTECTION.id()));
 						n.displayNpcTeleportBubble(656, 695);
 						delay(1000);
 						n.displayNpcTeleportBubble(656, 695);

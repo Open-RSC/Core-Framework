@@ -101,7 +101,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 						if (p.getCarriedItems().hasCatalogID(ItemId.CHEESE_AND_TOMATO_BATTA.id(), Optional.of(false))) {
 							say(p, n, "no problem, it was easy");
 							mes(p, 1900, "you give aluft the gnome batta");
-							remove(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.CHEESE_AND_TOMATO_BATTA.id()));
 							p.message("he takes a bite");
 							npcsay(p, n, "not bad...not bad at all",
 								"ok now for something a little harder",
@@ -129,7 +129,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 						npcsay(p, n, "hello there, how did you get on");
 						if (p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))) {
 							say(p, n, "here you go");
-							remove(p, ItemId.CHOCOLATE_BOMB.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
 							mes(p, 1200, "you give aluft the choc bomb");
 							p.message("he takes a bite");
 							npcsay(p, n, "yes, yes, yes, that's superb",
@@ -162,7 +162,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 						if (p.getCarriedItems().hasCatalogID(ItemId.TOAD_BATTA.id(), Optional.of(false))) {
 							say(p, n, "here you go, easy");
 							mes(p, 1900, "you give mr gianne the toad batta");
-							remove(p, ItemId.TOAD_BATTA.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.TOAD_BATTA.id()));
 							p.message("he takes a bite");
 							npcsay(p, n, "ooh, that's some good toad",
 								"very nice",
@@ -188,7 +188,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 						if (p.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 							say(p, n, "here, see what you think");
 							mes(p, 1900, "you give mr gianne the worm hole");
-							remove(p, ItemId.WORM_HOLE.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
 							p.message("he takes a bite");
 							npcsay(p, n, "hmm, that's actually really good",
 								"how about you make me some toad crunchies for desert",
@@ -214,7 +214,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 						if (p.getCarriedItems().hasCatalogID(ItemId.TOAD_CRUNCHIES.id(), Optional.of(false))) {
 							say(p, n, "here, try it");
 							mes(p, 1900, "you give mr gianne the toad crunchie");
-							remove(p, ItemId.TOAD_CRUNCHIES.id(), 1);
+							p.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id()));
 							p.message("he takes a bite");
 							npcsay(p, n, "well for a human you certainly can cook",
 								"i'd love to have you on the team",
@@ -270,9 +270,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				say(p, n, "all done, here you go");
 				mes(p, 1900, "you give aluft two worm batta's a veg batta and a toad batta");
 				p.incExp(Skills.COOKING, 425, true);
-				remove(p, ItemId.WORM_BATTA.id(), 2);
-				remove(p, ItemId.VEG_BATTA.id(), 1);
-				remove(p, ItemId.TOAD_BATTA.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.WORM_BATTA.id(), 2));
+				p.getCarriedItems().remove(new Item(ItemId.VEG_BATTA.id()));
+				p.getCarriedItems().remove(new Item(ItemId.TOAD_BATTA.id()));
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
 				p.message("mr gianne gives you 45 gold coins");
@@ -291,9 +291,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& ifheld(p, ItemId.TOAD_CRUNCHIES.id(), 2)) {
 				say(p, n, "here you go aluft");
 				mes(p, 1900, "you give aluft choc bomb, two choc crunchies and two toad crunchies");
-				remove(p, ItemId.CHOCOLATE_BOMB.id(), 1);
-				remove(p, ItemId.CHOC_CRUNCHIES.id(), 2);
-				remove(p, ItemId.TOAD_CRUNCHIES.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
+				p.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id(), 2));
+				p.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id(), 2));
 				p.incExp(Skills.COOKING, 675, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -311,7 +311,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			if (ifheld(p, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				say(p, n, "all done, here you go");
 				mes(p, 1900, "you give aluft the two choc crunchies");
-				remove(p, ItemId.CHOC_CRUNCHIES.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id(), 2));
 				p.incExp(Skills.COOKING, 300, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -329,8 +329,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& ifheld(p, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				say(p, n, "here you go aluft");
 				mes(p, 1900, "you give aluft one choc bomb and two choc crunchies");
-				remove(p, ItemId.CHOCOLATE_BOMB.id(), 1);
-				remove(p, ItemId.CHOC_CRUNCHIES.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
+				p.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id(), 2));
 				p.incExp(Skills.COOKING, 425, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -347,8 +347,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& p.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(p, n, "here you go aluft");
 				mes(p, 1900, "you give aluft two veg batta's and a worm hole");
-				remove(p, ItemId.VEG_BATTA.id(), 2);
-				remove(p, ItemId.WORM_HOLE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.VEG_BATTA.id(), 2));
+				p.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
 				p.incExp(Skills.COOKING, 425, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -368,9 +368,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& p.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(p, n, "all done, here you go");
 				mes(p, 1900, "you give aluft one veg ball, one twisted toads legs and one worm hole");
-				remove(p, ItemId.VEGBALL.id(), 1);
-				remove(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
-				remove(p, ItemId.WORM_HOLE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.VEGBALL.id(), 1));
+				p.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id(), 1));
+				p.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id(), 1));
 				p.incExp(Skills.COOKING, 425, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -389,9 +389,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& ifheld(p, ItemId.WORM_CRUNCHIES.id(), 2)) {
 				mes(p, 1900, "you give one cheese and tomato batta,one veg ball...",
 						"...and two portions of worm crunchies");
-				remove(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
-				remove(p, ItemId.VEGBALL.id(), 1);
-				remove(p, ItemId.WORM_CRUNCHIES.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.CHEESE_AND_TOMATO_BATTA.id()));
+				p.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
+				p.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id(), 2));
 				p.incExp(Skills.COOKING, 550, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -412,10 +412,10 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& p.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))) {
 				say(p, n, "all done, here you go");
 				mes(p, 1900, "you give aluft the tangled toads legs and two worm crunchies");
-				remove(p, ItemId.SPICE_CRUNCHIES.id(), 2);
-				remove(p, ItemId.FRUIT_BATTA.id(), 1);
-				remove(p, ItemId.CHOCOLATE_BOMB.id(), 1);
-				remove(p, ItemId.VEGBALL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.SPICE_CRUNCHIES.id(), 2));
+				p.getCarriedItems().remove(new Item(ItemId.FRUIT_BATTA.id()));
+				p.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
+				p.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
 				p.incExp(Skills.COOKING, 425, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");
@@ -436,8 +436,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& ifheld(p, ItemId.WORM_CRUNCHIES.id(), 2)) {
 				say(p, n, "all done, here you go");
 				mes(p, 1900, "you give aluft one choc bomb and two choc crunchies");
-				remove(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
-				remove(p, ItemId.WORM_CRUNCHIES.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id()));
+				p.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id(), 2));
 				p.incExp(Skills.COOKING, 425, true);
 				npcsay(p, n, "they look great, well done",
 					"here's your share of the profit");

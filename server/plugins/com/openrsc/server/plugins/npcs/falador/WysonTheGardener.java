@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.npcs.falador;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -59,7 +60,7 @@ public class WysonTheGardener implements TalkNpcTrigger {
 					"I used to have plenty but someone kept stealing them off me");
 			} else if (sub_option == 2) {
 				npcsay(p, n, "Mmmm Ok that sounds fair.");
-				if (remove(p, ItemId.COINS.id(), 15)) {
+				if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15)) != -1) {
 					give(p, ItemId.WOAD_LEAF.id(), 1);
 					p.message("You give wyson 15 coins");
 					p.message("Wyson the gardener gives you some woad leaves");
@@ -67,7 +68,7 @@ public class WysonTheGardener implements TalkNpcTrigger {
 					say(p, n, "I dont have enough coins to buy the leaves. I'll come back later");
 			} else if (sub_option == 3) {
 				npcsay(p, n, "Ok that's more than fair.");
-				if (remove(p, ItemId.COINS.id(), 20)) {
+				if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20)) != -1) {
 					p.message("You give wyson 20 coins");
 					p.message("Wyson the gardener gives you some woad leaves");
 					give(p, ItemId.WOAD_LEAF.id(), 2);

@@ -139,7 +139,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				if (p.getCache().hasKey("dolmen_ghost")) {
 					p.getCache().remove("dolmen_ghost");
 				}
-				remove(p, ItemId.RASHILIYA_CORPSE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));
 				Functions.mes(p, "You drop Rashiliyias remains on the ground.",
 					"The bones turn to dust and forms into the shape of a human figure.");
 				Npc rash = addnpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 30000);
@@ -164,7 +164,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				Functions.mes(p, "As the necklace hits the floor, it disintigrates",
 					"into a puff of white powder.");
 				p.message("and you start to wonder if it ever really existed?");
-				remove(p, ItemId.BEADS_OF_THE_DEAD.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BEADS_OF_THE_DEAD.id()));
 			} else if (menu == 1) {
 				p.message("You decide not to drop the Beads of the Dead.");
 			}
@@ -172,7 +172,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		else if (i.getCatalogId() == ItemId.BONE_BEADS.id()) {
 			Functions.mes(p, "As the beads hit the floor, they disintegrate into");
 			p.message("puffs of white powder.");
-			remove(p, ItemId.BONE_BEADS.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.BONE_BEADS.id()));
 		}
 		else if (i.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) {
 			p.message("As you drop the delicate scrolls onto the floor, they");
@@ -180,7 +180,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			if (!p.getCache().hasKey("dropped_writing")) {
 				p.getCache().store("dropped_writing", true);
 			}
-			remove(p, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.BERVIRIUS_TOMB_NOTES.id()));
 		}
 		else if (i.getCatalogId() == ItemId.LOCATING_CRYSTAL.id()) {
 			p.message("Are you sure you want to drop this crystal?");
@@ -192,7 +192,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				Functions.mes(p, "As you drop the cystal, it hits a rock and explodes.");
 				p.message("You are lascerated by shards of glass.");
 				p.damage(10);
-				remove(p, ItemId.LOCATING_CRYSTAL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.LOCATING_CRYSTAL.id()));
 			} else if (menu == 1) {
 				p.message("You decide to keep the Locating Crystal ");
 				p.message("tucked into your inventory safe and sound.");
@@ -201,7 +201,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		else if (i.getCatalogId() == ItemId.SWORD_POMMEL.id()) {
 			Functions.mes(p, "You drop the sword pommel on the floor.");
 			p.message("It turns to dust as soon as it hits the ground.");
-			remove(p, ItemId.SWORD_POMMEL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.SWORD_POMMEL.id()));
 		}
 		else if (i.getCatalogId() == ItemId.BONE_KEY.id()) {
 			p.message("This looks quite valuable.");
@@ -223,7 +223,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			if (menu == 0) {
 				p.message("As you drop the item, it gets carried off by the wind.");
 				p.message("never to be seen again.");
-				remove(p, ItemId.CRUMPLED_SCROLL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.CRUMPLED_SCROLL.id()));
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
@@ -237,7 +237,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				p.message("You decide to throw the item away.");
 				p.message("As you drop the item, it falls down a narrow crevice.");
 				p.message("never to be seen again.");
-				remove(p, ItemId.TATTERED_SCROLL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.TATTERED_SCROLL.id()));
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
@@ -253,7 +253,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			if (menu == 0) {
 				p.message("As you drop the item, it bounces into a stream.");
 				p.message("never to be seen again.");
-				remove(p, ItemId.STONE_PLAQUE.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.STONE_PLAQUE.id()));
 			} else if (menu == 1) {
 				p.message("You decide against throwing the item away.");
 			}
@@ -402,7 +402,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 			Functions.mes(p, "You successfully craft the beads and Bronze Wire ");
 			p.message("into a necklace which you name, 'Beads of the dead'");
-			remove(p, ItemId.BRONZE_WIRE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.BRONZE_WIRE.id()));
 			p.getCarriedItems().getInventory().replace(ItemId.BONE_BEADS.id(), ItemId.BEADS_OF_THE_DEAD.id());
 		}
 		else if (Functions.compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.BONE_SHARD.id())) {

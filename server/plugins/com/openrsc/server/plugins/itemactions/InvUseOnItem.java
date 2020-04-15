@@ -29,6 +29,8 @@ public class InvUseOnItem implements UseInvTrigger {
 
 	@Override
 	public void onUseInv(Player player, Item item1, Item item2) {
+		if(item1.getItemStatus().getNoted() || item2.getItemStatus().getNoted()) return;
+
 		/*
 		 * Dye the wig with yellow dye and get blonde wig for Prince Ali rescue Quest
 		 */
@@ -208,9 +210,9 @@ public class InvUseOnItem implements UseInvTrigger {
 				player.message("You still need one more piece of map");
 			} else {
 				player.message("You put all the pieces of map together");
-				player.getCarriedItems().remove(pieces[0], 1);
-				player.getCarriedItems().remove(pieces[1], 1);
-				player.getCarriedItems().remove(pieces[2], 1);
+				player.getCarriedItems().remove(new Item(pieces[0]));
+				player.getCarriedItems().remove(new Item(pieces[1]));
+				player.getCarriedItems().remove(new Item(pieces[2]));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.MAP.id(), 1));
 			}
 		}
@@ -224,9 +226,9 @@ public class InvUseOnItem implements UseInvTrigger {
 				player.message("You still need one more piece of the crest");
 			} else {
 				player.message("You put all the pieces of the crest together");
-				player.getCarriedItems().remove(fragments[0], 1);
-				player.getCarriedItems().remove(fragments[1], 1);
-				player.getCarriedItems().remove(fragments[2], 1);
+				player.getCarriedItems().remove(new Item(fragments[0]));
+				player.getCarriedItems().remove(new Item(fragments[1]));
+				player.getCarriedItems().remove(new Item(fragments[2]));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.FAMILY_CREST.id(), 1));
 			}
 		}

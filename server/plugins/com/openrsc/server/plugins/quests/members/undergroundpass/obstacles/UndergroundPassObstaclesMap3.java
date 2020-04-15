@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.Area;
@@ -88,9 +89,9 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				&& p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_DOOMION.id(), Optional.of(false))
 				&& p.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_HOLTHION.id(), Optional.of(false)) && !p.getCache().hasKey("shadow_on_doll")) {
 				Functions.mes(p, "the three amulets glow red in your satchel");
-				remove(p, ItemId.AMULET_OF_OTHAINIAN.id(), 1);
-				remove(p, ItemId.AMULET_OF_DOOMION.id(), 1);
-				remove(p, ItemId.AMULET_OF_HOLTHION.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.AMULET_OF_OTHAINIAN.id()));
+				p.getCarriedItems().remove(new Item(ItemId.AMULET_OF_DOOMION.id()));
+				p.getCarriedItems().remove(new Item(ItemId.AMULET_OF_HOLTHION.id()));
 				p.message("you place them on the chest and the chest opens");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
 				Functions.addloc(obj.getWorld(), obj.getLoc(), 2000);

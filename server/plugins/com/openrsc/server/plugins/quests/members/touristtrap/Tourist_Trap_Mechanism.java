@@ -92,7 +92,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			npc.initializeIndirectTalkScript(p);
 		}
 		else if (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
-			remove(p, ItemId.TENTI_PINEAPPLE.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.TENTI_PINEAPPLE.id()));
 			npcsay(p, npc, "Great! Just what I've been looking for!",
 				"Mmmmmmm, delicious!!",
 				"Oh, this is soo nice!",
@@ -162,7 +162,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				Functions.mes(p, "You begin experimenting in forging the weapon...",
 					"You follow the plans carefully.",
 					"And after a long time of careful work.");
-				remove(p, ItemId.BRONZE_BAR.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 				if (succeedRate(p)) {
 					Functions.mes(p, "You finally manage to forge a sharp, pointed...",
 						"... dart tip...");
@@ -192,7 +192,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			}
 			Functions.mes(p, "You try to attach feathers to the bronze dart tip.",
 				"Following the plans is tricky, but you persevere.");
-			remove(p, ItemId.FEATHER.id(), 10);
+			p.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
 			if (succeedRate(p)) {
 				Functions.mes(p, "You succesfully attach the feathers to the dart tip.");
 				p.getCarriedItems().getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
@@ -680,7 +680,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 										npcsay(p, n, "Great!");
 										if (ifheld(p, ItemId.COINS.id(), 100)) {
 											npcsay(p, n, "Ok, get in the back of the cart then!");
-											remove(p, ItemId.COINS.id(), 100);
+											p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
 											if (p.getCache().hasKey("ana_in_cart")) {
 												p.getCache().remove("ana_in_cart");
 												p.getCache().store("rescue", true);
@@ -799,7 +799,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			delay(650);
 			npcsay(p, n, "Hey, where d'ya think you're going with that Barrel?");
 			p.message("A guard comes over and takes the barrel off you.");
-			remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 			npcsay(p, n, "'Cor! This barrel is really heavy!",
 				"Have you been mining lead?",
 				"Har, har har!");
@@ -847,7 +847,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				p.message("The guard places the barrel carefully on the lift platform.");
 				npcsay(p, n, "Oh, there's no one operating the lift up top, hope this barrel isn't urgent?",
 					"You'd better get back to work!");
-				remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				if (!p.getCache().hasKey("ana_lift")) {
 					p.getCache().store("ana_lift", true);
 				}
@@ -884,7 +884,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		else if (obj.getID() == MINING_CART && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			Functions.mes(p, "You carefully place Ana in the barrel into the mine cart.",
 				"Soon the cart moves out of sight and then it returns.");
-			remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 			if (!p.getCache().hasKey("ana_cart")) {
 				p.getCache().store("ana_cart", true);
 			}
@@ -900,7 +900,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				"This was the last barrel to go on the cart,",
 				"but the cart driver doesn't seem to be in any rush to get going.",
 				"And the desert heat will soon get to Ana.");
-			remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+			p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 			if (!p.getCache().hasKey("ana_in_cart")) {
 				p.getCache().store("ana_in_cart", true);
 			}
@@ -945,7 +945,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	public void onDropObj(Player p, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (p.getQuestStage(Quests.TOURIST_TRAP) == -1) {
-				remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				return;
 			}
 			p.message("Are you sure you want to drop this?");
@@ -966,7 +966,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					diffX = -8;
 				}
 				Functions.mes(p, "You drop the barrel to the floor and Ana gets out.");
-				remove(p, ItemId.ANA_IN_A_BARREL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				Npc Ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 20000);
 				delay(650);
 				npcsay(p, Ana, "How dare you put me in that barrel you barbarian!");

@@ -42,7 +42,7 @@ public class GnomeMixing implements UseInvTrigger {
 
 			// Remove secondary ingredient
 			if (gm.itemIDOther != ItemId.GNOME_SPICE.id())
-				remove(p, gm.itemIDOther, 1);
+				p.getCarriedItems().remove(new Item(gm.itemIDOther));
 
 			gc.addGnomeRecipeCache(p, gm.itemID, gm.itemIDOther);
 
@@ -53,7 +53,7 @@ public class GnomeMixing implements UseInvTrigger {
 
 			// If complete (denoted with a trailing ! on the recipe)
 			if (recipe.endsWith("!")) {
-				remove(p, gm.itemID, 1); // Remove base item
+				p.getCarriedItems().remove(new Item(gm.itemID)); // Remove base item
 
 				if (gc.recipeStrings[gc.CHOC_CRUNCHIE].equals(recipe)) {
 					give(p, ItemId.CHOC_CRUNCHIES.id(), 1);

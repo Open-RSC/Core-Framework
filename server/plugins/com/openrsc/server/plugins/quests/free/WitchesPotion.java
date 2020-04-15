@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -97,10 +98,10 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 						say(p, n, "Yes I have everthing");
 						npcsay(p, n, "Excellent, can I have them then?");
 						p.message("You pass the ingredients to Hetty");
-						p.getCarriedItems().remove(ItemId.RATS_TAIL.id(), 1);
-						p.getCarriedItems().remove(ItemId.EYE_OF_NEWT.id(), 1);
-						p.getCarriedItems().remove(ItemId.BURNTMEAT.id(), 1);
-						p.getCarriedItems().remove(ItemId.ONION.id(), 1);
+						p.getCarriedItems().remove(new Item(ItemId.RATS_TAIL.id()));
+						p.getCarriedItems().remove(new Item(ItemId.EYE_OF_NEWT.id()));
+						p.getCarriedItems().remove(new Item(ItemId.BURNTMEAT.id()));
+						p.getCarriedItems().remove(new Item(ItemId.ONION.id()));
 						Functions.mes(p,
 							"Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");

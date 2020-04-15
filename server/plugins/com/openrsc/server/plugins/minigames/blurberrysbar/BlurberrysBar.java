@@ -16,12 +16,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.give;
 import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
-import static com.openrsc.server.plugins.Functions.ifheld;
 import static com.openrsc.server.plugins.Functions.mes;
 import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.remove;
-import static com.openrsc.server.plugins.Functions.multi;
 
 public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
 
@@ -182,9 +178,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				&& p.getCarriedItems().hasCatalogID(ItemId.DRUNK_DRAGON.id(), Optional.of(false))) {
 				Functions.say(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
 				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
-				Functions.remove(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
-				Functions.remove(p, ItemId.CHOCOLATE_SATURDAY.id(), 1);
-				Functions.remove(p, ItemId.DRUNK_DRAGON.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
+				p.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
+				p.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
 				p.incExp(Skills.COOKING, 360, true);
 				npcsay(p, n, "that's blurberry-tastic");
 				p.message("blurberry gives you 100 gold coins");
@@ -200,8 +196,8 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				&& p.getCarriedItems().hasCatalogID(ItemId.SGG.id(), Optional.of(false))) {
 				Functions.say(p, n, "here you go, two wizard blizzards and an s.g.g.");
 				p.message("you give blurberry two wizard blizzards and an s.g.g.");
-				Functions.remove(p, ItemId.WIZARD_BLIZZARD.id(), 2);
-				Functions.remove(p, ItemId.SGG.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id(), 2));
+				p.getCarriedItems().remove(new Item(ItemId.SGG.id()));
 				p.incExp(Skills.COOKING, 360, true);
 				npcsay(p, n, "that's excellent, here's your share of the profit");
 				p.message("blurberry gives you 150 gold coins");
@@ -222,10 +218,10 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 						"and two fruit blasts");
 				p.message("you give blurberry one wizard blizzard,one pineapple punch, one blurberry special");
 				p.message("and two fruit blasts");
-				Functions.remove(p, ItemId.WIZARD_BLIZZARD.id(), 1);
-				Functions.remove(p, ItemId.PINEAPPLE_PUNCH.id(), 1);
-				Functions.remove(p, ItemId.BLURBERRY_SPECIAL.id(), 1);
-				Functions.remove(p, ItemId.FRUIT_BLAST.id(), 2);
+				p.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id()));
+				p.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
+				p.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
+				p.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id(), 2));
 				p.incExp(Skills.COOKING, 540, true);
 				npcsay(p, n, "wow fantastic, here's your share of the profit");
 				p.message("blurberry gives you 179 gold coins");
@@ -243,8 +239,8 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				&& p.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
 				Functions.say(p, n, "here you go, two s.g.g. and one blurberry special");
 				p.message("you give blurberry two s.g.g. and one blurberry special");
-				Functions.remove(p, ItemId.SGG.id(), 2);
-				Functions.remove(p, ItemId.BLURBERRY_SPECIAL.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.SGG.id(), 2));
+				p.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
 				p.incExp(Skills.COOKING, 360, true);
 				npcsay(p, n, "great, here's your share of the profit");
 				p.message("blurberry gives you 120 gold coins");
@@ -260,7 +256,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			if (p.getCarriedItems().hasCatalogID(ItemId.FRUIT_BLAST.id(), Optional.of(false))) {
 				Functions.say(p, n, "here you go, one fruit blast");
 				p.message("you give blurberry one fruit blast");
-				Functions.remove(p, ItemId.FRUIT_BLAST.id(), 1);
+				p.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
 				p.incExp(Skills.COOKING, 240, true);
 				npcsay(p, n, "that's frutty-licious");
 				p.message("blurberry gives you 10 gold coins");
@@ -397,7 +393,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignDrunkDragon(Player player, Npc npc) {
 		Functions.say(player, npc, "here you go");
 		mes(player, "you give blurberry the fruit blast");
-		Functions.remove(player, ItemId.FRUIT_BLAST.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
 		player.message("he takes a sip");
 		npcsay(player, npc, "hmmm... not bad, not bad at all",
 			"now can you make me a drunk dragon",
@@ -418,7 +414,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignSGG(Player player, Npc npc) {
 		Functions.say(player, npc, "here you go");
 		mes(player, "you give blurberry the drunk dragon");
-		Functions.remove(player, ItemId.DRUNK_DRAGON.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
 		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
 		npcsay(player, npc, "woooo, that's some good stuff",
@@ -442,7 +438,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignChocolateSaturday(Player player, Npc npc) {
 		Functions.say(player, npc, "here you go");
 		mes(player, "you give blurberry the short green guy");
-		Functions.remove(player, ItemId.SGG.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
 		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
 		npcsay(player, npc, "hmmm, not bad, not bad at all",
@@ -468,7 +464,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignBlurberrySpecial(Player player, Npc npc) {
 		Functions.say(player, npc, "here.. try some");
 		mes(player, "you give blurberry the cocktail");
-		Functions.remove(player, ItemId.CHOCOLATE_SATURDAY.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
 		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
 		npcsay(player, npc, "that's blurberry-tastic",
@@ -494,7 +490,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void completeBlurberrysBar(Player player, Npc npc) {
 		Functions.say(player, npc, "I think i've made it right");
 		mes(player, "you give the blurberry special to blurberry");
-		Functions.remove(player, ItemId.BLURBERRY_SPECIAL.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
 		player.message("he takes a sip");
 		npcsay(player, npc, "well i never, incredible",
 			"not many manage to get that right, but this is perfect",

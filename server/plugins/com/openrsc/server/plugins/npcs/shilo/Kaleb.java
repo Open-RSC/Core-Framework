@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -34,7 +35,7 @@ public class Kaleb implements TalkNpcTrigger {
 			} else if (menu == 1) {
 				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
 				if (ifheld(p, ItemId.COINS.id(), 1)) {
-					remove(p, ItemId.COINS.id(), 1);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id()));
 					give(p, ItemId.WINE.id(), 1);
 					p.message("You purchase a jug of wine.");
 				} else {
@@ -43,7 +44,7 @@ public class Kaleb implements TalkNpcTrigger {
 			} else if (menu == 2) {
 				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
 				if (ifheld(p, ItemId.COINS.id(), 2)) {
-					remove(p, ItemId.COINS.id(), 2);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 					give(p, ItemId.BEER.id(), 1);
 					p.message("You purchase a frothy glass of beer.");
 				} else {
@@ -52,7 +53,7 @@ public class Kaleb implements TalkNpcTrigger {
 			} else if (menu == 3) {
 				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
 				if (ifheld(p, ItemId.COINS.id(), 35)) {
-					remove(p, ItemId.COINS.id(), 35);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 35));
 					give(p, ItemId.PARAMAYA_REST_TICKET.id(), 1);
 					p.message("You purchase a ticket to access the dormitory.");
 				} else {
@@ -61,7 +62,7 @@ public class Kaleb implements TalkNpcTrigger {
 			} else if (menu == 5) {
 				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
 				if (ifheld(p, ItemId.COINS.id(), 175)) {
-					remove(p, ItemId.COINS.id(), 175);
+					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 175));
 					give(p, ItemId.PARAMAYA_REST_TICKET.id(), 5);
 					p.message("You purchase 5 tickets to access the dormitory.");
 				} else {

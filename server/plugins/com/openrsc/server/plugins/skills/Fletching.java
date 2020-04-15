@@ -127,15 +127,9 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					Item item = ci.getInventory().get(
-						ci.getInventory().getLastIndexById(featherID));
-					Item featherToRemove = new Item(featherID, 1, false, item.getItemId());
-					item = ci.getInventory().get(
-						ci.getInventory().getLastIndexById(attachmentID));
-					Item attachmentToRemove = new Item(attachmentID, 1, false, item.getItemId());
-					if (ci.remove(featherToRemove, true) > -1
-						&& ci.remove(attachmentToRemove, true) > -1) {
-						ci.getInventory().add(new Item(itemID, 1), true);
+					if (ci.remove(new Item(featherID)) > -1
+						&& ci.remove(new Item(attachmentID)) > -1) {
+						ci.getInventory().add(new Item(itemID));
 						owner.incExp(Skills.FLETCHING, exp, true);
 						// ActionSender.sendInventory(owner);
 					} else {
@@ -206,14 +200,8 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					Item item = ci.getInventory().get(
-						ci.getInventory().getLastIndexById(headlessArrowsID));
-					Item headlessToRemove = new Item(headlessArrowsID, 1, false, item.getItemId());
-					item = ci.getInventory().get(
-						ci.getInventory().getLastIndexById(arrowHeadsID));
-					Item arrowHeadsToRemove = new Item(arrowHeadsID, 1, false, item.getItemId());
-					if (ci.remove(headlessToRemove, true) > -1
-						&& ci.remove(arrowHeadsToRemove, true) > -1) {
+					if (ci.remove(new Item(headlessArrowsID)) > -1
+						&& ci.remove(new Item(arrowHeadsID)) > -1) {
 						//Successful make attempt
 						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
 						ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
@@ -397,7 +385,7 @@ public class Fletching implements UseInvTrigger {
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(pearlID, 1) > -1) {
+				if (getOwner().getCarriedItems().remove(new Item(pearlID)) > -1) {
 					getOwner().message("you chisel the pearls into small bolt tips");
 					give(getOwner(), com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 					getOwner().incExp(Skills.FLETCHING, exp, true);
@@ -460,8 +448,8 @@ public class Fletching implements UseInvTrigger {
 						}
 
 					}
-					if (ci.remove(bolt, 1) > -1
-						&& ci.remove(tip, 1) > -1) {
+					if (ci.remove(new Item(bolt)) > -1
+						&& ci.remove(new Item(tip)) > -1) {
 						//Successful bolt make
 						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
 						ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
