@@ -332,7 +332,7 @@ public class BankInterface {
 							inventorySlot++;
 							continue;
 						}
-						if (i.getNoted() && Config.S_WANT_BANK_NOTES) {
+						if (i.getNoted() && Config.S_WANT_CUSTOM_BANKS) {
 							// Draw the note background
 							mc.getSurface().drawSpriteClipping(
 								mc.spriteSelect(EntityHandler.noteDef),
