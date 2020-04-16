@@ -1401,7 +1401,6 @@ public class PacketHandler {
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			System.out.println(jsonString);
 			JSONObject itemInfo = new JSONObject(jsonString);
 			int itemID = (int)itemInfo.get("id");
 			mc.setInventoryItemID(i, itemID);
@@ -2236,44 +2235,48 @@ public class PacketHandler {
 		mc.setShopPriceMultiplier(packetsIncoming.getUnsignedByte());
 
 		for (int i = 0; i < 40; ++i) {
-			mc.setShopItemID(i, -1);
+			mc.setShopCategoryID(i, -1);
 		}
 
 		for (int i = 0; shopItemCount > i; ++i) {
-			mc.setShopItemID(i, packetsIncoming.getShort());
+			mc.setShopCategoryID(i, packetsIncoming.getShort());
 			mc.setShopItemCount(i, packetsIncoming.getShort());
 			mc.setShopItemPrice(i, packetsIncoming.getShort());
 		}
 
+		// Check through player's inventory items if this is a general store.
 		if (shopType == 1) {
-			int var6 = 39;
-
+			int lastAvailableShopSlotIndex = 39;
 			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-				&& shopItemCount <= var6; ++inventoryIndex) {
-				boolean var25 = false;
+				&& shopItemCount <= lastAvailableShopSlotIndex; ++inventoryIndex) {
+				boolean foundEquivalentShopItem = false;
+				for (int currentShopSlot = 0; currentShopSlot < 40; ++currentShopSlot) {
 
-				for (int var9 = 0; var9 < 40; ++var9) {
-					if (mc.getInventoryItemID(inventoryIndex) == mc.getShopItemID(var9)) {
-						var25 = true;
+					// Can only match if category matches and not noted.
+					if (mc.getInventoryItemID(inventoryIndex) == mc.getShopCategoryID(currentShopSlot)
+						&& mc.getInventoryItem(inventoryIndex).getNoted() == mc.getShopItemNoted(currentShopSlot)) {
+						foundEquivalentShopItem = true;
 						break;
 					}
 				}
 
 				if (mc.getInventoryItemID(inventoryIndex) == 10) {
-					var25 = true;
+					continue;
 				}
 
-				if (!var25) {
-					mc.setShopItemID(var6, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
-					mc.setShopItemCount(var6, 0);
-					mc.setShopItemPrice(var6, 0);
-					--var6;
+				// If we have not found an inventory item in the shop stock, add the item to the end of the shop.
+				if (!foundEquivalentShopItem) {
+					mc.setShopCategoryID(lastAvailableShopSlotIndex, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
+					mc.setShopItemCount(lastAvailableShopSlotIndex, 0);
+					mc.setShopItemPrice(lastAvailableShopSlotIndex, 0);
+					mc.setShopItemNoted(lastAvailableShopSlotIndex, mc.getInventoryItem(inventoryIndex).getNoted());
+					--lastAvailableShopSlotIndex;
 				}
 			}
 		}
 
 		if (mc.getShopSelectedItemIndex() >= 0 && 40 > mc.getShopSelectedItemIndex()
-			&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
+			&& mc.getShopSelectedItemType() != mc.getShopCategoryID(mc.getShopSelectedItemIndex())) {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}

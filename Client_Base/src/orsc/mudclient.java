@@ -143,8 +143,9 @@ public final class mudclient implements Runnable {
 	private final boolean[] prayerOn = new boolean[50];
 	private final int projectileMaxRange = 40;
 	private final int[] shopItemCount = new int[256];
-	private final int[] shopItemID = new int[256];
+	private final int[] shopCategoryID = new int[256];
 	private final int[] shopItemPrice = new int[256];
+	private final boolean[] shopItemNoted = new boolean[256];
 
 	private final int[] teleportBubbleTime = new int[50];
 	private final int[] teleportBubbleX = new int[50];
@@ -3593,9 +3594,9 @@ public final class mudclient implements Runnable {
 						for (int column = 0; column < 8; ++column) {
 							int sx = column * 49 + 7;
 							int sy = row * 34 + 28;
-							if (mlx > sx && 49 + sx > mlx && mly > sy && sy + 34 > mly && this.shopItemID[slot] != -1) {
+							if (mlx > sx && 49 + sx > mlx && mly > sy && sy + 34 > mly && this.shopCategoryID[slot] != -1) {
 								this.shopSelectedItemIndex = slot;
-								this.shopSelectedItemType = this.shopItemID[slot];
+								this.shopSelectedItemType = this.shopCategoryID[slot];
 							}
 							++slot;
 						}
@@ -3603,7 +3604,7 @@ public final class mudclient implements Runnable {
 				}
 
 				if (this.shopSelectedItemIndex >= 0) {
-					int id = this.shopItemID[this.shopSelectedItemIndex];
+					int id = this.shopCategoryID[this.shopSelectedItemIndex];
 					if (id != -1) {
 						int count = this.shopItemCount[this.shopSelectedItemIndex];
 						if (count > 0 && mly >= 204 && mly <= 215) {
@@ -3631,7 +3632,7 @@ public final class mudclient implements Runnable {
 							if (btnCount > 0) {
 								this.packetHandler.getClientStream().newPacket(236);
 								this.packetHandler.getClientStream().bufferBits
-									.putShort(this.shopItemID[this.shopSelectedItemIndex]);
+									.putShort(this.shopCategoryID[this.shopSelectedItemIndex]);
 								this.packetHandler.getClientStream().bufferBits.putShort(count);
 								this.packetHandler.getClientStream().bufferBits.putShort(btnCount);
 								this.packetHandler.getClientStream().finishPacket();
@@ -3664,7 +3665,7 @@ public final class mudclient implements Runnable {
 							if (btnCount > 0) {
 								this.packetHandler.getClientStream().newPacket(221);
 								this.packetHandler.getClientStream().bufferBits
-									.putShort(this.shopItemID[this.shopSelectedItemIndex]);
+									.putShort(this.shopCategoryID[this.shopSelectedItemIndex]);
 								this.packetHandler.getClientStream().bufferBits.putShort(count);
 								this.packetHandler.getClientStream().bufferBits.putShort(btnCount);
 								this.packetHandler.getClientStream().finishPacket();
@@ -3707,23 +3708,23 @@ public final class mudclient implements Runnable {
 						}
 
 						this.getSurface().drawBoxBorder(sx, 50, sy, 35, 0);
-						//TODO: Need to add noted boolean to shop items
-						if (this.shopItemID[slot] != -1) {
-							this.getSurface().drawSpriteClipping(
-								spriteSelect(EntityHandler.getItemDef(this.shopItemID[slot])),
-								sx, sy, 48, 32, EntityHandler.getItemDef(this.shopItemID[slot]).getPictureMask(), 0,
-								EntityHandler.getItemDef(this.shopItemID[slot]).getBlueMask(), false, 0, 1);
 
-							ItemDef def = EntityHandler.getItemDef(this.shopItemID[slot]);
-							if (def.getNotedFormOf() >= 0) {
-								ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-								getSurface().drawSpriteClipping(spriteSelect(originalDef), sx + 7,
-									sy + 4, 33, 23, originalDef.getPictureMask(), 0,
-									originalDef.getBlueMask(), false, 0, 1);
+						if (this.shopCategoryID[slot] != -1) {
+							if (this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]) > 0
+								&& this.getShopItemNoted(slot)) {
+								this.getSurface().drawSpriteClipping(this.spriteSelect(EntityHandler.noteDef),
+									sx, sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+									EntityHandler.noteDef.getBlueMask(), false, 0, 1);
 							}
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.getItemDef(this.shopCategoryID[slot])),
+								sx, sy, 48, 32, EntityHandler.getItemDef(this.shopCategoryID[slot]).getPictureMask(), 0,
+								EntityHandler.getItemDef(this.shopCategoryID[slot]).getBlueMask(), false, 0, 1);
+
+							ItemDef def = EntityHandler.getItemDef(this.shopCategoryID[slot]);
 
 							this.getSurface().drawString("" + this.shopItemCount[slot], 1 + sx, 10 + sy, '\uff00', 1);
-							this.getSurface().b(47 + sx, "" + this.getInventoryCount(this.shopItemID[slot]),
+							this.getSurface().b(47 + sx, "" + this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]),
 								10 + sy, '\uffff', -80, 1);
 						}
 
@@ -3734,7 +3735,7 @@ public final class mudclient implements Runnable {
 
 			this.getSurface().drawLineHoriz(5 + xr, yr + 222, 398, 0);
 			if (this.shopSelectedItemIndex != -1) {
-				int id = this.shopItemID[this.shopSelectedItemIndex];
+				int id = this.shopCategoryID[this.shopSelectedItemIndex];
 				if (id != -1) {
 					int count = this.shopItemCount[this.shopSelectedItemIndex];
 					if (count <= 0) {
@@ -5475,7 +5476,7 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.SHOP_BUY) {
 					try {
-						int id = this.shopItemID[this.shopSelectedItemIndex];
+						int id = this.shopCategoryID[this.shopSelectedItemIndex];
 						if (id != -1) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
@@ -5497,7 +5498,7 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.SHOP_SELL) {
 					try {
-						int id = this.shopItemID[this.shopSelectedItemIndex];
+						int id = this.shopCategoryID[this.shopSelectedItemIndex];
 						if (id != -1) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
@@ -5508,7 +5509,7 @@ public final class mudclient implements Runnable {
 								var4 = Integer.parseInt(str);
 							}
 							this.packetHandler.getClientStream().newPacket(221);
-							this.packetHandler.getClientStream().bufferBits.putShort(this.shopItemID[this.shopSelectedItemIndex]);
+							this.packetHandler.getClientStream().bufferBits.putShort(this.shopCategoryID[this.shopSelectedItemIndex]);
 							this.packetHandler.getClientStream().bufferBits
 								.putShort(this.shopItemCount[this.shopSelectedItemIndex]);
 							this.packetHandler.getClientStream().bufferBits.putShort(var4);
@@ -15590,12 +15591,12 @@ public final class mudclient implements Runnable {
 //			}
 //		}
 
-	public void setShopItemID(int i, int n) {
-		this.shopItemID[i] = n;
+	public void setShopCategoryID(int i, int n) {
+		this.shopCategoryID[i] = n;
 	}
 
-	public int getShopItemID(int i) {
-		return this.shopItemID[i];
+	public int getShopCategoryID(int i) {
+		return this.shopCategoryID[i];
 	}
 
 	public void setShopItemCount(int i, int n) {
@@ -15604,6 +15605,14 @@ public final class mudclient implements Runnable {
 
 	public void setShopItemPrice(int i, int n) {
 		this.shopItemPrice[i] = n;
+	}
+
+	public void setShopItemNoted(int i, boolean n) {
+		this.shopItemNoted[i] = n;
+	}
+
+	public boolean getShopItemNoted(int i) {
+		return this.shopItemNoted[i];
 	}
 
 	public int getShopSelectedItemIndex() {
