@@ -516,7 +516,7 @@ public class PacketHandler {
 		mc.getOnlineList().reset();
 		int onlinePlayerCount = packetsIncoming.getShort();
 		for (int i = 0; i < onlinePlayerCount; i++) {
-			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32());
+			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32(), i == (onlinePlayerCount -1 ));
 		}
 		mc.getOnlineList().setVisible(true);
 	}
