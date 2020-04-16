@@ -538,9 +538,6 @@ public class Bank {
 					return false;
 				}
 
-				// Ensure the requested deposit does not exceed item quantity.
-				int depositAmount = Math.min(depositItem.getAmount(), requestedAmount);
-
 				// Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
 				if (depositDef == null) {
@@ -549,10 +546,9 @@ public class Bank {
 				}
 
 				// Limit non-stackables to a withdraw of 1
-				if (!depositDef.isStackable() && !depositItem.getNoted())
-					depositAmount = 1;
-				else
-					requestedAmount = depositAmount;
+				int depositAmount = 1;
+				if (depositDef.isStackable() || depositItem.getNoted())
+					requestedAmount = Math.min(player.getCarriedItems().getInventory().countId(depositItem.getCatalogId()), requestedAmount);
 
 				// Make sure they have enough space in their bank to deposit it
 				if (!canHold(new Item(depositItem.getCatalogId(), depositAmount))) {
