@@ -195,16 +195,6 @@ public class Inventory {
 		}
 	}
 
-	public int remove(int index) {
-		synchronized (list) {
-			Item item = get(index);
-			if (item == null) {
-				return -1;
-			}
-			return remove(item, true);
-		}
-	}
-
 	public int remove(Item item, boolean sendInventory) {
 		synchronized (list) {
 			try {
@@ -218,9 +208,8 @@ public class Inventory {
 
 				int size = list.size();
 				ListIterator<Item> iterator = list.listIterator(size);
-				for (int index = size - 1; iterator.hasPrevious(); --index) {
+				for (int index = size - 1; iterator.hasPrevious(); index--) {
 					Item inventoryItem = iterator.previous();
-
 					// Loop until we have the correct item.
 					if (inventoryItem.getItemId() != itemID)
 						continue;
@@ -252,12 +241,6 @@ public class Inventory {
 							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
 						}
 
-						// Update the Client
-						if (sendInventory)
-							ActionSender.sendInventory(player);
-
-						return inventoryItem.getItemId();
-
 					// Non-stacking items
 					} else {
 
@@ -274,13 +257,13 @@ public class Inventory {
 
 						// Update the Database
 						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
-
-						//Update the client
-						if (sendInventory)
-							ActionSender.sendInventory(player);
-
-						return inventoryItem.getItemId();
 					}
+
+					//Update the client
+					if (sendInventory)
+						ActionSender.sendInventory(player);
+
+					return inventoryItem.getItemId();
 				}
 				System.out.println("Item not found: " + item.getItemId() + " for player " + player.getUsername());
 			} catch (GameDatabaseException ex) {
@@ -289,24 +272,6 @@ public class Inventory {
 		}
 		return -1;
 	}
-
-	/*
-	public int remove(int id, int amount) {
-		return remove(id, amount, true);
-	}
-	*/
-
-	/*
-	public int remove(Item item, boolean updatePlayer) {
-		return remove(item.getCatalogId(), item.getAmount(), updatePlayer);
-	}
-	*/
-
-	/*
-	public int remove(Item item) {
-		return remove(item.getCatalogId(), item.getAmount(), true);
-	}
-	*/
 
 	public void replace(int i, int j) {
 		this.replace(i, j, true);
@@ -564,17 +529,7 @@ public class Inventory {
 		}
 		return null;
 	}
-	public int searchInventoryForItem(int id, boolean noted) {
-		synchronized (list) {
-			Item item;
-			for (int i = 0; i < size(); i++) {
-				item = list.get(i);
-				if (item != null && item.getCatalogId() == id && item.getItemStatus().getNoted() == noted)
-					return i;
-			}
-			return -1;
-		}
-	}
+
 	public boolean contains(Item i) {
 		//synchronized (list) {
 		//	return list.contains(i);
@@ -606,10 +561,60 @@ public class Inventory {
 		}
 	}
 
+	public int countSlotsOccupied(Item item, int totalAmount) {
+		synchronized (list) {
+			int slots = 0;
+			int amountFound = 0;
+			for (int x = list.size() - 1; x >= 0; x--) {
+				if (amountFound >= totalAmount) break;
+				Item i = list.get(x);
+				if (i.getCatalogId() == item.getCatalogId() && i.getItemStatus().getNoted() == item.getItemStatus().getNoted()) {
+					slots++;
+					amountFound += i.getAmount();
+				}
+			}
+			return slots;
+		}
+	}
+
+	// Will find notes and items.
 	public int getLastIndexById(int id) {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).getCatalogId() == id) {
+				Item item = list.get(index);
+				if (item.getCatalogId() == id) {
+					return index;
+				}
+			}
+		}
+		return -1;
+	}
+
+	// Used when you only want notes or items alone.
+	public int getLastIndexById(int id, boolean wantNoted) {
+		if (wantNoted) {
+			return getLastNotedIndexById(id);
+		}
+		return getLastItemIndexById(id);
+	}
+
+	public int getLastNotedIndexById(int id) {
+		synchronized (list) {
+			for (int index = list.size() - 1; index >= 0; index--) {
+				Item item = list.get(index);
+				if (item.getCatalogId() == id && item.getNoted()) {
+					return index;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public int getLastItemIndexById(int id) {
+		synchronized (list) {
+			for (int index = list.size() - 1; index >= 0; index--) {
+				Item item = list.get(index);
+				if (item.getCatalogId() == id && !item.getNoted()) {
 					return index;
 				}
 			}

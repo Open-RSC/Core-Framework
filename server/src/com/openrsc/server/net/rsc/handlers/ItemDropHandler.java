@@ -47,17 +47,12 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) {
-			if (amount > item.getAmount()) {
-				amount = item.getAmount();
-			}
-		} else if (idx != -1) {
-			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId())) {
-				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+		if (idx != -1) {
+			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), item.getNoted())) {
+				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), item.getNoted());
 			}
 		}
 
-		final int finalAmount = amount;
 		final boolean fromInventory = idx != -1;
 
 		// Set temporary amount until event executes and double checks.

@@ -12149,7 +12149,8 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_DROP_ALL: {
 					dropInventorySlot = indexOrX;
-					int dropQuantity = getInventoryCount(getInventoryItemID(dropInventorySlot));
+					Item dropping = getInventoryItem(dropInventorySlot);
+					int dropQuantity = getInventoryCount(dropping.getCatalogID(), dropping.getNoted());
 					this.packetHandler.getClientStream().newPacket(246);
 					this.packetHandler.getClientStream().bufferBits.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().bufferBits.putInt(dropQuantity);

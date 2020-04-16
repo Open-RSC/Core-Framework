@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -994,60 +995,60 @@ public abstract class Mob extends Entity {
 		Item item = p.getDropItemEvent();
 		this.setDropItemEvent(null);
 		if (item == null) return;
-		int finalAmount = item.getAmount();
-		if (item.getDef(p.getWorld()).isStackable() || item.getItemStatus().getNoted() || finalAmount == 1) {
-			int dropAmount = finalAmount;
-			if (!(item.getDef(p.getWorld()).isStackable() || item.getItemStatus().getNoted())) {
-				dropAmount = 1;
-			}
+		final int finalAmount = item.getAmount(); // Possibly more than 1 for non-stack items, in this situation.
 
-			p.setStatus(Action.DROPPING_GITEM);
-			item.getItemStatus().setAmount(dropAmount);
+		// We need to figure out how many times MAX to loop the batch.
+		int slotsOccupiedByItem = p.getCarriedItems().getInventory().countSlotsOccupied(item, finalAmount);
 
-			if ((!p.getCarriedItems().getInventory().contains(item) && fromInventory)  || p.getStatus() != Action.DROPPING_GITEM) {
-				p.setStatus(Action.IDLE);
-				return;
-			}
+		p.setStatus(Action.DROPPING_GITEM);
+		p.getWorld().getServer().getGameEventHandler().add(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK, "Player Batch Drop", slotsOccupiedByItem, false, true) {
+			int dropCount = 0;
 
-			p.getWorld().getServer().getPluginHandler().handlePlugin(p, "DropObj", new Object[]{p, item, fromInventory});
-			p.setStatus(Action.IDLE);
-		} else {
-			p.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(p.getWorld(), p, 640, "Player Batch Drop") {
-				int dropCount = 0;
-
-				public void run() {
-					if ((!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) || getOwner().getStatus() != Action.DROPPING_GITEM) {
-						stop();
-						getOwner().setStatus(Action.IDLE);
-						return;
-					}
-					if (getOwner().hasMoved()) {
-						stop();
-						getOwner().setStatus(Action.IDLE);
-						return;
-					}
-					if (dropCount >= finalAmount) {
-						stop();
-						getOwner().setStatus(Action.IDLE);
-						return;
-					}
-					if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId())) ||
-						(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
-						getOwner().message("You don't have the entered amount to drop");
-						stop();
-						getOwner().setStatus(Action.IDLE);
-						return;
-					}
-					if (getOwner().getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "DropObj", new Object[]{getOwner(), item, fromInventory})) {
-						stop();
-						getOwner().setStatus(Action.IDLE);
-						return;
-					}
-					dropCount++;
-					getOwner().message("Dropped " + dropCount + "/" + finalAmount);
+			public void action() {
+				// Player doesn't have the item in their inventory.
+				if (!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
 				}
-			});
-		}
+				// Player moved after queuing up a drop.
+				if (getOwner().hasMoved()) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// We've exceeded the amount we requested to drop.
+				if (dropCount >= finalAmount) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// We don't have any more in the inventory to drop.
+				if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId())) ||
+					(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
+					getOwner().message("You don't have the entered amount to drop");
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// Grab the last item by the ID we are trying to drop.
+				Item i = getOwner().getCarriedItems().getInventory().get(
+					getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), item.getNoted())
+				);
+				// Set temporary amount for dropping.
+				Item toDrop = new Item(i.getCatalogId(), Math.min(finalAmount, i.getAmount()), i.getNoted(), i.getItemId());
+				// Ask the plugin to drop the item.
+				if (getOwner().getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "DropObj", new Object[]{getOwner(), toDrop, fromInventory})) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				dropCount += toDrop.getAmount();
+
+				if (finalAmount > 1)
+					getOwner().message("Dropped " + Math.min(dropCount, finalAmount) + "/" + finalAmount);
+			}
+		});
 	}
 
 	protected Player talkToNpcEvent = null;
