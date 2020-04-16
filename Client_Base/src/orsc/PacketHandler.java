@@ -2245,33 +2245,36 @@ public class PacketHandler {
 		}
 
 		// Check through player's inventory items if this is a general store.
-		if (shopType == 1) {
-			int lastAvailableShopSlotIndex = 39;
-			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-				&& shopItemCount <= lastAvailableShopSlotIndex; ++inventoryIndex) {
-				boolean foundEquivalentShopItem = false;
-				for (int currentShopSlot = 0; currentShopSlot < 40; ++currentShopSlot) {
+		int lastAvailableShopSlotIndex = 39;
+		for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
+			&& shopItemCount <= lastAvailableShopSlotIndex; ++inventoryIndex) {
 
-					// Can only match if category matches and not noted.
-					if (mc.getInventoryItemID(inventoryIndex) == mc.getShopCategoryID(currentShopSlot)
-						&& mc.getInventoryItem(inventoryIndex).getNoted() == mc.getShopItemNoted(currentShopSlot)) {
-						foundEquivalentShopItem = true;
-						break;
-					}
-				}
+			// Only show player items if they are in a general store, or it's a note in a specialty store.
+			if (!(shopType == 1
+				|| (mc.getInventoryItem(inventoryIndex).getNoted() && mc.shopContains(mc.getInventoryItemID(inventoryIndex))))) continue;
 
-				if (mc.getInventoryItemID(inventoryIndex) == 10) {
-					continue;
-				}
+			boolean foundEquivalentShopItem = false;
+			for (int currentShopSlot = 0; currentShopSlot < 40; ++currentShopSlot) {
 
-				// If we have not found an inventory item in the shop stock, add the item to the end of the shop.
-				if (!foundEquivalentShopItem) {
-					mc.setShopCategoryID(lastAvailableShopSlotIndex, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
-					mc.setShopItemCount(lastAvailableShopSlotIndex, 0);
-					mc.setShopItemPrice(lastAvailableShopSlotIndex, 0);
-					mc.setShopItemNoted(lastAvailableShopSlotIndex, mc.getInventoryItem(inventoryIndex).getNoted());
-					--lastAvailableShopSlotIndex;
+				// Can only match if category matches and not noted.
+				if (mc.getInventoryItemID(inventoryIndex) == mc.getShopCategoryID(currentShopSlot)
+					&& mc.getInventoryItem(inventoryIndex).getNoted() == mc.getShopItemNoted(currentShopSlot)) {
+					foundEquivalentShopItem = true;
+					break;
 				}
+			}
+
+			if (mc.getInventoryItemID(inventoryIndex) == 10) {
+				continue;
+			}
+
+			// If we have not found an inventory item in the shop stock, add the item to the end of the shop.
+			if (!foundEquivalentShopItem) {
+				mc.setShopCategoryID(lastAvailableShopSlotIndex, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
+				mc.setShopItemCount(lastAvailableShopSlotIndex, 0);
+				mc.setShopItemPrice(lastAvailableShopSlotIndex, 0);
+				mc.setShopItemNoted(lastAvailableShopSlotIndex, mc.getInventoryItem(inventoryIndex).getNoted());
+				--lastAvailableShopSlotIndex;
 			}
 		}
 

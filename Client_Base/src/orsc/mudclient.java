@@ -15575,22 +15575,6 @@ public final class mudclient implements Runnable {
 		this.shopPriceMultiplier = i;
 	}
 
-//		private final void updateBankItems(int var1) {
-//			try {
-//
-//				this.bankItemCount = this.newBankItemCount;
-//
-//				int var2;
-//				for (var2 = 0; var2 < this.newBankItemCount; ++var2) {
-//					this.bankItemID[var2] = this.newBankItems[var2];
-//					this.bankItemSize[var2] = this.newBankItemsCount[var2];
-//				}
-//
-//			} catch (RuntimeException var6) {
-//				throw GenUtil.makeThrowable(var6, "client.WB(" + var1 + ')');
-//			}
-//		}
-
 	public void setShopCategoryID(int i, int n) {
 		this.shopCategoryID[i] = n;
 	}
@@ -15613,6 +15597,13 @@ public final class mudclient implements Runnable {
 
 	public boolean getShopItemNoted(int i) {
 		return this.shopItemNoted[i];
+	}
+
+	public boolean shopContains(int categoryID) {
+		for (int i = 0; i < this.shopCategoryID.length; i++) {
+			if (this.shopCategoryID[i] == categoryID) return true;
+		}
+		return false;
 	}
 
 	public int getShopSelectedItemIndex() {
