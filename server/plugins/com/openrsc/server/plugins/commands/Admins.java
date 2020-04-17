@@ -768,27 +768,55 @@ public final class Admins implements CommandTrigger {
 			if (player.getCarriedItems().getInventory().full()) {
 				player.message("Need at least one free inventory space.");
 			} else {
+				List<Item> bisList;
+				if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+					bisList = newArrayList(
+						new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
+						new Item(ItemId.DRAGON_SCALE_MAIL.id()),
+						new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
+						new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
+						new Item(ItemId.CAPE_OF_LEGENDS.id()),
+						new Item(ItemId.RING_OF_WEALTH.id()),
+						new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
+						);
+				} else {
+					bisList = newArrayList(
+						new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
+						player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_BODY.id()) : new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
+						new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
+						new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
+						new Item(ItemId.CAPE_OF_LEGENDS.id()),
+						new Item(ItemId.DRAGON_AXE.id()),
+						new Item(ItemId.DRAGON_SQUARE_SHIELD.id())
+					);
+				}
 				List<Integer> questsToComplete = newArrayList(
 					Quests.LEGENDS_QUEST,
 					Quests.HEROS_QUEST,
 					Quests.DRAGON_SLAYER
 				);
-				List<Item> beastItems = newArrayList(
-					new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
-					new Item(ItemId.DRAGON_SQUARE_SHIELD.id()),
-					new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
-					new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
-					new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
-					new Item(ItemId.CAPE_OF_LEGENDS.id()),
-					new Item(ItemId.DRAGON_AXE.id())
+				List<Integer> skillsToLevel = newArrayList(
+					Skills.ATTACK,
+					Skills.STRENGTH,
+					Skills.DEFENSE,
+					Skills.HITS,
+					Skills.PRAYER,
+					Skills.RANGED,
+					Skills.MAGIC
 				);
+				for (Integer skill : skillsToLevel) {
+					if (player.getSkills().getMaxStat(skill) < 99) {
+						player.getSkills().setLevelTo(skill, 99);
+						player.getSkills().setLevel(skill, 99);
+					}
+				}
 				for (Integer quest : questsToComplete) {
 					if (player.getQuestStage(quest) != Quests.QUEST_STAGE_COMPLETED) {
 						player.updateQuestStage(quest, Quests.QUEST_STAGE_COMPLETED);
 						player.message(String.format("Congratulations, you completed quest %s.", quest)); //TODO: use quest name instead
 					}
 				}
-				for (Item item : beastItems) {
+				for (Item item : bisList) {
 					player.getCarriedItems().getInventory().add(item);
 					player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, item, RequestType.FROM_INVENTORY, false));
 				}
