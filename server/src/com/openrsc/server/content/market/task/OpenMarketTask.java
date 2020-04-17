@@ -23,7 +23,6 @@ public class OpenMarketTask extends MarketTask {
 
 		@SuppressWarnings("unchecked")
 		ArrayList<MarketItem> items = (ArrayList<MarketItem>) owner.getWorld().getMarket().getAuctionItems().clone();
-		System.out.println("There's currently " + items.size() + " auctions. ");
 		Iterator<MarketItem> iterator = items.iterator();
 
 		int currentWritten = 0;
@@ -38,7 +37,6 @@ public class OpenMarketTask extends MarketTask {
 			chunk.addItem(item);
 		}
 
-		System.out.println(currentWritten + " : " + chunk.getChunkItemCount());
 		if (!chunk.isFinished())
 			owner.write(chunk.toPacket());
 	}
@@ -75,7 +73,7 @@ public class OpenMarketTask extends MarketTask {
 			builder.writeShort(items.size());
 			for (MarketItem item : items) {
 				builder.writeInt(item.getAuctionID());
-				builder.writeInt(item.getItemID());
+				builder.writeInt(item.getCatalogID());
 				builder.writeInt(item.getAmountLeft());
 				builder.writeInt(item.getPrice());
 				builder.writeByte(item.getSeller() == owner.getDatabaseID() ? 1 : 0);

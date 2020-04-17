@@ -23,7 +23,7 @@ public class ModeratorDeleteAuctionTask extends MarketTask {
 		} else {
 			MarketItem item = player.getWorld().getMarket().getMarketDatabase().getAuctionItem(auctionID);
 			if (item != null) {
-				int itemIndex = item.getItemID();
+				int itemIndex = item.getCatalogID();
 				int amount = item.getAmountLeft();
 				if (player.getWorld().getMarket().getMarketDatabase().setSoldOut(item)) {
 					player.getWorld().getMarket().getMarketDatabase().addCollectableItem("Removed by " + player.getStaffName(), itemIndex, amount, item.getSeller());

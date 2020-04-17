@@ -197,6 +197,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 					player.setAttribute("bank_pin_entered", "cancel");
 				}
 				break;
+
+			// Auction
 			case 10:
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
@@ -228,10 +230,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 						break;
 
 					case 1: /* Create auction */
-						int itemID = p.readInt();
+						int catalogID = p.readInt();
 						int amount = p.readInt();
 						int price = p.readInt();
-						player.getWorld().getMarket().addNewAuctionItemTask(player, itemID, amount, price);
+						player.getWorld().getMarket().addNewAuctionItemTask(player, catalogID, amount, price);
 						break;
 					case 2:
 						int auctionID = p.readInt();

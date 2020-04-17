@@ -87,7 +87,7 @@ public class Market implements Runnable {
 						+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
 				for (MarketItem expiredItem : expiredItems) {
 
-					int itemIndex = expiredItem.getItemID();
+					int itemIndex = expiredItem.getCatalogID();
 					int amount = expiredItem.getAmountLeft();
 
 					Player sellerPlayer = getWorld().getPlayerID(expiredItem.getSeller());
