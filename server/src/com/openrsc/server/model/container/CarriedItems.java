@@ -86,7 +86,7 @@ public class CarriedItems {
 	//TODO: Add parameter allowNoted
 	public int remove(Item item, boolean updateClient) {
 		if (item.getItemId() == -1) {
-			item = getInventory().get(getInventory().getLastIndexById(item.getCatalogId()));
+			item = getInventory().get(getInventory().getLastIndexById(item.getCatalogId(), item.getNoted()));
 		}
 		Item toRemove = new Item(item.getCatalogId(), item.getAmount(), item.getNoted(), item.getItemId());
 		int result = getInventory().remove(toRemove, updateClient);

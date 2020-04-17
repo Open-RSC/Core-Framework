@@ -172,11 +172,10 @@ public class Duel implements ContainerListener {
 					}
 					LOGGER.info("Missing staked item [" + item.getCatalogId() + ", " + item.getAmount()
 						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
-					continue;
 				} else {
-					player.getCarriedItems().remove(item);
+					player.getCarriedItems().remove(new Item(item.getCatalogId(), item.getAmount(), item.getNoted(), affectedItem.getItemId()));
 					log.addDroppedItem(item);
-					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent, item.getNoted()));
 				}
 			}
 		}
