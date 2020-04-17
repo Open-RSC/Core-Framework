@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-// Author: Ryan
-
 public class YMLReader {
 	private static final Logger LOGGER = LogManager.getLogger();
 
