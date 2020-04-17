@@ -1525,11 +1525,10 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryInventoryAdd(final int playerId, final Item item, int slot) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
-				int itemId = -1;
-				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+				int itemId = item.getItemId();
+				if (itemId == Item.ITEM_ID_UNASSIGNED) {
 					itemId = assignItemID(item);
 				}
-				else itemId = item.getItemId();
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryAdd);) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, itemId);
@@ -1563,9 +1562,13 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryEquipmentAdd(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
+				int itemId = item.getItemId();
+				if (itemId == Item.ITEM_ID_UNASSIGNED) {
+					itemId = assignItemID(item);
+				}
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentAdd);) {
 					statement.setInt(1, playerId);
-					statement.setInt(2, item.getItemId());
+					statement.setInt(2, itemId);
 					statement.executeUpdate();
 				}
 			} catch (SQLException ex) {
@@ -1579,9 +1582,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryEquipmentRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
-				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED)
-					return;
-
+				itemPurge(item);
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentRemove);) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, item.getItemId());
@@ -1598,11 +1599,10 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryBankAdd(final int playerId, final Item item, int slot) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
-				int itemId = -1;
-				if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
+				int itemId = item.getItemId();
+				if (itemId == Item.ITEM_ID_UNASSIGNED) {
 					itemId = assignItemID(item);
 				}
-				else itemId = item.getItemId();
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankAdd);) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, itemId);
@@ -1619,6 +1619,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryBankRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try {
+				itemPurge(item);
 				try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankRemove);) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, item.getItemId());
