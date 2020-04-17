@@ -1032,9 +1032,17 @@ public abstract class Mob extends Entity {
 					return;
 				}
 				// Grab the last item by the ID we are trying to drop.
-				Item i = getOwner().getCarriedItems().getInventory().get(
-					getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), item.getNoted())
-				);
+				Item i = null;
+				if (fromInventory) {
+					i = getOwner().getCarriedItems().getInventory().get(
+						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), item.getNoted())
+					);
+				}
+				else {
+					i = getOwner().getCarriedItems().getEquipment().get(
+						getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())
+					);
+				}
 				// Set temporary amount for dropping.
 				Item toDrop = new Item(i.getCatalogId(), Math.min(finalAmount, i.getAmount()), i.getNoted(), i.getItemId());
 				// Ask the plugin to drop the item.
