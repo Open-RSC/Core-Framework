@@ -13,7 +13,8 @@ public class UnequipRequest {
 	public int inventorySlot;
 	public Boolean sound;
 
-	public UnequipRequest(){}
+	public UnequipRequest() {
+	}
 
 	public UnequipRequest(Player player, Item item, RequestType type, Boolean sound) {
 		this.player = player;
@@ -34,5 +35,13 @@ public class UnequipRequest {
 		FROM_EQUIPMENT,
 		FROM_BANK,
 		CHECK_IF_EQUIPMENT_TAB
+	}
+
+	@Override
+	public String toString() {
+		return "UnequipRequest{" +
+			"player=" + player +
+			", item=" + item +
+			'}';
 	}
 }

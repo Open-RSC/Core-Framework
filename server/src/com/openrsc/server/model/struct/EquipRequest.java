@@ -12,7 +12,8 @@ public class EquipRequest {
 	public RequestType requestType;
 	public boolean sound;
 
-	public EquipRequest() {}
+	public EquipRequest() {
+	}
 
 	public EquipRequest(Player player, Item item, RequestType type, Boolean sound) {
 		this.player = player;
@@ -25,4 +26,13 @@ public class EquipRequest {
 		FROM_INVENTORY,
 		FROM_BANK
 	}
+
+	@Override
+	public String toString() {
+		return "EquipRequest{" +
+			"player=" + player +
+			", item=" + item +
+			'}';
+	}
+
 }
