@@ -777,8 +777,9 @@ public final class Admins implements CommandTrigger {
 						new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
 						new Item(ItemId.CAPE_OF_LEGENDS.id()),
 						new Item(ItemId.RING_OF_WEALTH.id()),
+						new Item(ItemId.KLANKS_GAUNTLETS.id()),
 						new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
-						);
+					);
 				} else {
 					bisList = newArrayList(
 						new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
@@ -820,6 +821,7 @@ public final class Admins implements CommandTrigger {
 					player.getCarriedItems().getInventory().add(item);
 					player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, item, RequestType.FROM_INVENTORY, false));
 				}
+				player.playSound("click");
 			}
 		} else if (cmd.equalsIgnoreCase("heal")) {
 			Player p = args.length > 0 ?
