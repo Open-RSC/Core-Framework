@@ -367,7 +367,7 @@ public class Equipment {
 					for (int p = 0; p < Equipment.SLOT_COUNT; p++) {
 						i = list[p];
 						if (i != null && request.item.wieldingAffectsItem(player.getWorld(), i)
-						&& i.getCatalogId() != request.item.getCatalogId()) {
+						&& i.getItemId() != request.item.getItemId()) {
 							if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_EQUIPMENT, false)))
 								return false;
 						}
