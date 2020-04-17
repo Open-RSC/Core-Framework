@@ -2023,7 +2023,11 @@ public final class Player extends Mob {
 		if (isRanging()) {
 			resetRange();
 		}
-		setInteractingNpc(null);
+		Npc n = getInteractingNpc();
+		if (n != null) {
+			n.setBusyTimer(0);
+			setInteractingNpc(null);
+		}
 		setStatus(Action.IDLE);
 	}
 
