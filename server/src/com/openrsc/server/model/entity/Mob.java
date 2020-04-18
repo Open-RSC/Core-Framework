@@ -1025,7 +1025,7 @@ public abstract class Mob extends Entity {
 					return;
 				}
 				// We don't have any more in the inventory to drop.
-				if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId())) ||
+				if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId(), Optional.of(item.getNoted()))) ||
 					(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
 					getOwner().message("You don't have the entered amount to drop");
 					stop();
