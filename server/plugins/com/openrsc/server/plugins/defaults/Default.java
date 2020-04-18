@@ -429,8 +429,9 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
-		p.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
+	public void onWithdraw(Player player, Integer catalogID, Integer amount, Boolean wantsNotes) {
+		amount = Math.min(player.getBank().countId(catalogID), amount);
+		player.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
 	}
 
 	@Override
@@ -440,6 +441,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onDeposit(Player player, Integer catalogID, Integer amount) {
+		amount = Math.min(player.getCarriedItems().getInventory().countId(catalogID), amount);
 		player.getBank().depositItemFromInventory(catalogID, amount, true);
 	}
 

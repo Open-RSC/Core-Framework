@@ -442,16 +442,16 @@ public class Bank {
 				if (wantsNotes && withdrawDef.isStackable())
 					withdrawNoted = false;
 
-				// If there are two stacks, let's make sure we don't take more
-				// than the stack we've selected has in it.
-				int withdrawAmount = requestedAmount = Math.min(withdrawItem.getAmount(), requestedAmount);
-
-				if (withdrawAmount <= 0) return false;
-
 				// Limit non-stackables to a withdraw of 1.
 				// (will call function again later if more than 1 requested.)
-				if (!withdrawDef.isStackable() && !withdrawNoted)
-					withdrawAmount = 1;
+				int withdrawAmount = 1;
+				if (withdrawDef.isStackable() || (withdrawItem.getNoted() && withdrawNoted)) {
+					if (requestedAmount % 10 > 0) withdrawAmount = 1;
+					else if (requestedAmount % 100 > 0) withdrawAmount = 10;
+					else if (requestedAmount % 1000 > 0) withdrawAmount = 100;
+					else if (requestedAmount % 10000 > 0) withdrawAmount = 1000;
+					else if (requestedAmount % 100000 > 0) withdrawAmount = 10000;
+				}
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted, withdrawItem.getItemId());
 
@@ -547,8 +547,13 @@ public class Bank {
 
 				// Limit non-stackables to a withdraw of 1
 				int depositAmount = 1;
-				if (depositDef.isStackable() || depositItem.getNoted())
-					requestedAmount = Math.min(player.getCarriedItems().getInventory().countId(depositItem.getCatalogId()), requestedAmount);
+				if (depositDef.isStackable() || depositItem.getNoted()) {
+					if (requestedAmount % 10 > 0) depositAmount = 1;
+					else if (requestedAmount % 100 > 0) depositAmount = 10;
+					else if (requestedAmount % 1000 > 0) depositAmount = 100;
+					else if (requestedAmount % 10000 > 0) depositAmount = 1000;
+					else if (requestedAmount % 100000 > 0) depositAmount = 10000;
+				}
 
 				// Make sure they have enough space in their bank to deposit it
 				if (!canHold(new Item(depositItem.getCatalogId(), depositAmount))) {
