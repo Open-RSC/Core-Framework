@@ -247,9 +247,14 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			savePlayerSkills(player);
 			savePlayerSocial(player);
 
+			commitTransaction();
+
 			return true;
 		} catch (final Exception ex) {
-			rollbackTransaction();
+			try {
+				rollbackTransaction();
+				LOGGER.error(ex.getMessage());
+			} catch (final Exception e) { }
 			LOGGER.catching(ex);
 			return false;
 		}
