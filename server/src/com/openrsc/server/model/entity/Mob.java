@@ -25,6 +25,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Mob extends Entity {
@@ -1035,7 +1036,7 @@ public abstract class Mob extends Entity {
 				Item i = null;
 				if (fromInventory) {
 					i = getOwner().getCarriedItems().getInventory().get(
-						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), item.getNoted())
+						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
 					);
 				}
 				else {

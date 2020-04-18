@@ -7,6 +7,8 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
+import java.util.Optional;
+
 public final class ItemDropHandler implements PacketHandler {
 
 	public void handlePacket(Packet p, Player player) throws Exception{
@@ -48,8 +50,8 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		if (idx != -1) {
-			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), item.getNoted())) {
-				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), item.getNoted());
+			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()))) {
+				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
 			}
 		}
 

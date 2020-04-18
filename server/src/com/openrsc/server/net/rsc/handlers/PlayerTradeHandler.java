@@ -14,6 +14,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PlayerTradeHandler implements PacketHandler {
 
@@ -176,7 +177,7 @@ public class PlayerTradeHandler implements PacketHandler {
 						continue;
 					}
 
-					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), tItem.getNoted())) {
+					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), Optional.of(tItem.getNoted()))) {
 						player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
 						player.getTrade().resetAll();
 						return;

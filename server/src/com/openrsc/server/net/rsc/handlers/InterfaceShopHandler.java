@@ -12,6 +12,8 @@ import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 
+import java.util.Optional;
+
 public final class InterfaceShopHandler implements PacketHandler {
 
 	/**
@@ -130,11 +132,11 @@ public final class InterfaceShopHandler implements PacketHandler {
 				else if (amount % 100000 > 10000) ticker = 10000;
 				// Start with selling noted and move to normal after.
 				Item toSell = player.getCarriedItems().getInventory().get(
-					player.getCarriedItems().getInventory().getLastIndexById(categoryID, true)
+					player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(true))
 				);
 				if (toSell == null) {
 					toSell = player.getCarriedItems().getInventory().get(
-						player.getCarriedItems().getInventory().getLastIndexById(categoryID, false)
+						player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(false))
 					);
 				}
 				ticker = Math.min(ticker, toSell.getAmount());

@@ -347,8 +347,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				}
 				if (ownerItems.hasCatalogID(vialID)
 					&& ownerItems.hasCatalogID(herbID)) {
-					ownerItems.remove(new Item(vialID));
-					ownerItems.remove(new Item(herbID));
+					ownerItems.remove(new Item(vialID, 1, false));
+					ownerItems.remove(new Item(herbID, 1, false));
 					owner.playSound("mix");
 					owner.playerServerMessage(MessageType.QUEST, "You put the " + herb.getDef(getWorld()).getName()
 						+ " into the vial of water");

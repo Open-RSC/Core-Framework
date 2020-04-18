@@ -21,6 +21,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -596,7 +597,7 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Cut Gem", player.getCarriedItems().getInventory().countId(gem.getCatalogId()), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Cut Gem", player.getCarriedItems().getInventory().countId(gem.getCatalogId(), Optional.of(false)), false) {
 			@Override
 			public void action() {
 				Player owner = getOwner();
@@ -617,7 +618,7 @@ public class Crafting implements UseInvTrigger,
 					}
 				}
 				Item item = owner.getCarriedItems().getInventory().get(
-					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId(), false));
+					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId(), Optional.of(false)));
 				if (item.getItemStatus().getNoted()) return;
 				if (owner.getCarriedItems().remove(item) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);

@@ -538,22 +538,14 @@ public class Inventory {
 	}
 
 	public int countId(long id) {
-		synchronized (list) {
-			int temp = 0;
-			for (Item i : list) {
-				if (i.getCatalogId() == id) {
-					temp += i.getAmount();
-				}
-			}
-			return temp;
-		}
+		return countId(id, Optional.empty());
 	}
 
-	public int countId(long id, boolean noted) {
+	public int countId(long id, Optional<Boolean> noted) {
 		synchronized (list) {
 			int temp = 0;
 			for (Item i : list) {
-				if (i.getCatalogId() == id && i.getNoted() == noted) {
+				if (i.getCatalogId() == id && (noted.isEmpty() || (i.getNoted() == noted.get()))) {
 					temp += i.getAmount();
 				}
 			}
@@ -577,44 +569,15 @@ public class Inventory {
 		}
 	}
 
-	// Will find notes and items.
 	public int getLastIndexById(int id) {
+		return getLastIndexById(id, Optional.empty());
+	}
+
+	public int getLastIndexById(int id, Optional<Boolean> wantNoted) {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {
 				Item item = list.get(index);
-				if (item.getCatalogId() == id) {
-					return index;
-				}
-			}
-		}
-		return -1;
-	}
-
-	// Used when you only want notes or items alone.
-	public int getLastIndexById(int id, boolean wantNoted) {
-		if (wantNoted) {
-			return getLastNotedIndexById(id);
-		}
-		return getLastItemIndexById(id);
-	}
-
-	public int getLastNotedIndexById(int id) {
-		synchronized (list) {
-			for (int index = list.size() - 1; index >= 0; index--) {
-				Item item = list.get(index);
-				if (item.getCatalogId() == id && item.getNoted()) {
-					return index;
-				}
-			}
-		}
-		return -1;
-	}
-
-	public int getLastItemIndexById(int id) {
-		synchronized (list) {
-			for (int index = list.size() - 1; index >= 0; index--) {
-				Item item = list.get(index);
-				if (item.getCatalogId() == id && !item.getNoted()) {
+				if (item.getCatalogId() == id && (wantNoted.isEmpty() || item.getNoted() == wantNoted.get())) {
 					return index;
 				}
 			}
