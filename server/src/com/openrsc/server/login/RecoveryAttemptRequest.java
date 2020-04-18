@@ -95,9 +95,10 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 		try {
 			server.getPacketFilter().addPasswordAttempt(getIpAddress());
 
-			if(getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
+			if(!getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 				getChannel().close();
+				return;
 			}
 
 			int pid = -1;
