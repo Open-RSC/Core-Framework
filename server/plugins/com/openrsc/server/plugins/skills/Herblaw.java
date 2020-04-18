@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -323,8 +324,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int repeatTimes = 1;
 		boolean allowDuplicateEvents = true;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeatTimes = Math.min(player.getCarriedItems().getInventory().countId(vialID),
-				player.getCarriedItems().getInventory().countId(herbID));
+			repeatTimes = Math.min(player.getCarriedItems().getInventory().countId(vialID, Optional.of(false)),
+				player.getCarriedItems().getInventory().countId(herbID, Optional.of(false)));
 			allowDuplicateEvents = false;
 		}
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
@@ -347,13 +348,13 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				}
 				if (ownerItems.hasCatalogID(vialID)
 					&& ownerItems.hasCatalogID(herbID)) {
-					ownerItems.remove(new Item(vialID, 1, false));
-					ownerItems.remove(new Item(herbID, 1, false));
+					ownerItems.remove(new Item(vialID));
+					ownerItems.remove(new Item(herbID));
 					owner.playSound("mix");
 					owner.playerServerMessage(MessageType.QUEST, "You put the " + herb.getDef(getWorld()).getName()
 						+ " into the vial of water");
 					ownerItems.getInventory().add(
-						new Item(herbDef.getPotionId(), 1));
+						new Item(herbDef.getPotionId()));
 				} else {
 					interrupt();
 				}
