@@ -617,7 +617,7 @@ public class Crafting implements UseInvTrigger,
 					}
 				}
 				Item item = owner.getCarriedItems().getInventory().get(
-					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId()));
+					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId(), false));
 				if (item.getItemStatus().getNoted()) return;
 				if (owner.getCarriedItems().remove(item) > -1) {
 					Item cutGem = new Item(gemDef.getGemID(), 1);
