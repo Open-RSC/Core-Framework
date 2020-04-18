@@ -29,6 +29,11 @@ public final class ItemUseOnItem implements PacketHandler {
 			return;
 		}
 
+		if (item1.getNoted() || item2.getNoted()) {
+			player.message("Nothing interesting happens");
+			return;
+		}
+
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (itemIndex1 > Inventory.MAX_SIZE || itemIndex2 > Inventory.MAX_SIZE)) {
 			player.message("Please unequip your item and try again.");
 			return;
