@@ -8503,6 +8503,10 @@ public final class mudclient implements Runnable {
 						this.walkToActionSource(this.playerLocalX, this.playerLocalZ, mX / 128, (mZ / 128),
 							false);
 					}
+					if (Config.S_WANT_CUSTOM_SPRITES && this.mouseButtonClick == 2) {
+						this.cameraRotation = 128;
+					}
+
 					this.mouseButtonClick = 0;
 				}
 
@@ -14825,6 +14829,7 @@ public final class mudclient implements Runnable {
 	public void setInventoryItem(int index, Item item) {
 		this.inventory[index] = item;
 	}
+
 	public int getInventoryItemID(int index) {
 		if (this.inventory[index].getItemDef() == null)
 			return Item.ID_NOTHING;
@@ -16978,7 +16983,9 @@ public final class mudclient implements Runnable {
 		return tradeRecipient[index];
 	}
 
-	public Item getTradeConfirmItem(int index) { return tradeConfirm[index]; }
+	public Item getTradeConfirmItem(int index) {
+		return tradeConfirm[index];
+	}
 
 	public Item getTradeRecipientConfirmItem(int index) {
 		return tradeRecipientConfirm[index];
@@ -16992,7 +16999,9 @@ public final class mudclient implements Runnable {
 		return duelOpponent[index];
 	}
 
-	public Item getDuelConfirmItem(int index) { return duelConfirm[index]; }
+	public Item getDuelConfirmItem(int index) {
+		return duelConfirm[index];
+	}
 
 	public Item getDuelOpponentConfirmItem(int index) {
 		return duelOpponentConfirm[index];
