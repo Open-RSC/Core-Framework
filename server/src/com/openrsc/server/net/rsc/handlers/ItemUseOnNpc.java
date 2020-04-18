@@ -43,6 +43,9 @@ public class ItemUseOnNpc implements PacketHandler {
 				}
 				getPlayer().resetAll();
 				getPlayer().face(affectedNpc);
+				if (item.getNoted()) {
+					getPlayer().message("Nothing interesting happens");
+				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"UseNpc",
