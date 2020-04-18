@@ -418,7 +418,7 @@ public class Inventory {
 		for (Item invItem : list) {
 			def = invItem.getDef(player.getWorld());
 			// stackable always lost
-			key = def.isStackable() ? -1 : def.getDefaultPrice();
+			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice();
 			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
 			value.add(invItem);
 			deathItemsMap.put(key, value);
