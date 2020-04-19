@@ -545,7 +545,7 @@ public class Inventory {
 		synchronized (list) {
 			int temp = 0;
 			for (Item i : list) {
-				if (i.getCatalogId() == id && (noted.isEmpty() || (i.getNoted() == noted.get()))) {
+				if (i.getCatalogId() == id && (!noted.isPresent() || (i.getNoted() == noted.get()))) {
 					temp += i.getAmount();
 				}
 			}
@@ -577,7 +577,7 @@ public class Inventory {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {
 				Item item = list.get(index);
-				if (item.getCatalogId() == id && (wantNoted.isEmpty() || item.getNoted() == wantNoted.get())) {
+				if (item.getCatalogId() == id && (!wantNoted.isPresent() || item.getNoted() == wantNoted.get())) {
 					return index;
 				}
 			}

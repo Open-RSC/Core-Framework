@@ -1,7 +1,6 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,7 +9,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.ByteBuffer;
 import java.util.*;
 
 
@@ -438,8 +436,8 @@ public class Bank {
 				ItemDefinition withdrawDef = withdrawItem.getDef(player.getWorld());
 				if (withdrawDef == null) return false;
 
-				// Don't allow notes for stackables
-				if (wantsNotes && withdrawDef.isStackable())
+				// Don't allow notes for non noteable items
+				if (wantsNotes && !withdrawDef.isNoteable())
 					withdrawNoted = false;
 
 				// Limit non-stackables to a withdraw of 1.
