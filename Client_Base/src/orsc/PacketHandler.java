@@ -197,7 +197,7 @@ public class PacketHandler {
 			else if (opcode == 48) showGameObjects(length);
 
 				// Inventory items
-			else if (opcode == 53) updateInventoryItems();
+			else if (opcode == 53) updateInventory();
 
 				//All Equipment sent
 			else if (opcode == 254) updateEquipment();
@@ -287,7 +287,7 @@ public class PacketHandler {
 			else if (opcode == 249) updateBank();
 
 				// Update Inventory
-			else if (opcode == 90) updateInventory();
+			else if (opcode == 90) updateInventoryItem();
 
 				// Experience Updates & Notification
 			else if (opcode == 159) updateExperience();
@@ -351,7 +351,7 @@ public class PacketHandler {
 			else if (opcode == 253) duelOpponentDecision();
 
 				// Drop Item
-			else if (opcode == 123) dropItem();
+			else if (opcode == 123) removeItem();
 
 				// Open Duel Dialog
 			else if (opcode == 176) beginDuelOptions();
@@ -1360,7 +1360,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void dropItem() {
+	private void removeItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
 
@@ -1369,7 +1369,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void updateInventory() {
+	private void updateInventoryItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
 		boolean noted = packetsIncoming.getShort() == 1;
@@ -1386,7 +1386,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void updateInventoryItems() {
+	private void updateInventory() {
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
 		{
 			Item item = mc.getInventoryItem(i);

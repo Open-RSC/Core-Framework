@@ -234,11 +234,19 @@ public class Inventory {
 							// Update the Database - Remove item status
 							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
+							// Update the client
+							if (sendInventory)
+								ActionSender.sendRemoveItem(player, index);
+
 						// Removing only part of the stack
 						} else {
 
 							// Update the Database and Server Bank
 							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+
+							// Update the client
+							if (sendInventory)
+								ActionSender.sendInventoryUpdateItem(player, index);
 						}
 
 					// Non-stacking items
@@ -257,11 +265,11 @@ public class Inventory {
 
 						// Update the Database
 						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
-					}
 
-					//Update the client
-					if (sendInventory)
-						ActionSender.sendInventory(player);
+						// Update the client
+						if (sendInventory)
+							ActionSender.sendRemoveItem(player, index);
+					}
 
 					return inventoryItem.getItemId();
 				}
