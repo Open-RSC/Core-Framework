@@ -137,7 +137,7 @@ public class MySqlQueries {
 		npcDrops = "SELECT * FROM `" + PREFIX + "npcdrops`";
 		itemDefs = "SELECT `id`, `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
 			+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
-			+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`"
+			+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`"
 			+ "FROM `" + PREFIX  + "itemdef` order by `id` ASC";
 		banPlayer = "UPDATE `" + PREFIX + "players` SET `banned`=?, offences = offences + 1 WHERE `username` LIKE ?";
 		unbanPlayer = "UPDATE `" + PREFIX + "players` SET `banned`= 0 WHERE `username` LIKE ?";

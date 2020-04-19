@@ -12,6 +12,7 @@ public class ItemDef extends EntityDef {
 	private int blueMask;
 	public boolean quest;
 	public boolean membersItem;
+	public boolean noteable;
 	public boolean hasNoteType;
 
 	@Deprecated
@@ -48,27 +49,27 @@ public class ItemDef extends EntityDef {
 
 	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
-				   boolean quest, int id) {
+				   boolean quest, boolean noteable, int id) {
 		this(name, description, command, basePrice, spriteID, spriteLocation,
 			stackable, wieldable, wearableID, pictureMask, 0, membersItem,
-			quest, -1, -1, id);
+			quest, noteable, id);
 	}
 
 	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
-				   boolean quest, int id) {
+				   boolean quest, boolean noteable, int id) {
 		this(name, description, command, basePrice, spriteID, spriteLocation,
 			stackable, wieldable, wearableID, pictureMask, blueMask, membersItem,
-			quest, -1, -1, id);
+			quest, noteable, -1, -1, id);
 	}
 
-	ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
+	/*ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
 				   boolean quest, int notedForm, int notedFormOf, int id) {
 		this(name, description, command, basePrice, spriteID, spriteLocation,
 		stackable, wieldable, wearableID, pictureMask, 0, membersItem,
 		quest, notedForm, notedFormOf, id);
-		/*super(name, description, id);
+		super(name, description, id);
 		this.command = command.split(",");
 		this.basePrice = basePrice;
 		this.spriteID = spriteID;
@@ -85,12 +86,12 @@ public class ItemDef extends EntityDef {
 		this.spriteLocation = spriteLocation;
 
 		if (this.command.length == 1 && this.command[0] == "")
-			this.command = null;*/
-	}
+			this.command = null;
+	}*/
 
 	ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
-				   boolean quest, int notedForm, int notedFormOf, int id) {
+				   boolean quest, boolean noteable, int notedForm, int notedFormOf, int id) {
 		super(name, description, id);
 		this.command = command.split(",");
 		this.basePrice = basePrice;
@@ -102,6 +103,7 @@ public class ItemDef extends EntityDef {
 		this.blueMask = blueMask;
 		this.membersItem = membersItem;
 		this.quest = quest;
+		this.noteable = noteable;
 		this.id = id;
 		this.notedFormID = notedForm;
 		this.isNotedFormOf = notedFormOf;
@@ -117,7 +119,7 @@ public class ItemDef extends EntityDef {
 		if (item.hasNoteType) {
 			return new ItemDef(item.name, "Swap this note at any bank for the equivalent item.", "", item.basePrice, item.spriteID, item.spriteLocation, /*438, "items:438",*/ /*item.spriteID, item.spriteLocation,*/
 				true, false, 0, item.getPictureMask(), item.getBlueMask(), item.membersItem,
-				item.quest, -1, item.id, item.id);
+				item.quest, false, -1, item.id, item.id);
 		} else {
 			return item;
 		}
@@ -174,7 +176,7 @@ public class ItemDef extends EntityDef {
 	public int getBlueMask() { return blueMask; }
 
 	public boolean calcHasNoteType() {
-		return !stackable && !quest;
+		return !stackable && (!quest || noteable);
 	}
 
 	@Deprecated

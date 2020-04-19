@@ -280,6 +280,7 @@ public class MySqlGameDatabase extends GameDatabase {
 					item.magicBonus = result.getInt("magicBonus");
 					item.prayerBonus = result.getInt("prayerBonus");
 					item.basePrice = result.getInt("basePrice");
+					item.isNoteable = result.getBoolean("isNoteable");
 
 					itemDefs.add(item);
 				}

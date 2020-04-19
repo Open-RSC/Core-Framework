@@ -233,7 +233,8 @@ public final class EntityHandler {
 					item.weaponPowerBonus,
 					item.magicBonus,
 					item.prayerBonus,
-					item.basePrice);
+					item.basePrice,
+					item.isNoteable);
 
 				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
 					toAdd.nullCommand();
