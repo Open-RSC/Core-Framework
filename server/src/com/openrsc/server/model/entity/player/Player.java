@@ -1309,7 +1309,7 @@ public final class Player extends Mob {
 	}
 
 	public int getSpellWait() {
-		return DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D);
+		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
 	}
 
 	public synchronized Action getStatus() {
@@ -2252,7 +2252,7 @@ public final class Player extends Mob {
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, 600, "Start Sleep Event") {
+		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, getWorld().getServer().getConfig().GAME_TICK, "Start Sleep Event") {
 			@Override
 			public void run() {
 				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {
