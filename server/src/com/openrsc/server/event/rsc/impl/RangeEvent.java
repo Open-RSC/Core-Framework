@@ -115,7 +115,9 @@ public class RangeEvent extends GameTickEvent {
 					stop();
 					return;
 				}
-				getPlayerOwner().face(target);
+				//getPlayerOwner().face(target);
+				//authentic player always faced NW
+				getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
 				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
 				if (target.isPlayer()) {
