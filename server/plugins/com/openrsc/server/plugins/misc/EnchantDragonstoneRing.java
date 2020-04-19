@@ -39,7 +39,7 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 			}
 			SpellHandler.checkAndRemoveRunes(p,spellDef);
 			Item toRemove = new Item(item.getCatalogId(), 1, false, item.getItemId());
-			p.getCarriedItems().remove(toRemove, false);
+			p.getCarriedItems().remove(toRemove);
 			p.getCarriedItems().getInventory().add(new Item(i));
 			SpellHandler.finalizeSpell(p, spellDef, "You succesfully enchant the ring");
 		}
