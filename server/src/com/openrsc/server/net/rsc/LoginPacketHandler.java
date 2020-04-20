@@ -57,7 +57,7 @@ public class LoginPacketHandler {
 					public void loginValidated(int response) {
 						Channel channel = getChannel();
 						channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
-						if ((response & 0x40) == LoginResponse.LOGIN_INSUCCESSFUL) {
+						if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
 							channel.close();
 						}
 					}

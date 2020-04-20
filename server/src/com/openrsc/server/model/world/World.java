@@ -593,7 +593,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		if (!getPlayers().contains(player)) {
 			player.setUUID(UUID.randomUUID().toString());
 
-			player.setLoggedIn(true);
 			player.setBusy(false);
 
 			getPlayers().add(player);
