@@ -463,16 +463,19 @@ public class Inventory {
 			iterator.remove();
 
 			log.addDroppedItem(item);
+			Player dropOwner;
+			GroundItem groundItem;
 			if (item.getDef(player.getWorld()).isUntradable()) {
-				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player));
+				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player, item.getNoted());
 			} else {
-				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner);
+				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
+				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
 				if (dropOwner.getIronMan() != IronmanMode.None.id()) {
 					groundItem.setAttribute("playerKill", true);
 				}
-				player.getWorld().registerItem(groundItem, 644000); // 10m 44s
 			}
+			player.getWorld().registerItem(groundItem, 644000); // 10m 44s
+
 		}
 
 		//check for fam crest gloves in bank, if not present there give player
