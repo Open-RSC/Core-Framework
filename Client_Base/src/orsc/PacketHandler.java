@@ -95,7 +95,14 @@ public class PacketHandler {
 		put(249,"UPDATE_BANK_ITEMS_DISPLAY");
 		put(252,"DISABLE_OPTION_MENU");
 		put(253,"UPDATE_DUEL_OPPONENT_ACCEPTANCE");
-		put(10000, "VIRTUAL_OPCODE_LOGIN_RESPONSE");
+
+		// CUSTOM
+		put(19, "SEND_SERVER_CONFIGS");
+		put(113, "SEND_IRONMAN");
+		put(115, "SEND_ON_BLACK_HOLE");
+		put(135, "BANK_PIN_INTERFACE");
+		put(136, "ONLINE_LIST");
+		put(147, "SEND_KILLS2");
 	}};
 
 
@@ -236,7 +243,7 @@ public class PacketHandler {
 			else if (opcode == 109) updateIgnoreList();
 
 				// Chat Blocking Settings
-			else if (opcode == 158) updateChatBlockSettings();
+			else if (opcode == 51) updateChatBlockSettings();
 
 				// Receive Private Message
 			else if (opcode == 120) receivePrivateMessage();
