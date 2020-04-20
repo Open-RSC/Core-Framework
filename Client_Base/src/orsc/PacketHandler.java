@@ -22,14 +22,82 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
+
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
 	private Network_Socket clientStream;
 	private mudclient mc;
+
+	private static final Map< Integer,String > incomingOpcodeMap = new HashMap< Integer,String >() {{
+		put(4,"CLOSE_CONNECTION_NOTIFY");
+		put(5,"QUEST_STATUS");
+		put(6,"UPDATE_STAKED_ITEMS_OPPONENT");
+		put(15,"UPDATE_TRADE_ACCEPTANCE");
+		put(20,"SHOW_CONFIRM_TRADE");
+		put(25,"FLOOR_SET");
+		put(30,"SYNC_DUEL_SETTINGS");
+		put(33,"UPDATE_XP");
+		put(36,"DISPLAY_TELEPORT_TELEGRAB_BUBBLE");
+		put(42,"OPEN_BANK");
+		put(48,"SCENERY_HANDLER");
+		put(51,"PRIVACY_SETTINGS");
+		put(52,"UPDATE_SYSTEM_UPDATE_TIMER");
+		put(53,"SET_INVENTORY");
+		put(59,"SHOW_APPEARANCE_CHANGE");
+		put(79,"NPC_COORDS");
+		put(83,"DISPLAY_DEATH_SCREEN");
+		put(84,"WAKE_UP");
+		put(87,"SEND_PM");
+		put(89,"SHOW_DIALOGUE_SERVER_MESSAGE_NOT_TOP");
+		put(90,"SET_INVENTORY_SLOT");
+		put(91,"BOUNDARY_HANDLER");
+		put(92,"INITIATE_TRADE");
+		put(97,"UPDATE_ITEMS_TRADED_TO_YOU");
+		put(99,"GROUNDITEM_HANDLER");
+		put(101,"SHOW_SHOP");
+		put(104,"UPDATE_NPC");
+		put(109,"SET_IGNORE");
+		put(111,"COMPLETED_TUTORIAL");
+		put(114,"SET_FATIGUE");
+		put(117,"FALL_ASLEEP");
+		put(120,"RECEIVE_PM");
+		put(123,"REMOVE_INVENTORY_SLOT");
+		put(128,"CONCLUDE_TRADE");
+		put(131,"SEND_MESSAGE");
+		put(137,"EXIT_SHOP");
+		put(149,"UPDATE_FRIEND");
+		put(153,"SET_EQUIP_STATS");
+		put(156,"SET_STATS");
+		put(159,"UPDATE_STAT");
+		put(162,"UPDATE_TRADE_RECIPIENT_ACCEPTANCE");
+		put(165,"CLOSE_CONNECTION");
+		put(172,"SHOW_CONFIRM_DUEL");
+		put(176,"SHOW_DIALOGUE_DUEL");
+		put(182,"SHOW_WELCOME");
+		put(183,"DENY_LOGOUT");
+		put(191,"PLAYER_COORDS");
+		put(194,"INCORRECT_SLEEPWORD");
+		put(203,"CLOSE_BANK");
+		put(204,"PLAY_SOUND");
+		put(206,"SET_PRAYERS");
+		put(210,"UPDATE_DUEL_ACCEPTANCE");
+		put(211,"UPDATE_ENTITIES");
+		put(213,"NO_OP_WHILE_WAITING_FOR_NEW_APPEARANCE");
+		put(222,"SHOW_DIALOGUE_SERVER_MESSAGE_TOP");
+		put(225,"CANCEL_DUEL_DIALOGUE");
+		put(234,"UPDATE_PLAYERS");
+		put(237,"UPDATE_IGNORE_BECAUSE_OF_NAME_CHANGE");
+		put(240,"GAME_SETTINGS");
+		put(244,"SET_FATIGUE_SLEEPING");
+		put(245,"SHOW_DIALOGUE_MENU");
+		put(249,"UPDATE_BANK_ITEMS_DISPLAY");
+		put(252,"DISABLE_OPTION_MENU");
+		put(253,"UPDATE_DUEL_OPPONENT_ACCEPTANCE");
+		put(10000, "VIRTUAL_OPCODE_LOGIN_RESPONSE");
+	}};
+
 
 	public PacketHandler(mudclient mc) {
 		this.mc = mc;
@@ -77,7 +145,8 @@ public class PacketHandler {
 	private void handlePacket1(int opcode, int length) {
 		try {
 			if (Config.DEBUG) {
-				System.out.println("Frame: " + mc.getFrameCounter() + ", Opcode: " + opcode + ", Length: " + length);
+				System.out.println("Frame: " + mc.getFrameCounter()
+					+ ", Opcode: " + incomingOpcodeMap.get(opcode) + " (" + opcode + "), Length: " + length);
 			}
 
 			// Unhandled Opcodes Received...
