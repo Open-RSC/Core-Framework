@@ -931,11 +931,12 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId) throws GameDatabaseException {
+	protected PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException {
 		try {
 			PlayerRecoveryQuestions recoveryQuestions = new PlayerRecoveryQuestions();
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().playerRecoveryInfo);
-			statement.setInt(1, playerId);
+			statement.setString(1, tableName);
+			statement.setInt(2, playerId);
 			final ResultSet resultSet = statement.executeQuery();
 
 			try {
@@ -962,6 +963,30 @@ public class MySqlGameDatabase extends GameDatabase {
 				resultSet.close();
 			}
 		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryInsertPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions, String tableName) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newPlayerRecoveryInfo);
+			statement.setString(1, tableName);
+			statement.setInt(2, playerId);
+			statement.setString(3, recoveryQuestions.username);
+			statement.setString(4, recoveryQuestions.question1);
+			statement.setString(5, recoveryQuestions.question2);
+			statement.setString(6, recoveryQuestions.question3);
+			statement.setString(7, recoveryQuestions.question4);
+			statement.setString(8, recoveryQuestions.question5);
+			for (int i = 0; i < recoveryQuestions.answers.length; i++) {
+				statement.setString(i+9, recoveryQuestions.answers[i]);
+			}
+			statement.setLong(14, recoveryQuestions.dateSet);
+			statement.setString(15, recoveryQuestions.ipSet);
+			try { statement.executeUpdate(); }
+			finally { statement.close(); }
+		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}

@@ -16,7 +16,7 @@ public class MySqlQueries {
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
 	public final String save_Password, save_PreviousPasswords, previousPassword, achievements, rewards, tasks;
-	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerRecoveryInfo, playerRecoveryAttempt, userToId, initializeOnlineUsers;
+	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerRecoveryInfo, newPlayerRecoveryInfo, playerRecoveryAttempt, userToId, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate, playerLastRecoveryTryId;
 	public final String dropLogSelect, dropLogInsert, dropLogUpdate, npcDefs, npcDrops, itemDefs, banPlayer, unbanPlayer;
 	public final String addNpcSpawn, removeNpcSpawn, addObjectSpawn, removeObjectSpawn, addItemSpawn, removeItemSpawn;
@@ -117,7 +117,8 @@ public class MySqlQueries {
 		playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, " +
 			"`question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, " +
 			"`ip_set` FROM `" + PREFIX + "player_change_recovery` WHERE `playerID`=?";
-		playerRecoveryInfo = "SELECT * FROM " + PREFIX + "player_recovery WHERE playerID=?";
+		playerRecoveryInfo = "SELECT * FROM `" + PREFIX + "?` WHERE playerID=?";
+		newPlayerRecoveryInfo = "INSERT INTO `" + PREFIX + "?` (`playerID`, `username`, `question1`, `question2`, `question3`, `question4`, `question5`, `answer1`, `answer2`, `answer3`, `answer4`, `answer5`, `date_set`, `ip_set`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		playerRecoveryAttempt = "INSERT INTO `" + PREFIX + "recovery_attempts`(`playerID`, `username`, `time`, `ip`) VALUES(?, ?, ?, ?)";
 		playerLastRecoveryTryId = "UPDATE `" + PREFIX + "players` SET `lastRecoveryTryId`=? WHERE `id`=?";
 		userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";

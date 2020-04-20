@@ -89,7 +89,8 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
 	protected abstract ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException;
 	protected abstract ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException;
-	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId) throws GameDatabaseException;
+	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException;
+	protected abstract void queryInsertPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions, String tableName) throws GameDatabaseException;
 	protected abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
 
 	protected abstract ClanDef[] queryClans() throws GameDatabaseException;
@@ -393,7 +394,19 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public PlayerRecoveryQuestions getPlayerRecoveryData(int playerId) throws GameDatabaseException {
-		return queryPlayerRecoveryData(playerId);
+		return queryPlayerRecoveryData(playerId, "player_recovery");
+	}
+
+	public PlayerRecoveryQuestions getPlayerChangeRecoveryData(int playerId) throws GameDatabaseException {
+		return queryPlayerRecoveryData(playerId, "player_change_recovery");
+	}
+
+	public void newPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions) throws GameDatabaseException {
+		queryInsertPlayerRecoveryData(playerId, recoveryQuestions, "player_recovery");
+	}
+
+	public void newPlayerChangeRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions) throws GameDatabaseException {
+		queryInsertPlayerRecoveryData(playerId, recoveryQuestions, "player_change_recovery");
 	}
 
 	// Inserts a new recovery attempt into the database and returns the database index of the attempt.
