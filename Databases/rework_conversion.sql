@@ -2359,14 +2359,6 @@ ALTER TABLE `openrsc_bank` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
 
 ALTER TABLE `openrsc_itemstatuses` DROP COLUMN `playerID`;
 
--- CABBAGE -- UNCOMMENT FOR RUNNING ON CABBAGE!!!!!!!!!!!!
-ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
-ALTER TABLE `openrsc_equipped` DROP COLUMN `amount`;
-ALTER TABLE `openrsc_equipped` DROP COLUMN `dbid`;
-ALTER TABLE `openrsc_curstats` ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
-ALTER TABLE `openrsc_experience` ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;
-
-
 DROP TABLE IF EXISTS `openrsc_itemdef`;
 CREATE TABLE IF NOT EXISTS `openrsc_itemdef`
 (
@@ -4688,3 +4680,11 @@ VALUES (1249, 'Cut reed plant', 'A narrow long tube - it might be useful for som
        (1375, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 6, 0, 0, 0, 0, 99000, 0),
        (1376, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000, 0),
        (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000, 0);
+
+
+-- CABBAGE -- UNCOMMENT FOR RUNNING ON CABBAGE!!!!!!!!!!!!
+ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
+ALTER TABLE `openrsc_equipped` DROP COLUMN `amount`;
+ALTER TABLE `openrsc_equipped` DROP COLUMN `dbid`;
+ALTER TABLE `openrsc_curstats` ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
+ALTER TABLE `openrsc_experience` ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;
