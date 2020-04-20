@@ -2078,7 +2078,6 @@ public final class Player extends Mob {
 
 	public void logout() {
 		ActionSender.sendLogoutRequestConfirm(this);
-		setLoggedIn(false);
 
 		FishingTrawler trawlerInstance = getWorld().getFishingTrawler(this);
 
@@ -2110,6 +2109,8 @@ public final class Player extends Mob {
 	}
 
 	public void logoutSaveSuccess() {
+
+		setLoggedIn(false);
 
 		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
