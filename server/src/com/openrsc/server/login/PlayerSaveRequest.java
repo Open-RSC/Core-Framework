@@ -19,10 +19,12 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 
 	private final Server server;
 	private final Player player;
+	private final boolean logout;
 
-	public PlayerSaveRequest(final Server server, final Player player) {
+	public PlayerSaveRequest(final Server server, final Player player, boolean logout) {
 		this.server = server;
 		this.player = player;
+		this.logout = logout;
 	}
 
 	public final Player getPlayer() {
@@ -36,7 +38,8 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 	protected void processInternal() {
 		//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
 		try {
-			getServer().getDatabase().savePlayer(getPlayer());
+			boolean success = getServer().getDatabase().savePlayer(getPlayer());
+			if (success && this.logout) getPlayer().logoutSaveSuccess();
 		} catch (final GameDatabaseException ex) {
 			LOGGER.catching(ex);
 		}

@@ -2069,7 +2069,11 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this));
+		save(false);
+	}
+
+	public void save(boolean logout) {
+		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this, logout));
 	}
 
 	public void logout() {
@@ -2102,7 +2106,10 @@ public final class Player extends Mob {
 		getCache().set("gnomeball_goals", getAttribute("gnomeball_goals", 0));
 		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
-		save();
+		save(true);
+	}
+
+	public void logoutSaveSuccess() {
 
 		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
