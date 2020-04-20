@@ -15,9 +15,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author Imposter/Fate
- */
 public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 
 	/**

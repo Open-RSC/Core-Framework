@@ -7,9 +7,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 
-/**
- * @author Imposter
- */
 public class PlayerPoisonScript implements CombatScript {
 
 	@Override

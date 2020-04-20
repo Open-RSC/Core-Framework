@@ -5,9 +5,6 @@ import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
 
-/**
- * @author n0m
- */
 public class TutorialIslandScriptIGuess implements CombatScript {
 
 	@Override

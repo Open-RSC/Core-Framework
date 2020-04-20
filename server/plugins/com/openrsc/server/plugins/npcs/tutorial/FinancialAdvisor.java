@@ -12,7 +12,6 @@ import com.openrsc.server.constants.NpcId;
 
 public class FinancialAdvisor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island financial advisor
 	 */
 

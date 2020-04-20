@@ -15,12 +15,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SheepShearer implements QuestInterface, TalkNpcTrigger {
 
-	/**
-	 * Quest: Sheep Shearer - fully working made by Fate 2013-09-10. GIVE BALLS
-	 * OF WOOL ALL AT ONCE INSTEAD OF ONE BY ONE(THIS PLAYER PREFER THIS),
-	 * DIALOGUES, AFTER DIALOGUES - 100% Replicated.
-	 */
-
 	@Override
 	public int getQuestId() {
 		return Quests.SHEEP_SHEARER;

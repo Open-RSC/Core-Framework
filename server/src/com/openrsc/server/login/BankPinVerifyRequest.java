@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Used to verify bank pins on the Login thread
- *
- * @author Kenix
  */
 public class BankPinVerifyRequest extends LoginExecutorProcess {
 	/**

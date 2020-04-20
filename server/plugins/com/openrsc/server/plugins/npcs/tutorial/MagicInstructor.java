@@ -16,7 +16,6 @@ import com.openrsc.server.constants.NpcId;
 
 public class MagicInstructor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island magic instructor
 	 */
 	@Override

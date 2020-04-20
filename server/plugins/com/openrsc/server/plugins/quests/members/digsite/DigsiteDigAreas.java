@@ -26,9 +26,6 @@ import static com.openrsc.server.plugins.Functions.thinkbubble;
 import static com.openrsc.server.plugins.Functions.delay;
 import static com.openrsc.server.plugins.Functions.addnpc;
 
-/**
- * @author Imposter/Fate
- */
 public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigger {
 
 	private static int[] SOIL = {1065, 1066, 1067};

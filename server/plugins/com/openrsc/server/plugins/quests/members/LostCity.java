@@ -21,11 +21,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * Rewritten in Java.
- *
- * @author n0m
- */
 public class LostCity implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
 	KillNpcTrigger,

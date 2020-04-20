@@ -10,10 +10,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 
-/****
- * Author: Kenix
- */
-
 public class NpcLootEvent extends SingleEvent {
 	private Point location;
 	private int npcId;

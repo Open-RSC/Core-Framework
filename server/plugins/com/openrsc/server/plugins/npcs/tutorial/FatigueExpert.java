@@ -14,7 +14,6 @@ import com.openrsc.server.constants.NpcId;
 
 public class FatigueExpert implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island fatigue expert
 	 */
 	@Override

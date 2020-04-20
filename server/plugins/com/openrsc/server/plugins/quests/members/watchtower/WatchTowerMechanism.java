@@ -17,9 +17,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author Imposter/Fate
- */
 public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpcTrigger, TakeObjTrigger {
 
 	private static final int TOBAN_CHEST_OPEN = 979;

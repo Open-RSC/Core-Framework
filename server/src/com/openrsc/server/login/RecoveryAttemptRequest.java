@@ -15,8 +15,6 @@ import java.net.InetSocketAddress;
 
 /**
  * Used to recovery character passwords on the Login thread
- *
- * @author Kenix
  */
 public class RecoveryAttemptRequest extends LoginExecutorProcess{
 

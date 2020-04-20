@@ -14,8 +14,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @author n0m
- * @revised Luis
  * Hit restoration event is independent of the other stats
  * The restoration tick may be re-synced if player has no stats to restore and new
  * trigger occurs such as drinking a potion

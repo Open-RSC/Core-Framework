@@ -14,9 +14,7 @@ import com.openrsc.server.constants.NpcId;
 
 public class CookingInstructor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island cooking instructor
-	 * FIXED THE COOKEDMEAT BUG.
 	 */
 
 	@Override

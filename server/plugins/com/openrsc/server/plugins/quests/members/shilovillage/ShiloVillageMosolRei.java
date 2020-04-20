@@ -10,9 +10,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import static com.openrsc.server.plugins.Functions.*;
 
 /**
- * @author Imposter/Fate
- * Shilo village Quest: Start template.
- * <p>
  * TODO:
  * the messages inside UndeadOnes a mist (possible to damage?)
  */

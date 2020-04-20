@@ -14,7 +14,6 @@ import com.openrsc.server.constants.NpcId;
 
 public class Guide implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island guide first room
 	 */
 	@Override

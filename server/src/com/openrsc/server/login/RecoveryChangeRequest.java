@@ -14,8 +14,6 @@ import java.sql.ResultSet;
 
 /**
  * Used to recovery character passwords on the Login thread
- *
- * @author Kenix
  */
 public class RecoveryChangeRequest extends LoginExecutorProcess{
 

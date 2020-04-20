@@ -10,8 +10,6 @@ import java.sql.SQLException;
 /**
  * staff username|action int|affected player username|time in epoch|staff x|staff y|affected x|affected y|staff ip|affected ip
  *
- * @author openfrog
- * <p>
  * 0 - Mute
  * 1 - Unmuted
  * 2 - Summon

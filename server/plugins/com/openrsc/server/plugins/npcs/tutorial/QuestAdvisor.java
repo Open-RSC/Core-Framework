@@ -13,7 +13,6 @@ import com.openrsc.server.constants.NpcId;
 
 public class QuestAdvisor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island quest advisor
 	 */
 

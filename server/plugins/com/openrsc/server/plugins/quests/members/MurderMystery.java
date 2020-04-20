@@ -18,11 +18,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author Davve
- * MURDER MYSTERY 2014-01-11
- */
-
 public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 	TakeObjTrigger, OpBoundTrigger, OpLocTrigger, UseInvTrigger {
 

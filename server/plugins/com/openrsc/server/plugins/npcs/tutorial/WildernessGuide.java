@@ -13,7 +13,6 @@ import com.openrsc.server.constants.NpcId;
 
 public class WildernessGuide implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island wilderness guide
 	 */
 

@@ -14,10 +14,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 
-	/*
-	 * Original Author: Fate 2013-09-10
-	 */
-
 	@Override
 	public int getQuestId() {
 		return Quests.COOKS_ASSISTANT;

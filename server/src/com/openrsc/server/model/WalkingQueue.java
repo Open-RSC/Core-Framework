@@ -9,17 +9,10 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
 /**
- * <p>
- * A <code>WalkingQueue</code> stores steps the client needs to walk and allows
+ * A WalkingQueue stores steps the client needs to walk and allows
  * this queue of steps to be modified.
- * </p>
- *
- * <p>
- * The class will also process these steps when {@link #processNextMovement()}
+ * The class will also process these steps when processNextMovement()
  * is called. This should be called once per server cycle.
- * </p>
- *
- * @author Graham Edgecombe
  */
 public class WalkingQueue {
 

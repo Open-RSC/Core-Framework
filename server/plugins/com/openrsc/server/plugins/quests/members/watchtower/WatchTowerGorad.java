@@ -11,9 +11,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author Imposter/Fate
- */
 public class WatchTowerGorad implements TalkNpcTrigger,
 	KillNpcTrigger, AttackNpcTrigger {
 

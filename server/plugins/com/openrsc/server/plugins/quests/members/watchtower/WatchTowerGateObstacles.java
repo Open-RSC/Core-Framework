@@ -14,9 +14,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author Imposter/Fate
- */
 public class WatchTowerGateObstacles implements OpLocTrigger {
 
 	private static int NORTH_WEST_GATE = 989;

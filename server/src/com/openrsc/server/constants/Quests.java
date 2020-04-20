@@ -2,10 +2,6 @@ package com.openrsc.server.constants;
 
 import java.util.HashMap;
 
-/**
- * Author: Kenix
- */
-
 public final class Quests {
 	public static final int BLACK_KNIGHTS_FORTRESS = 0;
 	public static final int COOKS_ASSISTANT = 1;

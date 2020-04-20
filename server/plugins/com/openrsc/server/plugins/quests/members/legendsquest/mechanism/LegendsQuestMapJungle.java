@@ -21,7 +21,6 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 	 * MIDDLE 431 < 384
 	 * EAST 383 > 338
 	 * <p>
-	 * Coords for each area calculated by: Imposter.
 	 * From real runescape classic using the map on multiple X coordinate tiles for accurate mapping.
 	 * <p>
 	 * SIDE NOTE: There are 5 entrances (Very Deep east & Deep east, Very Deep west & Deep west, One Centered in middle).

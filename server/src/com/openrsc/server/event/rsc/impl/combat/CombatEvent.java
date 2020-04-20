@@ -16,11 +16,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/***
- *
- * @author n0m
- *
- */
 public class CombatEvent extends GameTickEvent {
 
 	private final Mob attackerMob, defenderMob;

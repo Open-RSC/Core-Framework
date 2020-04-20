@@ -10,9 +10,6 @@ import io.netty.util.AttributeMap;
 
 import java.util.List;
 
-/**
- * @author Imposter
- */
 public final class RSCProtocolDecoder extends ByteToMessageDecoder implements AttributeMap {
 
 	@Override

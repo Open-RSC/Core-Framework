@@ -16,10 +16,6 @@ import java.util.Optional;
 
 public final class InterfaceShopHandler implements PacketHandler {
 
-	/**
-	 * Author: Imposter
-	 */
-
 	public void handlePacket(Packet p, Player player) throws Exception {
 
 		int pID = p.getID();

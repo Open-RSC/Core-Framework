@@ -13,11 +13,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Dorics implements QuestInterface, TalkNpcTrigger {
 
-	/**
-	 * Quest: Doric's Quest - fully working made by Fate 2013-09-10. GIVE DORIC
-	 * THE ORES, ANVIL, DIALOGUES, AFTER DIALOGUES - 100% Replicated.
-	 */
-
 	@Override
 	public int getQuestId() {
 		return Quests.DORICS_QUEST;

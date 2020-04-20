@@ -7,7 +7,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 
 /**
- * @author Davve
  * Random appearing messages from the underground cave appearing at random time stamps triggers
  * when you cross an obstacle (Rock) & (Agility obstacles in the black area(Map3)).
  */

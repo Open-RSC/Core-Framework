@@ -26,9 +26,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Author: Kenix
- */
 public abstract class GameDatabase extends GameDatabaseQueries{
 	/**
 	 * The asynchronous logger.

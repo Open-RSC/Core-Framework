@@ -677,10 +677,6 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 
 	}
 
-	/**
-	 * @author Davve
-	 */
-
 	class Dimintheis {
 		public static final int THREE_SONS = 0;
 		public static final int TRADITION = 1;

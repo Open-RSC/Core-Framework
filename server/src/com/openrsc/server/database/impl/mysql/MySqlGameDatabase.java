@@ -25,9 +25,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-/**
- * Author: Kenix
- */
 public class MySqlGameDatabase extends GameDatabase {
 
 	private final MySqlGameDatabaseConnection connection;

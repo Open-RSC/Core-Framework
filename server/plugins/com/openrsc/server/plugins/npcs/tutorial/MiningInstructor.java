@@ -13,7 +13,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class MiningInstructor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island mining instructor
 	 */
 

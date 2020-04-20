@@ -16,7 +16,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackNpcTrigger, SpellNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island combat instructor
 	 * Level-7 rat not the regular rat!!!!!!!
 	 * YOUTUBE: NO XP GIVEN IN ANY COMBAT STAT BY KILLING THE RAT

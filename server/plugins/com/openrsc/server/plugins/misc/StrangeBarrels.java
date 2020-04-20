@@ -17,7 +17,6 @@ import static com.openrsc.server.plugins.Functions.*;
 public class StrangeBarrels implements OpLocTrigger {
 
 	/**
-	 * @author Davve
 	 * What I have discovered from barrels is the food, potions, misc, weapon, runes, certificates and monsters.
 	 * There are 8 ways that the barrel behave - more comment below.
 	 * The barrel is smashed and then after 40 seconds it adds on a new randomized coord in the cave area.

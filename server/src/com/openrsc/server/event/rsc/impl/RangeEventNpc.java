@@ -13,9 +13,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/**
- * @author n0m
- */
 public class RangeEventNpc extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;

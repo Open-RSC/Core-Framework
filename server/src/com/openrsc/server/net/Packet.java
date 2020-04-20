@@ -2,9 +2,6 @@ package com.openrsc.server.net;
 
 import io.netty.buffer.ByteBuf;
 
-/**
- * @author n0m
- */
 public class Packet {
 	/**
 	 * The opcode.

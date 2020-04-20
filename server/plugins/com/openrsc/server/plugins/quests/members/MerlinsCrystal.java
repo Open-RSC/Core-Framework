@@ -18,11 +18,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author n0m
- * @author complete dialogues & fixed functions - Davve
- * @author start of holy grail quest - davve
- */
 public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
 	OpBoundTrigger,

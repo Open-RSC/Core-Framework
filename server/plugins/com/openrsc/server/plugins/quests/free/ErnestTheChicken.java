@@ -16,9 +16,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/***
- * @author n0m
- */
 public class ErnestTheChicken implements QuestInterface,
 	UseBoundTrigger,
 	UseInvTrigger,

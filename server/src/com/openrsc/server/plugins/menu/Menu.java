@@ -9,8 +9,6 @@ import java.util.ArrayList;
 /**
  * This system is for adding a new menu item on NPC under certain circumstances.
  * If this system is used, the whole starting menu needs to be done using this.
- *
- * @author n0m
  */
 public class Menu {
 

@@ -23,9 +23,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	OpInvTrigger,
 	KillNpcTrigger, TakeObjTrigger,
 	OpLocTrigger {
-	/**
-	 * @author Davve
-	 */
+
 	@Override
 	public int getQuestId() {
 		return Quests.THE_HOLY_GRAIL;

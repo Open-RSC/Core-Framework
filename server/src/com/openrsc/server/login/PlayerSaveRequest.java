@@ -8,8 +8,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Used to verify save players on the Login thread
- *
- * @author Kenix
  */
 public class PlayerSaveRequest extends LoginExecutorProcess {
 	/**

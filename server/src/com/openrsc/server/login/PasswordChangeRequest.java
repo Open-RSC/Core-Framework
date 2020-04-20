@@ -12,8 +12,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Used to run change password functionality on the Login thread
- *
- * @author Kenix
  */
 public class PasswordChangeRequest extends LoginExecutorProcess {
 

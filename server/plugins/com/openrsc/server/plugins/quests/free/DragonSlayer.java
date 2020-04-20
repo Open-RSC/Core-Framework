@@ -20,9 +20,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author n0m
- */
 public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	UseInvTrigger,
 	OpBoundTrigger,

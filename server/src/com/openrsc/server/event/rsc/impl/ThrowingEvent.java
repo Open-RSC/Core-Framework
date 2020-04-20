@@ -16,10 +16,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/**
- * @author Davve
- */
-
 public class ThrowingEvent extends GameTickEvent {
 
 	private Mob target;

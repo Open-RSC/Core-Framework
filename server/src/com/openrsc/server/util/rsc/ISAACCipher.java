@@ -1,27 +1,7 @@
 package com.openrsc.server.util.rsc;
 
 /**
- * <p>
- * An implementation of the <a href="http://www.burtleburtle.net/bob/rand/isaacafa.html">ISAAC</a> psuedorandom number
- * generator.
- * </p>
- *
- * <pre>
- * ------------------------------------------------------------------------------
- * Rand.java: By Bob Jenkins.  My random number generator, ISAAC.
- *   rand.init() -- initialize
- *   rand.val()  -- get a random value
- * MODIFIED:
- *   960327: Creation (addition of randinit, really)
- *   970719: use context, not global variables, for internal state
- *   980224: Translate to Java
- * ------------------------------------------------------------------------------
- * </pre>
- * <p>
- * This class has been changed to be more conformant to Java and javadoc conventions.
- * </p>
- *
- * @author Bob Jenkins
+ * http://www.burtleburtle.net/bob/rand/isaacafa.html
  */
 public final class ISAACCipher {
 

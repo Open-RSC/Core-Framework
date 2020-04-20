@@ -19,9 +19,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 
-/**
- * @author n0m
- */
 public class RangeEvent extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;

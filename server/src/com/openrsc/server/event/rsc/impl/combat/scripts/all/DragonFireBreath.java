@@ -14,9 +14,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-/**
- * @author n0m
- */
 public class DragonFireBreath implements OnCombatStartScript {
 
 	@Override

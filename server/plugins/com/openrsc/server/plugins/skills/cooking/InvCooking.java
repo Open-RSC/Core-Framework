@@ -13,11 +13,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * Way better way to handle item on item cooking.
- *
- * @author n0m
- */
 public class InvCooking implements UseInvTrigger {
 
 	@Override

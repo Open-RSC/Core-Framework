@@ -1,8 +1,5 @@
 package com.openrsc.server.external;
 
-/**
- * @author ephemeral
- */
 public final class ItemDefinition extends EntityDef {
 	/**
 	 * The command for an <code>InventoryItem</code>,

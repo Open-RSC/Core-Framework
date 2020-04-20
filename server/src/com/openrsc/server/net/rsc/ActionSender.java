@@ -35,9 +35,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map.Entry;
 
-/**
- * @author n0m
- */
 public class ActionSender {
 	/**
 	 * The asynchronous logger.

@@ -10,7 +10,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class boatman implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island boat man - last npc before main land (Lumbridge)
 	 */
 	@Override

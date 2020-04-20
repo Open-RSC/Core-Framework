@@ -12,7 +12,6 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class FishingInstructor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island fishing instructor
 	 */
 
