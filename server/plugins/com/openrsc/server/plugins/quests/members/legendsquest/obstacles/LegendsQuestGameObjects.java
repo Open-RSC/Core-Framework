@@ -15,8 +15,8 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
-import com.openrsc.server.plugins.skills.Mining;
-import com.openrsc.server.plugins.skills.Thieving;
+import com.openrsc.server.plugins.skills.mining.Mining;
+import com.openrsc.server.plugins.skills.thieving.Thieving;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 

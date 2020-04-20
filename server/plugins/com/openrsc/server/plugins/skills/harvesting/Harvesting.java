@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.harvesting;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;

@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.cooking;
 
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;

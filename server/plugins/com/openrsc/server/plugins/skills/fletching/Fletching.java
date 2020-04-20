@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.fletching;
 
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;

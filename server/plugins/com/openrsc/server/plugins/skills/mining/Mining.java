@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.mining;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;

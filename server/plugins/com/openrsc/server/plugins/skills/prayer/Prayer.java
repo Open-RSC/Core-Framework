@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.prayer;
 
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
