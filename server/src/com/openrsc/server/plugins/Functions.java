@@ -21,6 +21,70 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+/** Functions.java
+ *
+ * addloc
+ * addnpc
+ * addobject
+ * advancestat
+ * atQuestStage
+ * atQuestStages
+ * canWalk
+ * changebankpin
+ * changeloc
+ * changenpc
+ * checkAndRemoveBlurberry
+ * checkBlocking
+ * closeCupboard
+ * closeGenericObject
+ * compareItemsIds
+ * completeQuest
+ * createGroundItemDelayedRemove
+ * delay
+ * delloc
+ * delnpc
+ * displayTeleportBubble
+ * doDoor
+ * doGate
+ * doTentDoor
+ * doWallMovePlayer
+ * getCurrentLevel
+ * getMaxLevel
+ * getQuestStage
+ * give
+ * ifbank
+ * ifbankorheld
+ * ifheld
+ * ifnearvisnpc
+ * inarray
+ * incQuestReward
+ * isBlocking
+ * isObject
+ * mes
+ * multi
+ * npcattack
+ * npcsay
+ * npcWalkFromPlayer
+ * npcYell
+ * openChest
+ * openCupboard
+ * openGenericObject
+ * random
+ * removebankpin
+ * resetGnomeCooking
+ * say
+ * setbankpin
+ * setQuestStage
+ * setCurrentLevel
+ * showbankpin
+ * startsWithVowel
+ * teleport
+ * thinkbubble
+ * validatebankpin
+ *
+ */
+
+
 public class Functions {
 
 	/**
