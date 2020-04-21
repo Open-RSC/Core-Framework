@@ -29,10 +29,10 @@ public class GemMining implements OpLocTrigger {
 		ItemId.UNCUT_DIAMOND.id()
 	};
 
-	private void handleGemRockMining(final GameObject obj, Player p, int click) {
-		final ObjectMiningDef def = p.getWorld().getServer().getEntityHandler().getObjectMiningDef(obj.getID());
-		final int axeId = getAxe(p);
-		final int mineLvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+	private void handleGemRockMining(final GameObject obj, Player player, int click) {
+		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(obj.getID());
+		final int axeId = getAxe(player);
+		final int mineLvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		final int retrytimes;
 		final int reqlvl;
 		switch (ItemId.getById(axeId)) {
@@ -63,47 +63,47 @@ public class GemMining implements OpLocTrigger {
 				break;
 		}
 
-		if (p.isBusy()) {
+		if (player.isBusy()) {
 			return;
 		}
-		if (!p.withinRange(obj, 1)) {
+		if (!player.withinRange(obj, 1)) {
 			return;
 		}
 
-		if (p.click == 1) {
-			p.playSound("prospect");
-			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-			p.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
+		if (player.click == 1) {
+			player.playSound("prospect");
+			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (obj.getID() == GEM_ROCK) {
-				p.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
+				player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 				return;
 			}
 			//should not get into the else, just a fail-safe
 			else {
-				p.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
+				player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
 				return;
 			}
 		}
 
 		if (axeId < 0 || reqlvl > mineLvl) {
-			mes(p, "You need a pickaxe to mine this rock",
+			mes(player, "You need a pickaxe to mine this rock",
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
 
-		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
-				&& p.getFatigue() >= p.MAX_FATIGUE) {
-				p.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 				return;
 			}
 		}
 
-		p.playSound("mine");
-		thinkbubble(p, new Item(ItemId.IRON_PICKAXE.id()));
-		p.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
-		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Gem Mining", p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000, true) {
+		player.playSound("mine");
+		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
+		player.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Gem Mining", player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000, true) {
 			@Override
 			public void action() {
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -114,8 +114,8 @@ public class GemMining implements OpLocTrigger {
 						return;
 					}
 				}
-				if (getGem(p, 40, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
-					Item gem = new Item(getGemFormula(p.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
+				if (getGem(player, 40, getOwner().getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
+					Item gem = new Item(getGemFormula(player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 					//check if there is still gem at the rock
 					GameObject object = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 					if (object == null) {
@@ -154,21 +154,21 @@ public class GemMining implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"));
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
-			handleGemRockMining(obj, p, p.click);
+			handleGemRockMining(obj, player, player.click);
 		}
 	}
 
-	private int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+	private int getAxe(Player player) {
+		int lvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
-			if (p.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
+			if (player.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
 					return Formulae.miningAxeIDs[i];
 				}
@@ -201,7 +201,7 @@ public class GemMining implements OpLocTrigger {
 		return 0;
 	}
 
-	private boolean getGem(Player p, int req, int miningLevel, int axeId) {
+	private boolean getGem(Player player, int req, int miningLevel, int axeId) {
 		return Formulae.calcGatheringSuccessful(req, miningLevel, calcAxeBonus(axeId));
 	}
 

@@ -13,13 +13,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.THRANDER.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Hello I'm Thrander the smith",
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello I'm Thrander the smith",
 			"I'm an expert in armour modification",
 			"Give me your armour designed for men",
 			"And I can convert it into something more comfortable for a women",

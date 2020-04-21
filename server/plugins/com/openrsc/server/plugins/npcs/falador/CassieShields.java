@@ -22,7 +22,7 @@ public final class CassieShields implements ShopInterface,
 		new Item(ItemId.STEEL_KITE_SHIELD.id(), 0), new Item(ItemId.MITHRIL_SQUARE_SHIELD.id(), 0));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.CASSIE.id();
 	}
 
@@ -37,14 +37,14 @@ public final class CassieShields implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.CASSIE.id()) {
-			say(p, n, "What wares are you selling?");
-			npcsay(p, n, "I buy and sell shields", "Do you want to trade?");
-			int option = multi(p, n, "Yes please", "No thank you");
+			say(player, n, "What wares are you selling?");
+			npcsay(player, n, "I buy and sell shields", "Do you want to trade?");
+			int option = multi(player, n, "Yes please", "No thank you");
 			if (option == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}

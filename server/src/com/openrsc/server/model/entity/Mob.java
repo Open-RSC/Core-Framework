@@ -428,9 +428,9 @@ public abstract class Mob extends Entity {
 		resetPath();
 	}
 
-	public void setLocation(final Point p, boolean teleported) {
+	public void setLocation(final Point point, boolean teleported) {
 		if (!teleported) {
-			face(p);
+			face(point);
 			hasMoved = true;
 		} else {
 			setTeleporting(true);
@@ -438,12 +438,12 @@ public abstract class Mob extends Entity {
 
 		setLastMoved();
 		setWarnedToMove(false);
-		super.setLocation(p);
+		super.setLocation(point);
 	}
 
 	public void updatePosition() {
 		final long now = System.currentTimeMillis();
-		final boolean doWalk = getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
+		final boolean doWalk = !getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED || now >= lastMovementTime + getWalkingTick();
 
 		if(doWalk) {
 			getWalkingQueue().processNextMovement();
@@ -703,8 +703,8 @@ public abstract class Mob extends Entity {
 			skills.setLevel(3, newHp);
 		}
 		if (this.isPlayer()) {
-			Player p = (Player) this;
-			ActionSender.sendStat(p, 3);
+			Player player = (Player) this;
+			ActionSender.sendStat(player, 3);
 		}
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}
@@ -908,8 +908,8 @@ public abstract class Mob extends Entity {
 		lastMovement = System.currentTimeMillis();
 	}
 
-	public void setLocation(final Point p) {
-		setLocation(p, false);
+	public void setLocation(final Point point) {
+		setLocation(point, false);
 	}
 
 	public void setWarnedToMove(final boolean moved) {
@@ -992,17 +992,17 @@ public abstract class Mob extends Entity {
 	public void runDropEvent(boolean fromInventory) {
 		// TODO: Allow npcs to use this code for drop parties?
 		if (!this.isPlayer()) return;
-		Player p = (Player) this;
-		Item item = p.getDropItemEvent();
+		Player player = (Player) this;
+		Item item = player.getDropItemEvent();
 		this.setDropItemEvent(null);
 		if (item == null) return;
 		final int finalAmount = item.getAmount(); // Possibly more than 1 for non-stack items, in this situation.
 
 		// We need to figure out how many times MAX to loop the batch.
-		int slotsOccupiedByItem = p.getCarriedItems().getInventory().countSlotsOccupied(item, finalAmount);
+		int slotsOccupiedByItem = player.getCarriedItems().getInventory().countSlotsOccupied(item, finalAmount);
 
-		p.setStatus(Action.DROPPING_GITEM);
-		p.getWorld().getServer().getGameEventHandler().add(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK, "Player Batch Drop", slotsOccupiedByItem, false, true) {
+		player.setStatus(Action.DROPPING_GITEM);
+		player.getWorld().getServer().getGameEventHandler().add(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Player Batch Drop", slotsOccupiedByItem, false, true) {
 			int dropCount = 0;
 
 			public void action() {
@@ -1062,8 +1062,8 @@ public abstract class Mob extends Entity {
 
 	protected Player talkToNpcEvent = null;
 
-	public void setTalkToNpcEvent(Player p) {
-		this.talkToNpcEvent = p;
+	public void setTalkToNpcEvent(Player player) {
+		this.talkToNpcEvent = player;
 	}
 
 	public Player getTalkToNpcEvent() {
@@ -1071,10 +1071,10 @@ public abstract class Mob extends Entity {
 	}
 
 	public void runTalkToNpcEvent() {
-		Player p = getTalkToNpcEvent();
+		Player player = getTalkToNpcEvent();
 		setTalkToNpcEvent(null);
-		if (p.getWorld().getServer().getPluginHandler().handlePlugin(p, "TalkNpc", new Object[]{p, this})) {
-			p.setInteractingNpc((Npc) this);
+		if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, this})) {
+			player.setInteractingNpc((Npc) this);
 		}
 	}
 

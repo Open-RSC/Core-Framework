@@ -22,7 +22,7 @@ public final class PeksaHelmets implements ShopInterface,
 		new Item(ItemId.LARGE_STEEL_HELMET.id(), 2), new Item(ItemId.LARGE_MITHRIL_HELMET.id(), 1), new Item(ItemId.LARGE_ADAMANTITE_HELMET.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.PEKSA.id();
 	}
 
@@ -37,16 +37,16 @@ public final class PeksaHelmets implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Are you interested in buying or selling a helmet?");
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Are you interested in buying or selling a helmet?");
 
-		int option = multi(p, n, "I could be, yes", "No, I'll pass on that");
+		int option = multi(player, n, "I could be, yes", "No, I'll pass on that");
 		if (option == 0) {
-			npcsay(p, n, "Well look at all these great helmets!");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "Well look at all these great helmets!");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			npcsay(p, n, "Well come back if you change your mind");
+			npcsay(player, n, "Well come back if you change your mind");
 		}
 	}
 

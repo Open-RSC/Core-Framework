@@ -14,94 +14,94 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTrigger, TalkNpcTrigger {
 
 	@Override
-	public boolean blockAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player player, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id();
 	}
 
-	private void necromancerFightSpawnMethod(Player p, Npc necromancer) {
+	private void necromancerFightSpawnMethod(Player player, Npc necromancer) {
 		if (necromancer.getID() == NpcId.NECROMANCER.id()) {
-			Npc zombie = ifnearvisnpc(p, NpcId.ZOMBIE_INVOKED.id(), 10);
-			if (!p.getCache().hasKey("necroSpawn") || (p.getCache().hasKey("necroSpawn") && p.getCache().getInt("necroSpawn") < 7) || (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0 && zombie == null)) {
-				npcsay(p, necromancer, "I summon the undead to smite you down");
-				p.setBusyTimer(3000);
-				zombie = p.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
+			Npc zombie = ifnearvisnpc(player, NpcId.ZOMBIE_INVOKED.id(), 10);
+			if (!player.getCache().hasKey("necroSpawn") || (player.getCache().hasKey("necroSpawn") && player.getCache().getInt("necroSpawn") < 7) || (player.getCache().hasKey("killedZomb") && player.getCache().getInt("killedZomb") != 0 && zombie == null)) {
+				npcsay(player, necromancer, "I summon the undead to smite you down");
+				player.setBusyTimer(3000);
+				zombie = player.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
 				zombie.setShouldRespawn(false);
 				delay(1600);
-				if (!p.inCombat()) {
-					zombie.startCombat(p);
+				if (!player.inCombat()) {
+					zombie.startCombat(player);
 				}
-				if (!p.getCache().hasKey("necroSpawn")) {
-					p.getCache().set("necroSpawn", 1);
+				if (!player.getCache().hasKey("necroSpawn")) {
+					player.getCache().set("necroSpawn", 1);
 				} else {
-					int spawn = p.getCache().getInt("necroSpawn");
+					int spawn = player.getCache().getInt("necroSpawn");
 					if (spawn < 7) {
-						p.getCache().set("necroSpawn", spawn + 1);
+						player.getCache().set("necroSpawn", spawn + 1);
 					}
 				}
-				if (!p.getCache().hasKey("killedZomb")) {
-					p.getCache().set("killedZomb", 7);
+				if (!player.getCache().hasKey("killedZomb")) {
+					player.getCache().set("killedZomb", 7);
 				}
-			} else if (p.getCache().getInt("necroSpawn") > 6 && p.getCache().hasKey("necroSpawn") && zombie != null && p.getCache().getInt("killedZomb") != 0) {
-				npcsay(p, zombie, "Raargh");
-				p.setBusyTimer(3000);
-				zombie.startCombat(p);
-			} else if (p.getCache().getInt("killedZomb") == 0 && p.getCache().hasKey("killedZomb")) {
-				p.startCombat(necromancer);
+			} else if (player.getCache().getInt("necroSpawn") > 6 && player.getCache().hasKey("necroSpawn") && zombie != null && player.getCache().getInt("killedZomb") != 0) {
+				npcsay(player, zombie, "Raargh");
+				player.setBusyTimer(3000);
+				zombie.startCombat(player);
+			} else if (player.getCache().getInt("killedZomb") == 0 && player.getCache().hasKey("killedZomb")) {
+				player.startCombat(necromancer);
 			}
 		}
 	}
 
-	private void necromancerOnKilledMethod(Player p, Npc n) {
+	private void necromancerOnKilledMethod(Player player, Npc n) {
 		if (n.getID() == NpcId.NECROMANCER.id()) {
-			n.killedBy(p);
-			p.getCache().remove("necroSpawn");
-			p.getCache().remove("killedZomb");
-			Npc newZombie = p.getWorld().registerNpc(new Npc(n.getWorld(), NpcId.ZOMBIE_INVOKED.id(), p.getX(), p.getY()));
+			n.killedBy(player);
+			player.getCache().remove("necroSpawn");
+			player.getCache().remove("killedZomb");
+			Npc newZombie = player.getWorld().registerNpc(new Npc(n.getWorld(), NpcId.ZOMBIE_INVOKED.id(), player.getX(), player.getY()));
 			newZombie.setShouldRespawn(false);
-			newZombie.setChasing(p);
+			newZombie.setChasing(player);
 		}
 		if (n.getID() == NpcId.ZOMBIE_INVOKED.id()) {
-			n.killedBy(p);
-			if (p.getCache().hasKey("killedZomb") && p.getCache().getInt("killedZomb") != 0) {
-				int delete = p.getCache().getInt("killedZomb");
-				p.getCache().set("killedZomb", delete - 1);
+			n.killedBy(player);
+			if (player.getCache().hasKey("killedZomb") && player.getCache().getInt("killedZomb") != 0) {
+				int delete = player.getCache().getInt("killedZomb");
+				player.getCache().set("killedZomb", delete - 1);
 			}
 		}
 	}
 
 
 	@Override
-	public void onAttackNpc(Player p, Npc necromancer) {
-		necromancerFightSpawnMethod(p, necromancer);
+	public void onAttackNpc(Player player, Npc necromancer) {
+		necromancerFightSpawnMethod(player, necromancer);
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
-		necromancerOnKilledMethod(p, n);
+	public void onKillNpc(Player player, Npc n) {
+		necromancerOnKilledMethod(player, n);
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id() || n.getID() == NpcId.ZOMBIE_INVOKED.id();
 	}
 
 	@Override
-	public boolean blockSpellNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player player, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id() || n.getID() == NpcId.ZOMBIE_INVOKED.id();
 	}
 
 	@Override
-	public void onSpellNpc(Player p, Npc necromancer) {
-		necromancerFightSpawnMethod(p, necromancer);
+	public void onSpellNpc(Player player, Npc necromancer) {
+		necromancerFightSpawnMethod(player, necromancer);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.NECROMANCER.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		p.playerServerMessage(MessageType.QUEST, "Invrigar the necromancer is not interested in talking");
+	public void onTalkNpc(Player player, Npc n) {
+		player.playerServerMessage(MessageType.QUEST, "Invrigar the necromancer is not interested in talking");
 	}
 }

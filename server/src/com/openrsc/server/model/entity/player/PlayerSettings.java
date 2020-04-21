@@ -93,8 +93,8 @@ public class PlayerSettings {
 		this.appearance = pa;
 	}
 
-	void addAttackedBy(Player p) {
-		attackedBy.put(p.getUsernameHash(), System.currentTimeMillis());
+	void addAttackedBy(Player player) {
+		attackedBy.put(player.getUsernameHash(), System.currentTimeMillis());
 	}
 	public void addAttackedBy(Npc n) {
 		attackedBy2.put(n.getID(), System.currentTimeMillis());
@@ -107,8 +107,8 @@ public class PlayerSettings {
 		return attackedBy2;
 	}
 
-	public long lastAttackedBy(Player p) {
-		Long time = attackedBy.get(p.getUsernameHash());
+	public long lastAttackedBy(Player player) {
+		Long time = attackedBy.get(player.getUsernameHash());
 		if (time != null) {
 			return time;
 		}

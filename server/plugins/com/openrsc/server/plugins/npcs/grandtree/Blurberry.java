@@ -19,20 +19,20 @@ public final class Blurberry implements ShopInterface, TalkNpcTrigger {
 	private final Shop shop = new Shop(false, 3000, 100, 25, 1, new Item(ItemId.BLURBERRY_BARMAN_FRUIT_BLAST.id(), 10), new Item(ItemId.BLURBERRY_BARMAN_BLURBERRY_SPECIAL.id(), 10), new Item(ItemId.BLURBERRY_BARMAN_WIZARD_BLIZZARD.id(), 10), new Item(ItemId.BLURBERRY_BARMAN_PINEAPPLE_PUNCH.id(), 10), new Item(ItemId.BLURBERRY_BARMAN_SGG.id(), 10), new Item(ItemId.BLURBERRY_BARMAN_CHOCOLATE_SATURDAY.id(), 10), new Item(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id(), 10));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		npcsay(p, n, "good day to you", "can i get you drink");
-		int opt = multi(p, n, "what do you have", "no thanks");
+	public void onTalkNpc(Player player, final Npc n) {
+		npcsay(player, n, "good day to you", "can i get you drink");
+		int opt = multi(player, n, "what do you have", "no thanks");
 		if (opt == 0) {
-			npcsay(p, n, "take a look");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "take a look");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (opt == 1) {
-			npcsay(p, n, "ok, take it easy");
+			npcsay(player, n, "ok, take it easy");
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BLURBERRY_BARMAN.id();
 	}
 

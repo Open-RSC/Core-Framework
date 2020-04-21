@@ -22,14 +22,14 @@ public class GroundItemTake implements PacketHandler {
 		return null;
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		final Point location = Point.location(p.readShort(), p.readShort());
-		final int id = p.readShort();
+		final Point location = Point.location(packet.readShort(), packet.readShort());
+		final int id = packet.readShort();
 		final GroundItem item = getItem(id, location, player);
 
 		if (item == null) {

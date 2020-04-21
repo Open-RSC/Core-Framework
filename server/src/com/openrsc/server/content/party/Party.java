@@ -138,9 +138,9 @@ public class Party {
 	}
 
 	public PartyPlayer getPlayer(String username) {
-		for (PartyPlayer p : getPlayers()) {
-			if (p.getUsername().equalsIgnoreCase(username)) {
-				return p;
+		for (PartyPlayer player : getPlayers()) {
+			if (player.getUsername().equalsIgnoreCase(username)) {
+				return player;
 			}
 		}
 		return null;
@@ -229,15 +229,15 @@ public class Party {
 		this.partySetting[1] = state;
 	}
 
-	public boolean isAllowed(int setting, Player p) {
-		if (p.getParty() != null) {
+	public boolean isAllowed(int setting, Player player) {
+		if (player.getParty() != null) {
 			if (partySetting[setting] == 0) {
 				return true;
-			} else if (partySetting[setting] == 1 && p.getParty().getPlayer(p.getUsername()).getRank().equals(PartyRank.LEADER)) {
+			} else if (partySetting[setting] == 1 && player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)) {
 				return true;
-			} else if ((partySetting[setting] == 2 || partySetting[setting] == 3) && (p.getParty().getPlayer(p.getUsername()).getRank().equals(PartyRank.LEADER) || p.getParty().getPlayer(p.getUsername()).getRank().equals(PartyRank.GENERAL))) {
-				return true;
-			}
+			} else return (partySetting[setting] == 2 || partySetting[setting] == 3)
+				&& (player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.LEADER)
+				|| player.getParty().getPlayer(player.getUsername()).getRank().equals(PartyRank.GENERAL));
 		}
 		return false;
 	}
@@ -254,8 +254,8 @@ public class Party {
 		return partyPoints;
 	}
 
-	public void setPartyPoints(int p) {
-		this.partyPoints = p;
+	public void setPartyPoints(int player) {
+		this.partyPoints = player;
 	}
 
 	public World getWorld() {

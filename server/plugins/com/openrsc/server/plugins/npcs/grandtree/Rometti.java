@@ -26,30 +26,30 @@ public final class Rometti implements ShopInterface,
 		new Item(ItemId.BOOTS_CREAM.id(), 5), new Item(ItemId.BOOTS_BLUE.id(), 5));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		say(p, n, "hello");
-		npcsay(p, n, "hello traveller",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "hello");
+		npcsay(player, n, "hello traveller",
 			"have a look at my latest range of gnome fashion",
 			"rometti is the ultimate label in gnome high society");
-		say(p, n, "really");
-		npcsay(p, n, "pastels are all the rage this season");
-		int option = multi(p, n, false, //do not send over
+		say(player, n, "really");
+		npcsay(player, n, "pastels are all the rage this season");
+		int option = multi(player, n, false, //do not send over
 			"i've no time for fashion", "ok then let's have a look");
 		switch (option) {
 			case 0:
-				say(p, n, "i've no time for fashion");
-				npcsay(p, n, "hmm...i did wonder");
+				say(player, n, "i've no time for fashion");
+				npcsay(player, n, "hmm...i did wonder");
 				break;
 			case 1:
-				say(p, n, "ok then, let's have a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "ok then, let's have a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ROMETTI.id();
 	}
 

@@ -25,7 +25,7 @@ public class WoodcutJungle implements OpLocTrigger,
 	private static int JUNGLE_TREE_STUMP = 1087;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		if (inArray(obj.getID(), JUNGLE_TREES)) {
 			return true;
 		}
@@ -36,27 +36,27 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (inArray(obj.getID(), JUNGLE_TREES)) {
-			handleJungleWoodcut(obj, p);
+			handleJungleWoodcut(obj, player);
 		}
 		if (obj.getID() == JUNGLE_TREE_STUMP) {
-			p.teleport(obj.getX(), obj.getY());
+			player.teleport(obj.getX(), obj.getY());
 		}
 	}
 
-	private void handleJungleWoodcut(GameObject obj, Player p) {
-		if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
-			&& p.getFatigue() >= p.MAX_FATIGUE) {
-			p.playerServerMessage(MessageType.QUEST, "You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+	private void handleJungleWoodcut(GameObject obj, Player player) {
+		if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+			&& player.getFatigue() >= player.MAX_FATIGUE) {
+			player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 
 			// Shilo side of the jungle
-			if (p.getY() < 866) {
+			if (player.getY() < 866) {
 				return;
-			} else if (p.getY() >= 866) { // Khazari side, force out.
-				p.message("It takes you some time, but you eventually make your way");
-				p.message("out of the Khazari jungle.");
-				cutJungle(0, obj, p, true);
+			} else if (player.getY() >= 866) { // Khazari side, force out.
+				player.message("It takes you some time, but you eventually make your way");
+				player.message("out of the Khazari jungle.");
+				cutJungle(0, obj, player, true);
 				return;
 			}
 		}
@@ -66,77 +66,77 @@ public class WoodcutJungle implements OpLocTrigger,
 		//	return;
 		//}
 
-		if (getCurrentLevel(p, Skills.WOODCUT) < 50) {
-			p.message("You need a woodcutting level of 50 to axe this tree");
+		if (getCurrentLevel(player, Skills.WOODCUT) < 50) {
+			player.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}
 
-		if (!p.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
-			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "This jungle is very thick, you'll need a machette to cut through.");
+		if (!player.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "This jungle is very thick, you'll need a machette to cut through.");
 			return;
 		}
 
 		int axeId = -1;
 		if (obj.getID() != JUNGLE_VINE) {
 			for (final int a : Formulae.woodcuttingAxeIDs) {
-				if (p.getCarriedItems().hasCatalogID(a, Optional.of(false))) {
+				if (player.getCarriedItems().hasCatalogID(a, Optional.of(false))) {
 					axeId = a;
 					break;
 				}
 			}
 			if (axeId < 0) {
-				p.playerServerMessage(MessageType.QUEST, "You need an axe to chop this tree down");
+				player.playerServerMessage(MessageType.QUEST, "You need an axe to chop this tree down");
 				return;
 			}
 		} else {
 			axeId = ItemId.MACHETTE.id();
 		}
 
-		p.setBusy(true);
-		thinkbubble(p, new Item(axeId));
-		p.playerServerMessage(MessageType.QUEST, "You swing your " + p.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
-		if (p.getFatigue() >= 149840) {
-			if (p.getFatigue() < p.MAX_FATIGUE) {
-				p.message("You are getting very tired, you may get stuck if you continue into the jungle.");
+		player.setBusy(true);
+		thinkbubble(player, new Item(axeId));
+		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
+		if (player.getFatigue() >= 149840) {
+			if (player.getFatigue() < player.MAX_FATIGUE) {
+				player.message("You are getting very tired, you may get stuck if you continue into the jungle.");
 			}
 		}
 
-		cutJungle(axeId, obj, p, false);
+		cutJungle(axeId, obj, player, false);
 	}
 
-	private void cutJungle(int axeId, GameObject obj, Player p, boolean force) {
-		if (force || getLog(50, p.getSkills().getLevel(Skills.WOODCUT), axeId)) {
-			GameObject jungleObject = p.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+	private void cutJungle(int axeId, GameObject obj, Player player, boolean force) {
+		if (force || getLog(50, player.getSkills().getLevel(Skills.WOODCUT), axeId)) {
+			GameObject jungleObject = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (jungleObject != null && jungleObject.getID() == obj.getID()) {
 				if (obj.getID() == JUNGLE_VINE) {
-					p.getWorld().unregisterGameObject(jungleObject);
-					p.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
+					player.getWorld().unregisterGameObject(jungleObject);
+					player.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 					if (!force)
 						// authentic does not send to quest tab
-						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You hack your way through the jungle.");
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hack your way through the jungle.");
 				} else {
-					p.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
-					p.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
+					player.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
+					player.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
 				}
 
 				if (!force)
-					p.incExp(Skills.WOODCUT, 20, true);
+					player.incExp(Skills.WOODCUT, 20, true);
 			}
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());
-				p.getCarriedItems().getInventory().add(log);
-				p.playerServerMessage(MessageType.QUEST, "You get some wood");
+				player.getCarriedItems().getInventory().add(log);
+				player.playerServerMessage(MessageType.QUEST, "You get some wood");
 			}
-			p.teleport(obj.getX(), obj.getY());
-			if (p.getY() > 871) {
+			player.teleport(obj.getX(), obj.getY());
+			if (player.getY() > 871) {
 				if (obj.getID() == JUNGLE_VINE)
-					delay(p.getWorld().getServer().getConfig().GAME_TICK * 6);
-				p.message("You manage to hack your way into the Kharazi Jungle.");
+					delay(player.getWorld().getServer().getConfig().GAME_TICK * 6);
+				player.message("You manage to hack your way into the Kharazi Jungle.");
 			}
 		} else {
-			p.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
+			player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 		}
-		p.setBusy(false);
+		player.setBusy(false);
 	}
 
 	@Override
@@ -145,9 +145,9 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == JUNGLE_VINE) {
-			handleJungleWoodcut(obj, p);
+			handleJungleWoodcut(obj, player);
 		}
 	}
 

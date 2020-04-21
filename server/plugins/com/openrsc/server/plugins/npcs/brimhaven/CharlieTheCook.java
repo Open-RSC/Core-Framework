@@ -11,34 +11,34 @@ import com.openrsc.server.constants.NpcId;
 public class CharlieTheCook implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.CHARLIE_THE_COOK.id()) {
-			npcsay(p, n, "Hey what are you doing round here");
-			int menu = multi(p, n,
+			npcsay(player, n, "Hey what are you doing round here");
+			int menu = multi(player, n,
 				"I'm looking for a gherkin",
 				"I'm a fellow member of the phoenix gang",
 				"Just exploring");
 			if (menu == 0) {
-				fellowPheonix(p, n);
+				fellowPheonix(player, n);
 			} else if (menu == 1) {
-				fellowPheonix(p, n);
+				fellowPheonix(player, n);
 			} else if (menu == 2) {
-				npcsay(p, n, "This kitchen isn't for exploring",
+				npcsay(player, n, "This kitchen isn't for exploring",
 					"It's a private establishment, now get out");
 			}
 		}
 	}
 
-	private void fellowPheonix(Player p, Npc n) {
-		npcsay(p, n, "Aha a fellow phoenix",
+	private void fellowPheonix(Player player, Npc n) {
+		npcsay(player, n, "Aha a fellow phoenix",
 			"What brings you to Brimhaven?");
-		int menu2 = multi(p, n,
+		int menu2 = multi(player, n,
 			"Sun, sand and the fresh sea air",
 			"I want to steal Scarface Pete's candlesticks");
 		if (menu2 == 0) {
-			npcsay(p, n, "Well they are some things we have here yes");
+			npcsay(player, n, "Well they are some things we have here yes");
 		} else if (menu2 == 1) {
-			npcsay(p, n, "Ah yes the candlesticks",
+			npcsay(player, n, "Ah yes the candlesticks",
 				"Our progress hasn't been amazing on that front",
 				"Though we can help you a bit",
 				"The setting up of this restaurant is the start of things",
@@ -53,7 +53,7 @@ public class CharlieTheCook implements TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.CHARLIE_THE_COOK.id();
 	}
 

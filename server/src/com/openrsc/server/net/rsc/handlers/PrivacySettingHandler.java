@@ -6,11 +6,11 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class PrivacySettingHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		boolean[] newSettings = new boolean[4];
 		for (int i = 0; i < 4; i++) {
-			newSettings[i] = p.readByte() == 1;
+			newSettings[i] = packet.readByte() == 1;
 		}
 		for (int i = 0; i < 4; i++) {
 			player.getSettings().setPrivacySetting(i, newSettings[i]);

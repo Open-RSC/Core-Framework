@@ -25,7 +25,7 @@ public final class NurmofPickaxe implements ShopInterface,
 		new Item(ItemId.MITHRIL_PICKAXE.id(), 3), new Item(ItemId.ADAMANTITE_PICKAXE.id(), 2), new Item(ItemId.RUNE_PICKAXE.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.NURMOF.id();
 	}
 
@@ -40,48 +40,48 @@ public final class NurmofPickaxe implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "greetings welcome to my pickaxe shop",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "greetings welcome to my pickaxe shop",
 			"Do you want to buy my premium quality pickaxes");
 
 		List<String> options = new ArrayList<>();
 		options.add("Yes please");
 		options.add("No thankyou");
 		options.add("Are your pickaxes better than other pickaxes then?");
-		if (p.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
-			&& getMaxLevel(p, Skills.MINING) >= 99)
+		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+			&& getMaxLevel(player, Skills.MINING) >= 99)
 			options.add("Mining Skillcape");
 
-		int option = multi(p, n, false, //do not send over
+		int option = multi(player, n, false, //do not send over
 				options.toArray(new String[0]));
 		if (option == 0) {
-			say(p, n, "Yes please");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Yes please");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "No thankyou\"");
+			say(player, n, "No thankyou\"");
 		} else if (option == 2) {
-			say(p, n, "Are your pickaxes better than other pickaxes then?");
-			npcsay(p, n, "Of course they are",
+			say(player, n, "Are your pickaxes better than other pickaxes then?");
+			npcsay(player, n, "Of course they are",
 				"My pickaxes are made of higher grade metal than your ordinary bronze pickaxes",
 				"Allowing you to have multiple swings at a rock until you get the ore from it");
 		} else if (option == 3) {
-			if (getMaxLevel(p, Skills.MINING) >= 99) {
-				npcsay(p, n, "it's clear you are a miner",
+			if (getMaxLevel(player, Skills.MINING) >= 99) {
+				npcsay(player, n, "it's clear you are a miner",
 					"i can offer you cape",
 					"made for those who excel in the skill",
 					"the cost is 99,000 coins");
-				int choice2 = multi(p, n, true, "I'll buy one", "Not at the moment");
+				int choice2 = multi(player, n, true, "I'll buy one", "Not at the moment");
 				if (choice2 == 0) {
-					if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-						if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-							give(p, ItemId.MINING_CAPE.id(), 1);
-							npcsay(p, n, "wearing this cape while mining",
+					if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+						if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+							give(player, ItemId.MINING_CAPE.id(), 1);
+							npcsay(player, n, "wearing this cape while mining",
 								"will sometimes let you find more ore",
 								"wear it with pride");
 						}
 					} else {
-						npcsay(p, n, "come back with the money anytime");
+						npcsay(player, n, "come back with the money anytime");
 					}
 				}
 			}

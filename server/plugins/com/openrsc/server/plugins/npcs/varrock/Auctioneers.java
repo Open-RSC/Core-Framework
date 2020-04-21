@@ -66,7 +66,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		if ((n.getID() == AUCTIONEER) && command.equalsIgnoreCase("Auction")) {
 			return true;
 		}
@@ -77,47 +77,47 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player player) {
 		if (n.getID() == AUCTIONEER) {
 			if (command.equalsIgnoreCase("Auction")) {
-				if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
-					|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {
-					p.message("As an Iron Man, you cannot use the Auction.");
+				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
+					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if(validatebankpin(p)) {
-					p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
-					p.setAttribute("auctionhouse", true);
-					ActionSender.sendOpenAuctionHouse(p);
+				if(validatebankpin(player)) {
+					player.message("Welcome to the auction house " + (player.isMale() ? "Sir" : "Miss") + "!");
+					player.setAttribute("auctionhouse", true);
+					ActionSender.sendOpenAuctionHouse(player);
 				}
 			}
 		} else if (n.getID() == AUCTION_CLERK) {
 			if (command.equalsIgnoreCase("Auction")) {
-				if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
-					|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {
-					p.message("As an Iron Man, you cannot use the Auction.");
+				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
+					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if(validatebankpin(p)) {
-					p.message("Welcome to the auction house " + (p.isMale() ? "Sir" : "Miss") + "!");
-					p.setAttribute("auctionhouse", true);
-					ActionSender.sendOpenAuctionHouse(p);
+				if(validatebankpin(player)) {
+					player.message("Welcome to the auction house " + (player.isMale() ? "Sir" : "Miss") + "!");
+					player.setAttribute("auctionhouse", true);
+					ActionSender.sendOpenAuctionHouse(player);
 				}
 			} else if (command.equalsIgnoreCase("Teleport")) {
-				n.face(p);
-				p.face(n);
-				mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Would you like to be teleport to Varrock centre for 1000 gold?");
-				int yesOrNo = multi(p, "Yes please!", "No thanks.");
+				n.face(player);
+				player.face(n);
+				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Would you like to be teleport to Varrock centre for 1000 gold?");
+				int yesOrNo = multi(player, "Yes please!", "No thanks.");
 				if (yesOrNo == 0) {
-					if (ifheld(p, ItemId.COINS.id(), 1000)) {
-						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 1000));
-						p.teleport(133, 508);
-						p.message("You have been teleported to the Varrock Centre");
+					if (ifheld(player, ItemId.COINS.id(), 1000)) {
+						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 1000));
+						player.teleport(133, 508);
+						player.message("You have been teleported to the Varrock Centre");
 					} else {
-						p.message("You don't seem to have enough coins");
+						player.message("You don't seem to have enough coins");
 					}
 				} else if (yesOrNo == 1) {
-					p.message("You decide to stay where you are located.");
+					player.message("You decide to stay where you are located.");
 				}
 			}
 		}

@@ -13,8 +13,8 @@ public class ControlsGuide implements TalkNpcTrigger {
 	 * Tutorial island second room guide
 	 */
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Hello I'm here to tell you more about the game's controls",
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello I'm here to tell you more about the game's controls",
 			"Most of your options and character information",
 			"can be accesed by the menus in the top right corner of the screen",
 			"moving your mouse over the map icon",
@@ -24,14 +24,14 @@ public class ControlsGuide implements TalkNpcTrigger {
 			"though if the route is blocked, for example by a closed door",
 			"then your character won't move",
 			"Also notice the compass on the map which may be of help to you");
-		say(p, n, "Thankyou for your help");
-		npcsay(p, n, "Now carry on to speak to the combat instructor");
-		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 15)
-			p.getCache().set("tutorial", 15);
+		say(player, n, "Thankyou for your help");
+		npcsay(player, n, "Now carry on to speak to the combat instructor");
+		if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") < 15)
+			player.getCache().set("tutorial", 15);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.CONTROLS_GUIDE.id();
 	}
 

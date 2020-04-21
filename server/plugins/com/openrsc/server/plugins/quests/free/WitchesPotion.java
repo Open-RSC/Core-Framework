@@ -41,109 +41,109 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 
-	private void hettyDialogue(Player p, Npc n, int cID) {
+	private void hettyDialogue(Player player, Npc n, int cID) {
 		if (cID == -1) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcsay(p, n, "Greetings Traveller",
+					npcsay(player, n, "Greetings Traveller",
 						"What could you want with an old woman like me?");
-					int choice = multi(p, n,
+					int choice = multi(player, n,
 						"I am in search of a quest",
 						"I've heard that you are a witch");
 					if (choice == 0) {
-						npcsay(p, n, "Hmm maybe I can think of something for you",
+						npcsay(player, n, "Hmm maybe I can think of something for you",
 							"Would you like to become more proficient in the dark arts?");
-						int choice2 = multi(p, n, false, //do not send over
+						int choice2 = multi(player, n, false, //do not send over
 							"Yes help me become one with my darker side",
 							"No I have my principles and honour",
 							"What you mean improve my magic?");
 						if (choice2 == 0) {
-							say(p, n, "Yes help me become one with my darker side");
-							hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
+							say(player, n, "Yes help me become one with my darker side");
+							hettyDialogue(player, n, Hetty.SOUNDOFIT_ALRIGHT);
 						} else if (choice2 == 1) {
-							say(p, n, "No, I have my principles and honour");
-							npcsay(p, n, "Suit yourself, but you're missing out");
+							say(player, n, "No, I have my principles and honour");
+							npcsay(player, n, "Suit yourself, but you're missing out");
 						} else if (choice2 == 2) {
-							say(p, n, "What you mean improve my magic?");
-							npcsay(p, n, "Yes improve your magic",
+							say(player, n, "What you mean improve my magic?");
+							npcsay(player, n, "Yes improve your magic",
 								"Do you have no sense of drama?");
-							int choice4 = multi(p, n,
+							int choice4 = multi(player, n,
 								"Yes I'd like to improve my magic",
 								"No I'm not interested",
 								"Show me the mysteries of the dark arts");
 							if (choice4 == 0) {
-								p.message("The witch sighs");
-								hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
+								player.message("The witch sighs");
+								hettyDialogue(player, n, Hetty.SOUNDOFIT_ALRIGHT);
 							} else if (choice4 == 1) {
-								npcsay(p, n, "Many aren't to start off with",
+								npcsay(player, n, "Many aren't to start off with",
 									"But I think you'll be drawn back to this place");
 							} else if (choice4 == 2) {
-								hettyDialogue(p, n, Hetty.SOUNDOFIT_ALRIGHT);
+								hettyDialogue(player, n, Hetty.SOUNDOFIT_ALRIGHT);
 							}
 						}
 					} else if (choice == 1) {
-						npcsay(p,
+						npcsay(player,
 							n,
 							"Yes it does seem to be getting fairly common knowledge",
 							"I fear I may get a visit from the witch hunters of Falador before long");
 					}
 					break;
 				case 1:
-					npcsay(p, n, "So have you found the things for the potion");
-					if (p.getCarriedItems().hasCatalogID(ItemId.RATS_TAIL.id())
-						&& p.getCarriedItems().hasCatalogID(ItemId.EYE_OF_NEWT.id())
-						&& p.getCarriedItems().hasCatalogID(ItemId.BURNTMEAT.id())
-						&& p.getCarriedItems().hasCatalogID(ItemId.ONION.id())) {
-						say(p, n, "Yes I have everthing");
-						npcsay(p, n, "Excellent, can I have them then?");
-						p.message("You pass the ingredients to Hetty");
-						p.getCarriedItems().remove(new Item(ItemId.RATS_TAIL.id()));
-						p.getCarriedItems().remove(new Item(ItemId.EYE_OF_NEWT.id()));
-						p.getCarriedItems().remove(new Item(ItemId.BURNTMEAT.id()));
-						p.getCarriedItems().remove(new Item(ItemId.ONION.id()));
-						mes(p,
+					npcsay(player, n, "So have you found the things for the potion");
+					if (player.getCarriedItems().hasCatalogID(ItemId.RATS_TAIL.id())
+						&& player.getCarriedItems().hasCatalogID(ItemId.EYE_OF_NEWT.id())
+						&& player.getCarriedItems().hasCatalogID(ItemId.BURNTMEAT.id())
+						&& player.getCarriedItems().hasCatalogID(ItemId.ONION.id())) {
+						say(player, n, "Yes I have everthing");
+						npcsay(player, n, "Excellent, can I have them then?");
+						player.message("You pass the ingredients to Hetty");
+						player.getCarriedItems().remove(new Item(ItemId.RATS_TAIL.id()));
+						player.getCarriedItems().remove(new Item(ItemId.EYE_OF_NEWT.id()));
+						player.getCarriedItems().remove(new Item(ItemId.BURNTMEAT.id()));
+						player.getCarriedItems().remove(new Item(ItemId.ONION.id()));
+						mes(player,
 							"Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");
-						npcsay(p, n, "Ok drink from the cauldron");
-						delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-						p.updateQuestStage(getQuestId(), 2);
+						npcsay(player, n, "Ok drink from the cauldron");
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+						player.updateQuestStage(getQuestId(), 2);
 					} else {
-						say(p, n, "No not yet");
-						npcsay(p, n, "Well remember you need to get",
+						say(player, n, "No not yet");
+						npcsay(player, n, "Well remember you need to get",
 							"An eye of newt, a rat's tail,some burnt meat and an onion");
 					}
 					break;
 				case 2:
-					npcsay(p, n, "Greetings Traveller",
+					npcsay(player, n, "Greetings Traveller",
 						"Well are you going to drink the potion or not?");
 					break;
 				case -1:
-					npcsay(p, n, "Greetings Traveller",
+					npcsay(player, n, "Greetings Traveller",
 						"How's your magic coming along?");
-					say(p, n, "I'm practicing and slowly getting better");
-					npcsay(p, n, "good good");
+					say(player, n, "I'm practicing and slowly getting better");
+					npcsay(player, n, "good good");
 					break;
 			}
 		}
 		switch (cID) {
 			case Hetty.SOUNDOFIT_ALRIGHT:
-				npcsay(p,
+				npcsay(player,
 					n,
 					"Ok I'm going to make a potion to help bring out your darker self",
 					"So that you can perform acts of  dark magic with greater ease",
 					"You will need certain ingredients");
-				say(p, n, "What do I need");
-				npcsay(p, n,
+				say(player, n, "What do I need");
+				npcsay(player, n,
 					"You need an eye of newt, a rat's tail, an onion and a piece of burnt meat");
-				p.updateQuestStage(getQuestId(), 1);
+				player.updateQuestStage(getQuestId(), 1);
 				break;
 		}
 	}
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 		if (n.getID() == NpcId.HETTY.id()) {
-			hettyDialogue(p, n, -1);
+			hettyDialogue(player, n, -1);
 		} /*else if (n.getID() == NpcId.RAT_WITCHES_POTION.id()) { // This is not proven to be authentic, the earliest reference for this is Moparscape Classic Punkrocker's quest version from July 2009
 			if (p.getQuestStage(this) >= -1) {
 				p.message("Rats can't talk!");
@@ -167,7 +167,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.HETTY.id() /*|| n.getID() == NpcId.RAT_WITCHES_POTION.id()*/;
 	}
 
@@ -178,17 +178,17 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
-		if (p.getQuestStage(this) >= 1) {
-			p.getWorld().registerItem(new GroundItem(p.getWorld(), ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, p));
-			n.killedBy(p);
+	public void onKillNpc(Player player, Npc n) {
+		if (player.getQuestStage(this) >= 1) {
+			player.getWorld().registerItem(new GroundItem(player.getWorld(), ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, player));
+			n.killedBy(player);
 		} else {
-			n.killedBy(p);
+			n.killedBy(player);
 		}
 	}
 

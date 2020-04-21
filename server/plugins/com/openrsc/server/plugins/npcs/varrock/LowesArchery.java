@@ -21,7 +21,7 @@ public final class LowesArchery implements ShopInterface,
 		ItemId.LONGBOW.id(), 2), new Item(ItemId.CROSSBOW.id(), 2));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.LOWE.id();
 	}
 
@@ -36,19 +36,19 @@ public final class LowesArchery implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Welcome to Lowe's Archery Store",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Welcome to Lowe's Archery Store",
 			"Do you want to see my wares?");
 
-		int option = multi(p, n, false, //do not send over
+		int option = multi(player, n, false, //do not send over
 			"Yes please", "No, I prefer to bash things close up");
 
 		if (option == 0) {
-			say(p, n, "Yes Please");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Yes Please");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "No, I prefer to bash things close up");
+			say(player, n, "No, I prefer to bash things close up");
 		}
 	}
 

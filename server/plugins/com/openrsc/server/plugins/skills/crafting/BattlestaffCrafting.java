@@ -21,29 +21,29 @@ public class BattlestaffCrafting implements UseInvTrigger {
 	}
 
 	@Override
-	public void onUseInv(Player p, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		Battlestaff combine = null;
 		for (Battlestaff c : Battlestaff.values()) {
 			if (c.isValid(item1.getCatalogId(), item2.getCatalogId())) {
 				combine = c;
 			}
 		}
-		if (p.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
-			p.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
+		if (player.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
+			player.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
-		if (p.getCarriedItems().remove(new Item(combine.itemID)) != -1
-			&& p.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
+		if (player.getCarriedItems().remove(new Item(combine.itemID)) != -1
+			&& player.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
 			if (combine.messages.length > 1)
-				mes(p, combine.messages[0]);
+				mes(player, combine.messages[0]);
 			else
-				p.message(combine.messages[0]);
+				player.message(combine.messages[0]);
 
-			give(p, combine.resultItem, 1);
-			p.incExp(Skills.CRAFTING, combine.experience, true);
+			give(player, combine.resultItem, 1);
+			player.incExp(Skills.CRAFTING, combine.experience, true);
 
 			if (combine.messages.length > 1)
-				p.message(combine.messages[1]);
+				player.message(combine.messages[1]);
 		}
 	}
 

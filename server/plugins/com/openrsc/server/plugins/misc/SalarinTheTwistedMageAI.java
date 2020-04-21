@@ -17,20 +17,20 @@ public class SalarinTheTwistedMageAI implements SpellNpcTrigger {
 	 */
 
 	@Override
-	public boolean blockSpellNpc(Player p, Npc n) {
-		return n.getID() == NpcId.SALARIN_THE_TWISTED.id() && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2);
+	public boolean blockSpellNpc(Player player, Npc n) {
+		return n.getID() == NpcId.SALARIN_THE_TWISTED.id() && (player.getSkills().getLevel(Skills.ATTACK) > 2 || player.getSkills().getLevel(Skills.STRENGTH) > 2);
 	}
 
 	@Override
-	public void onSpellNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.SALARIN_THE_TWISTED.id() && (p.getSkills().getLevel(Skills.ATTACK) > 2 || p.getSkills().getLevel(Skills.STRENGTH) > 2)) {
-			if (!p.withinRange(n, 5))
+	public void onSpellNpc(Player player, Npc n) {
+		if (n.getID() == NpcId.SALARIN_THE_TWISTED.id() && (player.getSkills().getLevel(Skills.ATTACK) > 2 || player.getSkills().getLevel(Skills.STRENGTH) > 2)) {
+			if (!player.withinRange(n, 5))
 				return;
-			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Amshalaraz Nithcosh dimarilo", p));
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.message("You suddenly feel much weaker");
-			p.getSkills().setLevel(Skills.ATTACK, 0);
-			p.getSkills().setLevel(Skills.STRENGTH, 0);
+			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Amshalaraz Nithcosh dimarilo", player));
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.message("You suddenly feel much weaker");
+			player.getSkills().setLevel(Skills.ATTACK, 0);
+			player.getSkills().setLevel(Skills.STRENGTH, 0);
 		}
 	}
 }

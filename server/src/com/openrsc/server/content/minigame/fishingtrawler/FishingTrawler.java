@@ -160,16 +160,16 @@ public class FishingTrawler extends DelayedEvent {
 				}
 				else if (currentStage == State.FIRST_SHIP) {
 					if (getWaterLevel() >= SHIP_WATER_LIMIT_SECOND_BOAT) {
-						for (Player p : players) {
-							p.message("the boats full of water");
-							p.message("it's sinking!");
+						for (Player player : players) {
+							player.message("the boats full of water");
+							player.message("it's sinking!");
 							// this may fail, unknown why, if it does attempt to teleport players
 							// in the other stage
 							try {
-								p.setLocation(shipAreaWaterSpawn, true);
+								player.setLocation(shipAreaWaterSpawn, true);
 							}
 							catch(RuntimeException e) {
-								unteledPlayers.add(p);
+								unteledPlayers.add(player);
 							}
 						}
 						for (int i = 0; i < leaks.length; i++) {
@@ -195,18 +195,18 @@ public class FishingTrawler extends DelayedEvent {
 						}
 					}
 					if (getWaterLevel() >= SHIP_WATER_LIMIT_SINK) {
-						for (Player p : players) {
-							p.message("the boats gone under");
-							p.message("you're lost at sea!");
+						for (Player player : players) {
+							player.message("the boats gone under");
+							player.message("you're lost at sea!");
 							// defensive code, in case this teleport fails
 							// attempt to teleport in the cleanup stage
 							try {
-								p.setLocation(spawnFail, true);
+								player.setLocation(spawnFail, true);
 							}
 							catch(RuntimeException e) {
-								unteledPlayers.add(p);
+								unteledPlayers.add(player);
 							}
-							ActionSender.hideFishingTrawlerInterface(p);
+							ActionSender.hideFishingTrawlerInterface(player);
 						}
 						resetGame();
 					}
@@ -254,8 +254,8 @@ public class FishingTrawler extends DelayedEvent {
 
 	private void updateInterfaces() {
 		int minutesLeft = timeTillReturn / 100;// think its correct?
-		for (Player p : players) {
-			ActionSender.updateFishingTrawler(p, waterLevel, minutesLeft, fishCaught, isNetBroken());
+		for (Player player : players) {
+			ActionSender.updateFishingTrawler(player, waterLevel, minutesLeft, fishCaught, isNetBroken());
 		}
 	}
 
@@ -277,8 +277,8 @@ public class FishingTrawler extends DelayedEvent {
 	private void netBreak() {
 		if (DataConversions.random(0, 100) >= 75) {
 			setNetBroken(true);
-			for (Player p : players) {
-				ActionSender.sendBox(p,
+			for (Player player : players) {
+				ActionSender.sendBox(player,
 					"@red@ The trawler net is damaged% %you cannot catch any fish with a damaged net",
 					false);
 			}
@@ -309,13 +309,13 @@ public class FishingTrawler extends DelayedEvent {
 		else {
 			// x2 since about half will be filled with junk
 			int rewardForEach = 2 * fishCaught / players.size();
-			for (Player p : players) {
-				ActionSender.sendBox(p,
+			for (Player player : players) {
+				ActionSender.sendBox(player,
 					"@yel@you have trawled a full net% %@yel@It's time to go back in and inspect the catch", false);
-				p.message("murphy turns the boat towards shore");
-				p.setLocation(SPAWN_LAND, true);
-				p.getCache().set("fishing_trawler_reward", rewardForEach);
-				ActionSender.hideFishingTrawlerInterface(p);
+				player.message("murphy turns the boat towards shore");
+				player.setLocation(SPAWN_LAND, true);
+				player.getCache().set("fishing_trawler_reward", rewardForEach);
+				ActionSender.hideFishingTrawlerInterface(player);
 			}
 		}
 		players.clear();
@@ -454,29 +454,29 @@ public class FishingTrawler extends DelayedEvent {
 			waterLevel = 0;
 	}
 	
-	public void addPlayer(Player p) {
-		p.setLocation(spawnLocation, true);
-		players.add(p);
-		ActionSender.showFishingTrawlerInterface(p);
+	public void addPlayer(Player player) {
+		player.setLocation(spawnLocation, true);
+		players.add(player);
+		ActionSender.showFishingTrawlerInterface(player);
 		if (this.currentStage == State.STANDBY) {
 			start();
 		}
 	}
 	
-	public void disconnectPlayer(Player p, boolean fromAction) {
-		players.remove(p);
-		p.setLocation(spawnFail, true);
+	public void disconnectPlayer(Player player, boolean fromAction) {
+		players.remove(player);
+		player.setLocation(spawnFail, true);
 		if (fromAction) {
-			ActionSender.hideFishingTrawlerInterface(p);
+			ActionSender.hideFishingTrawlerInterface(player);
 		}
 	}
 
 	//quitting players (by talking to Murphy) always got the west fail spawn
 	//regardless of chosen boat
-	public void quitPlayer(Player p) {
-		players.remove(p);
-		p.setLocation(SPAWN_WEST_FAIL, true);
-		ActionSender.hideFishingTrawlerInterface(p);
+	public void quitPlayer(Player player) {
+		players.remove(player);
+		player.setLocation(SPAWN_WEST_FAIL, true);
+		ActionSender.hideFishingTrawlerInterface(player);
 	}
 	
 	public Area getShipAreaWater() {

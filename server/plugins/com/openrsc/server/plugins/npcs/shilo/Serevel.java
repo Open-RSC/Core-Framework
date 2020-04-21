@@ -13,35 +13,35 @@ import com.openrsc.server.constants.NpcId;
 public class Serevel implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.SEREVEL.id()) {
-			say(p, n, "Hello");
-			npcsay(p, n, "Hello Bwana.",
+			say(player, n, "Hello");
+			npcsay(player, n, "Hello Bwana.",
 				"Are you interested in buying a ticket for the 'Lady of the Waves'?",
 				"It's a ship that can take you to either Port Sarim or Khazard Port",
 				"The ship lies west of Shilo Village and south of Cairn Island.",
 				"The tickets cost 100 Gold Pieces.",
 				"Would you like to purchase a ticket Bwana?");
-			int menu = multi(p, n,
+			int menu = multi(player, n,
 				"Yes, that sounds great!",
 				"No thanks.");
 			if (menu == 0) {
-				if (ifheld(p, ItemId.COINS.id(), 100)) {
-					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
-					npcsay(p, n, "Great, nice doing business with you.");
-					give(p, ItemId.SHIP_TICKET.id(), 1);
+				if (ifheld(player, ItemId.COINS.id(), 100)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
+					npcsay(player, n, "Great, nice doing business with you.");
+					give(player, ItemId.SHIP_TICKET.id(), 1);
 				} else {
-					npcsay(p, n, "Sorry Bwana, you don't have enough money.",
+					npcsay(player, n, "Sorry Bwana, you don't have enough money.",
 						"Come back when you have 100 Gold Pieces.");
 				}
 			} else if (menu == 1) {
-				npcsay(p, n, "Fair enough Bwana, let me know if you change your mind.");
+				npcsay(player, n, "Fair enough Bwana, let me know if you change your mind.");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SEREVEL.id();
 	}
 

@@ -24,8 +24,8 @@ public class PlayerDuelHandler implements PacketHandler {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getTrade().isTradeActive();
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		int pID = packet.getID();
 		Player affectedPlayer = player.getDuel().getDuelRecipient();
 
 		if (player == affectedPlayer) {
@@ -68,7 +68,7 @@ public class PlayerDuelHandler implements PacketHandler {
 		int duelFirstAccept = OpcodeIn.DUEL_FIRST_ACCEPTED.getOpcode();
 
 		if (pID == duelInvite) { // Sending duel request
-			int playerIndex = p.readShort();
+			int playerIndex = packet.readShort();
 			affectedPlayer = player.getWorld().getPlayer(playerIndex);
 			if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
 				|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
@@ -325,11 +325,11 @@ public class PlayerDuelHandler implements PacketHandler {
 			affectedPlayer.getDuel().setDuelConfirmAccepted(false);
 
 			player.getDuel().resetDuelOffer();
-			int count = p.readByte();
+			int count = packet.readByte();
 			for (int slot = 0; slot < count; slot++) {
-				int catalogID = p.readShort();
-				int amount = p.readInt();
-				int noted = p.readShort();
+				int catalogID = packet.readShort();
+				int amount = packet.readInt();
+				int noted = packet.readShort();
 				Item tItem = new Item(catalogID, amount, noted == 1);
 				if (tItem.getAmount() < 1) {
 					player.setSuspiciousPlayer(true, "duel item amount < 1");
@@ -380,7 +380,7 @@ public class PlayerDuelHandler implements PacketHandler {
 
 			// Read each setting and set them accordingly.
 			for (int i = 0; i < 4; i++) {
-				boolean b = p.readByte() == 1;
+				boolean b = packet.readByte() == 1;
 				player.getDuel().setDuelSetting(i, b);
 				affectedPlayer.getDuel().setDuelSetting(i, b);
 			}
@@ -410,10 +410,10 @@ public class PlayerDuelHandler implements PacketHandler {
 		}
 	}
 
-	private void unsetOptions(Player p) {
-		if (p == null) {
+	private void unsetOptions(Player player) {
+		if (player == null) {
 			return;
 		}
-		p.getDuel().resetAll();
+		player.getDuel().resetAll();
 	}
 }

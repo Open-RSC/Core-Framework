@@ -35,9 +35,9 @@ public class Equipment {
 
 	//------------------------------------------------------------------
 	//Constructors------------------------------------------------------
-	public Equipment(Player p) {
+	public Equipment(Player player) {
 		synchronized (list) {
-			this.player = p;
+			this.player = player;
 			for (int i = 0; i < SLOT_COUNT; i++)
 				list[i] = null;
 		}

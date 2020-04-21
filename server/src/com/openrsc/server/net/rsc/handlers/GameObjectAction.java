@@ -18,14 +18,14 @@ public class GameObjectAction implements PacketHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public void handlePacket(Packet p, Player player) {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) {
+		int pID = packet.getID();
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		final GameObject object = player.getViewArea().getGameObject(Point.location(p.readShort(), p.readShort()));
+		final GameObject object = player.getViewArea().getGameObject(Point.location(packet.readShort(), packet.readShort()));
 
 		final int click = pID == OpcodeIn.OBJECT_COMMAND1.getOpcode() ? 0 : 1;
 		player.click = click;

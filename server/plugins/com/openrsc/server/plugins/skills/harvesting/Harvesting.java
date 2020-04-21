@@ -130,7 +130,7 @@ public final class Harvesting implements OpLocTrigger {
 	private int chanceAskSoil = 5;
 	private int chanceAskWatering = 7;
 
-	public static int getTool(Player p, GameObject obj) {
+	public static int getTool(Player player, GameObject obj) {
 		String objName = obj.getGameObjectDef().getName();
 		int expectedTool;
 		if (objName.toLowerCase().contains("tree") || objName.toLowerCase().contains("palm") || objName.toLowerCase().contains("pineapple")) {
@@ -138,7 +138,7 @@ public final class Harvesting implements OpLocTrigger {
 		} else {
 			expectedTool = ItemId.HAND_SHOVEL.id();
 		}
-		return p.getCarriedItems().hasCatalogID(expectedTool, Optional.of(false)) ? expectedTool : ItemId.NOTHING.id();
+		return player.getCarriedItems().hasCatalogID(expectedTool, Optional.of(false)) ? expectedTool : ItemId.NOTHING.id();
 	}
 
 	@Override
@@ -399,50 +399,50 @@ public final class Harvesting implements OpLocTrigger {
 			command.equalsIgnoreCase("clip") || (command.equals("collect") && obj.getID() == 1238);
 	}
 
-	private int checkCare(GameObject obj, Player p) {
+	private int checkCare(GameObject obj, Player player) {
 		long timestamp = System.currentTimeMillis() + 3 * 60000;
 		if (DataConversions.random(1, chanceAskWatering) == 1) {
-			if (p.getAttribute("watered", null) == null
-				|| expiredAction(obj, p, "watered")) {
-				if (!p.getCarriedItems().hasCatalogID(ItemId.WATERING_CAN.id(), Optional.of(false))) {
+			if (player.getAttribute("watered", null) == null
+				|| expiredAction(obj, player, "watered")) {
+				if (!player.getCarriedItems().hasCatalogID(ItemId.WATERING_CAN.id(), Optional.of(false))) {
 					return HarvestingEvents.NEGLECTED.getID();
 				}
-				p.playerServerMessage(MessageType.QUEST, "You water the harvesting spot");
-				p.setAttribute("watered", new TimePoint(obj.getX(), obj.getY(), timestamp));
-				updateUsesWateringCan(p);
+				player.playerServerMessage(MessageType.QUEST, "You water the harvesting spot");
+				player.setAttribute("watered", new TimePoint(obj.getX(), obj.getY(), timestamp));
+				updateUsesWateringCan(player);
 			}
 			return HarvestingEvents.WATER.getID();
 		} else if (DataConversions.random(1, chanceAskSoil) == 1) {
-			if (p.getAttribute("soiled", null) == null
-				|| expiredAction(obj, p, "soiled")) {
-				if (!p.getCarriedItems().hasCatalogID(ItemId.SOIL.id(), Optional.of(false))) {
+			if (player.getAttribute("soiled", null) == null
+				|| expiredAction(obj, player, "soiled")) {
+				if (!player.getCarriedItems().hasCatalogID(ItemId.SOIL.id(), Optional.of(false))) {
 					return HarvestingEvents.NEGLECTED.getID();
 				}
-				p.playerServerMessage(MessageType.QUEST, "You add soil to the spot");
-				p.setAttribute("soiled", new TimePoint(obj.getX(), obj.getY(), timestamp));
-				p.getCarriedItems().getInventory().replace( ItemId.SOIL.id(), ItemId.BUCKET.id());
+				player.playerServerMessage(MessageType.QUEST, "You add soil to the spot");
+				player.setAttribute("soiled", new TimePoint(obj.getX(), obj.getY(), timestamp));
+				player.getCarriedItems().getInventory().replace( ItemId.SOIL.id(), ItemId.BUCKET.id());
 			}
 			return HarvestingEvents.SOIL.getID();
 		}
 		return HarvestingEvents.NONE.getID();
 	}
 
-	private void updateUsesWateringCan(Player p) {
-		if (!p.getCache().hasKey("uses_wcan")) {
-			p.getCache().set("uses_wcan", 1);
+	private void updateUsesWateringCan(Player player) {
+		if (!player.getCache().hasKey("uses_wcan")) {
+			player.getCache().set("uses_wcan", 1);
 		} else {
-			int uses = p.getCache().getInt("uses_wcan");
+			int uses = player.getCache().getInt("uses_wcan");
 			if (uses >= 4) {
-				p.getCarriedItems().remove(new Item(ItemId.WATERING_CAN.id()));
-				p.getCache().remove("uses_wcan");
+				player.getCarriedItems().remove(new Item(ItemId.WATERING_CAN.id()));
+				player.getCache().remove("uses_wcan");
 			} else {
-				p.getCache().put("uses_wcan", uses + 1);
+				player.getCache().put("uses_wcan", uses + 1);
 			}
 		}
 	}
 
-	private boolean expiredAction(GameObject obj, Player p, String key) {
-		Object testObj = p.getAttribute(key);
+	private boolean expiredAction(GameObject obj, Player player, String key) {
+		Object testObj = player.getAttribute(key);
 		if (!(testObj instanceof TimePoint)) {
 			return true;
 		} else {

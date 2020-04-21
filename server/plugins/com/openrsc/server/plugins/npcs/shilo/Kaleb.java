@@ -13,67 +13,67 @@ import com.openrsc.server.constants.NpcId;
 public class Kaleb implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KALEB.id()) {
-			say(p, n, "Hello.");
-			npcsay(p, n, "Hello Bwana,",
+			say(player, n, "Hello.");
+			npcsay(player, n, "Hello Bwana,",
 				"What can I do for you today?");
-			int menu = multi(p, n, false, //do not send over
+			int menu = multi(player, n, false, //do not send over
 				"Can you tell me a bit about this place?",
 				"Buy some wine: 1 Gold.",
 				"Buy some Beer: 2 Gold.",
 				"Buy a nights rest: 35 Gold",
 				"Buy a pack of 5 Dorm tickets: 175 Gold");
 			if (menu == 0) {
-				say(p, n, "Can you tell me a bit about this place?");
-				npcsay(p, n, "Of course Bwana, you look like a traveler!");
-				say(p, n, "Yes I am actually!");
-				npcsay(p, n, "Well, I am a traveller myself, and I have set up this hostel",
+				say(player, n, "Can you tell me a bit about this place?");
+				npcsay(player, n, "Of course Bwana, you look like a traveler!");
+				say(player, n, "Yes I am actually!");
+				npcsay(player, n, "Well, I am a traveller myself, and I have set up this hostel",
 					"for adventurers and travellers who are weary from their journey",
 					"There is a dormitory upstairs if you are tired, it costs 35 gold",
 					"pieces which covers the costs of laundry and cleaning.");
 			} else if (menu == 1) {
-				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
-				if (ifheld(p, ItemId.COINS.id(), 1)) {
-					p.getCarriedItems().remove(new Item(ItemId.COINS.id()));
-					give(p, ItemId.WINE.id(), 1);
-					p.message("You purchase a jug of wine.");
+				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				if (ifheld(player, ItemId.COINS.id(), 1)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id()));
+					give(player, ItemId.WINE.id(), 1);
+					player.message("You purchase a jug of wine.");
 				} else {
-					npcsay(p, n, "Sorry Bwana, you don't have enough money.");
+					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			} else if (menu == 2) {
-				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
-				if (ifheld(p, ItemId.COINS.id(), 2)) {
-					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
-					give(p, ItemId.BEER.id(), 1);
-					p.message("You purchase a frothy glass of beer.");
+				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				if (ifheld(player, ItemId.COINS.id(), 2)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+					give(player, ItemId.BEER.id(), 1);
+					player.message("You purchase a frothy glass of beer.");
 				} else {
-					npcsay(p, n, "Sorry Bwana, you don't have enough money.");
+					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			} else if (menu == 3) {
-				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
-				if (ifheld(p, ItemId.COINS.id(), 35)) {
-					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 35));
-					give(p, ItemId.PARAMAYA_REST_TICKET.id(), 1);
-					p.message("You purchase a ticket to access the dormitory.");
+				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				if (ifheld(player, ItemId.COINS.id(), 35)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 35));
+					give(player, ItemId.PARAMAYA_REST_TICKET.id(), 1);
+					player.message("You purchase a ticket to access the dormitory.");
 				} else {
-					npcsay(p, n, "Sorry Bwana, you don't have enough money.");
+					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			} else if (menu == 5) {
-				npcsay(p, n, "Very good " + (p.isMale() ? "sir" : "madam") + "!");
-				if (ifheld(p, ItemId.COINS.id(), 175)) {
-					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 175));
-					give(p, ItemId.PARAMAYA_REST_TICKET.id(), 5);
-					p.message("You purchase 5 tickets to access the dormitory.");
+				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				if (ifheld(player, ItemId.COINS.id(), 175)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 175));
+					give(player, ItemId.PARAMAYA_REST_TICKET.id(), 5);
+					player.message("You purchase 5 tickets to access the dormitory.");
 				} else {
-					npcsay(p, n, "Sorry Bwana, you don't have enough money.");
+					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.KALEB.id();
 	}
 

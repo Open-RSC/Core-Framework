@@ -64,9 +64,9 @@ public class WalkingQueue {
 			}
 		}
 		else {
-			Player p = (Player) mob;
-			p.setLocation(Point.location(destX, destY));
-			p.stepIncrementActivity();
+			Player player = (Player) mob;
+			player.setLocation(Point.location(destX, destY));
+			player.stepIncrementActivity();
 		}
 
 	}
@@ -217,8 +217,8 @@ public class WalkingQueue {
 		}
 
 		if (mob.isNpc()) {
-			Player p = region.getPlayer(x, y);
-			return p != null;
+			Player player = region.getPlayer(x, y);
+			return player != null;
 		}
 		return false;
 	}

@@ -14,10 +14,10 @@ public class FatigueExpert implements TalkNpcTrigger {
 	 * Tutorial island fatigue expert
 	 */
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") <= 85) {
-			say(p, n, "Hi I'm feeling a little tired after all this learning");
-			npcsay(p, n, "Yes when you use your skills you will slowly get fatigued",
+	public void onTalkNpc(Player player, Npc n) {
+		if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") <= 85) {
+			say(player, n, "Hi I'm feeling a little tired after all this learning");
+			npcsay(player, n, "Yes when you use your skills you will slowly get fatigued",
 				"If you look on your stats menu you will see a fatigue stat",
 				"When your fatigue reaches 100 percent then you will be very tired",
 				"You won't be able to concentrate enough to gain experience in your skills",
@@ -25,20 +25,20 @@ public class FatigueExpert implements TalkNpcTrigger {
 				"Click on the bed to go sleep",
 				"Then follow the instructions to wake up",
 				"When you have done that talk to me again");
-			p.getCache().set("tutorial", 85);
-		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 86) {
-			npcsay(p, n, "How are you feeling now?");
-			say(p, n, "I feel much better rested now");
-			npcsay(p, n, "Tell you what, I'll give you this useful sleeping bag",
+			player.getCache().set("tutorial", 85);
+		} else if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 86) {
+			npcsay(player, n, "How are you feeling now?");
+			say(player, n, "I feel much better rested now");
+			npcsay(player, n, "Tell you what, I'll give you this useful sleeping bag",
 				"So you can rest anywhere");
-			give(p, ItemId.SLEEPING_BAG.id(), 1);
-			p.message("The expert hands you a sleeping bag");
-			npcsay(p, n, "This saves you the trouble of finding a bed",
+			give(player, ItemId.SLEEPING_BAG.id(), 1);
+			player.message("The expert hands you a sleeping bag");
+			npcsay(player, n, "This saves you the trouble of finding a bed",
 				"but you will need to sleep longer to restore your fatigue fully",
 				"You can now go through the next door\"");
-			p.getCache().set("tutorial", 90);
+			player.getCache().set("tutorial", 90);
 		} else {
-			npcsay(p, n, "When you use your skills you will slowly get fatigued",
+			npcsay(player, n, "When you use your skills you will slowly get fatigued",
 				"If you look on your stats menu you will see a fatigue stat",
 				"When your fatigue reaches 100 percent then you will be very tired",
 				"You won't be able to concentrate enough to gain experience in your skills",
@@ -50,7 +50,7 @@ public class FatigueExpert implements TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FATIGUE_EXPERT.id();
 	}
 

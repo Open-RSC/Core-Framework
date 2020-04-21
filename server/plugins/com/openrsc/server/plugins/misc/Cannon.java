@@ -201,16 +201,16 @@ public class Cannon implements OpLocTrigger,
 		}
 	}
 
-	private void handleFire(Player p) {
-		if (!p.getCarriedItems().getInventory().contains(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
-			p.message("you're out of ammo");
+	private void handleFire(Player player) {
+		if (!player.getCarriedItems().getInventory().contains(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
+			player.message("you're out of ammo");
 			return;
-		} else if (p.isCannonEventActive()) {
+		} else if (player.isCannonEventActive()) {
 			return;
 		}
-		FireCannonEvent cannonEvent = new FireCannonEvent(p.getWorld(), p);
-		p.setCannonEvent(cannonEvent);
-		p.getWorld().getServer().getGameEventHandler().add(cannonEvent);
+		FireCannonEvent cannonEvent = new FireCannonEvent(player.getWorld(), player);
+		player.setCannonEvent(cannonEvent);
+		player.getWorld().getServer().getGameEventHandler().add(cannonEvent);
 	}
 
 	@Override
@@ -263,7 +263,7 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 946) {
 			return true;
 		}
@@ -277,30 +277,30 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 946) {
-			if (!obj.getOwner().equals(p.getUsername())) {
-				p.message("you can only add this stand to your own base");
+			if (!obj.getOwner().equals(player.getUsername())) {
+				player.message("you can only add this stand to your own base");
 				return;
 			}
-			addCannonStand(p, item, obj);
+			addCannonStand(player, item, obj);
 		}
 		if (obj.getID() == 947) {
-			if (!obj.getOwner().equals(p.getUsername())) {
-				p.message("you can only add the barrels to your own cannon");
+			if (!obj.getOwner().equals(player.getUsername())) {
+				player.message("you can only add the barrels to your own cannon");
 				return;
 			}
-			addCannonBarrels(p, item, obj);
+			addCannonBarrels(player, item, obj);
 		}
 		if (obj.getID() == 948) {
-			if (!obj.getOwner().equals(p.getUsername())) {
-				p.message("you can only add the furnace to your own cannon");
+			if (!obj.getOwner().equals(player.getUsername())) {
+				player.message("you can only add the furnace to your own cannon");
 				return;
 			}
-			addCannonFurnace(p, item, obj);
+			addCannonFurnace(player, item, obj);
 		}
 		if (obj.getID() == 943 && item.getCatalogId() == ItemId.MULTI_CANNON_BALL.id()) {
-			p.message("the cannon loads automatically");
+			player.message("the cannon loads automatically");
 		}
 	}
 }

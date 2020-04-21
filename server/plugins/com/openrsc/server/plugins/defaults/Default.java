@@ -75,14 +75,14 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		p.message(
+	public void onTalkNpc(final Player player, final Npc n) {
+		player.message(
 			"The " + n.getDef().getName()
 				+ " does not appear interested in talking");
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return false;
 	}
 
@@ -101,11 +101,11 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
-		if (doors.blockWallObjectAction(obj, click, p)) {
-			doors.onWallObjectAction(obj, click, p);
+	public void onOpBound(GameObject obj, Integer click, Player player) {
+		if (doors.blockWallObjectAction(obj, click, player)) {
+			doors.onWallObjectAction(obj, click, player);
 		} else {
-			p.message("Nothing interesting happens");
+			player.message("Nothing interesting happens");
 		}
 	}
 
@@ -115,12 +115,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onCatGrowth(Player p) {
+	public void onCatGrowth(Player player) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockCatGrowth(Player p) {
+	public boolean blockCatGrowth(Player player) {
 		return false;
 	}
 
@@ -135,43 +135,43 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onDropObj(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player player, Item i, Boolean fromInventory) {
 		if (fromInventory) {
-			if (p.getCarriedItems().remove(i) < 0) {
-				p.setStatus(Action.IDLE);
+			if (player.getCarriedItems().remove(i) < 0) {
+				player.setStatus(Action.IDLE);
 				return;
 			}
 		} else {
-			int slot = p.getCarriedItems().getEquipment().searchEquipmentForItem(i.getCatalogId());
-			if (slot == -1 || p.getCarriedItems().getEquipment().get(slot).getAmount() != i.getAmount()) {
-				p.setStatus(Action.IDLE);
+			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(i.getCatalogId());
+			if (slot == -1 || player.getCarriedItems().getEquipment().get(slot).getAmount() != i.getAmount()) {
+				player.setStatus(Action.IDLE);
 				return;
 			}
-			p.getCarriedItems().getEquipment().remove(i, i.getAmount());
-			ActionSender.sendEquipmentStats(p);
-			if (i.getDef(p.getWorld()).getWieldPosition() < 12)
-				p.updateWornItems(i.getDef(p.getWorld()).getWieldPosition(), p.getSettings().getAppearance().getSprite(i.getDef(p.getWorld()).getWieldPosition()));
+			player.getCarriedItems().getEquipment().remove(i, i.getAmount());
+			ActionSender.sendEquipmentStats(player);
+			if (i.getDef(player.getWorld()).getWieldPosition() < 12)
+				player.updateWornItems(i.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(i.getDef(player.getWorld()).getWieldPosition()));
 		}
 
-		GroundItem groundItem = new GroundItem(p.getWorld(), i.getCatalogId(), p.getX(), p.getY(), i.getAmount(), p, i.getNoted());
-		ActionSender.sendSound(p, "dropobject");
-		p.getWorld().registerItem(groundItem, p.getWorld().getServer().getConfig().GAME_TICK * 300);
-		p.getWorld().getServer().getGameLogger().addQuery(new GenericLog(p.getWorld(), p.getUsername() + " dropped " + i.getDef(p.getWorld()).getName() + " x"
-			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + p.getLocation().toString()));
+		GroundItem groundItem = new GroundItem(player.getWorld(), i.getCatalogId(), player.getX(), player.getY(), i.getAmount(), player, i.getNoted());
+		ActionSender.sendSound(player, "dropobject");
+		player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 300);
+		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + i.getDef(player.getWorld()).getName() + " x"
+			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 	}
 
 	@Override
-	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
 		return false;
 	}
 
 	@Override
-	public void onIndirectTalkToNpc(Player p, Npc n) {
+	public void onIndirectTalkToNpc(Player player, Npc n) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
+	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
 		return false;
 	}
 
@@ -216,73 +216,73 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player player) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		return false;
 	}
 
 	@Override
-	public void onTakeObj(Player p, GroundItem i) {
-		p.groundItemTake(i);
+	public void onTakeObj(Player player, GroundItem i) {
+		player.groundItemTake(i);
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		return false;
 	}
 
 	@Override
-	public void onAttackPlayer(Player p, Player affectedmob) {
-		p.startCombat(affectedmob);
-		if (p.getWorld().getServer().getConfig().WANT_PARTIES) {
-			if (p.getParty() != null) {
-				p.getParty().sendParty();
+	public void onAttackPlayer(Player player, Player affectedmob) {
+		player.startCombat(affectedmob);
+		if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+			if (player.getParty() != null) {
+				player.getParty().sendParty();
 			}
 		}
 	}
 
 	@Override
-	public boolean blockAttackPlayer(Player p, Player affectedmob) {
+	public boolean blockAttackPlayer(Player player, Player affectedmob) {
 		return false;
 	}
 
 	@Override
-	public void onAttackNpc(Player p, Npc affectedmob) {
-		p.startCombat(affectedmob);
-		if (p.getWorld().getServer().getConfig().WANT_PARTIES) {
-			if (p.getParty() != null) {
-				p.getParty().sendParty();
+	public void onAttackNpc(Player player, Npc affectedmob) {
+		player.startCombat(affectedmob);
+		if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+			if (player.getParty() != null) {
+				player.getParty().sendParty();
 			}
 		}
 	}
 
 	@Override
-	public boolean blockAttackNpc(Player p, Npc affectedmob) {
+	public boolean blockAttackNpc(Player player, Npc affectedmob) {
 		return false;
 	}
 
 	@Override
-	public void onPlayerDeath(Player p) {
+	public void onPlayerDeath(Player player) {
 		// TODO: This plugin is not handled anywhere
 		// No default actions
 	}
 
 	@Override
-	public boolean blockPlayerDeath(Player p) {
+	public boolean blockPlayerDeath(Player player) {
 		return false;
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return false;
 	}
 
@@ -317,12 +317,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onSpellInv(Player p, Integer itemID, Integer spellID) {
+	public void onSpellInv(Player player, Integer itemID, Integer spellID) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockSpellInv(Player p, Integer itemID, Integer spellID) {
+	public boolean blockSpellInv(Player player, Integer itemID, Integer spellID) {
 		return false;
 	}
 
@@ -337,12 +337,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onSpellNpc(Player p, Npc n) {
+	public void onSpellNpc(Player player, Npc n) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockSpellNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player player, Npc n) {
 		return false;
 	}
 
@@ -357,33 +357,33 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onEscapeNpc(Player p, Npc n) {
+	public void onEscapeNpc(Player player, Npc n) {
 		// TODO: This plugin is not handled anywhere
 		// No default actions
 	}
 
 	@Override
-	public boolean blockEscapeNpc(Player p, Npc n) {
+	public boolean blockEscapeNpc(Player player, Npc n) {
 		return false;
 	}
 
 	@Override
-	public void onPlayerRangePlayer(Player p, Player affectedMob) {
+	public void onPlayerRangePlayer(Player player, Player affectedMob) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockPlayerRangePlayer(Player p, Player affectedMob) {
+	public boolean blockPlayerRangePlayer(Player player, Player affectedMob) {
 		return false;
 	}
 
 	@Override
-	public void onPlayerRangeNpc(Player p, Npc n) {
+	public void onPlayerRangeNpc(Player player, Npc n) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockPlayerRangeNpc(Player p, Npc n) {
+	public boolean blockPlayerRangeNpc(Player player, Npc n) {
 		return false;
 	}
 
@@ -398,13 +398,13 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onTeleport(Player p) {
+	public void onTeleport(Player player) {
 		// TODO: player.teleport() logic needs to be moved here. There needs to be an exception when bubble is false.
 		// No default actions
 	}
 
 	@Override
-	public boolean blockTeleport(Player p) {
+	public boolean blockTeleport(Player player) {
 		return false;
 	}
 
@@ -435,7 +435,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockWithdraw(Player p, Integer catalogID, Integer amount, Boolean wantsNotes) {
+	public boolean blockWithdraw(Player player, Integer catalogID, Integer amount, Boolean wantsNotes) {
 		return false;
 	}
 
@@ -446,7 +446,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockDeposit(Player p, Integer catalogID, Integer amount) {
+	public boolean blockDeposit(Player player, Integer catalogID, Integer amount) {
 		return false;
 	}
 }

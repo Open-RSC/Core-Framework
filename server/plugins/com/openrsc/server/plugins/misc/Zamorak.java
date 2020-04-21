@@ -26,47 +26,47 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.WINE_OF_ZAMORAK.id()) {
-			Npc zam = ifnearvisnpc(p, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
+			Npc zam = ifnearvisnpc(player, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			return zam != null && !zam.inCombat();
 		}
 		return false;
 	}
 
 	@Override
-	public boolean blockAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player player, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onAttackNpc(Player p, Npc zamorak) {
+	public void onAttackNpc(Player player, Npc zamorak) {
 		if (zamorak.getID() == NpcId.MONK_OF_ZAMORAK.id() || zamorak.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
-			applyCurse(p, zamorak);
+			applyCurse(player, zamorak);
 		}
 	}
 
 	@Override
-	public boolean blockSpellNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player player, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onSpellNpc(Player p, Npc zamorak) {
+	public void onSpellNpc(Player player, Npc zamorak) {
 		if (zamorak.getID() == NpcId.MONK_OF_ZAMORAK.id() || zamorak.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
-			applyCurse(p, zamorak);
+			applyCurse(player, zamorak);
 		}
 	}
 
 	@Override
-	public boolean blockPlayerRangeNpc(Player p, Npc n) {
+	public boolean blockPlayerRangeNpc(Player player, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onPlayerRangeNpc(Player p, Npc zamorak) {
+	public void onPlayerRangeNpc(Player player, Npc zamorak) {
 		if (zamorak.getID() == NpcId.MONK_OF_ZAMORAK.id() || zamorak.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
-			applyCurse(p, zamorak);
+			applyCurse(player, zamorak);
 		}
 	}
 
@@ -91,19 +91,19 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.MONK_OF_ZAMORAK.id() || n.getID() == NpcId.MONK_OF_ZAMORAK_MACE.id()) {
 			if (n.getID() == NpcId.MONK_OF_ZAMORAK.id()) {
-				npcsay(p, n, "Save your speech for the altar");
+				npcsay(player, n, "Save your speech for the altar");
 			} else {
-				npcsay(p, n, "Who are you to dare speak to the servants of Zamorak ?");
+				npcsay(player, n, "Who are you to dare speak to the servants of Zamorak ?");
 			}
-			n.setChasing(p);
+			n.setChasing(player);
 		}
 	}
 }

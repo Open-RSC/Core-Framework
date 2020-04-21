@@ -10,15 +10,15 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemUseOnPlayer implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		final Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
-		final Item item = player.getCarriedItems().getInventory().get(p.readShort());
+		final Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+		final Item item = player.getCarriedItems().getInventory().get(packet.readShort());
 		if (affectedPlayer == null || item == null || item.getItemStatus().getNoted()) {
 			return;
 		}

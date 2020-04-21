@@ -48,7 +48,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.HOLY_WATER_VIAL.id();
 	}
 

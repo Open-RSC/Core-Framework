@@ -15,64 +15,64 @@ public class WatchTowerGorad implements TalkNpcTrigger,
 	KillNpcTrigger, AttackNpcTrigger {
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GORAD.id()) {
-			n.killedBy(p);
-			p.message("Gorad has gone");
-			p.message("He's dropped a tooth, I'll keep that!");
-			give(p, ItemId.OGRE_TOOTH.id(), 1);
+			n.killedBy(player);
+			player.message("Gorad has gone");
+			player.message("He's dropped a tooth, I'll keep that!");
+			give(player, ItemId.OGRE_TOOTH.id(), 1);
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GORAD.id()) {
-			if (p.getCache().hasKey("ogre_grew")) {
-				say(p, n, "I've come to knock your teeth out!");
-				npcsay(p, n, "How dare you utter that foul language in my prescence!",
+			if (player.getCache().hasKey("ogre_grew")) {
+				say(player, n, "I've come to knock your teeth out!");
+				npcsay(player, n, "How dare you utter that foul language in my prescence!",
 					"You shall die quickly vermin");
-				n.startCombat(p);
-			} else if (p.getCache().hasKey("ogre_grew_p1") || p.getQuestStage(Quests.WATCHTOWER) > 0) {
-				say(p, n, "Hello");
-				npcsay(p, n, "Do you know who you are talking to ?");
-				int menu = multi(p, n,
+				n.startCombat(player);
+			} else if (player.getCache().hasKey("ogre_grew_p1") || player.getQuestStage(Quests.WATCHTOWER) > 0) {
+				say(player, n, "Hello");
+				npcsay(player, n, "Do you know who you are talking to ?");
+				int menu = multi(player, n,
 					"A big ugly brown creature...",
 					"I don't know who you are");
 				if (menu == 0) {
-					npcsay(p, n, "The impudence! take that...");
-					p.damage(16);
-					say(p, n, "Ouch!");
-					p.message("The ogre punched you hard in the face!");
+					npcsay(player, n, "The impudence! take that...");
+					player.damage(16);
+					say(player, n, "Ouch!");
+					player.message("The ogre punched you hard in the face!");
 
 				} else if (menu == 1) {
-					npcsay(p, n, "I am Gorad - who you are dosen't matter",
+					npcsay(player, n, "I am Gorad - who you are dosen't matter",
 						"Go now and you may live another day!");
 				}
 			} else {
-				p.message("Gorad is busy, try again later");
+				player.message("Gorad is busy, try again later");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GORAD.id();
 	}
 
 	@Override
-	public void onAttackNpc(Player p, Npc affectedmob) {
+	public void onAttackNpc(Player player, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.GORAD.id()) {
-			npcsay(p, affectedmob, "Ho Ho! why would I want to fight a worm ?",
+			npcsay(player, affectedmob, "Ho Ho! why would I want to fight a worm ?",
 				"Get lost!");
 		}
 	}

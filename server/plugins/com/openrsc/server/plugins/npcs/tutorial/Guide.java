@@ -14,28 +14,28 @@ public class Guide implements TalkNpcTrigger {
 	 * Tutorial island guide first room
 	 */
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 
-		npcsay(p, n, "Welcome to the world of runescape",
+		npcsay(player, n, "Welcome to the world of runescape",
 			"My job is to help newcomers find their feet here");
-		say(p, n, "Ah good, let's get started");
-		npcsay(p, n, "when speaking to characters such as myself",
+		say(player, n, "Ah good, let's get started");
+		npcsay(player, n, "when speaking to characters such as myself",
 			"Sometimes options will appear in the top left corner of the screen",
 			"left click on one of them to continue the conversation");
-		int menu = multi(p, n, "So what else can you tell me?", "What other controls do I have?");
+		int menu = multi(player, n, "So what else can you tell me?", "What other controls do I have?");
 		if (menu != -1) {
-			npcsay(p, n, "I suggest you go through the  door now",
+			npcsay(player, n, "I suggest you go through the  door now",
 					"There are several guides and advisors on the island",
 					"Speak to them",
 					"They will teach you about the various aspects of the game");
-			ActionSender.sendBox(p, "Use the quest history tab at the bottom of the screen to reread things said to you by ingame characters", false);
-			if (!p.getCache().hasKey("tutorial") || p.getCache().getInt("tutorial") < 10)
-				p.getCache().set("tutorial", 10);
+			ActionSender.sendBox(player, "Use the quest history tab at the bottom of the screen to reread things said to you by ingame characters", false);
+			if (!player.getCache().hasKey("tutorial") || player.getCache().getInt("tutorial") < 10)
+				player.getCache().set("tutorial", 10);
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GUIDE_STARTING.id();
 	}
 

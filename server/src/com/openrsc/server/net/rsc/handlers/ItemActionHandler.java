@@ -14,10 +14,10 @@ public class ItemActionHandler implements PacketHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int idx = (int) p.readShort();
-		int amount = p.readInt();
+		int idx = (int) packet.readShort();
+		int amount = packet.readInt();
 		int commandIndex;
 
 		if (player == null || player.getCarriedItems().getInventory() == null) {
@@ -33,14 +33,14 @@ public class ItemActionHandler implements PacketHandler {
 		//User wants to use the item from equipment tab
 		if (idx == -1)
 		{
-			idx = (int) p.readShort();
+			idx = (int) packet.readShort();
 			if (player.getCarriedItems().getEquipment().searchEquipmentForItem(idx) != -1)
 				tempitem = new Item(idx);
-			commandIndex = p.readByte();
+			commandIndex = packet.readByte();
 
 		} else {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
-			commandIndex = p.readByte();
+			commandIndex = packet.readByte();
 		}
 
 		final Item item = tempitem;

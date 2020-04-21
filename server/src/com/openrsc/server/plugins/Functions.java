@@ -254,8 +254,8 @@ public class Functions {
 		}
 	}
 
-	public static void advancestat(Player p, int skillId, int baseXp, int expPerLvl) {
-		p.incExp(skillId, p.getSkills().getMaxStat(skillId) * expPerLvl + baseXp, true);
+	public static void advancestat(Player player, int skillId, int baseXp, int expPerLvl) {
+		player.incExp(skillId, player.getSkills().getMaxStat(skillId) * expPerLvl + baseXp, true);
 	}
 
 	/**
@@ -265,10 +265,10 @@ public class Functions {
 	 * @param amount
 	 * @param x
 	 * @param y
-	 * @param owner
+	 * @param player
 	 */
-	public static void addobject(int id, int amount, int x, int y, Player owner) {
-		owner.getWorld().registerItem(new GroundItem(owner.getWorld(), id, x, y, amount, owner));
+	public static void addobject(int id, int amount, int x, int y, Player player) {
+		player.getWorld().registerItem(new GroundItem(player.getWorld(), id, x, y, amount, player));
 	}
 
 	/**
@@ -303,11 +303,11 @@ public class Functions {
 		return npc;
 	}
 
-	public static Npc addnpc(Player p, int id, int x, int y, int radius, final int time) {
-		final Npc npc = new Npc(p.getWorld(), id, x, y, radius);
+	public static Npc addnpc(Player player, int id, int x, int y, int radius, final int time) {
+		final Npc npc = new Npc(player.getWorld(), id, x, y, radius);
 		npc.setShouldRespawn(false);
-		p.getWorld().registerNpc(npc);
-		p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, time, "Spawn Radius NPC Timed") {
+		player.getWorld().registerNpc(npc);
+		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, time, "Spawn Radius NPC Timed") {
 			public void action() {
 				npc.remove();
 			}
@@ -335,33 +335,33 @@ public class Functions {
 		world.getServer().getGameEventHandler().submit(() -> world.delayedSpawnObject(loc, time), "Delayed Add Game Object");
 	}
 
-	public static void teleport(Player p, int x, int y) {
-		p.teleport(x, y);
+	public static void teleport(Player player, int x, int y) {
+		player.teleport(x, y);
 	}
 
 	/**
 	 * Adds an item to players inventory.
 	 */
-	public static void give(final Player p, final int item, final int amt) {
+	public static void give(final Player player, final int item, final int amt) {
 		final Item items = new Item(item, amt);
-		if (!items.getDef(p.getWorld()).isStackable() && amt > 1) {
+		if (!items.getDef(player.getWorld()).isStackable() && amt > 1) {
 			for (int i = 0; i < amt; i++) {
-				p.getCarriedItems().getInventory().add(new Item(item, 1));
+				player.getCarriedItems().getInventory().add(new Item(item, 1));
 			}
 		} else {
-			p.getCarriedItems().getInventory().add(items);
+			player.getCarriedItems().getInventory().add(items);
 		}
 	}
 
 	/**
 	 * Checks if player has an item, and returns true/false.
 	 *
-	 * @param p
+	 * @param player
 	 * @param item
 	 * @return
 	 */
-	public static boolean ifheld(final Player p, final int item) {
-		boolean retval = p.getCarriedItems().hasCatalogID(item);
+	public static boolean ifheld(final Player player, final int item) {
+		boolean retval = player.getCarriedItems().hasCatalogID(item);
 
 		return retval;
 	}
@@ -369,17 +369,17 @@ public class Functions {
 	/**
 	 * Checks if player has item and returns true/false
 	 *
-	 * @param p
+	 * @param player
 	 * @param id
 	 * @param amt
 	 * @return
 	 */
-	public static boolean ifheld(final Player p, final int id, final int amt) {
-		int amount = p.getCarriedItems().getInventory().countId(id);
+	public static boolean ifheld(final Player player, final int id, final int amt) {
+		int amount = player.getCarriedItems().getInventory().countId(id);
 		int equipslot = -1;
-		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if ((equipslot = p.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
-				amount += p.getCarriedItems().getEquipment().get(equipslot).getAmount();
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if ((equipslot = player.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
+				amount += player.getCarriedItems().getEquipment().get(equipslot).getAmount();
 			}
 		}
 		return amount >= amt;
@@ -406,15 +406,15 @@ public class Functions {
 	 * @param radius
 	 * @return
 	 */
-	public static Npc ifnearvisnpc(Player p, final int npcId, final int radius) {
-		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
+	public static Npc ifnearvisnpc(Player player, final int npcId, final int radius) {
+		final Iterable<Npc> npcsInView = player.getViewArea().getNpcsInView();
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
 			for (final Npc n : npcsInView) {
 				if (n.getID() == npcId) {
 
 				}
-				if (n.getID() == npcId && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
+				if (n.getID() == npcId && n.withinRange(player.getLocation(), next) && !n.isBusy()) {
 					closestNpc = n;
 				}
 			}
@@ -422,13 +422,13 @@ public class Functions {
 		return closestNpc;
 	}
 
-	public static Npc ifnearvisnpc(Player p, final int radius, final int... npcId) {
-		final Iterable<Npc> npcsInView = p.getViewArea().getNpcsInView();
+	public static Npc ifnearvisnpc(Player player, final int radius, final int... npcId) {
+		final Iterable<Npc> npcsInView = player.getViewArea().getNpcsInView();
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
 			for (final Npc n : npcsInView) {
 				for (final int na : npcId) {
-					if (n.getID() == na && n.withinRange(p.getLocation(), next) && !n.isBusy()) {
+					if (n.getID() == na && n.withinRange(player.getLocation(), next) && !n.isBusy()) {
 						closestNpc = n;
 					}
 				}
@@ -482,8 +482,8 @@ public class Functions {
 		npcsay(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 3, messages);
 	}
 
-	public static void npcattack(Npc npc, Player p) {
-		npc.setChasing(p);
+	public static void npcattack(Npc npc, Player player) {
+		npc.setChasing(player);
 	}
 
 	public static void npcattack(Npc npc, Npc npc2) {
@@ -517,16 +517,16 @@ public class Functions {
 	/**
 	 * Checks if player has an item in bank, and returns true/false.
 	 *
-	 * @param p
+	 * @param player
 	 * @param item
 	 * @return
 	 */
-	public static boolean ifbank(final Player p, final int item) {
-		return p.getBank().hasItemId(item);
+	public static boolean ifbank(final Player player, final int item) {
+		return player.getBank().hasItemId(item);
 	}
 
-	public static boolean ifbankorheld(Player p, int id) {
-		return ifbank(p, id) || ifheld(p, id);
+	public static boolean ifbankorheld(Player player, int id) {
+		return ifbank(player, id) || ifheld(player, id);
 	}
 
 	private static String showbankpin(Player player) {
@@ -696,35 +696,35 @@ public class Functions {
 	/**
 	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
 	 *
-	 * @param p         - the player
+	 * @param player         - the player
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
 	 * @param applyQP   - apply the quest point increase
 	 */
-	public static void incQuestReward(Player p, int[] questData, boolean applyQP) {
+	public static void incQuestReward(Player player, int[] questData, boolean applyQP) {
 		int qp = questData[0];
 		int skillId = questData[1];
 		int baseXP = questData[2];
 		int varXP = questData[3];
 		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
-			p.incQuestExp(skillId, p.getSkills().getMaxStat(skillId) * varXP + baseXP);
+			player.incQuestExp(skillId, player.getSkills().getMaxStat(skillId) * varXP + baseXP);
 		}
 		if (applyQP) {
-			p.incQuestPoints(qp);
+			player.incQuestPoints(qp);
 		}
 	}
 
 	/**
 	 * Returns true if you are in any stages provided.
 	 *
-	 * @param p
+	 * @param player
 	 * @param quest
 	 * @param stage
 	 * @return
 	 */
-	public static boolean atQuestStages(Player p, QuestInterface quest, int... stage) {
+	public static boolean atQuestStages(Player player, QuestInterface quest, int... stage) {
 		boolean flag = false;
 		for (int s : stage) {
-			if (atQuestStage(p, quest, s)) {
+			if (atQuestStage(player, quest, s)) {
 				flag = true;
 			}
 		}
@@ -734,15 +734,15 @@ public class Functions {
 	/**
 	 * Returns true if you are in any stages provided.
 	 *
-	 * @param p
+	 * @param player
 	 * @param qID
 	 * @param stage
 	 * @return
 	 */
-	public static boolean atQuestStages(Player p, int qID, int... stage) {
+	public static boolean atQuestStages(Player player, int qID, int... stage) {
 		boolean flag = false;
 		for (int s : stage) {
-			if (atQuestStage(p, qID, s)) {
+			if (atQuestStage(player, qID, s)) {
 				flag = true;
 			}
 		}
@@ -752,41 +752,41 @@ public class Functions {
 	/**
 	 * Checks if players quest stage for this quest is @param stage
 	 *
-	 * @param p
+	 * @param player
 	 * @param qID
 	 * @param stage
 	 * @return
 	 */
-	public static boolean atQuestStage(Player p, int qID, int stage) {
-		return getQuestStage(p, qID) == stage;
+	public static boolean atQuestStage(Player player, int qID, int stage) {
+		return getQuestStage(player, qID) == stage;
 	}
 
 	/**
 	 * Checks if players quest stage for this quest is @param stage
 	 */
-	public static boolean atQuestStage(Player p, QuestInterface quest, int stage) {
-		return getQuestStage(p, quest) == stage;
+	public static boolean atQuestStage(Player player, QuestInterface quest, int stage) {
+		return getQuestStage(player, quest) == stage;
 	}
 
-	public static int getCurrentLevel(Player p, int i) {
-		return p.getSkills().getLevel(i);
+	public static int getCurrentLevel(Player player, int i) {
+		return player.getSkills().getLevel(i);
 	}
 
-	public static int getMaxLevel(Player p, int i) {
-		return p.getSkills().getMaxStat(i);
+	public static int getMaxLevel(Player player, int i) {
+		return player.getSkills().getMaxStat(i);
 	}
 
 	public static int getMaxLevel(Mob n, int i) {
 		return n.getSkills().getMaxStat(i);
 	}
 
-	public static void setCurrentLevel(Player p, int skill, int level) {
-		p.getSkills().setLevel(skill, level);
-		ActionSender.sendStat(p, skill);
+	public static void setCurrentLevel(Player player, int skill, int level) {
+		player.getSkills().setLevel(skill, level);
+		ActionSender.sendStat(player, skill);
 	}
 
-	public static void displayTeleportBubble(Player p, int x, int y, boolean teleGrab) {
-		for (Object o : p.getViewArea().getPlayersInView()) {
+	public static void displayTeleportBubble(Player player, int x, int y, boolean teleGrab) {
+		for (Object o : player.getViewArea().getPlayersInView()) {
 			Player pt = ((Player) o);
 			ActionSender.sendTeleBubble(pt, x, y, teleGrab);
 		}
@@ -794,14 +794,14 @@ public class Functions {
 
 	private static boolean checkBlocking(Npc npc, int x, int y, int bit) {
 		TileValue t = npc.getWorld().getTile(x, y);
-		Point p = new Point(x, y);
+		Point point = new Point(x, y);
 		for (Npc n : npc.getViewArea().getNpcsInView()) {
-			if (n.getLocation().equals(p)) {
+			if (n.getLocation().equals(point)) {
 				return true;
 			}
 		}
 		for (Player areaPlayer : npc.getViewArea().getPlayersInView()) {
-			if (areaPlayer.getLocation().equals(p)) {
+			if (areaPlayer.getLocation().equals(point)) {
 				return true;
 			}
 		}
@@ -890,8 +890,8 @@ public class Functions {
 		}
 	}
 
-	public static void completeQuest(Player p, QuestInterface quest) {
-		p.sendQuestComplete(quest.getQuestId());
+	public static void completeQuest(Player player, QuestInterface quest) {
+		player.sendQuestComplete(quest.getQuestId());
 	}
 
 	public static int random(int low, int high) {
@@ -922,30 +922,30 @@ public class Functions {
 	/**
 	 * Returns the quest stage for @param quest
 	 *
-	 * @param p
+	 * @param player
 	 * @param quest
 	 * @return
 	 */
-	public static int getQuestStage(Player p, QuestInterface quest) {
-		return p.getQuestStage(quest);
+	public static int getQuestStage(Player player, QuestInterface quest) {
+		return player.getQuestStage(quest);
 	}
 
 	/**
 	 * Returns the quest stage for @param qID
 	 */
-	public static int getQuestStage(Player p, int questID) {
-		return p.getQuestStage(questID);
+	public static int getQuestStage(Player player, int questID) {
+		return player.getQuestStage(questID);
 	}
 
 	/**
 	 * Sets @param quest 's stage to @param stage
 	 *
-	 * @param p
+	 * @param player
 	 * @param quest
 	 * @param stage
 	 */
-	public static void setQuestStage(Player p, QuestInterface quest, int stage) {
-		p.updateQuestStage(quest, stage);
+	public static void setQuestStage(Player player, QuestInterface quest, int stage) {
+		player.updateQuestStage(quest, stage);
 	}
 
 	public static void openChest(GameObject obj, int delay, int chestID) {
@@ -962,92 +962,92 @@ public class Functions {
 		openChest(obj, obj.getWorld().getServer().getConfig().GAME_TICK * 3);
 	}
 
-	public static void closeCupboard(GameObject obj, Player p, int cupboardID) {
+	public static void closeCupboard(GameObject obj, Player player, int cupboardID) {
 		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
-		p.message("You close the cupboard");
+		player.message("You close the cupboard");
 	}
 
-	public static void openCupboard(GameObject obj, Player p, int cupboardID) {
+	public static void openCupboard(GameObject obj, Player player, int cupboardID) {
 		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), cupboardID, obj.getDirection(), obj.getType()));
-		p.message("You open the cupboard");
+		player.message("You open the cupboard");
 	}
 
-	public static void closeGenericObject(GameObject obj, Player p, int objectID, String... messages) {
+	public static void closeGenericObject(GameObject obj, Player player, int objectID, String... messages) {
 		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
 		for (String message : messages) {
-			p.message(message);
+			player.message(message);
 		}
 	}
 
-	public static void openGenericObject(GameObject obj, Player p, int objectID, String... messages) {
+	public static void openGenericObject(GameObject obj, Player player, int objectID, String... messages) {
 		changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), objectID, obj.getDirection(), obj.getType()));
 		for (String message : messages) {
-			p.message(message);
+			player.message(message);
 		}
 	}
 
-	public static void doTentDoor(final GameObject object, final Player p) {
-		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
+	public static void doTentDoor(final GameObject object, final Player player) {
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		if (object.getDirection() == 0) {
-			if (object.getLocation().equals(p.getLocation())) {
-				teleport(p, object.getX(), object.getY() - 1);
+			if (object.getLocation().equals(player.getLocation())) {
+				teleport(player, object.getX(), object.getY() - 1);
 			} else {
-				teleport(p, object.getX(), object.getY());
+				teleport(player, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 1) {
-			if (object.getLocation().equals(p.getLocation())) {
-				teleport(p, object.getX() - 1, object.getY());
+			if (object.getLocation().equals(player.getLocation())) {
+				teleport(player, object.getX() - 1, object.getY());
 			} else {
-				teleport(p, object.getX(), object.getY());
+				teleport(player, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 2) {
 			// DIAGONAL
 			// front
-			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX(), object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() - 1, object.getY());
+			if (object.getX() == player.getX() && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX(), object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() - 1, object.getY());
 			}
 			// back
-			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX(), object.getY() - 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() + 1, object.getY());
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX() + 1, object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX() - 1, object.getY() - 1);
+			else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX(), object.getY() - 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() + 1, object.getY());
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX() + 1, object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX() - 1, object.getY() - 1);
 			}
 		}
 		if (object.getDirection() == 3) {
 
 			// front
-			if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
+			if (object.getX() == player.getX() && object.getY() == player.getY() - 1) {
 
-				teleport(p, object.getX(), object.getY() - 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() + 1, object.getY());
+				teleport(player, object.getX(), object.getY() - 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() + 1, object.getY());
 			}
 
 			// back
-			else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX(), object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() - 1, object.getY());
+			else if (object.getX() == player.getX() && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX(), object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() - 1, object.getY());
 			}
 
 		}
 	}
 
-	public static void doWallMovePlayer(final GameObject object, final Player p, int replaceID, int delay, boolean removeObject) {
-		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
+	public static void doWallMovePlayer(final GameObject object, final Player player, int replaceID, int delay, boolean removeObject) {
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		/* For the odd looking walls. */
 		if (removeObject) {
 			GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 			if (object.getID() == replaceID) {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 				return;
 			}
 			if (replaceID == -1) {
@@ -1058,56 +1058,56 @@ public class Functions {
 			addloc(object.getWorld(), object.getLoc(), delay);
 		}
 		if (object.getDirection() == 0) {
-			if (object.getLocation().equals(p.getLocation())) {
-				teleport(p, object.getX(), object.getY() - 1);
+			if (object.getLocation().equals(player.getLocation())) {
+				teleport(player, object.getX(), object.getY() - 1);
 			} else {
-				teleport(p, object.getX(), object.getY());
+				teleport(player, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 1) {
-			if (object.getLocation().equals(p.getLocation())) {
-				teleport(p, object.getX() - 1, object.getY());
+			if (object.getLocation().equals(player.getLocation())) {
+				teleport(player, object.getX() - 1, object.getY());
 			} else {
-				teleport(p, object.getX(), object.getY());
+				teleport(player, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 2) {
 			// DIAGONAL
 			// front
-			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX(), object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() - 1, object.getY());
+			if (object.getX() == player.getX() && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX(), object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() - 1, object.getY());
 			}
 			// back
-			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX(), object.getY() - 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() + 1, object.getY());
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX() + 1, object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX() - 1, object.getY() - 1);
+			else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX(), object.getY() - 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() + 1, object.getY());
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX() + 1, object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX() - 1, object.getY() - 1);
 			}
 		}
 		if (object.getDirection() == 3) {
 
 			// front
-			if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX(), object.getY() - 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() + 1, object.getY());
+			if (object.getX() == player.getX() && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX(), object.getY() - 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() + 1, object.getY());
 			}
 
 			// back
-			else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX(), object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() - 1, object.getY());
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX() - 1, object.getY() + 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX() + 1, object.getY() - 1);
+			else if (object.getX() == player.getX() && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX(), object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() - 1, object.getY());
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX() - 1, object.getY() + 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX() + 1, object.getY() - 1);
 			}
 		}
 	}
@@ -1116,71 +1116,71 @@ public class Functions {
 	 * Opens a door object for the player and walks through it. Works for any
 	 * regular door in any direction.
 	 */
-	public static void doDoor(final GameObject object, final Player p) {
-		doDoor(object, p, 11);
+	public static void doDoor(final GameObject object, final Player player) {
+		doDoor(object, player, 11);
 	}
 
-	public static void doDoor(final GameObject object, final Player p, int replaceID) {
-		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
+	public static void doDoor(final GameObject object, final Player player, int replaceID) {
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		/* For the odd looking walls. */
 		GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 		if (object.getID() == replaceID) {
-			p.message("Nothing interesting happens");
+			player.message("Nothing interesting happens");
 			return;
 		}
 		if (replaceID == -1) {
 			delloc(object);
 		} else {
-			p.playSound("opendoor");
+			player.playSound("opendoor");
 			changeloc(object, newObject);
 		}
 		addloc(object.getWorld(), object.getLoc(), 3000);
 
 		if (object.getDirection() == 0) {
-			if (object.getLocation().equals(p.getLocation())) {
-				teleport(p, object.getX(), object.getY() - 1);
+			if (object.getLocation().equals(player.getLocation())) {
+				teleport(player, object.getX(), object.getY() - 1);
 			} else {
-				teleport(p, object.getX(), object.getY());
+				teleport(player, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 1) {
-			if (object.getLocation().equals(p.getLocation())) {
-				teleport(p, object.getX() - 1, object.getY());
+			if (object.getLocation().equals(player.getLocation())) {
+				teleport(player, object.getX() - 1, object.getY());
 			} else {
-				teleport(p, object.getX(), object.getY());
+				teleport(player, object.getX(), object.getY());
 			}
 		}
 		if (object.getDirection() == 2) {
 			// front
-			if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
+			if (object.getX() == player.getX() && object.getY() == player.getY() + 1) {
 
-				teleport(p, object.getX(), object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() - 1, object.getY());
+				teleport(player, object.getX(), object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() - 1, object.getY());
 			}
 
 			// back
-			else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
-				teleport(p, object.getX(), object.getY() - 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() + 1, object.getY());
+			else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) {
+				teleport(player, object.getX(), object.getY() - 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() + 1, object.getY());
 			}
 		}
 		if (object.getDirection() == 3) {
 
 			// front
-			if (object.getX() == p.getX() && object.getY() == p.getY() - 1) {
+			if (object.getX() == player.getX() && object.getY() == player.getY() - 1) {
 
-				teleport(p, object.getX(), object.getY() - 1);
-			} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() + 1, object.getY());
+				teleport(player, object.getX(), object.getY() - 1);
+			} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() + 1, object.getY());
 			}
 
 			// back
-			else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) {
-				teleport(p, object.getX(), object.getY() + 1);
-			} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-				teleport(p, object.getX() - 1, object.getY());
+			else if (object.getX() == player.getX() && object.getY() == player.getY() + 1) {
+				teleport(player, object.getX(), object.getY() + 1);
+			} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+				teleport(player, object.getX() - 1, object.getY());
 			}
 
 		}
@@ -1219,16 +1219,16 @@ public class Functions {
 		// }
 	}
 
-	public static void doGate(final Player p, final GameObject object) {
-		doGate(p, object, 181);
+	public static void doGate(final Player player, final GameObject object) {
+		doGate(player, object, 181);
 	}
 
-	public static void doGate(final Player p, final GameObject object, int replaceID) {
-		doGate(p, object, replaceID, null);
+	public static void doGate(final Player player, final GameObject object, int replaceID) {
+		doGate(player, object, replaceID, null);
 	}
 
-	public static void doGate(final Player p, final GameObject object, int replaceID, Point destination) {
-		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
+	public static void doGate(final Player player, final GameObject object, int replaceID, Point destination) {
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		// 0 - East
 		// 1 - Diagonal S- NE
 		// 2 - South
@@ -1238,43 +1238,43 @@ public class Functions {
 		// 6 - North
 		// 7 - Diagonal N-W
 		// 8 - N->S
-		p.playSound("opendoor");
+		player.playSound("opendoor");
 		delloc(object);
 		addloc(new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType()));
 
 		int dir = object.getDirection();
-		int pdir = p.getSprite();
-		if (destination != null && Math.abs(p.getX() - destination.getX()) <= 5 && Math.abs(p.getY() - destination.getY()) <= 5) {
-			p.setLocation(Point.location(destination.getX(), destination.getY()));
+		int pdir = player.getSprite();
+		if (destination != null && Math.abs(player.getX() - destination.getX()) <= 5 && Math.abs(player.getY() - destination.getY()) <= 5) {
+			player.setLocation(Point.location(destination.getX(), destination.getY()));
 		} else if (dir == 0) {
-			if (p.getX() >= object.getX()) {
-				p.setLocation(Point.location(object.getX() - 1, object.getY()));
+			if (player.getX() >= object.getX()) {
+				player.setLocation(Point.location(object.getX() - 1, object.getY()));
 			} else {
-				p.setLocation(Point.location(object.getX(), object.getY()));
+				player.setLocation(Point.location(object.getX(), object.getY()));
 			}
 		} else if (dir == 2) {
-			if (p.getY() <= object.getY()) {
-				p.setLocation(Point.location(object.getX(), object.getY() + 1));
+			if (player.getY() <= object.getY()) {
+				player.setLocation(Point.location(object.getX(), object.getY() + 1));
 			} else {
-				p.setLocation(Point.location(object.getX(), object.getY()));
+				player.setLocation(Point.location(object.getX(), object.getY()));
 			}
 		} else if (dir == 4) {
-			if (p.getX() > object.getX()) {
-				p.setLocation(Point.location(object.getX(), object.getY()));
+			if (player.getX() > object.getX()) {
+				player.setLocation(Point.location(object.getX(), object.getY()));
 			} else {
-				p.setLocation(Point.location(object.getX() + 1, object.getY()));
+				player.setLocation(Point.location(object.getX() + 1, object.getY()));
 			}
 		} else if (dir == 6) {
-			if (p.getY() >= object.getY()) {
-				p.setLocation(Point.location(object.getX(), object.getY() - 1));
+			if (player.getY() >= object.getY()) {
+				player.setLocation(Point.location(object.getX(), object.getY() - 1));
 			} else {
-				p.setLocation(Point.location(object.getX(), object.getY()));
+				player.setLocation(Point.location(object.getX(), object.getY()));
 			}
 		} else {
-			p.message("Failure - Contact an administrator");
+			player.message("Failure - Contact an administrator");
 		}
-		p.setSprite(pdir);
-		delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
+		player.setSprite(pdir);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
@@ -1293,11 +1293,11 @@ public class Functions {
 		}
 	}
 
-	public static void resetGnomeCooking(Player p) {
-		p.getCache().remove("gnome_recipe");
+	public static void resetGnomeCooking(Player player) {
+		player.getCache().remove("gnome_recipe");
 	}
 
-	public static boolean checkAndRemoveBlurberry(Player p, boolean reset) {
+	public static boolean checkAndRemoveBlurberry(Player player, boolean reset) {
 		String[] caches = {
 			"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
 			"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
@@ -1308,9 +1308,9 @@ public class Functions {
 			"diced_lemon_in_drink", "pineapple_punch_base", "diced_lime_in_drink", "wizard_blizzard_base"
 		};
 		for (String s : caches) {
-			if (p.getCache().hasKey(s)) {
+			if (player.getCache().hasKey(s)) {
 				if (reset) {
-					p.getCache().remove(s);
+					player.getCache().remove(s);
 					continue;
 				}
 				return true;

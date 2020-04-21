@@ -13,7 +13,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Drinkables implements OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return command.equalsIgnoreCase("drink");
 	}
 

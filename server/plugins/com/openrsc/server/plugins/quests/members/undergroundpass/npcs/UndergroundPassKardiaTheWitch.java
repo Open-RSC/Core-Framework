@@ -30,107 +30,107 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == WITCH_RAILING) {
-			mes(p, "inside you see Kardia the witch");
-			p.message("her appearence make's you feel quite ill");
+			mes(player, "inside you see Kardia the witch");
+			player.message("her appearence make's you feel quite ill");
 		}
 		else if (obj.getID() == WITCH_DOOR) {
 			if (click == 0) {
-				if (p.getCache().hasKey("kardia_cat")) {
-					p.message("you open the door");
-					doDoor(obj, p);
-					mes(p, "and walk through");
-					p.message("the witch is busy talking to the cat");
+				if (player.getCache().hasKey("kardia_cat")) {
+					player.message("you open the door");
+					doDoor(obj, player);
+					mes(player, "and walk through");
+					player.message("the witch is busy talking to the cat");
 				} else {
-					Npc witch = ifnearvisnpc(p, NpcId.KARDIA_THE_WITCH.id(), 5);
-					p.message("you reach to open the door");
-					npcsay(p, witch, "get away...far away from here");
-					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-					p.message("the witch raises her hands above her");
-					displayTeleportBubble(p, p.getX(), p.getY(), true);
-					p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
-					npcsay(p, witch, "haa haa.. die mortal");
+					Npc witch = ifnearvisnpc(player, NpcId.KARDIA_THE_WITCH.id(), 5);
+					player.message("you reach to open the door");
+					npcsay(player, witch, "get away...far away from here");
+					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					player.message("the witch raises her hands above her");
+					displayTeleportBubble(player, player.getX(), player.getY(), true);
+					player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
+					npcsay(player, witch, "haa haa.. die mortal");
 				}
 			} else if (click == 1) {
-				if (p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !p.getCache().hasKey("kardia_cat")) {
-					mes(p, "you place the cat by the door");
-					p.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
-					p.teleport(776, 3535);
-					mes(p, "you knock on the door and hide around the corner");
-					p.message("the witch takes the cat inside");
-					if (!p.getCache().hasKey("kardia_cat")) {
-						p.getCache().store("kardia_cat", true);
+				if (player.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !player.getCache().hasKey("kardia_cat")) {
+					mes(player, "you place the cat by the door");
+					player.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
+					player.teleport(776, 3535);
+					mes(player, "you knock on the door and hide around the corner");
+					player.message("the witch takes the cat inside");
+					if (!player.getCache().hasKey("kardia_cat")) {
+						player.getCache().store("kardia_cat", true);
 					}
-				} else if (p.getCache().hasKey("kardia_cat")) {
-					mes(p, "there is no reply");
-					p.message("inside you can hear the witch talking to her cat");
+				} else if (player.getCache().hasKey("kardia_cat")) {
+					mes(player, "there is no reply");
+					player.message("inside you can hear the witch talking to her cat");
 				} else {
-					mes(p, "you knock on the door");
-					p.message("there is no reply");
+					mes(player, "you knock on the door");
+					player.message("there is no reply");
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem i) {
-		return i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false));
+	public boolean blockTakeObj(Player player, GroundItem i) {
+		return i.getID() == ItemId.KARDIA_CAT.id() && player.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false));
 	}
 
 	@Override
-	public void onTakeObj(Player p, GroundItem i) {
-		if (i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false))) {
-			mes(p, "it's not very nice to squeeze one cat into a satchel");
-			p.message("...two's just plain cruel!");
+	public void onTakeObj(Player player, GroundItem i) {
+		if (i.getID() == ItemId.KARDIA_CAT.id() && player.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false))) {
+			mes(player, "it's not very nice to squeeze one cat into a satchel");
+			player.message("...two's just plain cruel!");
 		}
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player p) {
+	public boolean blockUseBound(GameObject obj, Item item, Player player) {
 		return obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id();
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player p) {
+	public void onUseBound(GameObject obj, Item item, Player player) {
 		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
-			if (!p.getCache().hasKey("kardia_cat")) {
-				mes(p, "you place the cat by the door");
-				p.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
-				p.teleport(776, 3535);
-				mes(p, "you knock on the door and hide around the corner");
-				p.message("the witch takes the cat inside");
-				if (!p.getCache().hasKey("kardia_cat")) {
-					p.getCache().store("kardia_cat", true);
+			if (!player.getCache().hasKey("kardia_cat")) {
+				mes(player, "you place the cat by the door");
+				player.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
+				player.teleport(776, 3535);
+				mes(player, "you knock on the door and hide around the corner");
+				player.message("the witch takes the cat inside");
+				if (!player.getCache().hasKey("kardia_cat")) {
+					player.getCache().store("kardia_cat", true);
 				}
 			} else {
-				mes(p, "the witch is busy playing...");
-				p.message("with her other cat");
+				mes(player, "the witch is busy playing...");
+				player.message("with her other cat");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == WITCH_CHEST;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == WITCH_CHEST) {
-			mes(p, "you search the chest");
-			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !p.getCache().hasKey("doll_of_iban")) {
-				p.message("..inside you find a book a wooden doll..");
-				p.message("...and two potions");
-				give(p, ItemId.A_DOLL_OF_IBAN.id(), 1);
-				give(p, ItemId.OLD_JOURNAL.id(), 1);
-				give(p, ItemId.FULL_SUPER_ATTACK_POTION.id(), 1);
-				give(p, ItemId.FULL_STAT_RESTORATION_POTION.id(), 1);
-				if (!p.getCache().hasKey("doll_of_iban")) {
-					p.getCache().store("doll_of_iban", true);
+			mes(player, "you search the chest");
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !player.getCache().hasKey("doll_of_iban")) {
+				player.message("..inside you find a book a wooden doll..");
+				player.message("...and two potions");
+				give(player, ItemId.A_DOLL_OF_IBAN.id(), 1);
+				give(player, ItemId.OLD_JOURNAL.id(), 1);
+				give(player, ItemId.FULL_SUPER_ATTACK_POTION.id(), 1);
+				give(player, ItemId.FULL_STAT_RESTORATION_POTION.id(), 1);
+				if (!player.getCache().hasKey("doll_of_iban")) {
+					player.getCache().store("doll_of_iban", true);
 				}
 			} else {
-				p.message("but you find nothing of interest");
+				player.message("but you find nothing of interest");
 			}
 		}
 	}

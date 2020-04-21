@@ -311,7 +311,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = null;
 			try {
@@ -321,15 +321,15 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			}
 
 			if (pickpocket != null) {
-				if (!p.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					p.message(p.MEMBER_MESSAGE);
+				if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+					player.message(player.MEMBER_MESSAGE);
 					return false;
 				}
 				return true;
 			} else if (n.getID() == NpcId.CIVILLIAN_PICKPOCKET.id()) {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 			} else {
-				p.message("You can't pickpocket that person, it has not been implemented yet");
+				player.message("You can't pickpocket that person, it has not been implemented yet");
 			}
 
 		}
@@ -662,20 +662,20 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player player) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
 			if (pickpocket != null) {
-				doPickpocket(p, n, pickpocket);
+				doPickpocket(player, n, pickpocket);
 			} else {
-				p.message("ERROR: Pickpocket handler not found.");
+				player.message("ERROR: Pickpocket handler not found.");
 			}
 		}
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
-		handlePicklock(obj, p, click);
+	public void onOpBound(GameObject obj, Integer click, Player player) {
+		handlePicklock(obj, player, click);
 	}
 
 	enum Pickpocket {

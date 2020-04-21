@@ -5,5 +5,5 @@ import com.openrsc.server.net.Packet;
 
 public interface PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception;
+	public void handlePacket(Packet packet, Player player) throws Exception;
 }

@@ -19,8 +19,8 @@ public class NpcPoisonPlayerScript implements CombatScript {
 	@Override
 	public boolean shouldExecute(Mob attacker, Mob victim) {
 		if (attacker.isNpc() && victim.isPlayer()) {
-			Player p = (Player) victim;
-			if (p.isAntidoteProtected()) {
+			Player player = (Player) victim;
+			if (player.isAntidoteProtected()) {
 				return false;
 			}
 			return (((Npc) attacker).getDef().getName().toLowerCase().contains("poison") || ((Npc) attacker).getID() == NpcId.DUNGEON_SPIDER.id() || ((Npc) attacker).getID() == NpcId.TRIBESMAN.id() || ((Npc) attacker).getID() == NpcId.JUNGLE_SAVAGE.id()) && (DataConversions.getRandom().nextInt(100) >= 90);

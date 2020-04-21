@@ -56,7 +56,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	public static int[] SPEAR_ROCKS = {806, 807, 808, 809, 810, 811, 882, 883};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String cmd, Player p) {
+	public boolean blockOpLoc(GameObject obj, String cmd, Player player) {
 		return obj.getID() == UNDERGROUND_CAVE || obj.getID() == CRUMBLED_ROCK
 				|| inArray(obj.getID(), READ_ROCKS) || inArray(obj.getID(), MAIN_ROCKS)
 				|| inArray(obj.getID(), MAIN_LEDGE) || obj.getID() == FIRST_SWAMP
@@ -66,22 +66,22 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String cmd, Player p) {
+	public void onOpLoc(GameObject obj, String cmd, Player player) {
 		if (obj.getID() == UNDERGROUND_CAVE) {
-			switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
+			switch (player.getQuestStage(Quests.UNDERGROUND_PASS)) {
 				case 0:
-					if (p.getQuestStage(Quests.BIOHAZARD) != -1) {
-						p.message("You must first complete the biohazard quest...");
-						p.message("...before you can enter");
+					if (player.getQuestStage(Quests.BIOHAZARD) != -1) {
+						player.message("You must first complete the biohazard quest...");
+						player.message("...before you can enter");
 					}
 					else {
-						p.message("you must talk to king lathas before you can enter");
+						player.message("you must talk to king lathas before you can enter");
 					}
 					break;
 				case 1:
-					Npc koftik = ifnearvisnpc(p, NpcId.KOFTIK_ARDOUGNE.id(), 10);
+					Npc koftik = ifnearvisnpc(player, NpcId.KOFTIK_ARDOUGNE.id(), 10);
 					if (koftik != null) {
-						UndergroundPassKoftik.koftikEnterCaveDialogue(p, koftik);
+						UndergroundPassKoftik.koftikEnterCaveDialogue(player, koftik);
 					}
 					break;
 				case 2:
@@ -92,155 +92,155 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				case 7:
 				case 8:
 				case -1:
-					mes(p, "you cautiously enter the cave");
-					p.teleport(673, 3420);
+					mes(player, "you cautiously enter the cave");
+					player.teleport(673, 3420);
 					break;
 			}
 		}
 		else if (obj.getID() == CRUMBLED_ROCK) {
-			mes(p, "you climb the rock pile");
-			p.teleport(713, 581);
+			mes(player, "you climb the rock pile");
+			player.teleport(713, 581);
 		}
 		else if (inArray(obj.getID(), READ_ROCKS)) {
-			mes(p, "the writing seems to have been scracthed...",
+			mes(player, "the writing seems to have been scracthed...",
 				"..into the rock with bare hands, it reads..");
 			if (obj.getID() == 832) {
-				ActionSender.sendBox(p, "@red@All those who thirst for knowledge%@red@Bow down to the lord.% %@red@All you that crave eternal life%@red@Come and meet your God.% %@red@For no man nor beast can cast a spell%@red@Against the wake of eternal hell.", true);
+				ActionSender.sendBox(player, "@red@All those who thirst for knowledge%@red@Bow down to the lord.% %@red@All you that crave eternal life%@red@Come and meet your God.% %@red@For no man nor beast can cast a spell%@red@Against the wake of eternal hell.", true);
 			} else if (obj.getID() == 833) {
-				ActionSender.sendBox(p, "@red@Most men do live in fear of death%@red@That it might steal their soul.% %@red@Some work and pray to shield their life%@red@From the ravages of the cold.% %@red@But only those who embrace the end%@red@Can truly make their life extend.% %@red@And when all hope begins to fade% %@red@look above and use nature as your aid", true);
+				ActionSender.sendBox(player, "@red@Most men do live in fear of death%@red@That it might steal their soul.% %@red@Some work and pray to shield their life%@red@From the ravages of the cold.% %@red@But only those who embrace the end%@red@Can truly make their life extend.% %@red@And when all hope begins to fade% %@red@look above and use nature as your aid", true);
 			} else if (obj.getID() == 834) {
-				ActionSender.sendBox(p, "@red@And now our God has given us%@red@One who is from our own.% %@red@A saviour who once sat upon%@red@His father's glorious thrown.% %@red@It is in your name that we will lead the attack Iban%@red@son of Zamorak!", true);
+				ActionSender.sendBox(player, "@red@And now our God has given us%@red@One who is from our own.% %@red@A saviour who once sat upon%@red@His father's glorious thrown.% %@red@It is in your name that we will lead the attack Iban%@red@son of Zamorak!", true);
 			} else if (obj.getID() == 835) {
-				ActionSender.sendBox(p, "@red@Here lies the sacred font%@red@Where the great Iban will bless all his disciples%@red@in the name of evil.% %@red@Here the forces of darkness are so concentrated they rise%@red@when they detect any positive force close by", true);
+				ActionSender.sendBox(player, "@red@Here lies the sacred font%@red@Where the great Iban will bless all his disciples%@red@in the name of evil.% %@red@Here the forces of darkness are so concentrated they rise%@red@when they detect any positive force close by", true);
 			} else if (obj.getID() == 923) {
-				ActionSender.sendBox(p, "@red@Ibans Shadow% %@red@Then came the hard part: recreating the parts of a man%@red@that cannot be seen or touched: those intangible things%@red@that are life itself. Using all the mystical force that I could%@red@muster, I performed the ancient ritual of Incantia, a spell%@red@so powerful that it nearly stole the life from my frail and%@red@withered body. Opening my eyes again, I saw the three%@red@demons that had been summoned. Standing in a triangle,%@red@their energy was focused on the doll. These demons%@red@would be the keepers of Iban's shadow. Black as night,%@red@their shared spirit would follow his undead body like an%@red@angel of death.", true);
+				ActionSender.sendBox(player, "@red@Ibans Shadow% %@red@Then came the hard part: recreating the parts of a man%@red@that cannot be seen or touched: those intangible things%@red@that are life itself. Using all the mystical force that I could%@red@muster, I performed the ancient ritual of Incantia, a spell%@red@so powerful that it nearly stole the life from my frail and%@red@withered body. Opening my eyes again, I saw the three%@red@demons that had been summoned. Standing in a triangle,%@red@their energy was focused on the doll. These demons%@red@would be the keepers of Iban's shadow. Black as night,%@red@their shared spirit would follow his undead body like an%@red@angel of death.", true);
 			} else if (obj.getID() == 922) {
-				ActionSender.sendBox(p, "% %@red@Crumbling some of the dove's bones onto the doll, I cast%@red@my mind's eye onto Iban's body. My ritual was complete,%@red@soon he would be coming to life. I, Kardia, had resurrected%@red@the legendary Iban, the most powerful evil being ever to%@red@take human form. And I alone knew that the same%@red@process that I had used to create him, was also capable%@red@of destroying him.% %@red@But now I was exhausted. As I closed my eyes to sleep, I%@red@was settled by a strange feeling of contentment%@red@anticipation of the evil that Iban would soon unleash.", true);
+				ActionSender.sendBox(player, "% %@red@Crumbling some of the dove's bones onto the doll, I cast%@red@my mind's eye onto Iban's body. My ritual was complete,%@red@soon he would be coming to life. I, Kardia, had resurrected%@red@the legendary Iban, the most powerful evil being ever to%@red@take human form. And I alone knew that the same%@red@process that I had used to create him, was also capable%@red@of destroying him.% %@red@But now I was exhausted. As I closed my eyes to sleep, I%@red@was settled by a strange feeling of contentment%@red@anticipation of the evil that Iban would soon unleash.", true);
 			} else if (obj.getID() == 881) {
-				ActionSender.sendBox(p, "@red@Leave this battered corpse be% %@red@For now he lives as spirit alone% %@red@Let his flesh rest and become one with the earth% %@red@As it is the soil that shall rise to protect him% %@red@Only as flesh becomes dust, as wood becomes ash...% %@red@..will Iban's corpse embrace nature and finally rest", true);
+				ActionSender.sendBox(player, "@red@Leave this battered corpse be% %@red@For now he lives as spirit alone% %@red@Let his flesh rest and become one with the earth% %@red@As it is the soil that shall rise to protect him% %@red@Only as flesh becomes dust, as wood becomes ash...% %@red@..will Iban's corpse embrace nature and finally rest", true);
 			}
 		}
 		else if (inArray(obj.getID(), MAIN_ROCKS)) {
-			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1, true, -1);
+			doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == FIRST_SWAMP) {
-			mes(p, "you try to cross but you're unable to",
+			mes(player, "you try to cross but you're unable to",
 				"the swamp seems to cling to your legs");
-			p.message("you slowly feel yourself being dragged below");
-			say(p, null, "gulp!");
-			p.teleport(674, 3462);
-			say(p, null, "aargh");
-			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-			p.teleport(677, 3462);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(680, 3465);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(682, 3462);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(683, 3465);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(685, 3464);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(687, 3462);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			say(p, null, "aargh");
-			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
-			p.teleport(690, 3461);
-			mes(p, "you tumble deep into the cravass",
+			player.message("you slowly feel yourself being dragged below");
+			say(player, null, "gulp!");
+			player.teleport(674, 3462);
+			say(player, null, "aargh");
+			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			player.teleport(677, 3462);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(680, 3465);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(682, 3462);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(683, 3465);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(685, 3464);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(687, 3462);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			say(player, null, "aargh");
+			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
+			player.teleport(690, 3461);
+			mes(player, "you tumble deep into the cravass",
 				"and land battered and bruised at the base");
 		}
 		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
-			doRock(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1, true, -1);
+			doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
-			mes(p, "you climb up the mud pile");
-			p.teleport(685, 3420);
-			mes(p, "it leads into darkness, the stench is almost unbearable",
+			mes(player, "you climb up the mud pile");
+			player.teleport(685, 3420);
+			mes(player, "it leads into darkness, the stench is almost unbearable",
 				"you surface by the swamp, covered in muck");
 		}
 		else if (inArray(obj.getID(), MAIN_LEDGE)) {
-			doLedge(obj, p, (int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
+			doLedge(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
 		}
 		else if (obj.getID() == LEVER) {
-			mes(p, "you pull back on the old lever",
+			mes(player, "you pull back on the old lever",
 				"the bridge slowly lowers");
 			GameObject bridge_open = new GameObject(obj.getWorld(), Point.location(704, 3417), 727, 2, 0);
 			GameObject bridge_closed = new GameObject(obj.getWorld(), Point.location(704, 3417), 726, 2, 0);
 			bridge_open.getWorld().registerGameObject(bridge_open);
 			bridge_closed.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
-			p.teleport(709, 3420);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(706, 3420);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.teleport(703, 3420);
-			p.message("you cross the bridge");
+			player.teleport(709, 3420);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(706, 3420);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.teleport(703, 3420);
+			player.message("you cross the bridge");
 		}
 		else if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
-			mes(p, "you step in rancid swamp",
+			mes(player, "you step in rancid swamp",
 				"it clings to your feet, you cannot cross");
 		}
 		else if (obj.getID() == CLEAR_ROCKS) {
-			if (p.getX() == 695 && (p.getY() == 3436 || p.getY() == 3435)) {
-				p.teleport(695, 3435);
+			if (player.getX() == 695 && (player.getY() == 3436 || player.getY() == 3435)) {
+				player.teleport(695, 3435);
 				return;
 			}
-			mes(p, "you move the rocks from your path");
-			p.message("you hear a strange mechanical sound");
+			mes(player, "you move the rocks from your path");
+			player.message("you hear a strange mechanical sound");
 			obj.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
 					.getType()));
 			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
-			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
-			say(p, null, "aaarrghhh");
-			mes(p, "You've triggered a trap");
+			player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
+			say(player, null, "aaarrghhh");
+			mes(player, "You've triggered a trap");
 		}
 		else if (inArray(obj.getID(), SPEAR_ROCKS)) {
 			if (cmd.equalsIgnoreCase("step over")) {
-				mes(p, "you step over the rock");
-				p.message("you feel a thread tug at your boot");
-				p.message("it's a trap");
-				p.teleport(obj.getX(), obj.getY());
+				mes(player, "you step over the rock");
+				player.message("you feel a thread tug at your boot");
+				player.message("it's a trap");
+				player.teleport(obj.getX(), obj.getY());
 				obj.getWorld().replaceGameObject(obj,
 					new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 						.getType()));
 				obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
-				say(p, null, "aaarghh");
+				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 6) + 1);
+				say(player, null, "aaarghh");
 			} else {
-				mes(p, "you search the rock",
+				mes(player, "you search the rock",
 					"you find a trip wire");
-				p.message("do you wish to disarm the trap?");
-				int menu = multi(p, "yes, i'll have a go", "no chance");
+				player.message("do you wish to disarm the trap?");
+				int menu = multi(player, "yes, i'll have a go", "no chance");
 				if (menu == 0) {
-					mes(p, "you carefully try and diconnect the trip wire");
-					if (succeed(p, 1)) {
-						p.message("you manage to delay the trap..");
-						p.message("...long enough to cross the rocks");
-						if (obj.getX() == p.getX() + 1)
-							p.teleport(obj.getX() + 1, obj.getY());
+					mes(player, "you carefully try and diconnect the trip wire");
+					if (succeed(player, 1)) {
+						player.message("you manage to delay the trap..");
+						player.message("...long enough to cross the rocks");
+						if (obj.getX() == player.getX() + 1)
+							player.teleport(obj.getX() + 1, obj.getY());
 						else
-							p.teleport(obj.getX() - 1, obj.getY());
+							player.teleport(obj.getX() - 1, obj.getY());
 					}
 					else {
-						p.message("but the trap activates");
-						p.teleport(obj.getX(), obj.getY());
+						player.message("but the trap activates");
+						player.teleport(obj.getX(), obj.getY());
 						obj.getWorld().replaceGameObject(obj,
 							new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 								.getType()));
 						obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-						p.damage((int) (getCurrentLevel(p, Skills.HITS) / 6) + 1);
-						say(p, null, "aaarghh");
+						player.damage((int) (getCurrentLevel(player, Skills.HITS) / 6) + 1);
+						say(player, null, "aaarghh");
 					}
 
 				} else if (menu == 1) {
-					p.message("you back away from the trap");
+					player.message("you back away from the trap");
 				}
 			}
 		}
 		else if (obj.getID() == DROP_DOWN_LEDGE) {
-			p.message("you drop down to the cave floor");
-			p.teleport(706, 3439);
+			player.message("you drop down to the cave floor");
+			player.teleport(706, 3439);
 		}
 	}
 
@@ -260,132 +260,132 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 		return percent <= level_difference;
 	}
 
-	public static void doLedge(final GameObject object, final Player p, int damage) {
-		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
-		p.message("you climb the ledge");
-		boolean failLedge = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
+	public static void doLedge(final GameObject object, final Player player, int damage) {
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
+		player.message("you climb the ledge");
+		boolean failLedge = !Formulae.calcProductionSuccessful(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failLedge) {
 			if (object.getDirection() == 2 || object.getDirection() == 6) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
+				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
 					if (object.getID() == 753) {
-						p.message("and drop down to the cave floor");
-						teleport(p, object.getX() - 2, object.getY());
+						player.message("and drop down to the cave floor");
+						teleport(player, object.getX() - 2, object.getY());
 					} else {
-						p.message("and drop down to the cave floor");
-						teleport(p, object.getX() - 1, object.getY());
+						player.message("and drop down to the cave floor");
+						teleport(player, object.getX() - 1, object.getY());
 					}
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
+				} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) { // Y
 					if (object.getID() == 753) {
-						p.message("and drop down to the cave floor");
-						teleport(p, object.getX() + 2, object.getY());
+						player.message("and drop down to the cave floor");
+						teleport(player, object.getX() + 2, object.getY());
 					} else {
-						p.message("and drop down to the cave floor");
-						teleport(p, object.getX() + 1, object.getY());
+						player.message("and drop down to the cave floor");
+						teleport(player, object.getX() + 1, object.getY());
 					}
 				}
 			}
 			if (object.getDirection() == 4 || object.getDirection() == 0) {
-				if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // X
-					teleport(p, object.getX(), object.getY() + 1);
-					p.message("and drop down to the cave floor");
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // Y
-					teleport(p, object.getX(), object.getY() - 1);
+				if (object.getX() == player.getX() && object.getY() == player.getY() + 1) { // X
+					teleport(player, object.getX(), object.getY() + 1);
+					player.message("and drop down to the cave floor");
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) { // Y
+					teleport(player, object.getX(), object.getY() - 1);
 				}
 			}
 		} else {
-			p.message("but you slip");
-			p.damage(damage);
-			say(p, null, "aargh");
+			player.message("but you slip");
+			player.damage(damage);
+			say(player, null, "aargh");
 		}
 	}
 
-	public static void doRock(final GameObject object, final Player p, int damage, boolean eventMessage,
+	public static void doRock(final GameObject object, final Player player, int damage, boolean eventMessage,
 							  int spikeLocation) {
-		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
-		p.message("you climb onto the rock");
-		boolean failRock = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
+		player.message("you climb onto the rock");
+		boolean failRock = !Formulae.calcProductionSuccessful(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failRock) {
 			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
 				|| object.getDirection() == 3) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					teleport(p, object.getX() - 1, object.getY());
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					teleport(p, object.getX() + 1, object.getY());
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
+					teleport(player, object.getX() - 1, object.getY());
+				} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) { // Y
+					teleport(player, object.getX() + 1, object.getY());
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() + 1) { // left
 					// side
 					if (object.getID() == 749) {
-						teleport(p, object.getX(), object.getY() + 1);
+						teleport(player, object.getX(), object.getY() + 1);
 					} else {
-						teleport(p, object.getX() + 1, object.getY());
+						teleport(player, object.getX() + 1, object.getY());
 					}
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) { // right
 					// side.
 					if (object.getID() == 749) {
-						teleport(p, object.getX(), object.getY() - 1);
+						teleport(player, object.getX(), object.getY() - 1);
 					} else {
-						teleport(p, object.getX() + 1, object.getY());
+						teleport(player, object.getX() + 1, object.getY());
 					}
 				}
 			}
 			if (object.getDirection() == 6) {
-				if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+				if (object.getX() == player.getX() && object.getY() == player.getY() + 1) { // left
 					// side
-					teleport(p, object.getX(), object.getY() + 1);
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					teleport(player, object.getX(), object.getY() + 1);
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) { // right
 					// side.
-					teleport(p, object.getX(), object.getY() - 1);
-				} else if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) {
-					teleport(p, object.getX() + 1, object.getY() + 1);
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) {
-					teleport(p, object.getX(), object.getY() + 1);
+					teleport(player, object.getX(), object.getY() - 1);
+				} else if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) {
+					teleport(player, object.getX() + 1, object.getY() + 1);
+				} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) {
+					teleport(player, object.getX(), object.getY() + 1);
 				}
 			}
 			if (object.getDirection() == 0) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					teleport(p, object.getX() - 1, object.getY());
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					teleport(p, object.getX() + 1, object.getY());
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
+					teleport(player, object.getX() - 1, object.getY());
+				} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) { // Y
+					teleport(player, object.getX() + 1, object.getY());
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() + 1) { // left
 					// side
-					teleport(p, object.getX(), object.getY() + 1);
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					teleport(player, object.getX(), object.getY() + 1);
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) { // right
 					// side.
-					teleport(p, object.getX(), object.getY() - 1);
+					teleport(player, object.getX(), object.getY() - 1);
 				}
 			}
 			if (object.getDirection() == 7) {
-				if (object.getX() == p.getX() - 1 && object.getY() == p.getY()) { // X
-					teleport(p, object.getX() - 1, object.getY() - 1);
-				} else if (object.getX() == p.getX() + 1 && object.getY() == p.getY()) { // Y
-					teleport(p, object.getX() + 1, object.getY());
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() + 1) { // left
+				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
+					teleport(player, object.getX() - 1, object.getY() - 1);
+				} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) { // Y
+					teleport(player, object.getX() + 1, object.getY());
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() + 1) { // left
 					// side
-					teleport(p, object.getX(), object.getY() + 1);
-				} else if (object.getX() == p.getX() && object.getY() == p.getY() - 1) { // right
+					teleport(player, object.getX(), object.getY() + 1);
+				} else if (object.getX() == player.getX() && object.getY() == player.getY() - 1) { // right
 					// side.
-					teleport(p, object.getX() + 1, object.getY());
+					teleport(player, object.getX() + 1, object.getY());
 				}
 			}
-			p.message("and step down the other side");
+			player.message("and step down the other side");
 		} else {
-			p.message("but you slip");
-			p.damage(damage);
+			player.message("but you slip");
+			player.damage(damage);
 			if (spikeLocation == 1) {
-				p.teleport(743, 3475);
+				player.teleport(743, 3475);
 			} else if (spikeLocation == 2) {
-				p.teleport(748, 3482);
+				player.teleport(748, 3482);
 			} else if (spikeLocation == 3) {
-				p.teleport(738, 3483);
+				player.teleport(738, 3483);
 			} else if (spikeLocation == 4) {
-				p.teleport(736, 3475);
+				player.teleport(736, 3475);
 			} else if (spikeLocation == 5) {
-				p.teleport(730, 3478);
+				player.teleport(730, 3478);
 			}
-			say(p, null, "aargh");
+			say(player, null, "aargh");
 		}
 		if (eventMessage) {
-			p.getWorld().getServer().getGameEventHandler()
-				.add(new UndergroundPassMessages(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * DataConversions.random(3, 15)));
+			player.getWorld().getServer().getGameEventHandler()
+				.add(new UndergroundPassMessages(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * DataConversions.random(3, 15)));
 		}
 	}
 }

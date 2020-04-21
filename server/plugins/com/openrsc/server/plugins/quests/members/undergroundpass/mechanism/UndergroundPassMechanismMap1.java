@@ -125,10 +125,10 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 		}
 	}
 
-	private boolean hasABow(Player p) {
-		synchronized(p.getCarriedItems().getInventory().getItems()) {
-			for (Item bow : p.getCarriedItems().getInventory().getItems()) {
-				String bowName = bow.getDef(p.getWorld()).getName().toLowerCase();
+	private boolean hasABow(Player player) {
+		synchronized(player.getCarriedItems().getInventory().getItems()) {
+			for (Item bow : player.getCarriedItems().getInventory().getItems()) {
+				String bowName = bow.getDef(player.getWorld()).getName().toLowerCase();
 				if (bowName.contains("bow")) {
 					return true;
 				}

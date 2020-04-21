@@ -4,6 +4,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface OpNpcTrigger {
-	void onOpNpc(Npc n, String command, Player p);
-	boolean blockOpNpc(Npc n, String command, Player p);
+	void onOpNpc(Npc n, String command, Player player);
+	boolean blockOpNpc(Npc n, String command, Player player);
 }

@@ -44,7 +44,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	}
 
 	@Override
-	public void handleReward(Player p) {
+	public void handleReward(Player player) {
 		//mini-game complete handled already
 	}
 
@@ -162,43 +162,43 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 		}
 	}
 
-	private void cheerLeaderCelebrate(Player p, Npc n) {
+	private void cheerLeaderCelebrate(Player player, Npc n) {
 
 		switch(DataConversions.random(0, 2)) {
 		case 0:
-			npcsay(p, n, "yeah", "good goal");
+			npcsay(player, n, "yeah", "good goal");
 			break;
 		case 1:
-			npcsay(p, n, "yahoo", "go go traveller");
+			npcsay(player, n, "yahoo", "go go traveller");
 			break;
 		case 2:
-			npcsay(p, n, "yeah baby", "gimme a g, gimme an o, gimme an a, gimme an l");
+			npcsay(player, n, "yeah baby", "gimme a g, gimme an o, gimme an a, gimme an l");
 			break;
 		}
 	}
 
-	private void loadIfNotMemory(Player p, String cacheName) {
+	private void loadIfNotMemory(Player player, String cacheName) {
 		//load from player cache if not present in memory
-		if((p.getAttribute(cacheName, -1) == -1) && p.getCache().hasKey(cacheName)) {
-			p.setAttribute(cacheName, p.getCache().getInt(cacheName));
-		} else if (p.getAttribute(cacheName, -1) == -1) {
-			p.setAttribute(cacheName, 0);
+		if((player.getAttribute(cacheName, -1) == -1) && player.getCache().hasKey(cacheName)) {
+			player.setAttribute(cacheName, player.getCache().getInt(cacheName));
+		} else if (player.getAttribute(cacheName, -1) == -1) {
+			player.setAttribute(cacheName, 0);
 		}
 	}
 
-	private void handleScore(Player p, int score_zone) {
-		loadIfNotMemory(p, "gnomeball_goals");
-		int prev_goalCount = p.getAttribute("gnomeball_goals", 0);
-		p.incExp(Skills.RANGED, SCORES_XP[score_zone][prev_goalCount], true);
-		p.incExp(Skills.AGILITY, SCORES_XP[score_zone][prev_goalCount], true);
-		showScoreWindow(p, prev_goalCount+1);
+	private void handleScore(Player player, int score_zone) {
+		loadIfNotMemory(player, "gnomeball_goals");
+		int prev_goalCount = player.getAttribute("gnomeball_goals", 0);
+		player.incExp(Skills.RANGED, SCORES_XP[score_zone][prev_goalCount], true);
+		player.incExp(Skills.AGILITY, SCORES_XP[score_zone][prev_goalCount], true);
+		showScoreWindow(player, prev_goalCount+1);
 		if (prev_goalCount+1 == 5) {
-			ActionSender.sendTeleBubble(p, p.getX(), p.getY(), true);
+			ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 		}
-		p.setAttribute("gnomeball_goals", (prev_goalCount+1)%5);
+		player.setAttribute("gnomeball_goals", (prev_goalCount+1)%5);
 	}
 
-	private void showScoreWindow(Player p, int goalNum) {
+	private void showScoreWindow(Player player, int goalNum) {
 		String text = "@yel@goal";
 		if (goalNum > 1) {
 			text += (" " + goalNum);
@@ -206,17 +206,17 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 		if (goalNum == 5) {
 			text += ("% %Well Done% %@red@Agility Bonus");
 		}
-		ActionSender.sendBox(p, text, false);
+		ActionSender.sendBox(player, text, false);
 	}
 
 	@Override
-	public void onTakeObj(Player p, GroundItem item) {
+	public void onTakeObj(Player player, GroundItem item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
-				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
+			if (player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
 			} else {
-				p.getWorld().unregisterItem(item);
-				give(p, ItemId.GNOME_BALL.id(), 1);
+				player.getWorld().unregisterItem(item);
+				give(player, ItemId.GNOME_BALL.id(), 1);
 			}
 		}
 	}
@@ -232,7 +232,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.GNOME_BALL.id();
 	}
 

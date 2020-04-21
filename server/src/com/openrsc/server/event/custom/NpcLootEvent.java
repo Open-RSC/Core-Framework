@@ -38,26 +38,26 @@ public class NpcLootEvent extends SingleEvent {
 	}
 
 	// TODO: Maybe should implement listener method from PlayerKilledNpcListener
-	public void onLootNpcDeath(Player p, Npc n) {
+	public void onLootNpcDeath(Player player, Npc n) {
 		if(!n.equals(lootNpc)) {
 			return;
 		}
 
 		String npcName  = n.getDef().getName();
-		ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(itemId);
+		ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(itemId);
 
 		if(itemDef.isStackable()) {
-			getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
+			getWorld().registerItem(new GroundItem(player.getWorld(), itemId, n.getX(), n.getY(), itemAmount, player));
 		} else {
 			for (int i = 0; i < itemAmount; i++) {
-				getWorld().registerItem(new GroundItem(p.getWorld(), itemId, n.getX(), n.getY(), itemAmount, p));
+				getWorld().registerItem(new GroundItem(player.getWorld(), itemId, n.getX(), n.getY(), itemAmount, player));
 			}
 		}
 
 		for (Player informee : getWorld().getPlayers())
-			informee.message(p.getWorld().getServer().getConfig().MESSAGE_PREFIX + p.getUsername() + " has killed the special " + npcName + " and won: " + itemDef.getName() +  " x" + itemAmount);
+			informee.message(player.getWorld().getServer().getConfig().MESSAGE_PREFIX + player.getUsername() + " has killed the special " + npcName + " and won: " + itemDef.getName() +  " x" + itemAmount);
 
-		ActionSender.sendBox(p, "You have killed the special " + npcName + "! % Remember to loot your winnings of " + itemAmount + " " + itemDef.getName(),false);
+		ActionSender.sendBox(player, "You have killed the special " + npcName + "! % Remember to loot your winnings of " + itemAmount + " " + itemDef.getName(),false);
 		lootNpc = null;
 		stop();
 	}

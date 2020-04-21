@@ -36,67 +36,67 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	}
 
 	@Override
-	public void handleReward(Player p) {
+	public void handleReward(Player player) {
 		//mini-quest complete handled already
 	}
 
 	@Override
-	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
 		return i.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onDropObj(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player player, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.KITTEN.id()) {
-			p.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
-			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you drop the kitten");
-			mes(p, 0, "it's upset and runs away");
+			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you drop the kitten");
+			mes(player, 0, "it's upset and runs away");
 		}
 
 		KittenState state = new KittenState();
-		state.saveState(p);
+		state.saveState(player);
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
-			mes(p, "you softly stroke the kitten",
+			mes(player, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
-			mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "the kitten appreciates the attention");
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "the kitten appreciates the attention");
 
-			reduceKittensLoneliness(p);
+			reduceKittensLoneliness(player);
 		}
 	}
 
-	public void entertainCat(Item item, Player p, boolean isGrown) {
+	public void entertainCat(Item item, Player player, boolean isGrown) {
 		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
-				mes(p, "your kitten plays around with the ball of wool",
+				mes(player, "your kitten plays around with the ball of wool",
 						"it seems to love pouncing on it");
 
-				reduceKittensLoneliness(p);
+				reduceKittensLoneliness(player);
 			} else {
-				mes(p, "your cat plays around with the wool",
+				mes(player, "your cat plays around with the wool",
 						"it seems to be enjoying itself");
 			}
 		}
 	}
 
-	public void feedCat(Item item, Player p, boolean isGrown) {
+	public void feedCat(Item item, Player player, boolean isGrown) {
 		boolean feeded = false;
 		switch (ItemId.getById(item.getCatalogId())) {
 		case MILK:
-			p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
+			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
 			if(!isGrown) {
-				mes(p, "you give the kitten the milk",
+				mes(player, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
 			} else {
-				mes(p, "you give the cat the milk",
+				mes(player, "you give the cat the milk",
 						"the kitten quickly laps it up then licks his paws");
 			}
 			feeded = true;
@@ -112,12 +112,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case RAW_SALMON:
 		case RAW_TUNA:
 		case TUNA:
-			p.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if(!isGrown) {
-				mes(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
+				mes(player, "you give the kitten the " + item.getDef(player.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
 			} else {
-				mes(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
+				mes(player, "you give the cat the " + item.getDef(player.getWorld()).getName(),
 						"it quickly eat's them up and licks its paws");
 			}
 			feeded = true;
@@ -127,40 +127,40 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		}
 
 		if (feeded && !isGrown)
-			reduceKittensHunger(p);
+			reduceKittensHunger(player);
 	}
 
-	private void reduceKittensLoneliness(Player p) {
+	private void reduceKittensLoneliness(Player player) {
 		KittenState state = new KittenState();
-		state.loadState(p);
+		state.loadState(player);
 		int loneliness = state.getLoneliness();
 		if (loneliness >= BASE_FACTOR) {
 			state.setLoneliness(loneliness - BASE_FACTOR);
-			state.saveState(p);
+			state.saveState(player);
 		}
 	}
 
-	private void reduceKittensHunger(Player p) {
+	private void reduceKittensHunger(Player player) {
 		KittenState state = new KittenState();
-		state.loadState(p);
+		state.loadState(player);
 		int hunger = state.getHunger();
 		if (hunger >= BASE_FACTOR) {
 			state.setHunger(hunger - BASE_FACTOR);
-			state.saveState(p);
+			state.saveState(player);
 		}
 	}
 
 	@Override
-	public boolean blockCatGrowth(Player p) {
-		return p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id());
+	public boolean blockCatGrowth(Player player) {
+		return player.getCarriedItems().hasCatalogID(ItemId.KITTEN.id());
 	}
 
 	@Override
-	public void onCatGrowth(Player p) {
-		if (p.getCarriedItems().hasCatalogID(ItemId.KITTEN.id())) {
+	public void onCatGrowth(Player player) {
+		if (player.getCarriedItems().hasCatalogID(ItemId.KITTEN.id())) {
 			// no events in memory, check in cache
 			KittenState state = new KittenState();
-			state.loadState(p);
+			state.loadState(player);
 			int kittenHunger = state.getHunger();
 			int kittenLoneliness = state.getLoneliness();
 			int kittenEvents = state.getEvents();
@@ -193,36 +193,36 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			}
 
 			for (String message : messages) {
-				p.message(message);
+				player.message(message);
 			}
 
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
-				p.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
+				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 			}
 			// kitten grows to cat - replace and reset counters
 			else if (kittenEvents >= 32) {
-				p.getCarriedItems().getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
+				player.getCarriedItems().getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
-				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");
 			}
 
 			state.setEvents(kittenEvents);
 			state.setHunger(kittenHunger);
 			state.setLoneliness(kittenLoneliness);
-			state.saveState(p);
+			state.saveState(player);
 		}
 	}
 
 	@Override
-	public boolean blockUseInv(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2);
 	}
 
 	@Override
-	public void onUseInv(Player p, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2)) {
 			boolean isGrownCat = item1.getCatalogId() != ItemId.KITTEN.id() && item2.getCatalogId() != ItemId.KITTEN.id();
 			Item item;
@@ -232,9 +232,9 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 				item = item1.getCatalogId() == ItemId.KITTEN.id() ? item2 : item1;
 			}
 			if (isBallWoolOnCat(item1, item2)) {
-				entertainCat(item, p, isGrownCat);
+				entertainCat(item, player, isGrownCat);
 			} else if (isFoodOnCat(item1, item2)) {
-				feedCat(item, p, isGrownCat);
+				feedCat(item, player, isGrownCat);
 			}
 		}
 	}
@@ -254,35 +254,35 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	}
 
 	@Override
-	public boolean blockUseNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player player, Npc n, Item item) {
 		//only small rats
 		return (item.getCatalogId() == ItemId.KITTEN.id() || item.getCatalogId() == ItemId.CAT.id()) && n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
-	public void onUseNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player player, Npc n, Item item) {
 		if (item.getCatalogId() == ItemId.KITTEN.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
-			p.message("it pounces on the rat...");
+			player.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
-				n.face(p);
-				delay(p.getWorld().getServer().getConfig().GAME_TICK);
+				n.face(player);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				n.remove();
-				p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
+				player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				//possibly non kosher
-				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
 						"it returns to your satchel licking it's paws");
 
-				reduceKittensLoneliness(p);
+				reduceKittensLoneliness(player);
 			}
 		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
-			p.message("the cat pounces on the rat...");
-			n.face(p);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
+			player.message("the cat pounces on the rat...");
+			n.face(player);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			n.remove();
-			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
+			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");
 		}
 	}

@@ -20,20 +20,20 @@ public class FrincosVialShopEntrana implements ShopInterface,
 		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Hello how can I help you?");
-		int menu = multi(p, n,
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello how can I help you?");
+		int menu = multi(player, n,
 			"What are you selling?",
 			"You can't, I'm beyond help",
 			"I'm okay, thankyou");
 		if (menu == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FRINCOS.id();
 	}
 

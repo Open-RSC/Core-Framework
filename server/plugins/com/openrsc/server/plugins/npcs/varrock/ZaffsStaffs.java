@@ -19,7 +19,7 @@ public final class ZaffsStaffs implements ShopInterface,
 	private Shop shop = null;
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.ZAFF.id();
 	}
 
@@ -34,12 +34,12 @@ public final class ZaffsStaffs implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Would you like to buy or sell some staffs?");
-		int option = multi(p, n, "Yes please", "No, thank you");
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy or sell some staffs?");
+		int option = multi(player, n, "Yes please", "No, thank you");
 		if (option == 0) {
-			p.setAccessingShop(getShop(p.getWorld()));
-			ActionSender.showShop(p, getShop(p.getWorld()));
+			player.setAccessingShop(getShop(player.getWorld()));
+			ActionSender.showShop(player, getShop(player.getWorld()));
 		}
 	}
 

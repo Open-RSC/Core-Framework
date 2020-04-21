@@ -7,12 +7,12 @@ public interface EscapeNpcTrigger {
 	/**
 	 * Called when a player runs from npc
 	 *
-	 * @param p
+	 * @param player
 	 * @param n
 	 */
-	void onEscapeNpc(Player p, Npc n);
+	void onEscapeNpc(Player player, Npc n);
 	/**
 	 * Return true if you wish to prevent a user from running from npc
 	 */
-	boolean blockEscapeNpc(Player p, Npc n);
+	boolean blockEscapeNpc(Player player, Npc n);
 }

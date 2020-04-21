@@ -183,7 +183,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			ItemId.GNOMEBOWL.id()), // Step Thirteen: Bake Gnomebowl
 	};
 
-	private void handleGnomeCooking(final Item item, Player p, final GameObject object) {
+	private void handleGnomeCooking(final Item item, Player player, final GameObject object) {
 		GnomeCook gc = null;
 		for (GnomeCook c : GnomeCook.values()) {
 			if (item.getCatalogId() == c.uncookedID && inArray(object.getID(), 119)) {
@@ -191,160 +191,160 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			}
 		}
 		// NOTE: THERE ARE NO REQUIREMENT TO COOK THE DOUGH ONLY TO MOULD IT.
-		p.setBusy(true);
-		thinkbubble(p, item);
-		p.playSound("cooking");
-		if (p.getCarriedItems().remove(item) > -1) {
-			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, gc.messages[0]);
-			if (!burnFood(p, item.getCatalogId(), p.getSkills().getLevel(Skills.COOKING))) {
-				p.message(gc.messages[1]);
+		player.setBusy(true);
+		thinkbubble(player, item);
+		player.playSound("cooking");
+		if (player.getCarriedItems().remove(item) > -1) {
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, gc.messages[0]);
+			if (!burnFood(player, item.getCatalogId(), player.getSkills().getLevel(Skills.COOKING))) {
+				player.message(gc.messages[1]);
 
 				// Cooking Gnomebatta and Gnomebowl base
 				if (item.getCatalogId() == ItemId.GNOMEBATTA_DOUGH.id() || item.getCatalogId() == ItemId.GNOMEBOWL_DOUGH.id()) {
-					give(p, gc.cookedID, 1);
-					p.setBusy(false);
+					give(player, gc.cookedID, 1);
+					player.setBusy(false);
 					return;
 				}
 
 				// Successful recipe
-				boolean recipeSuccess = addGnomeRecipeCache(p, -1, item.getCatalogId());
+				boolean recipeSuccess = addGnomeRecipeCache(player, -1, item.getCatalogId());
 				if (recipeSuccess) {
-					p.incExp(Skills.COOKING, gc.experience, true);
+					player.incExp(Skills.COOKING, gc.experience, true);
 
 					// Toad Batta
-					if (p.getCache().getString("gnome_recipe").equals(recipeStrings[TOAD_BATTA])) {
-						give(p, ItemId.TOAD_BATTA.id(), 1);
-						resetGnomeCooking(p);
+					if (player.getCache().getString("gnome_recipe").equals(recipeStrings[TOAD_BATTA])) {
+						give(player, ItemId.TOAD_BATTA.id(), 1);
+						resetGnomeCooking(player);
 					}
 
 					// Tangled Toads Legs
-					else if (p.getCache().getString("gnome_recipe").equals(recipeStrings[TANGLED_TOADS_LEGS])) {
-						give(p, ItemId.TANGLED_TOADS_LEGS.id(), 1);
-						resetGnomeCooking(p);
+					else if (player.getCache().getString("gnome_recipe").equals(recipeStrings[TANGLED_TOADS_LEGS])) {
+						give(player, ItemId.TANGLED_TOADS_LEGS.id(), 1);
+						resetGnomeCooking(player);
 					}
 
 					// Basic baking
 					else if (gc.cookedID == ItemId.GNOMEBATTA.id() || gc.cookedID == ItemId.GNOMEBOWL.id()
 						|| gc.cookedID == ItemId.GNOMECRUNCHIE.id()) {
-						give(p, gc.cookedID, 1);
+						give(player, gc.cookedID, 1);
 					}
 				}
 			}
 			else {
-				give(p, gc.burntID, 1);
-				p.message(gc.messages[2]);
-				resetGnomeCooking(p);
+				give(player, gc.burntID, 1);
+				player.message(gc.messages[2]);
+				resetGnomeCooking(player);
 			}
 		}
-		p.setBusy(false);
+		player.setBusy(false);
 	}
 
-	private boolean mouldDough(Item item, Player p) {
-		if (p.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA_DOUGH.id(), Optional.of(false))
-			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL_DOUGH.id(), Optional.of(false))
-			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE_DOUGH.id(), Optional.of(false))
-			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA.id(), Optional.of(false))
-			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
-			|| p.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
-			mes(p, "you need to finish, eat or drop the unfinished dish you hold");
-			p.message("before you can make another - giannes rules");
+	private boolean mouldDough(Item item, Player player) {
+		if (player.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA_DOUGH.id(), Optional.of(false))
+			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL_DOUGH.id(), Optional.of(false))
+			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE_DOUGH.id(), Optional.of(false))
+			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA.id(), Optional.of(false))
+			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
+			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
+			mes(player, "you need to finish, eat or drop the unfinished dish you hold");
+			player.message("before you can make another - giannes rules");
 			return false;
 		}
-		p.message("which shape would you like to mould");
-		int menu = multi(p,
+		player.message("which shape would you like to mould");
+		int menu = multi(player,
 			"gnomebatta",
 			"gnomebowl",
 			"gnomecrunchie");
 		if (menu != -1) {
-			p.setOption(-1);
-			p.setBusy(true);
+			player.setOption(-1);
+			player.setBusy(true);
 			if (menu == 0) {
-				if (p.getSkills().getLevel(Skills.COOKING) < 25) {
-					p.message("you need a cooking level of 25 to mould dough batta's");
-					p.setBusy(false);
+				if (player.getSkills().getLevel(Skills.COOKING) < 25) {
+					player.message("you need a cooking level of 25 to mould dough batta's");
+					player.setBusy(false);
 					return false;
 				}
 
-				thinkbubble(p, item);
-				p.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnomebatta");
-				p.message("You manage to make some gnome batta dough");
-				give(p, ItemId.GNOMEBATTA_DOUGH.id(), 1);
+				thinkbubble(player, item);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnomebatta");
+				player.message("You manage to make some gnome batta dough");
+				give(player, ItemId.GNOMEBATTA_DOUGH.id(), 1);
 
 				// Add Gianne Dough to our current recipe
-				addGnomeRecipeCache(p, -1, ItemId.GIANNE_DOUGH.id());
+				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 
 			} else if (menu == 1) {
-				if (p.getSkills().getLevel(Skills.COOKING) < 30) {
-					p.message("you need a cooking level of 30 to mould dough bowls");
-					p.setBusy(false);
+				if (player.getSkills().getLevel(Skills.COOKING) < 30) {
+					player.message("you need a cooking level of 30 to mould dough bowls");
+					player.setBusy(false);
 					return false;
 				}
 
-				thinkbubble(p, item);
-				p.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnome bowl");
-				p.message("You manage to make some gnome bowl dough");
-				give(p, ItemId.GNOMEBOWL_DOUGH.id(), 1);
+				thinkbubble(player, item);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnome bowl");
+				player.message("You manage to make some gnome bowl dough");
+				give(player, ItemId.GNOMEBOWL_DOUGH.id(), 1);
 
 				// Add Gianne Dough to our current recipe
-				addGnomeRecipeCache(p, -1, ItemId.GIANNE_DOUGH.id());
+				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 
 			} else if (menu == 2) {
-				if (p.getSkills().getLevel(Skills.COOKING) < 15) {
-					p.message("you need a cooking level of 15 to mould crunchies");
-					p.setBusy(false);
+				if (player.getSkills().getLevel(Skills.COOKING) < 15) {
+					player.message("you need a cooking level of 15 to mould crunchies");
+					player.setBusy(false);
 					return false;
 				}
 
-				thinkbubble(p, item);
-				p.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into gnome crunchies");
-				p.message("You manage to make some gnome crunchies dough");
-				give(p, ItemId.GNOMECRUNCHIE_DOUGH.id(), 1);
+				thinkbubble(player, item);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into gnome crunchies");
+				player.message("You manage to make some gnome crunchies dough");
+				give(player, ItemId.GNOMECRUNCHIE_DOUGH.id(), 1);
 
 				// Add Gianne Dough to our current recipe
-				addGnomeRecipeCache(p, -1, ItemId.GIANNE_DOUGH.id());
+				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 			}
-			p.incExp(Skills.COOKING, 100, true);
-			p.setBusy(false);
+			player.incExp(Skills.COOKING, 100, true);
+			player.setBusy(false);
 		}
 		return true;
 
 	}
 
 	@Override
-	public void onOpInv(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == ItemId.GIANNE_DOUGH.id()) {
-			mouldDough(item, p);
+			mouldDough(item, player);
 		}
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.GIANNE_DOUGH.id();
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return canCook(item, obj);
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
-		handleGnomeCooking(item, p, obj);
+	public void onUseLoc(GameObject obj, Item item, Player player) {
+		handleGnomeCooking(item, player, obj);
 	}
 
-	private boolean burnFood(Player p, int itemId, int myCookingLvl) {
-		return Formulae.burnFood(p, itemId, myCookingLvl);
+	private boolean burnFood(Player player, int itemId, int myCookingLvl) {
+		return Formulae.burnFood(player, itemId, myCookingLvl);
 	}
 
-	protected boolean addGnomeRecipeCache(final Player p, int baseId, int actionId) {
+	protected boolean addGnomeRecipeCache(final Player player, int baseId, int actionId) {
 		String recipeString = "";
 
 		// Get a stored recipe if one exists
-		if (p.getCache().hasKey("gnome_recipe")) {
-			recipeString = p.getCache().getString("gnome_recipe") + "-";
+		if (player.getCache().hasKey("gnome_recipe")) {
+			recipeString = player.getCache().getString("gnome_recipe") + "-";
 		}
 
 		// Base ID is -1 for moulding and baking AKA an empty string.
@@ -368,13 +368,13 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 			// Completed
 			if (recipe.equals(recipeString + "!")) {
-				p.getCache().store("gnome_recipe", recipeString + "!");
+				player.getCache().store("gnome_recipe", recipeString + "!");
 				return true;
 			}
 
 			// Partially complete
 			if (recipe.startsWith(recipeString)) {
-				p.getCache().store("gnome_recipe", recipeString);
+				player.getCache().store("gnome_recipe", recipeString);
 				return true;
 			}
 
@@ -384,7 +384,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 		}
 
-		p.getCache().store("gnome_recipe", baseIdString);
+		player.getCache().store("gnome_recipe", baseIdString);
 		return false;
 	}
 

@@ -11,26 +11,26 @@ import com.openrsc.server.constants.NpcId;
 public class SigbertTheAdventurer implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id()) {
-			npcsay(p, n, "I'd be very careful going up there friend");
-			int menu = multi(p, n,
+			npcsay(player, n, "I'd be very careful going up there friend");
+			int menu = multi(player, n,
 				"Why what's up there?",
 				"Fear not I am very strong");
 			if (menu == 0) {
-				npcsay(p, n, "Salarin the twisted",
+				npcsay(player, n, "Salarin the twisted",
 					"One of Kanadarin's most dangerous chaos druids",
 					"I tried to take him on and then suddenly felt immensly week",
 					"I here he's susceptable to attacks from the mind",
 					"However I have no idea what that means",
 					"So it's not much help to me");
 			} else if (menu == 1) {
-				npcsay(p, n, "You might find you are not so strong shortly");
+				npcsay(player, n, "You might find you are not so strong shortly");
 			}
 		}
 	}

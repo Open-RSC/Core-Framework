@@ -22,175 +22,175 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 	private static final int ROCKY_WALKWAY_4 = 561;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), ROCK_HEWN_STAIRS_1, ROCK_HEWN_STAIRS_2, ROCK_HEWN_STAIRS_3, ROCK_HEWN_STAIRS_4, ROCKY_WALKWAY_1, ROCKY_WALKWAY_2, ROCKY_WALKWAY_3, ROCKY_WALKWAY_4);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
-		p.setBusy(true);
+	public void onOpLoc(GameObject obj, String command, Player player) {
+		player.setBusy(true);
 		switch (obj.getID()) {
 			case ROCKY_WALKWAY_1:
 			case ROCKY_WALKWAY_2:
 			case ROCKY_WALKWAY_3:
 			case ROCKY_WALKWAY_4:
-				if (p.getX() == obj.getX() && p.getY() == obj.getY()) {
-					p.message("You're standing there already!");
-					p.setBusy(false);
+				if (player.getX() == obj.getX() && player.getY() == obj.getY()) {
+					player.message("You're standing there already!");
+					player.setBusy(false);
 					return;
 				}
-				if (succeed(p, 50)) {
-					p.message("You manage to keep your balance.");
-					p.teleport(obj.getX(), obj.getY());
-					p.incExp(Skills.AGILITY, 20, true);
+				if (succeed(player, 50)) {
+					player.message("You manage to keep your balance.");
+					player.teleport(obj.getX(), obj.getY());
+					player.incExp(Skills.AGILITY, 20, true);
 				} else {
-					p.teleport(421, 3699);
-					p.message("You slip and fall...");
+					player.teleport(421, 3699);
+					player.message("You slip and fall...");
 					int failScene = DataConversions.random(0, 10);
 					if (failScene == 0) {
-						p.message("...but you luckily avoid any damage.");
+						player.message("...but you luckily avoid any damage.");
 					}
 					else if (failScene <= 2) {
-						p.damage(DataConversions.random(3, 6));
-						p.message("...and take a bit of damage.");
+						player.damage(DataConversions.random(3, 6));
+						player.message("...and take a bit of damage.");
 					}
 					else if (failScene <= 5) {
-						p.damage(DataConversions.random(7, 11));
-						p.message("...and take some damage.");
+						player.damage(DataConversions.random(7, 11));
+						player.message("...and take some damage.");
 					}
 					else if (failScene <= 7) {
-						p.damage(DataConversions.random(12, 16));
-						p.message("...and take damage.");
+						player.damage(DataConversions.random(12, 16));
+						player.message("...and take damage.");
 					}
 					else if (failScene <= 9) {
-						p.damage(DataConversions.random(17, 23));
-						p.message("...and are injured.");
+						player.damage(DataConversions.random(17, 23));
+						player.message("...and are injured.");
 					}
 					else {
-						p.damage(DataConversions.random(24, 31));
-						p.message("...and take some major damage.");
+						player.damage(DataConversions.random(24, 31));
+						player.message("...and take some major damage.");
 					}
-					p.incExp(Skills.AGILITY, 5, true);
+					player.incExp(Skills.AGILITY, 5, true);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_4:
-				if (getCurrentLevel(p, Skills.AGILITY) < 50) {
-					p.message("You need an agility level of 50 to step these stairs");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					player.message("You need an agility level of 50 to step these stairs");
+					player.setBusy(false);
 					return;
 				}
-				if (succeed(p, 50)) {
-					if (p.getX() <= 419) {
-						p.message("You climb down the steps.");
-						p.teleport(421, 3707);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(423, 3707);
+				if (succeed(player, 50)) {
+					if (player.getX() <= 419) {
+						player.message("You climb down the steps.");
+						player.teleport(421, 3707);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(423, 3707);
 					} else {
-						p.message("You climb up the stairs.");
-						p.teleport(421, 3707);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(419, 3707);
+						player.message("You climb up the stairs.");
+						player.teleport(421, 3707);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(419, 3707);
 					}
 				} else {
-					p.message("You slip and fall...");
-					p.damage(DataConversions.random(2, 3));
-					p.teleport(421, 3707);
-					delay(p.getWorld().getServer().getConfig().GAME_TICK);
-					p.incExp(Skills.AGILITY, 5, true);
-					p.teleport(423, 3707);
+					player.message("You slip and fall...");
+					player.damage(DataConversions.random(2, 3));
+					player.teleport(421, 3707);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					player.incExp(Skills.AGILITY, 5, true);
+					player.teleport(423, 3707);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_3:
-				if (getCurrentLevel(p, Skills.AGILITY) < 50) {
-					p.message("You need an agility level of 50 to step these stairs");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					player.message("You need an agility level of 50 to step these stairs");
+					player.setBusy(false);
 					return;
 				}
-				if (succeed(p, 50)) {
-					if (p.getY() <= 3702) {
-						p.message("You climb down the steps.");
-						p.teleport(419, 3704);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(419, 3706);
+				if (succeed(player, 50)) {
+					if (player.getY() <= 3702) {
+						player.message("You climb down the steps.");
+						player.teleport(419, 3704);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(419, 3706);
 					} else {
-						p.message("You climb up the stairs.");
-						p.teleport(419, 3704);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(419, 3702);
+						player.message("You climb up the stairs.");
+						player.teleport(419, 3704);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(419, 3702);
 					}
 				} else {
-					p.message("You slip and fall...");
-					p.damage(DataConversions.random(2, 3));
-					p.teleport(419, 3704);
-					delay(p.getWorld().getServer().getConfig().GAME_TICK);
-					p.incExp(Skills.AGILITY, 5, true);
-					p.teleport(419, 3706);
+					player.message("You slip and fall...");
+					player.damage(DataConversions.random(2, 3));
+					player.teleport(419, 3704);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					player.incExp(Skills.AGILITY, 5, true);
+					player.teleport(419, 3706);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_2:
-				if (getCurrentLevel(p, Skills.AGILITY) < 50) {
-					p.message("You need an agility level of 50 to step these stairs");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					player.message("You need an agility level of 50 to step these stairs");
+					player.setBusy(false);
 					return;
 				}
-				if (succeed(p, 50)) {
-					if (p.getX() >= 426) {
-						p.message("You climb down the steps.");
-						p.teleport(424, 3702);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(422, 3702);
+				if (succeed(player, 50)) {
+					if (player.getX() >= 426) {
+						player.message("You climb down the steps.");
+						player.teleport(424, 3702);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(422, 3702);
 					} else {
-						p.message("You climb up the stairs.");
-						p.teleport(424, 3702);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(426, 3702);
+						player.message("You climb up the stairs.");
+						player.teleport(424, 3702);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(426, 3702);
 					}
 				} else {
-					p.message("You slip and fall...");
-					p.damage(DataConversions.random(2, 3));
-					p.teleport(424, 3702);
-					delay(p.getWorld().getServer().getConfig().GAME_TICK);
-					p.incExp(Skills.AGILITY, 5, true);
-					p.teleport(422, 3702);
+					player.message("You slip and fall...");
+					player.damage(DataConversions.random(2, 3));
+					player.teleport(424, 3702);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					player.incExp(Skills.AGILITY, 5, true);
+					player.teleport(422, 3702);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_1:
-				if (getCurrentLevel(p, Skills.AGILITY) < 50) {
-					p.message("You need an agility level of 50 to step these stairs");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					player.message("You need an agility level of 50 to step these stairs");
+					player.setBusy(false);
 					return;
 				}
-				if (succeed(p, 50)) {
-					if (p.getY() >= 3706) {
-						p.message("You climb down the steps.");
-						p.teleport(426, 3704);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(426, 3702);
+				if (succeed(player, 50)) {
+					if (player.getY() >= 3706) {
+						player.message("You climb down the steps.");
+						player.teleport(426, 3704);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(426, 3702);
 					} else {
-						p.message("You climb up the stairs.");
-						p.teleport(426, 3704);
-						delay(p.getWorld().getServer().getConfig().GAME_TICK);
-						p.incExp(Skills.AGILITY, 20, true);
-						p.teleport(426, 3706);
+						player.message("You climb up the stairs.");
+						player.teleport(426, 3704);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.incExp(Skills.AGILITY, 20, true);
+						player.teleport(426, 3706);
 					}
 				} else {
-					p.message("You slip and fall...");
-					p.damage(DataConversions.random(2, 3));
-					p.teleport(426, 3704);
-					delay(p.getWorld().getServer().getConfig().GAME_TICK);
-					p.incExp(Skills.AGILITY, 5, true);
-					p.teleport(426, 3702);
+					player.message("You slip and fall...");
+					player.damage(DataConversions.random(2, 3));
+					player.teleport(426, 3704);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					player.incExp(Skills.AGILITY, 5, true);
+					player.teleport(426, 3702);
 				}
 				break;
 		}
-		p.setBusy(false);
+		player.setBusy(false);
 	}
 
 	boolean succeed(Player player, int req) {

@@ -9,52 +9,52 @@ import com.openrsc.server.model.entity.player.Player;
 
 public class AgilityUtils {
 
-	public static void completedObstacle(Player p, int id, Set<Integer> obstacles, Integer lastObstacle, int bonus) {
-		if (p.getAttribute("obstaclesDone") == null) {
+	public static void completedObstacle(Player player, int id, Set<Integer> obstacles, Integer lastObstacle, int bonus) {
+		if (player.getAttribute("obstaclesDone") == null) {
 			if (id == lastObstacle) {
-				p.setAttribute("obstaclesDone", new HashSet<Integer>());
+				player.setAttribute("obstaclesDone", new HashSet<Integer>());
 			}
 			else {
-				p.setAttribute("obstaclesDone", new HashSet<Integer>(Arrays.asList(id)));
+				player.setAttribute("obstaclesDone", new HashSet<Integer>(Arrays.asList(id)));
 			}
 		} else {
-			Set<Integer> obstaclesDone = p.getAttribute("obstaclesDone", new HashSet<Integer>());
+			Set<Integer> obstaclesDone = player.getAttribute("obstaclesDone", new HashSet<Integer>());
 			if (obstacles.contains(id)) {
 				obstaclesDone.add(id);
-				p.setAttribute("obstaclesDone", obstaclesDone);
+				player.setAttribute("obstaclesDone", obstaclesDone);
 			}
 			else if (id == lastObstacle && obstaclesDone.containsAll(obstacles)) {
-				p.incExp(Skills.AGILITY, bonus, true);
-				p.setAttribute("obstaclesDone", new HashSet<Integer>());
+				player.incExp(Skills.AGILITY, bonus, true);
+				player.setAttribute("obstaclesDone", new HashSet<Integer>());
 			}
 		}
 	}
 	
-	public static boolean hasDoneObstacle(Player p, int id, Set<Integer> obstacles) {
-		return p.getAttribute("obstaclesDone") != null
-				&& p.getAttribute("obstaclesDone", new HashSet<Integer>()).contains(id);
+	public static boolean hasDoneObstacle(Player player, int id, Set<Integer> obstacles) {
+		return player.getAttribute("obstaclesDone") != null
+				&& player.getAttribute("obstaclesDone", new HashSet<Integer>()).contains(id);
 	}
 	
 	// old method - where order matters
-	public static void setNextObstacle(Player p, int id, int[] obstacleOrder, int bonus) {
-		if (p.getAttribute("nextObstacle", -1) == -1) {
+	public static void setNextObstacle(Player player, int id, int[] obstacleOrder, int bonus) {
+		if (player.getAttribute("nextObstacle", -1) == -1) {
 			if (id == obstacleOrder[0]) {
-				p.setAttribute("nextObstacle", obstacleOrder[1]);
+				player.setAttribute("nextObstacle", obstacleOrder[1]);
 			} else {
-				p.setAttribute("nextObstacle", obstacleOrder[0]);
+				player.setAttribute("nextObstacle", obstacleOrder[0]);
 			}
 		} else {
-			if ((int) p.getAttribute("nextObstacle") != id) {
-				p.setAttribute("nextObstacle", obstacleOrder[0]);
+			if ((int) player.getAttribute("nextObstacle") != id) {
+				player.setAttribute("nextObstacle", obstacleOrder[0]);
 			} else {
 				for (int i = 0; i < obstacleOrder.length; i++) {
 					if (obstacleOrder[i] == id) {
 						if (i == obstacleOrder.length - 1) {
-							p.incExp(Skills.AGILITY, bonus, true);
-							p.setAttribute("nextObstacle", obstacleOrder[0]);
+							player.incExp(Skills.AGILITY, bonus, true);
+							player.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;
 						}
-						p.setAttribute("nextObstacle", obstacleOrder[i + 1]);
+						player.setAttribute("nextObstacle", obstacleOrder[i + 1]);
 						break;
 					}
 				}

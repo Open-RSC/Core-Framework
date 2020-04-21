@@ -132,9 +132,9 @@ public class Clan {
 	}
 
 	public ClanPlayer getPlayer(String username) {
-		for (ClanPlayer p : getPlayers()) {
-			if (p.getUsername().equalsIgnoreCase(username)) {
-				return p;
+		for (ClanPlayer player : getPlayers()) {
+			if (player.getUsername().equalsIgnoreCase(username)) {
+				return player;
 			}
 		}
 		return null;
@@ -214,15 +214,15 @@ public class Clan {
 		this.clanSetting[1] = state;
 	}
 
-	public boolean isAllowed(int setting, Player p) {
-		if (p.getClan() != null) {
+	public boolean isAllowed(int setting, Player player) {
+		if (player.getClan() != null) {
 			if (clanSetting[setting] == 0) {
 				return true;
-			} else if (clanSetting[setting] == 1 && p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER)) {
+			} else if (clanSetting[setting] == 1 && player.getClan().getPlayer(player.getUsername()).getRank().equals(ClanRank.LEADER)) {
 				return true;
-			} else if ((clanSetting[setting] == 2 ||clanSetting[setting] == 3) && (p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.LEADER) || p.getClan().getPlayer(p.getUsername()).getRank().equals(ClanRank.GENERAL))) {
-				return true;
-			}
+			} else return (clanSetting[setting] == 2 || clanSetting[setting] == 3)
+				&& (player.getClan().getPlayer(player.getUsername()).getRank().equals(ClanRank.LEADER)
+				|| player.getClan().getPlayer(player.getUsername()).getRank().equals(ClanRank.GENERAL));
 		}
 		return false;
 	}
@@ -239,8 +239,8 @@ public class Clan {
 		return clanPoints;
 	}
 
-	public void setClanPoints(int p) {
-		this.clanPoints = p;
+	public void setClanPoints(int player) {
+		this.clanPoints = player;
 	}
 
 	public World getWorld() {

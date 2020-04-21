@@ -25,7 +25,7 @@ public class HarrysFishingShack implements ShopInterface,
 		new Item(ItemId.RAW_SHARK.id(), 0));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.HARRY.id();
 	}
 
@@ -40,16 +40,16 @@ public class HarrysFishingShack implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Welcome you can buy fishing equipment at my store",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Welcome you can buy fishing equipment at my store",
 			"We'll also buy fish that you catch off you");
-		final int option = multi(p, n, false, "Let's see what you've got then", "Sorry, I'm not interested");
+		final int option = multi(player, n, false, "Let's see what you've got then", "Sorry, I'm not interested");
 		if (option == 0) {
-			say(p, n, "Let's see what you've got then");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Let's see what you've got then");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "Sorry,I'm not interested");
+			say(player, n, "Sorry,I'm not interested");
 		}
 	}
 

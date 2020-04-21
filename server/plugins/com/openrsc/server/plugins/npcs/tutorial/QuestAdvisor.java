@@ -14,41 +14,41 @@ public class QuestAdvisor implements TalkNpcTrigger {
 	 */
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Greetings traveller",
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Greetings traveller",
 			"If you're interested in a bit of adventure",
 			"I can recommend going on a good quest",
 			"There are many secrets to be unconvered",
 			"And wrongs to be set right",
 			"If you talk to the various characters in the game",
 			"Some of them will give you quests");
-		say(p, n, "What sort of quests are there to do?");
-		npcsay(p, n, "If you select the bar graph in the menu bar",
+		say(player, n, "What sort of quests are there to do?");
+		npcsay(player, n, "If you select the bar graph in the menu bar",
 			"And then select the quests tabs",
 			"You will see a list of quests",
 			"quests you have completed will show up in green",
 			"You can only do each quest once");
-		int menu = multi(p, n, false, "Thank you for the advice", "Can you recommend any quests?");
+		int menu = multi(player, n, false, "Thank you for the advice", "Can you recommend any quests?");
 		if (menu == 0) {
-			say(p, n, "thank you for the advice");
-			npcsay(p, n, "good questing traveller");
-			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 65) {
-				p.getCache().set("tutorial", 65);
+			say(player, n, "thank you for the advice");
+			npcsay(player, n, "good questing traveller");
+			if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") < 65) {
+				player.getCache().set("tutorial", 65);
 			}
 		} else if (menu == 1) {
-			say(p, n, "Can you recommend any quests?");
-			npcsay(p, n, "Well I hear the cook in Lumbridge castle is having some problems",
+			say(player, n, "Can you recommend any quests?");
+			npcsay(player, n, "Well I hear the cook in Lumbridge castle is having some problems",
 				"When you get to Lumbridge, go into the castle there",
 				"Find the cook and have a chat with him");
-			say(p, n, "Okay thanks for the advice");
-			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 65) {
-				p.getCache().set("tutorial", 65);
+			say(player, n, "Okay thanks for the advice");
+			if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") < 65) {
+				player.getCache().set("tutorial", 65);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.QUEST_ADVISOR.id();
 	}
 

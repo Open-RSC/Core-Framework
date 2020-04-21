@@ -12,19 +12,19 @@ import static com.openrsc.server.plugins.Functions.*;
 public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OGRE_SHAMAN.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id()) {
-			npcsay(p, n, "Grr! how dare you talk to us",
+			npcsay(player, n, "Grr! how dare you talk to us",
 				"We will destroy you!");
-			p.message("A magic blast comes from the shaman");
+			player.message("A magic blast comes from the shaman");
 			n.displayNpcTeleportBubble(n.getX(), n.getY());
-			p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D + 10));
-			p.message("You are badly injured by the blast");
+			player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D + 10));
+			player.message("You are badly injured by the blast");
 		}
 	}
 
@@ -35,52 +35,52 @@ public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	@Override
-	public void onUseNpc(Player p, Npc n, Item item) {
+	public void onUseNpc(Player player, Npc n, Item item) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getCatalogId() == ItemId.MAGIC_OGRE_POTION.id()) {
-			p.setBusy(true);
-			if (getCurrentLevel(p, Skills.MAGIC) < 14) {
-				p.message("You need a level of 14 magic first");
-				p.setBusy(false);
+			player.setBusy(true);
+			if (getCurrentLevel(player, Skills.MAGIC) < 14) {
+				player.message("You need a level of 14 magic first");
+				player.setBusy(false);
 				return;
 			}
-			p.message("There is a bright flash");
-			p.message("The ogre dissolves into spirit form");
-			displayTeleportBubble(p, n.getX(), n.getY(), true);
+			player.message("There is a bright flash");
+			player.message("The ogre dissolves into spirit form");
+			displayTeleportBubble(player, n.getX(), n.getY(), true);
 			delnpc(n, true);
-			if (p.getCache().hasKey("shaman_count")) {
-				int shaman_done = p.getCache().getInt("shaman_count");
-				if (p.getCache().getInt("shaman_count") < 6) {
-					p.getCache().set("shaman_count", shaman_done + 1);
+			if (player.getCache().hasKey("shaman_count")) {
+				int shaman_done = player.getCache().getInt("shaman_count");
+				if (player.getCache().getInt("shaman_count") < 6) {
+					player.getCache().set("shaman_count", shaman_done + 1);
 				}
 				if (shaman_done == 1) {
-					say(p, null, "Thats the second one gone...");
+					say(player, null, "Thats the second one gone...");
 				} else if (shaman_done == 2) {
-					say(p, null, "Thats the next one dealt with...");
+					say(player, null, "Thats the next one dealt with...");
 				} else if (shaman_done == 3) {
-					say(p, null, "There goes another one...");
+					say(player, null, "There goes another one...");
 				} else if (shaman_done == 4) {
-					say(p, null, "Thats five, only one more left now...");
-				} else if (shaman_done == 5 || p.getCache().getInt("shaman_count") == 6) {
-					p.message("You hear a scream...");
-					p.message("The shaman dissolves before your eyes!");
-					p.message("A crystal drops from the hand of the dissappearing ogre!");
-					p.message("You snatch it up quickly");
-					p.getCarriedItems().remove(new Item(ItemId.MAGIC_OGRE_POTION.id()));
-					give(p, ItemId.EMPTY_VIAL.id(), 1);
-					give(p, ItemId.POWERING_CRYSTAL3.id(), 1);
-					if (p.getQuestStage(Quests.WATCHTOWER) == 8) {
-						p.updateQuestStage(Quests.WATCHTOWER, 9);
+					say(player, null, "Thats five, only one more left now...");
+				} else if (shaman_done == 5 || player.getCache().getInt("shaman_count") == 6) {
+					player.message("You hear a scream...");
+					player.message("The shaman dissolves before your eyes!");
+					player.message("A crystal drops from the hand of the dissappearing ogre!");
+					player.message("You snatch it up quickly");
+					player.getCarriedItems().remove(new Item(ItemId.MAGIC_OGRE_POTION.id()));
+					give(player, ItemId.EMPTY_VIAL.id(), 1);
+					give(player, ItemId.POWERING_CRYSTAL3.id(), 1);
+					if (player.getQuestStage(Quests.WATCHTOWER) == 8) {
+						player.updateQuestStage(Quests.WATCHTOWER, 9);
 					}
 				}
 			} else {
-				p.getCache().set("shaman_count", 1);
-				say(p, null, "Thats one destroyed...");
+				player.getCache().set("shaman_count", 1);
+				say(player, null, "Thats one destroyed...");
 			}
-			p.setBusy(false);
+			player.setBusy(false);
 		} else if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getCatalogId() == ItemId.OGRE_POTION.id()) {
-			p.message("There is a small flash");
-			p.message("But the potion was ineffective");
-			say(p, null, "Oh no! I better go back to the wizards about this");
+			player.message("There is a small flash");
+			player.message("But the potion was ineffective");
+			say(player, null, "Oh no! I better go back to the wizards about this");
 		}
 	}
 }

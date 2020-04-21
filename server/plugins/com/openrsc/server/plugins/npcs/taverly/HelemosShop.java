@@ -19,7 +19,7 @@ public class HelemosShop implements ShopInterface,
 	private final Shop shop = new Shop(false, 60000, 100, 55, 3, new Item(ItemId.DRAGON_AXE.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.HELEMOS.id();
 	}
 
@@ -34,18 +34,18 @@ public class HelemosShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Welcome to the hero's guild");
-		final int option = multi(p, n, false, //do not send over
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Welcome to the hero's guild");
+		final int option = multi(player, n, false, //do not send over
 			"So do you sell anything here?", "So what can I do here?");
 		if (option == 0) {
-			say(p, n, "So do you sell anything here?");
-			npcsay(p, n, "Why yes we do run an exclusive shop for our members");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "So do you sell anything here?");
+			npcsay(player, n, "Why yes we do run an exclusive shop for our members");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "so what can I do here?");
-			npcsay(p, n, "Look around there are all sorts of things to keep our members entertained");
+			say(player, n, "so what can I do here?");
+			npcsay(player, n, "Look around there are all sorts of things to keep our members entertained");
 		}
 	}
 }

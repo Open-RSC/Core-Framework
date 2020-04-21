@@ -7,9 +7,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class MenuReplyHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, final Player player) throws Exception {
+	public void handlePacket(Packet packet, final Player player) throws Exception {
 		final MenuOptionListener menuHandler = player.getMenuHandler();
-		final int option = p.readByte();
+		final int option = packet.readByte();
 		// NO game content code should be run in handleReply. This is to ensure Functions.sleep() is never called on the main game thread
 		if (player.getMenu() != null) {
 			player.getMenu().handleReply(player, option);
