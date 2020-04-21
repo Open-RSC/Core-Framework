@@ -47,7 +47,7 @@ public final class CaptainBarnaby implements OpLocTrigger,
 			if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) > -1) {
 				Functions.mes(p, "You pay 30 gold", "You board the ship");
 				p.teleport(467, 651, false);
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				Functions.mes(p, "The ship arrives at Karamja");
 			} else {
 				say(p, n, "Oh dear I don't seem to have enough money");

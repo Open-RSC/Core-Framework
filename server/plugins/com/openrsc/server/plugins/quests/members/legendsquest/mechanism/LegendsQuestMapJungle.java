@@ -61,44 +61,44 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 				if (!JUNGLE_WEST_AREA(p) && !JUNGLE_MIDDLE_AREA(p) && !JUNGLE_EAST_AREA(p)) {
 					int rnd = DataConversions.random(0, 1);
 					if (rnd == 0) {
-						mes(p, 1200, "You're not even in the Kharazi Jungle yet.");
-						mes(p, 1200, "You need to get to the Southern end of Karamja ");
-						mes(p, 1200, "before you can start mapping.");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You're not even in the Kharazi Jungle yet.");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You need to get to the Southern end of Karamja ");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "before you can start mapping.");
 					}
 					else {
-						mes(p, 1900, "You prepare to start mapping this area...");
-						mes(p, 1200, "This doesn't look like the Kharazi Jungle! ");
-						mes(p, 1200, "You need to go to the very southern end of the Island of Karamja !");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "You prepare to start mapping this area...");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "This doesn't look like the Kharazi Jungle! ");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You need to go to the very southern end of the Island of Karamja !");
 					}
 					return;
 				}
-				mes(p, 1900, "You prepare to start mapping this area...");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "You prepare to start mapping this area...");
 				if (p.getCache().hasKey("JUNGLE_EAST") && JUNGLE_EAST_AREA(p)) {
-					mes(p, 1200, "You have already completed this part of the map.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
 				}
 				if (p.getCache().hasKey("JUNGLE_MIDDLE") && JUNGLE_MIDDLE_AREA(p)) {
-					mes(p, 1200, "You have already completed this part of the map.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
 				}
 				if (p.getCache().hasKey("JUNGLE_WEST") && JUNGLE_WEST_AREA(p)) {
-					mes(p, 1200, "You have already completed this part of the map.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You have already completed this part of the map.");
 					checkMapComplete(p);
 					return;
 				}
 				if (!p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
 					&& !p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // no charcoal or papyrus
-					mes(p, 1200, "You'll need some papyrus and charcoal to complete this map.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need some papyrus and charcoal to complete this map.");
 					canMap = false;
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
 					&& !p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // has papyrus but no charcoal
-					mes(p, 1200, "You'll need some charcoal to complete this map.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need some charcoal to complete this map.");
 					canMap = false;
 				} else if (!p.getCarriedItems().hasCatalogID(ItemId.PAPYRUS.id(), Optional.of(false))
 					&& p.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) { // has charcoal but no papyrus
-					mes(p, 1200, "You'll need some additional Papyrus to complete this map.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need some additional Papyrus to complete this map.");
 					canMap = false;
 				}
 				//potentially this check was done earlier?
@@ -123,19 +123,19 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 
 	private void checkMapComplete(Player p) {
 		if (!p.getCache().hasKey("JUNGLE_EAST")) {
-			mes(p, 1200, "@red@You have yet to map the eastern part of the Kharazi Jungle");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@red@You have yet to map the eastern part of the Kharazi Jungle");
 		} else {
-			mes(p, 1200, "@gre@Eastern area of the Kharazi Jungle - *** Completed ***");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@gre@Eastern area of the Kharazi Jungle - *** Completed ***");
 		}
 		if (!p.getCache().hasKey("JUNGLE_MIDDLE")) {
-			mes(p, 1200, "@red@You have yet to map the mid - part of the Kharazi Jungle.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@red@You have yet to map the mid - part of the Kharazi Jungle.");
 		} else {
-			mes(p, 1200, "@gre@Middle area of the Kharazi Jungle- *** Completed ***");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@gre@Middle area of the Kharazi Jungle- *** Completed ***");
 		}
 		if (!p.getCache().hasKey("JUNGLE_WEST")) {
-			mes(p, 1200, "@red@You have yet to map the Western part of the Kharazi Jungle.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@red@You have yet to map the Western part of the Kharazi Jungle.");
 		} else {
-			mes(p, 1200, "@gre@Western part of the Kharazi Jungle- *** Completed ***");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@gre@Western part of the Kharazi Jungle- *** Completed ***");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 		int random = DataConversions.random(0, 100);
 		if (random <= 29) { // 30% succeed.
 			p.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
-			mes(p, 1200, "You neatly add a new section to your map.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You neatly add a new section to your map.");
 			if (JUNGLE_WEST_AREA(p)) {
 				if (!p.getCache().hasKey("JUNGLE_WEST")) {
 					p.getCache().store("JUNGLE_WEST", true);
@@ -160,16 +160,16 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 				}
 			}
 			if (p.getCache().hasKey("JUNGLE_EAST") && p.getCache().hasKey("JUNGLE_MIDDLE") && p.getCache().hasKey("JUNGLE_WEST")) {
-				mes(p, 1200, "Well done !",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Well done !",
 					"You have completed mapping the Kharazai jungle on the southern end of Karamja,");
-				mes(p, 1900, "Grand Vizier Erkle will be pleased.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Grand Vizier Erkle will be pleased.");
 				p.getCarriedItems().getInventory().replace(ItemId.RADIMUS_SCROLLS.id(), ItemId.RADIMUS_SCROLLS_COMPLETE.id()); // switch map to complete map.
 				checkMapComplete(p);
 				p.getCache().remove("JUNGLE_EAST");
 				p.getCache().remove("JUNGLE_MIDDLE");
 				p.getCache().remove("JUNGLE_WEST");
 			} else {
-				mes(p, 1900, "You still have some sections of the map to complete.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "You still have some sections of the map to complete.");
 				checkMapComplete(p);
 			}
 		} else if (random <= 50) { // 20 % fail both.

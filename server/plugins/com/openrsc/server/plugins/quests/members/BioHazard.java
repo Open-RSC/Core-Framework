@@ -1000,7 +1000,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 		Functions.mes(p, "you climb up the rope ladder");
 		p.teleport(622, 611);
 		Functions.mes(p, "and drop down on the other side");
-		delay(2000);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.getWorld().unregisterGameObject(ropeLadder);
 	}
 
@@ -1010,7 +1010,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 		Functions.mes(p, "you climb up the rope ladder");
 		p.teleport(624, 606);
 		Functions.mes(p, "and drop down on the other side");
-		delay(2000);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.getWorld().unregisterGameObject(ropeLadder);
 	}
 

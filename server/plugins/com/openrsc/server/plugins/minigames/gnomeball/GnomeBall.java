@@ -100,7 +100,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 		} else if (playerZone == Zone.ZONE_1XP_OUTER || playerZone == Zone.ZONE_1XP_INNER) {
 			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = ifnearvisnpc(player, GnomeNpcs.GOALIE, 15);
-			player.setBusyTimer(600);
+			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
@@ -129,7 +129,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 		} else if (playerZone == Zone.ZONE_2XP_OUTER || playerZone == Zone.ZONE_2XP_INNER) {
 			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = ifnearvisnpc(player, GnomeNpcs.GOALIE, 15);
-			player.setBusyTimer(600);
+			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
@@ -214,7 +214,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	public void onTakeObj(Player p, GroundItem item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
-				mes(p, 1200, "you can only carry one ball at a time", "otherwise it would be too easy");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
 			} else {
 				p.getWorld().unregisterItem(item);
 				give(p, ItemId.GNOME_BALL.id(), 1);

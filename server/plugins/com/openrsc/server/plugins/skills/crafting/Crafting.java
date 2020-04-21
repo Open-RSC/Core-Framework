@@ -518,7 +518,7 @@ public class Crafting implements UseInvTrigger,
 					} else {
 						owner.playerServerMessage(MessageType.QUEST, "the "
 							+ potteryItem + " hardens in the oven");
-						getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), owner, 1800, "Remove Clay From Oven") {
+						getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), owner, owner.getWorld().getServer().getConfig().GAME_TICK * 3, "Remove Clay From Oven") {
 							@Override
 							public void action() {
 								owner.playerServerMessage(MessageType.QUEST, "You remove a "
@@ -590,7 +590,7 @@ public class Crafting implements UseInvTrigger,
 				if (player.getCarriedItems().remove(new Item(ItemId.KING_BLACK_DRAGON_SCALE.id(),1)) > -1) {
 					player.message("You chip the massive scale into 5 pieces");
 					give(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
-					player.incExp(Skills.CRAFTING,1300,true);
+					player.incExp(Skills.CRAFTING,player.getWorld().getServer().getConfig().GAME_TICK * 2,true);
 				}
 			} else
 				player.message("Nothing interesting happens");
@@ -913,7 +913,7 @@ public class Crafting implements UseInvTrigger,
 				&& player.getCarriedItems().remove(item) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(jugID));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
-				mes(player, 1200, "You mix the clay and water");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You mix the clay and water");
 				player.message("You now have some soft workable clay");
 			}
 		} else {

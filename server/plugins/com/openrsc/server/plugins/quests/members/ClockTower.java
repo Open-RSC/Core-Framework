@@ -315,7 +315,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 111) {
 			if (p.getCache().hasKey("rats_dead") || atQuestStage(p, this, -1)) {
 				p.message("In a panic to escape, the rats have..");
-				delay(500);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				p.message("..bent the bars, you can just crawl through");
 				if (p.getX() >= 583) {
 					p.setLocation(Point.location(582, 3476), true);

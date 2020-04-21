@@ -95,7 +95,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				p.message("you place them on the chest and the chest opens");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
 				Functions.addloc(obj.getWorld(), obj.getLoc(), 2000);
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.message("inside you find a strange dark liquid");
 				give(p, ItemId.IBANS_SHADOW.id(), 1);
 			} else {
@@ -115,7 +115,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					Functions.addloc(obj.getWorld(), obj.getLoc(), 3000);
 					p.teleport(792, 3469);
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.teleport(795, 3469);
 					Functions.mes(p, "you pull open the large doors");
 					p.message("and walk into the temple");
@@ -169,7 +169,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 									say(p, null, "aarrgh");
 									p.message("you're blasted back to the door");
 								}
-								delay(650);
+								delay(p.getWorld().getServer().getConfig().GAME_TICK);
 							}
 						} catch (Exception e) {
 							LOGGER.catching(e);
@@ -183,11 +183,11 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				}
 			} else {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
-				Functions.addloc(obj.getWorld(), obj.getLoc(), 3000);
+				Functions.addloc(obj.getWorld(), obj.getLoc(), p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.teleport(794, 3469);
-				delay(600);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				p.teleport(791, 3469);
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.message("you pull open the large doors");
 				p.message("and walk out of the temple");
 			}

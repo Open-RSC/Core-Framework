@@ -175,7 +175,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 			return;
 		}
 		p.message("You feel a powerful force take hold of you...");
-		delay(500);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 
 		switch(ItemId.getById(item.getCatalogId()))
 		{

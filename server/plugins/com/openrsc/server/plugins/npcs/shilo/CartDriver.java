@@ -32,11 +32,11 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 				npcsay(p, n, "Great!",
 					"Just hop into the cart then and we'll go!");
 				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 500));
-				mes(p, 1000, "You Hop into the cart and the driver urges the horses on.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You Hop into the cart and the driver urges the horses on.");
 				p.teleport(468, 662);
-				mes(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");
-				mes(p, 1200, "You feel fatigued from the journey, but at least");
-				mes(p, 1200, "you didn't have to walk all that distance.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a taxing journey through the jungle to Brimhaven.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel fatigued from the journey, but at least");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you didn't have to walk all that distance.");
 			} else {
 				npcsay(p, n, "Sorry, but it looks as if you don't have enough money.",
 					"Come back and see me when you have enough for the ride.");
@@ -69,7 +69,7 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 				Npc driver = ifnearvisnpc(p, NpcId.CART_DRIVER_SHILO.id(), 10);
 				if (driver != null) {
 					driver.teleport(p.getX(), p.getY());
-					delay(600); // 1 tick.
+					delay(p.getWorld().getServer().getConfig().GAME_TICK); // 1 tick.
 					npcWalkFromPlayer(p, driver);
 					p.message("A nearby man walks over to you.");
 					cartRide(p, driver);

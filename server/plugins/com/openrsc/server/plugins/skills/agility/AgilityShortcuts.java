@@ -105,19 +105,19 @@ public class AgilityShortcuts implements OpLocTrigger,
 						p.teleport(458, 832);
 						say(p, null, "* Ahhhhhhhhhh! *");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						delay(500);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.teleport(458, 836);
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						delay(1000);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 						say(p, null, "* Gulp! *");
 						delay(1500);
 						p.teleport(459, 841);
 						say(p, null, "* Gulp! *");
-						delay(1000);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 						p.message("You just manage to drag your pitiful frame onto the river bank.");
 						say(p, null, "* Gasp! *");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						delay(1000);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 						p.message("Though you nearly drowned in the river!");
 					}
 				}
@@ -148,7 +148,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						p.teleport(450, 828);
 						Functions.mes(p, "You fall and hurt yourself.");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						delay(500);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.teleport(449, 828);
 					}
 				} else if (menu == 1) {
@@ -172,7 +172,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You grab the vine and try and swing across");
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 511, 669);
 				p.message("You skillfully swing across the stream");
 				say(p, null, "Aaaaahahah");
@@ -185,7 +185,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You grab the vine and try and swing across");
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 508, 668);
 				p.message("You skillfully swing across the stream");
 				say(p, null, "Aaaaahahah");
@@ -197,7 +197,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 207, 3221);
 				p.message("You skillfully swing across the hole");
 				p.incExp(Skills.AGILITY, 40, true);
@@ -208,7 +208,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 206, 3225);
 				p.message("You skillfully swing across the hole");
 				p.incExp(Skills.AGILITY, 40, true);
@@ -222,7 +222,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				p.message("You stand on the slippery log");
 				for (int x = 595; x >= 592; x--) {
 					teleport(p, x, 458);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				}
 				p.message("and you walk across");
 				p.incExp(Skills.AGILITY, 34, true);
@@ -236,7 +236,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				p.message("You stand on the slippery log");
 				for (int x = 595; x <= 598; x++) {
 					teleport(p, x, 458);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				}
 				p.message("and you walk across");
 				p.incExp(Skills.AGILITY, 34, true);
@@ -435,10 +435,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				p.message("You attempt to walk over the the slippery log..");
-				delay(1900);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				if (!succeed(p, 32)) {
 					teleport(p, 368, 781);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.message("@red@You fall into the stream!");
 					p.message("You lose some health");
 					teleport(p, 370, 776);
@@ -448,11 +448,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				if (p.getX() <= 367) {
 					teleport(p, 368, 781);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					teleport(p, 370, 781);
 				} else {
 					teleport(p, 368, 781);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					teleport(p, 366, 781);
 				}
 				p.message("...and make it without any problems!");
@@ -475,7 +475,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				p.message("You jump onto the rock");
 				if (p.getY() <= 805) {
 					teleport(p, 347, 806);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					if (!succeed(p, 32)) {
 						delay(900);
 						teleport(p, 341, 809);
@@ -489,7 +489,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(p, 346, 808);
 				} else {
 					teleport(p, 346, 807);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					if (!succeed(p, 32)) {
 						delay(900);
 						teleport(p, 341, 805);

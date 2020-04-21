@@ -29,13 +29,13 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 	@Override
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.BULL_ROARER.id()) {
-			mes(p, 1300, "You start to swing the bullroarer above your head.",
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You start to swing the bullroarer above your head.",
 				"You feel a bit silly at first, but soon it makes an interesting sound.");
 			if (inKharaziJungle(p)) {
-				mes(p, 1300, "You see some movement in the trees...");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You see some movement in the trees...");
 				attractNatives(p);
 			} else {
-				mes(p, 1300, "Nothing much seems to happen though.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Nothing much seems to happen though.");
 				Npc forester = ifnearvisnpc(p, NpcId.JUNGLE_FORESTER.id(), 10);
 				if (forester != null) {
 					npcsay(p, forester, "You might like to use that when you get into the ",
@@ -48,9 +48,9 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 	private void attractNatives(Player p) {
 		int controlRandom = DataConversions.getRandom().nextInt(4);
 		if (controlRandom == 0) {
-			mes(p, 1300, "...but nothing else much seems to happen.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "...but nothing else much seems to happen.");
 		} else if (controlRandom >= 1 && controlRandom <= 2) {
-			mes(p, 1300, "...and a tall, dark, charismatic looking native approaches you.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a tall, dark, charismatic looking native approaches you.");
 			Npc gujuo = ifnearvisnpc(p, NpcId.GUJUO.id(), 15);
 			if (gujuo == null) {
 				gujuo = addnpc(p.getWorld(), NpcId.GUJUO.id(), p.getX(), p.getY());
@@ -60,13 +60,13 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 				gujuo.resetPath();
 				gujuo.teleport(p.getX(), p.getY());
 				gujuo.initializeTalkScript(p);
-				delay(650);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				npcWalkFromPlayer(p, gujuo);
 			}
 		} else if (controlRandom == 3) {
 			Npc nativeNpc = Functions.ifnearvisnpc(p, 5, NpcId.OOMLIE_BIRD.id(), NpcId.KARAMJA_WOLF.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.JUNGLE_SAVAGE.id());
 			if (nativeNpc != null) {
-				mes(p, 1300, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
 				nativeNpc.setChasing(p);
 				mes(p, 0, "And attacks...");
 			} else {
@@ -107,7 +107,7 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 					} else {
 						npcsay(p, n, "I have work to do Bwana, I may see you again...");
 					}
-					getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1900, "Legends Quest Gujuo Disappears") {
+					getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Legends Quest Gujuo Disappears") {
 						public void action() {
 							p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 							n.remove();

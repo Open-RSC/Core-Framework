@@ -72,14 +72,14 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Normal Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Normal Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
 			@Override
 			public void action() {
 				if (Formulae.lightLogs(getOwner().getSkills().getLevel(Skills.FIREMAKING))) {
 
 					if (!gItem.isRemoved()) {
 						getOwner().getWorld().getServer().getGameEventHandler().add(
-							new SingleEvent(getOwner().getWorld(), getOwner(), 1200, "Light Logs") {
+							new SingleEvent(getOwner().getWorld(), getOwner(), getOwner().getWorld().getServer().getConfig().GAME_TICK * 2, "Light Logs") {
 								@Override
 								public void action() {
 									getOwner().playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
@@ -137,7 +137,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
 			@Override
 			public void action() {
 				if (Formulae.lightCustomLogs(def, getOwner().getSkills().getLevel(Skills.FIREMAKING))) {

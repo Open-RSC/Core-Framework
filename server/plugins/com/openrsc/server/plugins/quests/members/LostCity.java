@@ -89,7 +89,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						p.setBusyTimer(1800);
 						lepr.walk(173, 661);
 						try {
-							p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(),null, 600, "Lost City Leprechaun", true) {
+							p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(),null, p.getWorld().getServer().getConfig().GAME_TICK, "Lost City Leprechaun", true) {
 								@Override
 								public void action() {
 									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
@@ -148,7 +148,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					if (treeSpirit == null) {
 						return;
 					}
-					delay(2000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					npcsay(p, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
@@ -322,7 +322,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				"Well that is a risk I will have to take");
 			if (option == 1) {
 				p.message("You climb down the ladder");
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 427, 3380);
 				/* What is the point of this? */
 				if (getCurrentLevel(p, Skills.PRAYER) <= 3)
@@ -438,7 +438,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == MAGIC_DOOR) {
 			p.teleport(109, 245, true);
-			delay(500);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {

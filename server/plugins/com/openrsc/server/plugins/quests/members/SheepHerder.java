@@ -238,7 +238,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void sheepYell(Player p) {
-		delay(600);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("@yel@:Baaaaaaaaa!!!");
 	}
 

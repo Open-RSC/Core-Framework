@@ -132,19 +132,19 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			p.teleport(674, 3462);
 			say(p, null, "aargh");
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
-			delay(2000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			p.teleport(677, 3462);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(680, 3465);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(682, 3462);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(683, 3465);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(685, 3464);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(687, 3462);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			say(p, null, "aargh");
 			p.damage((int) (getCurrentLevel(p, Skills.HITS) / 42) + 1);
 			p.teleport(690, 3461);
@@ -171,9 +171,9 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			bridge_open.getWorld().registerGameObject(bridge_open);
 			bridge_closed.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
 			p.teleport(709, 3420);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(706, 3420);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(703, 3420);
 			p.message("you cross the bridge");
 		}
@@ -262,7 +262,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	}
 
 	public static void doLedge(final GameObject object, final Player p, int damage) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("you climb the ledge");
 		boolean failLedge = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failLedge) {
@@ -302,7 +302,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 
 	public static void doRock(final GameObject object, final Player p, int damage, boolean eventMessage,
 							  int spikeLocation) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("you climb onto the rock");
 		boolean failRock = !Formulae.calcProductionSuccessful(1, p.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failRock) {

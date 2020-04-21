@@ -27,7 +27,7 @@ public class Tanner implements TalkNpcTrigger {
 				say(p, n, "Here's some cow hides, Can I buy some leather");
 				npcsay(p, n, "Ok");
 				while (true) {
-					delay(500);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					if (p.getCarriedItems().getInventory().countId(ItemId.COW_HIDE.id()) < 1) {
 						say(p, n, "I don't have any cow hides left now");
 						break;

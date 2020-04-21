@@ -32,7 +32,7 @@ public class Refill implements UseLocTrigger {
 			if (REFILLABLE[i] == item.getCatalogId()) {
 				final int itemID = item.getCatalogId();
 				final int refilledID = REFILLED[i];
-				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Refill Water Jug", player.getCarriedItems().getInventory().countId(itemID), false) {
+				player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Refill Water Jug", player.getCarriedItems().getInventory().countId(itemID), false) {
 					@Override
 					public void action() {
 						if (getOwner().getCarriedItems().getInventory().hasInInventory(itemID)) {

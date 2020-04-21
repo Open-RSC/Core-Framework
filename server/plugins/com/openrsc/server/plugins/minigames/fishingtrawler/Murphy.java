@@ -196,7 +196,7 @@ public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 			if (option == 0) {
 				say(p, n, "i insist murphy, take me back");
 				npcsay(p, n, "ok, ok, i'll try, but don't say i didn't warn you");
-				mes(p, 1900, "murphy sharply turns the large ship", "the boats gone under", "you're lost at sea!");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "murphy sharply turns the large ship", "the boats gone under", "you're lost at sea!");
 				if (p.getWorld().getFishingTrawler(p) != null) {
 					p.getWorld().getFishingTrawler(p).quitPlayer(p);
 				}

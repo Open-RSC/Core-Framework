@@ -48,17 +48,17 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 			case BALANCE_LOG:
 				p.message("you stand on the slippery log");
 				teleport(p, 692, 494);
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 692, 495);
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 692, 496);
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 692, 497);
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 692, 498);
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 692, 499);
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				p.message("and walk across");
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);
@@ -70,7 +70,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 					npcsay(p, gnomeTrainer, "move it, move it, move it");
 				}
 				p.message("you climb the net");
-				Functions.delay(1920);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				teleport(p, 692, 1448);
 				p.message("and pull yourself onto the platform");
 				p.incExp(Skills.AGILITY, 30, true);
@@ -83,7 +83,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 					npcsay(p, gnomeTrainer, "that's it, straight up, no messing around");
 				}
 				p.message("you pull yourself up the tree");
-				Functions.delay(1280);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 693, 2394);
 				p.message("to the platform above");
 				p.incExp(Skills.AGILITY, 30, true);
@@ -92,9 +92,9 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				return;
 			case ROPE_SWING:
 				p.message("you reach out and grab the rope swing");
-				Functions.delay(1280);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.message("you hold on tight");
-				Functions.delay(2560);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 				teleport(p, 685, 2396);
 				p.message("and swing to the oppisite platform");
 				p.incExp(Skills.AGILITY, 30, true);
@@ -103,7 +103,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				return;
 			case LANDING:
 				p.message("you hang down from the tower");
-				Functions.delay(1280);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				teleport(p, 683, 506);
 				p.message("and drop to the floor");
 				say(p, null, "ooof");
@@ -117,10 +117,10 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 					npcsay(p, gnomeTrainer, "my granny can move faster than you");
 				}
 				p.message("you take a few steps back");
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 683, 505);
 				p.message("and run towards the net");
-				Functions.delay(640);
+				Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(p, 683, 501);
 				p.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 150);

@@ -110,7 +110,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						break;
 					case -1:
 						npcsay(p, n, "Hello there! How are you enjoying the Legends Guild?");
-						Functions.mes(p, n, 1300, "Radimus looks busy...");
+						Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus looks busy...");
 						npcsay(p, n, "Excuse me a moment won't you.",
 							"Do feel free to explore the rest of the building.");
 						break;
@@ -268,7 +268,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						break;
 					case -1:
 						npcsay(p, n, "Hello there! How are you enjoying the Legends Guild?");
-						Functions.mes(p, n, 1300, "Radimus looks busy...");
+						Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus looks busy...");
 						npcsay(p, n, "Excuse me a moment won't you.",
 							"Do feel free to explore the rest of the building.");
 						break;
@@ -296,7 +296,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							"It's towards the southern most part of Karamja.",
 							"You'll need additional papyrus and charcoal to complete the map.",
 							"There are three different sectors of the Kharazi jungle to map.");
-						Functions.mes(p, 1200, "Radimus shuffles around the back of his desk.");
+						Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus shuffles around the back of his desk.");
 						npcsay(p, n, "It is likely to be very tough going.",
 							"You'll need an axe and a machette to cut through ",
 							"the dense Kharazi jungle,collect a machette from the ",
@@ -395,7 +395,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				case RadimusInHouse.CHARCOAL:
 					npcsay(p, n, "Well, get some more!",
 						"Be proactive and get some more from somewhere.");
-					Functions.mes(p, 1200, "Sir Radimus mutters under his breath.");
+					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Sir Radimus mutters under his breath.");
 					npcsay(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some charcoal!");
 					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
@@ -408,7 +408,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				case RadimusInHouse.PAPYRUS:
 					npcsay(p, n, "Well, get some more!",
 						"Be proactive and try to find some!");
-					Functions.mes(p, 1200, "Sir Radimus mutters under his breath.");
+					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Sir Radimus mutters under his breath.");
 					npcsay(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some papyrus!");
 					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
@@ -473,7 +473,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					npcsay(p, n, "However, I need you to complete the map of the ,",
 						"Kharazi Jungle before your quest is complete.");
 				} else {
-					Functions.mes(p, n, 1300, "Radimus Erkle orders some guards to take the totem pole,",
+					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus Erkle orders some guards to take the totem pole,",
 						"into the main Legends Hall.");
 					p.getCarriedItems().remove(new Item(item.getCatalogId()));
 					npcsay(p, n, "That will take pride of place in the Legends Guild ",

@@ -96,7 +96,7 @@ public class ShantayPassNpcs implements ShopInterface,
 									npc.remove();
 								}
 							});
-						delay(1000);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 						npcsay(p, npc, "Can I see your Shantay Desert Pass please.");
 						p.message("You hand over a Shantay Pass.");
 						p.getCarriedItems().remove(new Item(SHANTAY_PASS));

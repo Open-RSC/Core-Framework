@@ -52,7 +52,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			}
 			p.setBusy(true);
 			p.message("You squeeze through the pipe");
-			Functions.delay(1920);
+			Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (p.getY() <= 551) {
 				teleport(p, 487, 554);
 			} else {
@@ -74,20 +74,20 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 		switch (obj.getID()) {
 			case SWING:
 				p.message("You grab the rope and try and swing across");
-				Functions.delay(1920);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				if (passObstacle) {
 					p.message("You skillfully swing across the hole");
-					Functions.delay(1920);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					teleport(p, 486, 559);
 					p.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);
 					p.setBusy(false);
 				} else {
 					p.message("Your hands slip and you fall to the level below");
-					Functions.delay(1920);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					teleport(p, 486, 3389);
 					p.message("You land painfully on the spikes");
-					Functions.delay(1920);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					int swingDamage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.15D);
 					p.damage(swingDamage);
 					say(p, "ouch");
@@ -96,12 +96,12 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				break;
 			case LOG:
 				p.message("you stand on the slippery log");
-				Functions.delay(1920);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				if (passObstacle) {
 					teleport(p, 489, 563);
-					Functions.delay(640);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					teleport(p, 490, 563);
-					Functions.delay(640);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.message("and walk across");
 					teleport(p, 492, 563);
 					p.incExp(Skills.AGILITY, 50, true);
@@ -128,7 +128,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 					return;
 				}
 				p.message("You put your foot on the ledge and try to edge across");
-				Functions.delay(1280);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (passObstacle) {
 					teleport(p, 501, 1506);
 					p.message("You skillfully balance across the hole");
@@ -171,7 +171,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 		}
 		p.setBusy(true);
 		p.message("You jump over the wall");
-		Functions.delay(1280);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 		teleport(p, p.getX() == obj.getX() ? p.getX() - 1 : p.getX() + 1, p.getY());
 		p.incExp(Skills.AGILITY, 20, true);
 		AgilityUtils.completedObstacle(p, obj.getID(), obstacles, lastObstacle, 300);

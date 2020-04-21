@@ -254,7 +254,7 @@ public final class RegularPlayer implements CommandTrigger {
 				sayDelay = player.getCache().getLong("say_delay");
 			}
 
-			long waitTime = 1200;
+			long waitTime = player.getWorld().getServer().getConfig().GAME_TICK * 2;
 
 			if (player.isMod()) {
 				waitTime = 0;

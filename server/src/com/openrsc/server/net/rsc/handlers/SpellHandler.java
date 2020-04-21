@@ -1160,7 +1160,7 @@ public class SpellHandler implements PacketHandler {
 							// Deal first damage
 							getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, firstDamage, 1));
 							// Deal Second Damage
-							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), 600, "Salarin the Twisted Strike") {
+							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), getPlayer().getWorld().getServer().getConfig().GAME_TICK, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
 									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);

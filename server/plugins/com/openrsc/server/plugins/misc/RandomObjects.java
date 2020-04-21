@@ -25,7 +25,7 @@ public class RandomObjects implements OpLocTrigger {
 		switch (object.getID()) {
 			case 79:
 				if (command.equals("close")) {
-					owner.setBusyTimer(600);
+					owner.setBusyTimer(owner.getWorld().getServer().getConfig().GAME_TICK);
 					owner.playerServerMessage(MessageType.QUEST, "You slide the cover back over the manhole");
 					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 78, object.getDirection(), object.getType()));
 				} else {
@@ -34,7 +34,7 @@ public class RandomObjects implements OpLocTrigger {
 				break;
 			case 78:
 				if (command.equals("open")) {
-					owner.setBusyTimer(600);
+					owner.setBusyTimer(owner.getWorld().getServer().getConfig().GAME_TICK);
 					owner.playerServerMessage(MessageType.QUEST, "You slide open the manhole cover");
 					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 79, object.getDirection(), object.getType()));
 				}
@@ -136,7 +136,7 @@ public class RandomObjects implements OpLocTrigger {
 				break;
 			case 1242:
 				owner.message("You enter the rowboat...");
-				delay(3*owner.getWorld().getServer().getConfig().GAME_TICK);
+				delay(owner.getWorld().getServer().getConfig().GAME_TICK * 3);
 				owner.teleport(206,449);
 				owner.message("And stop in Edgeville");
 				break;

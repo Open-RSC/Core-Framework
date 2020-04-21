@@ -16,7 +16,7 @@ public class BananaTree implements
 	public void onOpLoc(GameObject obj, String command, Player p) {
 
 		if (obj.getID() == 183) {
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Pick Banana Tree", p.getCarriedItems().getInventory().getFreeSlots(), false) {
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK, "Pick Banana Tree", p.getCarriedItems().getInventory().getFreeSlots(), false) {
 				@Override
 				public void action () {
 					int bananaCount = 1;

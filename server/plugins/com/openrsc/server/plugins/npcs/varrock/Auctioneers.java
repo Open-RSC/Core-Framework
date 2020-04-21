@@ -107,7 +107,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 			} else if (command.equalsIgnoreCase("Teleport")) {
 				n.face(p);
 				p.face(n);
-				Functions.mes(p, n, 1300, "Would you like to be teleport to Varrock centre for 1000 gold?");
+				Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Would you like to be teleport to Varrock centre for 1000 gold?");
 				int yesOrNo = multi(p, "Yes please!", "No thanks.");
 				if (yesOrNo == 0) {
 					if (ifheld(p, ItemId.COINS.id(), 1000)) {

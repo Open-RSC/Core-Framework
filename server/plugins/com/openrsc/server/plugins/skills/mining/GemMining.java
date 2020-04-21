@@ -75,7 +75,7 @@ public class GemMining implements OpLocTrigger {
 			p.playSound("prospect");
 			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			p.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			Functions.delay(1920);
+			Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (obj.getID() == GEM_ROCK) {
 				p.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 				return;

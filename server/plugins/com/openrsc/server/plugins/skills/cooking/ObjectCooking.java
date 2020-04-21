@@ -73,13 +73,13 @@ public class ObjectCooking implements UseLocTrigger {
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274)
-				mes(p, 1200, "You cook the meat on the fire...");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the fire...");
 			else
-				mes(p, 1200, "You cook the meat on the stove...");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the stove...");
 			p.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
 			give(p, ItemId.BURNTMEAT.id(), 1);
-			mes(p, 1200, "This meat is too delicate to cook like this.");
-			mes(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "This meat is too delicate to cook like this.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
 		}
 
 		// Poison (Hazeel Cult)
@@ -100,7 +100,7 @@ public class ObjectCooking implements UseLocTrigger {
 		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
 			if (p.getQuestStage(Quests.WITCHS_POTION) != -1) {
 				thinkbubble(p, item);
-				mes(p, 1800, cookingOnMessage(p, item, object, false));
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, cookingOnMessage(p, item, object, false));
 				p.getCarriedItems().remove(new Item(ItemId.COOKEDMEAT.id()));
 				give(p, ItemId.BURNTMEAT.id(), 1);
 				p.playerServerMessage(MessageType.QUEST, "you burn the meat");

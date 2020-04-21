@@ -339,7 +339,7 @@ public class DemonSlayer implements QuestInterface,
 							p.getCarriedItems().remove(new Item(ItemId.BONES.id()));
 							p.message("You give Traiborn a set of bones");
 							boneCount++;
-							delay(600);
+							delay(p.getWorld().getServer().getConfig().GAME_TICK);
 							if (boneCount >= 25)
 								break;
 						}
@@ -1003,7 +1003,7 @@ public class DemonSlayer implements QuestInterface,
 			case GypsyConversation.INCANTATION:
 				npcsay(p, n, "Oh yes let me think a second");
 				Functions.mes(p, "The gypsy is thinking");
-				delay(2000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				npcsay(p, n, "Alright I've got it now I think", "It goes",
 					"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 					"Have you got that?");
@@ -1025,7 +1025,7 @@ public class DemonSlayer implements QuestInterface,
 				if (choice == 0) {
 					npcsay(p, n, "Oh yes let me think a second");
 					Functions.mes(p, "The gypsy is thinking");
-					delay(2000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					npcsay(p, n, "Alright I've got it now I think", "It goes",
 						"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 						"Have you got that?");
@@ -1162,7 +1162,7 @@ public class DemonSlayer implements QuestInterface,
 					"Carlem Aber Camerinthum Purchai Gabindo");
 				if (choice != -1) {
 					if (choice == 3) {
-						mes(p, 1300, "Delrith is sucked back into the dark demension from which he came");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Delrith is sucked back into the dark demension from which he came");
 						n.killedBy(p);
 						n.remove();
 						if (p.getQuestStage(Quests.DEMON_SLAYER) != -1) {
@@ -1172,7 +1172,7 @@ public class DemonSlayer implements QuestInterface,
 							p.sendQuestComplete(getQuestId());
 						}
 					} else {
-						mes(p, 1300, "As you chant, Delrith is sucked towards the vortex", "Suddenly the vortex closes");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "As you chant, Delrith is sucked towards the vortex", "Suddenly the vortex closes");
 						p.message("And Delrith is still here");
 						p.message("That was the wrong incantation");
 					}

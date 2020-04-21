@@ -169,13 +169,13 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					case -1:
 						if (!p.getCache().hasKey("rewarded_totem") && p.getQuestStage(Quests.LEGENDS_QUEST) >= 10) {
 							n.resetPath();
-							delay(650);
+							delay(p.getWorld().getServer().getConfig().GAME_TICK);
 							npcWalkFromPlayer(p, n);
 							npcsay(p, n, "Greetins Bwana,",
 								"We witnessed your fight with the Demon from some distance away.",
 								"My people are so pleased with your heroic efforts.",
 								"Your strength and ability as a warrior are Legendary.");
-							Functions.mes(p, n, 1300, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
+							Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
 							give(p, ItemId.GILDED_TOTEM_POLE.id(), 1);
 							p.getCache().store("rewarded_totem", true);
 							npcsay(p, n, "Please accept this as a token of our appreciation.",
@@ -449,7 +449,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER:
-					Functions.mes(p, n, 1300, "Gujuo looks very uncomfortable...");
+					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
 					npcsay(p, n, "I am not sure...",
 						"But I have heard that deeper in the Catacombs where you found Ungadulu,",
 						"deep underground,",
@@ -476,7 +476,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2:
-					Functions.mes(p, n, 1300, "Gujuo looks very uncomfortable...");
+					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
 					npcsay(p, n, "I am not sure...",
 						"But I have heard that deeper in the Catacombs where you found Ungadulu,",
 						"deep underground,",
@@ -629,11 +629,11 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					if (opt2 == 0) {
 						npcsay(p, n, "Follow me...");
 						n.setBusy(true);
-						mes(p, 1300, "Gujuo takes you out of the jungle...");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo takes you out of the jungle...");
 						p.teleport(397, 865);
 						if (n != null) {
 							n.teleport(398, 865);
-							delay(650);
+							delay(p.getWorld().getServer().getConfig().GAME_TICK);
 							npcsay(p, n, "");
 							n.setBusy(false);
 						}
@@ -670,7 +670,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					gujuoBye(p, n);
 					break;
 				case Gujuo.I_WANT_TO_DEVELOP_FRIENDLY_RELATIONS:
-					Functions.mes(p, n, 1300, "Gujuo smiles and shakes your hand warmly...");
+					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo smiles and shakes your hand warmly...");
 					npcsay(p, n, "Very good Bwana...this is indeed a very pleasant gesture.",
 						"However, my people are very distributed throughout the Kharazi jungle.");
 					int opt5 = multi(p, n,
@@ -698,7 +698,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 								npcsay(p, n, "First we need to plant a sacred Yommi tree..",
 									"It is a magical tree of great power, however, our Shaman..",
 									"Ungadulu is the only person with the seeds for this tree.");
-								mes(p, 1300, "Gujuo's expression changes to sadness...");
+								mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo's expression changes to sadness...");
 								npcsay(p, n, "And I fear that it is impossible to get some seeds.",
 									"He is being held against his will in some caves in ",
 									"north western part of the Kharazi jungle.");
@@ -708,7 +708,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 								if (opt8 == 0) {
 									GujuoDialogue(p, n, Gujuo.I_WILL_RELEASE_UNGADULU);
 								} else if (opt8 == 1) {
-									mes(p, 1300, "Gujuo's expression of sadness deepens...");
+									mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo's expression of sadness deepens...");
 									npcsay(p, n, "Yes Bwana, perhaps we will become friends sometime in the future...",
 										"But not today...",
 										"Ungadulu has problably lost his mind anyway... ",
@@ -754,7 +754,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					}
 					break;
 				case Gujuo.UNGADULU_CALLED_ME_VACU:
-					mes(p, 1300, "Gujuo shakes his head slightly in sadness.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo shakes his head slightly in sadness.");
 					npcsay(p, n, "It seems that Ungadulu has started to lose his senses.",
 						"In our native and ancient history, ",
 						"the Vacu were the servants of the evil spirits from the underworld.",
@@ -831,7 +831,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					npcsay(p, n, "A vessel made of sun metal, but it can be of any shape.",
 						"However, it must be blessed.");
 					if (!p.getCarriedItems().hasCatalogID(ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), Optional.of(false))) {
-						mes(p, 1300, "Gujuo takes out a small scroll and some charcoal and draws a rough sketch.",
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo takes out a small scroll and some charcoal and draws a rough sketch.",
 							"When he has finished, he gives the sketch to you.");
 						give(p, ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), 1);
 						npcsay(p, n, "Here, have this as an example...I pray that it will help you.");
@@ -933,15 +933,15 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 						p.message("You need a prayer ability of 42 to complete this task.");
 					} else {
 						npcsay(p, n, "Very well Bwana...");
-						mes(p, 1300, "Gujuo places the bowl on the floor in front of you,");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo places the bowl on the floor in front of you,");
 						Functions.mes(p, "and leads you into a deep meditation...");
-						npcsay(p, n, 3000, "Ohhhhhmmmmmm");
+						npcsay(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
 						say(p, n, "Oooooommmmmmmmmm");
-						npcsay(p, n, 3000, "Ohhhhhmmmmmm");
+						npcsay(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
 						say(p, n, "Oooooohhhhmmmmmmmmmm");
-						npcsay(p, n, 3000, "Ohhhhhmmmmmm");
+						npcsay(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
 						if (Formulae.failCalculation(p, Skills.PRAYER, 42)) {
-							mes(p, 1300, "A totally peacefull aura surrounds you and you ",
+							mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
 							if (p.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))) {
 								p.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
@@ -950,7 +950,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 							}
 							GujuoDialogue(p, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 						} else {
-							mes(p, 1300, "You were not able to go into a deep enough trance.",
+							mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You were not able to go into a deep enough trance.",
 								"You lose some prayer...");
 							p.getSkills().setLevel(Skills.PRAYER, p.getSkills().getLevel(Skills.PRAYER) - 5);
 							npcsay(p, n, "Would you like to try again.");
@@ -986,7 +986,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 			npcsay(p, n, "I have work to do Bwana, I may see you again...");
 		}
 		npcsay(p, n, "");
-		p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1900, "Legends Quest Gujuo Disappears") {
+		p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Legends Quest Gujuo Disappears") {
 			public void action() {
 				p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 				if(n != null) {

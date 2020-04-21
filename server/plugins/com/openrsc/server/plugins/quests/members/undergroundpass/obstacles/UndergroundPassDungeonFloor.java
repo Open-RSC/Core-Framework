@@ -48,7 +48,7 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 			addloc(claws_of_iban);
 			p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5);
 			say(p, null, "aaarrgghhh");
-			delay(1000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			delloc(claws_of_iban);
 		}
 		else if (obj.getID() == DWARF_BARREL) {

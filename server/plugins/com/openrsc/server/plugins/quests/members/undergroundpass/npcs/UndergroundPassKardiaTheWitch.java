@@ -47,7 +47,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 					Npc witch = ifnearvisnpc(p, NpcId.KARDIA_THE_WITCH.id(), 5);
 					p.message("you reach to open the door");
 					npcsay(p, witch, "get away...far away from here");
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 					p.message("the witch raises her hands above her");
 					displayTeleportBubble(p, p.getX(), p.getY(), true);
 					p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.

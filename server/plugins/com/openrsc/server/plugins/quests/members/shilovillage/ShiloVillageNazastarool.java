@@ -57,11 +57,11 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				choke(p);
 			}
 			p.message("You touch the Dolmen, and the ground starts to shake.");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("You hear an unearthly voice booming and ");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("you step away from the Dolmen in anticipation...");
-			delay(1000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.teleport(380, 3625);
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(p);
@@ -110,7 +110,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	// run away coords 379, 3626
 	private void spawnAndMoveAway(Player p, int npcID) {
 		Npc npc = addnpc(p.getWorld(), npcID, 380, 3625, 60000 * 5);
-		delay(1000);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 		npc.teleport(381, 3625);
 		if (npc.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			zombieShout(p, npc);
@@ -152,11 +152,11 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				p.getCache().store("dolmen_zombie", true);
 			}
 			p.message("You defeat Nazastarool and the corpse falls to  ");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("the ground. The bones start to move again and   ");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("soon they reform into a grisly giant skeleton.  ");
-			delay(1000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			spawnAndMoveAway(p, NpcId.NAZASTAROOL_SKELETON.id());
 			p.setBusy(false);
 		}
@@ -167,11 +167,11 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				p.getCache().store("dolmen_skeleton", true);
 			}
 			p.message("You defeat the Nazastarool Skeleton as the corpse falls to ");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("the ground. An ethereal form starts taking shape above the ");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("bones and you soon face the vengeful ghost of Nazastarool ");
-			delay(1000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			spawnAndMoveAway(p, NpcId.NAZASTAROOL_GHOST.id());
 			p.setBusy(false);
 		}
@@ -182,9 +182,9 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				p.getCache().store("dolmen_ghost", true);
 			}
 			p.message("@yel@Nazastarool: May you perish in the fires of Zamoraks furnace!");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("@yel@Nazastarool: May Rashiliyias Curse be upon you!");
-			delay(1200);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("You see something appear on the Dolmen");
 			p.setBusy(false);
 		}

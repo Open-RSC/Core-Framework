@@ -44,7 +44,7 @@ public final class Reldo implements TalkNpcTrigger {
 				@Override
 				public void action() {
 					npcsay(p, n, "I don't think there's any here");
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					npcsay(p, n, "Let me think actually",
 						"If you look in a book",
 						"called the shield of Arrav",

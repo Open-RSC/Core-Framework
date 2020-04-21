@@ -1202,7 +1202,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"My father will pay you well for this");
 				say(p, ladyAli, "Go to Leela, she is close to here");
 				ladyAli.remove();
-				mes(p, 1000, "The prince has escaped, well done!", "You are now a friend of Al kharid",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The prince has escaped, well done!", "You are now a friend of Al kharid",
 						"And may pass through the Al Kharid toll gate for free");
 				p.updateQuestStage(this, 3);
 				break;

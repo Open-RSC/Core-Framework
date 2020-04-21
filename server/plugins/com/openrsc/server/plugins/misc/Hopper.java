@@ -36,7 +36,7 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player player) {
-		mes(player, 500, "You operate the hopper");
+		mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "You operate the hopper");
 		player.playSound("mechanical");
 		int contains = obj.getAttribute("contains_item", -1);
 		if (contains != ItemId.GRAIN.id()) {

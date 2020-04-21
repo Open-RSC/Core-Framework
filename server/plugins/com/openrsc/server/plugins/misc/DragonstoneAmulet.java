@@ -28,7 +28,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			p.message("You rub the amulet");
-			delay(600);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.message("Where would you like to teleport to?");
 			int menu = multi(p, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
 			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
@@ -92,8 +92,8 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
 			p.setBusy(true);
 			p.message("You dip the amulet in the fountain");
-			delay(1000);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
+			p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK, "Charge Dragonstone Ammy", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 
 				@Override
 				public void action() {

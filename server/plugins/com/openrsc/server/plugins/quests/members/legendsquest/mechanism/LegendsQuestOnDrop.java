@@ -33,7 +33,7 @@ public class LegendsQuestOnDrop implements DropObjTrigger {
 		else if (inArray(i.getCatalogId(), ItemId.A_CHUNK_OF_CRYSTAL.id(), ItemId.A_LUMP_OF_CRYSTAL.id(), ItemId.A_HUNK_OF_CRYSTAL.id(),
 				ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id())) {
 			p.getCarriedItems().remove(new Item(i.getCatalogId()));
-			mes(p, 600, "The crystal starts fading..");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "The crystal starts fading..");
 		}
 	}
 }
