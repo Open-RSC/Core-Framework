@@ -1016,6 +1016,85 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected void queryCancelRecoveryChange(int playerId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().cancelRecoveryChangeRequest);
+			statement.setInt(1, playerId);
+			try { statement.executeUpdate(); }
+			finally { statement.close(); }
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected PlayerContactDetails queryContactDetails(int playerId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().contactDetails);
+			statement.setInt(1, playerId);
+			final ResultSet result = statement.executeQuery();
+			final PlayerContactDetails contactDetails = new PlayerContactDetails();
+			try {
+				if (result.next()) {
+					contactDetails.id = playerId;
+					contactDetails.username = result.getString("username");
+					contactDetails.fullName = result.getString("fullname");
+					contactDetails.zipCode = result.getString("zipCode");
+					contactDetails.country = result.getString("country");
+					contactDetails.email = result.getString("email");
+					contactDetails.dateModified = result.getInt("date_modified");
+					contactDetails.ip = result.getString("ip");
+
+					return contactDetails;
+				}
+				return null;
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryInsertContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newContactDetails);
+			statement.setInt(1, playerId);
+			statement.setString(2, contactDetails.username);
+			statement.setString(3, contactDetails.fullName);
+			statement.setString(4, contactDetails.zipCode);
+			statement.setString(5, contactDetails.country);
+			statement.setString(6, contactDetails.email);
+			statement.setLong(7, contactDetails.dateModified);
+			statement.setString(8, contactDetails.ip);
+			try { statement.executeUpdate(); }
+			finally { statement.close(); }
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryUpdateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateContactDetails);
+			statement.setString(1, contactDetails.fullName);
+			statement.setString(2, contactDetails.zipCode);
+			statement.setString(3, contactDetails.country);
+			statement.setString(4, contactDetails.email);
+			statement.setLong(5, contactDetails.dateModified);
+			statement.setString(6, contactDetails.ip);
+			statement.setInt(7, playerId);
+			try { statement.executeUpdate(); }
+			finally { statement.close(); }
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected ClanDef[] queryClans() throws GameDatabaseException {
 		try {
 			final ArrayList<ClanDef> clans = new ArrayList<>();

@@ -92,6 +92,10 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException;
 	protected abstract void queryInsertPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions, String tableName) throws GameDatabaseException;
 	protected abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
+	protected abstract void queryCancelRecoveryChange(int playerId) throws GameDatabaseException;
+	protected abstract PlayerContactDetails queryContactDetails(int playerId) throws GameDatabaseException;
+	protected abstract void queryInsertContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
+	protected abstract void queryUpdateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
 
 	protected abstract ClanDef[] queryClans() throws GameDatabaseException;
 	protected abstract ClanMember[] queryClanMembers(final int clanId) throws GameDatabaseException;
@@ -412,6 +416,22 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	// Inserts a new recovery attempt into the database and returns the database index of the attempt.
 	public int newRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException {
 		return queryInsertRecoveryAttempt(playerId, username, time, ip);
+	}
+
+	public void cancelRecoveryChangeRequest(int playerId) throws GameDatabaseException {
+		queryCancelRecoveryChange(playerId);
+	}
+
+	public PlayerContactDetails getContactDetails(int playerId) throws GameDatabaseException {
+		return queryContactDetails(playerId);
+	}
+
+	public void newContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException {
+		queryInsertContactDetails(playerId, contactDetails);
+	}
+
+	public void updateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException {
+		queryUpdateContactDetails(playerId, contactDetails);
 	}
 
 	public ClanDef[] getClans() throws GameDatabaseException {
