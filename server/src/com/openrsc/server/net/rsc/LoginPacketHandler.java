@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.database.struct.PlayerRecoveryQuestions;
 import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.RecoveryAttemptRequest;
@@ -18,8 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class LoginPacketHandler {
 
@@ -116,43 +115,36 @@ public class LoginPacketHandler {
 					user = getString(p.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 
-					PreparedStatement statement = server.getDatabase().getConnection().prepareStatement("SELECT id FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
-					statement.setString(1, user);
-					ResultSet res = statement.executeQuery();
-					ResultSet res2 = null;
-					try {
-						boolean foundAndHasRecovery = false;
+					int playerID = server.getDatabase().getPlayerLoginData(user).id;
 
-						if (res.next()) {
-							statement = server.getDatabase().getConnection().prepareStatement("SELECT * FROM " + server.getConfig().MYSQL_TABLE_PREFIX + "player_recovery WHERE playerID=?");
-							statement.setInt(1, res.getInt("id"));
-							res2 = statement.executeQuery();
-							if (res2.next()) {
-								foundAndHasRecovery = true;
-							}
-						}
+					String[] questions = new String[5];
+					boolean foundAndHasRecovery = false;
+					PlayerRecoveryQuestions recoveryQuestions = server.getDatabase().getPlayerRecoveryData(playerID);
 
-						if (!foundAndHasRecovery) {
-							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-							channel.close();
-						} else {
-							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
-							com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-							String st;
-							for (int n = 0; n < 5; ++n) {
-								st = res2.getString("question" + (n + 1));
-								s.writeByte((byte) st.length() + 1);
-								s.writeString(st);
-							}
-							channel.writeAndFlush(s.toPacket());
-							channel.close();
-						}
-					} finally {
-						statement.close();
-						res.close();
-						if (res2 != null)
-							res2.close();
+					if (recoveryQuestions != null) {
+						questions[0] = recoveryQuestions.question1;
+						questions[1] = recoveryQuestions.question2;
+						questions[2] = recoveryQuestions.question3;
+						questions[3] = recoveryQuestions.question4;
+						questions[4] = recoveryQuestions.question5;
+
+						foundAndHasRecovery = true;
 					}
+
+					if (!foundAndHasRecovery) {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+					} else {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
+						com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+						String st;
+						for (int n = 0; n < 5; ++n) {
+							st = questions[n];
+							s.writeByte((byte) st.length() + 1);
+							s.writeString(st);
+						}
+						channel.writeAndFlush(s.toPacket());
+					}
+					channel.close();
 
 				} catch (Exception e) {
 					LOGGER.catching(e);
