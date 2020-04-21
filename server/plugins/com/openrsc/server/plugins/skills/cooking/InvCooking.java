@@ -48,7 +48,7 @@ public class InvCooking implements UseInvTrigger {
 				player.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
 				player.getCarriedItems().remove(new Item(ItemId.GRAPES.id()));
 
-				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 3000, "Cook Wine", 1, false) {
+				player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "Cook Wine", 1, false) {
 					@Override
 					public void action() {
 						if (getOwner().getSkills().getLevel(Skills.COOKING) < 35) {

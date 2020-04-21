@@ -220,7 +220,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 	public void handleGateSounds(Player player) {
         player.playSound("opendoor");
 
-	   player.getWorld().getServer().getGameEventHandler().add(new SingleTickEvent(player.getWorld(), player, 3000, "Sheep Herder Gate Sounds") {
+	   player.getWorld().getServer().getGameEventHandler().add(new SingleTickEvent(player.getWorld(), player, 5, "Sheep Herder Gate Sounds") {
            @Override
            public void action() {
                player.playSound("opendoor");

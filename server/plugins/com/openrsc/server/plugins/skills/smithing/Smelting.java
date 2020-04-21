@@ -189,7 +189,7 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		p.playerServerMessage(MessageType.QUEST, smeltString(p.getWorld(), smelt, item));
-		p.setBatchEvent(new BatchEvent(p.getWorld(), p, 1800, "Smelt", Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
+		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Smelt", Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
 			@Override
 			public void action() {
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {

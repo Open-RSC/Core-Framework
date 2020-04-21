@@ -113,7 +113,7 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 				failBlackAreaObstacle(p, obj);
 			}
 			p.getWorld().getServer().getGameEventHandler()
-				.add(new UndergroundPassMessages(p.getWorld(), p, DataConversions.random(3000, 15000)));
+				.add(new UndergroundPassMessages(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * DataConversions.random(5, 25)));
 		}
 	}
 

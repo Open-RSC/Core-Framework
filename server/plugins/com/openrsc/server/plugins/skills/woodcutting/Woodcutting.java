@@ -69,7 +69,7 @@ public class Woodcutting implements OpLocTrigger {
 		final int axeID = axeId;
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		Functions.thinkbubble(player, new Item(axeId));
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Woodcutting", Formulae.getRepeatTimes(player, Skills.WOODCUT), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Woodcutting", Formulae.getRepeatTimes(player, Skills.WOODCUT), true) {
 			@Override
 			public void action() {
 				final Item log = new Item(def.getLogId());

@@ -474,7 +474,7 @@ public class Inventory {
 					groundItem.setAttribute("playerKill", true);
 				}
 			}
-			player.getWorld().registerItem(groundItem, 644000); // 10m 44s
+			player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 1000);
 
 		}
 

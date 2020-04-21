@@ -62,7 +62,7 @@ public class FishingTrawler extends DelayedEvent {
 	private List<SimpleSubscriber<FishingTrawler>> subscribers = new ArrayList<SimpleSubscriber<FishingTrawler>>();
 
 	public FishingTrawler(World world, TrawlerBoat selectedBoat) {
-		super(world, null, 600, "Fishing Trawler Event");
+		super(world, null, world.getServer().getConfig().GAME_TICK, "Fishing Trawler Event");
 
 		if (selectedBoat == TrawlerBoat.EAST) {
 			shipArea = new Area(270, 278, 740, 744, "FishingTrawler: Fine");

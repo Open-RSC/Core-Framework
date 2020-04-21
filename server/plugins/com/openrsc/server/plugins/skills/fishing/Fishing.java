@@ -110,7 +110,7 @@ public class Fishing implements OpLocTrigger {
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		thinkbubble(player, new Item(netId));
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Fishing", Formulae.getRepeatTimes(player, Skills.FISHING), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Fishing", Formulae.getRepeatTimes(player, Skills.FISHING), true) {
 			@Override
 			public void action() {
 				try {

@@ -553,7 +553,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void registerItem(final GroundItem i) {
-		registerItem(i, 128000);
+		registerItem(i, i.getWorld().getServer().getConfig().GAME_TICK * 200);
 	}
 
 	public void registerItem(final GroundItem i, int delayTime) {

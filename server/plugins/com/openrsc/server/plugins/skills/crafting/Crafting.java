@@ -749,7 +749,7 @@ public class Crafting implements UseInvTrigger,
 							} else {
 								getOwner().getWorld().registerItem(
 									new GroundItem(owner.getWorld(), resultClone.getCatalogId(), owner.getX(), owner.getY(), 1, owner),
-									94000);
+									94000); // TODO: Delay on this?
 								owner.getWorld().getServer().getGameLogger().addQuery(new GenericLog(owner.getWorld(), owner.getUsername() + " dropped(inventory full) "
 									+ resultClone.getCatalogId() + " x" + "1" + " at " + owner.getLocation().toString()));
 							}

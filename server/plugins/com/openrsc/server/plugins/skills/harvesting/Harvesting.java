@@ -149,7 +149,7 @@ public final class Harvesting implements OpLocTrigger {
 		if (object.getID() == 1238) {
 			player.playerServerMessage(MessageType.QUEST, "You attempt to grab a present...");
 			retrytimes = 10;
-			player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Harvesting Xmas", retrytimes, true) {
+			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 4, "Harvesting Xmas", retrytimes, true) {
 				@Override
 				public void action() {
 					final Item present = new Item(ItemId.PRESENT.id());
@@ -222,7 +222,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		thinkbubble(player, new Item(ItemId.HERB_CLIPPERS.id()));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 4, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
 			@Override
 			public void action() {
 				// herb uses herb drop table
@@ -298,7 +298,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		if (toolId != ItemId.NOTHING.id()) thinkbubble(player, new Item(toolId));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 4, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
 			@Override
 			public void action() {
 				final Item produce = new Item(def.getProdId());

@@ -386,7 +386,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 		}
 		if (eventMessage) {
 			p.getWorld().getServer().getGameEventHandler()
-				.add(new UndergroundPassMessages(p.getWorld(), p, DataConversions.random(2000, 10000)));
+				.add(new UndergroundPassMessages(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * DataConversions.random(3, 15)));
 		}
 	}
 }
