@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -50,17 +49,17 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
 			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) != -1) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
-					Functions.mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + itemLower,
+					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("skirt")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					Functions.mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + metal + " plated skirt",
+					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + metal + " plated skirt",
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you some " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("legs")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					Functions.mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander some " + itemLower,
+					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander some " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + metal + " plated skirt");
 				}

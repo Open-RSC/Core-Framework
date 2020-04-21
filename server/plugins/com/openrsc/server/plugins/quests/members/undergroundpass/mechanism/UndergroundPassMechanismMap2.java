@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.quests.members.undergroundpass.obstacles.UndergroundPassObstaclesMap2;
 
@@ -38,7 +37,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			if (p.getX() == 763 && p.getY() == 3463) {
 				p.message("you can't reach the grill from here");
 			} else {
-				Functions.mes(p, "you tie the rope to the grill...");
+				mes(p, "you tie the rope to the grill...");
 				p.message("..and poke it through to the otherside");
 				if (!p.getCache().hasKey("rope_wall_grill")) {
 					p.getCache().store("rope_wall_grill", true);
@@ -58,17 +57,17 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == BOULDER && item.getCatalogId() == ItemId.RAILING.id()) {
-			Functions.mes(p, "you use the pole as leverage...",
+			mes(p, "you use the pole as leverage...",
 				"..and tip the bolder onto its side");
 			delloc(obj);
-			Functions.addloc(obj.getWorld(), obj.getLoc(), 5000);
+			addloc(obj.getWorld(), obj.getLoc(), 5000);
 			p.message("it tumbles down the slope");
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 3) {
 				p.updateQuestStage(Quests.UNDERGROUND_PASS, 4);
 			}
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getCatalogId(), ITEMS_TO_FLAMES)) {
-			Functions.mes(p, "you throw the " + item.getDef(p.getWorld()).getName().toLowerCase() + " into the flames");
+			mes(p, "you throw the " + item.getDef(p.getWorld()).getName().toLowerCase() + " into the flames");
 			if (!atQuestStages(p, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (!p.getCache().hasKey("flames_of_zamorak1") && item.getCatalogId() == ItemId.UNDERGROUND_PASS_UNICORN_HORN.id()) {
 					p.getCache().store("flames_of_zamorak1", true);
@@ -91,7 +90,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			p.message("you hear a howl in the distance");
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
-			Functions.mes(p, "you hold the staff above the well");
+			mes(p, "you hold the staff above the well");
 			displayTeleportBubble(p, p.getX(), p.getY(), true);
 			p.message("and feel the power of zamorak flow through you");
 			p.getCache().set("Iban blast_casts", 25);

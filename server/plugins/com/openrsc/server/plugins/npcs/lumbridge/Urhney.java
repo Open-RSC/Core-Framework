@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -43,7 +42,7 @@ public class Urhney implements TalkNpcTrigger {
 									"Until I had done a full two years of prayer and meditation",
 									"Tell you what I can do though",
 									"Take this amulet");
-								Functions.mes(p,
+								mes(p,
 									"Father Urhney hands you an amulet");
 								give(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
 								npcsay(p,
@@ -85,7 +84,7 @@ public class Urhney implements TalkNpcTrigger {
 									"Until I had done a full two years of prayer and meditation",
 									"Tell you what I can do though",
 									"Take this amulet");
-								Functions.mes(p,
+								mes(p,
 									"Father Urhney hands you an amulet");
 								give(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
 								npcsay(p,
@@ -112,12 +111,12 @@ public class Urhney implements TalkNpcTrigger {
 				"I've lost the amulet") {
 				@Override
 				public void action() {
-					Functions.mes(p, "Father Urhney sighs");
+					mes(p, "Father Urhney sighs");
 					npcsay(p, n, "How careless can you get",
 						"Those things aren't easy to come by you know",
 						"It's a good job I've got a spare");
 					give(p, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1);
-					Functions.mes(p, "Father Urhney hands you an amulet");
+					mes(p, "Father Urhney hands you an amulet");
 					npcsay(p, n, "Be more careful this time");
 					say(p, n, "Ok I'll try to be");
 				}

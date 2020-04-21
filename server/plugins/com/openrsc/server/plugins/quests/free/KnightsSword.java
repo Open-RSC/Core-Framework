@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -142,7 +141,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						"I have found a picture of the sword I would like you to make");
 					p.message("You give the portrait to Thurgo");
 					p.getCarriedItems().remove(new Item(ItemId.PORTRAIT.id()));
-					Functions.mes(p, "Thurgo studies the portrait");
+					mes(p, "Thurgo studies the portrait");
 					p.updateQuestStage(this, 5);
 					npcsay(p,
 						n,
@@ -177,12 +176,12 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				if (ifheld(p, ItemId.IRON_BAR.id(), 2) && p.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
 					npcsay(p, n, "How are you doing finding sword materials?");
 					say(p, n, "I have them all");
-					Functions.mes(p, "You give some blurite ore and two iron bars to Thurgo");
+					mes(p, "You give some blurite ore and two iron bars to Thurgo");
 
 					p.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
 					p.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
 					p.getCarriedItems().remove(new Item(ItemId.BLURITE_ORE.id()));
-					Functions.mes(p, "Thurgo starts making a sword",
+					mes(p, "Thurgo starts making a sword",
 						"Thurgo hammers away",
 						"Thurgo hammers some more",
 						"Thurgo hands you a sword");
@@ -202,17 +201,17 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void givePie(Player p, Npc n) {
-		Functions.mes(p, "Thurgo's eyes light up");
+		mes(p, "Thurgo's eyes light up");
 		npcsay(p, n, "I'd never say no to a redberry pie");
 		npcsay(p, n, "It's great stuff");
 		if (!p.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) { //should not happen here
 			say(p, n, "Well that's too bad, because I don't have any");
-			Functions.mes(p, "Thurgo does not look impressed");
+			mes(p, "Thurgo does not look impressed");
 		} else {
-			Functions.mes(p, "You hand over the pie");
+			mes(p, "You hand over the pie");
 			p.getCarriedItems().remove(new Item(ItemId.REDBERRY_PIE.id()));
 			p.updateQuestStage(this, 3);
-			Functions.mes(p, "Thurgo eats the pie", "Thurgo pats his stomach");
+			mes(p, "Thurgo eats the pie", "Thurgo pats his stomach");
 			npcsay(p, n, "By Guthix that was good pie",
 				"Anyone who makes pie like that has gotta be alright");
 		}
@@ -401,7 +400,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						p.face(n);
 						npcsay(p, n, "Hey what are you doing?",
 							"That's my cupboard");
-						Functions.mes(p,
+						mes(p,
 							"Maybe you need to get someone to distract Sir Vyvin for you");
 					} else {
 						if (p.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false)) || p.getQuestStage(this) < 4) {

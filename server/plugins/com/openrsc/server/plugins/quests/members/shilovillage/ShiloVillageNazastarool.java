@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
@@ -40,7 +39,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 					p.message("You find nothing new on the Dolmen.");
 					return;
 				}
-				Functions.mes(p, "You search the Dolmen...",
+				mes(p, "You search the Dolmen...",
 					"and find the mumified remains of a human female corpse.");
 				p.message("Do you want to take the corpse?");
 				int menu = multi(p, "Yes, I'll take the remains.", "No, I'll leave them where they are.");
@@ -85,7 +84,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	}
 
 	private void choke(Player p) {
-		Functions.mes(p, "@red@You feel invisible hands starting to choke you...");
+		mes(p, "@red@You feel invisible hands starting to choke you...");
 		p.damage(getCurrentLevel(p, Skills.HITS) / 2);
 	}
 

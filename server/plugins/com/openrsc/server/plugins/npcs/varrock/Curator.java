@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
@@ -28,7 +27,7 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 				say(p, n,
 					"I have retrieved the shield of Arrav and I would like to claim my reward");
 				npcsay(p, n, "The shield of Arrav?", "Let me see that");
-				Functions.mes(p, "The curator peers at the shield");
+				mes(p, "The curator peers at the shield");
 				npcsay(p,
 					n,
 					"This is incredible",
@@ -44,10 +43,10 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 					"I needed significant help from a friend to get the shield",
 					"We'll split the reward");
 				npcsay(p, n, "Oh ok");
-				Functions.mes(p, "You hand over the shield parts");
+				mes(p, "You hand over the shield parts");
 				p.getCarriedItems().remove(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()));
 				p.getCarriedItems().remove(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()));
-				Functions.mes(p, "The curator writes out two certificates");
+				mes(p, "The curator writes out two certificates");
 				give(p, ItemId.CERTIFICATE.id(), 1);
 				give(p, ItemId.CERTIFICATE.id(), 1);
 				npcsay(p, n, "Take these to the king",

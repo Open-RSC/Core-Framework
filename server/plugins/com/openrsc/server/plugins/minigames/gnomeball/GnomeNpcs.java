@@ -6,7 +6,6 @@ import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -271,7 +270,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 		}
 		else {
 			thinkbubble(p, new Item(ItemId.GNOME_BALL.id()));
-			Functions.mes(p, "you attempt to tackle the gnome");
+			mes(p, "you attempt to tackle the gnome");
 			if (DataConversions.random(0, 1) == 0) {
 				//successful tackles gives agility xp
 				p.playerServerMessage(MessageType.QUEST, "You skillfully grab the ball");

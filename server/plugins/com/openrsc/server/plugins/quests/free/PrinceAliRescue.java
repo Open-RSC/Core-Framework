@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
@@ -42,11 +41,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	@Override
 	public void handleReward(final Player p) {
 		if (p.getCache().hasKey("pre_paid")) {
-			Functions.mes(p, "The chancellor pays you 620 coins");
+			mes(p, "The chancellor pays you 620 coins");
 			give(p, ItemId.COINS.id(), 620);
 			p.getCache().remove("pre_paid");
 		} else {
-			Functions.mes(p, "The chancellor pays you 700 coins");
+			mes(p, "The chancellor pays you 700 coins");
 			give(p, ItemId.COINS.id(), 700);
 		}
 		p.message("You have completed the quest of the Prince of Al Kharid");
@@ -123,7 +122,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					if (!p.getCache().hasKey("pre_paid")) {
 						npcsay(p, n, "You have proved your services useful to us",
 							"Here is 80 coins for the work you have already done");
-						Functions.mes(p, "The chancellor hands you 80 coins");
+						mes(p, "The chancellor hands you 80 coins");
 						give(p, ItemId.COINS.id(), 80);
 						p.getCache().store("pre_paid", true);
 
@@ -262,7 +261,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					say(p, n,
 						"Of course, it must be tough being here without a drink");
-					Functions.mes(p,
+					mes(p,
 						"You hand a beer to the guard, he drinks it in seconds");
 					p.getCarriedItems().remove(new Item(ItemId.BEER.id()));
 
@@ -275,7 +274,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						"Ah, that would be lovely, just one now, just to wet my throat");
 					say(p, n,
 						"Of course, it might be tough being here without a drink");
-					Functions.mes(p,
+					mes(p,
 						"You hand a beer to the guard, he drinks it in seconds");
 					p.getCarriedItems().remove(new Item(ItemId.BEER.id())); //takes 2 more after dialogue
 					npcsay(p, n, "Thas was perfect, i cant thank you enough");
@@ -283,9 +282,9 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					npcsay(p, n, "I better not, I don't want to be drunk on duty");
 					say(p, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
-					Functions.mes(p, "You hand two more beers to the guard");
+					mes(p, "You hand two more beers to the guard");
 					p.getCarriedItems().remove(new Item(ItemId.BEER.id(), 2));
-					Functions.mes(p, "he takes a sip of one, and then he drinks them both");
+					mes(p, "he takes a sip of one, and then he drinks them both");
 					npcsay(p,
 						n,
 						"Franksh, that wash just what I need to shtay on guard",
@@ -564,7 +563,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						"I should not disturb someone as tough as you");
 					if (menu1 == 0) {
 						npcsay(p, n, "Only for a moment then");
-						Functions.mes(p,
+						mes(p,
 							"You put a piece of your soft clay in your hand",
 							"As you touch the key, you take an imprint of it");
 						p.getCarriedItems().remove(new Item(ItemId.SOFT_CLAY.id()));
@@ -699,7 +698,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					if ((p.getCache().hasKey("key_sent")) && !p.getCarriedItems().hasCatalogID(ItemId.BRONZE_KEY.id(), Optional.of(false))) {
 						npcsay(p, n,
 							"My father sent this key for you, be careful not to lose it");
-						Functions.mes(p,
+						mes(p,
 							"Leela gives you a copy of the key to the princes door");
 						give(p, ItemId.BRONZE_KEY.id(), 1);
 						p.getCache().remove("key_sent");
@@ -1196,7 +1195,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				p.getCarriedItems().remove(new Item(ItemId.PINK_SKIRT.id()));
 				p.getCarriedItems().remove(new Item(ItemId.PASTE.id()));
 				p.getCarriedItems().remove(new Item(ItemId.BRONZE_KEY.id()));
-				Functions.mes(p, "You hand the disguise and the key to the prince");
+				mes(p, "You hand the disguise and the key to the prince");
 				final Npc ladyAli = changenpc(n, NpcId.PRINCE_ALI_DISGUISE.id(), false);
 				npcsay(p, ladyAli, "Thankyou my friend, I must leave you now",
 					"My father will pay you well for this");

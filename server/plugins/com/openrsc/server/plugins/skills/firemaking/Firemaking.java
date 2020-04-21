@@ -18,8 +18,7 @@ import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.compareItemsIds;
-import static com.openrsc.server.plugins.Functions.inArray;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Firemaking implements UseObjTrigger, UseInvTrigger {
 

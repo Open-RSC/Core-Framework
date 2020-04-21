@@ -2,12 +2,9 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -38,7 +35,7 @@ public class CookingInstructor implements TalkNpcTrigger {
 				"Then click on whatever you wish to use it on",
 				"In this case use it on the range");
 		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
-			Functions.say(p, n, "I burnt the meat");
+			say(p, n, "I burnt the meat");
 			npcsay(p, n, "Well I'm sure you'll get the hang of it soon",
 				"Let's try again");
 			if (!p.getCarriedItems().hasCatalogID(ItemId.RAW_RAT_MEAT.id())) {
@@ -46,7 +43,7 @@ public class CookingInstructor implements TalkNpcTrigger {
 				give(p, ItemId.RAW_RAT_MEAT.id(), 1); // Add raw rat meat again
 			}
 		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 31) {
-			Functions.say(p, n, "I've cooked the meat correctly this time");
+			say(p, n, "I've cooked the meat correctly this time");
 			npcsay(p, n, "Very well done",
 				"Now you can tell whether you need to eat or not",
 				"look in your stats menu",

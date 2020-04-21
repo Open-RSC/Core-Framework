@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.quests.free.DragonSlayer;
 
@@ -42,7 +41,7 @@ public final class NedInShip implements
 				if (menu == 0) {
 					if (p.getCache().hasKey("ship_fixed")) {
 						npcsay(p, n, "Okie Dokie");
-						Functions.mes(p, "You feel the ship begin to move",
+						mes(p, "You feel the ship begin to move",
 							"You are out at sea", "The ship is sailing",
 							"The ship is sailing", "You feel a crunch");
 						p.teleport(281, 3472, false);
@@ -67,14 +66,14 @@ public final class NedInShip implements
 					npcsay(p, n, "Ok show me the map and we'll set sail now");
 					boolean gave_map = false;
 					if (p.getCarriedItems().hasCatalogID(ItemId.MAP.id(), Optional.of(false))) {
-						Functions.mes(p, "You give the map to ned");
+						mes(p, "You give the map to ned");
 						say(p, n, "Here it is");
 						p.getCarriedItems().remove(new Item(ItemId.MAP.id()));
 						gave_map = true;
 					} else if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
 						&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
-						Functions.mes(p, "You give the parts of the map to ned");
+						mes(p, "You give the parts of the map to ned");
 						say(p, n, "Here it is");
 						p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_1.id()));
 						p.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_2.id()));

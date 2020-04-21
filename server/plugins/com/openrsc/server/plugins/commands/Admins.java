@@ -29,7 +29,6 @@ import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -40,6 +39,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -1668,7 +1669,7 @@ public final class Admins implements CommandTrigger {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [shooter_id] [victim_id]");
 				return;
 			}
-			Functions.npcattack(n, j);
+			npcattack(n, j);
 		} else if (cmd.equalsIgnoreCase("npcrangedlvl")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc id]");

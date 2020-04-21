@@ -2,12 +2,10 @@ package com.openrsc.server.plugins.npcs.barbarian;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -20,7 +18,7 @@ public class Barbarians implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
-		Functions.say(p, n, "Hello");
+		say(p, n, "Hello");
 		int randomDiag = DataConversions.random(0, 10);
 		if (randomDiag == 0) {
 			npcsay(p, n, "Go away",
@@ -32,7 +30,7 @@ public class Barbarians implements TalkNpcTrigger {
 			n.startCombat(p);
 		} else if (randomDiag == 3) {
 			npcsay(p, n, "Who are you?");
-			Functions.say(p, n, "I'm a bold adventurer");
+			say(p, n, "I'm a bold adventurer");
 			npcsay(p, n, "You don't look very strong");
 		} else if (randomDiag == 4) {
 			p.message("The barbarian grunts");

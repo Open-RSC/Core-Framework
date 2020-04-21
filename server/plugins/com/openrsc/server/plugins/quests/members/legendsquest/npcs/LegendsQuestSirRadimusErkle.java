@@ -7,18 +7,13 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.incQuestReward;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigger, UseNpcTrigger {
 
@@ -100,7 +95,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							npcsay(p, n, "You can choose " + getRewardClaimCount(p) + " areas to increase your abilities in.");
 							radimusInGuildDialogue(p, n, RadimusInGuild.SKILL_MENU_ONE);
 						} else if (menu == 1) {
-							Functions.say(p, n, "No, I've got something else to do at the moment.");
+							say(p, n, "No, I've got something else to do at the moment.");
 							npcsay(p, n, "Very well young " + (p.isMale() ? "man" : "lady") + ".",
 								"Return when you are able, but don't leave it too long.",
 								"You'll benefit alot from this training.",
@@ -110,7 +105,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						break;
 					case -1:
 						npcsay(p, n, "Hello there! How are you enjoying the Legends Guild?");
-						Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus looks busy...");
+						mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus looks busy...");
 						npcsay(p, n, "Excuse me a moment won't you.",
 							"Do feel free to explore the rest of the building.");
 						break;
@@ -118,7 +113,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 			}
 			switch (cID) {
 				case RadimusInGuild.SKILL_MENU_ONE:
-					int menu_one = Functions.multi(p,
+					int menu_one = multi(p,
 						"* Attack *",
 						"* Defense * ",
 						"* Strength * ",
@@ -134,7 +129,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					}
 					break;
 				case RadimusInGuild.SKILL_MENU_TWO:
-					int menu_two = Functions.multi(p,
+					int menu_two = multi(p,
 						"* Hits * ",
 						"* Prayer * ",
 						"* Magic *",
@@ -150,7 +145,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					}
 					break;
 				case RadimusInGuild.SKILL_MENU_THREE:
-					int menu_three = Functions.multi(p,
+					int menu_three = multi(p,
 						"* Woodcutting * ",
 						"* Crafting * ",
 						"* Smithing * ",
@@ -166,7 +161,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					}
 					break;
 				case RadimusInGuild.SKILL_MENU_FOUR:
-					int menu_four = Functions.multi(p,
+					int menu_four = multi(p,
 						"* Herblaw *",
 						"* Agility *",
 						"* Thieving *",
@@ -233,13 +228,13 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							"Who are you?");
 						if (menu == 0) {
 							/* START LEGENDS QUEST */
-							Functions.say(p, n, "Yes actually, what's involved ?");
+							say(p, n, "Yes actually, what's involved ?");
 							radimusInHouseDialogue(p, n, RadimusInHouse.WHATS_INVOLVED);
 						} else if (menu == 1) {
-							Functions.say(p, n, "Maybe some other time.");
+							say(p, n, "Maybe some other time.");
 							radimusInHouseDialogue(p, n, RadimusInHouse.MAYBE_SOME_OTHER_TIME);
 						} else if (menu == 2) {
-							Functions.say(p, n, "Who are you?");
+							say(p, n, "Who are you?");
 							radimusInHouseDialogue(p, n, RadimusInHouse.WHO_ARE_YOU);
 						}
 						break;
@@ -268,7 +263,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						break;
 					case -1:
 						npcsay(p, n, "Hello there! How are you enjoying the Legends Guild?");
-						Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus looks busy...");
+						mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus looks busy...");
 						npcsay(p, n, "Excuse me a moment won't you.",
 							"Do feel free to explore the rest of the building.");
 						break;
@@ -283,7 +278,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"in order to get a gift or token of friendship.",
 						"We want to display it in the Legends Guild Main hall.",
 						"Are you interested in this quest?");
-					int questMenu = Functions.multi(p, n,
+					int questMenu = multi(p, n,
 						"Yes, it sounds great!",
 						"Not just at the moment.");
 					if (questMenu == 0) {
@@ -296,7 +291,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							"It's towards the southern most part of Karamja.",
 							"You'll need additional papyrus and charcoal to complete the map.",
 							"There are three different sectors of the Kharazi jungle to map.");
-						Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus shuffles around the back of his desk.");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus shuffles around the back of his desk.");
 						npcsay(p, n, "It is likely to be very tough going.",
 							"You'll need an axe and a machette to cut through ",
 							"the dense Kharazi jungle,collect a machette from the ",
@@ -318,15 +313,15 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"Yes actually, what's involved?",
 						"Maybe some other time.");
 					if (opt == 0) {
-						Functions.say(p, n, "Yes actually, what's involved ?");
+						say(p, n, "Yes actually, what's involved ?");
 						radimusInHouseDialogue(p, n, RadimusInHouse.WHATS_INVOLVED);
 					} else if (opt == 1) {
-						Functions.say(p, n, "Maybe some other time.");
+						say(p, n, "Maybe some other time.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.MAYBE_SOME_OTHER_TIME);
 					}
 					break;
 				case RadimusInHouse.SAME_MENU_HAS_SCROLLS:
-					int option = Functions.multi(p, n,
+					int option = multi(p, n,
 						"It's Ok, but I have forgotten what to do.",
 						"I need another machete.",
 						"I've run out of Charcoal.",
@@ -352,19 +347,19 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"I've run out of Charcoal.",
 						"I've run out of Papyrus.");
 					if (myMenu == 0) {
-						Functions.say(p, n, "Terrible, I lost my map of the Kharazi Jungle.");
+						say(p, n, "Terrible, I lost my map of the Kharazi Jungle.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.LOST_KHARAZI_JUNGLE_MAP);
 					} else if (myMenu == 1) {
-						Functions.say(p, n, "It's Ok, but I have forgotten what to do.");
+						say(p, n, "It's Ok, but I have forgotten what to do.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.FORGOTTEN_WHAT_TO_DO);
 					} else if (myMenu == 2) {
-						Functions.say(p, n, "I need another machete.");
+						say(p, n, "I need another machete.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.ANOTHER_MACHETE);
 					} else if (myMenu == 3) {
-						Functions.say(p, n, "I've run out of Charcoal.");
+						say(p, n, "I've run out of Charcoal.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.CHARCOAL);
 					} else if (myMenu == 4) {
-						Functions.say(p, n, "I've run out of Papyrus.");
+						say(p, n, "I've run out of Papyrus.");
 						radimusInHouseDialogue(p, n, RadimusInHouse.PAPYRUS);
 					}
 					break;
@@ -395,7 +390,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				case RadimusInHouse.CHARCOAL:
 					npcsay(p, n, "Well, get some more!",
 						"Be proactive and get some more from somewhere.");
-					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Sir Radimus mutters under his breath.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Sir Radimus mutters under his breath.");
 					npcsay(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some charcoal!");
 					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
@@ -408,7 +403,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				case RadimusInHouse.PAPYRUS:
 					npcsay(p, n, "Well, get some more!",
 						"Be proactive and try to find some!");
-					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Sir Radimus mutters under his breath.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Sir Radimus mutters under his breath.");
 					npcsay(p, n, "It's hardly legendary if you fail a quest",
 						"because you can't find some papyrus!");
 					if (p.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS.id(), Optional.of(false))
@@ -429,9 +424,9 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				case RadimusInHouse.LOST_KHARAZI_JUNGLE_MAP:
 					npcsay(p, n, "That is awful, well, luckily I have a copy here.",
 						"But I need to charge you a copy fee of 30 gold pieces.");
-					if (Functions.ifheld(p, ItemId.COINS.id(), 30)) {
+					if (ifheld(p, ItemId.COINS.id(), 30)) {
 						npcsay(p, n, "Do you agree to pay?");
-						int pay = Functions.multi(p, n,
+						int pay = multi(p, n,
 							"Yes, I'll pay for it.",
 							"No, I won't pay for it.");
 						if (pay == 0) {
@@ -473,7 +468,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					npcsay(p, n, "However, I need you to complete the map of the ,",
 						"Kharazi Jungle before your quest is complete.");
 				} else {
-					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus Erkle orders some guards to take the totem pole,",
+					mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Radimus Erkle orders some guards to take the totem pole,",
 						"into the main Legends Hall.");
 					p.getCarriedItems().remove(new Item(item.getCatalogId()));
 					npcsay(p, n, "That will take pride of place in the Legends Guild ",

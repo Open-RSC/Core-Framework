@@ -5,7 +5,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -14,17 +13,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
-import static com.openrsc.server.plugins.Functions.ifheld;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.thinkbubble;
-import static com.openrsc.server.plugins.Functions.delay;
-import static com.openrsc.server.plugins.Functions.addnpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigger {
 
@@ -189,7 +178,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 						return;
 					}
 				}
-				Functions.thinkbubble(p, new Item(ItemId.ROCK_PICK.id()));
+				thinkbubble(p, new Item(ItemId.ROCK_PICK.id()));
 				p.incExp(Skills.MINING, 70, true);
 				mes(p, "You dig through the earth");
 				delay(1500);
@@ -206,7 +195,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 	private void trowelOnSite(Player p, Item item, GameObject obj) {
 		if (item.getCatalogId() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(p)) {
-				Functions.thinkbubble(p, new Item(ItemId.TROWEL.id()));
+				thinkbubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 50, true);
 				mes(p, "You dig with the trowel...");
 				delay(1500);
@@ -229,7 +218,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					if (workman != null) {
 						npcsay(p, workman, "Hey, where are your gloves ?");
 						npcWalkFromPlayer(p, workman);
-						Functions.say(p, workman, "Err...I haven't got any");
+						say(p, workman, "Err...I haven't got any");
 						npcsay(p, workman, "Well get some and put them on first!");
 						workman.remove();
 					}
@@ -252,7 +241,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 						return;
 					}
 				}
-				Functions.thinkbubble(p, new Item(ItemId.TROWEL.id()));
+				thinkbubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 60, true);
 				mes(p, "You dig through the earth");
 				delay(1500);
@@ -281,7 +270,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 						npcsay(p, workman, "Ahem! I don't see your sample jar");
 						npcWalkFromPlayer(p, workman);
 						npcsay(p, workman, "You must carry one to be able to dig here...");
-						Functions.say(p, workman, "Oh, okay");
+						say(p, workman, "Oh, okay");
 						workman.remove();
 					} else {
 						p.message("You need a sample jar to dig here");
@@ -312,7 +301,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					}
 					return;
 				}
-				Functions.thinkbubble(p, new Item(ItemId.TROWEL.id()));
+				thinkbubble(p, new Item(ItemId.TROWEL.id()));
 				p.incExp(Skills.MINING, 80, true);
 				mes(p, "You dig through the earth");
 				delay(1500);
@@ -349,7 +338,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					rockPickOnSite(p, item, obj);
 					break;
 				case PANNING_TRAY:
-					Functions.say(p, null, "No I'd better not - it may damage the tray...");
+					say(p, null, "No I'd better not - it may damage the tray...");
 					break;
 				default:
 					p.message("Nothing interesting happens");
@@ -373,7 +362,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 		if (inArray(obj.getID(), SOIL)) {
 			p.playerServerMessage(MessageType.QUEST, "You examine the patch of soil");
 			p.message("You see nothing on the surface");
-			Functions.say(p, null, "I think I need something to dig with");
+			say(p, null, "I think I need something to dig with");
 		}
 	}
 

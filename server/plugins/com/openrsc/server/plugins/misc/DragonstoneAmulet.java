@@ -6,7 +6,6 @@ import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
@@ -43,7 +42,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				return;
 			}
 			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				Functions.mes(p, "You can't teleport while holding Ana,",
+				mes(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
@@ -107,7 +106,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 						interrupt();
 				}
 			});
-			Functions.mes(p, "You feel more power emanating from it than before",
+			mes(p, "You feel more power emanating from it than before",
 				"you can now rub this amulet to teleport",
 				"Though using it to much means you will need to recharge it");
 			p.message("It now also means you can find more gems when mining");

@@ -2,7 +2,8 @@ package com.openrsc.server.plugins.menu;
 
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
+
+import static  com.openrsc.server.plugins.Functions.*;
 
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class Menu {
 			if (player.getInteractingNpc() != null)
 				player.getInteractingNpc().setBusyTimer(3000);
 
-			Functions.delay(1);
+			delay(1);
 		}
 
 		doReply(player);
@@ -81,7 +82,7 @@ public class Menu {
 		if(i >= 0 && i <= options.size()) {
 			Option option = options.get(i);
 			if (option != null) {
-				Functions.say(player, player.getInteractingNpc(), option.getOption());
+				say(player, player.getInteractingNpc(), option.getOption());
 				option.action();
 			}
 		}

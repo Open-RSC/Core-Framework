@@ -8,8 +8,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.skills.mining.Mining;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class RawEssence implements OpLocTrigger {
 	@Override

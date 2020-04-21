@@ -89,21 +89,21 @@ public class AchievementSystem {
 
 	/*public static void triggerTask(Player p, Entity e, Achievement quest) {
 		if (!playerStartedQuest(p, quest)) {
-			Functions.message(p, "Would you like to start the quest: @cya@" + quest.getName());
-			int option = Functions.showMenu(p, (Npc) e, "Yes", "No thanks");
+			mes(p, "Would you like to start the quest: @cya@" + quest.getName());
+			int option = showMenu(p, (Npc) e, "Yes", "No thanks");
 			if (option == 0) {
 				setQuestStage(p, quest, ACHIEVEMENT_STARTED);
 			}
 		} else if (e.getID() == quest.getEndID()) {
 			if (playerCanFinishQuest(p, quest)) {
 				if (e.isNpc()) {
-					Functions.npcTalk(p, (Npc) e, quest.getEndQuestDialogue().split(";"));
+					npcTalk(p, (Npc) e, quest.getEndQuestDialogue().split(";"));
 				} else {
-					Functions.message(p, quest.getEndQuestDialogue().split(";"));
+					mes(p, quest.getEndQuestDialogue().split(";"));
 				}
 				for (AchievementTask tasks : quest.getTasks()) {
 					if (tasks.getTask() == TaskType.GATHER_ITEM) {
-						Functions.removeItem(p, tasks.getId(), tasks.getAmount());
+						removeItem(p, tasks.getId(), tasks.getAmount());
 					}
 				}
 
@@ -160,7 +160,7 @@ public class AchievementSystem {
 				if (hasItemRewards) {
 					int chosenItemReward = p.getAttribute("simpletask[" + quest.getId() + "]_reward_item", (int) -1);
 					AchievementReward rewardItem = quest.getRewards().get(chosenItemReward);
-					Functions.addItem(p, rewardItem.getId(), rewardItem.getAmount());
+					addItem(p, rewardItem.getId(), rewardItem.getAmount());
 				}
 				if (hasExpRewards) {
 					int chosenXpReward = p.getAttribute("simpletask[" + quest.getId() + "]_reward_xp", (int) -1);
@@ -173,13 +173,13 @@ public class AchievementSystem {
 						if (reward.getRewardType() == TaskReward.EXPERIENCE) {
 							p.message("This quest rewards " + "(" + reward.getAmount() + " of "
 									+ Formulae.statArray[reward.getId()] + " xp), do you accept this reward?");
-							int wantXP = Functions.showMenu(p, (Npc) e, "Yes ( " + reward.getAmount() + " of "
+							int wantXP = showMenu(p, (Npc) e, "Yes ( " + reward.getAmount() + " of "
 									+ Formulae.statArray[reward.getId()] + " xp)", "No thanks");
 							if (wantXP == 0) {
 								p.incExp1x(reward.getId(), reward.getAmount());
 							}
 						} else if (reward.getRewardType() == TaskReward.ITEM) {
-							Functions.addItem(p, reward.getId(), reward.getAmount());
+							addItem(p, reward.getId(), reward.getAmount());
 						}
 					}
 				}
@@ -190,9 +190,9 @@ public class AchievementSystem {
 				p.message("@gre@Congratulations you have completed " + quest.getName() + " quest");
 			} else {
 				if (e.isNpc()) {
-					Functions.npcTalk(p, (Npc) e, quest.getDuringQuestDialogue().split(";"));
+					npcTalk(p, (Npc) e, quest.getDuringQuestDialogue().split(";"));
 				} else {
-					Functions.message(p, quest.getDuringQuestDialogue().split(";"));
+					message(p, quest.getDuringQuestDialogue().split(";"));
 				}
 				ActionSender.sendBox(p, getTaskProgressText(p, quest.getId()), false);
 			}

@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
@@ -75,7 +74,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("The ship comes to a stop");
 				p.teleport(456, 520, false);
-				Functions.mes(p, "You sneak out of the ship");
+				mes(p, "You sneak out of the ship");
 			}
 		} else if (obj.getID() == 291) {
 			p.message("there are buckets in this crate");
@@ -87,7 +86,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				give(p, ItemId.BUCKET.id(), 1);
 			}
 		} else if (obj.getID() == 296) {
-			Functions.mes(p,
+			mes(p,
 				"You find a small inscription at the bottom of the altar",
 				"It reads Snarthon Candtrick Termanto");
 			if (!p.getCache().hasKey("magic_words")) {
@@ -190,15 +189,15 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == 294) {
 			if (item.getCatalogId() == ItemId.INSECT_REPELLANT.id()) {
-				Functions.mes(p, "you squirt insect repellant on the beehive",
+				mes(p, "you squirt insect repellant on the beehive",
 					"You see bees leaving the hive");
 				if (!p.getCache().hasKey("squirt")) {
 					p.getCache().store("squirt", true);
 				}
 			} else if (item.getCatalogId() == ItemId.BUCKET.id()) {
-				Functions.mes(p, "You try to get some wax from the beehive");
+				mes(p, "You try to get some wax from the beehive");
 				if (p.getCache().hasKey("squirt")) {
-					Functions.mes(p, "You get some wax from the hive",
+					mes(p, "You get some wax from the hive",
 						"The bees fly back to the hive as the repellant wears off");
 					p.getCarriedItems().remove(new Item(ItemId.BUCKET.id()));
 					give(p, ItemId.WAX_BUCKET.id(), 1);
@@ -210,7 +209,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			}
 		} else if (obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id()) {
 			if (p.getQuestStage(this) == 4) {
-				Functions.mes(p, "The crystal shatters");
+				mes(p, "The crystal shatters");
 				p.getWorld().unregisterGameObject(obj);
 				p.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
 				Npc merlin = ifnearvisnpc(p, NpcId.MERLIN_CRYSTAL.id(), 5);
@@ -258,7 +257,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 							doDoor(obj, p);
 							beggar.remove();
 						} else {
-							Functions.mes(p, "You give the bread to the beggar");
+							mes(p, "You give the bread to the beggar");
 							p.getCarriedItems().remove(new Item(ItemId.BREAD.id()));
 							npcsay(p, beggar, "Thankyou very much");
 							if (p.getCache().hasKey("lady_test")) {

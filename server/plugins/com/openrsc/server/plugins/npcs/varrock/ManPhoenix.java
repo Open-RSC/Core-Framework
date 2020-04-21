@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
@@ -89,22 +88,22 @@ public class ManPhoenix implements
 				"Ah well",
 				"Have this spare");
 			give(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
-			Functions.mes(p, "Straven hands you a key");
+			mes(p, "Straven hands you a key");
 		} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p))
 			|| (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
 			npcsay(p, n, "Hows your little mission going?");
 			if (p.getCarriedItems().hasCatalogID(ItemId.SCROLL.id())) {
 				say(p, n, "I have the intelligence report");
 				npcsay(p, n, "Lets see it then");
-				Functions.mes(p, "You hand over the report");
+				mes(p, "You hand over the report");
 				p.getCarriedItems().remove(new Item(ItemId.SCROLL.id()));
-				Functions.mes(p, "The man reads the report");
+				mes(p, "The man reads the report");
 				npcsay(p, n, "Yes this is very good",
 					"Ok you can join the phoenix gang",
 					"I am Straven, one of the gang leaders");
 				say(p, n, "Nice to meet you");
 				npcsay(p, n, "Here is a key");
-				Functions.mes(p, "Straven hands you a key");
+				mes(p, "Straven hands you a key");
 				give(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 				npcsay(p, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");

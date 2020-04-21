@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -73,11 +72,11 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"It'll cost you 10 coins");
 			if (ifheld(p, ItemId.COINS.id(), 10)) {
 				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
-				Functions.mes(p, "You buy a pint of Olde Suspiciouse",
+				mes(p, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");
 				drinkAle(p);
-				Functions.mes(p, "The bartender signs your card");
+				mes(p, "The bartender signs your card");
 				p.getCache().store("barone", true);
 				say(p, n, "Thanksh very mush");
 			} else {

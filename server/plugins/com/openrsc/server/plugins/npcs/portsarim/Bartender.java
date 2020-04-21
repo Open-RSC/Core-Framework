@@ -6,7 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -80,7 +79,7 @@ public class Bartender implements TalkNpcTrigger {
 						"Ok one black skull ale coming up, 8 coins please");
 					if (ifheld(p, ItemId.COINS.id(), 8)) {
 						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 8));
-						Functions.mes(p, "You buy a black skull ale",
+						mes(p, "You buy a black skull ale",
 							"You drink your black skull ale",
 							"Your vision blurs",
 							"The bartender signs your card");

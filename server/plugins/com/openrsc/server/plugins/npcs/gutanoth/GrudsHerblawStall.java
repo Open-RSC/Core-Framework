@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GrudsHerblawStall implements ShopInterface,
 	TalkNpcTrigger {
@@ -24,7 +22,7 @@ public class GrudsHerblawStall implements ShopInterface,
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		npcsay(p, n, "Does The little creature want to buy sumfin'");
-		int menu = Functions.multi(p, n,
+		int menu = multi(p, n,
 			"Yes I do",
 			"No I don't");
 		if (menu == 0) {

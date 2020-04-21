@@ -2,11 +2,9 @@ package com.openrsc.server.plugins.npcs.yanille;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -21,7 +19,7 @@ public class SigbertTheAdventurer implements TalkNpcTrigger {
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id()) {
 			npcsay(p, n, "I'd be very careful going up there friend");
-			int menu = Functions.multi(p, n,
+			int menu = multi(p, n,
 				"Why what's up there?",
 				"Fear not I am very strong");
 			if (menu == 0) {

@@ -2,11 +2,9 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -19,7 +17,7 @@ public class CommunityInstructor implements TalkNpcTrigger {
 		npcsay(p, n, "You're almost ready to go out into the main game area",
 			"When you get out there",
 			"You will be able to interact with thousands of other players");
-		int menu = Functions.multi(p, n, "How can I communicate with other players?", "Are there rules on ingame behaviour?");
+		int menu = multi(p, n, "How can I communicate with other players?", "Are there rules on ingame behaviour?");
 		if (menu == 0) {
 			communicateDialogue(p, n);
 		} else if (menu == 1) {
@@ -37,7 +35,7 @@ public class CommunityInstructor implements TalkNpcTrigger {
 			"their name will go green",
 			"If they are logged in on a different world their name will go yellow",
 			"clicking on their name will allow you to send a message");
-		int menu2 = Functions.multi(p, n, "Are there rules on ingame behaviour?", "goodbye then");
+		int menu2 = multi(p, n, "Are there rules on ingame behaviour?", "goodbye then");
 		if (menu2 == 0) {
 			behaviourDialogue(p, n);
 		} else if (menu2 == 1) {
@@ -56,7 +54,7 @@ public class CommunityInstructor implements TalkNpcTrigger {
 			"With real feelings",
 			"If you go round being abusive or causing trouble",
 			"your character could quickly be the one in trouble");
-		int menu3 = Functions.multi(p, n, "How can I communicate with other players?", "goodbye then");
+		int menu3 = multi(p, n, "How can I communicate with other players?", "goodbye then");
 		if (menu3 == 0) {
 			communicateDialogue(p, n);
 		} else if (menu3 == 1) {

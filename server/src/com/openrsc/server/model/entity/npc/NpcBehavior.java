@@ -17,7 +17,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-//import static com.openrsc.server.plugins.Functions.showBubbleNpc;
 
 public class NpcBehavior {
 

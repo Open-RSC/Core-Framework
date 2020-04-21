@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -326,7 +325,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				// castle.
 				p.teleport(490, 651, false);
 			} else {
-				Functions.mes(p, "The whistle makes no noise",
+				mes(p, "The whistle makes no noise",
 					"It will not work in this location");
 			}
 		}
@@ -390,7 +389,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924) {
-			Functions.mes(p, "You feel that the grail shouldn't be moved",
+			mes(p, "You feel that the grail shouldn't be moved",
 				"You must complete some task here before you are worthy");
 		}
 	}
@@ -409,7 +408,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == 408) {
 			if (p.getQuestStage(this) == 4) {
-				Functions.mes(p, "You hear muffled noises from the sack");
+				mes(p, "You hear muffled noises from the sack");
 				p.message("You open the sack");
 				Npc percival = addnpc(p.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
 				npcsay(p, percival, "Wow thankyou",
@@ -470,7 +469,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		say(p, percival,
 			"Well I do have the means to get us there - a magic whistle");
 		if (p.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
-			Functions.mes(p, "You give a whistle to Sir Percival",
+			mes(p, "You give a whistle to Sir Percival",
 				"You tell sir Percival what to do with the whistle");
 			p.getCarriedItems().remove(new Item(ItemId.MAGIC_WHISTLE.id()));
 			npcsay(p, percival, "Ok I will see you there then");

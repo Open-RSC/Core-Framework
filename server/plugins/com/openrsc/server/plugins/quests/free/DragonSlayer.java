@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -227,7 +226,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					npcsay(p, n, "You will need this to get in");
 					npcsay(p, n,
 						"This is the key to the front entrance to the maze");
-					Functions.mes(p, "Oziach hands you a key");
+					mes(p, "Oziach hands you a key");
 					give(p, ItemId.MAZE_KEY.id(), 1);
 				}
 				int menu = multi(p, n, "Where can I get an antidragon shield?",

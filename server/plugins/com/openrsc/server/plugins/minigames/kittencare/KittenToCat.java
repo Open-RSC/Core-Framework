@@ -6,7 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -66,7 +65,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
-			Functions.mes(p, "you softly stroke the kitten",
+			mes(p, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
 			mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "the kitten appreciates the attention");
 
@@ -77,12 +76,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	public void entertainCat(Item item, Player p, boolean isGrown) {
 		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
-				Functions.mes(p, "your kitten plays around with the ball of wool",
+				mes(p, "your kitten plays around with the ball of wool",
 						"it seems to love pouncing on it");
 
 				reduceKittensLoneliness(p);
 			} else {
-				Functions.mes(p, "your cat plays around with the wool",
+				mes(p, "your cat plays around with the wool",
 						"it seems to be enjoying itself");
 			}
 		}
@@ -94,10 +93,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case MILK:
 			p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
 			if(!isGrown) {
-				Functions.mes(p, "you give the kitten the milk",
+				mes(p, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
 			} else {
-				Functions.mes(p, "you give the cat the milk",
+				mes(p, "you give the cat the milk",
 						"the kitten quickly laps it up then licks his paws");
 			}
 			feeded = true;
@@ -115,10 +114,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case TUNA:
 			p.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if(!isGrown) {
-				Functions.mes(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
+				mes(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
 			} else {
-				Functions.mes(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
+				mes(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
 						"it quickly eat's them up and licks its paws");
 			}
 			feeded = true;

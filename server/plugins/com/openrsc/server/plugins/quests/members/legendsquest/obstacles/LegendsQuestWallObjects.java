@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestUngadulu;
@@ -119,7 +118,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 				return;
 			} else {
 				if (click == TOUCH) {
-					Functions.mes(p, "You walk blindly into the intense heat of the supernatural flames.");
+					mes(p, "You walk blindly into the intense heat of the supernatural flames.");
 					if (DataConversions.random(0, 9) <= 3) {
 						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The heat is so intense that it burns you.");
 						p.damage((int) Math.ceil((double) p.getSkills().getLevel(Skills.HITS) / 10 + 1));

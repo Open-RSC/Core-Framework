@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DavonShop implements ShopInterface, TalkNpcTrigger {
 
@@ -23,7 +21,7 @@ public class DavonShop implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		npcsay(p, n, "Pssst come here if you want to do some amulet trading");
-		int menu = Functions.multi(p, n, "What are you selling?", "What do you mean pssst?", "Why don't you ever restock some types of amulets?");
+		int menu = multi(p, n, "What are you selling?", "What do you mean pssst?", "Why don't you ever restock some types of amulets?");
 		if (menu == 0) {
 			p.message("Davon opens up his jacket to reveal some amulets");
 			p.setAccessingShop(shop);

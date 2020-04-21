@@ -4,7 +4,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class UndergroundPassDemons implements KillNpcTrigger {
 				teleportPlayer(p, n);
 			} else {
 				teleportPlayer(p, n);
-				Functions.mes(p, "the demon slumps to the floor");
+				mes(p, "the demon slumps to the floor");
 				if (!p.getCarriedItems().hasCatalogID(n.getID() + 364, Optional.empty())) {
 					p.message("around it's neck you find a strange looking amulet");
 					give(p, n.getID() + 364, 1); // will give correct ammys for all.

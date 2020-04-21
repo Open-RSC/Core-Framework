@@ -9,12 +9,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class ZekeScimitars implements ShopInterface,
 	TalkNpcTrigger {
@@ -58,7 +56,7 @@ public final class ZekeScimitars implements ShopInterface,
 			};
 		}
 
-		int option = Functions.multi(p, n, options);
+		int option = multi(p, n, options);
 		if (option == 0) {
 			npcsay(p, n, "Yes, certainly", "I deal in scimitars");
 			p.setAccessingShop(shop);

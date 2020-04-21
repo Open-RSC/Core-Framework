@@ -10,7 +10,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -73,7 +72,7 @@ public class Fishing implements OpLocTrigger {
 			}
 		}
 		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
-			Functions.mes(player, "that's enough fishing for now",
+			mes(player, "that's enough fishing for now",
 					"go through the next door to continue the tutorial");
 			return;
 		}

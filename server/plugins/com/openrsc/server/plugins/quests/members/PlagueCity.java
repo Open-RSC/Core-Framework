@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -137,7 +136,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						"Oh for one of Trudi's hangover cures");
 					if (p.getCarriedItems().hasCatalogID(ItemId.HANGOVER_CURE.id(), Optional.of(false))) {
 						say(p, n, "Try this");
-						Functions.mes(p, "You give Bravek the hangover cure",
+						mes(p, "You give Bravek the hangover cure",
 							"Bravek gulps down the foul looking liquid");
 						p.getCarriedItems().remove(new Item(ItemId.HANGOVER_CURE.id()));
 						npcsay(p,
@@ -432,7 +431,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						"but i need some dwellberries to finish it");
 					if (p.getCarriedItems().hasCatalogID(ItemId.DWELLBERRIES.id(), Optional.of(false))) {
 						say(p, n, "yes I've got some here");
-						Functions.mes(p, "you give the dwellberries to alrena",
+						mes(p, "you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
 							"she then smears the paste over a strange mask");
 						p.getCarriedItems().remove(new Item(ItemId.DWELLBERRIES.id()));
@@ -632,7 +631,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 				case 4:
 					say(p, n,
 						"I've tied the other end of this rope to the grill");
-					Functions.mes(p, "Edmond gets a good grip on the rope",
+					mes(p, "Edmond gets a good grip on the rope",
 						"together you tug the rope",
 						"you hear a clunk as you both fly backwards");
 					npcsay(p, n, "that's done the job",
@@ -778,14 +777,14 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 			if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				if (p.getQuestStage(getQuestId()) == 2) {
 					if (BUCKETS_USED >= 3) {
-						Functions.mes(p, "you poor the water onto the soil",
+						mes(p, "you poor the water onto the soil",
 							"the soil softens slightly",
 							"the soil is soft enough to dig into");
 						if (!p.getCache().hasKey("soil_soften")) {
 							p.getCache().store("soil_soften", true);
 						}
 					} else {
-						Functions.mes(p, "you poor the water onto the soil",
+						mes(p, "you poor the water onto the soil",
 							"the soil softens slightly");
 					}
 					p.getCarriedItems().getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
@@ -797,7 +796,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 			if (item.getCatalogId() == ItemId.SPADE.id()) {
 				if (p.getCache().hasKey("soil_soften") || p.getQuestStage(getQuestId()) >= 3
 					|| p.getQuestStage(getQuestId()) == -1) {
-					Functions.mes(p, "you dig deep into the soft soil",
+					mes(p, "you dig deep into the soft soil",
 						"Suddenly it crumbles away", "you fall through",
 						"and land in the sewer");
 					p.teleport(621, 3414, false);
@@ -809,7 +808,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						p.updateQuestStage(getQuestId(), 3);
 					}
 				} else {
-					Functions.mes(p, "you dig the soil", "The ground is rather hard");
+					mes(p, "you dig the soil", "The ground is rather hard");
 				}
 			}
 		}

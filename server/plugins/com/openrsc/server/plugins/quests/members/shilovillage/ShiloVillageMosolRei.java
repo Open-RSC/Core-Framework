@@ -4,7 +4,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -82,7 +81,7 @@ public class ShiloVillageMosolRei implements TalkNpcTrigger {
 									 */
 									p.updateQuestStage(Quests.SHILO_VILLAGE, 1);
 								} else if (menu4 == 1) {
-									Functions.mes(p, "Mosol casts a disaproving glance at you");
+									mes(p, "Mosol casts a disaproving glance at you");
 									npcsay(p, n, "Quite right, bwana, please make all haste!",
 										"Before your spine turns to water as we speak.");
 								}
@@ -135,9 +134,9 @@ public class ShiloVillageMosolRei implements TalkNpcTrigger {
 								if (sub_opt2 == 0) {
 									npcsay(p, n, "Ok, perhaps you'd like to be on your way now?");
 								} else if (sub_opt2 == 1) {
-									Functions.mes(p, "Mosol lowers his brows in deep concentration");
+									mes(p, "Mosol lowers his brows in deep concentration");
 									npcsay(p, n, "Well, let me have a think?");
-									Functions.mes(p, "He scratches his head.");
+									mes(p, "He scratches his head.");
 									npcsay(p, n, "Hmmm, there was something I think that might help...",
 										"No, sorry, it's gone.");
 									int sub_opt3 = multi(p, n,

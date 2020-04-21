@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -282,7 +281,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 							}
 						} else {
 							npcsay(p, n, "You're a hero?, I've never heard of you");
-							Functions.mes(p, "You need to have 55 quest points to file for an application",
+							mes(p, "You need to have 55 quest points to file for an application",
 								"You also need to have completed the following quests",
 								"The shield of arrav, the lost city",
 								"Merlin's crystal and dragon slayer\"");
@@ -591,7 +590,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			} else {
 				if (!p.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.empty())) {
 					give(p, ItemId.CANDLESTICK.id(), 2);
-					Functions.mes(p, "You find two candlesticks in the chest",
+					mes(p, "You find two candlesticks in the chest",
 						"So that will be one for you",
 						"And one to the person who killed grip for you");
 					if (p.getQuestStage(this) == 1) {

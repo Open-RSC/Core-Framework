@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -96,7 +95,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			// quest completed
 			case -1:
 				if (!isDirectTalk) {
-					Functions.mes(p, "you have already won the fishing competition");
+					mes(p, "you have already won the fishing competition");
 				} else {
 					npcsay(p, n, "Hello champ",
 						"So any hints on how to fish so well");
@@ -182,7 +181,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 							p.getCache().store("paid_contest_fee", true);
 
 						} else {
-							Functions.mes(p, "I don't have the 5gp though");
+							mes(p, "I don't have the 5gp though");
 							npcsay(p, n, "No pay, no play");
 						}
 					} else if (first == 1) {
@@ -203,7 +202,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 		npcsay(p, n, "Okay folks times up",
 			"Lets see who caught the biggest fish");
-		Functions.mes(p, "You hand over your catch");
+		mes(p, "You hand over your catch");
 		for (String aCatch : catches) {
 			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && p.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
 			p.getCarriedItems().remove(new Item(Integer.valueOf(aCatch)));
@@ -453,7 +452,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				npcsay(p, n, "Well done, so where is the trophy?");
 				if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 					say(p, n, "I have it right here");
-					Functions.mes(p, "you give the trophy to the dwarf");
+					mes(p, "you give the trophy to the dwarf");
 					p.getCarriedItems().remove(new Item(ItemId.HEMENSTER_FISHING_TROPHY.id()));
 					npcsay(p, n, "Okay we will let you in now");
 					p.sendQuestComplete(Quests.FISHING_CONTEST);
@@ -474,7 +473,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 		if (obj.getID() == 355 && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
-			Functions.mes(player, "you dig in amoungst the vines",
+			mes(player, "you dig in amoungst the vines",
 				"You find a red vine worm");
 			give(player, ItemId.RED_VINE_WORMS.id(), 1);
 		}
@@ -484,7 +483,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
-			Functions.mes(player, "You stash the garlic in the pipe");
+			mes(player, "You stash the garlic in the pipe");
 			player.getCarriedItems().remove(new Item(ItemId.GARLIC.id()));
 			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
 				npcsay(player, sinister,
@@ -513,7 +512,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				if (morris != null) {
 					npcsay(p, morris, "competition pass please");
 					if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_COMPETITION_PASS.id(), Optional.of(false))) {
-						Functions.mes(p, "You show Morris your pass");
+						mes(p, "You show Morris your pass");
 						npcsay(p, morris, "Move on through");
 						doGate(p, obj, 357);
 					} else {

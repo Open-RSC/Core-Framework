@@ -6,8 +6,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.checkAndRemoveBlurberry;
-import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DrinkHeating implements UseLocTrigger {
 

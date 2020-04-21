@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -77,7 +76,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == TENT_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
-				Functions.mes(p, "You search the chest");
+				mes(p, "You search the chest");
 				p.message("You find some unusual powder inside...");
 				give(p, ItemId.UNIDENTIFIED_POWDER.id(), 1);
 				p.getWorld().registerGameObject(
@@ -102,7 +101,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 		else if (obj.getID() == SPECIMEN_TRAY) {
 			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
 			p.incExp(Skills.MINING, 4, true);
-			Functions.mes(p, "You sift through the earth in the tray");
+			mes(p, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];
 			DigsiteDigAreas.doDigsiteItemMessages(p, chosenItem);
@@ -268,7 +267,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 						p.teleport(22, 3379);
 						p.updateQuestStage(Quests.DIGSITE, 6);
 						p.getCache().remove("brick_ignite");
-						Functions.mes(p, "\"Bang!!!\"");
+						mes(p, "\"Bang!!!\"");
 						say(p, null, "Wow that was a big explosion!",
 							"...What's that noise I can hear ?",
 							"...Sounds like bones moving or something");

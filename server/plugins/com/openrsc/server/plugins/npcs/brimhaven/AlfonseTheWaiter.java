@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -44,7 +43,7 @@ public class AlfonseTheWaiter implements ShopInterface, TalkNpcTrigger {
 			} else if (menu == 2) {
 				npcsay(p, n, "Hmm ask Charlie the cook round the back",
 					"He may have some Gherkins for you");
-				Functions.mes(p, "Alfonse winks");
+				mes(p, "Alfonse winks");
 				p.getCache().store("talked_alf", true);
 				p.getCache().remove("pheonix_alf");
 			}

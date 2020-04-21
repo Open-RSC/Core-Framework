@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -43,7 +42,7 @@ public class DarkMage implements TalkNpcTrigger {
 						p.message("you don't have enough money");
 						say(p, n, "oops, i'm a bit short");
 					} else {
-						Functions.mes(p, "you give the mage 200,000 coins",
+						mes(p, "you give the mage 200,000 coins",
 							"and the staff of iban");
 						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
 						p.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));

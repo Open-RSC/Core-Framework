@@ -14,7 +14,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
@@ -28,11 +27,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.constants.ItemId.THIEVING_CAPE;
 
-public class Thieving extends Functions
-	implements OpLocTrigger, OpNpcTrigger,
-	OpBoundTrigger {
+public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 	private static final String piece_of = "piece of ";
 
@@ -54,7 +52,7 @@ public class Thieving extends Functions
 			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some cake from the " + objectName);
 		else if (stall.equals(Stall.TEA_STALL)) {
 			int chance_player_caught = 60;
-			Npc teaseller = Functions.ifnearvisnpc(player, stall.getOwnerID(), 8);
+			Npc teaseller = ifnearvisnpc(player, stall.getOwnerID(), 8);
 			boolean caught = (chance_player_caught > DataConversions.random(0, 100)) && !teaseller.isBusy();
 			if (caught) {
 				npcsay(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
@@ -79,10 +77,10 @@ public class Thieving extends Functions
 					return;
 				}
 
-				Npc shopkeeper = Functions.ifnearvisnpc(getPlayerOwner(), stall.getOwnerID(), 8);
+				Npc shopkeeper = ifnearvisnpc(getPlayerOwner(), stall.getOwnerID(), 8);
 				Npc guard = null;
 				if (stall.equals(Stall.BAKERS_STALL)) {
-					guard = Thieving.ifnearvisnpc(getPlayerOwner(), 5, NpcId.GUARD_ARDOUGNE.id());
+					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.GUARD_ARDOUGNE.id());
 				} else if (stall.equals(Stall.SILK_STALL) || stall.equals(Stall.FUR_STALL)) {
 					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 				} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL)) {
@@ -93,7 +91,7 @@ public class Thieving extends Functions
 
 				if (shopkeeper != null) {
 					if (canBeSeen(getPlayerOwner().getWorld(), shopkeeper.getX(), shopkeeper.getY(), getPlayerOwner().getX(), getPlayerOwner().getY())) {
-						Functions.npcYell(getPlayerOwner(), shopkeeper, "Hey thats mine");
+						npcYell(getPlayerOwner(), shopkeeper, "Hey thats mine");
 						if (!getPlayerOwner().getCache().hasKey("stolenFrom" + stall.getOwnerID())) {
 							getPlayerOwner().getCache().store("stolenFrom" + stall.getOwnerID(), true);
 						}
@@ -103,7 +101,7 @@ public class Thieving extends Functions
 				}
 				if (guard != null) {
 					if (canBeSeen(getPlayerOwner().getWorld(), guard.getX(), guard.getY(), getPlayerOwner().getX(), getPlayerOwner().getY())) {
-						Functions.npcYell(getPlayerOwner(), guard, "Hey! Get your hands off there!");
+						npcYell(getPlayerOwner(), guard, "Hey! Get your hands off there!");
 						getPlayerOwner().setAttribute("stolenFrom" + stall.getOwnerID(), true);
 						guard.setChasing(getPlayerOwner());
 						getPlayerOwner().setBusy(false);
@@ -244,7 +242,7 @@ public class Thieving extends Functions
 			tempChest.set(new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 			changeloc(obj, tempChest.get());
 		}
-		Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		player.message("You disable the trap");
 
 		mes(player, "You open the chest");

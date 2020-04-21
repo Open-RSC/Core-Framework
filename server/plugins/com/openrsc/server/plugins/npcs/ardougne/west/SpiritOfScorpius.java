@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -54,7 +53,7 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 								"I will bless it for you");
 							p.message("The ghost mutters in a strange voice");
 							p.getCarriedItems().getInventory().replace(ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id(), ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id());
-							Functions.mes(p, "The unholy symbol throbs with power");
+							mes(p, "The unholy symbol throbs with power");
 							npcsay(p, n, "The symbol of our lord has been blessed with power!",
 								"My master calls...");
 						} else {

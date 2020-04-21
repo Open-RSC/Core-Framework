@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.skills.agility;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -52,7 +51,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			}
 			p.setBusy(true);
 			p.message("You squeeze through the pipe");
-			Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (p.getY() <= 551) {
 				teleport(p, 487, 554);
 			} else {

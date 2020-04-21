@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -38,22 +37,22 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 		else if (item.getCatalogId() == ItemId.HOLY_FORCE_SPELL.id()) {
 			Npc n = ifnearvisnpc(p, NpcId.ECHNED_ZEKIN.id(), 5);
 			if (n != null && p.getQuestStage(Quests.LEGENDS_QUEST) == 7) {
-				Functions.mes(p, "You thrust the Holy Force spell in front of the spirit.");
-				Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A bright, holy light streams out from the paper spell.");
+				mes(p, "You thrust the Holy Force spell in front of the spirit.");
+				mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A bright, holy light streams out from the paper spell.");
 				if (p.getCache().hasKey("already_cast_holy_spell")) {
 					npcsay(p, n, "Argghhhhh...not again....!");
 				} else {
 					npcsay(p, n, "Argghhhhh...noooooo!");
 					p.getCache().store("already_cast_holy_spell", true);
 				}
-				Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit lets out an unearthly, blood curdling scream...");
+				mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit lets out an unearthly, blood curdling scream...");
 				int formerNpcX = n.getX();
 				int formerNpcY = n.getY();
 				if (n != null)
 					n.remove();
 				Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
 				if (second_nezikchened != null) {
-					Functions.mes(p, second_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK, "The spell seems to weaken the Demon.");
+					mes(p, second_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK, "The spell seems to weaken the Demon.");
 					second_nezikchened.getSkills().setLevel(Skills.DEFENSE, n.getSkills().getLevel(Skills.DEFENSE) - 5);
 					if (p.getCache().hasKey("ran_from_2nd_nezi")) {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "So you have returned and I am prepared for you now!", p));
@@ -132,7 +131,7 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 						return;
 					}
 					if (p.getCarriedItems().hasCatalogID(ItemId.EMPTY_VIAL.id(), Optional.of(false))) {
-						Functions.mes(p, "The spell is cast perfectly..",
+						mes(p, "The spell is cast perfectly..",
 								"You enchant one of the empty vials.");
 						p.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.ENCHANTED_VIAL.id());
 					} else {
@@ -164,12 +163,12 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player p, Item item1, Item item2) {
-		return Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+		return compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 	}
 
 	@Override
 	public void onUseInv(Player p, Item item1, Item item2) {
-		if (Functions.compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
+		if (compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 			for (int i = 0; i < p.getCarriedItems().getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
 				p.getCarriedItems().remove(new Item(ItemId.YOMMI_TREE_SEED.id()));
 				give(p, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);

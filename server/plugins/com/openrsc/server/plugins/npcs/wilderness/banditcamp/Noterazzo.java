@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Noterazzo implements ShopInterface, TalkNpcTrigger {
 
@@ -32,7 +30,7 @@ public class Noterazzo implements ShopInterface, TalkNpcTrigger {
 		if (n.getID() == NpcId.NOTERAZZO.id()) {
 
 			npcsay(p, n, "Hey wanna trade?, I'll give the best deals you can find");
-			int menu = Functions.multi(p, n, "Yes please", "No thankyou", "How can you afford to give such good deals?");
+			int menu = multi(p, n, "Yes please", "No thankyou", "How can you afford to give such good deals?");
 			if (menu == 0) {
 				p.setAccessingShop(shop);
 				ActionSender.showShop(p, shop);

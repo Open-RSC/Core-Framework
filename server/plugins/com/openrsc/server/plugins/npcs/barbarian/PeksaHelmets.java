@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class PeksaHelmets implements ShopInterface,
 	TalkNpcTrigger {
@@ -42,7 +40,7 @@ public final class PeksaHelmets implements ShopInterface,
 	public void onTalkNpc(final Player p, final Npc n) {
 		npcsay(p, n, "Are you interested in buying or selling a helmet?");
 
-		int option = Functions.multi(p, n, "I could be, yes", "No, I'll pass on that");
+		int option = multi(p, n, "I could be, yes", "No, I'll pass on that");
 		if (option == 0) {
 			npcsay(p, n, "Well look at all these great helmets!");
 			p.setAccessingShop(shop);

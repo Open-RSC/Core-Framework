@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -251,9 +250,9 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 						Point.location(558, 617));
 					p.getWorld().unregisterGameObject(obj);
 					p.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
-					Functions.mes(p, "The employee picks up the crate");
+					mes(p, "The employee picks up the crate");
 					n.teleport(559, 612);
-					Functions.mes(p, "And takes it out to be delivered");
+					mes(p, "And takes it out to be delivered");
 					p.getCache().remove("label");
 					p.updateQuestStage(this, 2);
 				}
@@ -291,7 +290,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					say(p, n, "Yes, that sounds good",
 						"teleport me");
 					p.teleport(545, 577, false);
-					Functions.mes(p, "Cromperty takes out a small box",
+					mes(p, "Cromperty takes out a small box",
 						"Cromperty presses a switch on the box");
 					if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == -1) {
 						p.teleport(560, 588, true);
@@ -315,7 +314,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 				say(p, n, "Yes, that sounds good",
 					"teleport me");
 				p.teleport(545, 577, false);
-				Functions.mes(p, "Cromperty takes out a small box",
+				mes(p, "Cromperty takes out a small box",
 					"Cromperty presses a switch on the box");
 				if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == -1) {
 					p.teleport(560, 588, true);
@@ -346,31 +345,31 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 			p.message("The crate is empty");
 		}
 		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
-			Functions.mes(p, "There is a label on this crate", "It says",
+			mes(p, "There is a label on this crate", "It says",
 				"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
 			if (p.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || p.getCache().hasKey("label")) {
-				Functions.mes(p, "It doesn't seem possible to open the crate");
+				mes(p, "It doesn't seem possible to open the crate");
 			} else {
-				Functions.mes(p, "You take the label");
+				mes(p, "You take the label");
 				give(p, ItemId.ADDRESS_LABEL.id(), 1);
 			}
 		}
 		else if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
 			if (p.getCache().hasKey("label")) {
-				Functions.mes(p, "There is a label on this crate", "It says",
+				mes(p, "There is a label on this crate", "It says",
 					"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
 				return;
 			}
-			Functions.mes(p, "Its ready to be delivered",
+			mes(p, "Its ready to be delivered",
 				"To the wizard's tower in Misthalin",
 				"It doesn't seem possible to open the crate");
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
 				if (getCurrentLevel(p, Skills.THIEVING) < 21) {
-					Functions.mes(p, "You don't find anything interesting");
+					mes(p, "You don't find anything interesting");
 				} else {
-					Functions.mes(p, "You find a trap in the stairs",
+					mes(p, "You find a trap in the stairs",
 						"You make a note of the trap's location",
 						"Ready for next time you go up the stairs");
 					p.getCache().store("trapy", true);
@@ -381,7 +380,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					p.getCache().remove("trapy");
 					p.teleport(563, 1534, false);
 				} else {
-					Functions.mes(p, "You here a click beneath you",
+					mes(p, "You here a click beneath you",
 						"You feel yourself falling",
 						"You have fallen through a trap");
 					p.teleport(563, 3418, false);

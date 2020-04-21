@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -56,7 +55,7 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
-			Functions.mes(p, "You pour the poisoned fish food into the fountain",
+			mes(p, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas drop dead and float to the surface");
 			p.getCarriedItems().remove(new Item(ItemId.POISONED_FISH_FOOD.id()));
@@ -65,23 +64,23 @@ public class ErnestTheChicken implements QuestInterface,
 			}
 		} else if (obj.getID() == QuestObjects.FOUNTAIN
 			&& item.getCatalogId() == ItemId.FISH_FOOD.id()) {
-			Functions.mes(p, "You pour the fish food into the fountain",
+			mes(p, "You pour the fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas seem hungrier than ever");
 			p.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
 		}
 		//nothing happens every other item
 		else if (obj.getID() == QuestObjects.FOUNTAIN) {
-			Functions.mes(p, "Nothing interesting happens");
+			mes(p, "Nothing interesting happens");
 		}
 		if (obj.getID() == QuestObjects.COMPOST
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.CLOSET_KEY.id(), Optional.empty()) && p.getQuestStage(this) > 0) {
-				Functions.mes(p, "You dig through the compost heap",
+				mes(p, "You dig through the compost heap",
 					"You find a small key");
 				give(p, ItemId.CLOSET_KEY.id(), 1);
 			} else {
-				Functions.mes(p, "You dig through the compost heap",
+				mes(p, "You dig through the compost heap",
 					"You find nothing of interest");
 			}
 		}
@@ -282,7 +281,7 @@ public class ErnestTheChicken implements QuestInterface,
 						&& p.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
 						say(p, n, "I have everything");
 						npcsay(p, n, "Give em here then");
-						Functions.mes(p,
+						mes(p,
 							"You give a rubber tube, a pressure gauge and a can of oil to the Professer",
 							"Oddenstein starts up the machine",
 							"The machine hums and shakes",
@@ -300,7 +299,7 @@ public class ErnestTheChicken implements QuestInterface,
 								"Well a cash reward is always nice");
 							npcsay(p, ernest, "Of course, of course");
 
-							Functions.mes(p, "Ernest hands you 300 coins");
+							mes(p, "Ernest hands you 300 coins");
 							ernest.remove();
 							p.sendQuestComplete(getQuestId());
 						}
@@ -424,7 +423,7 @@ public class ErnestTheChicken implements QuestInterface,
 					say(p, n,
 						"No no he's been turned into an actual chicken",
 						"By a mad scientist");
-					Functions.mes(p, "Veronica lets out an ear piecing shreek");
+					mes(p, "Veronica lets out an ear piecing shreek");
 					npcsay(p, n, "Eeeeek", "My poor darling",
 						"Why must these things happen to us?");
 					say(p, n, "Well I'm doing my best to turn him back");
@@ -621,12 +620,12 @@ public class ErnestTheChicken implements QuestInterface,
 
 	@Override
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
-		return Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id());
+		return compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id());
 	}
 
 	@Override
 	public void onUseInv(Player player, Item item1, Item item2) {
-		if (Functions.compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
+		if (compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
 			player.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
 			player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 			give(player, ItemId.POISONED_FISH_FOOD.id(), 1);

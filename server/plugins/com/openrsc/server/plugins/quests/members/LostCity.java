@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -107,7 +106,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			case 245:
 				if (atQuestStages(p, this, 4, 3, 2, -1)) {
 					if (getCurrentLevel(p, Skills.WOODCUT) < 36) {
-						Functions.mes(p,
+						mes(p,
 							"You are not a high enough woodcutting level to chop down this tree",
 							"You need a woodcutting level of 36");
 						return;
@@ -122,7 +121,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					 * anymore
 					 */
 					if (atQuestStages(p, this, 4, -1)) {
-						Functions.mes(p, "You cut a branch from the Dramen tree");
+						mes(p, "You cut a branch from the Dramen tree");
 						give(p, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
@@ -410,20 +409,20 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
-		return Functions.compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.DRAMEN_BRANCH.id());
+		return compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.DRAMEN_BRANCH.id());
 	}
 
 	@Override
 	public void onUseInv(Player p, Item item1, Item item2) {
 		if (p.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(p, Skills.CRAFTING) < 31) {
-				Functions.mes(p,
+				mes(p,
 					"You are not a high enough crafting level to craft this staff",
 					"You need a crafting level of 31");
 				return;
 			}
 			p.getCarriedItems().remove(new Item(ItemId.DRAMEN_BRANCH.id()));
-			Functions.mes(p, "you carve the branch into a staff");
+			mes(p, "you carve the branch into a staff");
 			give(p, ItemId.DRAMEN_STAFF.id(), 1);
 		}
 	}
@@ -443,7 +442,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(p, this, 4, -1)) {
 				p.setBusy(true);
-				Functions.mes(p, "The world starts to shimmer",
+				mes(p, "The world starts to shimmer",
 					"You find yourself in different surroundings");
 				if (getQuestStage(p, this) != -1) {
 					teleport(p, 126, 3518);

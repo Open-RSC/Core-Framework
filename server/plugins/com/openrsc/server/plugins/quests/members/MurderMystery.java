@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -895,7 +894,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 							"and washes whiter than white, all with our uniquely",
 							"fragrant concoction that is immediately recognisable",
 							"across the land as Peter Potters Patented Poison potion");
-						Functions.mes(p, "The salesman stops for breath");
+						mes(p, "The salesman stops for breath");
 						npcsay(p, n, "I'd love to sell you some but I've sold out recently",
 							"Thats just how good it is! Three hundred and Twenty",
 							"Eight people in this area alone cannot be wrong!",
@@ -1027,7 +1026,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					"helping to prepare Lord Sinclair's meal, and then",
 					"when I took it to his study...",
 					"I saw... oh, it was horrible... he was....");
-				Functions.mes(p, "She seems to be on the verge of crying.",
+				mes(p, "She seems to be on the verge of crying.",
 					"You decide not to push her anymore for details.");
 			} else if (n.getID() == NpcId.DONOVAN_THE_HANDYMAN.id()) {
 				npcsay(p, n, "Me? I was sound asleep here in the servants",
@@ -1263,7 +1262,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					p.message("You need the guards permission to do that");
 					break;
 				case 1:
-					Functions.mes(p, "Some thread seems to have been caught",
+					mes(p, "Some thread seems to have been caught",
 						"on a loose nail on the window");
 					if (!p.getCache().hasKey("thread") && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())
 						&& !p.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id()) && !p.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
@@ -1280,7 +1279,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						} else if (p.getCache().hasKey("murder_bob")) {
 							give(p, ItemId.THREAD_RED.id(), 1);
 						}
-						Functions.mes(p, "You take the thread");
+						mes(p, "You take the thread");
 						p.getCache().store("thread", true);
 						if (!p.getCache().hasKey("thread")) {
 							p.getCache().store("thread", true);
@@ -1301,7 +1300,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						} else if (p.getCache().hasKey("murder_bob")) {
 							give(p, ItemId.THREAD_RED.id(), 1);
 						}
-						Functions.mes(p, "Lucky for you theres some thread left",
+						mes(p, "Lucky for you theres some thread left",
 							"You should be less careless in future");
 					} else {
 						p.message("You have already taken the thread");
@@ -1406,27 +1405,27 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						}
 					} else if (obj.getID() == 1126) {
 						if (p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("murder_anna")) {
-							Functions.mes(p, "The compost is teeming with maggots",
+							mes(p, "The compost is teeming with maggots",
 								"Somebody should really do something about it",
 								"Its certainly clear nobodies used poison here.");
 							p.getCache().store("evidence", true);
 							p.getCache().store("p_anna2", true);
 						} else if (p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_anna")) {
-							Functions.mes(p, "There is a faint smell of poison behind the smell of the compost");
+							mes(p, "There is a faint smell of poison behind the smell of the compost");
 						} else {
 							p.message("Its a heap of Compost");
 						}
 
 					} else if (obj.getID() == 1130) {
 						if (p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("murder_eliz")) {
-							Functions.mes(p, "The fountain is swarming with mosquitos",
+							mes(p, "The fountain is swarming with mosquitos",
 								"Theres a nest of them underneath the fountain");
 							say(p, null, "I hate mosquitos, they're so annoying");
-							Functions.mes(p, "Its certainly clear nobodies used poison here.");
+							mes(p, "Its certainly clear nobodies used poison here.");
 							p.getCache().store("evidence", true);
 							p.getCache().store("p_eliza2", true);
 						} else if (p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_eliz")) {
-							Functions.mes(p, "There are a lot of dead mosquitos around",
+							mes(p, "There are a lot of dead mosquitos around",
 								"the base of the fountain. A faint smell of",
 								"poison is in the air, but the water seems clean");
 						} else {
@@ -1435,12 +1434,12 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 					} else if (obj.getID() == 1127) {
 						if (p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("murder_bob")) {
-							Functions.mes(p, "The beehive buzzes with activity",
+							mes(p, "The beehive buzzes with activity",
 								"These bees definitely don't seem poisoned at all");
 							p.getCache().store("evidence", true);
 							p.getCache().store("p_bob2", true);
 						} else if (p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_bob")) {
-							Functions.mes(p, "The hive is empty. There are a few dead bees and",
+							mes(p, "The hive is empty. There are a few dead bees and",
 								"a faint smell of poison");
 						} else {
 							p.message("Its a very old beehive");
@@ -1448,20 +1447,20 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 					} else if (obj.getID() == 1128) {
 						if (p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("murder_carol")) {
-							Functions.mes(p, "The drain is totally blocked",
+							mes(p, "The drain is totally blocked",
 								"It really stinks. No, it *Really* smells bad.",
 								"Its certainly clear nobodies cleaned it recently.");
 							p.getCache().store("evidence", true);
 							p.getCache().store("p_carol2", true);
 						} else if (p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_carol")) {
-							Functions.mes(p, "The drain seems to have been recently cleaned",
+							mes(p, "The drain seems to have been recently cleaned",
 								"You can still smell the faint aroma of poison");
 						} else {
 							p.message("Its the drains from the kitchen");
 						}
 
 					} else if (obj.getID() == 1140) {
-						Functions.mes(p, "As you approach the gate the Guard Dog starts barking loudly at you",
+						mes(p, "As you approach the gate the Guard Dog starts barking loudly at you",
 							"There is no way an intruder could have committed the murder",
 							"It must have been someone the dog knew to get past it quietly");
 					} else if (obj.getID() == 1138) {
@@ -1475,19 +1474,19 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 							p.message("Theres still plenty of flour left");
 						} else if (p.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
-							Functions.mes(p, "You probably shouldn't use evidence from a crime",
+							mes(p, "You probably shouldn't use evidence from a crime",
 								"scene to keep flour in...");
 						}
 					} else if (obj.getID() == 1131) {
 						if (p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("murder_frank")) {
-							Functions.mes(p, "It looks like the Sinclair Family Crest",
+							mes(p, "It looks like the Sinclair Family Crest",
 								"but it is very dirty.",
 								"you can barely make it out under all of the grime",
 								"Its certainly clear nobodies cleaned it recently.");
 							p.getCache().store("evidence", true);
 							p.getCache().store("p_frank2", true);
 						} else if (p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_frank")) {
-							Functions.mes(p, "The sinclair family crest",
+							mes(p, "The sinclair family crest",
 								"its shiny and freshly polished",
 								"And has a slight smell of poison");
 						} else {
@@ -1496,13 +1495,13 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 					} else if (obj.getID() == 1129) {
 						if (p.getCache().hasKey("poison_opt2") && p.getCache().hasKey("murder_david")) {
-							Functions.mes(p, "There is a spiders nest here",
+							mes(p, "There is a spiders nest here",
 								"You estimate there must be at least a few hundred spiders ready to hatch",
 								"Its certainly clear nobodies used poison here.");
 							p.getCache().store("evidence", true);
 							p.getCache().store("p_david2", true);
 						} else if (p.getCache().hasKey("poison_opt2") && !p.getCache().hasKey("murder_david")) {
-							Functions.mes(p, "A faint smell of poison and a few dead spiders",
+							mes(p, "A faint smell of poison and a few dead spiders",
 								"is all that remains of the spiders nest");
 						} else {
 							p.message("It looks like a Spiders Nest of some kind");
@@ -1517,21 +1516,21 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
-		return Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())
-				|| Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())
+		return compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())
+				|| compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.FLYPAPER.id())
+				|| compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.FLYPAPER.id())
+				|| compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.FLYPAPER.id())
+				|| compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.FLYPAPER.id())
+				|| compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())
+				|| compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())
+				|| compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())
 				|| (item1.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
 				DataConversions.inArray(new int[] {ItemId.ANNAS_FINGERPRINT.id(), ItemId.BOBS_FINGERPRINT.id(), ItemId.CAROLS_FINGERPRINT.id(),
 						ItemId.DAVIDS_FINGERPRINT.id(), ItemId.ELIZABETHS_FINGERPRINT.id(), ItemId.FRANKS_FINGERPRINT.id()}, item2.getCatalogId()))
@@ -1542,14 +1541,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onUseInv(Player p, Item item1, Item item2) {
-		if (Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())) {
+		if (compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle a small amount of flour on the murderweapon");
 			p.message("the murderweapon is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER.id(), ItemId.A_SILVER_DAGGER_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the floury dagger");
 			p.message("You have a clean impression of the murderers finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.A_SILVER_DAGGER.id());
@@ -1557,14 +1556,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Annas Necklace");
 			p.message("the necklace is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Necklace");
 			p.message("You have a clean impression of Annas finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.ANNAS_SILVER_NECKLACE.id());
@@ -1572,14 +1571,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Bobs Cup");
 			p.message("the cup is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP.id(), ItemId.BOBS_SILVER_TEACUP_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Cup");
 			p.message("You have a clean impression of Bobs finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.BOBS_SILVER_TEACUP.id());
@@ -1587,14 +1586,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Carols Bottle");
 			p.message("the bottle is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Bottle");
 			p.message("You have a clean impression of Carols finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.CAROLS_SILVER_BOTTLE.id());
@@ -1602,14 +1601,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Davids Book");
 			p.message("the book is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.DAVIDS_SILVER_BOOK_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Book");
 			p.message("You have a clean impression of Davids finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.DAVIDS_SILVER_BOOK.id());
@@ -1617,14 +1616,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Elizabeths Needle");
 			p.message("the needle is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Needle");
 			p.message("You have a clean impression of Elizabeths finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.ELIZABETHS_SILVER_NEEDLE.id());
@@ -1632,14 +1631,14 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle the flour on Franks Pot");
 			p.message("the pot is now coated with a thin layer of flour");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
 			p.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT.id(), ItemId.FRANKS_SILVER_POT_FLOUR.id());
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			p.message("You use the flypaper on the flour covered Pot");
 			p.message("You have a clean impression of Franks finger prints");
 			p.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FRANKS_SILVER_POT.id());
@@ -1647,7 +1646,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			p.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
 		}
-		else if (Functions.compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())) {
+		else if (compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())) {
 			p.message("You sprinkle a small amount of flour on the strange smelling pot");
 			p.message("The surface isn't shiny enough to take a fingerprint from");
 			p.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());

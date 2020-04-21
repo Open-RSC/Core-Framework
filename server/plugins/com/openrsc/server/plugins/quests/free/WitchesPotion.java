@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
@@ -102,7 +101,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 						p.getCarriedItems().remove(new Item(ItemId.EYE_OF_NEWT.id()));
 						p.getCarriedItems().remove(new Item(ItemId.BURNTMEAT.id()));
 						p.getCarriedItems().remove(new Item(ItemId.ONION.id()));
-						Functions.mes(p,
+						mes(p,
 							"Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");
 						npcsay(p, n, "Ok drink from the cauldron");
@@ -160,7 +159,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 				say(player, null, "I'd rather not",
 					"It doesn't look very tasty");
 			} else {
-				Functions.mes(player, "You drink from the cauldron",
+				mes(player, "You drink from the cauldron",
 					"You feel yourself imbued with power");
 				player.sendQuestComplete(Quests.WITCHS_POTION);
 			}

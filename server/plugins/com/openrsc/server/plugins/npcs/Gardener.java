@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Gardener implements ShopInterface,
 	TalkNpcTrigger {
@@ -25,7 +23,7 @@ public final class Gardener implements ShopInterface,
 
 		npcsay(p, n, "Can I help you at all?");
 
-		int option = Functions.multi(p, n, "Yes please. What are you selling?",
+		int option = multi(p, n, "Yes please. What are you selling?",
 			"No thanks", "Do you have any tips on getting produce?");
 		switch (option) {
 			case 0:
@@ -36,7 +34,7 @@ public final class Gardener implements ShopInterface,
 			case 2:
 				npcsay(p, n, "Certainly, is there anything in particular",
 					"you might be wondering about?");
-				int sub_option = Functions.multi(p, n, "Sometimes I damage the produce",
+				int sub_option = multi(p, n, "Sometimes I damage the produce",
 					"How can I take care for a specific harvesting spot?",
 					"I don't seem to improve my harvesting skills on certain areas");
 				if (sub_option == 0) {

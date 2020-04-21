@@ -6,12 +6,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -23,7 +21,7 @@ public final class Blurberry implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, final Npc n) {
 		npcsay(p, n, "good day to you", "can i get you drink");
-		int opt = Functions.multi(p, n, "what do you have", "no thanks");
+		int opt = multi(p, n, "what do you have", "no thanks");
 		if (opt == 0) {
 			npcsay(p, n, "take a look");
 			p.setAccessingShop(shop);

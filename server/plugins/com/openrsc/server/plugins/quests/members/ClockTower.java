@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -194,7 +193,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			}
 
 			if (p.getCache().hasKey("foodtrough") && correctSetup) {
-				Functions.mes(p, "In their panic the rats bend and twist",
+				mes(p, "In their panic the rats bend and twist",
 						"The cage bars with their teeth",
 						"They're becoming weak, some have collapsed",
 						"The rats are eating the poison",
@@ -339,7 +338,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseObj(Item myItem, GroundItem item, Player p) {
 		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
-			Functions.mes(p, "You pour water over the cog",
+			mes(p, "You pour water over the cog",
 				"The cog quickly cools down");
 			if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 				|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
@@ -376,7 +375,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.ICE_GLOVES.id()) && p.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
-				Functions.mes(p, "The ice gloves cool down the cog",
+				mes(p, "The ice gloves cool down the cog",
 					"You can carry it now");
 				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
@@ -388,7 +387,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					give(p, ItemId.LARGE_COG_BLACK.id(), 1);
 				}
 			} else if (p.getCarriedItems().hasCatalogID(ItemId.BUCKET_OF_WATER.id(), Optional.of(false))) {
-				Functions.mes(p, "You pour water over the cog",
+				mes(p, "You pour water over the cog",
 					"The cog quickly cools down");
 				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
@@ -401,7 +400,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					p.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 				}
 			} else {
-				Functions.mes(p,
+				mes(p,
 					"The cog is red hot from the flames, too hot to carry",
 					"The cogs are heavy");
 				if (p.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())

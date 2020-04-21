@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -97,7 +96,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 							"that should cheer up Androe's son",
 							"and maybe I will be able to get some rest",
 							"..yawn..i'm off to bed, farewell brave traveller.");
-						Functions.mes(p,
+						mes(p,
 							"well done, you have completed part 1 of the monks friend quest");
 						p.updateQuestStage(getQuestId(), 2);
 					} else {
@@ -176,7 +175,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 					npcsay(p, n, " yesshh...hic up...beautiful..");
 					say(p, n, "take care old monk");
 					npcsay(p, n, "la..di..da..hic..up..");
-					Functions.mes(p, "The monk has had too much to drink");
+					mes(p, "The monk has had too much to drink");
 					break;
 				case 3:
 					say(p, n, "Brother Cedric are you okay?");
@@ -240,9 +239,9 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 				say(player, npc, "Cedric, here, drink some water");
 				npcsay(player, npc, "oh yes, my head's starting to spin",
 					"gulp...gulp");
-				Functions.mes(player, "Brother Cedric drinks the water");
+				mes(player, "Brother Cedric drinks the water");
 				npcsay(player, npc, "aah, that's better");
-				Functions.mes(player,
+				mes(player,
 					"you throw the excess water over brother Cedric");
 				npcsay(player, npc, "now i just need to fix...",
 					"..this cart..", "..and we can go party",

@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -32,10 +31,10 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id()) {
 			openChest(obj, 2000, TOBAN_CHEST_OPEN);
 			if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
-				Functions.mes(p, "You have already got the stolen gold");
+				mes(p, "You have already got the stolen gold");
 			} else {
 				p.message("You find a stash of gold inside");
-				Functions.mes(p, "You take the gold");
+				mes(p, "You take the gold");
 				give(p, ItemId.STOLEN_GOLD.id(), 1);
 			}
 			p.message("The chest springs shut");
@@ -46,7 +45,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 	public boolean blockUseInv(Player p, Item item1, Item item2) {
 		return ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
 				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) ||
-			Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id());
+			compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id());
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
 			p.message("I think these fit together, but I can't seem to make it fit");
 			p.message("I am going to need someone with more experience to help me with this");
-		} else if (Functions.compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id())) {
+		} else if (compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id())) {
 			p.message("The bat bones are to bulky to fit in the vial");
 		}
 	}
@@ -292,7 +291,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 		else if (i.getID() == ItemId.POWERING_CRYSTAL1.id() || i.getID() == ItemId.POWERING_CRYSTAL2.id()
 				|| i.getID() == ItemId.POWERING_CRYSTAL3.id() || i.getID() == ItemId.POWERING_CRYSTAL4.id()) {
 			if (p.getQuestStage(Quests.WATCHTOWER) == -1) {
-				Functions.mes(p, "You try and take the crystal but its stuck solid!",
+				mes(p, "You try and take the crystal but its stuck solid!",
 					"You feel magic power coursing through the crystal...",
 					"The force renews your magic level");
 				int maxMagic = getMaxLevel(p, Skills.MAGIC);

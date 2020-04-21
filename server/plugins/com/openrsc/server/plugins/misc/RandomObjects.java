@@ -7,7 +7,6 @@ import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -53,35 +52,35 @@ public class RandomObjects implements OpLocTrigger {
 					return;
 				}
 				if (owner.getX() >= 386) {
-					Functions.mes(owner, "You climb up onto the cart.",
+					mes(owner, "You climb up onto the cart.",
 						"You nimbly jump from one side of the cart...");
 					owner.teleport(383, 852);
 					owner.playerServerMessage(MessageType.QUEST, "...to the other and climb down again.");
 					return;
 				}
 				if (command.toLowerCase().equals("search") || owner.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
-					Functions.mes(owner, "It looks as if you can climb across.",
+					mes(owner, "It looks as if you can climb across.",
 							"You search the cart.");
 					if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too fatigued to attempt climb across");
 						return;
 					}
-					Functions.mes(owner, "You may be able to climb across the cart.",
+					mes(owner, "You may be able to climb across the cart.",
 							"Would you like to try?");
 						int menu = multi(owner,
 							"Yes, I am am very nimble and agile!",
 							"No, I am happy where I am thanks!");
 						if (menu == 0) {
-							Functions.mes(owner, "You climb up onto the cart",
+							mes(owner, "You climb up onto the cart",
 								"You nimbly jump from one side of the cart to the other.");
 							owner.teleport(386, 852);
 							owner.playerServerMessage(MessageType.QUEST, "And climb down again");
 						} else if (menu == 1) {
-							Functions.mes(owner, "You think better of clambering over the cart, you might get dirty.");
+							mes(owner, "You think better of clambering over the cart, you might get dirty.");
 							say(owner, null, "I'd probably have just scraped my knees up as well.");
 						}
 				} else {
-					Functions.mes(owner, "You approach the cart and see undead creatures gathering by the village gates.",
+					mes(owner, "You approach the cart and see undead creatures gathering by the village gates.",
 							"There is a note attached to the cart.",
 							"The note says,",
 							"@gre@Danger deadly green mist do not enter if you value your life");
@@ -119,7 +118,7 @@ public class RandomObjects implements OpLocTrigger {
 			case 241:
 			case 242:
 			case 243:
-				Functions.mes(owner, "You board the ship");
+				mes(owner, "You board the ship");
 				owner.teleport(263, 660, false);
 				delay(2200);
 				owner.message("The ship arrives at Port Sarim");
@@ -148,7 +147,7 @@ public class RandomObjects implements OpLocTrigger {
 		}
 		// ARDOUGNE WALL GATEWAY FOR BIOHAZARD ETC...
 		if (object.getID() == 450) {
-			Functions.mes(owner, "you pull on the large wooden doors");
+			mes(owner, "you pull on the large wooden doors");
 			if (owner.getQuestStage(Quests.BIOHAZARD) == -1) {
 				owner.message("you open it and walk through");
 				Npc gateMourner = ifnearvisnpc(owner, NpcId.MOURNER_BYENTRANCE.id(), 15);

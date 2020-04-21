@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public final class DukeOfLumbridge implements
 				"A most worthy cause",
 				"Guard this well my friend"
 			);
-			Functions.mes(p, "The duke hands you a shield");
+			mes(p, "The duke hands you a shield");
 			give(p, ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), 1);
 		} else if (option == 1) {
 			say(p, n, "Have you any quests for me?");

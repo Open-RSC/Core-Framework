@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class HorvikTheArmourer implements
 	ShopInterface, TalkNpcTrigger {
@@ -41,7 +39,7 @@ public final class HorvikTheArmourer implements
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		npcsay(p, n, "Hello, do you need any help?");
-		int option = Functions.multi(p, n,
+		int option = multi(p, n,
 			"No thanks. I'm just looking around",
 			"Do you want to trade?");
 

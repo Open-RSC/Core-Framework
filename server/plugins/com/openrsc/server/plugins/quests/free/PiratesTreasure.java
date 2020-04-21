@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
@@ -99,9 +98,9 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 					obj.getType()));
 			p.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			p.getCarriedItems().remove(new Item(ItemId.CHEST_KEY.id()));
-			Functions.mes(p, "All that is in the chest is a message");
-			Functions.mes(p, "You take the message from the chest");
-			Functions.mes(p, "It says dig just behind the south bench in the park");
+			mes(p, "All that is in the chest is a message");
+			mes(p, "You take the message from the chest");
+			mes(p, "It says dig just behind the south bench in the park");
 			p.updateQuestStage(this, 3);
 		}
 	}
@@ -145,7 +144,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				say(p, n, "Yes I've got some");
 				p.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 
-				Functions.mes(p, "Frank happily takes the rum");
+				mes(p, "Frank happily takes the rum");
 				npcsay(p,
 					n,
 					"Now a deals a deal, I'll tell ye about the treasure",
@@ -154,7 +153,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 					"but about a year ago we were boarded by the Royal Asgarnian Navy",
 					"Hector was killed along with many of the crew",
 					"I was one of the few to escape", "And I escaped with this");
-				Functions.mes(p, "Frank hands you a key");
+				mes(p, "Frank hands you a key");
 				give(p, ItemId.CHEST_KEY.id(), 1);
 				p.updateQuestStage(this, 2);
 				npcsay(p, n, "This is Hector's key",
@@ -183,7 +182,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				} else {
 					say(p, n, "I seem to have lost my chest key");
 					npcsay(p, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
-					Functions.mes(p, "Frank hands you a chest key");
+					mes(p, "Frank hands you a chest key");
 					give(p, ItemId.CHEST_KEY.id(), 1);
 				}
 				break;
@@ -319,12 +318,12 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				break;
 			case 185:
 				if (p.getCache().hasKey("rum_delivered") && p.getCache().getBoolean("rum_delivered")) {
-					Functions.mes(p, "There are a lot of bananas in the crate",
+					mes(p, "There are a lot of bananas in the crate",
 							"You find your bottle of rum in amoungst the bananas");
 					p.getCarriedItems().getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
 					p.getCache().remove("rum_delivered");
 				}
-				Functions.mes(p, "Do you want to take a banana?");
+				mes(p, "Do you want to take a banana?");
 				int wantabanana = multi(p, "Yes", "No");
 				if (wantabanana == 0) {
 					p.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));
@@ -380,7 +379,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 					dig = true;
 				}
 				if (dig) {
-					Functions.mes(p, "You dig a hole in the ground",
+					mes(p, "You dig a hole in the ground",
 						"You find a little bag of treasure");
 					p.sendQuestComplete(this.getQuestId());
 				}

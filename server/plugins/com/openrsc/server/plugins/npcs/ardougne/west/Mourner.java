@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -193,7 +192,7 @@ public class Mourner implements TalkNpcTrigger {
 		}
 		if (n.getID() == ILL_MOURNER) {
 			if (p.getQuestStage(Quests.BIOHAZARD) > 4) {
-				Functions.mes(p, "the mourner is sick",
+				mes(p, "the mourner is sick",
 					"he doesn't feel like talking");
 				return;
 			}

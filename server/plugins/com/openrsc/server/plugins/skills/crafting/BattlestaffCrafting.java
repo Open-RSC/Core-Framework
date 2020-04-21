@@ -4,12 +4,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BattlestaffCrafting implements UseInvTrigger {
 

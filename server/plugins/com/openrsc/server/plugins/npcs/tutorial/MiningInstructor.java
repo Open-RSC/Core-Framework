@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class MiningInstructor implements TalkNpcTrigger {
 				"Ok you need to get that tin out of the rock",
 				"First of all you need a pick",
 				"And here we have a pick");
-			Functions.mes(p, "The instructor somehow produces a large pickaxe from inside his jacket",
+			mes(p, "The instructor somehow produces a large pickaxe from inside his jacket",
 					"The instructor gives you the pickaxe");
 			give(p, ItemId.BRONZE_PICKAXE.id(), 1); // Add a bronze pickaxe to the players inventory
 			npcsay(p, n, "Now hit those rocks");
@@ -44,7 +43,7 @@ public class MiningInstructor implements TalkNpcTrigger {
 		} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 51) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.BRONZE_PICKAXE.id(), Optional.of(false))) {
 				say(p, n, "I have lost my pickaxe");
-				Functions.mes(p, "The instructor somehow produces a large pickaxe from inside his jacket",
+				mes(p, "The instructor somehow produces a large pickaxe from inside his jacket",
 					"The instructor gives you the pickaxe");
 				give(p, ItemId.BRONZE_PICKAXE.id(), 1); // Add a bronze pickaxe to the players inventory
 			}

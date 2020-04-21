@@ -8,7 +8,6 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -175,7 +174,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 								"We witnessed your fight with the Demon from some distance away.",
 								"My people are so pleased with your heroic efforts.",
 								"Your strength and ability as a warrior are Legendary.");
-							Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
+							mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
 							give(p, ItemId.GILDED_TOTEM_POLE.id(), 1);
 							p.getCache().store("rewarded_totem", true);
 							npcsay(p, n, "Please accept this as a token of our appreciation.",
@@ -449,7 +448,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER:
-					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
+					mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
 					npcsay(p, n, "I am not sure...",
 						"But I have heard that deeper in the Catacombs where you found Ungadulu,",
 						"deep underground,",
@@ -476,7 +475,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2:
-					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
+					mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
 					npcsay(p, n, "I am not sure...",
 						"But I have heard that deeper in the Catacombs where you found Ungadulu,",
 						"deep underground,",
@@ -637,7 +636,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 							npcsay(p, n, "");
 							n.setBusy(false);
 						}
-						Functions.mes(p, "Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+						mes(p, "Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 						if (n != null)
 							n.remove();
 					} else if (opt2 == 1) {
@@ -670,7 +669,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					gujuoBye(p, n);
 					break;
 				case Gujuo.I_WANT_TO_DEVELOP_FRIENDLY_RELATIONS:
-					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo smiles and shakes your hand warmly...");
+					mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo smiles and shakes your hand warmly...");
 					npcsay(p, n, "Very good Bwana...this is indeed a very pleasant gesture.",
 						"However, my people are very distributed throughout the Kharazi jungle.");
 					int opt5 = multi(p, n,
@@ -934,7 +933,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					} else {
 						npcsay(p, n, "Very well Bwana...");
 						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo places the bowl on the floor in front of you,");
-						Functions.mes(p, "and leads you into a deep meditation...");
+						mes(p, "and leads you into a deep meditation...");
 						npcsay(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
 						say(p, n, "Oooooommmmmmmmmm");
 						npcsay(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");

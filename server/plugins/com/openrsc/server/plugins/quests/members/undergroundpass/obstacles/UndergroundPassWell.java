@@ -4,7 +4,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -21,10 +20,10 @@ public class UndergroundPassWell implements OpLocTrigger {
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == WELL) {
-			Functions.mes(p, "you climb into the well");
+			mes(p, "you climb into the well");
 			if ((p.getCache().hasKey("orb_of_light1") && p.getCache().hasKey("orb_of_light2") && p.getCache().hasKey("orb_of_light3") && p.getCache().hasKey("orb_of_light4")) ||
 					atQuestStages(p, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
-				Functions.mes(p, "you feel the grip of icy hands all around you...");
+				mes(p, "you feel the grip of icy hands all around you...");
 				p.teleport(722, 3461);
 				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				displayTeleportBubble(p, p.getX(), p.getY(), true);
@@ -32,7 +31,7 @@ public class UndergroundPassWell implements OpLocTrigger {
 			} else {
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
 				displayTeleportBubble(p, obj.getX(), obj.getY(), false);
-				Functions.mes(p, "from below an icy blast of air chills you to your bones",
+				mes(p, "from below an icy blast of air chills you to your bones",
 					"a mystical force seems to blast you back out of the well");
 				p.message("there must be a positive force near by!");
 			}

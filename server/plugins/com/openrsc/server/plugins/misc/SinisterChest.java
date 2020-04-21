@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
@@ -38,7 +37,7 @@ public class SinisterChest implements OpLocTrigger, UseLocTrigger {
 		if (item.getCatalogId() == ItemId.SINISTER_KEY.id() && obj.getID() == SINISTER_CHEST) {
 			int respawnTime = 3000;
 			p.message("you unlock the chest with your key");
-			Functions.changeloc(obj, respawnTime, SINISTER_CHEST_OPEN);
+			changeloc(obj, respawnTime, SINISTER_CHEST_OPEN);
 			p.message("A foul gas seeps from the chest");
 			p.message("You find a lot of herbs in the chest");
 

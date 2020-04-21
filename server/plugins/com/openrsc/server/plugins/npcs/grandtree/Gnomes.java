@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -174,7 +173,7 @@ public class Gnomes implements TalkNpcTrigger {
 					break;
 				// case 7 hello little man
 				case 8:
-					Functions.mes(p, "the gnome is preying");
+					mes(p, "the gnome is preying");
 					npcsay(p, n, "guthix's angels fly so high as to be beyond our sight",
 						"but they are always looking down upon us");
 					say(p, n, "maybe");

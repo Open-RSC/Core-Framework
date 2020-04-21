@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
@@ -42,7 +41,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 	public void onOpLoc(GameObject obj, String cmd, Player p) {
 		if (inArray(obj.getID(), NORTH_PASSAGE)) {
 			if (cmd.equalsIgnoreCase("walk here")) {
-				Functions.mes(p, "you walk down the passage way");
+				mes(p, "you walk down the passage way");
 				p.message("you step on a pressure trigger");
 				p.message("it's a trap");
 				if (obj.getID() == 825) {
@@ -59,7 +58,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 				say(p, null, "aaarghh");
 			} else {
-				Functions.mes(p, "you search the rocks",
+				mes(p, "you search the rocks",
 					"there seems to be some sort of spring activated trap",
 					"you may be able to wedge it open with something?");
 			}
@@ -75,12 +74,12 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 					fallBack(p, obj);
 				}
 			} else {
-				Functions.mes(p, "you search the rocks");
+				mes(p, "you search the rocks");
 				p.message("you find a trip wire");
 				int menu = multi(p,
 					"step over trip wire", "back away");
 				if (menu == 0) {
-					Functions.mes(p, "you carefully step over the trip wire");
+					mes(p, "you carefully step over the trip wire");
 					if (DataConversions.getRandom().nextInt(20) <= 2) {
 						p.message("...but you brush against it");
 						if (obj.getX() == p.getX() - 1) {
@@ -106,7 +105,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		else if (obj.getID() == SOUTH_WEST_PASSAGE) {
 			p.teleport(742, 3453);
 			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-			Functions.mes(p, "you walk down the passage way",
+			mes(p, "you walk down the passage way",
 				"the floor seems unstable");
 			p.message("suddenly with a huge creek the whole passage way swings down");
 			if (p.getCache().hasKey("stalagmite")) {
@@ -120,28 +119,28 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			}
 		}
 		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP) {
-			Functions.mes(p, "you begin to climb up the grill");
+			mes(p, "you begin to climb up the grill");
 			if (DataConversions.getRandom().nextInt(10) <= 2) { // fail
-				Functions.mes(p, "but you fall back to the floor");
+				mes(p, "but you fall back to the floor");
 				p.message("impailing yourself on the spike's once more");
 				p.damage((int) (getCurrentLevel(p, Skills.HITS) / 5) + 5);
 				say(p, null, "aaarrrgh");
 			} else { // succeed
 				p.teleport(737, 3453);
-				Functions.mes(p, "as you pull yourself up you hear a mechanical churning");
+				mes(p, "as you pull yourself up you hear a mechanical churning");
 				p.message("as the passage raises back to it's original position");
 			}
 		}
 		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
 			p.message("you pull your self up the rope");
-			Functions.mes(p, "and climb back into the cavern");
+			mes(p, "and climb back into the cavern");
 			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.teleport(737, 3453);
-			Functions.mes(p, "as you pull yourself up you hear a mechanical churning");
+			mes(p, "as you pull yourself up you hear a mechanical churning");
 			p.message("as the passage raises back to it's original position");
 		}
 		else if (obj.getID() == SOUTH_WEST_STALAGMITE) {
-			Functions.mes(p, "you search the stalagmite");
+			mes(p, "you search the stalagmite");
 			if (p.getCache().hasKey("stalagmite")) {
 				p.message("you untie your rope and place it in your satchel");
 				give(p, ItemId.ROPE.id(), 1);
@@ -178,7 +177,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			}
 		}
 		else if (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
-			Functions.mes(player, "you tie one end of the rope to the stalagmite",
+			mes(player, "you tie one end of the rope to the stalagmite",
 				"and the other around your waist");
 			player.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 			if (!player.getCache().hasKey("stalagmite")) {
@@ -188,7 +187,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		else if (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
 				ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE) {
 			player.message("you throw the glowing orb into the furnace");
-			Functions.mes(player, "its light quickly dims and then dies");
+			mes(player, "its light quickly dims and then dies");
 			player.message("you feel a cold shudder run down your spine");
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {

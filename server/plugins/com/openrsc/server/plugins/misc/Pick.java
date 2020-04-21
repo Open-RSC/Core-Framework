@@ -7,7 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Pick implements OpLocTrigger {
 

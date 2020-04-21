@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -101,7 +100,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkNpcTrigger
 					&& p.getCache().hasKey("barsix") && p.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 					say(p, n,
 						"I think I jusht about done them all, but I losht count");
-					Functions.mes(p, "You give the card to the barbarian");
+					mes(p, "You give the card to the barbarian");
 					p.getCarriedItems().remove(new Item(ItemId.BARCRAWL_CARD.id()));
 					npcsay(p,
 						n,
@@ -143,7 +142,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkNpcTrigger
 						"And I have the perfect challenge for you",
 						"The Alfred Grimhand barcrawl",
 						"First done by Alfred Grimhand");
-					Functions.mes(p, "The guard hands you a barcrawl card");
+					mes(p, "The guard hands you a barcrawl card");
 					give(p, ItemId.BARCRAWL_CARD.id(), 1);
 					npcsay(p,
 						n,

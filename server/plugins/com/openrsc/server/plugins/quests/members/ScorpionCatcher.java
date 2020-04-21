@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
@@ -92,7 +91,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 							npcsay(p, n, "Many greetings");
 							say(p, n, "Where did you say that scorpion was again?");
 							npcsay(p, n, "Let me look into my looking glass");
-							Functions.mes(p, "The seer produces a small mirror",
+							mes(p, "The seer produces a small mirror",
 								"The seer gazes into the mirror",
 								"The seer smoothes his hair with his hand");
 							npcsay(p, n,
@@ -143,7 +142,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				say(p, n, "I'm looking for some lesser kharid scorpions",
 					"They belong to Thormac the sorceror");
 				npcsay(p, n, "Let me look into my looking glass");
-				Functions.mes(p, "The seer produces a small mirror",
+				mes(p, "The seer produces a small mirror",
 					"The seer gazes into the mirror",
 					"The seer smoothes his hair with his hand");
 				npcsay(p, n,
@@ -197,7 +196,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 			choice = multi(p, n, "Yes please",
 				"No it's too dangerous for me");
 			if (choice == 0) {
-				Functions.mes(p,
+				mes(p,
 					"Velrak reaches inside his boot and passes you a key");
 				give(p, ItemId.DUSTY_KEY.id(), 1);
 			}
@@ -344,7 +343,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 			npcsay(p, n, "Well I have a scorpion cage here",
 				"Which you can use to catch them in");
 			give(p, ItemId.SCORPION_CAGE_NONE.id(), 1);
-			Functions.mes(p, "Thormac gives you a cage");
+			mes(p, "Thormac gives you a cage");
 			npcsay(p, n,
 				"If you go up to the village of seers to the north of here",
 				"One of them will be able to tell you where the scorpions are now");

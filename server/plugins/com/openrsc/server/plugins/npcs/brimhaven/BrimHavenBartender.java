@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -59,11 +58,11 @@ public final class BrimHavenBartender implements
 				"That'll be 15 coins please");
 			if (ifheld(p, ItemId.COINS.id(), 15)) {
 				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
-				Functions.mes(p,
+				mes(p,
 					"The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");
 				drinkAle(p);
-				Functions.mes(p, "You think you see 2 bartenders signing 2 barcrawl cards");
+				mes(p, "You think you see 2 bartenders signing 2 barcrawl cards");
 				p.getCache().store("barfour", true);
 			} else {
 				say(p, n, "I don't have 15 coins right now");

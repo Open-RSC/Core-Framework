@@ -27,7 +27,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -316,7 +315,7 @@ public class SpellHandler implements PacketHandler {
 		if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 			npcsay(player, affectedNpc, "I'm sure you don't want to attack me really",
 					"I am your friend");
-			Functions.mes(player, "You decide you don't want to attack Lucien really",
+			mes(player, "You decide you don't want to attack Lucien really",
 					"He is your friend");
 			return true;
 		}
@@ -1224,7 +1223,7 @@ public class SpellHandler implements PacketHandler {
 		//	return;
 		//}
 		else if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-			Functions.mes(player, "You can't teleport while holding Ana,",
+			mes(player, "You can't teleport while holding Ana,",
 				"It's just too difficult to concentrate.");
 			canTeleport = false;
 		}

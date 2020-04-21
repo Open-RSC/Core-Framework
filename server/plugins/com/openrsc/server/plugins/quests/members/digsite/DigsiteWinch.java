@@ -5,18 +5,11 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.addnpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 
@@ -47,7 +40,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						} else if (!p.getCache().hasKey("winch_rope_1")) {
 							p.playerServerMessage(MessageType.QUEST, "You operate the winch");
 							p.message("The bucket descends, but does not reach the bottom");
-							Functions.say(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
+							say(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
 							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
@@ -69,7 +62,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						} else if (!p.getCache().hasKey("winch_rope_2")) {
 							p.playerServerMessage(MessageType.QUEST, "You operate the winch");
 							p.message("The bucket descends, but does not reach the bottom");
-							Functions.say(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
+							say(p, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
 							if (getCurrentLevel(p, Skills.AGILITY) < 10) {
 								p.message("You need an agility level of 10 to do this");
@@ -109,7 +102,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						p.message("There is already a rope tied to this bucket");
 					}
 				} else {
-					Functions.say(p, null, "Err... I have no idea why I am doing this !");
+					say(p, null, "Err... I have no idea why I am doing this !");
 				}
 			}
 			else if (obj.getID() == WINCH[1]) {
@@ -122,7 +115,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						p.message("There is already a rope tied to this bucket");
 					}
 				} else {
-					Functions.say(p, null, "Err... I have no idea why I am doing this !");
+					say(p, null, "Err... I have no idea why I am doing this !");
 				}
 			}
 		}

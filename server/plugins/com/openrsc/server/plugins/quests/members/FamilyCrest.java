@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -221,7 +220,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							"That sounds good, improve them for me",
 							"I think I'll check my other options with your brothers");
 						if (menu == 0) {
-							Functions.mes(p, "Avan takes out a little hammer",
+							mes(p, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
 							p.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
@@ -377,7 +376,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					int menu = multi(p, n, "That sounds good to me",
 						"I shall see what options your brothers can offer me first");
 					if (menu == 0) {
-						Functions.mes(p, "Johnathon waves his staff",
+						mes(p, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
 						p.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
 						p.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
@@ -568,7 +567,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	public void onUseNpc(Player p, Npc n, Item item) {
 		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (p.getQuestStage(this) == 7) {
-				Functions.mes(p, "You feed your potion to Johnathon");
+				mes(p, "You feed your potion to Johnathon");
 				p.getCarriedItems().remove(new Item(ItemId.FULL_CURE_POISON_POTION.id()));
 				p.updateQuestStage(this, 8);
 				npcsay(p, n, "Wow I'm feeling a lot better now",

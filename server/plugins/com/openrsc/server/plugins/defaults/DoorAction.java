@@ -10,7 +10,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -279,7 +278,7 @@ public class DoorAction {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
-					Functions.mes(p, "The door doesn't open",
+					mes(p, "The door doesn't open",
 						"No one seems to be in");
 				}
 				break;
@@ -289,7 +288,7 @@ public class DoorAction {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
-					Functions.mes(p, "The fire warrior's eyes glow",
+					mes(p, "The fire warrior's eyes glow",
 						"The fire warrior glares at the door",
 						"The door handle is too hot to handle");
 				}
@@ -318,7 +317,7 @@ public class DoorAction {
 					p.message("You go through the door");
 					doDoor(obj, p);
 				} else {
-					Functions.mes(p, "As you reach to open the door",
+					mes(p, "As you reach to open the door",
 						"A great terror comes over you",
 						"You decide you'll not open this door today");
 				}
@@ -690,7 +689,7 @@ public class DoorAction {
 					if (champy != null) {
 						npcsay(p, champy,
 							"You have not proven yourself worthy to enter here yet");
-						Functions.mes(p,
+						mes(p,
 							"The door won't open - you need at least 32 quest points");
 					}
 					return;
@@ -755,7 +754,7 @@ public class DoorAction {
 
 			case 138: // Biohazard
 				if (!p.getCache().hasKey("rotten_apples") && p.getQuestStage(Quests.BIOHAZARD) == 4) {
-					Functions.mes(p, "the door is locked",
+					mes(p, "the door is locked",
 						"inside you can hear the mourners eating",
 						"you need to distract them from their stew");
 				} else if (p.getCache().hasKey("rotten_apples") || p.getQuestStage(Quests.BIOHAZARD) == 5) {
@@ -1145,7 +1144,7 @@ public class DoorAction {
 					return;
 				}
 				if (player.getX() >= 394) {
-					Functions.mes(player, "The gate opens smoothly");
+					mes(player, "The gate opens smoothly");
 					player.teleport(381, 851);
 					player.message("You make your way out of Shilo Village.");
 				} else {
@@ -1163,26 +1162,26 @@ public class DoorAction {
 					player.message("the village.");
 					return;
 				}
-				Functions.mes(player, "The gate feels very cold to your touch!");
+				mes(player, "The gate feels very cold to your touch!");
 				player.message("Are you sure you want to go through?");
 				int menu = multi(player,
 					"Yes, I am fearless!",
 					"No, actually, I have a bad feeling about this!");
 				if (menu == 0) {
-					Functions.changeloc(obj, 3000, 612);
+					changeloc(obj, 3000, 612);
 					if (player.getX() >= 388) {
-						Functions.mes(player, "The gates open very slowly.");
+						mes(player, "The gates open very slowly.");
 						player.teleport(387, 852);
 						player.message("You manage to drag your battered body back through the gates.");
 					} else {
-						Functions.mes(player, "The gates open very slowly...");
+						mes(player, "The gates open very slowly...");
 						player.teleport(389, 852);
-						Functions.mes(player, "As soon as the gates open, the Zombies grab you and start dragging you inside!");
+						mes(player, "As soon as the gates open, the Zombies grab you and start dragging you inside!");
 						player.teleport(391, 852);
 						say(player, null, "Oh no, I'm done for!");
 					}
 				} else if (menu == 1) {
-					Functions.mes(player, "You drag your quivering body  away from the gates.");
+					mes(player, "You drag your quivering body  away from the gates.");
 					player.message("You look around, but you don't think anyone saw you.");
 				}
 				return;
@@ -1281,7 +1280,7 @@ public class DoorAction {
 						"you could be a spy");
 					say(player, n, "that's ridiculous");
 					npcsay(player, n, "maybe, but that's the orders, I'm sorry");
-					Functions.mes(player, "the gnome refuses to open the gate");
+					mes(player, "the gnome refuses to open the gate");
 					if (spawned) {
 						n.remove();
 					}

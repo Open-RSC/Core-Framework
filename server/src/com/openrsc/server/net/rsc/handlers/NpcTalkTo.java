@@ -9,9 +9,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.Functions;
-
-import java.util.concurrent.Future;
 
 public final class NpcTalkTo implements PacketHandler {
 

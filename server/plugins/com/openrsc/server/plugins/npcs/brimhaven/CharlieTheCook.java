@@ -2,11 +2,9 @@ package com.openrsc.server.plugins.npcs.brimhaven;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -16,7 +14,7 @@ public class CharlieTheCook implements TalkNpcTrigger {
 	public void onTalkNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.CHARLIE_THE_COOK.id()) {
 			npcsay(p, n, "Hey what are you doing round here");
-			int menu = Functions.multi(p, n,
+			int menu = multi(p, n,
 				"I'm looking for a gherkin",
 				"I'm a fellow member of the phoenix gang",
 				"Just exploring");
@@ -34,7 +32,7 @@ public class CharlieTheCook implements TalkNpcTrigger {
 	private void fellowPheonix(Player p, Npc n) {
 		npcsay(p, n, "Aha a fellow phoenix",
 			"What brings you to Brimhaven?");
-		int menu2 = Functions.multi(p, n,
+		int menu2 = multi(p, n,
 			"Sun, sand and the fresh sea air",
 			"I want to steal Scarface Pete's candlesticks");
 		if (menu2 == 0) {

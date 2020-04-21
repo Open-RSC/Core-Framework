@@ -7,7 +7,6 @@ import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -32,7 +31,7 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (inArray(obj.getID(), LEDGES)) {
-			Functions.mes(p, "you climb the ledge");
+			mes(p, "you climb the ledge");
 			if (succeed(p, 1)) {
 				switch (obj.getID()) {
 					case 862:
@@ -65,18 +64,18 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
-				Functions.mes(p, "you walk down the stone steps");
+				mes(p, "you walk down the stone steps");
 				p.teleport(766, 585);
 
 			}
 		}
 		else if (obj.getID() == SOUTH_STONE_STEP) {
-			Functions.mes(p, "you walk down the steps",
+			mes(p, "you walk down the steps",
 				"they lead to a ladder, you climb down");
 			p.teleport(739, 667);
 		}
 		else if (obj.getID() == FIRST_REMAINING_BRIDGE) {
-			Functions.mes(p, "you attempt to walk over the remaining bridge..");
+			mes(p, "you attempt to walk over the remaining bridge..");
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
 			} else {
@@ -94,9 +93,9 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 		}
 		else if (inArray(obj.getID(), STONE_REMAINING_BRIDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 			if (inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
-				Functions.mes(p, "you attempt to jump across the gap..");
+				mes(p, "you attempt to jump across the gap..");
 			} else {
-				Functions.mes(p, "you attempt to walk over the remaining bridge..");
+				mes(p, "you attempt to walk over the remaining bridge..");
 			}
 			if (succeed(p, 1)) {
 				if (obj.getX() == p.getX() + 1) {

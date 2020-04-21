@@ -7,7 +7,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -34,7 +33,7 @@ public class Chef implements TalkNpcTrigger {
 						"Yes please do that for me",
 						"I'll see what your brothers have to offer first");
 					if (menu == 0) {
-						Functions.mes(p, "Caleb holds the gauntlets and closes his eyes",
+						mes(p, "Caleb holds the gauntlets and closes his eyes",
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
 						p.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_COOKING.id());
@@ -75,7 +74,7 @@ public class Chef implements TalkNpcTrigger {
 					npcsay(p, n, "Remember I want cooked swordfish, bass, tuna, salmon and shrimp");
 				} else {
 					say(p, n, "Yes i have all of that now");
-					Functions.mes(p, "You give all of the fish to Caleb");
+					mes(p, "You give all of the fish to Caleb");
 					p.getCarriedItems().remove(new Item(ItemId.SWORDFISH.id()));
 					p.getCarriedItems().remove(new Item(ItemId.BASS.id()));
 					p.getCarriedItems().remove(new Item(ItemId.TUNA.id()));

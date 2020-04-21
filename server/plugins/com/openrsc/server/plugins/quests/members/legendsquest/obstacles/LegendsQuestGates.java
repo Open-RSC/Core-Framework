@@ -3,11 +3,9 @@ package com.openrsc.server.plugins.quests.members.legendsquest.obstacles;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.doDoor;
-import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestGates implements OpLocTrigger {
 
@@ -31,8 +29,8 @@ public class LegendsQuestGates implements OpLocTrigger {
 						p.teleport(513, 539);
 					}
 				} else {
-					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You need to complete the Legends Guild Quest");
-					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "before you can enter the Legends Guild");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You need to complete the Legends Guild Quest");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "before you can enter the Legends Guild");
 				}
 			} else if (command.equalsIgnoreCase("search")) {
 				p.message("Nothing interesting happens");

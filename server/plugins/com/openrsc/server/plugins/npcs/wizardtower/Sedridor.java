@@ -4,15 +4,13 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.quests.members.RuneMysteries;
 
 import java.util.ArrayList;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 
 
@@ -33,7 +31,7 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 			menu.add("Rune Mysteries");
 		if (p.getWorld().getServer().getConfig().WANT_RUNECRAFTING && p.getQuestStage(Quests.RUNE_MYSTERIES) == 1)
 			menu.add("I'm looking for the head wizard.");
-		int choice = Functions.multi(p,n, menu.toArray(new String[menu.size()]));
+		int choice = multi(p,n, menu.toArray(new String[menu.size()]));
 		if (choice > 0) {
 			RuneMysteries.sedridorDialog(p,n, choice);
 		}

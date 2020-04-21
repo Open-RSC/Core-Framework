@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -138,18 +137,18 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					if (p.getCarriedItems().hasCatalogID(ItemId.DISTILLATOR.id(), Optional.of(false))) {
 						npcsay(p, n, "You have - that's great!",
 							"Now can you pass me those refraction agents please?");
-						Functions.mes(p, "You hand Elena the distillator and an assortment of vials");
+						mes(p, "You hand Elena the distillator and an assortment of vials");
 						p.getCarriedItems().remove(new Item(ItemId.DISTILLATOR.id()));
 						say(p, n, "These look pretty fancy");
 						npcsay(p, n, "Well, yes and no. The liquid honey isn't worth so much",
 							"But the others are- especially this colourless ethenea",
 							"And be careful with the sulphuric broline- it's highly poisonous");
 						say(p, n, "You're not kidding- I can smell it from here");
-						Functions.mes(p, "Elena puts the agents through the distillator");
+						mes(p, "Elena puts the agents through the distillator");
 						npcsay(p, n, "I don't understand...the touch paper hasn't changed colour at all",
 							"You'll need to go and see my old mentor Guidor. He lives in Varrock",
 							"Take these vials and this sample to him");
-						Functions.mes(p, "elena gives you three vials and a sample in a tin container");
+						mes(p, "elena gives you three vials and a sample in a tin container");
 						give(p, ItemId.LIQUID_HONEY.id(), 1);
 						give(p, ItemId.ETHENEA.id(), 1);
 						give(p, ItemId.SULPHURIC_BROLINE.id(), 1);
@@ -178,7 +177,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					} else if (menu6 == 1) {
 						say(p, n, "I'm afraid I've you lost some of the stuff that you gave me");
 						npcsay(p, n, "That's alright, I've got plenty");
-						Functions.mes(p, "Elena replaces your items");
+						mes(p, "Elena replaces your items");
 						p.getCarriedItems().getInventory().replace(ItemId.LIQUID_HONEY.id(), ItemId.LIQUID_HONEY.id());
 						p.getCarriedItems().getInventory().replace(ItemId.ETHENEA.id(), ItemId.ETHENEA.id());
 						p.getCarriedItems().getInventory().replace(ItemId.SULPHURIC_BROLINE.id(), ItemId.SULPHURIC_BROLINE.id());
@@ -245,9 +244,9 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 				case 3:
 					npcsay(p, n, "well done, the guards are having real trouble with those birds",
 						"you must go now traveller, it's your only chance");
-					Functions.mes(p, "Omart calls to his associate");
+					mes(p, "Omart calls to his associate");
 					npcsay(p, n, "Kilron!");
-					Functions.mes(p, "he throws one end of the rope ladder over the wall");
+					mes(p, "he throws one end of the rope ladder over the wall");
 					npcsay(p, n, "go now traveller");
 					int menu = multi(p, n,
 						"ok lets do it",
@@ -467,7 +466,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						"I hope your journey was as pleasant as mine");
 					say(p, n, "Well, it's always sunny in Runescape, as they say");
 					npcsay(p, n, "OK. Here it is");
-					Functions.mes(p, "He gives you the vial of ethenea");
+					mes(p, "He gives you the vial of ethenea");
 					give(p, ItemId.ETHENEA.id(), 1);
 					say(p, n, "Thanks. You've been a big help");
 					p.getCache().remove("vial_vinci");
@@ -591,7 +590,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						if (!p.getCache().hasKey("wrong_vial_chancy")) {
 							p.getCache().store("wrong_vial_chancy", true);
 							p.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
-							Functions.mes(p, "You give him the vial of ethenea");
+							mes(p, "You give him the vial of ethenea");
 							say(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcsay(p, n, "Be lucky");
 						}
@@ -603,7 +602,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						if (!p.getCache().hasKey("vial_chancy")) {
 							p.getCache().store("vial_chancy", true);
 							p.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
-							Functions.mes(p, "You give him the vial of liquid honey");
+							mes(p, "You give him the vial of liquid honey");
 							say(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcsay(p, n, "Be lucky");
 						}
@@ -615,7 +614,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						if (!p.getCache().hasKey("wrong_vial_chancy")) {
 							p.getCache().store("wrong_vial_chancy", true);
 							p.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
-							Functions.mes(p, "You give him the vial of sulphuric broline");
+							mes(p, "You give him the vial of sulphuric broline");
 							say(p, n, "Right.I'll see you later in the dancing donkey inn");
 							npcsay(p, n, "Be lucky");
 						}
@@ -712,7 +711,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						if (!p.getCache().hasKey("vial_vinci")) {
 							p.getCache().store("vial_vinci", true);
 							p.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
-							Functions.mes(p, "You give him the vial of ethenea");
+							mes(p, "You give him the vial of ethenea");
 							npcsay(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							say(p, n, "That's right.");
 						}
@@ -724,7 +723,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						if (!p.getCache().hasKey("wrong_vial_vinci")) {
 							p.getCache().store("wrong_vial_vinci", true);
 							p.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
-							Functions.mes(p, "You give him the vial of liquid honey");
+							mes(p, "You give him the vial of liquid honey");
 							npcsay(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							say(p, n, "That's right.");
 						}
@@ -736,7 +735,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						if (!p.getCache().hasKey("wrong_vial_vinci")) {
 							p.getCache().store("wrong_vial_vinci", true);
 							p.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
-							Functions.mes(p, "You give him the vial of sulphuric broline");
+							mes(p, "You give him the vial of sulphuric broline");
 							npcsay(p, n, "OK. We're meeting at the dancing donkey in Varrock right?");
 							say(p, n, "That's right.");
 						}
@@ -997,9 +996,9 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	private void ropeLadderBackFunction(final Player p) {
 		GameObject ropeLadder = new GameObject(p.getWorld(), Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
 		p.getWorld().registerGameObject(ropeLadder);
-		Functions.mes(p, "you climb up the rope ladder");
+		mes(p, "you climb up the rope ladder");
 		p.teleport(622, 611);
-		Functions.mes(p, "and drop down on the other side");
+		mes(p, "and drop down on the other side");
 		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.getWorld().unregisterGameObject(ropeLadder);
 	}
@@ -1007,9 +1006,9 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	private void ropeLadderInFunction(final Player p) {
 		GameObject ropeLadder = new GameObject(p.getWorld(), Point.location(622, 611), VISUAL_ROPELADDER, 0, 0);
 		p.getWorld().registerGameObject(ropeLadder);
-		Functions.mes(p, "you climb up the rope ladder");
+		mes(p, "you climb up the rope ladder");
 		p.teleport(624, 606);
-		Functions.mes(p, "and drop down on the other side");
+		mes(p, "and drop down on the other side");
 		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.getWorld().unregisterGameObject(ropeLadder);
 	}
@@ -1093,22 +1092,22 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 				doGate(p, obj);
 				p.message("you open the gate and pass through");
 			} else {
-				Functions.mes(p, "the gate is locked");
+				mes(p, "the gate is locked");
 				p.message("you need a key");
 			}
 		}
 		else if (obj.getID() == DISTILLATOR_CRATE || obj.getID() == OTHER_CRATE) {
 			if (obj.getID() == DISTILLATOR_CRATE) {
-				Functions.mes(p, "you search the crate");
+				mes(p, "you search the crate");
 				if (!p.getCarriedItems().hasCatalogID(ItemId.DISTILLATOR.id(), Optional.empty())) {
-					Functions.mes(p, "and find elena's distillator");
+					mes(p, "and find elena's distillator");
 					give(p, ItemId.DISTILLATOR.id(), 1);
 					if (p.getCache().hasKey("rotten_apples")) {
 						p.getCache().remove("rotten_apples");
 						p.updateQuestStage(this, 5);
 					}
 				} else {
-					Functions.mes(p, "it's empty");
+					mes(p, "it's empty");
 				}
 			} else {
 				p.message("The crate is empty");
@@ -1127,7 +1126,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	public void onUseLoc(GameObject obj, Item item, Player p) {
 		if (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER) {
 			if (p.getQuestStage(this) == 2) {
-				Functions.mes(p, "you throw a hand full of seeds onto the watch tower",
+				mes(p, "you throw a hand full of seeds onto the watch tower",
 					"the mourners do not seem to notice");
 				p.getCarriedItems().remove(new Item(ItemId.BIRD_FEED.id()));
 				if (!p.getCache().hasKey("bird_feed")) {
@@ -1139,7 +1138,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (item.getCatalogId() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT) {
 			if (p.getQuestStage(this) == 4 || p.getQuestStage(this) == 5) {
-				Functions.mes(p, "you place the rotten apples in the pot",
+				mes(p, "you place the rotten apples in the pot",
 					"they quickly dissolve into the stew",
 					"that wasn't very nice");
 				if (!p.getCache().hasKey("rotten_apples")) {
@@ -1148,12 +1147,12 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 				p.getCarriedItems().remove(new Item(ItemId.ROTTEN_APPLES.id()));
 				return;
 			}
-			Functions.mes(p, "you place the rotten apples in the pot",
+			mes(p, "you place the rotten apples in the pot",
 				"that wasn't very nice");
 			p.getCarriedItems().remove(new Item(ItemId.ROTTEN_APPLES.id()));
 		}
 		else if (item.getCatalogId() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE) {
-			Functions.mes(p, "the key fits the gate");
+			mes(p, "the key fits the gate");
 			p.message("you open it and pass through");
 			doGate(p, obj);
 		}
@@ -1168,7 +1167,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.MOURNER_ILL.id()) {
 			if (!p.getCarriedItems().hasCatalogID(ItemId.BIOHAZARD_BRONZE_KEY.id(), Optional.empty())) {
-				Functions.mes(p, "you search the mourner");
+				mes(p, "you search the mourner");
 				give(p, ItemId.BIOHAZARD_BRONZE_KEY.id(), 1);
 				if (n != null) {
 					n.getBehavior().retreat();

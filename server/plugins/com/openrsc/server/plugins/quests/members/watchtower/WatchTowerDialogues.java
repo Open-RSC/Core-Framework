@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -190,7 +189,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						p.message("It seems the skavid understood you");
 					} else {
 						npcsay(p, n, "???");
-						Functions.mes(p, "It seems that was the wrong reply");
+						mes(p, "It seems that was the wrong reply");
 					}
 				}
 			} else {

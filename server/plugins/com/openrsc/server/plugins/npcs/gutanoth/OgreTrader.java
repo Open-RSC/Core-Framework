@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class OgreTrader implements ShopInterface, TalkNpcTrigger {
 
@@ -35,7 +33,7 @@ public class OgreTrader implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		npcsay(p, n, "What the human be wantin'");
-		int menu = Functions.multi(p, n,
+		int menu = multi(p, n,
 			"Can I see what you are selling ?",
 			"I don't need anything");
 		if (menu == 0) {

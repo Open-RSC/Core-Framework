@@ -6,12 +6,10 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SpinningWheel implements UseLocTrigger {
 
@@ -77,7 +75,7 @@ public class SpinningWheel implements UseLocTrigger {
 					}
 				}
 				if (getOwner().getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
-					Functions.thinkbubble(getOwner(), item);
+					thinkbubble(getOwner(), item);
 					getOwner().playSound("mechanical");
 					getOwner().message("You " + verb + " the "
 						+ consumedItem + " into a " + producedItem);

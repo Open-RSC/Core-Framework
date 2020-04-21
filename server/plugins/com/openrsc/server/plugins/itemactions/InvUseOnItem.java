@@ -10,7 +10,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.compareItemsIds;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class InvUseOnItem implements UseInvTrigger {
 	private int[] capes = {

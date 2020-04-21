@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import org.apache.logging.log4j.LogManager;
@@ -107,7 +106,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 			} else if (command.equalsIgnoreCase("Teleport")) {
 				n.face(p);
 				p.face(n);
-				Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Would you like to be teleport to Varrock centre for 1000 gold?");
+				mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Would you like to be teleport to Varrock centre for 1000 gold?");
 				int yesOrNo = multi(p, "Yes please!", "No thanks.");
 				if (yesOrNo == 0) {
 					if (ifheld(p, ItemId.COINS.id(), 1000)) {

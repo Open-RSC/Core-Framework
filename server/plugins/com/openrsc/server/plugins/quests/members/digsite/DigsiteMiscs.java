@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -45,7 +44,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 			p.message("You were injured by the exploding liquid");
 		}
 		else if (i.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
-			Functions.mes(p, "bang!");
+			mes(p, "bang!");
 			p.getCarriedItems().remove(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
 			p.damage(61);
 			say(p, null, "Ow!");

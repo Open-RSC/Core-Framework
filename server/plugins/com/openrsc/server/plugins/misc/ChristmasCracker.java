@@ -4,12 +4,11 @@ import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ChristmasCracker implements UsePlayerTrigger {
 
@@ -56,11 +55,11 @@ public class ChristmasCracker implements UsePlayerTrigger {
 			player.face(otherPlayer);
 			//otherPlayer.face(player);
 
-			Functions.thinkbubble(player, item);
+			thinkbubble(player, item);
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
-			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

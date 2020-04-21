@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
@@ -33,7 +32,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	@Override
 	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == WITCH_RAILING) {
-			Functions.mes(p, "inside you see Kardia the witch");
+			mes(p, "inside you see Kardia the witch");
 			p.message("her appearence make's you feel quite ill");
 		}
 		else if (obj.getID() == WITCH_DOOR) {
@@ -41,7 +40,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 				if (p.getCache().hasKey("kardia_cat")) {
 					p.message("you open the door");
 					doDoor(obj, p);
-					Functions.mes(p, "and walk through");
+					mes(p, "and walk through");
 					p.message("the witch is busy talking to the cat");
 				} else {
 					Npc witch = ifnearvisnpc(p, NpcId.KARDIA_THE_WITCH.id(), 5);
@@ -55,19 +54,19 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 				}
 			} else if (click == 1) {
 				if (p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !p.getCache().hasKey("kardia_cat")) {
-					Functions.mes(p, "you place the cat by the door");
+					mes(p, "you place the cat by the door");
 					p.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
 					p.teleport(776, 3535);
-					Functions.mes(p, "you knock on the door and hide around the corner");
+					mes(p, "you knock on the door and hide around the corner");
 					p.message("the witch takes the cat inside");
 					if (!p.getCache().hasKey("kardia_cat")) {
 						p.getCache().store("kardia_cat", true);
 					}
 				} else if (p.getCache().hasKey("kardia_cat")) {
-					Functions.mes(p, "there is no reply");
+					mes(p, "there is no reply");
 					p.message("inside you can hear the witch talking to her cat");
 				} else {
-					Functions.mes(p, "you knock on the door");
+					mes(p, "you knock on the door");
 					p.message("there is no reply");
 				}
 			}
@@ -82,7 +81,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	@Override
 	public void onTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.KARDIA_CAT.id() && p.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false))) {
-			Functions.mes(p, "it's not very nice to squeeze one cat into a satchel");
+			mes(p, "it's not very nice to squeeze one cat into a satchel");
 			p.message("...two's just plain cruel!");
 		}
 	}
@@ -96,16 +95,16 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	public void onUseBound(GameObject obj, Item item, Player p) {
 		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
 			if (!p.getCache().hasKey("kardia_cat")) {
-				Functions.mes(p, "you place the cat by the door");
+				mes(p, "you place the cat by the door");
 				p.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
 				p.teleport(776, 3535);
-				Functions.mes(p, "you knock on the door and hide around the corner");
+				mes(p, "you knock on the door and hide around the corner");
 				p.message("the witch takes the cat inside");
 				if (!p.getCache().hasKey("kardia_cat")) {
 					p.getCache().store("kardia_cat", true);
 				}
 			} else {
-				Functions.mes(p, "the witch is busy playing...");
+				mes(p, "the witch is busy playing...");
 				p.message("with her other cat");
 			}
 		}
@@ -119,7 +118,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == WITCH_CHEST) {
-			Functions.mes(p, "you search the chest");
+			mes(p, "you search the chest");
 			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !p.getCache().hasKey("doll_of_iban")) {
 				p.message("..inside you find a book a wooden doll..");
 				p.message("...and two potions");

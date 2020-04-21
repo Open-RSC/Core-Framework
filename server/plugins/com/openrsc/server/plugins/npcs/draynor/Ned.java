@@ -6,7 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -75,7 +74,7 @@ public final class Ned implements TalkNpcTrigger {
 				"I've not been able to get work at sea these days though",
 				"They say I am too old"
 			);
-			Functions.mes(p, "There is a wistfull look in Ned's eyes");
+			mes(p, "There is a wistfull look in Ned's eyes");
 			npcsay(p, n, "I miss those days",
 				"If you could get me a ship I would take you anywhere"
 			);
@@ -158,7 +157,7 @@ public final class Ned implements TalkNpcTrigger {
 					);
 					if (choice == 0) {
 						npcsay(p, n, "Okay, I will have a go.");
-						Functions.mes(p, "You hand Ned 3 balls of wool",
+						mes(p, "You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
 						p.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id(), 3));

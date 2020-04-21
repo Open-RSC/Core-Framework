@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -45,10 +44,10 @@ public final class PortSarimSailor implements OpLocTrigger,
 				"I have a wife and family to support");
 		} else if (option == 1) {
 			if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) > -1) {
-				Functions.mes(p, "You pay 30 gold", "You board the ship");
+				mes(p, "You pay 30 gold", "You board the ship");
 				p.teleport(324, 713, false);
 				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-				Functions.mes(p, "The ship arrives at Karamja");
+				mes(p, "The ship arrives at Karamja");
 			} else {
 				say(p, n, "Oh dear I don't seem to have enough money");
 			}

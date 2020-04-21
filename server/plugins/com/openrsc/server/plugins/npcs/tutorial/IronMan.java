@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -45,7 +44,7 @@ public class IronMan implements
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
 			if (p.getAttribute("ironman_delete", false)) {
 				if (p.getCache().hasKey("bank_pin")) {
-					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Enter your Bank PIN to downgrade your Iron Man status.");
+					mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Enter your Bank PIN to downgrade your Iron Man status.");
 
 					if (!validatebankpin(p)) {
 						ActionSender.sendBox(p, "Incorrect bank pin", false);
@@ -65,7 +64,7 @@ public class IronMan implements
 				}
 				return;
 			} else if (p.getAttribute("ironman_pin", false)) {
-				Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need to set a Bank PIN for that.");
+				mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need to set a Bank PIN for that.");
 				int menu = multi(p,
 					"Okay, let me set a PIN.",
 					"No, I don't want a Bank PIN.");

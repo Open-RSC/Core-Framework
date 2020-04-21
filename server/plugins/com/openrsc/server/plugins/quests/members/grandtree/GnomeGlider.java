@@ -4,7 +4,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -37,7 +36,7 @@ public class GnomeGlider implements TalkNpcTrigger {
 					"no thanks");
 				if (travelBackMenu == 0) {
 					npcsay(p, n, "ok, hold on tight");
-					Functions.mes(p, "you both hold onto the wooden beam",
+					mes(p, "you both hold onto the wooden beam",
 						"you take a few steps backand rush forwards",
 						"the glider just lifts of the ground");
 					p.teleport(221, 3567);
@@ -65,7 +64,7 @@ public class GnomeGlider implements TalkNpcTrigger {
 					say(p, n, "take me to karamja");
 					npcsay(p, n, "ok, your the boss, jump on",
 						"hold on tight, it'll be a rough ride");
-					Functions.mes(p, "you hold on tight to the glider's wooden beam",
+					mes(p, "you hold on tight to the glider's wooden beam",
 						"the pilot leans back and then pushes the glider forward",
 						"you float softly off the grand tree");
 					p.teleport(221, 3567);
@@ -76,7 +75,7 @@ public class GnomeGlider implements TalkNpcTrigger {
 					say(p, n, "take me to Varrock");
 					npcsay(p, n, "ok, your the boss, jump on",
 						"hold on tight, it'll be a rough ride");
-					Functions.mes(p, "you hold on tight to the glider's wooden beam",
+					mes(p, "you hold on tight to the glider's wooden beam",
 						"the pilot leans back and then pushes the glider forward",
 						"you float softly off the grand tree");
 					p.teleport(221, 3567);
@@ -87,7 +86,7 @@ public class GnomeGlider implements TalkNpcTrigger {
 					say(p, n, "take me to Al kharid");
 					npcsay(p, n, "ok, your the boss, jump on",
 						"hold on tight, it'll be a rough ride");
-					Functions.mes(p, "you hold on tight to the glider's wooden beam",
+					mes(p, "you hold on tight to the glider's wooden beam",
 						"the pilot leans back and then pushes the glider forward",
 						"you float softly off the grand tree");
 					p.teleport(221, 3567);
@@ -98,7 +97,7 @@ public class GnomeGlider implements TalkNpcTrigger {
 					say(p, n, "take me to White wolf mountain");
 					npcsay(p, n, "ok, your the boss, jump on",
 						"hold on tight, it'll be a rough ride");
-					Functions.mes(p, "you hold on tight to the glider's wooden beam",
+					mes(p, "you hold on tight to the glider's wooden beam",
 						"the pilot leans back and then pushes the glider forward",
 						"you float softly off the grand tree");
 					p.teleport(221, 3567);
@@ -123,7 +122,7 @@ public class GnomeGlider implements TalkNpcTrigger {
 				if (menu == 0) {
 					npcsay(p, n, "ok, your the boss, jump on",
 						"hold on tight, it'll be a rough ride");
-					Functions.mes(p, "you hold on tight to the glider's wooden beam",
+					mes(p, "you hold on tight to the glider's wooden beam",
 						"the pilot leans back and then pushes the glider forward",
 						"you float softly off the grand tree");
 					p.teleport(221, 3567);

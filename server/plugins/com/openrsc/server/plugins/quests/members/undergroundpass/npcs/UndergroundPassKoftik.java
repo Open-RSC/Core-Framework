@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -165,7 +164,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 						npcsay(p, n, "well..maybe?");
 					} else if (menu == 1) {
 						say(p, n, "what does it say?");
-						Functions.mes(p, "@red@it seems to be written by the adventurer Randas, it reads...",
+						mes(p, "@red@it seems to be written by the adventurer Randas, it reads...",
 							"@red@It began as a whisper in my ears. Dismissing the sounds...",
 							"@red@..as the whistling of the wind, I steeled myself against...",
 							"@red@..these forces and continued on my way",
@@ -289,7 +288,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 						"reserrect the well of voyage",
 						"follow me, i'll lead you out");
 					say(p, n, "at last!, i've had enough of caves");
-					Functions.mes(p, "koftik leads you back up through the winding caverns");
+					mes(p, "koftik leads you back up through the winding caverns");
 					p.teleport(714, 581);
 					p.message("and back to the cave entrance");
 					break;

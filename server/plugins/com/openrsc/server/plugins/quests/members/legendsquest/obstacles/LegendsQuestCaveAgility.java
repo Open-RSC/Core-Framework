@@ -7,9 +7,7 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestCaveAgility implements OpLocTrigger {
 

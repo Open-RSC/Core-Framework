@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -17,7 +16,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	@Override
 	public void onTakeObj(Player owner, GroundItem item) {
 		if (item.getID() == ItemId.WINE_OF_ZAMORAK.id() && item.getX() == 333 && item.getY() == 434) {
-			Npc zam = Functions.ifnearvisnpc(owner, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
+			Npc zam = ifnearvisnpc(owner, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			if (zam != null && !zam.inCombat()) {
 				owner.face(zam);
 				zam.face(owner);
@@ -29,7 +28,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 	@Override
 	public boolean blockTakeObj(Player p, GroundItem i) {
 		if (i.getID() == ItemId.WINE_OF_ZAMORAK.id()) {
-			Npc zam = Functions.ifnearvisnpc(p, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
+			Npc zam = ifnearvisnpc(p, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			return zam != null && !zam.inCombat();
 		}
 		return false;

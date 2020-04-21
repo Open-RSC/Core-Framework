@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -218,7 +217,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"herb is called, 'Sito Foil' and grows best",
 									"where the ground has been blackened",
 									"by the living flame.");
-								Functions.mes(p, "You give the Ardrigal to Trufitus");
+								mes(p, "You give the Ardrigal to Trufitus");
 								p.getCarriedItems().remove(new Item(ItemId.ARDRIGAL.id()));
 								setQuestStage(p, this, 3);
 								p.getCache().store("got_sito_foil", false);
@@ -250,7 +249,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"to collect. The next herb is called, 'Volencia Moss'",
 									"And it clings to rocks for it's existence",
 									"It is difficult to see, so you must search for it well.");
-								Functions.mes(p, "You give the Sito Foil to Trufitus");
+								mes(p, "You give the Sito Foil to Trufitus");
 								p.getCarriedItems().remove(new Item(ItemId.SITO_FOIL.id()));
 								setQuestStage(p, this, 4);
 								p.getCache().store("got_volencia_moss", false);
@@ -292,7 +291,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"A secret entrance to the caverns is set into",
 									"The Northern cliffs of this land",
 									"Take care Bwana as it may be very dangerous");
-								Functions.mes(p, "You give the Volencia Moss to Trufitus");
+								mes(p, "You give the Volencia Moss to Trufitus");
 								p.getCarriedItems().remove(new Item(ItemId.VOLENCIA_MOSS.id()));
 								setQuestStage(p, this, 5);
 								p.getCache().store("got_rogues_purse", false);
@@ -817,7 +816,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				break;
 			case Trufitus.THANKS_FOR_THE_INFORMATION:
 				npcsay(p, n, "What information?");
-				Functions.mes(p, "Trufitus looks at you blankly, then wanders off.");
+				mes(p, "Trufitus looks at you blankly, then wanders off.");
 				npcsay(p, n, "Hmmm, well, you are welcome bwana.");
 				break;
 			case Trufitus.AH_ZA_RHOON:
@@ -842,7 +841,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				break;
 			case Trufitus.OH_OK:
 				npcsay(p, n, "Yes, it's a bit sad really, I liked that village.");
-				Functions.mes(p, "Trufitus seems deeply touched...");
+				mes(p, "Trufitus seems deeply touched...");
 				npcsay(p, n, "Well, I hope you will excuse me, but I need to get back to my studies.");
 				break;
 			case Trufitus.WEAKNESS:
@@ -882,10 +881,10 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 						trufitisChat(p, n, Trufitus.WEAKNESS);
 					}
 				} else if (opt10 == 1) {
-					Functions.mes(p, "Trufitus looks at you blankly");
+					mes(p, "Trufitus looks at you blankly");
 					npcsay(p, n, "Surely you mean Minions?");
 					say(p, n, "Yes of course, I mean Minions, what made you think I said Onions?");
-					Functions.mes(p, "Trufitus frowns at you but continues about...minions...");
+					mes(p, "Trufitus frowns at you but continues about...minions...");
 					npcsay(p, n, "Minions are the fiendish undead creatures that Rashiliyia controls.",
 						"She has very few living worshippers, but they need to be dealt with at some point",
 						"Usually a strong creature of some sort will be guarding the bones",
@@ -992,7 +991,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), Optional.of(false))
 				&& !p.getCarriedItems().hasCatalogID(ItemId.SNAKE_WEED.id(), Optional.of(false)) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 						(!hasCacheKeySetTrue(p, "got_snake_weed") && atQuestStage(p, this, 1)) )) {
-				Functions.mes(p, "Small amounts of a herb are growing near this vine");
+				mes(p, "Small amounts of a herb are growing near this vine");
 				addobject(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
 					.getY(), p);
 				if(atQuestStage(p, this, 1)) {
@@ -1013,7 +1012,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			if (!p.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_ARDRIGAL.id(), Optional.of(false))
 				&& !p.getCarriedItems().hasCatalogID(ItemId.ARDRIGAL.id(), Optional.of(false)) && (p.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 					(!hasCacheKeySetTrue(p, "got_ardigal") && atQuestStage(p, this, 2)) )) {
-				Functions.mes(p, "You find a herb plant growing at the base of the palm");
+				mes(p, "You find a herb plant growing at the base of the palm");
 				addobject(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), p);
 				if(atQuestStage(p, this, 2)) {
 					p.getCache().store("got_ardigal", true);
@@ -1026,7 +1025,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !p.getCarriedItems().hasCatalogID(ItemId.SITO_FOIL.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_sito_foil")
 				&& atQuestStage(p, this, 3)) {
-				Functions.mes(p,
+				mes(p,
 					"A small herb plant is growing in the scorched soil.");
 				addobject(ItemId.UNIDENTIFIED_SITO_FOIL.id(), 1, obj.getX(), obj
 					.getY(), p);
@@ -1039,7 +1038,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !p.getCarriedItems().hasCatalogID(ItemId.VOLENCIA_MOSS.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_volencia_moss")
 				&& atQuestStage(p, this, 4)) {
-				Functions.mes(p,
+				mes(p,
 					"Small amounts of herb moss are growing at the base of this rock");
 				addobject(ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(), 1, obj.getX(), obj
 					.getY(), p);
@@ -1063,7 +1062,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !p.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))
 				&& !hasCacheKeySetTrue(p, "got_rogues_purse")
 				&& atQuestStage(p, this, 5)) {
-				Functions.mes(p,
+				mes(p,
 					"Small amounts of herb fungus are growing at the base of this cavern wall");
 				addobject(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), 1, p.getX(),
 					p.getY(), p);

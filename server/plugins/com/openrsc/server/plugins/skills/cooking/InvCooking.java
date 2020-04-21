@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -144,7 +143,7 @@ public class InvCooking implements UseInvTrigger {
 			}
 
 			if (combine.messages.length > 1)
-				Functions.mes(p, combine.messages[0]);
+				mes(p, combine.messages[0]);
 			else
 				p.message(combine.messages[0]);
 

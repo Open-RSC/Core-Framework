@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
@@ -27,7 +26,7 @@ public class MuddyChest implements OpLocTrigger, UseLocTrigger {
 		if (obj.getID() == MUDDY_CHEST && item.getCatalogId() == ItemId.MUDDY_KEY.id()) {
 			int respawnTime = 3000;
 			p.message("you unlock the chest with your key");
-			Functions.changeloc(obj, respawnTime, MUDDY_CHEST_OPEN);
+			changeloc(obj, respawnTime, MUDDY_CHEST_OPEN);
 			p.message("You find some treasure in the chest");
 
 			p.getCarriedItems().remove(new Item(ItemId.MUDDY_KEY.id())); // remove the muddy key.

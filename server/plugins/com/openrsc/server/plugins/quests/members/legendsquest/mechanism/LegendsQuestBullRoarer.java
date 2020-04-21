@@ -7,7 +7,6 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -64,7 +63,7 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 				npcWalkFromPlayer(p, gujuo);
 			}
 		} else if (controlRandom == 3) {
-			Npc nativeNpc = Functions.ifnearvisnpc(p, 5, NpcId.OOMLIE_BIRD.id(), NpcId.KARAMJA_WOLF.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.JUNGLE_SAVAGE.id());
+			Npc nativeNpc = ifnearvisnpc(p, 5, NpcId.OOMLIE_BIRD.id(), NpcId.KARAMJA_WOLF.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.JUNGLE_SAVAGE.id());
 			if (nativeNpc != null) {
 				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
 				nativeNpc.setChasing(p);

@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -115,12 +114,12 @@ public final class SeersBartender implements
 						"That'll be 18 coins please");
 					if (ifheld(p, ItemId.COINS.id(), 18)) {
 						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
-						Functions.mes(p,
+						mes(p,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",
 							"The room seems to be swaying");
 						drinkAle(p);
-						Functions.mes(p, "The bartender scrawls his signiture on your card");
+						mes(p, "The bartender scrawls his signiture on your card");
 						p.getCache().store("barfive", true);
 					} else {
 						say(p, n, "Sorry I don't have 18 coins");

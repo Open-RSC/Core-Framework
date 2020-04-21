@@ -2,12 +2,9 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -21,7 +18,7 @@ public class WildernessGuide implements TalkNpcTrigger {
 		npcsay(p, n, "Hi are you someone who likes to fight other players?",
 			"Granted it has big risks",
 			"but it can be very rewarding too");
-		int menu = Functions.multi(p, n, "Yes I'm up for a bit of a fight", "I'd prefer to avoid that");
+		int menu = multi(p, n, "Yes I'm up for a bit of a fight", "I'd prefer to avoid that");
 		if (menu == 0) {
 			npcsay(p, n, "Then the wilderness is the place for you",
 				"That is the area of the game where you can attack other players",
@@ -38,7 +35,7 @@ public class WildernessGuide implements TalkNpcTrigger {
 	}
 
 	private void optionsDialogue_where(Player p, Npc n) {
-		Functions.say(p, n, "Where is this wilderness?");
+		say(p, n, "Where is this wilderness?");
 		npcsay(p, n, "Once you get into the main playing area head north",
 				"then you will eventually reach the wilderness",
 				"The deeper you venture into the wilderness",
@@ -48,7 +45,7 @@ public class WildernessGuide implements TalkNpcTrigger {
 	}
 
 	private void optionsDialogue_die(Player p, Npc n) {
-		Functions.say(p, n, "What happens when I die?");
+		say(p, n, "What happens when I die?");
 		npcsay(p, n, "normally when you die",
 				"you will lose all of the items in your inventory",
 				"Except the three most valuable",

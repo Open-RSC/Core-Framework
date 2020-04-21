@@ -6,10 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Prayer implements OpLocTrigger {
 

@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -27,13 +26,13 @@ public class King implements TalkNpcTrigger {
 			say(p, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
 			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
-				Functions.mes(p, "You show the certificate to the king");
+				mes(p, "You show the certificate to the king");
 				npcsay(p, n, "My goodness",
 					"This is the claim for a reward put out by my father",
 					"I never thought I'd see anyone claim this reward",
 					"I see you are claiming half the reward",
 					"So that would come to 600 gold coins");
-				Functions.mes(p, "You hand over a certificate",
+				mes(p, "You hand over a certificate",
 					"The king gives you 600 coins");
 				p.getCarriedItems().remove(new Item(ItemId.CERTIFICATE.id()));
 				p.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
@@ -47,7 +46,7 @@ public class King implements TalkNpcTrigger {
 			} else {
 				npcsay(p, n, "You have already claimed the reward",
 					"You can't claim it twice");
-				Functions.mes(p, "Why don't you give this certificate",
+				mes(p, "Why don't you give this certificate",
 					"To whoever helped you get the shield");
 			}
 			return;

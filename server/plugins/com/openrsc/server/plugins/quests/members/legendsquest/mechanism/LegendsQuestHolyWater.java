@@ -8,7 +8,6 @@ import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -23,7 +22,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
-		return Functions.compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
+		return compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKalrag implements KillNpcTrigger {
 

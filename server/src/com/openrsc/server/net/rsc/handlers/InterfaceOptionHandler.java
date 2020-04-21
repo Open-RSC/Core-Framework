@@ -14,8 +14,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public class InterfaceOptionHandler implements PacketHandler {
 
@@ -89,7 +90,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 								&& (player.getIronMan() == IronmanMode.Ultimate.id() || player.getIronMan() == IronmanMode.Hardcore.id())) {
 								if (player.getIronManRestriction() == 0) {
 									if (player.getCache().hasKey("bank_pin")) {
-										Npc npc = Functions.ifnearvisnpc(player, 11, 799, 800, 801);
+										Npc npc = ifnearvisnpc(player, 11, 799, 800, 801);
 										if (npc != null) {
 											ActionSender.sendHideIronManInterface(player);
 											player.setAttribute("ironman_delete", true);
@@ -132,7 +133,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 								|| player.getIronMan() == IronmanMode.Hardcore.id())) {
 								if (player.getIronManRestriction() == 0) {
 									if (player.getCache().hasKey("bank_pin")) {
-										Npc npc = Functions.ifnearvisnpc(player, 11, 799, 800, 801);
+										Npc npc = ifnearvisnpc(player, 11, 799, 800, 801);
 										if (npc != null) {
 											ActionSender.sendHideIronManInterface(player);
 											player.setAttribute("ironman_delete", true);
@@ -167,7 +168,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 						}
 						if (setting == 0) {
 							if (!player.getCache().hasKey("bank_pin")) {
-								Npc npc = Functions.ifnearvisnpc(player, 11, 799, 800, 801);
+								Npc npc = ifnearvisnpc(player, 11, 799, 800, 801);
 								if (npc != null) {
 									ActionSender.sendHideIronManInterface(player);
 									player.setAttribute("ironman_pin", true);

@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -50,7 +49,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 						// NOTHING
 					} else if (moreMenu == 1) {
 						if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
-							Functions.mes(p, "you give doctor orbon 100 coins",
+							mes(p, "you give doctor orbon 100 coins",
 								"doctor orbon gives you a protective suit");
 							give(p, ItemId.PROTECTIVE_TROUSERS.id(), 1);
 							give(p, ItemId.PROTECTIVE_JACKET.id(), 1);
@@ -83,7 +82,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 					// NOTHING
 				} else if (menu == 1) {
 					if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
-						Functions.mes(p, "you give doctor orbon 100 coins",
+						mes(p, "you give doctor orbon 100 coins",
 							"doctor orbon gives you a protective suit");
 						give(p, ItemId.PROTECTIVE_TROUSERS.id(), 1);
 						give(p, ItemId.PROTECTIVE_JACKET.id(), 1);

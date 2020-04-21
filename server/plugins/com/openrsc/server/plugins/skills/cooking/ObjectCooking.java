@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -46,14 +45,14 @@ public class ObjectCooking implements UseLocTrigger {
 				if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
 					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
-					Functions.mes(p, "sometimes you will burn food",
+					mes(p, "sometimes you will burn food",
 							"As your cooking level increases this will happen less",
 							"Now speak to the cooking instructor again");
 					p.getCache().set("tutorial", 30);
 				} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
 					final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
 					p.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
-					Functions.mes(p, "Now speak to the cooking instructor again");
+					mes(p, "Now speak to the cooking instructor again");
 					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					p.getCache().set("tutorial", 31);
 					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
@@ -85,7 +84,7 @@ public class ObjectCooking implements UseLocTrigger {
 		// Poison (Hazeel Cult)
 		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if (p.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
-				Functions.mes(p, "you poor the poison into the hot pot",
+				mes(p, "you poor the poison into the hot pot",
 					"the poison desolves into the soup");
 				p.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 				p.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
@@ -225,7 +224,7 @@ public class ObjectCooking implements UseLocTrigger {
 					if (hasBubble)
 						thinkbubble(p, new Item(itemID));
 					p.playSound("cooking");
-					Functions.mes(p, messages);
+					mes(p, messages);
 					p.getCarriedItems().remove(new Item(itemID));
 					give(p, product, 1);
 				} else {

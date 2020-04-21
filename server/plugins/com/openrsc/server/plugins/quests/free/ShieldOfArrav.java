@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 
@@ -106,7 +105,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				if (player.getQuestStage(this) == 1) {
 					say(player, null, "Aha the shield of Arrav");
 					say(player, null, "That was what I was looking for");
-					Functions.mes(player, "You take the book from the bookcase");
+					mes(player, "You take the book from the bookcase");
 					give(player, ItemId.BOOK.id(), 1);
 					if (!player.getCache().hasKey("read_arrav")) {
 						player.getCache().store("read_arrav", true);
@@ -124,14 +123,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
 							|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
-							Functions.mes(player, "You search the chest", "The chest is empty");
+							mes(player, "You search the chest", "The chest is empty");
 							return;
 					} else if (isPhoenixGang(player)) {
-						Functions.mes(player, "You search the chest",
+						mes(player, "You search the chest",
 							"You find half a shield which you take");
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
 					} else {
-						Functions.mes(player, "You search the chest", "The chest is empty");
+						mes(player, "You search the chest", "The chest is empty");
 					}
 				}
 				break;
@@ -144,14 +143,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
 						|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
-						Functions.mes(player, "You search the cupboard", "The cupboard is empty");
+						mes(player, "You search the cupboard", "The cupboard is empty");
 						return;
 					} else if (isBlackArmGang(player)) {
-						Functions.mes(player, "You search the cupboard",
+						mes(player, "You search the cupboard",
 							"You find half a shield which you take");
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
 					} else {
-						Functions.mes(player, "You search the cupboard", "The cupboard is empty");
+						mes(player, "You search the cupboard", "The cupboard is empty");
 					}
 				}
 				break;
@@ -438,7 +437,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	public void onOpInv(Item item, Player player, String command) {
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BOOK:
-				Functions.mes(player,
+				mes(player,
 					"The shield of Arrav",
 					"By A.R.Wright",
 					"Arrav is probably the best known hero of the 4th age.",

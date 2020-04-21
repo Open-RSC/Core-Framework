@@ -6,12 +6,11 @@ import com.openrsc.server.content.DropTable;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Present implements UsePlayerTrigger, OpInvTrigger {
 
@@ -274,19 +273,19 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			Functions.thinkbubble(player, item);
+			thinkbubble(player, item);
 			player.message("You give a present to " + otherPlayer.getUsername());
 			otherPlayer.message(player.getUsername() + " handed you a present...");
-			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			otherPlayer.message("You unwrap the present and reach your hand inside...");
-			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			Item prize = presentDrops.rollItem(false, otherPlayer);
 			String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
 
 			player.message(otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
 			otherPlayer.message("You take out a " + prizeName + ".");
-			Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			String playerDialogue;
 

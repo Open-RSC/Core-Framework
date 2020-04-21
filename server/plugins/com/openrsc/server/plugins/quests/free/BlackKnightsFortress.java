@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -176,7 +175,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 			case HOLE:
 				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
 					if (player.getCarriedItems().remove(new Item(ItemId.CABBAGE.id())) != -1) {
-						Functions.mes(player,
+						mes(player,
 							"You drop a cabbage down the hole.",
 							"The cabbage lands in the cauldron below.",
 							"The mixture in the cauldron starts to froth and bubble.",
@@ -186,7 +185,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 						player.updateQuestStage(this, 3);
 					}
 				} else if (item.getCatalogId() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
-					Functions.mes(player,
+					mes(player,
 						"This is the wrong sort of cabbage!",
 						"You are meant to be hindering the witch.",
 						"Not helping her.");
@@ -331,7 +330,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 						int option = multi(player, guard, "Ok I won't", "I don't care I'm going in anyway");
 						if (option == 1) {
 							doDoor(obj, player);
-							Npc n = Functions.ifnearvisnpc(player, NpcId.BLACK_KNIGHT.id(), 7);
+							Npc n = ifnearvisnpc(player, NpcId.BLACK_KNIGHT.id(), 7);
 							if (!n.isChasing()) {
 								n.setChasing(player);
 								new AggroEvent(n.getWorld(), n, player);
@@ -345,7 +344,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 			case 40:
 				if (obj.getLocation().equals(DOOR3_LOCATION)
 						&& player.getY() <= 442) {
-					Npc npc = Functions.ifnearvisnpc(player, 5, NpcId.BLACK_KNIGHT.id());
+					Npc npc = ifnearvisnpc(player, 5, NpcId.BLACK_KNIGHT.id());
 					int countNotAbleChase = 0;
 					if (npc == null) {
 						doDoor(obj, player);

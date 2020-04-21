@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
@@ -487,7 +486,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 						npcsay(p, n,
 							"the spirit tree has looked over us for centuries",
 							"now we must pay our respects");
-						Functions.mes(p, "bolren takes the orbs",
+						mes(p, "bolren takes the orbs",
 							"the gnomes begin to chant", "Su tana, en tania",
 							"They continue to chant",
 							"As the king gnome climbs the tree",
@@ -884,7 +883,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 				p.message("The ballista has been damaged, it is out of use");
 				return;
 			} else if (p.getQuestStage(getQuestId()) < 4) {
-				Functions.mes(p, "The ballista is damaged",
+				mes(p, "The ballista is damaged",
 					"It cannot be used until the gnomes have finished their repairs");
 			} else if (p.getQuestStage(getQuestId()) == 4) {
 				fireBallistaMenu(p, obj);
@@ -892,7 +891,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 393) {
 			if (p.getQuestStage(getQuestId()) >= 5 || p.getQuestStage(getQuestId()) == -1) {
-				Functions.mes(p, "The wall is reduced to",
+				mes(p, "The wall is reduced to",
 					"Rubble, you manage to climb over");
 				if (p.getY() >= 633) {
 					p.teleport(659, 632, false);
@@ -911,7 +910,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 					p.teleport(659, 633, false);
 				}
 			} else {
-				Functions.mes(p, "The wall is damaged",
+				mes(p, "The wall is damaged",
 					"But not enough to climb through");
 			}
 		}
@@ -936,7 +935,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 		boolean firstOption = false;
 		boolean secondOption = false;
 		boolean thirdOption = false;
-		Functions.mes(p, "To fire the ballista you Must first set the coordinates",
+		mes(p, "To fire the ballista you Must first set the coordinates",
 			"Set the height coordinate to");
 		int MenuBallistaOne = multi(p, "coord 1", "coord 2",
 			"coord 3", "coord 4", "coord 5");
@@ -960,14 +959,14 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		p.message("You fire the ballista");
-		Functions.mes(p, "The huge spear flies through the air");
+		mes(p, "The huge spear flies through the air");
 		if (firstOption && secondOption && thirdOption) {
-			Functions.mes(p, "And screams down directly into the Khazard stronghold",
+			mes(p, "And screams down directly into the Khazard stronghold",
 				"A deafening crash echoes over the battlefield",
 				"The front entrance is reduced to rubble");
 			p.updateQuestStage(getQuestId(), 5);
 		} else {
-			Functions.mes(p, "Straight over the khazard stronghold",
+			mes(p, "Straight over the khazard stronghold",
 				"Into the valleys behond", "You've missed the target");
 		}
 	}
@@ -983,7 +982,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 			n.resetCombatEvent();
 			n.killedBy(p);
 			if (p.getQuestStage(getQuestId()) == 6) {
-				Functions.mes(p,
+				mes(p,
 					"As he falls to the ground...",
 					"A ghostly vapour floats upwards from his battle worn armour",
 					"Out of sight, you hear a shrill scream in the still air of the valley");

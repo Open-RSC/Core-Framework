@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class MagicStoreOwner implements ShopInterface,
 	TalkNpcTrigger {
@@ -29,7 +27,7 @@ public final class MagicStoreOwner implements ShopInterface,
 		npcsay(p, n, "Welcome to the magic guild store",
 			"would you like to buy some magic supplies?");
 
-		int option = Functions.multi(p, n, "Yes please", "No thankyou");
+		int option = multi(p, n, "Yes please", "No thankyou");
 		switch (option) {
 			case 0:
 				p.setAccessingShop(shop);

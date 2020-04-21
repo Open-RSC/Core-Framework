@@ -6,13 +6,12 @@ import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class GemMining implements OpLocTrigger {
 
@@ -75,7 +74,7 @@ public class GemMining implements OpLocTrigger {
 			p.playSound("prospect");
 			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			p.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (obj.getID() == GEM_ROCK) {
 				p.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 				return;
@@ -88,7 +87,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (axeId < 0 || reqlvl > mineLvl) {
-			Functions.mes(p, "You need a pickaxe to mine this rock",
+			mes(p, "You need a pickaxe to mine this rock",
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
@@ -102,7 +101,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		p.playSound("mine");
-		Functions.thinkbubble(p, new Item(ItemId.IRON_PICKAXE.id()));
+		thinkbubble(p, new Item(ItemId.IRON_PICKAXE.id()));
 		p.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Gem Mining", p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? Formulae.getRepeatTimes(p, com.openrsc.server.constants.Skills.MINING) : retrytimes + 1000, true) {
 			@Override
@@ -145,7 +144,7 @@ public class GemMining implements OpLocTrigger {
 					}
 				}
 				if (!isCompleted()) {
-					Functions.thinkbubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
+					thinkbubble(getOwner(), new Item(ItemId.IRON_PICKAXE.id()));
 					getOwner().playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 				}
 			}

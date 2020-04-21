@@ -13,11 +13,10 @@ import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Fletching implements UseInvTrigger {
 
@@ -281,7 +280,7 @@ public class Fletching implements UseInvTrigger {
 		String[] options = log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
 				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
 
-		int type = Functions.multi(player, options);
+		int type = multi(player, options);
 		if (player.isBusy() || type < 0 || type > options.length) {
 			return;
 		}

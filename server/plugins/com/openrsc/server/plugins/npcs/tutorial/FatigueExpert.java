@@ -2,12 +2,9 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -19,7 +16,7 @@ public class FatigueExpert implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player p, Npc n) {
 		if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") <= 85) {
-			Functions.say(p, n, "Hi I'm feeling a little tired after all this learning");
+			say(p, n, "Hi I'm feeling a little tired after all this learning");
 			npcsay(p, n, "Yes when you use your skills you will slowly get fatigued",
 				"If you look on your stats menu you will see a fatigue stat",
 				"When your fatigue reaches 100 percent then you will be very tired",
@@ -31,7 +28,7 @@ public class FatigueExpert implements TalkNpcTrigger {
 			p.getCache().set("tutorial", 85);
 		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 86) {
 			npcsay(p, n, "How are you feeling now?");
-			Functions.say(p, n, "I feel much better rested now");
+			say(p, n, "I feel much better rested now");
 			npcsay(p, n, "Tell you what, I'll give you this useful sleeping bag",
 				"So you can rest anywhere");
 			give(p, ItemId.SLEEPING_BAG.id(), 1);

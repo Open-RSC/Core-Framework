@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -28,7 +27,7 @@ public class SpiritTrees implements OpLocTrigger {
 		 * **/
 		if (obj.getID() == STRONGHOLD_SPIRIT_TREE) {
 			if (p.getQuestStage(Quests.GRAND_TREE) == -1) {
-				Functions.mes(p, "The tree talks in an old tired voice...",
+				mes(p, "The tree talks in an old tired voice...",
 					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
 					"@yel@Spirit Tree: Would you like me to take you somewhere?");
 				int treeMenu = multi(p, "No thanks old tree",
@@ -37,14 +36,14 @@ public class SpiritTrees implements OpLocTrigger {
 					say(p, null, "no thanks old tree");
 				} else if (treeMenu == 1) {
 					say(p, null, "where can i go?");
-					Functions.mes(p, "The tree talks again..",
+					mes(p, "The tree talks again..",
 						"@yel@Spirit Tree: You can travel to the trees",
 						"@yel@Spirit Tree: Which are related to myself");
 					int travelMenu = multi(p,
 						"Battlefield of Khazard",
 						"Forest north of Varrock", "the gnome tree village");
 					if (travelMenu >= 0 && travelMenu <= 2) {
-						Functions.mes(p,
+						mes(p,
 							"You place your hands on the dry tough bark of the spirit tree",
 							"and feel a surge of energy run through your veins");
 						breakPlagueSample(p);
@@ -62,7 +61,7 @@ public class SpiritTrees implements OpLocTrigger {
 		 *  **/
 		else if (obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE) {
 			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
-				Functions.mes(p,
+				mes(p,
 					"The tree talks in an old tired voice...",
 					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
 					"@yel@Spirit Tree: Would you like me to take you somewhere?");
@@ -72,14 +71,14 @@ public class SpiritTrees implements OpLocTrigger {
 					say(p, null, "no thanks old tree");
 				} else if (treeMenu == 1) {
 					say(p, null, "where can i go?");
-					Functions.mes(p, "The tree talks again..",
+					mes(p, "The tree talks again..",
 						"@yel@Spirit Tree: You can travel to the trees",
 						"@yel@Spirit Tree: Which are related to myself");
 					int travelMenu = multi(p,
 						"Battlefield of Khazard",
 						"Forest north of Varrock", "the gnome stronghold");
 					if (travelMenu >= 0 && travelMenu <= 2) {
-						Functions.mes(p,
+						mes(p,
 							"You place your hands on the dry tough bark of the spirit tree",
 							"and feel a surge of energy run through your veins");
 						breakPlagueSample(p);
@@ -97,7 +96,7 @@ public class SpiritTrees implements OpLocTrigger {
 		else if (obj.getID() == YOUNG_SPIRIT_TREES) {
 			if (p.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
 				p.message("The young spirit tree talks..");
-				Functions.mes(p, "@yel@Young Spirit Tree: Hello gnome friend",
+				mes(p, "@yel@Young Spirit Tree: Hello gnome friend",
 					"@yel@Young Spirit Tree: Would you like to travel to the home of the tree gnomes?");
 				int treeMenu = multi(p, "No thank you",
 					"Yes please");
@@ -105,7 +104,7 @@ public class SpiritTrees implements OpLocTrigger {
 					say(p, null, "No thank you");
 				} else if (treeMenu == 1) {
 					say(p, null, "Yes please");
-					Functions.mes(p, "You place your hands on the dry tough bark of the spirit tree",
+					mes(p, "You place your hands on the dry tough bark of the spirit tree",
 						"and feel a surge of energy run through your veins");
 					breakPlagueSample(p);
 					p.teleport(658, 695, false);

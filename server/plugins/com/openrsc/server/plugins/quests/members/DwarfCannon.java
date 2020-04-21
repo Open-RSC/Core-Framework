@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
@@ -51,7 +50,7 @@ public class DwarfCannon
 	public void handleReward(Player p) {
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DWARF_CANNON), true);
 		p.message("@gre@You haved gained 1 quest point!");
-		Functions.mes(p, "well done", "you have completed the dwarf cannon quest");
+		mes(p, "well done", "you have completed the dwarf cannon quest");
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class DwarfCannon
 						"here, take these to him, the instructions explain everthing");
 					say(p, n, "that's great, thanks");
 					npcsay(p, n, "thank you adventurer, the dwarf black guard will remember this");
-					Functions.mes(p, "the Cannon engineer gives you some notes and a mould");
+					mes(p, "the Cannon engineer gives you some notes and a mould");
 					give(p, ItemId.NULODIONS_NOTES.id(), 1);
 					give(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
 					p.getCache().store("spoken_nulodion", true);
@@ -85,7 +84,7 @@ public class DwarfCannon
 					if (!p.getCarriedItems().hasCatalogID(ItemId.NULODIONS_NOTES.id(), Optional.empty())) {
 						say(p, n, "i've lost the notes");
 						npcsay(p, n, "here take these");
-						Functions.mes(p, "the Cannon engineer gives you some more notes");
+						mes(p, "the Cannon engineer gives you some more notes");
 						give(p, ItemId.NULODIONS_NOTES.id(), 1);
 					}
 					if (!p.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id(), Optional.empty())) {
@@ -129,15 +128,15 @@ public class DwarfCannon
 								return;
 							}
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 750000) {
-								Functions.mes(p, "you give the Cannon engineer 750 000 coins");
+								mes(p, "you give the Cannon engineer 750 000 coins");
 								p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 750000));
 
-								Functions.mes(p, "he gives you the four parts that make the cannon");
+								mes(p, "he gives you the four parts that make the cannon");
 								give(p, ItemId.DWARF_CANNON_BASE.id(), 1);
 								give(p, ItemId.DWARF_CANNON_STAND.id(), 1);
 								give(p, ItemId.DWARF_CANNON_BARRELS.id(), 1);
 								give(p, ItemId.DWARF_CANNON_FURNACE.id(), 1);
-								Functions.mes(p, "a ammo mould and an instruction manual");
+								mes(p, "a ammo mould and an instruction manual");
 								give(p, ItemId.CANNON_AMMO_MOULD.id(), 1);
 								give(p, ItemId.INSTRUCTION_MANUAL.id(), 1);
 								npcsay(p, n, "there you go, you be carefull with that thing");
@@ -179,7 +178,7 @@ public class DwarfCannon
 							GameObject cannon = p.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY);
 							// does not exist or the object there is not a cannon.
 							if (cannon == null || !DataConversions.inArray(Cannon.cannonObjectIDs, cannon.getID())) {
-								Functions.mes(p, "the dwarf gives you a new cannon");
+								mes(p, "the dwarf gives you a new cannon");
 								npcsay(p, n, "keep that quite or i'll be in real trouble");
 								say(p, n, "thanks alot");
 								npcsay(p, n, "no worries");
@@ -240,7 +239,7 @@ public class DwarfCannon
 							"they manage to get through the broken railings",
 							"could you please replace them with these new ones");
 						say(p, n, "sounds easy enough");
-						Functions.mes(p, "the Dwarf commander gives you six railings");
+						mes(p, "the Dwarf commander gives you six railings");
 						give(p, ItemId.RAILING_DWARF_CANNON.id(), 6);
 						npcsay(p, n, "let me know once you've fixed the railings");
 						say(p, n, "ok , commander");
@@ -275,7 +274,7 @@ public class DwarfCannon
 						if (!p.getCarriedItems().hasCatalogID(ItemId.RAILING_DWARF_CANNON.id(), Optional.of(false))) {
 							say(p, n, "but i'm out of railings");
 							npcsay(p, n, "ok, we've got plenty");
-							Functions.mes(p, "the Dwarf commander gives you another railing");
+							mes(p, "the Dwarf commander gives you another railing");
 							give(p, ItemId.RAILING_DWARF_CANNON.id(), 1);
 						}
 					}
@@ -289,7 +288,7 @@ public class DwarfCannon
 						npcsay(p, n, "that's strange, gilob never leaves his post");
 						if (p.getCarriedItems().hasCatalogID(ItemId.DWARF_REMAINS.id(), Optional.of(false))) {
 							say(p, n, "i may have some bad news for you commander");
-							Functions.mes(p, "you show the Dwarf commander the remains");
+							mes(p, "you show the Dwarf commander the remains");
 							npcsay(p, n, "what's this?, oh no , it can't be!");
 							say(p, n, "i'm sorry, it looks like the goblins got him");
 							npcsay(p, n, "noooo... those..those animals", "but where's gilobs son?, he was also there");
@@ -327,7 +326,7 @@ public class DwarfCannon
 							"ok, i'll see what i can do", "sorry, i've done enough for today");
 						if (gobMenu == 0) {
 							npcsay(p, n, "that's great,you'll need this");
-							Functions.mes(p, "the Dwarf commander gives you a tool kit");
+							mes(p, "the Dwarf commander gives you a tool kit");
 							give(p, ItemId.TOOL_KIT.id(), 1);
 							npcsay(p, n, "let me know how you get on");
 							p.updateQuestStage(getQuestId(), 4);
@@ -347,7 +346,7 @@ public class DwarfCannon
 						npcsay(p, n, "hello there traveller, how's things?");
 						say(p, n, "well, i think i've done it, take a look");
 						npcsay(p, n, "really!");
-						Functions.mes(p, "the Dwarf commander pops into the shed to take a closer look");
+						mes(p, "the Dwarf commander pops into the shed to take a closer look");
 						npcsay(p, n, "well i don't believe it, it seems to be in working order");
 						say(p, n, "not bad for an adventurer");
 						npcsay(p, n, "not bad at all, your effort is appreciated my friend",
@@ -382,7 +381,7 @@ public class DwarfCannon
 					if (!p.getCarriedItems().hasCatalogID(ItemId.TOOL_KIT.id(), Optional.of(false))) {
 						say(p, n, "i'm afraid i lost the tool kit");
 						npcsay(p, n, "that was silly, never mind, here you go");
-						Functions.mes(p, "the Dwarf commander gives you another tool kit");
+						mes(p, "the Dwarf commander gives you another tool kit");
 						give(p, ItemId.TOOL_KIT.id(), 1);
 					}
 					break;
@@ -393,7 +392,7 @@ public class DwarfCannon
 						say(p, n, "hi");
 						npcsay(p, n, "hello traveller, any word from the Cannon engineer?");
 						say(p, n, "yes, i have spoken to him", "he gave me these to give to you");
-						Functions.mes(p, "you hand the Dwarf commander the mould and the notes");
+						mes(p, "you hand the Dwarf commander the mould and the notes");
 						p.getCarriedItems().remove(new Item(ItemId.NULODIONS_NOTES.id()));
 						p.getCarriedItems().remove(new Item(ItemId.CANNON_AMMO_MOULD.id()));
 						npcsay(p, n, "aah, of course, we make the ammo",
@@ -533,14 +532,14 @@ public class DwarfCannon
 	}
 
 	private void rail(Player p, GameObject obj) {
-		Functions.mes(p, "you search the railing", "one railing is broken and needs to be replaced");
+		mes(p, "you search the railing", "one railing is broken and needs to be replaced");
 		int railMenu = multi(p, new String[]{"try to replace railing", "leave it be"});
 		if (railMenu == 0) {
 			if (failToReplace()) {
-				Functions.mes(p, "you attempt to replace the missing railing", "but you fail and cut yourself trying");
+				mes(p, "you attempt to replace the missing railing", "but you fail and cut yourself trying");
 				p.damage(DataConversions.random(2, 3));
 			} else {
-				Functions.mes(p, "you attempt to replace the missing railing", "you replace the railing with no problems");
+				mes(p, "you attempt to replace the missing railing", "you replace the railing with no problems");
 				p.getCarriedItems().remove(new Item(ItemId.RAILING_DWARF_CANNON.id()));
 
 				if (obj.getID() == 181) {
@@ -565,7 +564,7 @@ public class DwarfCannon
 	@Override
 	public void onOpBound(GameObject obj, Integer click, Player p) {
 		if (obj.getID() == 193) {
-			Functions.mes(p, "you search the railing", "but find nothing of interest");
+			mes(p, "you search the railing", "but find nothing of interest");
 		}
 		else if (obj.getID() == 181 && p.getQuestStage(getQuestId()) == 1) {
 			if (p.getCache().hasKey("railone")) {
@@ -654,17 +653,17 @@ public class DwarfCannon
 			player.message("you climb down the ladder");
 			player.teleport(616, 493, false);
 		} else if (obj.getID() == 982 && obj.getY() == 523) {
-			Functions.mes(player, "you cautiously enter the cave");
+			mes(player, "you cautiously enter the cave");
 			player.teleport(578, 3356, false);
 		} else if (obj.getID() == 983) {
-			Functions.mes(player, "you climb the mudpile");
+			mes(player, "you climb the mudpile");
 			player.teleport(578, 521, false);
 		} else if (obj.getID() == 986) {
-			Functions.mes(player, "you search the crate", "but it's empty");
+			mes(player, "you search the crate", "but it's empty");
 		} else if (obj.getID() == 987) {
 			// only allow at quest stage and before being rescued
 			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
-				Functions.mes(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
+				mes(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
 				Npc lollk = addnpc(player.getWorld(), NpcId.LOLLK.id(), 619, 3314, 60000);
 				lollk.face(player);
 				player.face(lollk);
@@ -673,11 +672,11 @@ public class DwarfCannon
 				npcsay(player, lollk, "i think so, i'd better run of home");
 				say(player, lollk, "that's right , you get going, i'll catch up");
 				npcsay(player, lollk, "thanks again brave adventurer");
-				Functions.mes(player, "the dwarf child runs off into the caverns");
+				mes(player, "the dwarf child runs off into the caverns");
 				player.getCache().store("savedlollk", true);
 				lollk.remove();
 			} else {
-				Functions.mes(player, "you search the crate", "but it's empty");
+				mes(player, "you search the crate", "but it's empty");
 			}
 		} else if (obj.getID() == 994) {
 			if (player.getCache().hasKey("cannon_complete")) {
@@ -688,7 +687,7 @@ public class DwarfCannon
 			if (player.getCache().hasKey("pipe") && player.getCache().hasKey("barrel")
 				&& player.getCache().hasKey("axle") && player.getCache().hasKey("shaft")) {
 				player.message("the cannon seems to be in complete working order");
-				Functions.mes(player, "lawgof will be pleased");
+				mes(player, "lawgof will be pleased");
 				player.getCache().store("cannon_complete", true);
 				player.getCache().remove("pipe");
 				player.getCache().remove("barrel");
@@ -698,10 +697,10 @@ public class DwarfCannon
 			}
 			if (failToMultiCannon()) {
 				player.message("you try, but can't quite find the problem");
-				Functions.mes(player, "maybe you should inspect it again");
+				mes(player, "maybe you should inspect it again");
 			} else {
 				player.message("you see that there are some damaged components");
-				Functions.mes(player, "a pipe, a gun barrel, an axle and a shaft seem to be damaged",
+				mes(player, "a pipe, a gun barrel, an axle and a shaft seem to be damaged",
 					"which part of the cannon will you attempt to fix?");
 				int cannonMenu = multi(player, null, new String[]{"Pipe", "Barrel", "Axle", "Shaft", "none"});
 				if (cannonMenu == 0) {
@@ -709,12 +708,12 @@ public class DwarfCannon
 						player.message("you've already fixed this part of the cannon");
 						return;
 					}
-					Functions.mes(player, "you use your tool kit and attempt to fix the pipe");
+					mes(player, "you use your tool kit and attempt to fix the pipe");
 					thinkbubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
-						Functions.mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
+						mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
-						Functions.mes(player, "after some tinkering you manage to fix it");
+						mes(player, "after some tinkering you manage to fix it");
 						player.getCache().store("pipe", true);
 					}
 				} else if (cannonMenu == 1) {
@@ -722,12 +721,12 @@ public class DwarfCannon
 						player.message("you've already fixed this part of the cannon");
 						return;
 					}
-					Functions.mes(player, "you use your tool kit and attempt to fix the barrel");
+					mes(player, "you use your tool kit and attempt to fix the barrel");
 					thinkbubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
-						Functions.mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
+						mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
-						Functions.mes(player, "after some tinkering you manage to fix it");
+						mes(player, "after some tinkering you manage to fix it");
 						player.getCache().store("barrel", true);
 					}
 				} else if (cannonMenu == 2) {
@@ -735,12 +734,12 @@ public class DwarfCannon
 						player.message("you've already fixed this part of the cannon");
 						return;
 					}
-					Functions.mes(player, "you use your tool kit and attempt to fix the axle");
+					mes(player, "you use your tool kit and attempt to fix the axle");
 					thinkbubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
-						Functions.mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
+						mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
-						Functions.mes(player, "after some tinkering you manage to fix it");
+						mes(player, "after some tinkering you manage to fix it");
 						player.getCache().store("axle", true);
 					}
 				} else if (cannonMenu == 3) {
@@ -748,12 +747,12 @@ public class DwarfCannon
 						player.message("you've already fixed this part of the cannon");
 						return;
 					}
-					Functions.mes(player, "you use your tool kit and attempt to fix the shaft");
+					mes(player, "you use your tool kit and attempt to fix the shaft");
 					thinkbubble(player, new Item(ItemId.TOOL_KIT.id()));
 					if (failToMultiCannon()) {
-						Functions.mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
+						mes(player, "it's too hard, you fail to fix it", "maybe you should try again");
 					} else {
-						Functions.mes(player, "after some tinkering you manage to fix it");
+						mes(player, "after some tinkering you manage to fix it");
 						player.getCache().store("shaft", true);
 					}
 				} else if (cannonMenu == 4) {

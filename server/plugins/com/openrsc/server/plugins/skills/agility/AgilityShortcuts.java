@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -80,19 +79,19 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				Functions.mes(p, "The bridge beyond this fence looks very unsafe.");
-				Functions.mes(p, "However, you could try to negotiate it if you're feeling very agile.");
+				mes(p, "The bridge beyond this fence looks very unsafe.");
+				mes(p, "However, you could try to negotiate it if you're feeling very agile.");
 				p.message("Would you like to try?");
 				int jumpMenu = multi(p,
 					"No thanks! It looks far too dangerous!",
 					"Yes, I'm totally brave and quite agile!");
 				if (jumpMenu == 0) {
-					Functions.mes(p, "You decide that common sense is the better part of valour.",
+					mes(p, "You decide that common sense is the better part of valour.",
 						"And stop yourself from being hurled to what must be an ");
 					p.message("inevitable death.");
 				} else if (jumpMenu == 1) {
-					Functions.mes(p, "You prepare to negotiate the bridge fence...");
-					Functions.mes(p, "You run and jump...");
+					mes(p, "You prepare to negotiate the bridge fence...");
+					mes(p, "You run and jump...");
 					if (succeed(p, 32)) {
 						p.message("...and land perfectly on the other side!");
 						if (p.getX() >= 460) { // back
@@ -128,7 +127,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					p.setBusy(false);
 					return;
 				}
-				Functions.mes(p, "These rocks look quite dangerous to climb.",
+				mes(p, "These rocks look quite dangerous to climb.",
 					"But you may be able to scale them.");
 				p.message("Would you like to try?");
 				int menu = multi(p,
@@ -136,7 +135,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					"Nope, I'm sure I'll probably fall!");
 				if (menu == 0) {
 					if (succeed(p, 32)) {
-						Functions.mes(p, "You manage to climb the rocks succesfully and pick");
+						mes(p, "You manage to climb the rocks succesfully and pick");
 						if (obj.getX() == 450) {
 							p.message("a route though the trecherous embankment to the top.");
 							p.teleport(452, 829);
@@ -146,7 +145,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						}
 					} else {
 						p.teleport(450, 828);
-						Functions.mes(p, "You fall and hurt yourself.");
+						mes(p, "You fall and hurt yourself.");
 						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
 						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.teleport(449, 828);
@@ -257,7 +256,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You grab the rope and try and swing across");
 				if (!succeed(p, 57, 77)) {
-					Functions.mes(p, "You miss the opposite side and fall to the level below");
+					mes(p, "You miss the opposite side and fall to the level below");
 					teleport(p, 596, 3534);
 					p.setBusy(false);
 					return;
@@ -282,7 +281,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				p.message("You grab the rope and try and swing across");
 				if (!succeed(p, 57, 77)) {
-					Functions.mes(p, "You miss the opposite side and fall to the level below");
+					mes(p, "You miss the opposite side and fall to the level below");
 					teleport(p, 598, 3536);
 					p.setBusy(false);
 					return;
@@ -309,7 +308,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				p.message("You put your foot on the ledge and try to edge across");
 				delay(2200);
 				if (!succeed(p, 40, 65)) {
-					Functions.mes(p, "you lose your footing and fall to the level below");
+					mes(p, "you lose your footing and fall to the level below");
 					teleport(p, 603, 3520);
 					p.setBusy(false);
 					return;
@@ -335,7 +334,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				p.message("You put your foot on the ledge and try to edge across");
 				delay(2200);
 				if (!succeed(p, 40, 65)) {
-					Functions.mes(p, "you lose your footing and fall to the level below");
+					mes(p, "you lose your footing and fall to the level below");
 					teleport(p, 603, 3520);
 					p.setBusy(false);
 					return;
@@ -480,7 +479,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						delay(900);
 						teleport(p, 341, 809);
 						p.message("@red@!!! You Fall !!!");
-						Functions.mes(p, "You get washed up on the other side of the river...",
+						mes(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
 						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						p.setBusy(false);
@@ -494,7 +493,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						delay(900);
 						teleport(p, 341, 805);
 						p.message("@red@!!! You Fall !!!");
-						Functions.mes(p, "You get washed up on the other side of the river...",
+						mes(p, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
 						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						p.setBusy(false);

@@ -6,7 +6,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -110,7 +109,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					npcsay(p, n, "Very well " + (p.isMale() ? "Sir" : "Ma'am") + " !");
 					break;
 				case LegendsGuard.CAN_I_GO_ON_THE_QUEST:
-					Functions.mes(p, "The guard gets out a scroll of paper and starts looking through it.");
+					mes(p, "The guard gets out a scroll of paper and starts looking through it.");
 					if (p.getQuestPoints() >= 107
 						&& p.getQuestStage(Quests.HEROS_QUEST) == -1
 						&& p.getQuestStage(Quests.FAMILY_CREST) == -1
@@ -206,7 +205,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 
 	private void openGates(Player p) {
 		GameObject the_gate = p.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550));
-		Functions.changeloc(the_gate, p.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
+		changeloc(the_gate, p.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
 		p.teleport(513, 549);
 	}
 
@@ -235,7 +234,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 		if (obj.getID() == MITHRIL_GATES) {
 			if (command.equals("open")) {
 				if (p.getY() <= 550) {
-					Functions.changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
+					changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
 					p.teleport(513, 552);
 					return;
 				}

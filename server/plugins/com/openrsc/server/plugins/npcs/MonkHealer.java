@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.npcs;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -19,7 +18,7 @@ public class MonkHealer implements TalkNpcTrigger {
 		if (option == 0) {
 			say(p, n, "Can you heal me?", "I'm injured");
 			npcsay(p, n, "Ok");
-			Functions.mes(p, "The monk places his hands on your head", "You feel a little better");
+			mes(p, "The monk places his hands on your head", "You feel a little better");
 			int newHp = getCurrentLevel(p, Skills.HITS) + 5;
 			if (newHp > getMaxLevel(p, Skills.HITS)) {
 				newHp = getMaxLevel(p, Skills.HITS);

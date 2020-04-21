@@ -3,12 +3,9 @@ package com.openrsc.server.plugins.npcs.tutorial;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
@@ -29,14 +26,14 @@ public class BankAssistant implements
 			"You can withdraw deposited items from any bank in the world");
 		if (p.getCache().hasKey("tutorial")
 			&& p.getCache().getInt("tutorial") == 55) {
-			Functions.say(p, n, "Can I access my bank account please?");
+			say(p, n, "Can I access my bank account please?");
 			npcsay(p, n, "Certainly " + (p.isMale() ? "Sir" : "Miss"));
 			p.setAccessingBank(true);
 			ActionSender.showBank(p);
 			p.getCache().set("tutorial", 60);
 		} else {
 			npcsay(p, n, "Now proceed through the next door");
-			int menu = Functions.multi(p, n, "Can I access my bank account please?",
+			int menu = multi(p, n, "Can I access my bank account please?",
 				"Okay thankyou for your help");
 			if (menu == 0) {
 				npcsay(p, n, "Certainly " + (p.isMale() ? "Sir" : "Miss"));

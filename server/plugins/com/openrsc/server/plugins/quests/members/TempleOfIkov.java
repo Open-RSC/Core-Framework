@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -428,7 +427,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					"Yes here it is",
 					"No not yet");
 				if (menu == 0) {
-					Functions.mes(p, "You give the staff to Lucien");
+					mes(p, "You give the staff to Lucien");
 					p.getCarriedItems().remove(new Item(ItemId.STAFF_OF_ARMADYL.id()));
 					npcsay(p, n, "Muhahahaha",
 						"Already I can feel the power of this staff running through my limbs",
@@ -488,7 +487,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					p.message("You have activated a trap on the lever");
 					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITS) / 5));
 				} else {
-					Functions.mes(p, "You pull the lever",
+					mes(p, "You pull the lever",
 						"You hear a clunk",
 						"The trap on the lever resets");
 					if (p.getCache().hasKey("ikovLever")) {
@@ -504,7 +503,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					p.message("You have not high thieving enough to disable this trap");
 					return;
 				}
-				Functions.mes(p, "You find a trap on the lever",
+				mes(p, "You find a trap on the lever",
 					"You disable the trap");
 				if (!p.getCache().hasKey("ikovLever")) {
 					p.getCache().store("ikovLever", true);
@@ -512,7 +511,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (obj.getID() == COMPLETE_LEVER) {
-			Functions.mes(p, "You pull the lever",
+			mes(p, "You pull the lever",
 				"You hear the door next to you make a clunking noise");
 			if (!p.getCache().hasKey("completeLever") && (p.getQuestStage(this) != -1 || p.getQuestStage(this) != -2)) {
 				p.getCache().store("completeLever", true);
@@ -526,7 +525,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			return true;
 		}
 		if (i.getID() == ItemId.STAFF_OF_ARMADYL.id()) {
-			Npc guardian = Functions.ifnearvisnpc(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
+			Npc guardian = ifnearvisnpc(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
 			if (guardian == null)
 				return false;
 			else
@@ -546,7 +545,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.message("Suddenly your surroundings change");
 			} else {
-				Functions.mes(p, "You can only take ice arrows from the cave of ice spiders",
+				mes(p, "You can only take ice arrows from the cave of ice spiders",
 					"In the temple of Ikov");
 			}
 		}
@@ -559,7 +558,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				p.message("I already have one of those");
 				return;
 			}
-			Npc n = Functions.ifnearvisnpc(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
+			Npc n = ifnearvisnpc(p, 5, NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(), NpcId.GUARDIAN_OF_ARMADYL_MALE.id());
 			if (n != null) {
 				npcsay(p, n, "That is not thine to take");
 				n.setChasing(p);
@@ -645,7 +644,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				} else {
 					npcsay(p, n, "I'm sure you don't want to attack me really",
 						"I am your friend");
-					Functions.mes(p, "You decide you don't want to attack Lucien really",
+					mes(p, "You decide you don't want to attack Lucien really",
 						"He is your friend");
 				}
 			}
@@ -693,7 +692,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 				npcsay(p, n, "I'm sure you don't want to attack me really",
 					"I am your friend");
-				Functions.mes(p, "You decide you don't want to attack Lucien really",
+				mes(p, "You decide you don't want to attack Lucien really",
 					"He is your friend");
 				return;
 			}

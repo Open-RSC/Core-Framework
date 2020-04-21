@@ -9,17 +9,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import static com.openrsc.server.plugins.Functions.*;
 
 public class HicktonArcheryShop implements ShopInterface,
 	TalkNpcTrigger {
@@ -63,14 +59,14 @@ public class HicktonArcheryShop implements ShopInterface,
 		final int option = multi(p, n, false, //do not send over
 			choices.toArray(new String[0]));
 		if (option == 0) {
-			Functions.say(p, n, "Yes Please");
+			say(p, n, "Yes Please");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
-			Functions.say(p, n, "No, I prefer to bash things close up");
+			say(p, n, "No, I prefer to bash things close up");
 		} else if (option == 2) {
 			if (getMaxLevel(p, Skills.FLETCHING) >= 99) {
-				Functions.npcsay(p, n, "I see you've carved your way to the top",
+				npcsay(p, n, "I see you've carved your way to the top",
 					"i can offer you cape",
 					"made for those who excel in fletching",
 					"the cost is 99,000 coins");
@@ -79,12 +75,12 @@ public class HicktonArcheryShop implements ShopInterface,
 					if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
 						if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 							give(p, ItemId.FLETCHING_CAPE.id(), 1);
-							Functions.npcsay(p, n, "while wearing this cape",
+							npcsay(p, n, "while wearing this cape",
 								"fletching arrows, bolts and darts",
 								"may give you extras");
 						}
 					} else {
-						Functions.npcsay(p, n, "come back with the money anytime");
+						npcsay(p, n, "come back with the money anytime");
 					}
 				}
 			}

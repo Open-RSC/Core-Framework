@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -113,7 +112,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 		}
 		else if (obj.getID() == WATCHTOWER_LEVER) {
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
-			Functions.addloc(obj.getWorld(), obj.getLoc(), 2000);
+			addloc(obj.getWorld(), obj.getLoc(), 2000);
 			p.message("You pull the lever");
 			if (p.getQuestStage(Quests.WATCHTOWER) == 10) {
 				p.message("The magic forcefield activates");
@@ -248,10 +247,10 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 				p.getCarriedItems().remove(new Item(ItemId.KEY.id()));
 				openChest(obj, 2000, TOBAN_CHEST_OPEN);
 				if (p.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
-					Functions.mes(p, "You have already got the stolen gold");
+					mes(p, "You have already got the stolen gold");
 				} else {
 					p.message("You find a stash of gold inside");
-					Functions.mes(p, "You take the gold");
+					mes(p, "You take the gold");
 					give(p, ItemId.STOLEN_GOLD.id(), 1);
 				}
 				p.message("The chest springs shut");
@@ -297,7 +296,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 				give(p, ItemId.ROCK_CAKE.id(), 1);
 				p.incExp(Skills.THIEVING, 64, true);
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
-				Functions.addloc(obj.getWorld(), obj.getLoc(), 5000);
+				addloc(obj.getWorld(), obj.getLoc(), 5000);
 			}
 		}
 		else if (obj.getID() == ROCK_CAKE_COUNTER_EMPTY) {

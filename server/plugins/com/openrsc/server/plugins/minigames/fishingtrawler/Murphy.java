@@ -8,7 +8,6 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.Trawler
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
@@ -126,7 +125,7 @@ public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 					npcsay(p, n, "well of course you can",
 							"i'll warn you though, the seas are merciless",
 							"and with out fishing experience you won't catch much");
-					Functions.mes(p, "you need a fishing level of 15 or above to catch any fish on the trawler");
+					mes(p, "you need a fishing level of 15 or above to catch any fish on the trawler");
 					npcsay(p, n, "on occasions the net rip's, so you'll need some rope to repair it");
 					say(p, n, "rope...ok");
 					npcsay(p, n, "there's also a slight problem with leaks");

@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class ZaffsStaffs implements ShopInterface,
 	TalkNpcTrigger {
@@ -38,7 +36,7 @@ public final class ZaffsStaffs implements ShopInterface,
 	@Override
 	public void onTalkNpc(final Player p, final Npc n) {
 		npcsay(p, n, "Would you like to buy or sell some staffs?");
-		int option = Functions.multi(p, n, "Yes please", "No, thank you");
+		int option = multi(p, n, "Yes please", "No, thank you");
 		if (option == 0) {
 			p.setAccessingShop(getShop(p.getWorld()));
 			ActionSender.showShop(p, getShop(p.getWorld()));

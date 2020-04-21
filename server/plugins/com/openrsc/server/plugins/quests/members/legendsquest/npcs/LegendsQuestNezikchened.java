@@ -4,19 +4,9 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 
-import static com.openrsc.server.plugins.Functions.atQuestStages;
-import static com.openrsc.server.plugins.Functions.addobject;
-import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.npcWalkFromPlayer;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.delay;
-import static com.openrsc.server.plugins.Functions.addnpc;
-import static com.openrsc.server.plugins.Functions.changenpc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigger, KillNpcTrigger, PlayerRangeNpcTrigger, AttackNpcTrigger {
 
@@ -26,16 +16,16 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	private static void summonViyeldiCompanions(Player p) {
 		Npc COMPANION = null;
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 1) {
-			COMPANION = Functions.addnpc(NpcId.SAN_TOJALON.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = addnpc(NpcId.SAN_TOJALON.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 2) {
-			COMPANION = Functions.addnpc(NpcId.IRVIG_SENAY.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = addnpc(NpcId.IRVIG_SENAY.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 3) {
-			COMPANION = Functions.addnpc(NpcId.RANALPH_DEVERE.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = addnpc(NpcId.RANALPH_DEVERE.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 4) {
-			COMPANION = Functions.addnpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
+			COMPANION = addnpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
 		}
 		if (COMPANION != null) {
 			npcsay(p, COMPANION, "Corrupted are we now that Viyeldi is slain..");
@@ -45,22 +35,22 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	}
 
 	public static void demonFight(Player p) {
-		Npc third_nezikchened = Functions.addnpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
+		Npc third_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), p.getX(), p.getY(), 60000 * 15, p);
 		if (third_nezikchened != null) {
 			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			npcsay(p, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
 			if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") <= 3) {
 				npcsay(p, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
-				Functions.mes(p, third_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon starts chanting...",
+				mes(p, third_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon starts chanting...",
 					"@yel@Nezikchened: Protectors of source, alive in death,",
 					"@yel@Nezikchened: do not rest while this Vacu draws breath!");
 				if (third_nezikchened != null) {
 					third_nezikchened.remove();
-					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The demon is summoning the dead hero's from the Viyeldi caves !");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The demon is summoning the dead hero's from the Viyeldi caves !");
 					summonViyeldiCompanions(p);
 				}
 			} else if (p.getCache().hasKey("viyeldi_companions") && p.getCache().getInt("viyeldi_companions") == 4) {
-				Functions.mes(p, third_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon screams in rage...");
+				mes(p, third_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon screams in rage...");
 				npcsay(p, third_nezikchened, "Raarrrrghhhh!",
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(p);
@@ -138,15 +128,15 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", p));
 				delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				npcWalkFromPlayer(p, n);
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "Your opponent is retreating");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "Your opponent is retreating");
 				if (n != null) {
 					n.remove();
 				}
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The demon starts an incantation...",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The demon starts an incantation...",
 					"@yel@Nezikchened : But I will leave you with a taste of my power...",
 					"As he finishes the incantation a powerful bolt of energy strikes you.");
 				p.damage(7);
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened : Haha hah ha ha ha ha....",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened : Haha hah ha ha ha ha....",
 					"The demon explodes in a powerful burst of flame that scorches you.");
 				p.updateQuestStage(Quests.LEGENDS_QUEST, 4);
 				p.setBusy(false);
@@ -164,7 +154,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				mes(p, "Your opponent is retreating");
 				npcsay(p, n, "You would bite the hand that feeds you!",
 					"Very well, I will ready myself for our next encounter...");
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon seems very angry now...",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon seems very angry now...",
 					"You deliver a final devastating blow to the demon, ",
 					"and it's unearthly frame crumbles into dust.");
 				if (n != null) {
@@ -178,13 +168,13 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				if (n != null) {
 					n.remove();
 				}
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You deliver the final killing blow to the foul demon.",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You deliver the final killing blow to the foul demon.",
 					"The Demon crumbles into a pile of ash.");
 				addobject(ItemId.ASHES.id(), 1, p.getX(), p.getY(), p);
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened: Arrrghhhh.",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened: Arrrghhhh.",
 					"@yel@Nezikchened: I am beaten by a mere mortal.",
 					"@yel@Nezikchened: I will revenge myself upon you...");
-				Functions.say(p, null, "Yeah, yeah, yeah ! ",
+				say(p, null, "Yeah, yeah, yeah ! ",
 					"Heard it all before !");
 			}
 			// ??
@@ -213,8 +203,8 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	public void onAttackNpc(Player p, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((affectedmob.getAttribute("spawnedFor", null) != null && !affectedmob.getAttribute("spawnedFor").equals(p)) || !atQuestStages(p, Quests.LEGENDS_QUEST, 3, 7, 8)) {
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Your attack glides straight through the Demon.");
-				Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "as if it wasn't really there.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "Your attack glides straight through the Demon.");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "as if it wasn't really there.");
 				if (affectedmob != null)
 					affectedmob.remove();
 			}

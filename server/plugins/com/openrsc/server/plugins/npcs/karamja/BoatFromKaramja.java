@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -43,7 +42,7 @@ public final class BoatFromKaramja implements
 		} else if (sub_opt == 1) {
 			if (p.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
 				npcsay(p, n, "Aha trying to smuggle rum are we?");
-				Functions.mes(p, "The customs officer confiscates your rum");
+				mes(p, "The customs officer confiscates your rum");
 				p.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			} else {
 				npcsay(p,
@@ -54,7 +53,7 @@ public final class BoatFromKaramja implements
 				if (pay_opt == 0) {
 					if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) != -1) {
 						say(p, n, "Ok");
-						Functions.mes(p, "You pay 30 gold", "You board the ship");
+						mes(p, "You pay 30 gold", "You board the ship");
 						teleport(p, 269, 648);
 						p.message("The ship arrives at Port Sarim");
 					} else { // not enough money

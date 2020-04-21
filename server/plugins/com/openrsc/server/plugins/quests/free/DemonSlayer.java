@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -57,7 +56,7 @@ public class DemonSlayer implements QuestInterface,
 			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
-					Functions.mes(player, "I have no reason to do that.");
+					mes(player, "I have no reason to do that.");
 					break;
 				case 2:
 				case 3:
@@ -65,9 +64,9 @@ public class DemonSlayer implements QuestInterface,
 				case -1:
 					//even post-quest was the same thing
 					if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
-						Functions.mes(player,
+						mes(player,
 							"You pour the liquid down the drain");
-						Functions.mes(player, "Ok I think I've washed the key down into the sewer",
+						mes(player, "Ok I think I've washed the key down into the sewer",
 							"I'd better go down and get it before someone else finds it");
 						player.getCarriedItems().getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
 						player.getWorld().registerItem(
@@ -96,12 +95,12 @@ public class DemonSlayer implements QuestInterface,
 			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
-					Functions.mes(player, "I can see a key but can't quite reach it...");
+					mes(player, "I can see a key but can't quite reach it...");
 					break;
 				case 2:
 				case 3:
 				case 4:
-					Functions.mes(player, "This is the drainpipe",
+					mes(player, "This is the drainpipe",
 						"Running from the kitchen sink to the sewer",
 						"I can see a key just inside the drain",
 						"That must be the key Sir Prysin dropped",
@@ -111,7 +110,7 @@ public class DemonSlayer implements QuestInterface,
 						"And knock it down into the sewers");
 					break;
 				case -1:
-					Functions.mes(player, "This is the drainpipe",
+					mes(player, "This is the drainpipe",
 						"Running from the kitchen sink to the sewer",
 						"I can see a key just inside the drain",
 						"I don't seem to be able to quite reach it",
@@ -242,7 +241,7 @@ public class DemonSlayer implements QuestInterface,
 					"Well I am going to use the powerful sword silverlight",
 					"Which I believe you have one of the keys for");
 				npcsay(p, n, "Yes you're right", "Here you go");
-				Functions.mes(p, "Captain Rovin hands you a key");
+				mes(p, "Captain Rovin hands you a key");
 				give(p, ItemId.SILVERLIGHT_KEY_2.id(), 1);
 				break;
 			case CaptainRovin.I_FORGOT:
@@ -346,15 +345,15 @@ public class DemonSlayer implements QuestInterface,
 						p.getCache().set("traiborn_bones", boneCount);
 						if (boneCount >= 25) {
 							npcsay(p, n, "Hurrah! That's all 25 sets of bones");
-							Functions.mes(p,
+							mes(p,
 								"Traiborn places the bones in a circle on the floor",
 								"Traiborn waves his arms about");
 							npcsay(p, n, "Wings of dark and colour too",
 								"Spreading in the morning dew");
-							Functions.mes(p, "The wizard waves his arms some more");
+							mes(p, "The wizard waves his arms some more");
 							npcsay(p, n, "Locked away I have a key",
 								"Return it now unto me");
-							Functions.mes(p, "Traiborn smiles",
+							mes(p, "Traiborn smiles",
 								"Traiborn hands you a key");
 							p.getCarriedItems().getInventory().add(new Item(ItemId.SILVERLIGHT_KEY_1.id(), 1));
 							p.getCache().store("done_bone_task", true);
@@ -426,7 +425,7 @@ public class DemonSlayer implements QuestInterface,
 								"Yes Please",
 								"Just tell me if you have the key");
 							if (choice8 == 0) {
-								Functions.mes(p,
+								mes(p,
 									"Traiborn digs around in the pockets of his robes",
 									"Traiborn hands you a spinach roll");
 								give(p, ItemId.SPINACH_ROLL.id(), 1);
@@ -498,11 +497,11 @@ public class DemonSlayer implements QuestInterface,
 				npcsay(p, n, "Now you come to mention it - yes I do have a key",
 					"Its in my special closet of valuable stuff",
 					"Now how do I get into that?");
-				Functions.mes(p, "The wizard scratches his head");
+				mes(p, "The wizard scratches his head");
 				npcsay(p, n, "I sealed it using one of my magic rituals",
 					"so it would make sense that another ritual",
 					"Would open it again");
-				Functions.mes(p, "The wizard beams");
+				mes(p, "The wizard beams");
 				say(p, n, "So do you know what ritual to use?");
 				npcsay(p, n, "Let me think a second");
 				delay(800);
@@ -627,11 +626,11 @@ public class DemonSlayer implements QuestInterface,
 		switch (cID) {
 			case SirPrysin.GOT_THEM:
 				npcsay(p, n, "Excellent. Now I can give you Silverlight");
-				Functions.mes(p, "You give all three keys to Sir Prysin");
+				mes(p, "You give all three keys to Sir Prysin");
 				p.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_1.id()));
 				p.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_2.id()));
 				p.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_3.id()));
-				Functions.mes(p, "Sir Prysin unlocks a long thin box",
+				mes(p, "Sir Prysin unlocks a long thin box",
 					"Prysin hands you an impressive looking sword");
 				give(p, ItemId.SILVERLIGHT.id(), 1);
 				p.updateQuestStage(this, 4);
@@ -1002,7 +1001,7 @@ public class DemonSlayer implements QuestInterface,
 
 			case GypsyConversation.INCANTATION:
 				npcsay(p, n, "Oh yes let me think a second");
-				Functions.mes(p, "The gypsy is thinking");
+				mes(p, "The gypsy is thinking");
 				delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 				npcsay(p, n, "Alright I've got it now I think", "It goes",
 					"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
@@ -1024,7 +1023,7 @@ public class DemonSlayer implements QuestInterface,
 					"Where can I find Silverlight?");
 				if (choice == 0) {
 					npcsay(p, n, "Oh yes let me think a second");
-					Functions.mes(p, "The gypsy is thinking");
+					mes(p, "The gypsy is thinking");
 					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					npcsay(p, n, "Alright I've got it now I think", "It goes",
 						"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
@@ -1152,7 +1151,7 @@ public class DemonSlayer implements QuestInterface,
 		n.getSkills().setLevel(Skills.HITS, n.getDef().getHits());
 		if (p.getMenuHandler() == null && !p.getAttribute("delrith", false)) {
 			p.setAttribute("delrith", true);
-			Functions.mes(p, "As you strike Delrith a vortex opens up");
+			mes(p, "As you strike Delrith a vortex opens up");
 			say(p, n, "Now what was that incantation again");
 			if (p.inCombat()) {
 				int choice = multi(p, n,

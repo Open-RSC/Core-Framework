@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -66,14 +65,14 @@ public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 					say(p, n, "I've got all four beads",
 						"It was hard work I can tell you");
 					npcsay(p, n, "Give them here and I'll sort out a reward");
-					Functions.mes(p, "You give four coloured beads to Wizard Mizgog");
+					mes(p, "You give four coloured beads to Wizard Mizgog");
 					p.getCarriedItems().remove(new Item(ItemId.RED_BEAD.id()));
 					p.getCarriedItems().remove(new Item(ItemId.YELLOW_BEAD.id()));
 					p.getCarriedItems().remove(new Item(ItemId.BLACK_BEAD.id()));
 					p.getCarriedItems().remove(new Item(ItemId.WHITE_BEAD.id()));
 					npcsay(p, n, "Here's you're reward then",
 						"An Amulet of accuracy");
-					Functions.mes(p, "The Wizard hands you an amulet");
+					mes(p, "The Wizard hands you an amulet");
 					give(p, ItemId.AMULET_OF_ACCURACY.id(), 1);
 					p.sendQuestComplete(Quests.IMP_CATCHER);
 				} else if (p.getCarriedItems().hasCatalogID(ItemId.RED_BEAD.id(), Optional.of(false))

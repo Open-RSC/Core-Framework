@@ -8,7 +8,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -158,7 +157,7 @@ public class StrangeBarrels implements OpLocTrigger {
 				if (DataConversions.random(0, 1) != 1) {
 					p.message("You smash the barrel open.");
 					delloc(obj);
-					Functions.addloc(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
+					addloc(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
 						p.message("You were unable to smash this barrel open.");

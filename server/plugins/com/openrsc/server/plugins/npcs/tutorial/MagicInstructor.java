@@ -2,14 +2,9 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -23,7 +18,7 @@ public class MagicInstructor implements TalkNpcTrigger {
 		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 70) {
 			npcsay(p, n, "there's good magic potential in this one",
 					"Yes definitely something I can work with");
-				int menu = Functions.multi(p, n, "Hmm are you talking about me?", "teach me some magic");
+				int menu = multi(p, n, "Hmm are you talking about me?", "teach me some magic");
 				if (menu == 0) {
 					npcsay(p, n, "Yes that is the one of which I speak");
 					optionDialogue(p, n);
@@ -32,7 +27,7 @@ public class MagicInstructor implements TalkNpcTrigger {
 					optionDialogue(p, n);
 				}
 		} else if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 75) {
-			Functions.say(p, n, "I don't have the runes to cast wind strike");
+			say(p, n, "I don't have the runes to cast wind strike");
 			npcsay(p, n, "How do you expect to do magic without runes?",
 				"Ok I shall have to provide you with runes");
 			p.message("The instructor gives you some runes");

@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -29,7 +28,7 @@ public final class WormBrain implements OpBoundTrigger {
 		if (p.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = ifnearvisnpc(p, NpcId.WORMBRAIN.id(), 10);
-			Functions.mes(p, "...you knock on the cell door");
+			mes(p, "...you knock on the cell door");
 			npcsay(p, n, "Whut you want?");
 			Menu defaultMenu = new Menu();
 			if (p.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {

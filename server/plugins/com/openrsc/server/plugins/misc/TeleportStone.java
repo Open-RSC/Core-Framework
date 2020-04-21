@@ -2,7 +2,6 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -22,7 +21,7 @@ public class TeleportStone implements OpInvTrigger {
 	@Override
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
-			Functions.mes(p, "the stone starts shaking...");
+			mes(p, "the stone starts shaking...");
 			p.message("a magical portal opens up, where would you like to go?");
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};
 			int menu = multi(p, teleLoc);
@@ -38,7 +37,7 @@ public class TeleportStone implements OpInvTrigger {
 				return;
 			}
 			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				Functions.mes(p, "You can't teleport while holding Ana,",
+				mes(p, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}

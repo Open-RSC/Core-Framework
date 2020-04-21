@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class UndergroundPassDwarfs implements TalkNpcTrigger {
 				case 7:
 				case 8:
 				case -1:
-					Functions.mes(p, "the dwarf is leaning on a barrel of home made brew");
+					mes(p, "the dwarf is leaning on a barrel of home made brew");
 					p.message("he looks a little drunk");
 					say(p, n, "hi there, you ok?");
 					npcsay(p, n, "ooooh, my head ...im gone");

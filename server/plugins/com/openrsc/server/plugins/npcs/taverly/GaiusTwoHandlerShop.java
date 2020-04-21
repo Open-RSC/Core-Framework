@@ -6,14 +6,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.multi;
-
+import static com.openrsc.server.plugins.Functions.*;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
@@ -45,11 +41,11 @@ public class GaiusTwoHandlerShop implements ShopInterface,
 		final int option = multi(p, n, false, //do not send over
 			"Let's trade", "thankyou");
 		if (option == 0) {
-			Functions.say(p, n, "Let's trade");
+			say(p, n, "Let's trade");
 			p.setAccessingShop(shop);
 			ActionSender.showShop(p, shop);
 		} else if (option == 1) {
-			Functions.say(p, n, "Thankyou");
+			say(p, n, "Thankyou");
 		}
 	}
 

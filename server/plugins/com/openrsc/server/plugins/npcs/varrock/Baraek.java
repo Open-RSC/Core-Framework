@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -118,7 +117,7 @@ public final class Baraek implements
 				"I guess I could give 12 coins to take it off your hands");
 			int opts = multi(p, n, "Yeah that'll do", "I think I'll keep hold of it actually");
 			if (opts == 0) {
-				Functions.mes(p, "You give Baraek a fur",
+				mes(p, "You give Baraek a fur",
 					"And he gives you twelve coins");
 				p.getCarriedItems().remove(new Item(ItemId.FUR.id()));
 				give(p, ItemId.COINS.id(), 12);

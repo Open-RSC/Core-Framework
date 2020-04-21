@@ -10,8 +10,7 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Cannon implements OpLocTrigger,
 	OpInvTrigger,

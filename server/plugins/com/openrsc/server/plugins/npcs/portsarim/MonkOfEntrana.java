@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
@@ -75,12 +74,12 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
 					@Override
 					public void action() {
-						Functions.mes(p, "The monk quickly searches you");
+						mes(p, "The monk quickly searches you");
 						if (CAN_GO(p)) {
 							npcsay(p, n, "Sorry we cannow allow you on to our island",
 								"Make sure you are not carrying weapons or armour please");
 						} else {
-							Functions.mes(p, "You board the ship");
+							mes(p, "You board the ship");
 							p.teleport(418, 570, false);
 							delay(2200);
 							p.message("The ship arrives at Entrana");
@@ -100,7 +99,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
 				@Override
 				public void action() {
-					Functions.mes(p, "You board the ship");
+					mes(p, "You board the ship");
 					p.teleport(264, 660, false);
 					delay(2200);
 					p.message("The ship arrives at Port Sarim");

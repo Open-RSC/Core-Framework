@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -15,11 +14,7 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpInvTrigger {
 
@@ -47,12 +42,12 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			return false;
 		}
 		p.setBusy(true);
-		Functions.thinkbubble(p, new Item(ItemId.PANNING_TRAY.id()));
+		thinkbubble(p, new Item(ItemId.PANNING_TRAY.id()));
 		p.playSound("mix");
 		p.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
 		mes(p, "You swirl away the excess water");
 		delay(1500);
-		Functions.thinkbubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
+		thinkbubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		p.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
 		p.incExp(Skills.MINING, 20, true);
@@ -69,9 +64,9 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 					// NOT SURE? if(p.getQuestStage(Quests.DIGSITE) < 2) {
 					if (!p.getCache().hasKey("unlocked_panning")) {
 						npcsay(p, guide, "Hey! you can't pan yet!");
-						Functions.say(p, guide, "Why not ?");
+						say(p, guide, "Why not ?");
 						npcsay(p, guide, "We do not allow the uninvited to pan here");
-						int menu = Functions.multi(p, guide,
+						int menu = multi(p, guide,
 							"Okay, forget it",
 							"So how do I become invited then ?");
 						if (menu == 0) {
@@ -81,11 +76,11 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 								"Unless they have permission from the authorities first",
 								"Mind you I could let you have a go...",
 								"If you're willing to do me a favour");
-							Functions.say(p, guide, "What's that ?");
+							say(p, guide, "What's that ?");
 							npcsay(p, guide, "Well...to be honest...",
 								"What I would really like...",
 								"Is a nice cup of tea !");
-							Functions.say(p, guide, "Tea !?");
+							say(p, guide, "Tea !?");
 							npcsay(p, guide, "Absolutely, I'm parched !",
 								"If you could bring me one of those...",
 								"I would be more than willing to let you pan here");
@@ -131,7 +126,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 					npcsay(p, npc, "Ah! Lovely!",
 						"You can't beat a good cuppa...",
 						"You're free to pan all you want");
-					Functions.say(p, npc, "Thanks");
+					say(p, npc, "Thanks");
 					p.getCarriedItems().remove(new Item(ItemId.CUP_OF_TEA.id()));
 					p.getCache().store("unlocked_panning", true);
 				}
@@ -149,7 +144,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
-			Functions.say(p, null, "Err, why am I searching an empty tray ?");
+			say(p, null, "Err, why am I searching an empty tray ?");
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 			p.setBusy(true);
 			mes(p, "You search the contents of the tray...");

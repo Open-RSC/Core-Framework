@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import java.util.Optional;
@@ -199,7 +198,7 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 			}
 			p.message("You show Trufitus the Bone Shard.");
 			say(p, n, "Could you have a look at this please ?");
-			Functions.mes(p, "Trufitus looks at the object for a moment.");
+			mes(p, "Trufitus looks at the object for a moment.");
 			npcsay(p, n, "It looks like a simple shard of bone.",
 				"Why do you think it is significant ?");
 			int menu = multi(p, n,
@@ -240,7 +239,7 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 				"Ok, thanks!");
 			if (menu == 0) {
 				npcsay(p, n, "Hmmm, well just that part about the wards..");
-				Functions.mes(p, "Trufitus seems to drift off in thought.");
+				mes(p, "Trufitus seems to drift off in thought.");
 				npcsay(p, n, "It may be possible to make a ward like that?",
 					"But what is the best thing to make it from?");
 				// having zadimus corpse prolly

@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -33,7 +32,7 @@ public class BrotherJered implements
 				if (sub_option == 0) {
 					p.getCarriedItems().remove(new Item(ItemId.UNBLESSED_HOLY_SYMBOL.id()));
 					say(p, n, "Yes Please");
-					Functions.mes(p, "You give Jered the symbol",
+					mes(p, "You give Jered the symbol",
 							"Jered closes his eyes and places his hand on the symbol",
 							"He softly chants",
 							"Jered passes you the holy symbol");

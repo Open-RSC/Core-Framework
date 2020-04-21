@@ -6,7 +6,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BailingBucket implements OpInvTrigger {
 

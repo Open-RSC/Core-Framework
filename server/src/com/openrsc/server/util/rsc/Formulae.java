@@ -12,9 +12,7 @@ import com.openrsc.server.model.entity.player.Prayers;
 
 import java.security.InvalidParameterException;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
-
+import static com.openrsc.server.plugins.Functions.*;
 public final class Formulae {
 
 	public static final int[] arrowIDs = {ItemId.ICE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),

@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
@@ -30,7 +29,7 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 				"First of all you need weapons");
 			give(p, ItemId.WOODEN_SHIELD.id(), 1); // Add wooden shield to the players inventory
 			give(p, ItemId.BRONZE_LONG_SWORD.id(), 1); // Add bronze long sword to the players inventory
-			Functions.mes(p, "The instructor gives you a sword and shield");
+			mes(p, "The instructor gives you a sword and shield");
 			npcsay(p, n, "look after these well",
 				"These items will now have appeared in your inventory",
 				"You can access them by selecting the bag icon in the menu bar",
@@ -92,9 +91,9 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 				(affectedmob.getID() == NpcId.RAT_TUTORIAL.id() && p.getCache().getInt("tutorial") == 16)
 		)) {
 			if (p.getCache().getInt("tutorial") < 16)
-				Functions.mes(p, "Speak to the combat instructor before killing rats");
+				mes(p, "Speak to the combat instructor before killing rats");
 			else
-				Functions.mes(p, "That's enough rat killing for now");
+				mes(p, "That's enough rat killing for now");
 		}
 	}
 
@@ -128,7 +127,7 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 			n.remove();
 			// GIVE NO XP ACCORDING TO YOUTUBE VIDEOS FOR COMBAT SINCE IT WAS HEAVILY ABUSED IN REAL RSC TO TRAIN ON THOSE RATS.
 			if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 16) {
-				Functions.mes(p, "Well done you've killed the rat",
+				mes(p, "Well done you've killed the rat",
 					"Now speak to the combat instructor again");
 				p.getCache().set("tutorial", 20);
 			}

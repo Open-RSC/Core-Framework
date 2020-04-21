@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -66,7 +65,7 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 	public void onKillNpc(Player p, Npc n) {
 		if (n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id()) {
 			n.killedBy(p);
-			Functions.mes(p, "the paladin slumps to the floor",
+			mes(p, "the paladin slumps to the floor",
 				"you search his body");
 			if (!p.getCarriedItems().hasCatalogID(ItemId.COAT_OF_ARMS_RED.id(), Optional.empty())) {
 				give(p, ItemId.COAT_OF_ARMS_RED.id(), 1);
@@ -77,7 +76,7 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 		}
 		else if (n.getID() == NpcId.PALADIN_UNDERGROUND.id()) {
 			n.killedBy(p);
-			Functions.mes(p, "the paladin slumps to the floor",
+			mes(p, "the paladin slumps to the floor",
 				"you search his body");
 			if (!ifheld(p, ItemId.COAT_OF_ARMS_BLUE.id(), 2)) {
 				give(p, ItemId.COAT_OF_ARMS_BLUE.id(), 1);

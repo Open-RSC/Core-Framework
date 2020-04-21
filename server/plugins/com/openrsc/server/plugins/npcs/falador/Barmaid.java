@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -39,13 +38,13 @@ public final class Barmaid implements
 					"Lots of expensive parts to the cocktail though",
 					"So it will cost you 70 coins");
 				if (ifheld(p, ItemId.COINS.id(), 70)) {
-					Functions.mes(p, "You buy a hand of death cocktail");
+					mes(p, "You buy a hand of death cocktail");
 					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 70));
-					Functions.mes(p, "You drink the cocktail",
+					mes(p, "You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(p);
 					p.damage(DataConversions.getRandom().nextInt(2) + 1);
-					Functions.mes(p, "The barmaid giggles",
+					mes(p, "The barmaid giggles",
 						"The barmaid signs your card");
 					p.getCache().store("barthree", true);
 				} else {

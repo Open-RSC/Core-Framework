@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class BettysMagicEmporium implements
 	ShopInterface, TalkNpcTrigger {
@@ -42,7 +40,7 @@ public final class BettysMagicEmporium implements
 	public void onTalkNpc(final Player p, final Npc n) {
 		if (n.getID() == NpcId.BETTY.id()) {
 			npcsay(p, n, "Welcome to the magic emporium");
-			int opt = Functions.multi(p, n, "Can I see your wares?",
+			int opt = multi(p, n, "Can I see your wares?",
 				"Sorry I'm not into magic");
 			if (opt == 0) {
 				npcsay(p, n, "Yes");

@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -73,7 +72,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			switch (p.getQuestStage(this)) {
 				case 0:
 					say(p, n, "Hello young man");
-					Functions.mes(p, "The boy sobs");
+					mes(p, "The boy sobs");
 					int first = multi(p, n, "What's the matter?",
 						"Well if you're not going to answer, I'll go");
 					if (first == 0) {
@@ -91,7 +90,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 							// NOTHING
 						}
 					} else if (first == 1) {
-						Functions.mes(p, "The boy sniffs slightly");
+						mes(p, "The boy sniffs slightly");
 					}
 					break;
 				case 1:
@@ -141,10 +140,10 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 
 					npcsay(p, witch, "Oi what are you doing in my garden?");
 					npcsay(p, witch, "Get out you pesky intruder");
-					Functions.mes(p, "Nora begins to cast a spell");
+					mes(p, "Nora begins to cast a spell");
 
 					p.teleport(347, 616, true);
-					Functions.delnpc(witch, false);
+					delnpc(witch, false);
 
 					p.getCache().remove("witch_spawned");
 					p.updateQuestStage(this, 1);
@@ -166,21 +165,21 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			if (!p.getCache().hasKey("witch_spawned")) {
-				Functions.mes(p, "As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
+				mes(p, "As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
 				addnpc(p.getWorld(), NpcId.NORA_T_HAG.id(), 356, 494, 60000);
 				p.getCache().store("witch_spawned", true);
 			} else {
-				Functions.mes(p, "The shed door is locked");
+				mes(p, "The shed door is locked");
 				if (witch == null) {
 					return;
 				}
 				witch.teleport(355, 494);
 				npcsay(p, witch, "Oi what are you doing in my garden?");
 				npcsay(p, witch, "Get out you pesky intruder");
-				Functions.mes(p, "Nora begins to cast a spell");
+				mes(p, "Nora begins to cast a spell");
 
 				p.teleport(347, 616, true);
-				Functions.delnpc(witch, false);
+				delnpc(witch, false);
 				p.updateQuestStage(this, 1);
 				p.getCache().remove("found_magnet");
 			}
@@ -202,12 +201,12 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 						"Just wait there while I get some");
 					witch.teleport(353, 492);
 					witch.setLocation(Point.location(353, 492), true);
-					Functions.mes(p,
+					mes(p,
 						"The witch passes  back through the garden again",
 						"Leaving the shed door unlocked");
 					delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 
-					Functions.delnpc(witch, false);
+					delnpc(witch, false);
 					p.getCache().remove("witch_spawned");
 
 					p.updateQuestStage(this, 3);
@@ -289,7 +288,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				say(p, null, "I would rather eat it to be honest");
 				return;
 			}
-			Functions.mes(p, "A rat appears from a hole and eats the cheese");
+			mes(p, "A rat appears from a hole and eats the cheese");
 			addnpc(p.getWorld(), NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
 		}
 	}
@@ -310,8 +309,8 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			} else {
 				p.message("You put the magnet on the rat");
 				Npc rat = p.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
-				Functions.delnpc(rat, false);
-				Functions.mes(p, "The rat runs back into his hole",
+				delnpc(rat, false);
+				mes(p, "The rat runs back into his hole",
 					"You hear a click and whirr");
 				p.getCarriedItems().remove(new Item(ItemId.MAGNET.id()));
 				p.updateQuestStage(getQuestId(), 2);

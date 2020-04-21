@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.Action;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
@@ -61,17 +60,17 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			if (command.equalsIgnoreCase("Open")) {
 				if (p.getCache().hasKey("tomb_door_shilo")) {
 					if (p.getY() >= 3632) {
-						Functions.changeloc(obj, 800, 497);
+						changeloc(obj, 800, 497);
 						p.teleport(377, 3631);
 					} else {
-						Functions.changeloc(obj, 800, 497);
+						changeloc(obj, 800, 497);
 						p.teleport(377, 3633);
 					}
 					return;
 				}
 				p.message("This door is completely sealed, it is very ornately carved.");
 			} else if (command.equalsIgnoreCase("Search")) {
-				Functions.mes(p, "The door is ornately carved with depictions of skeletal warriors.",
+				mes(p, "The door is ornately carved with depictions of skeletal warriors.",
 					"You notice that some of the skeletal warriors depictions are not complete.",
 					"Instead, there are reccesses were some of the bones should be.");
 				p.message("There are three recesses.");
@@ -126,7 +125,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 		else if (obj.getID() == METALLIC_DUNGEON_GATE) {
 			if (command.equalsIgnoreCase("Open")) {
 				if (p.getY() >= 3616) {
-					Functions.changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
+					changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
 					p.teleport(348, 3614);
 					return;
 				}
@@ -137,11 +136,11 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					"Err, I'm having second thoughts now!");
 				if (menu == 0) {
 					if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
-						Functions.changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
+						changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
 						p.teleport(348, 3616);
 						p.damage(getCurrentLevel(p, Skills.HITS) / 2 + 1);
 						if (p.getStatus() != Action.DIED_FROM_DAMAGE) {
-							Functions.mes(p, "@red@You feel invisible hands starting to choke you...");
+							mes(p, "@red@You feel invisible hands starting to choke you...");
 							p.teleport(348, 3614);
 							delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 							say(p, null, "*Cough*",
@@ -153,7 +152,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 								"* Gaaaa....*");
 						}
 					} else {
-						Functions.changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
+						changeloc(obj, p.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
 						p.teleport(348, 3616);
 						displayTeleportBubble(p, p.getX(), p.getY(), false);
 						p.message("@red@The Beads of the dead start to glow...");
@@ -163,18 +162,18 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					p.message("You manage to pull your spineless body away from the ancient gates.");
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
-				Functions.mes(p, "There is an ancient symbol on the gate.",
+				mes(p, "There is an ancient symbol on the gate.",
 					"It looks like a human figure with something around it's neck.");
 				p.message("It looks pretty scary.");
 			}
 		}
 		else if (obj.getID() == RASH_EXIT_DOOR) {
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
-				Functions.mes(p, "@red@You feel invisible hands starting to choke you...");
+				mes(p, "@red@You feel invisible hands starting to choke you...");
 				p.damage(18); // todo?
 			}
 			if (command.equalsIgnoreCase("Open")) {
-				Functions.mes(p, "The door seems to be locked!");
+				mes(p, "The door seems to be locked!");
 				say(p, null, "Oh no, I'm going to be stuck in here forever!",
 					"How will I ever get out!",
 					"I'm too young to die!");
@@ -184,13 +183,13 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == HILLSIDE_ENTRANCE) {
 			if (command.equalsIgnoreCase("Open")) {
-				Functions.mes(p, "There seems to be some sort of recepticle,");
+				mes(p, "There seems to be some sort of recepticle,");
 				p.message("perhaps it needs a key?");
 				if (!p.getCache().hasKey("can_chisel_bone") && p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
 					p.getCache().store("can_chisel_bone", true);
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
-				Functions.mes(p, "Examining the door, you see that it has a very strange lock.");
+				mes(p, "Examining the door, you see that it has a very strange lock.");
 				p.message("Ewww...it seems to be made out of bone!");
 				if (!p.getCache().hasKey("can_chisel_bone") && p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
 					p.getCache().store("can_chisel_bone", true);
@@ -203,14 +202,14 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("You find nothing significant.");
 				return;
 			}
-			Functions.mes(p, "You pull the trees apart...");
+			mes(p, "You pull the trees apart...");
 			p.message("...and reveal an ancient doorway set into the side of the hill!");
 			GameObject ENTRANCE = new GameObject(p.getWorld(), Point.location(350, 782), HILLSIDE_ENTRANCE, 2, 0);
 			addloc(ENTRANCE);
-			Functions.addloc(p.getWorld(), new GameObject(p.getWorld(), Point.location(350, 782), 398, 2, 0).getLoc(), 15000);
+			addloc(p.getWorld(), new GameObject(p.getWorld(), Point.location(350, 782), 398, 2, 0).getLoc(), 15000);
 		}
 		else if (obj.getID() == TOMB_DOLMEN_HANDHOLDS) {
-			Functions.mes(p, "You start to climb up the side of the rock wall using the hand holds");
+			mes(p, "You start to climb up the side of the rock wall using the hand holds");
 			if (ShiloVillageUtils.succeed(p, 32)) {
 				p.message("You push your way through a cunningly designed trap door..");
 				p.teleport(471, 836);
@@ -218,11 +217,11 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("And appear in bright sunshine and the salty sea air.");
 			} else {
 				p.message("You get halfway but loose your grip.");
-				Functions.mes(p, "You fall back to the floor.");
+				mes(p, "You fall back to the floor.");
 				p.teleport(380, 3692);
 				say(p, null, "Ahhhhh!");
 				p.damage(getCurrentLevel(p, Skills.HITS) / 10);
-				Functions.mes(p, "And it knocks the wind out of you.");
+				mes(p, "And it knocks the wind out of you.");
 				p.damage(getCurrentLevel(p, Skills.HITS) / 10);
 				p.teleport(467, 3674);
 				say(p, null, "Oooff!");
@@ -236,7 +235,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					p.message("This tomb entrance seems to be completely flooded.");
 					p.message("A great sense of peace pervades in this area.");
 				} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 5) {
-					Functions.mes(p, "You investigate the rocks and find a dank,narrow crawl-way.",
+					mes(p, "You investigate the rocks and find a dank,narrow crawl-way.",
 						"Do you want to crawl into this dank, dark, narrow,",
 						"possibly dangerous hole?");
 					int menu = multi(p,
@@ -245,7 +244,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					if (menu == 0) {
 						p.message("You contort your body and prepare to squirm, worm like, into the hole.");
 						if (ShiloVillageUtils.succeed(p, 32)) {
-							Functions.mes(p, "You struggle through the narrow crevice in the rocks");
+							mes(p, "You struggle through the narrow crevice in the rocks");
 							p.teleport(471, 3658);
 							p.message("and drop to your feet into a narrow underground corridor");
 							if (p.getQuestStage(Quests.SHILO_VILLAGE) == 5) {
@@ -253,7 +252,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 							}
 						}
 						else {
-							Functions.mes(p, "You managed to get yourself stuck.",
+							mes(p, "You managed to get yourself stuck.",
 									"You have to wrench yourself free to get out.",
 									"You manage to pull yourself out, but hurt yourself in the process.");
 							p.damage(3);
@@ -275,7 +274,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			p.message("The remainder of the bridge looks even more rickety..");
 		}
 		else if (obj.getID() == PILE_OF_RUBBLE_TATTERED_SCROLL) {
-			Functions.mes(p, "You can see that there is something hidden behind some of the rocks.",
+			mes(p, "You can see that there is something hidden behind some of the rocks.",
 				"Do you want to have a look?");
 			p.message("It looks a bit dangerous because the ceiling doesn't look safe!");
 			int menu = multi(p,
@@ -285,9 +284,9 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				if (p.getCarriedItems().hasCatalogID(ItemId.TATTERED_SCROLL.id(), Optional.of(false))) {
 					p.message("You see nothing here but an empty book case behind rocks.");
 				} else {
-					Functions.mes(p, "You start to slowly move the rocks to one side.");
+					mes(p, "You start to slowly move the rocks to one side.");
 					if (ShiloVillageUtils.succeed(p, 32)) {
-						Functions.mes(p, "You carefully manage to remove enough rocks to see a book shelf.",
+						mes(p, "You carefully manage to remove enough rocks to see a book shelf.",
 							"You gingerly remove a delicate scroll from the shelf");
 						p.message("and place it carefully in your inventory.");
 						give(p, ItemId.TATTERED_SCROLL.id(), 1);
@@ -296,44 +295,44 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 						}
 						p.incExp(Skills.AGILITY, 15, true);
 					} else {
-						Functions.mes(p, "You acidently knock some rocks and the ceiling starts to cave in.");
-						Functions.mes(p, "Some rocks fall on you.");
+						mes(p, "You acidently knock some rocks and the ceiling starts to cave in.");
+						mes(p, "Some rocks fall on you.");
 						p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.1D + 1));
 						p.incExp(Skills.AGILITY, 5, true);
 					}
 				}
 			} else if (menu == 1) {
-				Functions.mes(p, "You decide to leave the rocks well alone.");
+				mes(p, "You decide to leave the rocks well alone.");
 				p.message("The ceiling does look a little unsafe.");
 			}
 		}
 		else if (obj.getID() == ROTTEN_GALLOWS) {
 			if (command.equalsIgnoreCase("Look")) {
-				Functions.mes(p, "You take a look at the Gallows.",
+				mes(p, "You take a look at the Gallows.",
 					"The gallows look pretty eerie.");
 				if (p.getCarriedItems().hasCatalogID(ItemId.ZADIMUS_CORPSE.id(), Optional.of(false)) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
-					Functions.mes(p, "An empty noose swings eerily in the half light of the tomb.");
+					mes(p, "An empty noose swings eerily in the half light of the tomb.");
 				} else {
-					Functions.mes(p, "A grisly sight meets your eyes. A human corpse hangs from the noose.",
+					mes(p, "A grisly sight meets your eyes. A human corpse hangs from the noose.",
 							"His hands have been tied behind his back.");
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
-				Functions.mes(p, "You search the gallows.");
+				mes(p, "You search the gallows.");
 				if (p.getCarriedItems().hasCatalogID(ItemId.ZADIMUS_CORPSE.id(), Optional.of(false)) || p.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
 					p.message("The gallows look pretty eerie. You search but find nothing.");
 				} else {
-					Functions.mes(p, "You find a human corpse hanging in the noose.",
+					mes(p, "You find a human corpse hanging in the noose.",
 						"It looks as if the corpse will be removed easily.",
 						"Would you like to remove the corpse from the noose?");
 					int menu = multi(p,
 						"I don't think so it might animate and attack me!",
 						"Yes, I may find something else on the corpse");
 					if (menu == 0) {
-						Functions.mes(p, "You move away from the corpse quietly and slowly...",
+						mes(p, "You move away from the corpse quietly and slowly...",
 							"...you have an eerie feeling about this!");
 						say(p, null, "** Gulp! **");
 					} else if (menu == 1) {
-						Functions.mes(p, "You gently support the frame of the skeleton and lift the skull through the noose.",
+						mes(p, "You gently support the frame of the skeleton and lift the skull through the noose.",
 							"You find an old sack and place the skeleton in this.",
 							"Maybe Trufitus can give you some tips on what to do with it.",
 							"You sense that there is a spirit that needs to be put to rest.");
@@ -358,45 +357,45 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == WET_ROCKS) {
-			Functions.mes(p, "You see a huge waterfall blocking your path.",
+			mes(p, "You see a huge waterfall blocking your path.",
 				"The rocks look quite perilous but you could try scale them.");
 			p.message("Or maybe you could use something to float through the waterfall?");
 			int m = multi(p,
 				"Yes, I'll try to climb out",
 				"No, thanks, I'll look for another exit.");
 			if (m == 0) {
-				Functions.mes(p, "You start searching for handholds in the slippery cave entrance...");
+				mes(p, "You start searching for handholds in the slippery cave entrance...");
 				p.teleport(342, 3684);
 				if (ShiloVillageUtils.succeed(p, 32)) {
-					Functions.mes(p, "@red@*** YOU FALL ***",
+					mes(p, "@red@*** YOU FALL ***",
 						"You slip into the water and get washed out through the waterfall!",
 						"You're pumelled as the thrashing water throws",
 						"you against the rocks...");
 					p.teleport(339, 808);
-					Functions.mes(p, "You are washed onto the waterfall river bank");
+					mes(p, "You are washed onto the waterfall river bank");
 					p.message("barely alive!");
 					p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D + 4));
 					p.incExp(Skills.AGILITY, 5, true);
 				} else {
-					Functions.mes(p, "You manage to work your way along the slippery wall");
-					Functions.mes(p, "and avoid falling into the water below.");
+					mes(p, "You manage to work your way along the slippery wall");
+					mes(p, "and avoid falling into the water below.");
 					p.teleport(344, 808);
-					Functions.mes(p, "You make it out of the cave");
+					mes(p, "You make it out of the cave");
 					p.message("and into the warmth of the jungle.");
 					p.incExp(Skills.AGILITY, 100, true);
 				}
 			} else if (m == 1) {
-				Functions.mes(p, "You decide to have another look around.");
+				mes(p, "You decide to have another look around.");
 				p.message("And see if you can find a better way to get out.");
 			}
 		}
 		else if (obj.getID() == SMASHED_TABLE) {
 			// 698
 			if (command.equalsIgnoreCase("Examine")) {
-				Functions.mes(p, "This table might be useful...");
+				mes(p, "This table might be useful...");
 				p.message("with some adjustment");
 			} else if (command.equalsIgnoreCase("Craft")) {
-				Functions.mes(p, "You may be able to turn this delapidated table into ",
+				mes(p, "You may be able to turn this delapidated table into ",
 					"something that could help you to get out of this place.",
 					"What would you like to try and turn this table into?");
 				int sub = multi(p,
@@ -404,18 +403,18 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					"A crude raft",
 					"A pole vault");
 				if (sub == 0) {
-					Functions.mes(p, "Your experience in crafting tells you that");
+					mes(p, "Your experience in crafting tells you that");
 					p.message("there isn't enough wood to complete this task.");
 				} else if (sub == 1) {
 					// WATER RAFT SCENE
 					p.setBusy(true);
-					Functions.mes(p, "You see that this table already looks very sea worthy",
+					mes(p, "You see that this table already looks very sea worthy",
 						"it takes virtually no time at all to help fix it into.");
-					Functions.mes(p, "a crude raft.");
+					mes(p, "a crude raft.");
 					GameObject RAFT_ONE = new GameObject(p.getWorld(), Point.location(353, 3669), 698, 0, 0);
 					addloc(RAFT_ONE);
 					p.teleport(353, 3669);
-					Functions.mes(p, "You place it carefully on the water!",
+					mes(p, "You place it carefully on the water!",
 						"You board the raft!",
 						"You push off!");
 					delloc(RAFT_ONE);
@@ -457,22 +456,22 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					GameObject RAFT_FINAL = new GameObject(p.getWorld(), Point.location(341, 3686), 698, 0, 0);
 					addloc(RAFT_FINAL);
 					p.teleport(341, 3686);
-					Functions.mes(p, "...and plough through it!");
+					mes(p, "...and plough through it!");
 					delloc(RAFT_FINAL);
 					p.message("The raft soon breaks up.");
 					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.teleport(341, 810);
 					p.setBusy(false);
 				} else if (sub == 2) {
-					Functions.mes(p, "You happily start hacking away at the table",
+					mes(p, "You happily start hacking away at the table",
 							"But realise that you won't have enough woood to properly finish the item off!");
 					say(p, null, "Oops! Not enough wood left to do anything else with the table!");
-					Functions.mes(p, "There isn't enough wood left in this table to make anything!");
+					mes(p, "There isn't enough wood left in this table to make anything!");
 				}
 			}
 		}
 		else if (obj.getID() == PILE_OF_RUBBLE) {
-			Functions.mes(p, "You can see that there is a narrow gap through into darkness.",
+			mes(p, "You can see that there is a narrow gap through into darkness.",
 				"You could try to wriggle through and see where it takes you.");
 			int menu = multi(p,
 				"Yes, I'll wriggle through.",
@@ -494,7 +493,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				if (p.getCache().hasKey("SV_DIG_BUMP")) {
-					Functions.mes(p, "You see a small fissure in the granite",
+					mes(p, "You see a small fissure in the granite",
 							"that you might just be able to crawl through.");
 					if(!p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false)) && !p.getCache().hasKey("SV_DIG_LIT")) {
 						p.message("It's very dark beyond the fissure.");
@@ -505,7 +504,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				if (command.equalsIgnoreCase("Look")) {
 					p.message("It looks as if something is buried here.");
 				} else if (command.equalsIgnoreCase("Search")) {
-					Functions.mes(p, "It looks as if something is buried here.");
+					mes(p, "It looks as if something is buried here.");
 					p.message("It looks quite big, you may need some tools to excavate further.");
 				}
 			} else {
@@ -517,7 +516,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("This stone seems to have strange markings on it");
 			}
 			else if (command.equalsIgnoreCase("Investigate")) {
-				Functions.mes(p, "This stone seems to have strange markings on it",
+				mes(p, "This stone seems to have strange markings on it",
 						"Maybe Trufitus can decipher them.",
 						"The stone is too heavy to carry",
 						"But the letters stand proud on a plaque",
@@ -545,13 +544,13 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("You do not have enough bones for all the recesses.");
 			} else {
 				p.getCarriedItems().remove(new Item(ItemId.BONES.id(), 3));
-				Functions.mes(p, "You fit the bones into the reccesses of the door.",
+				mes(p, "You fit the bones into the reccesses of the door.",
 					"The door seems to change slightly.",
 					"Two depictions of skeletal warriors turn their heads towards you.",
 					"They are alive!",
 					"The Skeletons wrench themselves free of the door.",
 					"Stepping out of the door, with grinning teeth they push the huge doors open.");
-				Functions.changeloc(obj, 800, 497);
+				changeloc(obj, 800, 497);
 				p.teleport(377, 3631);
 				if (!p.getCache().hasKey("tomb_door_shilo")) {
 					p.getCache().store("tomb_door_shilo", true);
@@ -560,10 +559,10 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == RASH_EXIT_DOOR && item.getCatalogId() == ItemId.BONE_KEY.id()) {
 			if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
-				Functions.mes(p, "@red@You feel invisible hands starting to choke you...");
+				mes(p, "@red@You feel invisible hands starting to choke you...");
 				p.damage(getCurrentLevel(p, Skills.HITS) / 2);
 			}
-			Functions.mes(p, "You insert the key into the lock and it merges with the door.",
+			mes(p, "You insert the key into the lock and it merges with the door.",
 					"The doors creak open revealing bright day light.");
 			p.message("You walk outside into the warmth of the Jungle heat.");
 			p.teleport(350, 782);
@@ -573,15 +572,15 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_KEY.id()) {
 			p.setBusy(true);
-			Functions.mes(p, "You try the key with the lock.");
-			Functions.mes(p, "As soon as you push the key into the lock.");
+			mes(p, "You try the key with the lock.");
+			mes(p, "As soon as you push the key into the lock.");
 			displayTeleportBubble(p, 350, 782, true);
 			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			p.message("A shimmering light dances over the doors, before you can blink, the doors creak open.");
 			p.teleport(348, 3611);
 			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.setBusy(false);
-			Functions.mes(p, "You feel a strange force pulling you inside.",
+			mes(p, "You feel a strange force pulling you inside.",
 				"The doors close behind you with the sound of crunching bone.",
 				"Before you stretches a winding tunnel blocked by an ancient gate.");
 			if (p.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
@@ -589,7 +588,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_SHARD.id()) {
-			Functions.mes(p, "You try to use the bone shard on the lock.",
+			mes(p, "You try to use the bone shard on the lock.",
 				"Although it isabout the right size,");
 			p.message("you find that it just doesn't fit the delicate lock mechanism.");
 		}
@@ -602,7 +601,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					p.message("It's too dark to see where to attach it.");
 				}
 				else if (!p.getCache().hasKey("SV_DIG_ROPE")) {
-					Functions.mes(p, "You see where to attach the rope very clearly.",
+					mes(p, "You see where to attach the rope very clearly.",
 							"You secure it well.");
 					p.message("A rope is already secured there");
 					p.getCache().store("SV_DIG_ROPE", true);
@@ -622,7 +621,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				// player has not lit place on bumpy dirt
 				if (!p.getCache().hasKey("SV_DIG_LIT")) {
-					Functions.mes(p, "You hold the candle to the fissure and see that",
+					mes(p, "You hold the candle to the fissure and see that",
 							"there is quite a large drop after you get through the hole.");
 					if(!p.getCarriedItems().hasCatalogID(ItemId.ROPE.id(), Optional.of(false))) {
 						p.message("It's a pity you don't have some rope");
@@ -647,7 +646,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				p.message("The entrance seems to have caved in.");
 			} else if (p.getQuestStage(Quests.SHILO_VILLAGE) >= 2) {
 				if (!p.getCache().hasKey("SV_DIG_BUMP")) {
-					Functions.mes(p, "You dig a small hole and almost immediately hit granite",
+					mes(p, "You dig a small hole and almost immediately hit granite",
 						"You excavate the hole a bit more and see that there is a small fissure",
 						"that you might just be able to crawl through.");
 					if(!p.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false)) && !p.getCache().hasKey("SV_DIG_LIT")) {
@@ -660,13 +659,13 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					p.message("Your spade clangs against the granite");
 				}
 			} else {
-				Functions.mes(p, "You start digging...",
+				mes(p, "You start digging...",
 					"But without knowing what you're digging for...");
 				p.message("you decide to give up.");
 			}
 		}
 		else if (obj.getID() == SPEC_STONE && item.getCatalogId() == ItemId.CHISEL.id()) {
-			Functions.mes(p, "You cleanly cut the plaque of letters away from the rock.",
+			mes(p, "You cleanly cut the plaque of letters away from the rock.",
 					"You place it carefully into your inventory.");
 			give(p, ItemId.STONE_PLAQUE.id(), 1);
 			p.incExp(Skills.CRAFTING, 10, true);
