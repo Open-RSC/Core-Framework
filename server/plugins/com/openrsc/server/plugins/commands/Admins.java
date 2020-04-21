@@ -775,7 +775,7 @@ public final class Admins implements CommandTrigger {
 						new Item(ItemId.DRAGON_SCALE_MAIL.id()),
 						new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
 						new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
-						new Item(ItemId.CAPE_OF_LEGENDS.id()),
+						new Item(ItemId.ATTACK_CAPE.id()),
 						new Item(ItemId.RING_OF_WEALTH.id()),
 						new Item(ItemId.KLANKS_GAUNTLETS.id()),
 						new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
