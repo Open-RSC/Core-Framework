@@ -120,7 +120,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					Functions.mes(p, "You find a rusty sword with an ivory pommel.");
 					p.message("You take the pommel and place it into your inventory.");
 					give(p, ItemId.SWORD_POMMEL.id(), 1);
-					delay(500);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				}
 				if (!p.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) { // crystal
 					Functions.mes(p, "You find a Crystal Sphere ");
@@ -169,7 +169,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					if (p.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 						p.setBusy(true);
 						p.message("You carefully place Rashiliyia's remains on the Dolmen.");
-						delay(1200);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 						p.message("You feel a strange vibration in the air.");
 						Npc rash = addnpc(p.getWorld(), NpcId.RASHILIYIA.id(), p.getX(), p.getY(), 60000);
 						if (rash != null) {

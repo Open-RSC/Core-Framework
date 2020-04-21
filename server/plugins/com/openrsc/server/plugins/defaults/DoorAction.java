@@ -178,13 +178,13 @@ public class DoorAction {
 				break;
 
 			case 154: // Grand Tree: main door (outside)
-				mes(p, 1900, "you open the door");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
 				p.teleport(703, 455);
 				p.message("and walk through");
 				break;
 
 			case 153: // Grand Tree: main door (inside)
-				mes(p, 1900, "you open the door");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
 				p.teleport(416, 165);
 				p.message("and walk through");
 				break;
@@ -331,9 +331,9 @@ public class DoorAction {
 				} else {
 					p.message("Your weight is too much for the bridge to hold");
 					p.teleport(544, 3330);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.message("You fall through the bridge");
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 					p.message("The lava singes you");
 					p.damage(DataConversions.roundUp(p.getSkills().getLevel(Skills.HITS) / 5));
 				}
@@ -569,7 +569,7 @@ public class DoorAction {
 					if (dwarf != null) {
 						npcsay(p, dwarf, "Sorry only the top miners are allowed in there");
 					}
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.message("You need a mining of level 60 to enter");
 				} else {
 					doDoor(obj, p);
@@ -586,7 +586,7 @@ public class DoorAction {
 					if (master != null) {
 						npcsay(p, master, "Sorry only experienced craftsmen are allowed in here");
 					}
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.setBusy(false);
 					p.message("You need a crafting level of 40 to enter the guild");
 				} else if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())) {
@@ -609,7 +609,7 @@ public class DoorAction {
 					if (chef != null) {
 						npcsay(p, chef, "Sorry. Only the finest chefs are allowed in here");
 					}
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.message("You need a cooking level of 32 to enter");
 				} else if (!p.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
 					Npc chef = p.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
@@ -1090,7 +1090,7 @@ public class DoorAction {
 				}
 				player.message("you open the gate");
 				doGate(player, obj, 357);
-				delay(1000);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				player.message("and walk through");
 				return;
 
@@ -1129,11 +1129,11 @@ public class DoorAction {
 							468, 472);
 						if (forester != null) {
 							npcsay(player, forester, "Hey you can't come through here", "This is private land");
-							delay(1200);
+							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
 						} else {
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
-							delay(1200);
+							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 							player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 						}
 					}
@@ -1350,7 +1350,7 @@ public class DoorAction {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
 			} else {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
-				owner.setBusyTimer(650);
+				owner.setBusyTimer(owner.getWorld().getServer().getConfig().GAME_TICK);
 			}
 			owner.playSound(open ? "opendoor" : "closedoor");
 			owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));

@@ -191,10 +191,10 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				if (p.getCache().hasKey("witch_spawned")) {
 					Npc witch = p.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 					witch.setBusy(true);
-					delay(2000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 					p.message("Through a crack in the door, you see a witch enter the garden");
 					witch.teleport(353, 492);
-					delay(2500);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 					witch.teleport(351, 491);
 					p.message("The witch disappears into the shed");
 					npcsay(p, witch, "How are you tonight my pretty?",
@@ -205,7 +205,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 					Functions.mes(p,
 						"The witch passes  back through the garden again",
 						"Leaving the shed door unlocked");
-					delay(2500);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 4);
 
 					Functions.delnpc(witch, false);
 					p.getCache().remove("witch_spawned");

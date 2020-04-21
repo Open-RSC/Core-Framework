@@ -149,7 +149,7 @@ public class Smithing implements UseLocTrigger {
 				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			mes(player, 1200, "You set to work trying to fix the ancient shield.",
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
 					"You hammer long and hard and use all of your skill.",
 					"Eventually, it is ready...",
 					"You have repaired the Dragon Square Shield.");
@@ -220,7 +220,7 @@ public class Smithing implements UseLocTrigger {
 
 		if (makeCount == -1) return;
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Smithing", makeCount, false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Smithing", makeCount, false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {

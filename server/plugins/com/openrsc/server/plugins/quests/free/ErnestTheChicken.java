@@ -472,7 +472,7 @@ public class ErnestTheChicken implements QuestInterface,
 			case 36:
 				if (p.getY() >= 553) {
 					doDoor(obj, p);
-					delay(3000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 					p.message("The door slams behind you!");
 				} else {
 					p.message("The door won't open");

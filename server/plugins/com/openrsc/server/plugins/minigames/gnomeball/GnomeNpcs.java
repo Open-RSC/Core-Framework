@@ -61,7 +61,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
-			mes(p, 1200, "you can't attack this gnome", "that's cheating");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you can't attack this gnome", "that's cheating");
 		}
 	}
 
@@ -71,7 +71,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
-			mes(p, 1200, "you can't attack this gnome", "that's cheating");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you can't attack this gnome", "that's cheating");
 		}
 	}
 
@@ -81,7 +81,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
-			mes(p, 1200, "you can't attack this gnome", "that's cheating");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you can't attack this gnome", "that's cheating");
 		}
 	}
 
@@ -182,7 +182,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 							"i think you should be fine");
 					p.getCache().store("gnomeball", true);
 					npcsay(p, n, "ready ...  go");
-					mes(p, 1200, "the ref throws the ball into the air", "you jump up and catch it");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "the ref throws the ball into the air", "you jump up and catch it");
 					give(p, ItemId.GNOME_BALL.id(), 1);
 				}
 			} else {
@@ -193,7 +193,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 					if (inArray(p.getAttribute("gnomeball_npc", -1), 0)) {
 						p.setAttribute("throwing_ball_game", false);
 						npcsay(p, n, "ready ...  go");
-						mes(p, 1200, "the ref throws the ball into the air", "you jump up and catch it");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "the ref throws the ball into the air", "you jump up and catch it");
 						give(p, ItemId.GNOME_BALL.id(), 1);
 					}
 					else {
@@ -242,7 +242,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 					p.message("you pass the ball to the gnome");
 					p.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 					npcsay(p, n, 100, "run long..");
-					delay(5000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 8);
 					p.message("the gnome throws you a long ball");
 					give(p, ItemId.GNOME_BALL.id(), 1);
 					p.setAttribute("throwing_ball_game", false);

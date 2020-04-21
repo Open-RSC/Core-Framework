@@ -157,7 +157,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			}
 		}
 		else if (obj.getID() == HIJACK_ROCK) {
-			p.setBusyTimer(650);
+			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 			p.message("you climb onto the rock");
 			if (DataConversions.getRandom().nextInt(5) == 4) {
 				p.message("but you slip");
@@ -212,7 +212,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 					.getType()));
 				Functions.addloc(obj.getWorld(), obj.getLoc(), 3000);
 				p.teleport(766, 3417);
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.teleport(770, 3417);
 				p.message("you walk into the darkness");
 			} else {

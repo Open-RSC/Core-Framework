@@ -76,7 +76,7 @@ public final class Apothecary implements
 					int eggtimes = p.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
 					int repeattimes = Math.min(cointimes, roottimes);
 					repeattimes = Math.min(eggtimes, repeattimes);
-					p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Apothecary Brews Potion", repeattimes, false) {
+					p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK, "Apothecary Brews Potion", repeattimes, false) {
 						@Override
 						public void action() {
 							if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 5) {

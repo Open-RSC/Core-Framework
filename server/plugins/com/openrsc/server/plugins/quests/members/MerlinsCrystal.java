@@ -68,11 +68,11 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			} else {
 				p.teleport(456, 3352, false);
 				p.message("You hide away in the ship");
-				delay(1200);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.message("The ship starts to move");
-				delay(3000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("You are out at sea");
-				delay(3000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("The ship comes to a stop");
 				p.teleport(456, 520, false);
 				Functions.mes(p, "You sneak out of the ship");
@@ -99,12 +99,12 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			if ((p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 3) || !p.getCache().hasKey("lady_test")) {
 				return;
 			}
-			delay(600);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			Npc lady = ifnearvisnpc(p, NpcId.LADY_UPSTAIRS.id(), 5);
 			if (lady == null) {
 				lady = addnpc(NpcId.LADY_UPSTAIRS.id(), p.getX() - 1, p.getY() - 1, 60000, p);
 			}
-			delay(600);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			if (lady != null) {
 				say(p, lady, "Hello I am here, can I have Excalibur yet?");
 				npcsay(p, lady, "I don't think you are worthy enough",
@@ -125,7 +125,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		}
 		n.getSkills().setLevel(Skills.HITS, 5);
 		Npc leFaye = addnpc(p.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
-		delay(500);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		npcsay(p, leFaye, "Please spare my son");
 		int option = multi(p, n, "Tell me how to untrap Merlin and I might",
 			"No he deserves to die", "OK then");
@@ -243,7 +243,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				if (beggar == null) {
 					beggar = addnpc(NpcId.BEGGAR.id(), 276, 631, 60000, p);
 				}
-				delay(600);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				if (beggar != null) {
 					npcsay(p, beggar, "Please sir, me and my family are starving",
 						"Could you possibly give me a loaf of bread?");

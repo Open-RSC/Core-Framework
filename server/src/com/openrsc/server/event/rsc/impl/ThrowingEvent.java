@@ -82,7 +82,7 @@ public class ThrowingEvent extends GameTickEvent {
 		} else {
 			getPlayerOwner().resetPath();
 
-			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
+			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (canShoot) {
 				if (!PathValidation.checkPath(getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
 					getPlayerOwner().message("I can't get a clear shot from here");

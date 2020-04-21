@@ -85,13 +85,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (p.getX() <= 419) {
 						p.message("You climb down the steps.");
 						p.teleport(421, 3707);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(423, 3707);
 					} else {
 						p.message("You climb up the stairs.");
 						p.teleport(421, 3707);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(419, 3707);
 					}
@@ -99,7 +99,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					p.message("You slip and fall...");
 					p.damage(DataConversions.random(2, 3));
 					p.teleport(421, 3707);
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.incExp(Skills.AGILITY, 5, true);
 					p.teleport(423, 3707);
 				}
@@ -114,13 +114,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (p.getY() <= 3702) {
 						p.message("You climb down the steps.");
 						p.teleport(419, 3704);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(419, 3706);
 					} else {
 						p.message("You climb up the stairs.");
 						p.teleport(419, 3704);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(419, 3702);
 					}
@@ -128,7 +128,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					p.message("You slip and fall...");
 					p.damage(DataConversions.random(2, 3));
 					p.teleport(419, 3704);
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.incExp(Skills.AGILITY, 5, true);
 					p.teleport(419, 3706);
 				}
@@ -143,13 +143,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (p.getX() >= 426) {
 						p.message("You climb down the steps.");
 						p.teleport(424, 3702);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(422, 3702);
 					} else {
 						p.message("You climb up the stairs.");
 						p.teleport(424, 3702);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(426, 3702);
 					}
@@ -157,7 +157,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					p.message("You slip and fall...");
 					p.damage(DataConversions.random(2, 3));
 					p.teleport(424, 3702);
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.incExp(Skills.AGILITY, 5, true);
 					p.teleport(422, 3702);
 				}
@@ -172,13 +172,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (p.getY() >= 3706) {
 						p.message("You climb down the steps.");
 						p.teleport(426, 3704);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(426, 3702);
 					} else {
 						p.message("You climb up the stairs.");
 						p.teleport(426, 3704);
-						delay(600);
+						delay(p.getWorld().getServer().getConfig().GAME_TICK);
 						p.incExp(Skills.AGILITY, 20, true);
 						p.teleport(426, 3706);
 					}
@@ -186,7 +186,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					p.message("You slip and fall...");
 					p.damage(DataConversions.random(2, 3));
 					p.teleport(426, 3704);
-					delay(600);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					p.incExp(Skills.AGILITY, 5, true);
 					p.teleport(426, 3702);
 				}

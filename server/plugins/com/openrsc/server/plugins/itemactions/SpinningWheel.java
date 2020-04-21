@@ -56,7 +56,7 @@ public class SpinningWheel implements UseLocTrigger {
 		if (produce == -1 || requirement == -1 || exp == -1) {
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Spinning Wheel", Formulae
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Spinning Wheel", Formulae
 			.getRepeatTimes(player, Skills.CRAFTING), false) {
 
 			@Override

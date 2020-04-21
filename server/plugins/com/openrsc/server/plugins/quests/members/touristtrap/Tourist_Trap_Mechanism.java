@@ -48,14 +48,14 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			if (n != null) {
 				n.teleport(player.getX(), player.getY());
 				player.teleport(player.getX(), player.getY());
-				delay(650);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				npcsay(player, n, "Oi! What are you doing down here?",
 					"You're no slave!");
 				n.startCombat(player);
 			} else {
 				player.teleport(player.getX(), player.getY());
 				Npc newNpc = addnpc(player.getWorld(), NpcId.MERCENARY.id(), player.getX(), player.getY(), 30000);
-				delay(650);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				npcsay(player, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
 				newNpc.startCombat(player);
@@ -750,7 +750,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			Npc mercenary = ifnearvisnpc(p, NpcId.MERCENARY.id(), 15);
 			if (mercenary != null) {
 				mercenary = addnpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			}
 			npcsay(p, mercenary, "Oi, what are you two doing?");
 			mercenary.startCombat(p);
@@ -796,7 +796,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	private void failCaveAnaInBarrel(Player p, Npc n) {
 		if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 			n = addnpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			npcsay(p, n, "Hey, where d'ya think you're going with that Barrel?");
 			p.message("A guard comes over and takes the barrel off you.");
 			p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
@@ -807,7 +807,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			npcsay(p, n, "What was that!");
 			p.message("The guards kick the barrel open.!");
 			Npc ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 30000);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			npcsay(p, ana, "How dare you say that I'm as heavy as lead?");
 			p.message("The guards drag Ana of and then throw you into a cell.");
 			if (ana != null) {
@@ -968,14 +968,14 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				Functions.mes(p, "You drop the barrel to the floor and Ana gets out.");
 				p.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				Npc Ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 20000);
-				delay(650);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				npcsay(p, Ana, "How dare you put me in that barrel you barbarian!");
 				Functions.mes(p, "Ana's outburst attracts the guards, they come running over.");
 				Npc guard = ifnearvisnpc(p, NpcId.MERCENARY.id(), 15);
 				if (guard == null || guard.inCombat()) {
 					guard = addnpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX() + diffX, p.getY(), 30000);
 				}
-				delay(650);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				npcsay(p, guard, "Hey! What's going on here then?");
 				if (diffX == 0)
 					guard.startCombat(p);

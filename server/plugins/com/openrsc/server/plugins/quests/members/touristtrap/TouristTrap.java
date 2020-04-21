@@ -72,17 +72,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	@Override
 	public void handleReward(Player p) {
 		p.message("");
-		delay(650);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("@yel@                          !!!  Well Done !!!   ");
-		delay(650);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("");
-		delay(650);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("@gre@***********************************************************");
-		delay(650);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("@gre@*** You have completed the 'Tourist Trap' Quest ! ***");
-		delay(650);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		p.message("@gre@***********************************************************");
-		delay(650);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP), true);
 		p.message("@gre@You haved gained 2 quest points!");
 	}
@@ -170,7 +170,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 							Npc Ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 							Ana.teleport(p.getX(), p.getY() + 1);
 							if (Ana != null) {
-								delay(650);
+								delay(p.getWorld().getServer().getConfig().GAME_TICK);
 								p.message("@gre@Ana: Hey great, there's my Mum!");
 								npcsay(p, Ana,
 									"Great! Thanks for getting me out of that mine!",
@@ -1037,7 +1037,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 								Npc npcN = ifnearvisnpc(p, NpcId.MERCENARY.id(), 10);
 								if (npcN == null) {
 									npcN = addnpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
-									delay(1000);
+									delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 								}
 								npcsay(p, npcN, "Hey! You're no slave!");
 								npcN.startCombat(p);
@@ -1232,7 +1232,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 			p.getCarriedItems().getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
 			p.getCarriedItems().remove(new Item(ItemId.DESERT_BOOTS.id()));
 			Npc newSlave = changenpc(n, NpcId.ESCAPING_MINING_SLAVE.id(), true);
-			delay(1000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 			delayedReturnSlave(p, newSlave);
 			npcsay(p, newSlave, "Right, I'm off! Good luck!");
 			say(p, newSlave, "Yeah, good luck to you too!");
@@ -2107,7 +2107,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				Npc npcN = ifnearvisnpc(p, NpcId.MERCENARY.id(), 10);
 				if (npcN == null) {
 					npcN = addnpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				}
 				npcsay(p, npcN, "Hey! You're no slave!");
 				npcN.startCombat(p);
@@ -2417,7 +2417,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						Npc Ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 60000);
 						Ana.teleport(p.getX(), p.getY() + 1);
 						if (Ana != null) {
-							delay(650);
+							delay(p.getWorld().getServer().getConfig().GAME_TICK);
 							npcsay(p, Ana, "Great! Thanks for getting me out of that mine!",
 								"And that barrel wasn't too bad anyway!",
 								"Pop by again sometime, I'm sure we'll have a barrel of laughs!",
@@ -2460,7 +2460,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						"You manage to sneak past the guards!.");
 					doGate(p, obj);
 					p.message("The gate swings open.");
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 					p.message("The gates close behind you.");
 					Npc n = ifnearvisnpc(p, NpcId.MERCENARY_ESCAPEGATES.id(), 15);
 					if (n != null) {
@@ -2524,7 +2524,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 						"And your ears ring with the 'CLANG CLANG CLANG' as metal hits rock.");
 				} else {
 					Npc n = addnpc(p.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), p.getX(), p.getY(), 60000);
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 					npcsay(p, n, "Oi You!");
 					Functions.mes(p, "A guard notices you and approaches...");
 					n.startCombat(p);
@@ -2621,7 +2621,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				if (n == null) {
 					n = addnpc(p.getWorld(), NpcId.CAPTAIN_SIAD.id(), p.getX(), p.getY(), 60000);
 					n.teleport(86, 1745);
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				}
 				captainSiadDialogue(p, n, -1, obj);
 			}
@@ -2803,7 +2803,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	private void failEscapeAnaInBarrel(Player p, Npc n) {
 		if (p.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 			n = addnpc(p.getWorld(), NpcId.MERCENARY.id(), p.getX(), p.getY(), 60000);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			npcsay(p, n, "Hey, where d'ya think you're going with that barrel?",
 				"You should know that they go out on the cart!",
 				"We'd better check this out!");
@@ -2812,7 +2812,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 			npcsay(p, n, "Blimey! It's a jail break!",
 				"They're making a break for it!");
 			Npc ana = addnpc(p.getWorld(), NpcId.ANA.id(), p.getX(), p.getY(), 30000);
-			delay(650);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK);
 			npcsay(p, ana, "I could have told you we wouldn't get away with it!",
 				"Now look at the mess you've caused!");
 			p.message("The guards grab Ana and drag her away.");
@@ -2885,7 +2885,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 				Npc n = ifnearvisnpc(p, NpcId.BEDABIN_NOMAD_GUARD.id(), 5);
 				if (n == null) {
 					n = addnpc(p.getWorld(), NpcId.BEDABIN_NOMAD_GUARD.id(), p.getX(), p.getY(), 60000);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				}
 				n.teleport(170, 794);
 				switch (p.getQuestStage(this)) {

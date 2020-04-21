@@ -19,9 +19,9 @@ public class Brimstail implements TalkNpcTrigger, OpLocTrigger {
 	public void onTalkNpc(Player p, final Npc n) {
 		p.setBusy(true);
 		Functions.say(p, "Hello");
-		Functions.delay(1920);
+		Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.message("The gnome is chanting");
-		Functions.delay(1920);
+		Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.message("he does not respond");
 		p.setBusy(false);
 	}
@@ -35,9 +35,9 @@ public class Brimstail implements TalkNpcTrigger, OpLocTrigger {
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		p.setBusy(true);
 		p.message("you enter the cave");
-		Functions.delay(1920);
+		Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.message("it leads to a ladder");
-		Functions.delay(1920);
+		Functions.delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 		p.message("you climb down");
 		p.teleport(730, 3334, false);
 		p.setBusy(false);

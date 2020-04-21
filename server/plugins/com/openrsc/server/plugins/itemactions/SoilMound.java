@@ -24,7 +24,7 @@ public class SoilMound implements UseLocTrigger {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Soil", player.getCarriedItems().getInventory().countId(itemID), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fill Bucket with Soil", player.getCarriedItems().getInventory().countId(itemID), true) {
 			@Override
 			public void action() {
 				if (getOwner().getCarriedItems().getInventory().hasInInventory(itemID)) {

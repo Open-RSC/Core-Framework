@@ -1345,7 +1345,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				p.message("you jump up and grab hold of the platform");
 				p.teleport(710, 2364);
 				p.incExp(Skills.AGILITY, 30, true);
-				delay(3000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
 				p.message("and pull yourself up");
 			} else {
 				p.message("You need an agility level of 25 to climb up the platform");
@@ -1515,7 +1515,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			Functions.mes(player, "the key fits the chest");
 			player.message("you open the chest");
 			player.message("and search it...");
-			Functions.changeloc(obj, 3000, GLOUGH_CHEST_OPEN);
+			Functions.changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 5, GLOUGH_CHEST_OPEN);
 			Functions.mes(player, "inside you find some paper work");
 			player.message("and an old gnome tongue translation book");
 			give(player, ItemId.GLOUGHS_NOTES.id(), 1);

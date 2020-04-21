@@ -62,7 +62,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		}
 
 		//if(!hasItem(p, 1163) && !hasItem(p, 1233) && p.getQuestStage(Quests.LEGENDS_QUEST) != -1) { // the radimus scrolls.
-		//	message(p, 1900, "This jungle is far too thick, you'll need a special map to go further.");
+		//	message(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "This jungle is far too thick, you'll need a special map to go further.");
 		//	return;
 		//}
 
@@ -72,7 +72,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		}
 
 		if (!p.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
-			mes(p, 1900, "This jungle is very thick, you'll need a machette to cut through.");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "This jungle is very thick, you'll need a machette to cut through.");
 			return;
 		}
 
@@ -113,7 +113,7 @@ public class WoodcutJungle implements OpLocTrigger,
 					p.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 					if (!force)
 						// authentic does not send to quest tab
-						mes(p, 1200, "You hack your way through the jungle.");
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You hack your way through the jungle.");
 				} else {
 					p.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
 					p.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
@@ -130,7 +130,7 @@ public class WoodcutJungle implements OpLocTrigger,
 			p.teleport(obj.getX(), obj.getY());
 			if (p.getY() > 871) {
 				if (obj.getID() == JUNGLE_VINE)
-					delay(4000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 6);
 				p.message("You manage to hack your way into the Kharazi Jungle.");
 			}
 		} else {

@@ -366,7 +366,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				boolean dig = false;
 				if (wyson != null) {
 					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", p));
-					delay(1000);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 					wyson.setChasing(p);
 					long start = System.currentTimeMillis();
 					while (!p.inCombat()) {

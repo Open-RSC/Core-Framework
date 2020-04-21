@@ -18,7 +18,7 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == COAL_TRUCK) {
 			if (p.getCache().hasKey("coal_truck") && p.getCache().getInt("coal_truck") > 0) {
-				p.setBusyTimer(500);
+				p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 				int coalLeft = p.getCache().getInt("coal_truck");
 				p.playerServerMessage(MessageType.QUEST, "You remove a piece of coal from the truck");
 				give(p, ItemId.COAL.id(), 1);

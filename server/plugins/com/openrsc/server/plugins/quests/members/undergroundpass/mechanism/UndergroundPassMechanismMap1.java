@@ -84,9 +84,9 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 								.getType()));
 						player.getWorld().delayedSpawnObject(obj.getLoc(), 10000);
 						player.teleport(702, 3420);
-						delay(1000);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 						player.teleport(706, 3420);
-						delay(650);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
 						player.teleport(709, 3420);
 						player.message("you rush across the bridge");
 					}

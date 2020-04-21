@@ -179,7 +179,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 						"Brace yourself then");
 					p.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id(), 20));
 					p.teleport(557, 3290);
-					delay(650);
+					delay(p.getWorld().getServer().getConfig().GAME_TICK);
 					ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
 				} else {
 					npcsay(p, n, "Hehe in a bit of a pickle are we?",
@@ -541,9 +541,9 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			if (i.getX() == 560 && i.getY() == 3352 || i.getX() == 563 && i.getY() == 3354) {
 				give(p, ItemId.ICE_ARROWS.id(), 1);
 				p.teleport(538, 3348);
-				delay(650);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				ActionSender.sendTeleBubble(p, p.getX(), p.getY(), false);
-				delay(1000);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 				p.message("Suddenly your surroundings change");
 			} else {
 				Functions.mes(p, "You can only take ice arrows from the cave of ice spiders",

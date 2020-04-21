@@ -31,9 +31,9 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 
 	private void holyForceSpell(Player p, Npc n) {
 		//not sure if this line is correct
-		//message(p, n, 1300, "You quickly grab the Holy Force Spell and cast it at the Demon.");
+		//message(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You quickly grab the Holy Force Spell and cast it at the Demon.");
 		Functions.mes(p, "You thrust the Holy Force spell in front of the spirit.");
-		Functions.mes(p, n, 1300, "A bright, holy light streams out from the paper spell.");
+		Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A bright, holy light streams out from the paper spell.");
 		if (p.getCache().hasKey("already_cast_holy_spell")) {
 			npcsay(p, n, "Argghhhhh...not again....!");
 		} else {
@@ -55,32 +55,32 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 		if (second_nezikchened != null) {
 			if (useHolySpell) {
 				holyForceSpell(p, second_nezikchened);
-				Functions.mes(p, second_nezikchened, 1300, "The spirit lets out an unearthly, blood curdling scream...");
-				Functions.mes(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
+				Functions.mes(p, second_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit lets out an unearthly, blood curdling scream...");
+				Functions.mes(p, second_nezikchened, p.getWorld().getServer().getConfig().GAME_TICK, "The spell seems to weaken the Demon.");
 				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
 			}
 			second_nezikchened.startCombat(p);
 			if (useHolySpell) {
 				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
 				if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
-					mes(p, 1300, "A sense of fear comes over you ",
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A sense of fear comes over you ",
 						"You feel a sense of loss...");
 				} else {
-					mes(p, 1300, "An intense sense of fear comes over you ",
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "An intense sense of fear comes over you ",
 						"You feel a great sense of loss...");
 				}
 				p.getSkills().setLevel(Skills.PRAYER, newPray);
 
 				delay(7000);
-				mes(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon takes out a dark dagger and throws it at you...");
 				if (DataConversions.random(0, 1) == 1) {
-					mes(p, 1300, "The dagger hits you with an agonising blow...");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The dagger hits you with an agonising blow...");
 					p.damage(14);
 				} else {
-					mes(p, 600, "But you neatly manage to dodge the attack.");
+					mes(p, p.getWorld().getServer().getConfig().GAME_TICK, "But you neatly manage to dodge the attack.");
 				}
 			} else {
-				mes(p, 1300, "A terrible fear comes over you. ",
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A terrible fear comes over you. ",
 					"You feel a terrible sense of loss...");
 				p.getSkills().setLevel(Skills.PRAYER, 0);
 			}
@@ -129,19 +129,19 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 							if (!p.getCache().hasKey("gave_glowing_dagger")) {
 								p.getCache().store("gave_glowing_dagger", true);
 							}
-							Functions.mes(p, n, 1300, "The formless shape of Echned Zekin takes the dagger from you.",
+							Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The formless shape of Echned Zekin takes the dagger from you.",
 								"As a ghostly hand envelopes the dagger, something seems to move",
 								"from the black weapon into the floating figure...");
 							npcsay(p, n, "Aahhhhhhhhh! As I take the spirit of one departed,",
 								"I will now reveal myself and spell out your doom.");
-							Functions.mes(p, n, 1300, "A terrible fear comes over you. ");
+							Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "A terrible fear comes over you. ");
 							int formerNpcX = n.getX();
 							int formerNpcY = n.getY();
 							if (n != null)
 								n.remove();
 							Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
 							if (second_nezikchened != null) {
-								delay(600);
+								delay(p.getWorld().getServer().getConfig().GAME_TICK);
 								second_nezikchened.startCombat(p);
 								p.message("You feel a terrible sense of loss...");
 								p.getSkills().setLevel(Skills.PRAYER, 0);
@@ -171,9 +171,9 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 							/**
 							 * NO DARK DAGGER - Default dialogue.
 							 */
-							Functions.mes(p, n, 1300, "In a rasping, barely audible voice you hear the entity speak.");
+							Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "In a rasping, barely audible voice you hear the entity speak.");
 							npcsay(p, n, "Who disturbs the rocks of Zekin?");
-							Functions.mes(p, n, 1300, "There seems to be something slightly familiar about this presence.");
+							Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "There seems to be something slightly familiar about this presence.");
 							int menu = multi(p, n,
 								"Er...me?",
 								"Who's asking?");
@@ -208,7 +208,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 									}
 								}
 							} else if (menu == 1) {
-								Functions.mes(p, n, 1300, "The hooded, headless figure faces you...it's quite unnerving..");
+								Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The hooded, headless figure faces you...it's quite unnerving..");
 								npcsay(p, n, "I am Echned Zekin...and I seek peace from my eternal torture...");
 								int opt3 = multi(p, n,
 									"What can I do about that?",
@@ -305,7 +305,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 					}
 					break;
 				case Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER:
-					Functions.mes(p, n, 1300, "The shapeless spirit seems to crackle with energy.");
+					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The shapeless spirit seems to crackle with energy.");
 					npcsay(p, n, "You would release me from my torment and the source would",
 						"be available to you.",
 						"However, you must realise that this will be no easy task.");
@@ -393,7 +393,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 					}
 					break;
 				case Echned.I_DONT_HAVE_THE_DAGGER:
-					Functions.mes(p, n, 1300, "The spirit seems to shake with anger...");
+					Functions.mes(p, n, p.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit seems to shake with anger...");
 					npcsay(p, n, "Bring it to me with all haste.",
 						"Or torment and pain will I bring to you...",
 						"the spirit extends a wraithlike finger which touches you.",

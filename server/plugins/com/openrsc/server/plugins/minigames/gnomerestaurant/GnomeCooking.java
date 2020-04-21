@@ -196,7 +196,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 		thinkbubble(p, item);
 		p.playSound("cooking");
 		if (p.getCarriedItems().remove(item) > -1) {
-			mes(p, 3000, gc.messages[0]);
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, gc.messages[0]);
 			if (!burnFood(p, item.getCatalogId(), p.getSkills().getLevel(Skills.COOKING))) {
 				p.message(gc.messages[1]);
 
@@ -268,7 +268,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 				thinkbubble(p, item);
 				p.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(p, 3000, "you attempt to mould the dough into a gnomebatta");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnomebatta");
 				p.message("You manage to make some gnome batta dough");
 				give(p, ItemId.GNOMEBATTA_DOUGH.id(), 1);
 
@@ -284,7 +284,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 				thinkbubble(p, item);
 				p.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(p, 3000, "you attempt to mould the dough into a gnome bowl");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnome bowl");
 				p.message("You manage to make some gnome bowl dough");
 				give(p, ItemId.GNOMEBOWL_DOUGH.id(), 1);
 
@@ -300,7 +300,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 				thinkbubble(p, item);
 				p.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(p, 3000, "you attempt to mould the dough into gnome crunchies");
+				mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into gnome crunchies");
 				p.message("You manage to make some gnome crunchies dough");
 				give(p, ItemId.GNOMECRUNCHIE_DOUGH.id(), 1);
 

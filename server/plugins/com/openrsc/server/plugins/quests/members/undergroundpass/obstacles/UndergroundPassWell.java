@@ -26,7 +26,7 @@ public class UndergroundPassWell implements OpLocTrigger {
 					atQuestStages(p, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				Functions.mes(p, "you feel the grip of icy hands all around you...");
 				p.teleport(722, 3461);
-				delay(600);
+				delay(p.getWorld().getServer().getConfig().GAME_TICK);
 				displayTeleportBubble(p, p.getX(), p.getY(), true);
 				p.message("..slowly dragging you futher down into the caverns");
 			} else {

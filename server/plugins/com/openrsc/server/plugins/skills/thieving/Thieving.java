@@ -244,7 +244,7 @@ public class Thieving extends Functions
 			tempChest.set(new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 			changeloc(obj, tempChest.get());
 		}
-		Functions.delay(1280);
+		Functions.delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		player.message("You disable the trap");
 
 		mes(player, "You open the chest");

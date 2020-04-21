@@ -31,8 +31,8 @@ public class LegendsQuestGates implements OpLocTrigger {
 						p.teleport(513, 539);
 					}
 				} else {
-					Functions.mes(p, 1300, "You need to complete the Legends Guild Quest");
-					Functions.mes(p, 1200, "before you can enter the Legends Guild");
+					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You need to complete the Legends Guild Quest");
+					Functions.mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "before you can enter the Legends Guild");
 				}
 			} else if (command.equalsIgnoreCase("search")) {
 				p.message("Nothing interesting happens");

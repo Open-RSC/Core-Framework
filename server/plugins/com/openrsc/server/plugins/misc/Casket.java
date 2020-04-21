@@ -19,11 +19,11 @@ public class Casket implements OpInvTrigger {
 	@Override
 	public void onOpInv(Item item, Player p, String command) {
 		if (item.getCatalogId() == ItemId.CASKET.id()) {
-			p.setBusyTimer(1300);
+			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 			int randomChanceOpen = DataConversions.random(0, 1081);
 
-			mes(p, 1300, "you open the casket");
+			mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "you open the casket");
 			p.playerServerMessage(MessageType.QUEST, "you find some treasure inside!");
 
 			p.getCarriedItems().remove(new Item(ItemId.CASKET.id()));

@@ -17,7 +17,7 @@ public class BailingBucket implements OpInvTrigger {
 		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
 		if (trawler != null && (trawler.getShipAreaWater().inBounds(player.getLocation())
 			|| trawler.getShipArea().inBounds(player.getLocation()))) {
-			player.setBusyTimer(650);
+			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			// 1st stage boat
 			if(player.getY() >= 741 && player.getY() <= 743) {
 				player.message("you bail a little water...");
@@ -25,7 +25,7 @@ public class BailingBucket implements OpInvTrigger {
 			else {
 				player.message("you begin to bail a bucket load of water");
 			}
-			delay(650);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			trawler.bailWater();
 		} else {
 			// player.message("");

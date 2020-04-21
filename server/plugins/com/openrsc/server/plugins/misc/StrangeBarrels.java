@@ -107,7 +107,7 @@ public class StrangeBarrels implements OpLocTrigger {
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player p) {
 		if (obj.getID() == STRANGE_BARREL) {
-			p.setBusyTimer(600);
+			p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 			int action = DataConversions.random(0, 4);
 			if (action != 0) {
 				p.message("You smash the barrel open.");
@@ -162,7 +162,7 @@ public class StrangeBarrels implements OpLocTrigger {
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
 						p.message("You were unable to smash this barrel open.");
-						mes(p, 1300, "You hit the barrel at the wrong angle.",
+						mes(p, p.getWorld().getServer().getConfig().GAME_TICK * 2, "You hit the barrel at the wrong angle.",
 							"You're heavily jarred from the vibrations of the blow.");
 						int reduceAttack = DataConversions.random(1, 3);
 						p.message("Your attack is reduced by " + reduceAttack + ".");
@@ -179,7 +179,7 @@ public class StrangeBarrels implements OpLocTrigger {
 		int randomizeMonster = DataConversions.random(0, (MONSTER.length - 1));
 		int selectedMonster = MONSTER[randomizeMonster];
 		Npc monster = addnpc(p.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
-		delay(600);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK);
 		if (monster != null) {
 			monster.startCombat(p);
 		}

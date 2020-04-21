@@ -26,7 +26,7 @@ public class boatman implements TalkNpcTrigger {
 			if (p.getCache().hasKey("tutorial")) {
 				p.getCache().remove("tutorial");
 			}
-			delay(2000);
+			delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
 			p.message("The boat arrives in Lumbridge");
 			p.getWorld().sendWorldAnnouncement("New adventurer @gre@" + p.getUsername() + "@whi@ has arrived in lumbridge!");
 			ActionSender.sendPlayerOnTutorial(p);

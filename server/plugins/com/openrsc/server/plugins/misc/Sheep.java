@@ -29,7 +29,7 @@ public class Sheep implements UseNpcTrigger {
 		Functions.thinkbubble(player, item);
 		player.message("You attempt to shear the sheep");
 		npc.setBusyTimer(1600);
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Crafting Shear Wool", player.getCarriedItems().getInventory().getFreeSlots(), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Crafting Shear Wool", player.getCarriedItems().getInventory().getFreeSlots(), true) {
 
 			@Override
 			public void action() {

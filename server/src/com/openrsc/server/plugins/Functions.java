@@ -92,12 +92,12 @@ public class Functions {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (player.getInteractingNpc() != null) {
-					player.getInteractingNpc().setBusyTimer(1900);
+					player.getInteractingNpc().setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 				}
 				player.message("@que@" + message);
-				player.setBusyTimer(1900);
+				player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 			}
-			delay(1900);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 		}
 		player.setBusyTimer(0);
 	}
@@ -120,19 +120,19 @@ public class Functions {
 				}
 				if (npc != null) {
 					npc.resetPath();
-					npc.setBusyTimer(2500);
+					npc.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 				}
 				if (!player.inCombat()) {
 					if (npc != null) {
 						npc.face(player);
 						player.face(npc);
 					}
-					player.setBusyTimer(2500);
+					player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 					player.resetPath();
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(1900);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 		}
 	}
 
@@ -415,7 +415,7 @@ public class Functions {
 	}
 
 	public static void npcsay(final Player player, final Npc npc, final String... messages) {
-		npcsay(player, npc, 1900, messages);
+		npcsay(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 3, messages);
 	}
 
 	public static void npcattack(Npc npc, Player p) {
@@ -474,7 +474,7 @@ public class Functions {
 			if (enteredPin != "") {
 				break;
 			}
-			Functions.delay(640);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
@@ -503,7 +503,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.delay(640);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -529,7 +529,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.delay(640);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -563,7 +563,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.delay(640);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -592,7 +592,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			Functions.delay(640);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		}
 
 		return player.getAttribute("bankpin", false);
@@ -895,7 +895,7 @@ public class Functions {
 	}
 
 	public static void openChest(GameObject obj) {
-		openChest(obj, 2000);
+		openChest(obj, obj.getWorld().getServer().getConfig().GAME_TICK * 3);
 	}
 
 	public static void closeCupboard(GameObject obj, Player p, int cupboardID) {
@@ -923,7 +923,7 @@ public class Functions {
 	}
 
 	public static void doTentDoor(final GameObject object, final Player p) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(p.getLocation())) {
 				teleport(p, object.getX(), object.getY() - 1);
@@ -978,7 +978,7 @@ public class Functions {
 	}
 
 	public static void doWallMovePlayer(final GameObject object, final Player p, int replaceID, int delay, boolean removeObject) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 		/* For the odd looking walls. */
 		if (removeObject) {
 			GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
@@ -1057,7 +1057,7 @@ public class Functions {
 	}
 
 	public static void doDoor(final GameObject object, final Player p, int replaceID) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 		/* For the odd looking walls. */
 		GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 		if (object.getID() == replaceID) {
@@ -1164,7 +1164,7 @@ public class Functions {
 	}
 
 	public static void doGate(final Player p, final GameObject object, int replaceID, Point destination) {
-		p.setBusyTimer(650);
+		p.setBusyTimer(p.getWorld().getServer().getConfig().GAME_TICK);
 		// 0 - East
 		// 1 - Diagonal S- NE
 		// 2 - South
@@ -1210,7 +1210,7 @@ public class Functions {
 			p.message("Failure - Contact an administrator");
 		}
 		p.setSprite(pdir);
-		delay(1000);
+		delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
