@@ -430,7 +430,6 @@ public abstract class Mob extends Entity {
 
 	public void setLocation(final Point point, boolean teleported) {
 		if (!teleported) {
-			face(point);
 			hasMoved = true;
 		} else {
 			setTeleporting(true);
