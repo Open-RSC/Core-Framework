@@ -62,8 +62,8 @@ public class WalkingQueue {
 			NPCLoc loc = ((Npc) mob).getLoc();
 			if (Point.location(destX, destY).inBounds(loc.minX() - 12, loc.minY() - 12,
 				loc.maxX() + 12, loc.maxY() + 12) || (destX == 0 && destY == 0)) {
-				mob.setLocation(Point.location(destX, destY));
 				mob.getWorld().removeNpcPosition((Npc) mob);
+				mob.setLocation(Point.location(destX, destY));
 				mob.getWorld().setNpcPosition((Npc) mob);
 			}
 		}
