@@ -8,12 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
-public class Jiminua implements ShopInterface,
-	TalkNpcTrigger {
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
+public class Jiminua extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 15000, 150, 50, 2,
 		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.EMPTY_VIAL.id(), 10), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3),
@@ -55,4 +54,8 @@ public class Jiminua implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

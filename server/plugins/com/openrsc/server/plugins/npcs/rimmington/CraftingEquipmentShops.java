@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public final class CraftingEquipmentShops implements ShopInterface,
-	TalkNpcTrigger {
+public final class CraftingEquipmentShops extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 5000, 100, 65, 2,
 		new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
@@ -37,6 +36,11 @@ public final class CraftingEquipmentShops implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Would you like to buy some crafting equipment");
 		int option = multi(player, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
@@ -47,5 +51,4 @@ public final class CraftingEquipmentShops implements ShopInterface,
 			ActionSender.showShop(player, shop);
 		}
 	}
-
 }

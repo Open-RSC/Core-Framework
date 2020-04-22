@@ -86,6 +86,7 @@ public class Config {
 	public static boolean S_WANT_CERTS_TO_BANK = false;
 	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
 	public static boolean S_RIGHT_CLICK_BANK = false;
+	public static boolean S_RIGHT_CLICK_TRADE = false;
 	public static boolean S_WANT_EQUIPMENT_TAB = false;
 	public static boolean S_WANT_BANK_PRESETS = false;
 	public static boolean S_WANT_LEFTCLICK_WEBS = false;

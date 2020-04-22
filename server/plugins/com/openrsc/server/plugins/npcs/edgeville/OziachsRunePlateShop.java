@@ -1,21 +1,19 @@
 package com.openrsc.server.plugins.npcs.edgeville;
 
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class OziachsRunePlateShop implements ShopInterface,
-	TalkNpcTrigger {
+public class OziachsRunePlateShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.RUNE_PLATE_MAIL_BODY.id(),
 		1));
@@ -33,6 +31,11 @@ public class OziachsRunePlateShop implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return false;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override

@@ -15745,6 +15745,7 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
 			System.out.println(S_WANT_PK_BOTS + " 64");
 			System.out.println(Config.S_WANT_HARVESTING + " 65");
+			System.out.println(S_RIGHT_CLICK_BANK + " 77");
 		}
 		try {
 			this.loadGameConfig(false);

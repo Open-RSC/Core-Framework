@@ -128,6 +128,7 @@ public class ServerConfiguration {
 	private String VALUABLE_DROP_ITEMS;
 	public boolean WANT_CUSTOM_RANK_DISPLAY;
 	public boolean RIGHT_CLICK_BANK;
+	public boolean RIGHT_CLICK_TRADE;
 	public boolean FIX_OVERHEAD_CHAT;
 	public boolean WANT_FATIGUE;
 	public int STOP_SKILLING_FATIGUED;
@@ -393,6 +394,9 @@ public class ServerConfiguration {
 		WANT_BANK_NOTES = tryReadBool("want_bank_notes").orElse(false);
 		WANT_CERT_DEPOSIT = tryReadBool("want_cert_deposit").orElse(false);
 		WANT_CERTER_BANK_EXCHANGE = tryReadBool("want_certer_bank_exchange").orElse(false);
+
+		//Shop
+		RIGHT_CLICK_TRADE = tryReadBool("right_click_trade").orElse(false);
 
 		// NPC kills
 		NPC_KILL_LIST = tryReadBool("npc_kill_list").orElse(false);

@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public class Fernahei implements ShopInterface,
-	TalkNpcTrigger {
+public class Fernahei extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 15000, 100, 70, 2,
 		new Item(ItemId.FISHING_ROD.id(), 5), new Item(ItemId.FLY_FISHING_ROD.id(), 5), new Item(ItemId.FISHING_BAIT.id(), 200),
@@ -53,4 +52,8 @@ public class Fernahei implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

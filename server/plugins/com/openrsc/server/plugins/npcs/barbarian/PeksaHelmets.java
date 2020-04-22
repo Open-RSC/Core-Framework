@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public final class PeksaHelmets implements ShopInterface,
-	TalkNpcTrigger {
+public final class PeksaHelmets extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 1, new Item(ItemId.MEDIUM_BRONZE_HELMET.id(),
 		5), new Item(ItemId.MEDIUM_IRON_HELMET.id(), 3), new Item(ItemId.MEDIUM_STEEL_HELMET.id(), 3), new Item(ItemId.MEDIUM_MITHRIL_HELMET.id(), 1),
@@ -37,6 +36,11 @@ public final class PeksaHelmets implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Are you interested in buying or selling a helmet?");
 
@@ -49,5 +53,4 @@ public final class PeksaHelmets implements ShopInterface,
 			npcsay(player, n, "Well come back if you change your mind");
 		}
 	}
-
 }

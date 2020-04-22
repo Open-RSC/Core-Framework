@@ -8,12 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ArdougneGeneralShop implements ShopInterface, TalkNpcTrigger {
+public class ArdougneGeneralShop extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 15000, 130, 40, 3, new Item(ItemId.VIAL.id(),
 		10), new Item(ItemId.BRONZE_PICKAXE.id(), 2), new Item(ItemId.IRON_AXE.id(), 2), new Item(ItemId.COOKEDMEAT.id(), 2),
@@ -36,6 +35,11 @@ public class ArdougneGeneralShop implements ShopInterface, TalkNpcTrigger {
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Hello you look like a bold adventurer",
 			"You've come to the right place for adventurer's equipment");
@@ -51,5 +55,4 @@ public class ArdougneGeneralShop implements ShopInterface, TalkNpcTrigger {
 			npcsay(player, n, "Hmph");
 		}
 	}
-
 }

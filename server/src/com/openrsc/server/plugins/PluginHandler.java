@@ -162,8 +162,8 @@ public final class PluginHandler {
 
 					plugins.get(interfceName).add(instance);
 
-					if (instance instanceof ShopInterface) {
-						final ShopInterface it = (ShopInterface) instance;
+					if (instance instanceof AbstractShop) {
+						final AbstractShop it = (AbstractShop) instance;
 
 						for (final Shop s : it.getShops(getServer().getWorld())) {
 							getServer().getWorld().getShops().add(s);

@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public class JatixHerblawShop implements ShopInterface,
-	TalkNpcTrigger {
+public class JatixHerblawShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 10000, 100, 70, 2,
 		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
@@ -35,6 +34,11 @@ public class JatixHerblawShop implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Hello how can I help you?");
 		final int option = multi(player, n,
@@ -47,5 +51,4 @@ public class JatixHerblawShop implements ShopInterface,
 		}
 
 	}
-
 }

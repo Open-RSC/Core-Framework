@@ -8,12 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
-public final class GeneralStore implements ShopInterface,
-	TalkNpcTrigger {
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
+
+public final class GeneralStore extends AbstractShop {
 
 	public static Item[] shop_items = new Item[]{new Item(ItemId.POT.id(), 3),
 		new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(), 2),
@@ -64,7 +64,35 @@ public final class GeneralStore implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player player, final Npc n) {
+	public Shop getShop() {
+		throw new RuntimeException("Method not used.");
+	}
+
+	@Override
+	public void onTalkNpc(final Player p, final Npc n) {
+		Shop shop = getShop(n, p);
+		if (shop != null) {
+			npcsay(p, n, "Can I help you at all?");
+			int menu = multi(p, n, "Yes please, what are you selling?", "No thanks");
+			if (menu == 0) {
+				npcsay(p, n, "Take a look");
+
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+			}
+		}
+	}
+
+	@Override
+	public void onOpNpc(Npc n, String command, Player player) {
+		Shop shop = getShop(n, player);
+		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		}
+	}
+
+	private Shop getShop(Npc n, Player player) {
 		boolean found = false;
 		Shop shp = null;
 		for (final Shop s : shops) {
@@ -78,7 +106,7 @@ public final class GeneralStore implements ShopInterface,
 			}
 		}
 		if (!found) {
-			return;
+			return null;
 		}
 
 		final Shop shap = shp;
@@ -97,19 +125,6 @@ public final class GeneralStore implements ShopInterface,
 			&& location.getY() >= 513 && location.getY() <= 518) {
 			shop = shops[1];
 		}
-
-		if (found) {
-			if (shop != null) {
-				npcsay(player, n, "Can I help you at all?");
-				int menu = multi(player, n, "Yes please, what are you selling?", "No thanks");
-				if (menu == 0) {
-					npcsay(player, n, "Take a look");
-
-					player.setAccessingShop(shop);
-					ActionSender.showShop(player, shop);
-				}
-			}
-		}
+		return shop;
 	}
-
 }

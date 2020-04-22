@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HelemosShop implements ShopInterface,
-	TalkNpcTrigger {
+public class HelemosShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 60000, 100, 55, 3, new Item(ItemId.DRAGON_AXE.id(), 1));
 
@@ -31,6 +29,11 @@ public class HelemosShop implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override

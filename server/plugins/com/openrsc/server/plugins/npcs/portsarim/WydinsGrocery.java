@@ -9,15 +9,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class WydinsGrocery implements ShopInterface,
-	TalkNpcTrigger,
-	OpBoundTrigger {
+public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger {
 
 	private final Shop shop = new Shop(false, 12500, 100, 70, 1, new Item(ItemId.POT_OF_FLOUR.id(),
 		3), new Item(ItemId.RAW_CHICKEN.id(), 1), new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.BANANA.id(), 3),
@@ -43,6 +40,11 @@ public final class WydinsGrocery implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return false;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
@@ -116,5 +118,4 @@ public final class WydinsGrocery implements ShopInterface,
 			}
 		}
 	}
-
 }

@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public final class HorvikTheArmourer implements
-	ShopInterface, TalkNpcTrigger {
+public final class HorvikTheArmourer extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
 		5), new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 3), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(), 3), new Item(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), 1),
@@ -37,6 +36,11 @@ public final class HorvikTheArmourer implements
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Hello, do you need any help?");
 		int option = multi(player, n,
@@ -49,5 +53,4 @@ public final class HorvikTheArmourer implements
 			ActionSender.showShop(player, shop);
 		}
 	}
-
 }

@@ -8,14 +8,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GemMerchant implements ShopInterface, TalkNpcTrigger {
+public class GemMerchant extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 60000 * 5, 150, 80, 3, new Item(ItemId.SAPPHIRE.id(),
 		2), new Item(ItemId.EMERALD.id(), 1), new Item(ItemId.RUBY.id(), 1), new Item(ItemId.DIAMOND.id(),
@@ -68,5 +67,10 @@ public class GemMerchant implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

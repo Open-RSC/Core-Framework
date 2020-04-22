@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class CassieShields implements ShopInterface,
-	TalkNpcTrigger {
+public final class CassieShields extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 2,
 		new Item(ItemId.WOODEN_SHIELD.id(), 5), new Item(ItemId.BRONZE_SQUARE_SHIELD.id(), 3), new Item(ItemId.BRONZE_KITE_SHIELD.id(), 3),
@@ -37,6 +35,11 @@ public final class CassieShields implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.CASSIE.id()) {
 			say(player, n, "What wares are you selling?");
@@ -48,5 +51,4 @@ public final class CassieShields implements ShopInterface,
 			}
 		}
 	}
-
 }

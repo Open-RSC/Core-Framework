@@ -8,15 +8,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Chamber_Guardian implements ShopInterface,
-	TalkNpcTrigger {
+public class Chamber_Guardian extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 60000 * 5, 100, 60, 2,
 		new Item(ItemId.STAFF_OF_ZAMORAK.id(), 5), new Item(ItemId.STAFF_OF_SARADOMIN.id(), 5), new Item(ItemId.STAFF_OF_GUTHIX.id(), 5));
@@ -94,5 +92,10 @@ public class Chamber_Guardian implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

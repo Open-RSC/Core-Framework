@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class HudoGlenfadGroceries implements ShopInterface,
-	TalkNpcTrigger {
+public final class HudoGlenfadGroceries extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 1,
 		new Item(ItemId.GIANNE_DOUGH.id(), 8), new Item(ItemId.EQUA_LEAVES.id(), 5), new Item(ItemId.POT_OF_FLOUR.id(), 5),
@@ -60,4 +58,8 @@ public final class HudoGlenfadGroceries implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

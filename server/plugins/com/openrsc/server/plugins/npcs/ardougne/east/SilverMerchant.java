@@ -8,14 +8,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SilverMerchant implements ShopInterface, TalkNpcTrigger {
+public class SilverMerchant extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 60000 * 2, 100, 70, 2, new Item(ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
 		2), new Item(ItemId.SILVER.id(), 1), new Item(ItemId.SILVER_BAR.id(), 1));
@@ -61,5 +60,10 @@ public class SilverMerchant implements ShopInterface, TalkNpcTrigger {
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

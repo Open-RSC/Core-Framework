@@ -1,23 +1,21 @@
 package com.openrsc.server.plugins.npcs.catherby;
 
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CandleMakerShop implements ShopInterface,
-	TalkNpcTrigger {
+public class CandleMakerShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 1000, 100, 80, 2, new Item(ItemId.UNLIT_CANDLE.id(), 10));
 
@@ -34,6 +32,11 @@ public class CandleMakerShop implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
@@ -83,5 +86,4 @@ public class CandleMakerShop implements ShopInterface,
 		});
 		defaultMenu.showMenu(player);
 	}
-
 }

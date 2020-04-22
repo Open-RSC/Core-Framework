@@ -9,16 +9,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class NurmofPickaxe implements ShopInterface,
-	TalkNpcTrigger {
+public final class NurmofPickaxe extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 2, new Item(ItemId.BRONZE_PICKAXE.id(),
 		6), new Item(ItemId.IRON_PICKAXE.id(), 5), new Item(ItemId.STEEL_PICKAXE.id(), 4),
@@ -37,6 +35,11 @@ public final class NurmofPickaxe implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return false;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
@@ -87,5 +90,4 @@ public final class NurmofPickaxe implements ShopInterface,
 			}
 		}
 	}
-
 }

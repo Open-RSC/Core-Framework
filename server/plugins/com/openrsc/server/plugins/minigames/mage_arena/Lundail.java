@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Lundail implements ShopInterface,
-	TalkNpcTrigger {
+public final class Lundail extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(ItemId.AIR_RUNE.id(),
 		100), new Item(ItemId.FIRE_RUNE.id(), 100), new Item(ItemId.WATER_RUNE.id(), 100), new Item(ItemId.EARTH_RUNE.id(),
@@ -63,4 +61,8 @@ public final class Lundail implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

@@ -11,10 +11,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
+import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,9 +22,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ShantayPassNpcs implements ShopInterface,
-	TalkNpcTrigger, OpLocTrigger,
-	TakeObjTrigger {
+public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeObjTrigger {
+
 	private static final Logger LOGGER = LogManager.getLogger(ShantayPassNpcs.class);
 	private static int ASSISTANT = 720;
 	private static int SHANTAY_DISCLAIMER = ItemId.A_FREE_SHANTAY_DISCLAIMER.id();
@@ -365,6 +363,11 @@ public class ShantayPassNpcs implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
