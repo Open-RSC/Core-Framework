@@ -28,7 +28,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 	public StatRestorationEvent(World world, Mob mob) {
 		super(world, mob, 1, "Stat Restoration Event");
-		numberSkills = world.getServer().getConstants().getSkills().getSkillsCount();
+		numberSkills = mob.isPlayer() ? world.getServer().getConstants().getSkills().getSkillsCount() : 4;
 	}
 
 	@Override
