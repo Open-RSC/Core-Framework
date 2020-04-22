@@ -58,6 +58,9 @@ public class WalkingQueue {
 			if (DEBUG && mob.isPlayer()) System.out.println("Failed adjacent check, not pathing.");
 			return;
 		}
+
+		mob.face(Point.location(destX, destY));
+
 		if (mob.isNpc()) {
 			NPCLoc loc = ((Npc) mob).getLoc();
 			if (Point.location(destX, destY).inBounds(loc.minX() - 12, loc.minY() - 12,
