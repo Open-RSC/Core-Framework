@@ -1245,30 +1245,30 @@ public class Functions {
 		int dir = object.getDirection();
 		int pdir = player.getSprite();
 		if (destination != null && Math.abs(player.getX() - destination.getX()) <= 5 && Math.abs(player.getY() - destination.getY()) <= 5) {
-			player.setLocation(Point.location(destination.getX(), destination.getY()));
+			boundaryTeleport(player, Point.location(destination.getX(), destination.getY()));
 		} else if (dir == 0) {
 			if (player.getX() >= object.getX()) {
-				player.setLocation(Point.location(object.getX() - 1, object.getY()));
+				boundaryTeleport(player, Point.location(object.getX() - 1, object.getY()));
 			} else {
-				player.setLocation(Point.location(object.getX(), object.getY()));
+				boundaryTeleport(player, Point.location(object.getX(), object.getY()));
 			}
 		} else if (dir == 2) {
 			if (player.getY() <= object.getY()) {
-				player.setLocation(Point.location(object.getX(), object.getY() + 1));
+				boundaryTeleport(player, Point.location(object.getX(), object.getY() + 1));
 			} else {
-				player.setLocation(Point.location(object.getX(), object.getY()));
+				boundaryTeleport(player, Point.location(object.getX(), object.getY()));
 			}
 		} else if (dir == 4) {
 			if (player.getX() > object.getX()) {
-				player.setLocation(Point.location(object.getX(), object.getY()));
+				boundaryTeleport(player, Point.location(object.getX(), object.getY()));
 			} else {
-				player.setLocation(Point.location(object.getX() + 1, object.getY()));
+				boundaryTeleport(player, Point.location(object.getX() + 1, object.getY()));
 			}
 		} else if (dir == 6) {
 			if (player.getY() >= object.getY()) {
-				player.setLocation(Point.location(object.getX(), object.getY() - 1));
+				boundaryTeleport(player, Point.location(object.getX(), object.getY() - 1));
 			} else {
-				player.setLocation(Point.location(object.getX(), object.getY()));
+				boundaryTeleport(player, Point.location(object.getX(), object.getY()));
 			}
 		} else {
 			player.message("Failure - Contact an administrator");
@@ -1318,4 +1318,9 @@ public class Functions {
 		}
 		return false;
 	}
+
+	public static void boundaryTeleport(Player player, Point location) {
+		player.setLocation(location);
+	}
+
 }

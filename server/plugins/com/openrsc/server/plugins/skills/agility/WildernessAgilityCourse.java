@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -102,7 +103,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (passObstacle) {
 					mes(player, "You skillfully swing across the hole");
-					teleport(player, 292, 108);
+					boundaryTeleport(player, Point.location(292, 108));
 					player.incExp(Skills.AGILITY, 100, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 					player.setBusy(false);
@@ -125,7 +126,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				player.message("you stand on the stepping stones");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (passObstacle) {
-					teleport(player, 293, 105);
+					boundaryTeleport(player, Point.location(293, 105));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				} else {
 					player.message("Your lose your footing and land in the lava");
@@ -135,14 +136,14 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					player.setBusy(false);
 					return ;
 				}
-				teleport(player, 294, 104);
+				boundaryTeleport(player, Point.location(294, 104));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 295, 104);
+				boundaryTeleport(player, Point.location(295, 104));
 				player.message("and walk across");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 296, 105);
+				boundaryTeleport(player, Point.location(296, 105));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 297, 106);
+				boundaryTeleport(player, Point.location(297, 106));
 				player.incExp(Skills.AGILITY, 80, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 				player.setBusy(false);
@@ -152,18 +153,18 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				player.message("you stand on the ledge");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (passObstacle) {
-					teleport(player, 296, 112);
+					boundaryTeleport(player, Point.location(296, 112));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 					player.message("and walk across");
-					teleport(player, 297, 112);
+					boundaryTeleport(player, Point.location(297, 112));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					teleport(player, 298, 112);
+					boundaryTeleport(player, Point.location(298, 112));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					teleport(player, 299, 111);
+					boundaryTeleport(player, Point.location(299, 111));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					teleport(player, 300, 111);
+					boundaryTeleport(player, Point.location(300, 111));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					teleport(player, 301, 111);
+					boundaryTeleport(player, Point.location(301, 111));
 					player.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 					player.setBusy(false);
@@ -182,11 +183,11 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 			case VINE:
 				player.message("You climb up the cliff");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-				teleport(player, 305, 118);
+				boundaryTeleport(player, Point.location(305, 118));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 304, 119);
+				boundaryTeleport(player, Point.location(304, 119));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 304, 120);
+				boundaryTeleport(player, Point.location(304, 120));
 				player.incExp(Skills.AGILITY, 80, true); // COMPLETION OF THE COURSE.
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 				player.setBusy(false);

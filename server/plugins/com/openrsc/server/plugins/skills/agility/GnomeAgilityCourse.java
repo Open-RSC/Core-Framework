@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -46,17 +47,17 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 		switch (obj.getID()) {
 			case BALANCE_LOG:
 				player.message("you stand on the slippery log");
-				teleport(player, 692, 494);
+				boundaryTeleport(player, Point.location(692, 494));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(player, 692, 495);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 692, 496);
+				boundaryTeleport(player, Point.location(692, 496));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 692, 497);
+				boundaryTeleport(player, Point.location(692, 497));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 692, 498);
+				boundaryTeleport(player, Point.location(692, 498));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 692, 499);
+				boundaryTeleport(player, Point.location(692, 499));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				player.message("and walk across");
 				player.incExp(Skills.AGILITY, 30, true);
@@ -117,7 +118,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				}
 				player.message("you take a few steps back");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				teleport(player, 683, 505);
+				player.setLocation(Point.location(683, 505));
 				player.message("and run towards the net");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				teleport(player, 683, 501);

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills.agility;
 
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -53,9 +54,9 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			player.message("You squeeze through the pipe");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (player.getY() <= 551) {
-				teleport(player, 487, 554);
+				boundaryTeleport(player, Point.location(487, 554));
 			} else {
-				teleport(player, 487, 551);
+				boundaryTeleport(player, Point.location(487, 551));
 			}
 			player.incExp(Skills.AGILITY, 20, true);
 			player.setBusy(false);
@@ -97,12 +98,12 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				player.message("you stand on the slippery log");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 				if (passObstacle) {
-					teleport(player, 489, 563);
+					boundaryTeleport(player, Point.location(489, 563));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					teleport(player, 490, 563);
+					boundaryTeleport(player, Point.location(490, 563));
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 					player.message("and walk across");
-					teleport(player, 492, 563);
+					boundaryTeleport(player, Point.location(492, 563));
 					player.incExp(Skills.AGILITY, 50, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);
 					player.face(495, 563);
@@ -171,7 +172,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 		player.setBusy(true);
 		player.message("You jump over the wall");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-		teleport(player, player.getX() == obj.getX() ? player.getX() - 1 : player.getX() + 1, player.getY());
+		boundaryTeleport(player, Point.location(player.getX() == obj.getX() ? player.getX() - 1 : player.getX() + 1, player.getY()));
 		player.incExp(Skills.AGILITY, 20, true);
 		AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);
 		player.setBusy(false);
