@@ -8,6 +8,8 @@ import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
+import java.util.ArrayList;
+
 /**
  * A WalkingQueue stores steps the client needs to walk and allows
  * this queue of steps to be modified.
@@ -61,6 +63,8 @@ public class WalkingQueue {
 			if (Point.location(destX, destY).inBounds(loc.minX() - 12, loc.minY() - 12,
 				loc.maxX() + 12, loc.maxY() + 12) || (destX == 0 && destY == 0)) {
 				mob.setLocation(Point.location(destX, destY));
+				mob.getWorld().removeNpcPosition((Npc) mob);
+				mob.getWorld().setNpcPosition((Npc) mob);
 			}
 		}
 		else {
@@ -182,7 +186,6 @@ public class WalkingQueue {
 	}
 
 	private boolean isMobBlocking(int x, int y) {
-		Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 
@@ -191,7 +194,8 @@ public class WalkingQueue {
 				return false;
 		}
 
-		Npc npc = region.getNpc(x, y);
+		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
+		Npc npc = npcsOnLoc != null && npcsOnLoc.size() > 0 ? npcsOnLoc.get(0) : null;
 
 		/*
 		 * NPC blocking config controlled
@@ -217,6 +221,7 @@ public class WalkingQueue {
 		}
 
 		if (mob.isNpc()) {
+			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 			Player player = region.getPlayer(x, y);
 			return player != null;
 		}

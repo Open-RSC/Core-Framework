@@ -75,6 +75,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
+	private HashMap<String, ArrayList<Npc>> npcPositions;
 	private final EntityList<Player> players;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
@@ -107,6 +108,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public World(Server server) {
 		this.server = server;
 		npcs = new EntityList<Npc>(4000);
+		npcPositions = new HashMap<>();
 		players = new EntityList<Player>(2000);
 		quests = Collections.synchronizedList( new LinkedList<QuestInterface>() );
 		minigames = Collections.synchronizedList( new LinkedList<MiniGameInterface>() );
@@ -580,6 +582,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 
 		getNpcs().add(n);
+		setNpcPosition(n);
 		return n;
 	}
 
@@ -1021,5 +1024,33 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public Queue<GlobalMessage> getGlobalMessageQueue() {
 		return globalMessageQueue;
+	}
+
+	public HashMap<String, ArrayList<Npc>> getNpcPositions() {
+		return npcPositions;
+	}
+
+	public void setNpcPosition(Npc n) {
+		String key = n.getX() + "," + n.getY();
+		npcPositions.putIfAbsent(key, new ArrayList<>());
+		npcPositions.get(key).add(n);
+	}
+
+	public void removeNpcPosition(Npc n) {
+		String key = n.getX() + "," + n.getY();
+		if (npcPositions.containsKey(key)) {
+			ArrayList<Npc> ar = npcPositions.get(key);
+			if (ar.size() > 1) {
+				for (int i = 0; i < ar.size(); i++) {
+					if (n.getUUID().equals(ar.get(i).getUUID())) {
+						ar.remove(i);
+						break;
+					}
+				}
+			}
+			else {
+				npcPositions.remove(key);
+			}
+		}
 	}
 }
