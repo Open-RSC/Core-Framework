@@ -22,7 +22,7 @@ public final class CraftingEquipmentShops implements ShopInterface,
 		new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.ROMMIK.id() || n.getID() == NpcId.DOMMIK.id();
 	}
 
@@ -37,14 +37,14 @@ public final class CraftingEquipmentShops implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Would you like to buy some crafting equipment");
-		int option = multi(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy some crafting equipment");
+		int option = multi(player, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
 		if (option == 0) {
-			npcsay(p, n, "Ok fair well on your travels");
+			npcsay(player, n, "Ok fair well on your travels");
 		} else if (option == 1) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 

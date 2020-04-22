@@ -23,12 +23,12 @@ public final class TeaSeller implements ShopInterface,
 		20));
 
 	@Override
-	public boolean blockTakeObj(final Player p, final GroundItem i) {
+	public boolean blockTakeObj(final Player player, final GroundItem i) {
 		return i.getID() == ItemId.DISPLAY_TEA.id();
 	}
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.TEA_SELLER.id();
 	}
 
@@ -43,38 +43,38 @@ public final class TeaSeller implements ShopInterface,
 	}
 
 	@Override
-	public void onTakeObj(final Player p, final GroundItem i) {
+	public void onTakeObj(final Player player, final GroundItem i) {
 		if (i.getID() == ItemId.DISPLAY_TEA.id()) {
-			final Npc n = p.getWorld().getNpcById(NpcId.TEA_SELLER.id());
+			final Npc n = player.getWorld().getNpcById(NpcId.TEA_SELLER.id());
 			if (n == null) {
 				return;
 			}
-			n.face(p);
-			npcsay(p, n, "Hey ! get your hands off that tea !",
+			n.face(player);
+			npcsay(player, n, "Hey ! get your hands off that tea !",
 				"That's for display purposes only",
 				"Im not running a charity here !");
 		}
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Greetings!",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Greetings!",
 			"Are you in need of refreshment ?");
 
 		final String[] options = new String[]{"Yes please", "No thanks",
 			"What are you selling ?"};
-		int option = multi(p, n, options);
+		int option = multi(player, n, options);
 		switch (option) {
 			case 0:
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 			case 1:
-				npcsay(p, n, "Well, if you're sure",
+				npcsay(player, n, "Well, if you're sure",
 					"You know where to come if you do !");
 				break;
 			case 2:
-				npcsay(p, n, "Only the most delicious infusion",
+				npcsay(player, n, "Only the most delicious infusion",
 					"Of the leaves of the tea plant",
 					"Grown in the exotic regions of this world...",
 					"Buy yourself a cup !");

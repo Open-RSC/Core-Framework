@@ -21,35 +21,35 @@ public final class Lundail implements ShopInterface,
 		100), new Item(ItemId.MIND_RUNE.id(), 100), new Item(ItemId.BODY_RUNE.id(), 100));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		say(p, n, "well hello sir");
-		npcsay(p, n, "hello brave adventurer",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "well hello sir");
+		npcsay(player, n, "hello brave adventurer",
 			"how can i help you?");
 
-		int option = multi(p, n, "what are you selling?",
+		int option = multi(player, n, "what are you selling?",
 			"what's that big old building behind us?");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "why, i sell rune stones",
+				npcsay(player, n, "why, i sell rune stones",
 					"i've got some good stuff, real powerful little rocks",
 					"take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 
 			case 1:
-				npcsay(p, n, "why that my friend...",
+				npcsay(player, n, "why that my friend...",
 					"...is the mage battle arena",
 					"top mages come from all over to compete in the arena",
 					"few return back, most get fried...hence the smell");
-				npcsay(p, n, "hmmm.. i did notice");
+				npcsay(player, n, "hmmm.. i did notice");
 				break;
 
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.LUNDAIL.id();
 	}
 

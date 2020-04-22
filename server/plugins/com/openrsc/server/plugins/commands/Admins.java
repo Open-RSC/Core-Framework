@@ -99,8 +99,8 @@ public final class Admins implements CommandTrigger {
 			player.message(messagePrefix + "Cleaned " + count1 + " NPC opponent references.");
 		} else if (cmd.equalsIgnoreCase("saveall")) {
 			int count = 0;
-			for (Player p : player.getWorld().getPlayers()) {
-				p.save();
+			for (Player playerToSave : player.getWorld().getPlayers()) {
+				playerToSave.save();
 				count++;
 			}
 			player.message(messagePrefix + "Saved " + count + " players on server!");
@@ -194,12 +194,12 @@ public final class Admins implements CommandTrigger {
 
 			player.message(messagePrefix + "There is no running Holiday Drop Event");
 		} else if (cmd.equalsIgnoreCase("kills2")) {
-			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if (p == null) {
+			Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			player.message(player.getKills2() + "");
+			player.message(targetPlayer.getKills2() + "");
 		}
 		/*else if (cmd.equalsIgnoreCase("fakecrystalchest")) {
 			String loot;
@@ -338,9 +338,7 @@ public final class Admins implements CommandTrigger {
 				}
 			}
 
-			Iterator<Map.Entry<String, Integer>> itr = rareDrops.entrySet().iterator();
-			while (itr.hasNext()) {
-				Map.Entry<String, Integer> entry = itr.next();
+			for (Map.Entry<String, Integer> entry : rareDrops.entrySet()) {
 				System.out.println(entry.getKey() + ": " + entry.getValue());
 			}
 		} else if (cmd.equalsIgnoreCase("simulatedrop")) {
@@ -595,8 +593,8 @@ public final class Admins implements CommandTrigger {
 		} else if (cmd.equalsIgnoreCase("shutdown")) {
 			int seconds = 0;
 			if (player.getWorld().getServer().shutdownForUpdate(seconds)) {
-				for (Player p : player.getWorld().getPlayers()) {
-					ActionSender.startShutdown(p, seconds);
+				for (Player playerToUpdate : player.getWorld().getPlayers()) {
+					ActionSender.startShutdown(playerToUpdate, seconds);
 				}
 			}
 		} else if (cmd.equalsIgnoreCase("update")) {
@@ -624,9 +622,9 @@ public final class Admins implements CommandTrigger {
 					+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
 					+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
 					+ (reason.toString() == "" ? "" : ": % % " + reason);
-				for (Player p : player.getWorld().getPlayers()) {
-					ActionSender.sendBox(p, message, false);
-					ActionSender.startShutdown(p, seconds);
+				for (Player playerToUpdate : player.getWorld().getPlayers()) {
+					ActionSender.sendBox(playerToUpdate, message, false);
+					ActionSender.startShutdown(playerToUpdate, seconds);
 				}
 			}
 			// Services.lookup(DatabaseManager.class).addQuery(new
@@ -675,15 +673,15 @@ public final class Admins implements CommandTrigger {
 				p = player;
 			}
 
-			if (p == null) {
+			if (player == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
 			if (player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
-				p.getCarriedItems().getInventory().add(new Item(id, amount));
+				player.getCarriedItems().getInventory().add(new Item(id, amount));
 			} else if (noted && player.getWorld().getServer().getEntityHandler().getItemDef(id).isNoteable()) {
-				p.getCarriedItems().getInventory().add(new Item(id, amount, true));
+				player.getCarriedItems().getInventory().add(new Item(id, amount, true));
 			} else {
 				for (int i = 0; i < amount; i++) {
 					if (!player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
@@ -692,13 +690,13 @@ public final class Admins implements CommandTrigger {
 							return;
 						}
 					}
-					p.getCarriedItems().getInventory().add(new Item(id, 1));
+					player.getCarriedItems().getInventory().add(new Item(id, 1));
 				}
 			}
 
-			player.message(messagePrefix + "You have spawned " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has given you " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
+			player.message(messagePrefix + "You have spawned " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + player.getUsername());
+			if (player.getUsernameHash() != player.getUsernameHash()) {
+				player.message(messagePrefix + "A staff member has given you " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 			}
 		} else if (cmd.equalsIgnoreCase("bankitem") || cmd.equalsIgnoreCase("bitem") || cmd.equalsIgnoreCase("addbank")) {
 			if (args.length < 1) {
@@ -733,16 +731,16 @@ public final class Admins implements CommandTrigger {
 				p = player;
 			}
 
-			if (p == null) {
+			if (player == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			p.getBank().add(new Item(id, amount));
+			player.getBank().add(new Item(id, amount));
 
-			player.message(messagePrefix + "You have spawned to bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
+			player.message(messagePrefix + "You have spawned to bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + player.getUsername());
+			if (player.getUsernameHash() != player.getUsernameHash()) {
+				player.message(messagePrefix + "A staff member has added to your bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 			}
 		} else if (cmd.equals("fillbank")) {
 			for (int i = 0; i < 1289; i++) {
@@ -755,12 +753,12 @@ public final class Admins implements CommandTrigger {
 			}
 			player.message("Removed bank items.");
 		} else if (cmd.equalsIgnoreCase("quickauction")) {
-			Player p = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-			if (p == null) {
+			Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			ActionSender.sendOpenAuctionHouse(p);
+			ActionSender.sendOpenAuctionHouse(targetPlayer);
 		} else if (cmd.equalsIgnoreCase("quickbank")) { // Show the bank screen to yourself
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
@@ -824,52 +822,52 @@ public final class Admins implements CommandTrigger {
 				player.playSound("click");
 			}
 		} else if (cmd.equalsIgnoreCase("heal")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(p, p.getSkills().getLevel(Skills.HITS) - p.getSkills().getMaxStat(Skills.HITS)));
-			p.getSkills().normalize(Skills.HITS);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "You have been healed by an admin");
+			targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skills.HITS) - targetPlayer.getSkills().getMaxStat(Skills.HITS)));
+			targetPlayer.getSkills().normalize(Skills.HITS);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "You have been healed by an admin");
 			}
-			player.message(messagePrefix + "Healed: " + p.getUsername());
+			player.message(messagePrefix + "Healed: " + targetPlayer.getUsername());
 		} else if (cmd.equalsIgnoreCase("recharge") || cmd.equalsIgnoreCase("healprayer") || cmd.equalsIgnoreCase("healp")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			p.getSkills().normalize(Skills.PRAYER);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your prayer has been recharged by an admin");
+			targetPlayer.getSkills().normalize(Skills.PRAYER);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your prayer has been recharged by an admin");
 			}
-			player.message(messagePrefix + "Recharged: " + p.getUsername());
+			player.message(messagePrefix + "Recharged: " + targetPlayer.getUsername());
 		} else if (cmd.equalsIgnoreCase("hp") || cmd.equalsIgnoreCase("sethp") || cmd.equalsIgnoreCase("hits") || cmd.equalsIgnoreCase("sethits")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [hp]");
 				return;
 			}
 
-			Player p = args.length > 1 ?
+			Player targetPlayer = args.length > 1 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not set hp of a staff member of equal or greater rank.");
 				return;
 			}
@@ -882,36 +880,36 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			if (newHits > p.getSkills().getMaxStat(Skills.HITS))
-				newHits = p.getSkills().getMaxStat(Skills.HITS);
+			if (newHits > targetPlayer.getSkills().getMaxStat(Skills.HITS))
+				newHits = targetPlayer.getSkills().getMaxStat(Skills.HITS);
 			if (newHits < 0)
 				newHits = 0;
 
-			p.getUpdateFlags().setDamage(new Damage(p, p.getSkills().getLevel(Skills.HITS) - newHits));
-			p.getSkills().setLevel(Skills.HITS, newHits);
-			if (p.getSkills().getLevel(Skills.HITS) <= 0)
-				p.killedBy(player);
+			targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skills.HITS) - newHits));
+			targetPlayer.getSkills().setLevel(Skills.HITS, newHits);
+			if (targetPlayer.getSkills().getLevel(Skills.HITS) <= 0)
+				targetPlayer.killedBy(player);
 
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
 			}
-			player.message(messagePrefix + "Set " + p.getUsername() + "'s hits to " + newHits);
+			player.message(messagePrefix + "Set " + targetPlayer.getUsername() + "'s hits to " + newHits);
 		} else if (cmd.equalsIgnoreCase("prayer") || cmd.equalsIgnoreCase("setprayer")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [prayer]");
 				return;
 			}
 
-			Player p = args.length > 1 ?
+			Player targetPlayer = args.length > 1 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not set prayer of a staff member of equal or greater rank.");
 				return;
 			}
@@ -924,51 +922,51 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			if (newPrayer > p.getSkills().getMaxStat(Skills.PRAYER))
-				newPrayer = p.getSkills().getMaxStat(Skills.PRAYER);
+			if (newPrayer > targetPlayer.getSkills().getMaxStat(Skills.PRAYER))
+				newPrayer = targetPlayer.getSkills().getMaxStat(Skills.PRAYER);
 			if (newPrayer < 0)
 				newPrayer = 0;
 
-			p.getSkills().setLevel(Skills.PRAYER, newPrayer);
+			targetPlayer.getSkills().setLevel(Skills.PRAYER, newPrayer);
 
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
 			}
-			player.message(messagePrefix + "Set " + p.getUsername() + "'s prayer to " + newPrayer);
+			player.message(messagePrefix + "Set " + targetPlayer.getUsername() + "'s prayer to " + newPrayer);
 		} else if (cmd.equalsIgnoreCase("kill")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not kill a staff member of equal or greater rank.");
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(p, p.getSkills().getLevel(Skills.HITS)));
-			p.getSkills().setLevel(Skills.HITS, 0);
-			p.killedBy(player);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "You have been killed by an admin");
+			targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skills.HITS)));
+			targetPlayer.getSkills().setLevel(Skills.HITS, 0);
+			targetPlayer.killedBy(player);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "You have been killed by an admin");
 			}
-			player.message(messagePrefix + "Killed " + p.getUsername());
+			player.message(messagePrefix + "Killed " + targetPlayer.getUsername());
 		} else if ((cmd.equalsIgnoreCase("damage") || cmd.equalsIgnoreCase("dmg"))) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name] [amount]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -981,94 +979,94 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not damage a staff member of equal or greater rank.");
 				return;
 			}
 
-			p.getUpdateFlags().setDamage(new Damage(p, damage));
-			p.getSkills().subtractLevel(Skills.HITS, damage);
-			if (p.getSkills().getLevel(Skills.HITS) <= 0)
-				p.killedBy(player);
+			targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, damage));
+			targetPlayer.getSkills().subtractLevel(Skills.HITS, damage);
+			if (targetPlayer.getSkills().getLevel(Skills.HITS) <= 0)
+				targetPlayer.killedBy(player);
 
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
 			}
-			player.message(messagePrefix + "Damaged " + p.getUsername() + " " + damage + " hits");
+			player.message(messagePrefix + "Damaged " + targetPlayer.getUsername() + " " + damage + " hits");
 		} else if (cmd.equalsIgnoreCase("wipeinventory") || cmd.equalsIgnoreCase("wipeinv")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not wipe the inventory of a staff member of equal or greater rank.");
 				return;
 			}
 
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (targetPlayer.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				int wearableId;
 				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-					Item equipped = p.getCarriedItems().getEquipment().get(i);
+					Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
 					if (equipped == null)
 						continue;
-					wearableId = p.getCarriedItems().getEquipment().get(i).getDef(player.getWorld()).getWearableId();
-					p.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
-					p.updateWornItems(i, p.getSettings().getAppearance().getSprite(i),
-						wearableId, false);
+					wearableId = targetPlayer.getCarriedItems().getEquipment().get(i).getDef(targetPlayer.getWorld()).getWearableId();
+					targetPlayer.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
+					targetPlayer.updateWornItems(i, targetPlayer.getSettings().getAppearance().getSprite(i),
+							wearableId, false);
 				}
 			}
 
-			ListIterator<Item> iterator = p.getCarriedItems().getInventory().iterator();
+			ListIterator<Item> iterator = targetPlayer.getCarriedItems().getInventory().iterator();
 
 			for (; iterator.hasNext(); ) {
 				Item i = iterator.next();
 				if (i.isWielded()) {
 					i.setWielded(false);
-					p.updateWornItems(i.getDef(player.getWorld()).getWieldPosition(), i.getDef(player.getWorld()).getAppearanceId(),
-						i.getDef(player.getWorld()).getWearableId(), false);
+					targetPlayer.updateWornItems(i.getDef(targetPlayer.getWorld()).getWieldPosition(), i.getDef(targetPlayer.getWorld()).getAppearanceId(),
+							i.getDef(targetPlayer.getWorld()).getWearableId(), false);
 				}
 				iterator.remove();
 			}
 
-			ActionSender.sendInventory(p);
-			ActionSender.sendEquipmentStats(p);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your inventory has been wiped by an admin");
+			ActionSender.sendInventory(targetPlayer);
+			ActionSender.sendEquipmentStats(targetPlayer);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
 			}
-			player.message(messagePrefix + "Wiped inventory of " + p.getUsername());
+			player.message(messagePrefix + "Wiped inventory of " + targetPlayer.getUsername());
 		} else if (cmd.equalsIgnoreCase("wipebank")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not wipe the bank of a staff member of equal or greater rank.");
 				return;
 			}
 
-			synchronized (p.getBank().getItems()) {
-				p.getBank().getItems().clear();
+			synchronized(targetPlayer.getBank().getItems()) {
+				targetPlayer.getBank().getItems().clear();
 			}
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your bank has been wiped by an admin");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
 			}
-			player.message(messagePrefix + "Wiped bank of " + p.getUsername());
+			player.message(messagePrefix + "Wiped bank of " + targetPlayer.getUsername());
 		} else if (cmd.equalsIgnoreCase("massitem")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] [amount]");
@@ -1303,31 +1301,31 @@ public final class Admins implements CommandTrigger {
 				msg.append(args[i]).append(" ");
 			msg.toString().trim();
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-			if (p == null) {
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not talk as a staff member of equal or greater rank.");
 				return;
 			}
 
 			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
 
-			ChatMessage chatMessage = new ChatMessage(p, message);
+			ChatMessage chatMessage = new ChatMessage(targetPlayer, message);
 			// First of second call to updatePlayerAppearance is to send out messages generated by other server processes so they don't get overwritten
-			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
+			for (Player playerToChat : targetPlayer.getViewArea().getPlayersInView()) {
 				player.getWorld().getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
-			p.getUpdateFlags().setChatMessage(chatMessage);
-			for (Player playerToChat : p.getViewArea().getPlayersInView()) {
+			targetPlayer.getUpdateFlags().setChatMessage(chatMessage);
+			for (Player playerToChat : targetPlayer.getViewArea().getPlayersInView()) {
 				player.getWorld().getServer().getGameUpdater().updatePlayerAppearances(playerToChat);
 			}
-			p.getUpdateFlags().setChatMessage(null);
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(p.getWorld(), p.getUsername(), chatMessage.getMessageString()));
-			player.getWorld().addEntryToSnapshots(new Chatlog(p.getUsername(), chatMessage.getMessageString()));
+			targetPlayer.getUpdateFlags().setChatMessage(null);
+			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(targetPlayer.getWorld(), targetPlayer.getUsername(), chatMessage.getMessageString()));
+			player.getWorld().addEntryToSnapshots(new Chatlog(targetPlayer.getUsername(), chatMessage.getMessageString()));
 		} else if ((cmd.equalsIgnoreCase("smitenpc") || cmd.equalsIgnoreCase("damagenpc") || cmd.equalsIgnoreCase("dmgnpc"))) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
@@ -1532,14 +1530,14 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not freeze experience of a staff member of equal or greater rank.");
 				return;
 			}
@@ -1561,16 +1559,16 @@ public final class Admins implements CommandTrigger {
 
 			boolean newFreezeXp;
 			if (toggle) {
-				newFreezeXp = p.toggleFreezeXp();
+				newFreezeXp = player.toggleFreezeXp();
 			} else {
-				newFreezeXp = p.setFreezeXp(freezeXp);
+				newFreezeXp = player.setFreezeXp(freezeXp);
 			}
 
 			String freezeMessage = newFreezeXp ? "frozen" : "unfrozen";
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
+			if (player.getUsernameHash() != player.getUsernameHash()) {
+				player.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
 			}
-			player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + p.getUsername());
+			player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + player.getUsername());
 		} else if (cmd.equalsIgnoreCase("shootme")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id] (damage)");
@@ -1849,14 +1847,14 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not skull a staff member of equal or greater rank.");
 				return;
 			}
@@ -1876,19 +1874,19 @@ public final class Admins implements CommandTrigger {
 				skull = false;
 			}
 
-			if ((toggle && p.isSkulled()) || (!toggle && !skull)) {
-				p.removeSkull();
+			if ((toggle && targetPlayer.isSkulled()) || (!toggle && !skull)) {
+				targetPlayer.removeSkull();
 			} else {
-				p.addSkull(1200000);
-				player.getCache().store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
-				player.getCache().store("last_skull", System.currentTimeMillis()); // Sets the last time a player had a skull
+				targetPlayer.addSkull(1200000);
+				targetPlayer.getCache().store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
+				targetPlayer.getCache().store("last_skull", System.currentTimeMillis()); // Sets the last time a player had a skull
 			}
 
-			String skullMessage = p.isSkulled() ? "added" : "removed";
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "PK skull has been " + skullMessage + " by a staff member");
+			String skullMessage = player.isSkulled() ? "added" : "removed";
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "PK skull has been " + skullMessage + " by a staff member");
 			}
-			player.message(messagePrefix + "PK skull has been " + skullMessage + ": " + p.getUsername());
+			player.message(messagePrefix + "PK skull has been " + skullMessage + ": " + targetPlayer.getUsername());
 		} else if (cmd.equalsIgnoreCase("npcrangeevent2")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [npc_id]");
@@ -1911,32 +1909,32 @@ public final class Admins implements CommandTrigger {
 			}
 			n.setRangeEventNpc(new RangeEventNpc(player.getWorld(), n, player));
 		} else if (cmd.equalsIgnoreCase("ip")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP());
+			player.message(messagePrefix + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP());
 		} else if (cmd.equalsIgnoreCase("appearance") || cmd.equalsIgnoreCase("changeappearance")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			player.message(messagePrefix + p.getUsername() + " has been sent the change appearance screen");
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has sent you the change appearance screen");
+			player.message(messagePrefix + targetPlayer.getUsername() + " has been sent the change appearance screen");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "A staff member has sent you the change appearance screen");
 			}
-			p.setChangingAppearance(true);
-			ActionSender.sendAppearanceScreen(p);
+			targetPlayer.setChangingAppearance(true);
+			ActionSender.sendAppearanceScreen(targetPlayer);
 		} else if (cmd.equalsIgnoreCase("spawnnpc")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [id] (radius) (time in minutes)");

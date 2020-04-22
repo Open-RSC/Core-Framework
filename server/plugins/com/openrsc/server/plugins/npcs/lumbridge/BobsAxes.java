@@ -21,7 +21,7 @@ public final class BobsAxes implements ShopInterface,
 		new Item(ItemId.IRON_BATTLE_AXE.id(), 5), new Item(ItemId.STEEL_BATTLE_AXE.id(), 2), new Item(ItemId.MITHRIL_BATTLE_AXE.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.BOB.id();
 	}
 
@@ -36,18 +36,18 @@ public final class BobsAxes implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Hello. How can I help you?");
-		int option = multi(p, n, "Give me a quest!",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello. How can I help you?");
+		int option = multi(player, n, "Give me a quest!",
 			"Have you anything to sell?");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "Get yer own!");
+				npcsay(player, n, "Get yer own!");
 				break;
 			case 1:
-				npcsay(p, n, "Yes, I buy and sell axes, take your pick! (or axe)");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Yes, I buy and sell axes, take your pick! (or axe)");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}

@@ -24,16 +24,16 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		return null;
 	}
 
-	public void handlePacket(Packet p, final Player player) throws Exception {
+	public void handlePacket(Packet packet, final Player player) throws Exception {
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 
 		player.resetAll();
-		Point location = Point.location(p.readShort(), p.readShort());
-		final int id = p.readShort();
-		final int groundItemId = p.readShort();
+		Point location = Point.location(packet.readShort(), packet.readShort());
+		final int id = packet.readShort();
+		final int groundItemId = packet.readShort();
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;

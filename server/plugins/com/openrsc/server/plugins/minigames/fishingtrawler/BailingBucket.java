@@ -33,7 +33,7 @@ public class BailingBucket implements OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.BAILING_BUCKET.id();
 	}
 

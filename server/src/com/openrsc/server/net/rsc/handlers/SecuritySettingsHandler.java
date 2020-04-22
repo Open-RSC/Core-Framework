@@ -22,13 +22,13 @@ public class SecuritySettingsHandler implements PacketHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Override
-	public void handlePacket(Packet p, Player player) throws Exception {
-		switch (p.getID()) {
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		switch (packet.getID()) {
 		case 25: //change pass
 			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP(), true);
 
-			String oldPass = p.readString().trim();
-			String newPass = p.readString().trim();
+			String oldPass = packet.readString().trim();
+			String newPass = packet.readString().trim();
 
 			PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(player.getWorld().getServer(), player.getChannel(), player, oldPass, newPass);
 			player.getWorld().getServer().getLoginExecutor().add(passwordChangeRequest);
@@ -73,8 +73,8 @@ public class SecuritySettingsHandler implements PacketHandler {
 			String questions[] = new String[5];
 			String answers[] = new String[5];
 			for (int i=0; i<5; i++) {
-				questions[i] = p.readString().trim();
-				answers[i] = DataConversions.normalize(p.readString(), 50);
+				questions[i] = packet.readString().trim();
+				answers[i] = DataConversions.normalize(packet.readString(), 50);
 			}
 
 			RecoveryChangeRequest recoveryChangeRequest = new RecoveryChangeRequest(player.getWorld().getServer(), player.getChannel(), player, questions, answers);
@@ -83,10 +83,10 @@ public class SecuritySettingsHandler implements PacketHandler {
 		case 253: //change/set contact details
 			LOGGER.info("Contact details change from: " + player.getCurrentIP());
 			String fullName, zipCode, country, email;
-			fullName = p.readString();
-			zipCode = p.readString();
-			country = p.readString();
-			email = DataConversions.maxLenString(p.readString(), 255, false);
+			fullName = packet.readString();
+			zipCode = packet.readString();
+			country = packet.readString();
+			email = DataConversions.maxLenString(packet.readString(), 255, false);
 
 			playerID = player.getDatabaseID();
 			if (playerID == -1) {

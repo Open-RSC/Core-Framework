@@ -11,16 +11,16 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemUseOnNpc implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		int npcIndex = p.readShort();
+		int npcIndex = packet.readShort();
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
-		int itemID = p.readShort();
+		int itemID = packet.readShort();
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;

@@ -25,7 +25,7 @@ public final class ChampionsGuild implements ShopInterface,
 		1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.SCAVVO.id() || n.getID() == NpcId.VALAINE.id();
 	}
 
@@ -40,26 +40,26 @@ public final class ChampionsGuild implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		switch (NpcId.getById(n.getID())) {
 			case SCAVVO:
-				npcsay(p, n, "Ello matey", "Want to buy some exciting new toys?");
-				int options = multi(p, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
+				npcsay(player, n, "Ello matey", "Want to buy some exciting new toys?");
+				int options = multi(player, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
 				if (options == 1 || options == 2) {
-					p.setAccessingShop(scavvosShop);
-					ActionSender.showShop(p, scavvosShop);
+					player.setAccessingShop(scavvosShop);
+					ActionSender.showShop(player, scavvosShop);
 				}
 				break;
 			case VALAINE:
-				npcsay(p, n, "Hello there.",
+				npcsay(player, n, "Hello there.",
 					"Want to have a look at what we're selling today?");
 
-				int opt = multi(p, n, false, //do not send over
+				int opt = multi(player, n, false, //do not send over
 						"Yes please", "No thank you");
 				if (opt == 0) {
-					say(p, n, "Yes please.");
-					p.setAccessingShop(valsShop);
-					ActionSender.showShop(p, valsShop);
+					say(player, n, "Yes please.");
+					player.setAccessingShop(valsShop);
+					ActionSender.showShop(player, valsShop);
 				}
 				break;
 			default:

@@ -35,18 +35,18 @@ public class LoginPacketHandler {
 		return bldr.toString();
 	}
 
-	public void processLogin(Packet p, Channel channel, Server server) {
+	public void processLogin(Packet packet, Channel channel, Server server) {
 		final String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
 
-		switch (p.getID()) {
+		switch (packet.getID()) {
 
 			/* Logging in */
 			case 0:
-				boolean reconnecting = p.readByte() == 1;
-				int clientVersion = p.readInt();
+				boolean reconnecting = packet.readByte() == 1;
+				int clientVersion = packet.readInt();
 
-				final String username = getString(p.getBuffer()).trim();
-				final String password = getString(p.getBuffer()).trim();
+				final String username = getString(packet.getBuffer()).trim();
+				final String password = getString(packet.getBuffer()).trim();
 
 				ConnectionAttachment attachment = new ConnectionAttachment();
 				channel.attr(RSCConnectionHandler.attachment).set(attachment);
@@ -89,13 +89,13 @@ public class LoginPacketHandler {
 			case 78:
 				LOGGER.info("Registration attempt from: " + IP);
 
-				String user = getString(p.getBuffer()).trim();
-				String pass = getString(p.getBuffer()).trim();
+				String user = getString(packet.getBuffer()).trim();
+				String pass = getString(packet.getBuffer()).trim();
 
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 				//pass = pass.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", "");
 
-				String email = getString(p.getBuffer()).trim();
+				String email = getString(packet.getBuffer()).trim();
 
 				if (server.getPacketFilter().shouldAllowLogin(IP, true)) {
 					CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email);
@@ -112,7 +112,7 @@ public class LoginPacketHandler {
 						return;
 					}
 
-					user = getString(p.getBuffer()).trim();
+					user = getString(packet.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 
 					int playerID = server.getDatabase().getPlayerLoginData(user).id;
@@ -155,14 +155,14 @@ public class LoginPacketHandler {
 
 			/* Attempt recover */
 			case 7:
-				user = getString(p.getBuffer()).trim();
+				user = getString(packet.getBuffer()).trim();
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
-				String oldPass = getString(p.getBuffer()).trim();
-				String newPass = getString(p.getBuffer()).trim();
-				Long uid = p.getBuffer().readLong();
+				String oldPass = getString(packet.getBuffer()).trim();
+				String newPass = getString(packet.getBuffer()).trim();
+				Long uid = packet.getBuffer().readLong();
 				String answers[] = new String[5];
 				for (int j = 0; j < 5; j++) {
-					answers[j] = DataConversions.normalize(getString(p.getBuffer()).trim(), 50);
+					answers[j] = DataConversions.normalize(getString(packet.getBuffer()).trim(), 50);
 				}
 
 				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, channel, user, oldPass, newPass, answers);

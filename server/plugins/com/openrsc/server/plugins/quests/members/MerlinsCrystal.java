@@ -57,125 +57,125 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 292 || obj.getID() == 293) {
-			Npc arhein = ifnearvisnpc(p, NpcId.ARHEIN.id(), 10);
-			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 2) {
-				p.playerServerMessage(MessageType.QUEST, "I have no reason to do that");
+			Npc arhein = ifnearvisnpc(player, NpcId.ARHEIN.id(), 10);
+			if (player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 2) {
+				player.playerServerMessage(MessageType.QUEST, "I have no reason to do that");
 			} else if (arhein != null) {
-				npcsay(p, arhein, "Oi get away from there!");
+				npcsay(player, arhein, "Oi get away from there!");
 			} else {
-				p.teleport(456, 3352, false);
-				p.message("You hide away in the ship");
-				delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-				p.message("The ship starts to move");
-				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
-				p.message("You are out at sea");
-				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
-				p.message("The ship comes to a stop");
-				p.teleport(456, 520, false);
-				mes(p, "You sneak out of the ship");
+				player.teleport(456, 3352, false);
+				player.message("You hide away in the ship");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				player.message("The ship starts to move");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				player.message("You are out at sea");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				player.message("The ship comes to a stop");
+				player.teleport(456, 520, false);
+				mes(player, "You sneak out of the ship");
 			}
 		} else if (obj.getID() == 291) {
-			p.message("there are buckets in this crate");
+			player.message("there are buckets in this crate");
 			delay(800);
-			p.message("would you like a bucket?");
-			int opt = multi(p, "Yes", "No");
+			player.message("would you like a bucket?");
+			int opt = multi(player, "Yes", "No");
 			if (opt == 0) {
-				p.message("you take a bucket.");
-				give(p, ItemId.BUCKET.id(), 1);
+				player.message("you take a bucket.");
+				give(player, ItemId.BUCKET.id(), 1);
 			}
 		} else if (obj.getID() == 296) {
-			mes(p,
+			mes(player,
 				"You find a small inscription at the bottom of the altar",
 				"It reads Snarthon Candtrick Termanto");
-			if (!p.getCache().hasKey("magic_words")) {
-				p.getCache().store("magic_words", true);
+			if (!player.getCache().hasKey("magic_words")) {
+				player.getCache().store("magic_words", true);
 			}
 		} else if (obj.getID() == 295) {
-			p.teleport(p.getX(), p.getY() + 944);
-			p.message("You climb up the ladder");
-			if ((p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 3) || !p.getCache().hasKey("lady_test")) {
+			player.teleport(player.getX(), player.getY() + 944);
+			player.message("You climb up the ladder");
+			if ((player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 3) || !player.getCache().hasKey("lady_test")) {
 				return;
 			}
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			Npc lady = ifnearvisnpc(p, NpcId.LADY_UPSTAIRS.id(), 5);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			Npc lady = ifnearvisnpc(player, NpcId.LADY_UPSTAIRS.id(), 5);
 			if (lady == null) {
-				lady = addnpc(NpcId.LADY_UPSTAIRS.id(), p.getX() - 1, p.getY() - 1, 60000, p);
+				lady = addnpc(NpcId.LADY_UPSTAIRS.id(), player.getX() - 1, player.getY() - 1, 60000, player);
 			}
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (lady != null) {
-				say(p, lady, "Hello I am here, can I have Excalibur yet?");
-				npcsay(p, lady, "I don't think you are worthy enough",
+				say(player, lady, "Hello I am here, can I have Excalibur yet?");
+				npcsay(player, lady, "I don't think you are worthy enough",
 					"Come back when you are a better person");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
-		return n.getID() == NpcId.SIR_MORDRED.id() && p.getQuestStage(this) == 2;
+	public boolean blockKillNpc(Player player, Npc n) {
+		return n.getID() == NpcId.SIR_MORDRED.id() && player.getQuestStage(this) == 2;
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getCombatEvent() != null) {
 			n.getCombatEvent().resetCombat();
 		}
 		n.getSkills().setLevel(Skills.HITS, 5);
-		Npc leFaye = addnpc(p.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
-		delay(p.getWorld().getServer().getConfig().GAME_TICK);
-		npcsay(p, leFaye, "Please spare my son");
-		int option = multi(p, n, "Tell me how to untrap Merlin and I might",
+		Npc leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		npcsay(player, leFaye, "Please spare my son");
+		int option = multi(player, n, "Tell me how to untrap Merlin and I might",
 			"No he deserves to die", "OK then");
 		if (option == 0) {
-			p.updateQuestStage(this, 3);
-			npcsay(p, leFaye,
+			player.updateQuestStage(this, 3);
+			npcsay(player, leFaye,
 				"You have guessed correctly that I'm responsible for that");
-			npcsay(p, leFaye,
+			npcsay(player, leFaye,
 				"I suppose I can live with that fool Merlin being loose");
-			npcsay(p, leFaye, "for the sake of my son");
-			npcsay(p, leFaye, "Setting him free won't be easy though");
-			npcsay(p, leFaye,
+			npcsay(player, leFaye, "for the sake of my son");
+			npcsay(player, leFaye, "Setting him free won't be easy though");
+			npcsay(player, leFaye,
 				"You will need to find a pentagram as close to the crystal as you can find");
-			npcsay(p, leFaye,
+			npcsay(player, leFaye,
 				"You will need to drop some bats bones in the pentagram");
-			npcsay(p, leFaye, "while holding a black candle");
-			npcsay(p, leFaye, "This will summon the demon Thrantax");
-			npcsay(p, leFaye, "You will need to bind him with magic words");
-			npcsay(p, leFaye,
+			npcsay(player, leFaye, "while holding a black candle");
+			npcsay(player, leFaye, "This will summon the demon Thrantax");
+			npcsay(player, leFaye, "You will need to bind him with magic words");
+			npcsay(player, leFaye,
 				"Then you will need the sword Excalibur with which the spell was bound");
-			npcsay(p, leFaye, "Shatter the crystal with Excalibur");
-			int sub_opt = multi(p, leFaye, "So where can I find Excalibur?",
+			npcsay(player, leFaye, "Shatter the crystal with Excalibur");
+			int sub_opt = multi(player, leFaye, "So where can I find Excalibur?",
 				"OK I will do all that", "What are the magic words?");
 			if (sub_opt == 0) {
-				npcsay(p, leFaye, "The lady of the lake has it");
-				npcsay(p, leFaye, "I don't know if she will give it you though");
-				npcsay(p, leFaye, "She can be rather temperamental");
-				int sub_opt2 = multi(p, leFaye, false, //do not send over
+				npcsay(player, leFaye, "The lady of the lake has it");
+				npcsay(player, leFaye, "I don't know if she will give it you though");
+				npcsay(player, leFaye, "She can be rather temperamental");
+				int sub_opt2 = multi(player, leFaye, false, //do not send over
 					"OK I will go do all that",
 					"What are the magic words?");
 				if (sub_opt2 == 0) {
-					say(p, leFaye, "OK I will do all that");
-					p.message("Morgan Le Faye vanishes");
+					say(player, leFaye, "OK I will do all that");
+					player.message("Morgan Le Faye vanishes");
 				} else if (sub_opt2 == 1) {
-					say(p, leFaye, "What are the magic words?");
-					npcsay(p, leFaye,
+					say(player, leFaye, "What are the magic words?");
+					npcsay(player, leFaye,
 						"You will find the magic words at the base of one of the chaos altars");
-					npcsay(p, leFaye, "Which chaos altar I cannot remember");
+					npcsay(player, leFaye, "Which chaos altar I cannot remember");
 				}
 			} else if (sub_opt == 1) {
-				p.message("Morgan Le Faye vanishes");
+				player.message("Morgan Le Faye vanishes");
 			} else if (sub_opt == 2) {
-				npcsay(p, leFaye,
+				npcsay(player, leFaye,
 					"You will find the magic words at the base of one of the chaos altars");
-				npcsay(p, leFaye, "Which chaos altar I cannot remember");
+				npcsay(player, leFaye, "Which chaos altar I cannot remember");
 			}
 		} else if (option == 1) {
-			p.message("You kill Mordred");
-			n.killedBy(p);
+			player.message("You kill Mordred");
+			n.killedBy(player);
 		} else if (option == 2) {
-			p.message("Morgan Le Faye vanishes");
+			player.message("Morgan Le Faye vanishes");
 		}
 	}
 
@@ -186,41 +186,41 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 294) {
 			if (item.getCatalogId() == ItemId.INSECT_REPELLANT.id()) {
-				mes(p, "you squirt insect repellant on the beehive",
+				mes(player, "you squirt insect repellant on the beehive",
 					"You see bees leaving the hive");
-				if (!p.getCache().hasKey("squirt")) {
-					p.getCache().store("squirt", true);
+				if (!player.getCache().hasKey("squirt")) {
+					player.getCache().store("squirt", true);
 				}
 			} else if (item.getCatalogId() == ItemId.BUCKET.id()) {
-				mes(p, "You try to get some wax from the beehive");
-				if (p.getCache().hasKey("squirt")) {
-					mes(p, "You get some wax from the hive",
+				mes(player, "You try to get some wax from the beehive");
+				if (player.getCache().hasKey("squirt")) {
+					mes(player, "You get some wax from the hive",
 						"The bees fly back to the hive as the repellant wears off");
-					p.getCarriedItems().remove(new Item(ItemId.BUCKET.id()));
-					give(p, ItemId.WAX_BUCKET.id(), 1);
-					p.getCache().remove("squirt");
+					player.getCarriedItems().remove(new Item(ItemId.BUCKET.id()));
+					give(player, ItemId.WAX_BUCKET.id(), 1);
+					player.getCache().remove("squirt");
 				} else {
-					p.message("Suddenly bees fly out of the hive and sting you");
-					p.damage(2);
+					player.message("Suddenly bees fly out of the hive and sting you");
+					player.damage(2);
 				}
 			}
 		} else if (obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id()) {
-			if (p.getQuestStage(this) == 4) {
-				mes(p, "The crystal shatters");
-				p.getWorld().unregisterGameObject(obj);
-				p.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
-				Npc merlin = ifnearvisnpc(p, NpcId.MERLIN_CRYSTAL.id(), 5);
-				npcsay(p, merlin, "Thankyou thankyou",
+			if (player.getQuestStage(this) == 4) {
+				mes(player, "The crystal shatters");
+				player.getWorld().unregisterGameObject(obj);
+				player.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
+				Npc merlin = ifnearvisnpc(player, NpcId.MERLIN_CRYSTAL.id(), 5);
+				npcsay(player, merlin, "Thankyou thankyou",
 					"It's not fun being trapped in a giant crystal",
 					"Go speak to King Arthur, I'm sure he'll reward you");
 
-				p.message("You have set Merlin free now talk to king arthur");
-				p.updateQuestStage(this, 5);
+				player.message("You have set Merlin free now talk to king arthur");
+				player.updateQuestStage(this, 5);
 			} else {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 			}
 		}
 	}
@@ -232,55 +232,55 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getX() == 277 && obj.getY() == 632) {
-			if ((p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 3) || !p.getCache().hasKey("lady_test")) {
-				doDoor(obj, p);
+			if ((player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 3) || !player.getCache().hasKey("lady_test")) {
+				doDoor(obj, player);
 				return;
 			} else {
-				Npc beggar = ifnearvisnpc(p, NpcId.BEGGAR.id(), 5);
+				Npc beggar = ifnearvisnpc(player, NpcId.BEGGAR.id(), 5);
 				if (beggar == null) {
-					beggar = addnpc(NpcId.BEGGAR.id(), 276, 631, 60000, p);
+					beggar = addnpc(NpcId.BEGGAR.id(), 276, 631, 60000, player);
 				}
-				delay(p.getWorld().getServer().getConfig().GAME_TICK);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				if (beggar != null) {
-					npcsay(p, beggar, "Please sir, me and my family are starving",
+					npcsay(player, beggar, "Please sir, me and my family are starving",
 						"Could you possibly give me a loaf of bread?");
-					int opt = multi(p, beggar, "Yes certainly",
+					int opt = multi(player, beggar, "Yes certainly",
 						"No I don't have any bread with me");
 					if (opt == 0) {
-						if (!p.getCarriedItems().hasCatalogID(ItemId.BREAD.id())) {
-							say(p, beggar,
+						if (!player.getCarriedItems().hasCatalogID(ItemId.BREAD.id())) {
+							say(player, beggar,
 								"Except that I don't have any bread at the moment");
-							npcsay(p, beggar,
+							npcsay(player, beggar,
 								"Well if you get some you know where to come");
-							doDoor(obj, p);
+							doDoor(obj, player);
 							beggar.remove();
 						} else {
-							mes(p, "You give the bread to the beggar");
-							p.getCarriedItems().remove(new Item(ItemId.BREAD.id()));
-							npcsay(p, beggar, "Thankyou very much");
-							if (p.getCache().hasKey("lady_test")) {
-								p.message("The beggar has turned into the lady of the lake!");
+							mes(player, "You give the bread to the beggar");
+							player.getCarriedItems().remove(new Item(ItemId.BREAD.id()));
+							npcsay(player, beggar, "Thankyou very much");
+							if (player.getCache().hasKey("lady_test")) {
+								player.message("The beggar has turned into the lady of the lake!");
 								Npc lady = changenpc(beggar, NpcId.LADY_GROUND.id(), false);
-								npcsay(p, lady, "Well done you have passed my test",
+								npcsay(player, lady, "Well done you have passed my test",
 									"Here is Excalibur, guard it well");
-								give(p, ItemId.EXCALIBUR.id(), 1);
-								p.getCache().remove("lady_test");
+								give(player, ItemId.EXCALIBUR.id(), 1);
+								player.getCache().remove("lady_test");
 								lady.remove();
 							} else {
-								doDoor(obj, p);
+								doDoor(obj, player);
 								beggar.remove();
 							}
 						}
 					} else if (opt == 1) {
-						npcsay(p, beggar,
+						npcsay(player, beggar,
 							"Well if you get some you know where to come");
-						doDoor(obj, p);
+						doDoor(obj, player);
 						beggar.remove();
 					}
 				} else {
-					doDoor(obj, p);
+					doDoor(obj, player);
 				}
 			}
 		}
@@ -288,116 +288,116 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
-		return p.getX() == 448 && p.getY() == 435 && i.getCatalogId() == ItemId.BAT_BONES.id()
-			&& p.getCache().hasKey("magic_words") && p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false));
+	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
+		return player.getX() == 448 && player.getY() == 435 && i.getCatalogId() == ItemId.BAT_BONES.id()
+			&& player.getCache().hasKey("magic_words") && player.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false));
 	}
 
 	@Override
-	public void onDropObj(Player p, Item i, Boolean fromInventory) {
-		Npc n = addnpc(p.getWorld(), NpcId.THRANTAX.id(), p.getX(), p.getY(), 300000);
+	public void onDropObj(Player player, Item i, Boolean fromInventory) {
+		Npc n = addnpc(player.getWorld(), NpcId.THRANTAX.id(), player.getX(), player.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
-		p.message("Suddenly a demon appears");
-		say(p, null, "Now what were those magic words?");
-		int opt = multi(p, n, false, //do not send over
+		player.message("Suddenly a demon appears");
+		say(player, null, "Now what were those magic words?");
+		int opt = multi(player, n, false, //do not send over
 			"Snarthtrick Candanto Termon",
 			"Snarthon Candtrick Termanto", "Snarthanto Candon Termtrick");
 		if (opt == 1) {
-			say(p, n, "Snarthon Candtrick Termanto");
-			npcsay(p, n, "rarrrrgh", "You have me in your control",
+			say(player, n, "Snarthon Candtrick Termanto");
+			npcsay(player, n, "rarrrrgh", "You have me in your control",
 				"What do you wish of me?",
 				"So that I may return to the nether regions");
-			say(p, n, "I wish to free Merlin from his giant crystal");
-			npcsay(p, n, "rarrrrgh",
+			say(player, n, "I wish to free Merlin from his giant crystal");
+			npcsay(player, n, "rarrrrgh",
 				"It is done, you can now shatter Merlins crystal with Excalibur");
 			n.remove();
-			p.updateQuestStage(this, 4);
+			player.updateQuestStage(this, 4);
 			return;
 		}
 		if (opt == 0) {
-			say(p, n, "Snarthtrick Candato Termon");
+			say(player, n, "Snarthtrick Candato Termon");
 		} else if (opt == 2) {
-			say(p, n, "Snarthanto Candon Termtrick");
+			say(player, n, "Snarthanto Candon Termtrick");
 		}
-		n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", p));
-		if (p.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))) {
-			p.getCarriedItems().remove(new Item(ItemId.LIT_BLACK_CANDLE.id()));
+		n.getUpdateFlags().setChatMessage(new ChatMessage(n, "rarrrrgh", player));
+		if (player.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))) {
+			player.getCarriedItems().remove(new Item(ItemId.LIT_BLACK_CANDLE.id()));
 		}
-		n.startCombat(p);
+		n.startCombat(player);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
-		return (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock())
+	public boolean blockTalkNpc(Player player, Npc n) {
+		return (n.getID() == NpcId.KING_ARTHUR.id() && !player.getLocation().inVarrock())
 			|| n.getID() == NpcId.SIR_GAWAIN.id() || n.getID() == NpcId.SIR_LANCELOT.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.KING_ARTHUR.id() && !p.getLocation().inVarrock()) {
-			switch (p.getQuestStage(Quests.THE_HOLY_GRAIL)) {
+	public void onTalkNpc(Player player, Npc n) {
+		if (n.getID() == NpcId.KING_ARTHUR.id() && !player.getLocation().inVarrock()) {
+			switch (player.getQuestStage(Quests.THE_HOLY_GRAIL)) {
 				case 1:
 				case 2:
 				case 3:
 				case 5:
-					npcsay(p, n, "How goes thy quest?");
-					if (p.getCarriedItems().hasCatalogID(ItemId.HOLY_GRAIL.id(), Optional.of(false))) {
-						say(p, n, "I have retrieved the grail");
-						npcsay(p, n, "wow incredible you truly are a splendid knight");
-						p.getCarriedItems().remove(new Item(ItemId.HOLY_GRAIL.id()));
-						p.sendQuestComplete(Quests.THE_HOLY_GRAIL);
+					npcsay(player, n, "How goes thy quest?");
+					if (player.getCarriedItems().hasCatalogID(ItemId.HOLY_GRAIL.id(), Optional.of(false))) {
+						say(player, n, "I have retrieved the grail");
+						npcsay(player, n, "wow incredible you truly are a splendid knight");
+						player.getCarriedItems().remove(new Item(ItemId.HOLY_GRAIL.id()));
+						player.sendQuestComplete(Quests.THE_HOLY_GRAIL);
 					} else {
-						say(p, n, "I am making progress",
+						say(player, n, "I am making progress",
 							"But I have not recovered the grail yet");
-						npcsay(p, n, "Well the grail is very elusive",
+						npcsay(player, n, "Well the grail is very elusive",
 							"It may take some perserverance");
-						if (p.getQuestStage(Quests.THE_HOLY_GRAIL) == 1) {
-							npcsay(p, n, "As I said before speak to Merlin",
+						if (player.getQuestStage(Quests.THE_HOLY_GRAIL) == 1) {
+							npcsay(player, n, "As I said before speak to Merlin",
 								"in the workshop by the library");
 						}
 					}
 					return;
 				case 4:
-					say(p, n, "Hello, do you have a knight named Sir Percival?");
-					npcsay(p, n, "Ah yes I remember, young percival",
+					say(player, n, "Hello, do you have a knight named Sir Percival?");
+					npcsay(player, n, "Ah yes I remember, young percival",
 						"He rode off on a quest a couple of months ago",
 						"We are getting a bit worried, he's not back yet",
 						"He was going to try and recover the golden boots of Arkaneeses");
-					say(p, n, "Any idea which way that would be?");
-					npcsay(p, n, "Not exactly",
+					say(player, n, "Any idea which way that would be?");
+					npcsay(player, n, "Not exactly",
 						"We discovered, some magic golden feathers",
 						"They are said to point the way to the boots",
 						"they certainly point somewhere",
 						"just blowing gently on them",
 						"Will make them show the way to go");
-					if (!p.getCarriedItems().hasCatalogID(ItemId.MAGIC_GOLDEN_FEATHER.id(), Optional.of(false))) {
-						p.message("King arthur gives you a feather");
-						give(p, ItemId.MAGIC_GOLDEN_FEATHER.id(), 1);
+					if (!player.getCarriedItems().hasCatalogID(ItemId.MAGIC_GOLDEN_FEATHER.id(), Optional.of(false))) {
+						player.message("King arthur gives you a feather");
+						give(player, ItemId.MAGIC_GOLDEN_FEATHER.id(), 1);
 					}
 					return;
 				case -1:
-					npcsay(p, n, "Thankyou for retrieving the grail",
+					npcsay(player, n, "Thankyou for retrieving the grail",
 						"You shall be long remembered",
 						"As one of the greatest heros",
 						"Amongst the knights of the round table");
 					return;
 			}
 			/** KING ARTHUR MERLINS CRYSTAL**/
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
 				case 3:
 				case 4:
-					npcsay(p, n, "Welcome to the court of King Arthur");
-					npcsay(p, n, "I am King Arthur");
-					int option = multi(p, n, false, //do not send over
+					npcsay(player, n, "Welcome to the court of King Arthur");
+					npcsay(player, n, "I am King Arthur");
+					int option = multi(player, n, false, //do not send over
 						"I want to become a knight of the round table",
 						"So what are you doing in Runescape?",
 						"Thankyou very much");
 					if (option == 0) {
-						say(p, n, "I want to become a knight of the round table");
-						npcsay(p,
+						say(player, n, "I want to become a knight of the round table");
+						npcsay(player,
 							n,
 							"Well I think you need to go on a quest to prove yourself worthy",
 							"My knights like a good quest",
@@ -405,195 +405,195 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 							"Back in England he got himself trapped in some sort of magical Crystal",
 							"We've moved him from the cave we found him in",
 							"He's upstairs in his tower");
-						say(p, n, "I will see what I can do then");
-						npcsay(p, n, "Talk to my knights if you need any help");
-						if (p.getQuestStage(this) == 0) {
-							p.updateQuestStage(Quests.MERLINS_CRYSTAL, 1);
+						say(player, n, "I will see what I can do then");
+						npcsay(player, n, "Talk to my knights if you need any help");
+						if (player.getQuestStage(this) == 0) {
+							player.updateQuestStage(Quests.MERLINS_CRYSTAL, 1);
 						}
 					} else if (option == 1) {
-						say(p, n, "So what are you doing in Runescape");
-						npcsay(p, n,
+						say(player, n, "So what are you doing in Runescape");
+						npcsay(player, n,
 							"Well legend says we will return to Britain in it's time of greatest need");
-						npcsay(p, n, "But that's not for quite a while");
-						npcsay(p, n,
+						npcsay(player, n, "But that's not for quite a while");
+						npcsay(player, n,
 							"So we've moved the whole outfit here for now");
-						npcsay(p, n, "We're passing the time in Runescape");
+						npcsay(player, n, "We're passing the time in Runescape");
 					} else if (option == 2) {
-						say(p, n, "thankyou very much");
+						say(player, n, "thankyou very much");
 					}
 					break;
 				case 5:
-					say(p, n, "I have freed Merlin from his crystal");
-					npcsay(p, n, "Ah a good job well done", "I knight thee",
+					say(player, n, "I have freed Merlin from his crystal");
+					npcsay(player, n, "Ah a good job well done", "I knight thee",
 						"You are now a knight of the round table");
-					p.sendQuestComplete(Quests.MERLINS_CRYSTAL);
+					player.sendQuestComplete(Quests.MERLINS_CRYSTAL);
 					break;
 				case -1:
-					say(p, n, "Now i am a knight of the round table",
+					say(player, n, "Now i am a knight of the round table",
 						"Do you have anymore quests for me?");
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Aha, I'm glad you are here",
 						"I am sending out various knights on an important quest",
 						"I was wondering if you too would like to take up this quest?");
-					int q = multi(p, n, "Tell me of this quest",
+					int q = multi(player, n, "Tell me of this quest",
 						"I am weary of questing for the time being");
 					if (q == 0) {
 						/******************************/
 						/**START OF THE HOLY GRAIL QUEST**/
 						/******************************/
-						npcsay(p, n, "Well we recently found out",
+						npcsay(player, n, "Well we recently found out",
 							"The holy grail has passed into the runescape world",
 							"This is most fortuitous",
 							"None of my knights ever did return with it last time",
 							"Now we have the opportunity to give it another go",
 							"Maybe this time we will have more luck");
-						int startHoly = multi(p, n,
+						int startHoly = multi(player, n,
 							"I'd enjoy trying that",
 							"I may come back and try that later");
 						if (startHoly == 0) {
-							npcsay(p, n, "Go speak to Merlin",
+							npcsay(player, n, "Go speak to Merlin",
 								"He may be able to give a better clue as to where it is",
 								"Now you have freed him from the crystal",
 								"He has set up his workshop in the room next to the library");
-							p.updateQuestStage(Quests.THE_HOLY_GRAIL, 1);
+							player.updateQuestStage(Quests.THE_HOLY_GRAIL, 1);
 						} else if (startHoly == 1) {
-							npcsay(p, n, "Be sure that you come speak to me soon then");
+							npcsay(player, n, "Be sure that you come speak to me soon then");
 						}
 					} else if (q == 1) {
-						npcsay(p, n, "Maybe later then");
-						say(p, n, "Maybe so");
+						npcsay(player, n, "Maybe later then");
+						say(player, n, "Maybe so");
 					}
 					break;
 			}
 		} else if (n.getID() == NpcId.SIR_GAWAIN.id()) {
-			if (p.getCache().hasKey("talked_to_gawain")) {
-				npcsay(p, n, "Good day to you sir");
+			if (player.getCache().hasKey("talked_to_gawain")) {
+				npcsay(player, n, "Good day to you sir");
 				int option = multi(
-					p,
+					player,
 					n,
 					"Any idea how to get into Morgan Le Faye's stronghold?",
 					"Hello again");
 				if (option == 0) {
-					npcsay(p, n, "No you've got me stumped there");
+					npcsay(player, n, "No you've got me stumped there");
 				}
 				return;
 			}
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcsay(p, n, "Good day to you sir");
-					int opt = multi(p, n, false, //do not send over
+					npcsay(player, n, "Good day to you sir");
+					int opt = multi(player, n, false, //do not send over
 						"Good day",
 						"Know you of any quests Sir knight?");
 					if (opt == 0) {
-						say(p, n, "good day");
+						say(player, n, "good day");
 					} else if (opt == 1) {
-						say(p, n, "Know you of any quests sir knight?");
-						npcsay(p, n,
+						say(player, n, "Know you of any quests sir knight?");
+						npcsay(player, n,
 							"The king is the man to talk to if you want a quest");
 					}
 					break;
 				case 1:
-					npcsay(p, n, "Good day to you sir");
-					int option = multi(p, n, false, //do not send over
+					npcsay(player, n, "Good day to you sir");
+					int option = multi(player, n, false, //do not send over
 						"Good day",
 						"Any ideas on how to get Merlin out that crystal?",
 						"Do you know how Merlin got trapped");
 					if (option == 0) {
-						say(p, n, "good day");
+						say(player, n, "good day");
 					} else if (option == 1) {
-						say(p, n, "Any ideas on how to get Merlin out that crystal?");
-						npcsay(p, n, "I'm a little stumped myself",
+						say(player, n, "Any ideas on how to get Merlin out that crystal?");
+						npcsay(player, n, "I'm a little stumped myself",
 							"We've tried opening it with anything and everything");
 					} else if (option == 2) {
-						say(p, n, "Do you know how Merlin got trapped?");
-						npcsay(p, n,
+						say(player, n, "Do you know how Merlin got trapped?");
+						npcsay(player, n,
 							"I would guess this is the work of the evil Morgan Le Faye");
-						say(p, n, "And where can I find her?");
-						npcsay(p, n,
+						say(player, n, "And where can I find her?");
+						npcsay(player, n,
 							"She lives in her stronghold to the south of here");
-						npcsay(p, n,
+						npcsay(player, n,
 							"Guarded by some renegade knights led by Sir Mordred");
-						p.getCache().store("talked_to_gawain", true);
+						player.getCache().store("talked_to_gawain", true);
 						int sub_option = multi(
-							p,
+							player,
 							n,
 							"Any idea how to get into Morgan Le Faye's stronghold?",
 							"Thankyou for the information");
 						if (sub_option == 0) {
-							npcsay(p, n, "No you've got me stumped there");
+							npcsay(player, n, "No you've got me stumped there");
 						}
 					}
 					break;
 				case 2:
-					npcsay(p, n, "Good day to you sir");
-					int op = multi(p, n, false, //do not send over
+					npcsay(player, n, "Good day to you sir");
+					int op = multi(player, n, false, //do not send over
 						"Good day",
 						"Know you of any quests Sir knight?");
 					if (op == 0) {
-						say(p, n, "good day");
+						say(player, n, "good day");
 					} else if (op == 1) {
-						say(p, n, "Know you of any quests sir knight?");
-						npcsay(p, n,
+						say(player, n, "Know you of any quests sir knight?");
+						npcsay(player, n,
 							"The king is the man to talk to if you want a quest");
 					}
 					break;
 				case -1:
-					npcsay(p, n, "Good day to you sir");
-					int ope = multi(p, n, false, //do not send over
+					npcsay(player, n, "Good day to you sir");
+					int ope = multi(player, n, false, //do not send over
 						"Good day",
 						"Know you of any quests Sir knight?");
 					if (ope == 0) {
-						say(p, n, "good day");
+						say(player, n, "good day");
 					} else if (ope == 1) {
-						say(p, n, "Know you of any quests sir knight?");
-						npcsay(p, n, "I think you've done the main quest we were on right now");
+						say(player, n, "Know you of any quests sir knight?");
+						npcsay(player, n, "I think you've done the main quest we were on right now");
 					}
 					break;
 			}
 		} else if (n.getID() == NpcId.SIR_LANCELOT.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Greetings I am Sir Lancelot the greatest knight in the land",
 						"What do you want?");
-					if (p.getCache().hasKey("talked_to_gawain")) {
-						int opt = multi(p, n,
+					if (player.getCache().hasKey("talked_to_gawain")) {
+						int opt = multi(player, n,
 							"I want to get Merlin out of the crystal",
 							"You're a little full of yourself aren't you?",
 							"Any ideas on how to get into Morgan Le Faye's stronghold?");
 						if (opt == 0) {
-							npcsay(p, n,
+							npcsay(player, n,
 								"Well the knights of the round table can't manage it",
 								"I can't see how a commoner like you could succeed where we have failed");
 						} else if (opt == 1) {
-							npcsay(p, n,
+							npcsay(player, n,
 								"I have every right to be proud of myself",
 								"My prowess in battle is world renowned");
 						} else if (opt == 2) {
-							npcsay(p,
+							npcsay(player,
 								n,
 								"That stronghold is built in a strong defensive position",
 								"It's on a big rock sticking out into the sea",
 								"There are two ways in that I know of, the large heavy front doors",
 								"And the sea entrance, only penetrable by boat",
 								"They take all their deliveries by boat");
-							p.updateQuestStage(Quests.MERLINS_CRYSTAL, 2);
-							p.getCache().remove("talked_to_gawain");
+							player.updateQuestStage(Quests.MERLINS_CRYSTAL, 2);
+							player.getCache().remove("talked_to_gawain");
 						}
 					} else {
-						int opt = multi(p, n,
+						int opt = multi(player, n,
 							"I want to get Merlin out of the crystal",
 							"You're a little full of yourself aren't you?");
 						if (opt == 0) {
-							npcsay(p,
+							npcsay(player,
 								n,
 								"Well the knights of the round table can't manage it",
 								"I can't see how a commoner like you could succeed where we have failed");
 						} else if (opt == 1) {
-							npcsay(p, n,
+							npcsay(player, n,
 								"I have every right to be proud of myself",
 								"My prowess in battle is world renowned");
 						}
@@ -601,18 +601,18 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 					break;
 				case 2:
 				case -1:
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Greetings I am Sir Lancelot the greatest knight in the land",
 						"What do you want?");
-					int opt = multi(p, n,
+					int opt = multi(player, n,
 						"You're a little full of yourself aren't you?",
 						"I seek a quest");
 					if (opt == 0) {
-						npcsay(p, n, "I have every right to be proud of myself",
+						npcsay(player, n, "I have every right to be proud of myself",
 							"My prowess in battle is world renowned");
 					} else if (opt == 1) {
-						npcsay(p, n, "Leave questing to the profesionals",
+						npcsay(player, n, "Leave questing to the profesionals",
 							"Such as myself");
 					}
 					break;

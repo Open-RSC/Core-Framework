@@ -20,22 +20,22 @@ public class Fionella implements ShopInterface, TalkNpcTrigger {
 		new Item(ItemId.FULL_ATTACK_POTION.id(), 3), new Item(ItemId.STEEL_ARROWS.id(), 50));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.FIONELLA.id()) {
-			npcsay(p, n, "Can I help you at all?");
-			int menu = multi(p, n,
+			npcsay(player, n, "Can I help you at all?");
+			int menu = multi(player, n,
 				"Yes please. What are you selling?",
 				"No thanks");
 			if (menu == 0) {
-				npcsay(p, n, "Take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Take a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FIONELLA.id();
 	}
 

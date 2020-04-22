@@ -14,85 +14,85 @@ public class TeleportStone implements OpInvTrigger {
 	private final int TELEPORT_STONE = 2107;
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == TELEPORT_STONE;
 	}
 
 	@Override
-	public void onOpInv(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
-			mes(p, "the stone starts shaking...");
-			p.message("a magical portal opens up, where would you like to go?");
+			mes(player, "the stone starts shaking...");
+			player.message("a magical portal opens up, where would you like to go?");
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};
-			int menu = multi(p, teleLoc);
+			int menu = multi(player, teleLoc);
 			//if (p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
 			//}
-			if (p.getLocation().wildernessLevel() >= 30 || p.getLocation().isInFisherKingRealm()
-					|| p.getLocation().isInsideGrandTreeGround()
-					|| (p.getLocation().inModRoom() && !p.isAdmin())) {
-				p.message("A mysterious force blocks your teleport!");
-				p.message("You can't use this teleport after level 30 wilderness");
+			if (player.getLocation().wildernessLevel() >= 30 || player.getLocation().isInFisherKingRealm()
+					|| player.getLocation().isInsideGrandTreeGround()
+					|| (player.getLocation().inModRoom() && !player.isAdmin())) {
+				player.message("A mysterious force blocks your teleport!");
+				player.message("You can't use this teleport after level 30 wilderness");
 				return;
 			}
-			if (p.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				mes(p, "You can't teleport while holding Ana,",
+			if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
+				mes(player, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
-			if (p.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
-				p.message("the plague sample is too delicate...");
-				p.message("it disintegrates in the crossing");
-				while (p.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+			if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
+				player.message("the plague sample is too delicate...");
+				player.message("it disintegrates in the crossing");
+				while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+					player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			switch (menu) {
 				case -1:// stop them.
 					return;
 				case 0: // lumb
-					p.teleport(125, 648);
+					player.teleport(125, 648);
 					break;
 				case 1: // dray
-					p.teleport(214, 632);
+					player.teleport(214, 632);
 					break;
 				case 2: // falla
-					p.teleport(304, 542);
+					player.teleport(304, 542);
 					break;
 				case 3: // edge
-					p.teleport(223, 447);
+					player.teleport(223, 447);
 					break;
 				case 4: // varrock
-					p.teleport(122, 509);
+					player.teleport(122, 509);
 					break;
 				case 5: // alkharid
-					p.teleport(85, 691);
+					player.teleport(85, 691);
 					break;
 				case 6: // Karamja
-					p.teleport(372, 706);
+					player.teleport(372, 706);
 					break;
 				case 7: // Yanille
-					p.teleport(583, 747);
+					player.teleport(583, 747);
 					break;
 				case 8: // Ardougne
-					p.teleport(557, 606);
+					player.teleport(557, 606);
 					break;
 				case 9: // Catherby
-					p.teleport(442, 503);
+					player.teleport(442, 503);
 					break;
 				case 10: // Seers
-					p.teleport(493, 456);
+					player.teleport(493, 456);
 					break;
 				case 11: // Gnome Stronghold
-					p.teleport(703, 481);
+					player.teleport(703, 481);
 					break;
 				case 12:
 					return;
 			}
-			p.getCarriedItems().remove(new Item(TELEPORT_STONE));
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			p.message("You landed in " + teleLoc[menu]);
+			player.getCarriedItems().remove(new Item(TELEPORT_STONE));
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.message("You landed in " + teleLoc[menu]);
 		}
 	}
 }

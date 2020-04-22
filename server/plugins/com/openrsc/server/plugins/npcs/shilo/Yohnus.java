@@ -15,36 +15,36 @@ import com.openrsc.server.constants.NpcId;
 public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.YOHNUS.id()) {
-			say(p, n, "Hello");
-			npcsay(p, n, "Hello Bwana, can I help you in anyway?");
-			yohnusChat(p, n);
+			say(player, n, "Hello");
+			npcsay(player, n, "Hello Bwana, can I help you in anyway?");
+			yohnusChat(player, n);
 		}
 	}
 
-	private void yohnusChat(Player p, Npc n) {
-		int menu = multi(p, n, false, //do not send over
+	private void yohnusChat(Player player, Npc n) {
+		int menu = multi(player, n, false, //do not send over
 			"Use Furnace - 20 Gold",
 			"No thanks!");
 		if (menu == 0) {
-			if (ifheld(p, ItemId.COINS.id(), 20)) {
-				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
-				npcsay(p, n, "Thanks Bwana!",
+			if (ifheld(player, ItemId.COINS.id(), 20)) {
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
+				npcsay(player, n, "Thanks Bwana!",
 					"Enjoy the facilities!");
-				p.teleport(400, 844);
-				p.message("You're shown into the Blacksmiths where you can see a furnace");
+				player.teleport(400, 844);
+				player.message("You're shown into the Blacksmiths where you can see a furnace");
 			} else {
-				npcsay(p, n, "Sorry Bwana, it seems that you are short of funds.");
+				npcsay(player, n, "Sorry Bwana, it seems that you are short of funds.");
 			}
 		} else if (menu == 1) {
-			say(p, n, "No thanks!");
-			npcsay(p, n, "Very well Bwana, have a nice day.");
+			say(player, n, "No thanks!");
+			npcsay(player, n, "Very well Bwana, have a nice day.");
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.YOHNUS.id();
 	}
 
@@ -54,18 +54,18 @@ public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == 165) {
-			if (p.getY() <= 844) {
-				p.teleport(400, 845);
+			if (player.getY() <= 844) {
+				player.teleport(400, 845);
 				return;
 			}
-			Npc yohnus = ifnearvisnpc(p, NpcId.YOHNUS.id(), 5);
+			Npc yohnus = ifnearvisnpc(player, NpcId.YOHNUS.id(), 5);
 			if (yohnus != null) {
-				npcsay(p, yohnus, "Sorry but the blacksmiths is closed.",
+				npcsay(player, yohnus, "Sorry but the blacksmiths is closed.",
 					"But I can let you use the furnace at the cost",
 					"of 20 gold pieces.");
-				yohnusChat(p, yohnus);
+				yohnusChat(player, yohnus);
 			}
 		}
 	}

@@ -78,20 +78,20 @@ public class Point {
 		return null;
 	}
 
-	public final boolean withinRange(Point p, int radius) {
+	public final boolean withinRange(Point point, int radius) {
 		/*int xDiff = this.x - p.x;
 		int yDiff = this.y - p.y;
 
 		return xDiff <= radius && xDiff >= -radius && yDiff <= radius
 			&& yDiff >= -radius;*/
-		return getDistanceTo(p) <= radius;
+		return getDistanceTo(point) <= radius;
 	}
 
-	public final boolean withinGridRange(Point p, int gridSize) {
+	public final boolean withinGridRange(Point point, int gridSize) {
 		// Snap coordinates to an 8x8 grid
 		// radius is compared in multiples of 8
-		final int xDiff = (this.x >> 3) - (p.x >> 3);
-		final int yDiff = (this.y >> 3) - (p.y >> 3);
+		final int xDiff = (this.x >> 3) - (point.x >> 3);
+		final int yDiff = (this.y >> 3) - (point.y >> 3);
 		return xDiff <= gridSize && xDiff >= -gridSize && yDiff <= gridSize && yDiff >= -gridSize;
 	}
 
@@ -260,8 +260,8 @@ public class Point {
 			return false;
 		}
 
-		Point p = (Point) o;
-		return x == p.x && y == p.y;
+		Point point = (Point) o;
+		return x == point.x && y == point.y;
 	}
 
 	@Override

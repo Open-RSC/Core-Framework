@@ -11,26 +11,26 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class PlayerAppearanceUpdater implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (!player.isChangingAppearance()) {
 			player.setSuspiciousPlayer(true, "player update packet without changing appearance");
 			return;
 		}
 		player.setChangingAppearance(false);
-		byte headGender = p.readByte();
-		byte headType = p.readByte();
-		byte bodyGender = p.readByte();
+		byte headGender = packet.readByte();
+		byte headType = packet.readByte();
+		byte bodyGender = packet.readByte();
 
-		p.readByte(); // wtf is this?
+		packet.readByte(); // wtf is this?
 
-		int hairColour = (int) p.readByte();
-		int topColour = (int) p.readByte();
-		int trouserColour = (int) p.readByte();
-		int skinColour = (int) p.readByte();
+		int hairColour = packet.readByte();
+		int topColour = packet.readByte();
+		int trouserColour = packet.readByte();
+		int skinColour = packet.readByte();
 
-		int playerMode1 = (int) p.readByte();
-		int playerMode2 = (int) p.readByte();
+		int playerMode1 = packet.readByte();
+		int playerMode2 = packet.readByte();
 
 		int headSprite = headType + 1;
 		int bodySprite = bodyGender + 1;

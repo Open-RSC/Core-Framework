@@ -13,17 +13,17 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Guildmaster implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GUILDMASTER.id();
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("What is this place?") {
 			@Override
 			public void action() {
-				npcsay(p,
+				npcsay(player,
 					n,
 					"This is the champions' guild",
 					"Only Adventurers who have proved themselves worthy",
@@ -37,17 +37,17 @@ public class Guildmaster implements TalkNpcTrigger {
 			"Do you know where I could get a rune plate mail body?") {
 			@Override
 			public void action() {
-				npcsay(p,
+				npcsay(player,
 					n,
 					"I have a friend called Oziach who lives by the cliffs",
 					"He has a supply of rune plate mail",
 					"He may sell you some if you're lucky, he can be a little strange sometimes though");
-				if (p.getQuestStage(Quests.DRAGON_SLAYER) == 0) {
-					p.updateQuestStage(Quests.DRAGON_SLAYER, 1);
+				if (player.getQuestStage(Quests.DRAGON_SLAYER) == 0) {
+					player.updateQuestStage(Quests.DRAGON_SLAYER, 1);
 				}
 			}
 		});
-		defaultMenu.showMenu(p);
+		defaultMenu.showMenu(player);
 	}
 
 }

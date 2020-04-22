@@ -21,8 +21,8 @@ public class OziachsRunePlateShop implements ShopInterface,
 		1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
-		return n.getID() == NpcId.OZIACH.id() && p.getQuestStage(Quests.DRAGON_SLAYER) == -1;
+	public boolean blockTalkNpc(final Player player, final Npc n) {
+		return n.getID() == NpcId.OZIACH.id() && player.getQuestStage(Quests.DRAGON_SLAYER) == -1;
 	}
 
 	@Override
@@ -36,13 +36,13 @@ public class OziachsRunePlateShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		say(p, n, "I have slain the dragon");
-		npcsay(p, n, "Well done");
-		final int option = multi(p, n, "Can I buy a rune plate mail body now please?", "Thank you");
+	public void onTalkNpc(final Player player, final Npc n) {
+		say(player, n, "I have slain the dragon");
+		npcsay(player, n, "Well done");
+		final int option = multi(player, n, "Can I buy a rune plate mail body now please?", "Thank you");
 		if (option == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 }

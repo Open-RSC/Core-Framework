@@ -10,7 +10,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 public final class ChatHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player sender) throws Exception {
+	public void handlePacket(Packet packet, Player sender) throws Exception {
 		if (sender.isMuted()) {
 			sender.message(sender.getWorld().getServer().getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
 		}
@@ -21,7 +21,7 @@ public final class ChatHandler implements PacketHandler {
 
 		String message = DataConversions.upperCaseAllFirst(
 			DataConversions.stripBadCharacters(
-				DataConversions.getEncryptedString(p, Short.MAX_VALUE)));
+				DataConversions.getEncryptedString(packet, Short.MAX_VALUE)));
 
 		ChatMessage chatMessage = new ChatMessage(sender, message);
 		sender.getUpdateFlags().setChatMessage(chatMessage);

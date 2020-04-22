@@ -15,7 +15,7 @@ public class PotFlour implements UseObjTrigger, TakeObjTrigger {
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem item) {
+	public boolean blockTakeObj(Player player, GroundItem item) {
 		return item.getID() == ItemId.FLOUR.id();
 	}
 

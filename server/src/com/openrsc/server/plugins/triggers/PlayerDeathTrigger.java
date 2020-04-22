@@ -6,13 +6,13 @@ public interface PlayerDeathTrigger {
 	/**
 	 * Called on a players death
 	 *
-	 * @param p
+	 * @param player
 	 */
-	void onPlayerDeath(Player p);
+	void onPlayerDeath(Player player);
 	/**
 	 * Return true to prevent the default action on death (stake item drop, wild item drop etc)
 	 *
-	 * @param p
+	 * @param player
 	 * @return
 	 */
-	boolean blockPlayerDeath(Player p);}
+	boolean blockPlayerDeath(Player player);}

@@ -25,7 +25,7 @@ public final class Tailor implements ShopInterface,
 		new Item(ItemId.EYE_PATCH.id(), 3));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.TAILOR.id();
 	}
 
@@ -40,19 +40,19 @@ public final class Tailor implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Now you look like someone who goes to a lot of fancy dress parties");
-		say(p, n, "Errr... what are you saying exactly?");
-		npcsay(p, n, "I'm just saying that perhaps you would like to peruse my selection of garments");
-		int opt = multi(p, n, false, //do not send over
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Now you look like someone who goes to a lot of fancy dress parties");
+		say(player, n, "Errr... what are you saying exactly?");
+		npcsay(player, n, "I'm just saying that perhaps you would like to peruse my selection of garments");
+		int opt = multi(player, n, false, //do not send over
 			"I think I might just leave the perusing for now thanks",
 			"OK,lets see what you've got then");
 		if (opt == 0) {
-			say(p, n, "I think I might just leave the perusing for now thanks");
+			say(player, n, "I think I might just leave the perusing for now thanks");
 		} else if (opt == 1) {
-			say(p, n, "OK,let's see what you've got then");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "OK,let's see what you've got then");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 

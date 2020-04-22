@@ -60,29 +60,29 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	 * Merlin should be the one of library (393)
 	 */
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.MERLIN_LIBRARY.id(), NpcId.BLACK_KNIGHT_TITAN.id(), NpcId.UNHAPPY_PEASANT.id(),
 				NpcId.FISHERMAN.id(), NpcId.FISHER_KING.id(), NpcId.KING_PERCIVAL.id(), NpcId.HAPPY_PEASANT.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.MERLIN_LIBRARY.id()) {
-			switch (p.getQuestStage(Quests.THE_HOLY_GRAIL)) {
+			switch (player.getQuestStage(Quests.THE_HOLY_GRAIL)) {
 				case 1:
 				case 2:
 				case 3:
 					say(
-						p,
+						player,
 						n,
 						"Hello King Arthur has sent me on a quest for the holy grail",
 						"He thought you could offer some assistance");
-					npcsay(p, n, "Ah yes the holy grail",
+					npcsay(player, n, "Ah yes the holy grail",
 						"That is a powerful artifact indeed",
 						"Returning it here would help Camelot a lot",
 						"Due to its nature the holy grail is likely to reside in a holy place");
-					say(p, n, "Any suggestions?");
-					npcsay(p,
+					say(player, n, "Any suggestions?");
+					npcsay(player,
 						n,
 						"I believe there is a holy island somewhere not far away",
 						"I'm not entirely sure",
@@ -92,84 +92,84 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 						"He returned from the quest many years after everyone else",
 						"He seems to know something about it",
 						"but he can only speak about those experiences cryptically");
-					if (p.getQuestStage(this) == 1) {
-						setQuestStage(p, this, 2);
+					if (player.getQuestStage(this) == 1) {
+						setQuestStage(player, this, 2);
 					}
-					int menu = multi(p, n, false, //do not send over
+					int menu = multi(player, n, false, //do not send over
 						"Thankyou for the advice",
 						"Where can I find Sir Galahad?");
 					if (menu == 0) {
-						say(p, n, "Thankyou for the advice");
+						say(player, n, "Thankyou for the advice");
 					} else if (menu == 1) {
-						say(p, n, "Where can I find Sir Galahad");
-						npcsay(p,
+						say(player, n, "Where can I find Sir Galahad");
+						npcsay(player,
 							n,
 							"Galahad now lives a life of religious contemplation",
 							"He lives somewhere west of McGrubors Wood");
 					}
 					break;
 				case -1:
-					npcsay(p, n, "hello I'm working on a new spell",
+					npcsay(player, n, "hello I'm working on a new spell",
 						"To turn people into hedgehogs");
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
-			npcsay(p, n, "I am the black knight titan",
+			npcsay(player, n, "I am the black knight titan",
 				"You must pass through me before you can continue in this realm");
-			int menu = multi(p, n, "Ok, have at ye oh evil knight",
+			int menu = multi(player, n, "Ok, have at ye oh evil knight",
 				"Actually I think I'll run away");
 			if (menu == 0) {
 				delay(800);
-				n.setChasing(p);
+				n.setChasing(player);
 			}
 		}
 		else if (n.getID() == NpcId.UNHAPPY_PEASANT.id()) {
-			npcsay(p, n, "Woe is me", "Our crops are all failing",
+			npcsay(player, n, "Woe is me", "Our crops are all failing",
 				"How shall I feed myself this winter?");
 		}
 		else if (n.getID() == NpcId.FISHERMAN.id()) {
-			npcsay(p, n, "Hi - I don't get many visitors here");
-			int menu = multi(p, n, "How's the fishing?",
+			npcsay(player, n, "Hi - I don't get many visitors here");
+			int menu = multi(player, n, "How's the fishing?",
 				"Any idea how to get into the castle?",
 				"Yes well this place is a dump");
 			if (menu == 0) {
-				npcsay(p, n, "Not amazing",
+				npcsay(player, n, "Not amazing",
 					"Not many fish can live in this gungey stuff",
 					"I remember when this was a pleasant river",
 					"Teaming with every sort of fish");
 			} else if (menu == 1) {
-				npcsay(p, n, "why thats easy",
+				npcsay(player, n, "why thats easy",
 					"just ring one of the bells outside");
-				say(p, n, "I didn't see any bells");
-				npcsay(p, n, "You must be blind then",
+				say(player, n, "I didn't see any bells");
+				npcsay(player, n, "You must be blind then",
 					"There's always bells there when I go to the castle");
-				addobject(ItemId.BELL.id(), 1, 421, 30, p);
+				addobject(ItemId.BELL.id(), 1, 421, 30, player);
 			} else if (menu == 2) {
-				npcsay(p, n, "This place used to be very beautiful",
+				npcsay(player, n, "This place used to be very beautiful",
 					"However as our king grows old and weak",
 					"the land seems to be dying too");
 			}
 		}
 		else if (n.getID() == NpcId.FISHER_KING.id()) {
-			npcsay(p, n, "Ah you got inside at last",
+			npcsay(player, n, "Ah you got inside at last",
 				"You spent all that time fumbling around outside",
 				"I thought you'd never make it here");
-			if (p.getQuestStage(this) == 3) {
-				p.updateQuestStage(this, 4);
+			if (player.getQuestStage(this) == 3) {
+				player.updateQuestStage(this, 4);
 			}
-			int menu = multi(p, n,
+			int menu = multi(player, n,
 				"How did you know what I have been doing?",
 				"I seek the holy grail", "You don't look too well");
 			if (menu == 0) {
-				npcsay(p, n, "Oh I can see what is happening in my realm",
+				npcsay(player, n, "Oh I can see what is happening in my realm",
 					"I have sent clues to help you get here",
 					"Such as the fisherman", "And the crone");
-				int mm = multi(p, n, "I seek the holy grail",
+				int mm = multi(player, n, "I seek the holy grail",
 					"You don't look too well",
 					"Do you mind if I have a look around?");
 				if (mm == 0) {
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Ah excellent, a knight come to seek the holy grail",
 						"Maybe now our land can be restored to it's former glory",
@@ -177,41 +177,41 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 						"legend has it a questing knight will one day",
 						"Work out how to restore our land",
 						"then he will claim the grail as his prize");
-					say(p, n, "Any ideas how I can restore the land?");
-					npcsay(p, n, "None at all");
-					int m = multi(p, n, false, //do not send over
+					say(player, n, "Any ideas how I can restore the land?");
+					npcsay(player, n, "None at all");
+					int m = multi(player, n, false, //do not send over
 						"You don't look to well",
 						"Do you mind if I have a look around?");
 					if (m == 0) {
-						say(p, n, "You don't look too well");
-						npcsay(p, n, "Nope I don't feel so good either",
+						say(player, n, "You don't look too well");
+						npcsay(player, n, "Nope I don't feel so good either",
 							"I fear my life is running short",
 							"Alas my son and heir is not here",
 							"I am waiting for my son to return to this castle",
 							"If you could find my son that would be a great weight off my shoulders");
-						say(p, n, "Who is your son?");
-						npcsay(p, n, "He is known as Percival",
+						say(player, n, "Who is your son?");
+						npcsay(player, n, "He is known as Percival",
 							"I believe he is a knight of the round table");
-						say(p, n, "I shall go and see if I can find him");
+						say(player, n, "I shall go and see if I can find him");
 					} else if (m == 1) {
-						say(p, n, "Do you mind if I have a look around?");
-						npcsay(p, n, "No not at all, be my guest");
+						say(player, n, "Do you mind if I have a look around?");
+						npcsay(player, n, "No not at all, be my guest");
 					}
 				} else if (mm == 1) {
-					npcsay(p, n, "Nope I don't feel so good either",
+					npcsay(player, n, "Nope I don't feel so good either",
 						"I fear my life is running short",
 						"Alas my son and heir is not here",
 						"I am waiting for my son to return to this castle",
 						"If you could find my son that would be a great weight off my shoulders");
-					say(p, n, "Who is your son?");
-					npcsay(p, n, "He is known as Percival",
+					say(player, n, "Who is your son?");
+					npcsay(player, n, "He is known as Percival",
 						"I believe he is a knight of the round table");
-					say(p, n, "I shall go and see if I can find him");
+					say(player, n, "I shall go and see if I can find him");
 				} else if (mm == 2) {
-					npcsay(p, n, "No not at all, be my guest");
+					npcsay(player, n, "No not at all, be my guest");
 				}
 			} else if (menu == 1) {
-				npcsay(p,
+				npcsay(player,
 					n,
 					"Ah excellent, a knight come to seek the holy grail",
 					"Maybe now our land can be restored to it's former glory",
@@ -219,40 +219,40 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 					"legend has it a questing knight will one day",
 					"Work out how to restore our land",
 					"then he will claim the grail as his prize");
-				say(p, n, "Any ideas how I can restore the land?");
-				npcsay(p, n, "None at all");
-				int m = multi(p, n, false, //do not send over
+				say(player, n, "Any ideas how I can restore the land?");
+				npcsay(player, n, "None at all");
+				int m = multi(player, n, false, //do not send over
 					"You don't look to well",
 					"Do you mind if I have a look around?");
 				if (m == 0) {
-					say(p, n, "You don't look too well");
-					npcsay(p, n, "Nope I don't feel so good either",
+					say(player, n, "You don't look too well");
+					npcsay(player, n, "Nope I don't feel so good either",
 						"I fear my life is running short",
 						"Alas my son and heir is not here",
 						"I am waiting for my son to return to this castle",
 						"If you could find my son that would be a great weight off my shoulders");
-					say(p, n, "Who is your son?");
-					npcsay(p, n, "He is known as Percival",
+					say(player, n, "Who is your son?");
+					npcsay(player, n, "He is known as Percival",
 						"I believe he is a knight of the round table");
-					say(p, n, "I shall go and see if I can find him");
+					say(player, n, "I shall go and see if I can find him");
 				} else if (m == 1) {
-					say(p, n, "Do you mind if I have a look around?");
-					npcsay(p, n, "No not at all, be my guest");
+					say(player, n, "Do you mind if I have a look around?");
+					npcsay(player, n, "No not at all, be my guest");
 				}
 			} else if (menu == 2) {
-				npcsay(p, n, "Nope I don't feel so good either",
+				npcsay(player, n, "Nope I don't feel so good either",
 					"I fear my life is running short",
 					"Alas my son and heir is not here",
 					"I am waiting for my son to return to this castle",
 					"If you could find my son that would be a great weight off my shoulders");
-				say(p, n, "Who is your son?");
-				npcsay(p, n, "He is known as Percival",
+				say(player, n, "Who is your son?");
+				npcsay(player, n, "He is known as Percival",
 					"I believe he is a knight of the round table");
-				say(p, n, "I shall go and see if I can find him");
+				say(player, n, "I shall go and see if I can find him");
 			}
 		}
 		else if (n.getID() == NpcId.KING_PERCIVAL.id()) {
-			npcsay(p,
+			npcsay(player,
 				n,
 				"You missed all the excitement",
 				"I got here and agreed to take over duties as king here",
@@ -261,60 +261,60 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				"Thankyou very much for showing me the way home");
 		}
 		else if (n.getID() == NpcId.HAPPY_PEASANT.id()) {
-			npcsay(p, n, "Oh happy day",
+			npcsay(player, n, "Oh happy day",
 				"suddenly our crops are growing again",
 				"It'll be a bumper harvest this year");
 		}
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
 		return obj.getID() == 117 || obj.getID() == 116;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == 117) {
-			if (p.getQuestStage(this) >= 1
-				&& atQuestStage(p, Quests.MERLINS_CRYSTAL, -1)
-				|| p.getQuestStage(this) == -1) {
-				doDoor(obj, p);
+			if (player.getQuestStage(this) >= 1
+				&& atQuestStage(player, Quests.MERLINS_CRYSTAL, -1)
+				|| player.getQuestStage(this) == -1) {
+				doDoor(obj, player);
 			} else {
-				p.message("The door won't open");
+				player.message("The door won't open");
 			}
 		}
 		if (obj.getID() == 116) {
-			p.message("You go through the door");
-			doDoor(obj, p);
-			if (p.getCarriedItems().getInventory().countId(ItemId.MAGIC_WHISTLE.id()) != 2
-				&& (p.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 || p
+			player.message("You go through the door");
+			doDoor(obj, player);
+			if (player.getCarriedItems().getInventory().countId(ItemId.MAGIC_WHISTLE.id()) != 2
+				&& (player.getQuestStage(Quests.THE_HOLY_GRAIL) >= 3 || player
 				.getQuestStage(Quests.THE_HOLY_GRAIL) == -1)) {
-				addobject(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, p);
-				addobject(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, p);
+				addobject(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, player);
+				addobject(ItemId.MAGIC_WHISTLE.id(), 1, 204, 2440, player);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.MAGIC_WHISTLE.id() || item.getCatalogId() == ItemId.BELL.id() || item.getCatalogId() == ItemId.MAGIC_GOLDEN_FEATHER.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == ItemId.MAGIC_WHISTLE.id()) {
-			if (p.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
-				if (p.getQuestStage(this) == 5 || p.getQuestStage(this) == -1) {
-					p.teleport(492, 18, false);
+			if (player.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
+				if (player.getQuestStage(this) == 5 || player.getQuestStage(this) == -1) {
+					player.teleport(492, 18, false);
 				} else {
-					p.teleport(396, 18, false);
+					player.teleport(396, 18, false);
 				}
-			} else if (p.getLocation().inBounds(388, 4, 427, 40)) { // 1st
+			} else if (player.getLocation().inBounds(388, 4, 427, 40)) { // 1st
 				// ISLAND
-				p.teleport(490, 651, false);
-			} else if (p.getLocation().inBounds(484, 4, 523, 40)
-				|| p.getLocation().inBounds(511, 976, 519, 984)
-				|| p.getLocation().inBounds(511, 1920, 518, 1925)) { // 2nd
+				player.teleport(490, 651, false);
+			} else if (player.getLocation().inBounds(484, 4, 523, 40)
+				|| player.getLocation().inBounds(511, 976, 519, 984)
+				|| player.getLocation().inBounds(511, 1920, 518, 1925)) { // 2nd
 				// ISLAND
 				// -
 				// 2nd
@@ -323,36 +323,36 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				// top
 				// floor
 				// castle.
-				p.teleport(490, 651, false);
+				player.teleport(490, 651, false);
 			} else {
-				mes(p, "The whistle makes no noise",
+				mes(player, "The whistle makes no noise",
 					"It will not work in this location");
 			}
 		}
 		else if (item.getCatalogId() == ItemId.BELL.id()) {
-			p.message("Ting a ling a ling");
-			if (p.getLocation().inBounds(411, 27, 425, 40)) {
-				p.message("Somehow you are now inside the castle");
-				p.teleport(420, 35, false);
+			player.message("Ting a ling a ling");
+			if (player.getLocation().inBounds(411, 27, 425, 40)) {
+				player.message("Somehow you are now inside the castle");
+				player.teleport(420, 35, false);
 			}
 		} //Prod sack = 328, 446
 		else if (item.getCatalogId() == ItemId.MAGIC_GOLDEN_FEATHER.id()) {
-			int x = p.getLocation().getX();
-			int y = p.getLocation().getY();
+			int x = player.getLocation().getX();
+			int y = player.getLocation().getY();
 			int sX = 328;
 			int sY = 446;
 			int pX = x - sX;
 			int pY = y - sY;
-			if (p.getQuestStage(this) == -1) {
-				p.message("nothing interesting happens");
+			if (player.getQuestStage(this) == -1) {
+				player.message("nothing interesting happens");
 			} else if (Math.abs(pY) > Math.abs(pX) && y <= sY) {
-				p.message("the feather points south");
+				player.message("the feather points south");
 			} else if (Math.abs(pX) > Math.abs(pY) && x > sX) {
-				p.message("the feather points east");
+				player.message("the feather points east");
 			} else if (x < sX) {
-				p.message("the feather points west");
+				player.message("the feather points west");
 			} else if (Math.abs(pY) > Math.abs(pX) && y >= sY) {
-				p.message("the feather points north");
+				player.message("the feather points north");
 			} else {
 				// TODO we may or may not need this.
 			}
@@ -360,23 +360,23 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BLACK_KNIGHT_TITAN.id();
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
-			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
-				n.killedBy(p);
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
+				n.killedBy(player);
 				n.resetCombatEvent();
-				p.message("Well done you have defeated the black knight titan");
-				p.teleport(414, 11, false);
+				player.message("Well done you have defeated the black knight titan");
+				player.teleport(414, 11, false);
 			} else {
 				n.resetCombatEvent();
 				n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
 				n.teleport(n.getLoc().startX, n.getLoc().startY);
-				p.message("Maybe you need something more to beat the titan");
+				player.message("Maybe you need something more to beat the titan");
 			}
 		}
 	}
@@ -387,38 +387,38 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	 * "You must complete some task here before you are worthy");
 	 */
 	@Override
-	public void onTakeObj(Player p, GroundItem i) {
+	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924) {
-			mes(p, "You feel that the grail shouldn't be moved",
+			mes(player, "You feel that the grail shouldn't be moved",
 				"You must complete some task here before you are worthy");
 		}
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		return i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924;
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == 408;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 408) {
-			if (p.getQuestStage(this) == 4) {
-				mes(p, "You hear muffled noises from the sack");
-				p.message("You open the sack");
-				Npc percival = addnpc(p.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
-				npcsay(p, percival, "Wow thankyou",
+			if (player.getQuestStage(this) == 4) {
+				mes(player, "You hear muffled noises from the sack");
+				player.message("You open the sack");
+				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
+				npcsay(player, percival, "Wow thankyou",
 					"I could hardly breathe in there");
-				int menu = multi(p, percival,
+				int menu = multi(player, percival,
 					"How did you end up in a sack?",
 					"Come with me, I shall make you a king",
 					"Your father wishes to speak to you");
 				if (menu == 0) {
-					npcsay(p,
+					npcsay(player,
 						percival,
 						"It's a little embarrassing really",
 						"After going on a long and challenging quest",
@@ -430,52 +430,52 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 						"To put me in this sack",
 						"Then they forgot about me",
 						"I'm now very hungry and my bones feel very stiff");
-					int menu2 = multi(p, percival,
+					int menu2 = multi(player, percival,
 						"Come with me, I shall make you a king",
 						"Your father wishes to speak to you");
 					if (menu2 == 0) {
-						npcsay(p, percival, "What are you talking about?",
+						npcsay(player, percival, "What are you talking about?",
 							"The king of where?");
-						say(p, percival,
+						say(player, percival,
 							"Your father is apparently someone called the fisher king");
-						beHisHeir(p, percival);
+						beHisHeir(player, percival);
 					} else if (menu2 == 1) {
-						npcsay(p, percival,
+						npcsay(player, percival,
 							"My father? you have spoken to him recently?");
-						beHisHeir(p, percival);
+						beHisHeir(player, percival);
 					}
 				} else if (menu == 1) {
-					npcsay(p, percival, "What are you talking about?",
+					npcsay(player, percival, "What are you talking about?",
 						"The king of where?");
-					say(p, percival,
+					say(player, percival,
 						"Your father is apparently someone called the fisher king");
-					beHisHeir(p, percival);
+					beHisHeir(player, percival);
 				} else if (menu == 2) {
-					npcsay(p, percival,
+					npcsay(player, percival,
 						"My father? you have spoken to him recently?");
-					beHisHeir(p, percival);
+					beHisHeir(player, percival);
 				}
 			} else {
-				p.message("nothing interesting happens");
+				player.message("nothing interesting happens");
 			}
 		}
 	}
 
-	private void beHisHeir(Player p, Npc percival) {
-		say(p, percival,
+	private void beHisHeir(Player player, Npc percival) {
+		say(player, percival,
 				"He is dying and wishes you to be his heir");
-		npcsay(p, percival, "I have been told that before",
+		npcsay(player, percival, "I have been told that before",
 			"I have not been able to find that castle again though");
-		say(p, percival,
+		say(player, percival,
 			"Well I do have the means to get us there - a magic whistle");
-		if (p.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
-			mes(p, "You give a whistle to Sir Percival",
+		if (player.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
+			mes(player, "You give a whistle to Sir Percival",
 				"You tell sir Percival what to do with the whistle");
-			p.getCarriedItems().remove(new Item(ItemId.MAGIC_WHISTLE.id()));
-			npcsay(p, percival, "Ok I will see you there then");
-			p.updateQuestStage(this, 5);
+			player.getCarriedItems().remove(new Item(ItemId.MAGIC_WHISTLE.id()));
+			npcsay(player, percival, "Ok I will see you there then");
+			player.updateQuestStage(this, 5);
 		} else {
-			say(p, percival, "I will just go and get you one");
+			say(player, percival, "I will just go and get you one");
 		}
 	}
 }

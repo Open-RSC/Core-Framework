@@ -10,11 +10,11 @@ import java.util.Iterator;
 
 public final class ReportHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		String hash = p.readString();
-		byte reason = p.readByte();
-		byte suggestsOrMutes = p.readByte();
+		String hash = packet.readString();
+		byte reason = packet.readByte();
+		byte suggestsOrMutes = packet.readByte();
 
 		if (hash.equalsIgnoreCase(player.getUsername())) {
 			player.message("You can't report yourself!!");

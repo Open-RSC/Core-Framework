@@ -155,12 +155,12 @@ public class PkBot extends Npc {
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public void addAttackedBy(Player p) {
-		attackedBy.put(p.getUsername(), System.currentTimeMillis());
+	public void addAttackedBy(Player player) {
+		attackedBy.put(player.getUsername(), System.currentTimeMillis());
 	}
 
-	public long lastAttackedBy(Player p) {
-		Long time = attackedBy.get(p.getUsername());
+	public long lastAttackedBy(Player player) {
+		Long time = attackedBy.get(player.getUsername());
 		if (time != null) {
 			return time;
 		}

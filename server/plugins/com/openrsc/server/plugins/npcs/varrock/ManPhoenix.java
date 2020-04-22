@@ -20,55 +20,55 @@ public class ManPhoenix implements
 	TalkNpcTrigger, IndirectTalkToNpcTrigger {
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		stravenDialogue(p, n, true);
+	public void onTalkNpc(final Player player, final Npc n) {
+		stravenDialogue(player, n, true);
 	}
 
 	@Override
-	public void onIndirectTalkToNpc(final Player p, final Npc n) {
-		Npc man = ifnearvisnpc(p, NpcId.STRAVEN.id(), 20);
-		if (isBlackArmGang(p)) {
+	public void onIndirectTalkToNpc(final Player player, final Npc n) {
+		Npc man = ifnearvisnpc(player, NpcId.STRAVEN.id(), 20);
+		if (isBlackArmGang(player)) {
 			if (man != null) {
-				npcsay(p, man, "hey get away from there",
+				npcsay(player, man, "hey get away from there",
 					"Black arm dog");
-				man.setChasing(p);
+				man.setChasing(player);
 			}
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 0 && p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 5) {
-			stravenDialogue(p, n, false);
+		} else if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 0 && player.getQuestStage(Quests.SHIELD_OF_ARRAV) < 5) {
+			stravenDialogue(player, n, false);
 		}
 		//any other condition inexistent, should open door
 	}
 
-	public void stravenDialogue(Player p, Npc n, final boolean directTalk) {
-		Npc man = ifnearvisnpc(p, NpcId.STRAVEN.id(), 20);
-		if (isBlackArmGang(p)) {
+	public void stravenDialogue(Player player, Npc n, final boolean directTalk) {
+		Npc man = ifnearvisnpc(player, NpcId.STRAVEN.id(), 20);
+		if (isBlackArmGang(player)) {
 			if (man != null) {
-				npcsay(p, man, "hey get away from there",
+				npcsay(player, man, "hey get away from there",
 					"Black arm dog");
-				man.setChasing(p);
+				man.setChasing(player);
 			}
-		} else if (p.getQuestStage(Quests.HEROS_QUEST) >= 1 && isPhoenixGang(p)) {
-			if (!p.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.empty()) && p.getCache().hasKey("armband")) {
-				say(p, n, "I have lost my master thief armband");
-				npcsay(p, n, "You need to be more careful", "Ah well", "Have this spare");
-				give(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
+		} else if (player.getQuestStage(Quests.HEROS_QUEST) >= 1 && isPhoenixGang(player)) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.empty()) && player.getCache().hasKey("armband")) {
+				say(player, n, "I have lost my master thief armband");
+				npcsay(player, n, "You need to be more careful", "Ah well", "Have this spare");
+				give(player, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 				return;
-			} else if (p.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && !p.getCache().hasKey("armband")) {
-				say(p, n, "I have retrieved a candlestick");
-				npcsay(p, n, "Hmm not a bad job",
+			} else if (player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && !player.getCache().hasKey("armband")) {
+				say(player, n, "I have retrieved a candlestick");
+				npcsay(player, n, "Hmm not a bad job",
 					"Let's see it, make sure it's genuine");
-				p.message("You hand Straven the candlestick");
-				p.getCarriedItems().remove(new Item(ItemId.CANDLESTICK.id()));
-				say(p, n, "So is this enough to get me a master thieves armband?");
-				npcsay(p, n, "Hmm I dunno",
+				player.message("You hand Straven the candlestick");
+				player.getCarriedItems().remove(new Item(ItemId.CANDLESTICK.id()));
+				say(player, n, "So is this enough to get me a master thieves armband?");
+				npcsay(player, n, "Hmm I dunno",
 					"I suppose I'm in a generous mood today");
-				p.message("Straven hands you a master thief armband");
-				give(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
-				p.getCache().store("armband", true);
+				player.message("Straven hands you a master thief armband");
+				give(player, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
+				player.getCache().store("armband", true);
 				return;
 			}
-			say(p, n, "How would I go about getting a master thieves armband?");
-			npcsay(p, n, "Ooh tricky stuff, took me years to get that rank",
+			say(player, n, "How would I go about getting a master thieves armband?");
+			npcsay(player, n, "Ooh tricky stuff, took me years to get that rank",
 				"Well what some of aspiring thieves in our gang are working on right now",
 				"Is to steal some very valuable rare candlesticks",
 				"From scarface Pete - the pirate leader on Karamja",
@@ -76,77 +76,77 @@ public class ManPhoenix implements
 				"That might be enough to get you the rank",
 				"Go talk to our man Alfonse the waiter in the shrimp and parrot",
 				"Use the secret word gherkin to show you're one of us");
-			p.getCache().store("pheonix_mission", true);
-			p.getCache().store("pheonix_alf", true);
-		} else if (!p.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !p.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id(), Optional.of(false)) &&
-			(p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
-			&& isPhoenixGang(p)) {
-			npcsay(p, n, "Greetings fellow gang member");
-			say(p, n, "I have lost the key you gave me");
-			npcsay(p, n, "You need to be more careful",
+			player.getCache().store("pheonix_mission", true);
+			player.getCache().store("pheonix_alf", true);
+		} else if (!player.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !player.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id(), Optional.of(false)) &&
+			(player.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || player.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
+			&& isPhoenixGang(player)) {
+			npcsay(player, n, "Greetings fellow gang member");
+			say(player, n, "I have lost the key you gave me");
+			npcsay(player, n, "You need to be more careful",
 				"We don't want that key falling into the wrong hands",
 				"Ah well",
 				"Have this spare");
-			give(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
-			mes(p, "Straven hands you a key");
-		} else if ((p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(p))
-			|| (p.getCache().hasKey("arrav_mission") && (p.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
-			npcsay(p, n, "Hows your little mission going?");
-			if (p.getCarriedItems().hasCatalogID(ItemId.SCROLL.id())) {
-				say(p, n, "I have the intelligence report");
-				npcsay(p, n, "Lets see it then");
-				mes(p, "You hand over the report");
-				p.getCarriedItems().remove(new Item(ItemId.SCROLL.id()));
-				mes(p, "The man reads the report");
-				npcsay(p, n, "Yes this is very good",
+			give(player, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
+			mes(player, "Straven hands you a key");
+		} else if ((player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(player))
+			|| (player.getCache().hasKey("arrav_mission") && (player.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
+			npcsay(player, n, "Hows your little mission going?");
+			if (player.getCarriedItems().hasCatalogID(ItemId.SCROLL.id())) {
+				say(player, n, "I have the intelligence report");
+				npcsay(player, n, "Lets see it then");
+				mes(player, "You hand over the report");
+				player.getCarriedItems().remove(new Item(ItemId.SCROLL.id()));
+				mes(player, "The man reads the report");
+				npcsay(player, n, "Yes this is very good",
 					"Ok you can join the phoenix gang",
 					"I am Straven, one of the gang leaders");
-				say(p, n, "Nice to meet you");
-				npcsay(p, n, "Here is a key");
-				mes(p, "Straven hands you a key");
-				give(p, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
-				npcsay(p, n, "It will let you enter our weapon supply area",
+				say(player, n, "Nice to meet you");
+				npcsay(player, n, "Here is a key");
+				mes(player, "Straven hands you a key");
+				give(player, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
+				npcsay(player, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
-				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
-				if (!p.getCache().hasKey("arrav_gang")) {
+				player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
+				if (!player.getCache().hasKey("arrav_gang")) {
 					// player got traded the report or had it before starting mission
-					p.getCache().set("arrav_gang", PHOENIX_GANG);
+					player.getCache().set("arrav_gang", PHOENIX_GANG);
 				}
-				if (p.getCache().hasKey("arrav_mission")) {
-					p.getCache().remove("arrav_mission");
+				if (player.getCache().hasKey("arrav_mission")) {
+					player.getCache().remove("arrav_mission");
 				}
-				if (p.getCache().hasKey("spoken_tramp")) {
-					p.getCache().remove("spoken_tramp");
+				if (player.getCache().hasKey("spoken_tramp")) {
+					player.getCache().remove("spoken_tramp");
 				}
 			} else {
-				say(p, n, "I haven't managed to find the report yet");
-				npcsay(p, n,
+				say(player, n, "I haven't managed to find the report yet");
+				npcsay(player, n,
 					"You need to kill Jonny the beard",
 					"Who should be in the blue moon inn");
 			}
 
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
-			|| p.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0 || p.getQuestStage(Quests.HEROS_QUEST) == -1) {
-			memberOfPhoenixConversation(p, n);
-		} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
-			defaultConverstation(p, n, directTalk);
+		} else if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5
+			|| player.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0 || player.getQuestStage(Quests.HEROS_QUEST) == -1) {
+			memberOfPhoenixConversation(player, n);
+		} else if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
+			defaultConverstation(player, n, directTalk);
 		}
 	}
 
-	private void memberOfPhoenixConversation(final Player p, final Npc n) {
+	private void memberOfPhoenixConversation(final Player player, final Npc n) {
 		Menu defaultMenu = new Menu();
-		if (isPhoenixGang(p)) {
-			npcsay(p, n, "Greetings fellow gang member");
+		if (isPhoenixGang(player)) {
+			npcsay(player, n, "Greetings fellow gang member");
 			defaultMenu.addOption(new Option(
 				"I've heard you've got some cool treasures in this place") {
 				public void action() {
-					npcsay(p, n,
+					npcsay(player, n,
 						"Oh yeah, we've all stolen some stuff in our time",
 						"The candlesticks down here",
 						"Were quite a challenge to get out the palace");
-					say(p, n, "And the shield of Arrav",
+					say(player, n, "And the shield of Arrav",
 						"I heard you got that");
-					npcsay(p, n, "hmm", "That was a while ago",
+					npcsay(player, n, "hmm", "That was a while ago",
 						"We don't even have all the shield anymore",
 						"About 5 years ago",
 						"We had a massive fight in our gang",
@@ -163,14 +163,14 @@ public class ManPhoenix implements
 			defaultMenu.addOption(new Option(
 				"Any suggestions for where I can go thieving?") {
 				public void action() {
-					npcsay(p, n, "You can always try the market",
+					npcsay(player, n, "You can always try the market",
 						"Lots of opportunity there");
 				}
 			});
 			defaultMenu.addOption(new Option("Where's the Blackarm gang hideout?") {
 				public void action() {
-					say(p, n, "I wanna go sabotage em");
-					npcsay(p, n, "That would be a little tricky",
+					say(player, n, "I wanna go sabotage em");
+					npcsay(player, n, "That would be a little tricky",
 						"Their security is pretty good",
 						"Not as good as ours obviously", "But still good",
 						"If you really want to go there",
@@ -179,43 +179,43 @@ public class ManPhoenix implements
 						"One of our operatives is often near the alley",
 						"A red haired tramp",
 						"He may be able to give you some ideas");
-					say(p, n, "Thanks for the help");
+					say(player, n, "Thanks for the help");
 				}
 			});
-			defaultMenu.showMenu(p);
+			defaultMenu.showMenu(player);
 		}
 	}
 
-	private void defaultConverstation(final Player p, final Npc n, final boolean directTalk) {
+	private void defaultConverstation(final Player player, final Npc n, final boolean directTalk) {
 		Menu defaultMenu = new Menu();
 		if (directTalk) {
-			say(p, n, "What's through that door?");
+			say(player, n, "What's through that door?");
 		}
-		npcsay(p,
+		npcsay(player,
 			n,
 			"Heh you can't go in there",
 			"Only authorised personnel of the VTAM corporation are allowed beyond this point");
-		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3) {
+		if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3) {
 			defaultMenu.addOption(new Option("I know who you are") {
 				public void action() {
-					npcsay(p, n, "I see", "Carry on");
-					say(p, n,
+					npcsay(player, n, "I see", "Carry on");
+					say(player, n,
 						"This is the headquarters of the Phoenix Gang",
 						"The most powerful crime gang this city has seen");
-					npcsay(p, n, "And supposing we were this crime gang",
+					npcsay(player, n, "And supposing we were this crime gang",
 						"What would you want with us?");
 					new Menu().addOptions(
 						new Option("I'd like to offer you my services") {
 							public void action() {
-								npcsay(p,
+								npcsay(player,
 									n,
 									"You mean you'd like to join the phoenix gang?",
 									"Well the phoenix gang doesn't let people join just like that",
 									"You can't be too careful, you understand",
 									"Generally someone has to prove their loyalty before they can join");
-								say(p, n,
+								say(player, n,
 									"How would I go about this?");
-								npcsay(p,
+								npcsay(player,
 									n,
 									"Let me think",
 									"I have an idea",
@@ -226,22 +226,22 @@ public class ManPhoenix implements
 									"By the south entrance to this city",
 									"The name of the contact is Jonny the beard",
 									"Kill him and bring back his intelligence report");
-								if (p.getCache().hasKey("arrav_mission") && ((p.getCache().getInt("arrav_mission") & 2) != PHOENIX_MISSION)) {
-									p.getCache().set("arrav_mission", ANY_MISSION);
-								} else if (!p.getCache().hasKey("arrav_mission")) {
-									p.getCache().set("arrav_mission", PHOENIX_MISSION);
+								if (player.getCache().hasKey("arrav_mission") && ((player.getCache().getInt("arrav_mission") & 2) != PHOENIX_MISSION)) {
+									player.getCache().set("arrav_mission", ANY_MISSION);
+								} else if (!player.getCache().hasKey("arrav_mission")) {
+									player.getCache().set("arrav_mission", PHOENIX_MISSION);
 								}
-								say(p, n, "Ok, I'll get on it");
+								say(player, n, "Ok, I'll get on it");
 							}
 						},
 						new Option(
 							"I want nothing. I was just making sure you were them") {
 							@Override
 							public void action() {
-								npcsay(p, n, "Well stop wasting my time");
+								npcsay(player, n, "Well stop wasting my time");
 							}
 
-						}).showMenu(p);
+						}).showMenu(player);
 
 				}
 			});
@@ -249,26 +249,26 @@ public class ManPhoenix implements
 		defaultMenu.addOption(new Option(
 			"How do I get a job with the VTAM corporation?") {
 			public void action() {
-				npcsay(p, n, "Get a copy of the Varrock Herald",
+				npcsay(player, n, "Get a copy of the Varrock Herald",
 					"If we have any positions right now",
 					"They'll be advertised in there");
 			}
 		});
 		defaultMenu.addOption(new Option("Why not?") {
 			public void action() {
-				npcsay(p, n, "Sorry that is classified information");
+				npcsay(player, n, "Sorry that is classified information");
 			}
 		});
-		defaultMenu.showMenu(p);
+		defaultMenu.showMenu(player);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.STRAVEN.id();
 	}
 
 	@Override
-	public boolean blockIndirectTalkToNpc(Player p, Npc n) {
+	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
 		return n.getID() == NpcId.STRAVEN.id();
 	}
 }

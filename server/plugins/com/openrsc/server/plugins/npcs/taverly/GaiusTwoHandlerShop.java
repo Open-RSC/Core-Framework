@@ -21,7 +21,7 @@ public class GaiusTwoHandlerShop implements ShopInterface,
 		new Item(ItemId.BLACK_2_HANDED_SWORD.id(), 1), new Item(ItemId.MITHRIL_2_HANDED_SWORD.id(), 1), new Item(ItemId.ADAMANTITE_2_HANDED_SWORD.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.GAIUS.id();
 	}
 
@@ -36,16 +36,16 @@ public class GaiusTwoHandlerShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Welcome to my two handed sword shop");
-		final int option = multi(p, n, false, //do not send over
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Welcome to my two handed sword shop");
+		final int option = multi(player, n, false, //do not send over
 			"Let's trade", "thankyou");
 		if (option == 0) {
-			say(p, n, "Let's trade");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Let's trade");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "Thankyou");
+			say(player, n, "Thankyou");
 		}
 	}
 

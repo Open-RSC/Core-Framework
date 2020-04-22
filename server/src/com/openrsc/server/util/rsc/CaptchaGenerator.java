@@ -35,7 +35,7 @@ public class CaptchaGenerator {
 		colors.add(Color.YELLOW);
 	}
 
-	public static byte[] generateCaptcha(Player p) {
+	public static byte[] generateCaptcha(Player player) {
 		final BufferedImage image = new BufferedImage(255 - 10, 40, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D gfx = image.createGraphics();
 		final String captcha = words.get(DataConversions.random(0, words.size()));
@@ -48,7 +48,7 @@ public class CaptchaGenerator {
 			gfx.drawString(String.valueOf(captcha.charAt(i)), currentX, DataConversions.random(25, 35));
 			currentX += gfx.getFontMetrics().charWidth(captcha.charAt(i)) + (DataConversions.random(5, 10));
 		}
-		p.setSleepword(captcha);
+		player.setSleepword(captcha);
 		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			ImageIO.setUseCache(false);
 			ImageIO.write(image, "PNG", baos);

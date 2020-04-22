@@ -80,9 +80,9 @@ public class ItemUseOnObject implements PacketHandler {
 		});
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = p.getID();
+		int pID = packet.getID();
 		if (player.isBusy()) {
 			player.resetPath();// sendSound
 			return;
@@ -94,18 +94,18 @@ public class ItemUseOnObject implements PacketHandler {
 		int packetTwo = OpcodeIn.OBJECT_USE_ITEM.getOpcode();
 
 		if (pID == packetOne) { // Use Item on Door
-			object = player.getViewArea().getWallObjectWithDir(Point.location(p.readShort(), p.readShort()), p.readByte());
+			object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null door");
 				player.resetPath();
 				return;
 			}
 			int dir = object.getDirection();
-			int slotID = p.readShort();
+			int slotID = packet.readShort();
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
 				//they used the item from their equipment slot
-				int itemID = p.readShort();
+				int itemID = packet.readShort();
 				int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
 				if (realSlot == -1)
 					return;
@@ -120,13 +120,13 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			handleDoor(player, object.getLocation(), object, dir, item);
 		} else if (pID == packetTwo) { // Use Item on GameObject
-			object = player.getViewArea().getGameObject(Point.location(p.readShort(), p.readShort()));
+			object = player.getViewArea().getGameObject(Point.location(packet.readShort(), packet.readShort()));
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null GameObject");
 				player.resetPath();
 				return;
 			}
-			int slotID = p.readShort();
+			int slotID = packet.readShort();
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
 				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else

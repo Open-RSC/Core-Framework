@@ -21,7 +21,7 @@ public final class FlynnMaces implements ShopInterface,
 		new Item(ItemId.MITHRIL_MACE.id(), 3), new Item(ItemId.ADAMANTITE_MACE.id(), 2));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.FLYNN.id();
 	}
 
@@ -36,17 +36,17 @@ public final class FlynnMaces implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Hello do you want to buy or sell any maces?");
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello do you want to buy or sell any maces?");
 
-		int opt = multi(p, n, false, //do not send over
+		int opt = multi(player, n, false, //do not send over
 			"No thanks", "Well I'll have a look anyway");
 		if (opt == 0) {
-			say(p, n, "no thanks");
+			say(player, n, "no thanks");
 		} else if (opt == 1) {
-			say(p, n, "Well I'll have a look anyway");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Well I'll have a look anyway");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 
 	}

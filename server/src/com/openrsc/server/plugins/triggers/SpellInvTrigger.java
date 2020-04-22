@@ -7,11 +7,11 @@ public interface SpellInvTrigger {
 	/**
 	 * Called when you cast on an item
 	 */
-	void onSpellInv(Player p, Integer itemID, Integer spellID);
+	void onSpellInv(Player player, Integer itemID, Integer spellID);
 	/**
 	 * Return true if you wish to prevent the cast
 	 *
 	 * @return
 	 */
-	boolean blockSpellInv(Player p, Integer itemID, Integer spellID);
+	boolean blockSpellInv(Player player, Integer itemID, Integer spellID);
 }

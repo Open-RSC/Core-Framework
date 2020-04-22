@@ -27,7 +27,7 @@ public final class LouieLegs implements ShopInterface,
 	);
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.LOUIE_LEGS.id();
 	}
 
@@ -42,10 +42,10 @@ public final class LouieLegs implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		final String[] options;
-		npcsay(p, n, "Hey, wanna buy some armour?");
-		if (p.getQuestStage(Quests.FAMILY_CREST) <= 2 || p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
+		npcsay(player, n, "Hey, wanna buy some armour?");
+		if (player.getQuestStage(Quests.FAMILY_CREST) <= 2 || player.getQuestStage(Quests.FAMILY_CREST) >= 5) {
 			options = new String[]{
 				"What have you got?",
 				"No, thank you"
@@ -57,16 +57,16 @@ public final class LouieLegs implements ShopInterface,
 				"I'm in search of a man named adam fitzharmon"
 			};
 		}
-		int option = multi(p, n, options);
+		int option = multi(player, n, options);
 
 		if (option == 0) {
-			npcsay(p, n, "Take a look, see");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "Take a look, see");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
 			//nothing
 		} else if (option == 2) {
-			npcsay(p, n, "I haven't seen him",
+			npcsay(player, n, "I haven't seen him",
 					"I'm sure if he's been to Al Kharid recently",
 					"Someone around here will have seen him though");
 		}

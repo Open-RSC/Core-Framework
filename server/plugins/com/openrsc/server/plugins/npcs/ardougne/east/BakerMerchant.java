@@ -18,14 +18,14 @@ public class BakerMerchant implements ShopInterface, TalkNpcTrigger {
 	private final Shop shop = new Shop(false, 15000, 100, 80, 2, new Item(ItemId.BREAD.id(), 10), new Item(ItemId.CAKE.id(), 3), new Item(ItemId.CHOCOLATE_SLICE.id(), 8));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Good day " + (p.isMale() ? "Monsieur" : "Madame"),
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Good day " + (player.isMale() ? "Monsieur" : "Madame"),
 			"Would you like ze nice freshly baked bread",
 			"Or perhaps a nice piece of cake");
-		int menu = multi(p, n, "Lets see what you have", "No thankyou");
+		int menu = multi(player, n, "Lets see what you have", "No thankyou");
 		if (menu == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 
@@ -33,7 +33,7 @@ public class BakerMerchant implements ShopInterface, TalkNpcTrigger {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BAKER.id();
 	}
 

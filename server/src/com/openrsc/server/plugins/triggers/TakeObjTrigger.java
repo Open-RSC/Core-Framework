@@ -7,9 +7,9 @@ public interface TakeObjTrigger {
 	/**
 	 * Called when a user picks up an item
 	 */
-	void onTakeObj(Player p, GroundItem i);
+	void onTakeObj(Player player, GroundItem i);
 	/**
 	 * Return true if you wish to prevent a user from picking up an item
 	 */
-	boolean blockTakeObj(Player p, GroundItem i);
+	boolean blockTakeObj(Player player, GroundItem i);
 }

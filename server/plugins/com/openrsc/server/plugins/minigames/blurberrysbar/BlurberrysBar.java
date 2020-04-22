@@ -33,12 +33,12 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	}
 
 	@Override
-	public void handleReward(Player p) {
+	public void handleReward(Player player) {
 		//mini-game complete handled already
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BLURBERRY.id();
 	}
 
@@ -138,203 +138,203 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 		}
 	}
 
-	private void randomizeJob(Player p, Npc n) {
+	private void randomizeJob(Player player, Npc n) {
 		int randomize = DataConversions.random(0, 4);
 		if (randomize == 0) {
-			npcsay(p, n, "can you make me one pineapple punch, one choc saturday and one drunk dragon");
-			say(p, n, "ok then i'll be back soon");
+			npcsay(player, n, "can you make me one pineapple punch, one choc saturday and one drunk dragon");
+			say(player, n, "ok then i'll be back soon");
 		} else if (randomize == 1) {
-			npcsay(p, n, "ok, i need two wizard blizzards and an s.g.g.");
-			say(p, n, "no problem");
+			npcsay(player, n, "ok, i need two wizard blizzards and an s.g.g.");
+			say(player, n, "no problem");
 		} else if (randomize == 2) {
-			npcsay(p, n, "ok, i need one wizard blizzard,one pineapple punch, one blurberry special",
+			npcsay(player, n, "ok, i need one wizard blizzard,one pineapple punch, one blurberry special",
 					"and two fruit blasts");
-			say(p, n, "i'll do my best");
+			say(player, n, "i'll do my best");
 		} else if (randomize == 3) {
 			//dialogue recreated
-			npcsay(p, n, "i just need two s.g.g. and one blurberry special");
-			say(p, n, "no problem");
+			npcsay(player, n, "i just need two s.g.g. and one blurberry special");
+			say(player, n, "no problem");
 		} else if (randomize == 4) {
 			//dialogue recreated
-			npcsay(p, n, "i just need one fruit blast");
-			say(p, n, "no problem");
+			npcsay(player, n, "i just need one fruit blast");
+			say(player, n, "no problem");
 		}
-		if (!p.getCache().hasKey("blurberry_job")) {
-			p.getCache().set("blurberry_job", randomize);
+		if (!player.getCache().hasKey("blurberry_job")) {
+			player.getCache().set("blurberry_job", randomize);
 		}
 	}
 
-	private void myCurrentJob(Player p, Npc n) {
-		int job = p.getCache().getInt("blurberry_job");
-		say(p, n, "hi");
-		npcsay(p, n, "have you made the order?");
+	private void myCurrentJob(Player player, Npc n) {
+		int job = player.getCache().getInt("blurberry_job");
+		say(player, n, "hi");
+		npcsay(player, n, "have you made the order?");
 		if (job == 0) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.PINEAPPLE_PUNCH.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_SATURDAY.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.DRUNK_DRAGON.id(), Optional.of(false))) {
-				say(p, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
-				p.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
-				p.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
-				p.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
-				p.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
-				p.incExp(Skills.COOKING, 360, true);
-				npcsay(p, n, "that's blurberry-tastic");
-				p.message("blurberry gives you 100 gold coins");
-				give(p, ItemId.COINS.id(), 100);
+			if (player.getCarriedItems().hasCatalogID(ItemId.PINEAPPLE_PUNCH.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_SATURDAY.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.DRUNK_DRAGON.id(), Optional.of(false))) {
+				say(player, n, "here you go, one pineapple punch, one choc saturday and one drunk dragon");
+				player.message("you give blurberry one pineapple punch, one choc saturday and one drunk dragon");
+				player.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
+				player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
+				player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+				player.incExp(Skills.COOKING, 360, true);
+				npcsay(player, n, "that's blurberry-tastic");
+				player.message("blurberry gives you 100 gold coins");
+				give(player, ItemId.COINS.id(), 100);
 			} else {
-				say(p, n, "not yet");
-				npcsay(p, n, "ok, i need one pineapple punch, one choc saturday and one drunk dragon",
+				say(player, n, "not yet");
+				npcsay(player, n, "ok, i need one pineapple punch, one choc saturday and one drunk dragon",
 					"let me know when you're done");
 				return;
 			}
 		} else if (job == 1) {
-			if (ifheld(p, ItemId.WIZARD_BLIZZARD.id(), 2)
-				&& p.getCarriedItems().hasCatalogID(ItemId.SGG.id(), Optional.of(false))) {
-				say(p, n, "here you go, two wizard blizzards and an s.g.g.");
-				p.message("you give blurberry two wizard blizzards and an s.g.g.");
-				p.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id(), 2));
-				p.getCarriedItems().remove(new Item(ItemId.SGG.id()));
-				p.incExp(Skills.COOKING, 360, true);
-				npcsay(p, n, "that's excellent, here's your share of the profit");
-				p.message("blurberry gives you 150 gold coins");
-				give(p, ItemId.COINS.id(), 150);
+			if (ifheld(player, ItemId.WIZARD_BLIZZARD.id(), 2)
+				&& player.getCarriedItems().hasCatalogID(ItemId.SGG.id(), Optional.of(false))) {
+				say(player, n, "here you go, two wizard blizzards and an s.g.g.");
+				player.message("you give blurberry two wizard blizzards and an s.g.g.");
+				player.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id(), 2));
+				player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
+				player.incExp(Skills.COOKING, 360, true);
+				npcsay(player, n, "that's excellent, here's your share of the profit");
+				player.message("blurberry gives you 150 gold coins");
+				give(player, ItemId.COINS.id(), 150);
 			} else {
-				say(p, n, "not yet");
-				npcsay(p, n, "ok, i need two wizard blizzards and an s.g.g.",
+				say(player, n, "not yet");
+				npcsay(player, n, "ok, i need two wizard blizzards and an s.g.g.",
 					"let me know when you're done");
 				return;
 			}
 		} else if (job == 2) {
 			//dialogue recreated
-			if (p.getCarriedItems().hasCatalogID(ItemId.WIZARD_BLIZZARD.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.PINEAPPLE_PUNCH.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))
-				&& ifheld(p, ItemId.FRUIT_BLAST.id(), 2)) {
-				say(p, n, "here you go, one wizard blizzard,one pineapple punch, one blurberry special",
+			if (player.getCarriedItems().hasCatalogID(ItemId.WIZARD_BLIZZARD.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.PINEAPPLE_PUNCH.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))
+				&& ifheld(player, ItemId.FRUIT_BLAST.id(), 2)) {
+				say(player, n, "here you go, one wizard blizzard,one pineapple punch, one blurberry special",
 						"and two fruit blasts");
-				p.message("you give blurberry one wizard blizzard,one pineapple punch, one blurberry special");
-				p.message("and two fruit blasts");
-				p.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id()));
-				p.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
-				p.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
-				p.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id(), 2));
-				p.incExp(Skills.COOKING, 540, true);
-				npcsay(p, n, "wow fantastic, here's your share of the profit");
-				p.message("blurberry gives you 179 gold coins");
-				give(p, ItemId.COINS.id(), 179);
+				player.message("you give blurberry one wizard blizzard,one pineapple punch, one blurberry special");
+				player.message("and two fruit blasts");
+				player.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id()));
+				player.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
+				player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
+				player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id(), 2));
+				player.incExp(Skills.COOKING, 540, true);
+				npcsay(player, n, "wow fantastic, here's your share of the profit");
+				player.message("blurberry gives you 179 gold coins");
+				give(player, ItemId.COINS.id(), 179);
 			} else {
-				say(p, n, "not yet");
-				npcsay(p, n, "ok, i need one wizard blizzard,one pineapple punch, one blurberry special",
+				say(player, n, "not yet");
+				npcsay(player, n, "ok, i need one wizard blizzard,one pineapple punch, one blurberry special",
 					"and two fruit blasts",
 					"let me know when you're done");
 				return;
 			}
 		} else if (job == 3) {
 			//dialogue recreated
-			if (ifheld(p, ItemId.SGG.id(), 2)
-				&& p.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
-				say(p, n, "here you go, two s.g.g. and one blurberry special");
-				p.message("you give blurberry two s.g.g. and one blurberry special");
-				p.getCarriedItems().remove(new Item(ItemId.SGG.id(), 2));
-				p.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
-				p.incExp(Skills.COOKING, 360, true);
-				npcsay(p, n, "great, here's your share of the profit");
-				p.message("blurberry gives you 120 gold coins");
-				give(p, ItemId.COINS.id(), 120);
+			if (ifheld(player, ItemId.SGG.id(), 2)
+				&& player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
+				say(player, n, "here you go, two s.g.g. and one blurberry special");
+				player.message("you give blurberry two s.g.g. and one blurberry special");
+				player.getCarriedItems().remove(new Item(ItemId.SGG.id(), 2));
+				player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
+				player.incExp(Skills.COOKING, 360, true);
+				npcsay(player, n, "great, here's your share of the profit");
+				player.message("blurberry gives you 120 gold coins");
+				give(player, ItemId.COINS.id(), 120);
 			} else {
-				say(p, n, "not yet");
-				npcsay(p, n, "ok, i need two s.g.g. and one blurberry special",
+				say(player, n, "not yet");
+				npcsay(player, n, "ok, i need two s.g.g. and one blurberry special",
 					"let me know when you're done");
 				return;
 			}
 		} else if (job == 4) {
 			//dialogue recreated
-			if (p.getCarriedItems().hasCatalogID(ItemId.FRUIT_BLAST.id(), Optional.of(false))) {
-				say(p, n, "here you go, one fruit blast");
-				p.message("you give blurberry one fruit blast");
-				p.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
-				p.incExp(Skills.COOKING, 240, true);
-				npcsay(p, n, "that's frutty-licious");
-				p.message("blurberry gives you 10 gold coins");
-				give(p, ItemId.COINS.id(), 10);
+			if (player.getCarriedItems().hasCatalogID(ItemId.FRUIT_BLAST.id(), Optional.of(false))) {
+				say(player, n, "here you go, one fruit blast");
+				player.message("you give blurberry one fruit blast");
+				player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
+				player.incExp(Skills.COOKING, 240, true);
+				npcsay(player, n, "that's frutty-licious");
+				player.message("blurberry gives you 10 gold coins");
+				give(player, ItemId.COINS.id(), 10);
 			} else {
-				say(p, n, "not yet");
-				npcsay(p, n, "ok, i need one fruit blast",
+				say(player, n, "not yet");
+				npcsay(player, n, "ok, i need one fruit blast",
 					"let me know when you're done");
 				return;
 			}
 		}
-		p.getCache().remove("blurberry_job");
-		if (!p.getCache().hasKey("blurberry_jobs_completed")) {
-			p.getCache().set("blurberry_jobs_completed", 1);
+		player.getCache().remove("blurberry_job");
+		if (!player.getCache().hasKey("blurberry_jobs_completed")) {
+			player.getCache().set("blurberry_jobs_completed", 1);
 		} else {
-			int completedJobs = p.getCache().getInt("blurberry_jobs_completed");
-			p.getCache().set("blurberry_jobs_completed", (completedJobs + 1));
+			int completedJobs = player.getCache().getInt("blurberry_jobs_completed");
+			player.getCache().set("blurberry_jobs_completed", (completedJobs + 1));
 		}
-		npcsay(p, n, "could you make me another order");
-		int menu = multi(p, n,
+		npcsay(player, n, "could you make me another order");
+		int menu = multi(player, n,
 			"I'm quite busy myself, sorry",
 			"ok then, what do you need");
 		if (menu == 0) {
-			npcsay(p, n, "that's ok, come back when you're free");
+			npcsay(player, n, "that's ok, come back when you're free");
 		} else if (menu == 1) {
-			randomizeJob(p, n);
+			randomizeJob(player, n);
 		}
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.GNOME_COCKTAIL_GUIDE.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == ItemId.GNOME_COCKTAIL_GUIDE.id()) {
-			p.message("you open blurberry's cocktail book");
-			p.message("inside are a list of cocktails");
-			int menu = multi(p,
+			player.message("you open blurberry's cocktail book");
+			player.message("inside are a list of cocktails");
+			int menu = multi(player,
 				"non alcoholic",
 				"alcoholic");
 			if (menu == 0) {
-				int non_alcoholic = multi(p,
+				int non_alcoholic = multi(player,
 					"fruit blast",
 					"pineapple punch");
 				if (non_alcoholic == 0) {
-					ActionSender.sendBox(p, "@yel@Fruit blast% %Mix the juice of one lemon, one orange and one pineapple in the shaker% %Pour into glass and top with slices of lemon.", true);
+					ActionSender.sendBox(player, "@yel@Fruit blast% %Mix the juice of one lemon, one orange and one pineapple in the shaker% %Pour into glass and top with slices of lemon.", true);
 				} else if (non_alcoholic == 1) {
-					ActionSender.sendBox(p, "@yel@Pineapple Punch% %mix the juice of two pineapples with the juice of one lemon and one orange% %pour the mix into a glass and add diced pineapple followed by diced lime% %top drink with one slice of lime", true);
+					ActionSender.sendBox(player, "@yel@Pineapple Punch% %mix the juice of two pineapples with the juice of one lemon and one orange% %pour the mix into a glass and add diced pineapple followed by diced lime% %top drink with one slice of lime", true);
 				}
 			} else if (menu == 1) {
-				int alcoholic = multi(p,
+				int alcoholic = multi(player,
 					"drunkdragon",
 					"sgg",
 					"choc saturday",
 					"blurberry special",
 					"wizard blizzard");
 				if (alcoholic == 0) {
-					ActionSender.sendBox(p, "@yel@Drunk Dragon% %Mix vodka with gin and dwellberry juice% %Pour the mixture into a glass and add a diced pineapple.Next add a generous portion of cream% %Heat the drink briefly in a warm oven.. yum.", true);
+					ActionSender.sendBox(player, "@yel@Drunk Dragon% %Mix vodka with gin and dwellberry juice% %Pour the mixture into a glass and add a diced pineapple.Next add a generous portion of cream% %Heat the drink briefly in a warm oven.. yum.", true);
 				} else if (alcoholic == 1) {
-					ActionSender.sendBox(p, "@yel@s g g - short green guy% %Mix vodka with the juice of three limes and pour into a glass% %sprinkle equa leaves over the top of the drink% %Finally add a slice of lime to finish the drink", true);
+					ActionSender.sendBox(player, "@yel@s g g - short green guy% %Mix vodka with the juice of three limes and pour into a glass% %sprinkle equa leaves over the top of the drink% %Finally add a slice of lime to finish the drink", true);
 				} else if (alcoholic == 2) {
-					ActionSender.sendBox(p, "@yel@Choc Saturday% %Mix together whiskey, milk, equa leaves% %Pour mixture into a glass add some chocolate and briefly heat in the oven% %Then add a generous helping of cream% %Finish of the drink with sprinkled chocolate dust", true);
+					ActionSender.sendBox(player, "@yel@Choc Saturday% %Mix together whiskey, milk, equa leaves% %Pour mixture into a glass add some chocolate and briefly heat in the oven% %Then add a generous helping of cream% %Finish of the drink with sprinkled chocolate dust", true);
 				} else if (alcoholic == 3) {
-					ActionSender.sendBox(p, "@yel@Blurberry Special% %Mix together vodka, gin and brandy% %Add to this the juice of two lemons and one orange and pour into the glass% %next add to the glass orange chunks and then lemon chunks% %Finish of with one lime slice and then add a sprinkling of equa leaves", true);
+					ActionSender.sendBox(player, "@yel@Blurberry Special% %Mix together vodka, gin and brandy% %Add to this the juice of two lemons and one orange and pour into the glass% %next add to the glass orange chunks and then lemon chunks% %Finish of with one lime slice and then add a sprinkling of equa leaves", true);
 				} else if (alcoholic == 4) {
-					ActionSender.sendBox(p, "@yel@Wizard Blizzard% %thoroughly mix together the juice of one pinapple, one orange, one lemon and one lime% %Add to this two measures of vodka and one measure of gin% %Pour the mixture into a glass, top with pineapple chunks and then add slices of lime", true);
+					ActionSender.sendBox(player, "@yel@Wizard Blizzard% %thoroughly mix together the juice of one pinapple, one orange, one lemon and one lime% %Add to this two measures of vodka and one measure of gin% %Pour the mixture into a glass, top with pineapple chunks and then add slices of lime", true);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void onDropObj(Player p, Item i, Boolean fromInventory) {
+	public void onDropObj(Player player, Item i, Boolean fromInventory) {
 		if (i.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || i.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
-			checkAndRemoveBlurberry(p, true);
+			checkAndRemoveBlurberry(player, true);
 		}
 	}
 
 	@Override
-	public boolean blockDropObj(Player p, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
 		return false;
 	}
 

@@ -24,27 +24,27 @@ public final class GnomeWaiter implements ShopInterface,
 		new Item(ItemId.GNOME_WAITER_SPICE_CRUNCHIES.id(), 4));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		say(p, n, "hello");
-		npcsay(p, n, "good afternoon",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "hello");
+		npcsay(player, n, "good afternoon",
 			"can i tempt you with our new menu?");
 
-		int option = multi(p, n, "i'll take a look", "not really");
+		int option = multi(player, n, "i'll take a look", "not really");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "i hope you like what you see");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "i hope you like what you see");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 
 			case 1:
-				npcsay(p, n, "ok then, enjoy your stay");
+				npcsay(player, n, "ok then, enjoy your stay");
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GNOME_WAITER.id();
 	}
 

@@ -20,26 +20,26 @@ public final class Jakut implements ShopInterface,
 		new Item(ItemId.DRAGON_SWORD.id(), 2));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		npcsay(p, n, "Dragon swords, get your Dragon swords",
+	public void onTalkNpc(Player player, final Npc n) {
+		npcsay(player, n, "Dragon swords, get your Dragon swords",
 			"Straight from the plane of frenaskrae");
 
-		int option = multi(p, n, false, //do not send over
+		int option = multi(player, n, false, //do not send over
 			"Yes please", "No thankyou, I'm just browsing the marketplace");
 		switch (option) {
 			case 0:
-				say(p, n, "Yes Please");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "Yes Please");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 			case 1:
-				say(p, n, "No thankyou, I'm just browsing the marketplace");
+				say(player, n, "No thankyou, I'm just browsing the marketplace");
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.JAKUT.id();
 	}
 

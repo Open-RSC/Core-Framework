@@ -25,28 +25,28 @@ public final class HeckelFunchGroceries implements ShopInterface,
 		new Item(ItemId.KNIFE.id(), 5), new Item(ItemId.GNOME_COCKTAIL_GUIDE.id(), 5));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		say(p, n, "hello there");
-		npcsay(p, n, "good day to you my friend ..and a beautiful one at that",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "hello there");
+		npcsay(player, n, "good day to you my friend ..and a beautiful one at that",
 			"would you like some groceries? i have all sorts",
 			"alcohol also, if your partial to a drink");
 
-		int option = multi(p, n, "no thank you", "i'll have a look");
+		int option = multi(player, n, "no thank you", "i'll have a look");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "ahh well, all the best to you");
+				npcsay(player, n, "ahh well, all the best to you");
 				break;
 
 			case 1:
-				npcsay(p, n, "there's a good human");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "there's a good human");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.HECKEL_FUNCH.id();
 	}
 

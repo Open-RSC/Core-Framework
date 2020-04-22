@@ -12,7 +12,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcTalkTo implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (player.isBusy()) {
 			if (player.inCombat()) {
@@ -22,7 +22,7 @@ public final class NpcTalkTo implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final Npc n = player.getWorld().getNpc(p.readShort());
+		final Npc n = player.getWorld().getNpc(packet.readShort());
 
 		if (n == null) {
 			return;
@@ -116,14 +116,14 @@ public final class NpcTalkTo implements PacketHandler {
 
 			private boolean checkBlocking(World world, int x, int y, int bit) {
 				TileValue t = world.getTile(x, y);
-				Point p = new Point(x, y);
+				Point point = new Point(x, y);
 				for (Npc n : n.getViewArea().getNpcsInView()) {
-					if (n.getLocation().equals(p)) {
+					if (n.getLocation().equals(point)) {
 						return true;
 					}
 				}
 				for (Player areaPlayer : n.getViewArea().getPlayersInView()) {
-					if (areaPlayer.getLocation().equals(p)) {
+					if (areaPlayer.getLocation().equals(point)) {
 						return true;
 					}
 				}

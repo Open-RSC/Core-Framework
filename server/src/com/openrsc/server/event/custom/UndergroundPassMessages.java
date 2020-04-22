@@ -13,26 +13,26 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 public class UndergroundPassMessages extends DelayedEvent {
 
-	private Player p;
+	private Player player;
 
-	public UndergroundPassMessages(World world, Player p, int delay) {
+	public UndergroundPassMessages(World world, Player player, int delay) {
 		super(world, null, delay, "Underground Pass Messages");
-		this.p = p;
+		this.player = player;
 	}
 
 	@Override
 	public void run() {
 		int random = DataConversions.getRandom().nextInt(6);
 		if (random == 0) {
-			p.message("@red@iban will save you....he'll save us all");
+			player.message("@red@iban will save you....he'll save us all");
 		} else if (random == 1) {
-			p.message("@red@join us...join us...embrace the mysery");
-		} else if (random == 2 && p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
-			p.message("@red@I see you adventurer...you can't hide");
-		} else if (random == 3 && p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
-			p.message("@red@Come taste the pleasure of evil");
-		} else if (random == 4 && p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
-			p.message("@red@Death is only the beginning");
+			player.message("@red@join us...join us...embrace the mysery");
+		} else if (random == 2 && player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
+			player.message("@red@I see you adventurer...you can't hide");
+		} else if (random == 3 && player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
+			player.message("@red@Come taste the pleasure of evil");
+		} else if (random == 4 && player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
+			player.message("@red@Death is only the beginning");
 		} else if (random == 5) {
 			stop();
 		}

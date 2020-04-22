@@ -13,15 +13,15 @@ import static com.openrsc.server.plugins.Functions.*;
 public class JollyBoarInnBartender implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BARTENDER_OUTSIDE_VARROCK.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Yes please?");
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Yes please?");
 		String[] options = {};
-		if (p.getCache().hasKey("barcrawl") && !p.getCache().hasKey("barone")) {
+		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("barone")) {
 			options = new String[]{
 				"I'll have a beer please",
 				"Any hints where I can go adventuring?",
@@ -35,19 +35,19 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"Heard any good gossip?"
 			};
 		}
-		int reply = multi(p, n, options);
+		int reply = multi(player, n, options);
 		if (reply == 0) {
-			npcsay(p, n, "Ok, that'll be two coins");
+			npcsay(player, n, "Ok, that'll be two coins");
 
-			if (ifheld(p, ItemId.COINS.id(), 2)) {
-				p.message("You buy a pint of beer");
-				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
-				give(p, ItemId.BEER.id(), 1);
+			if (ifheld(player, ItemId.COINS.id(), 2)) {
+				player.message("You buy a pint of beer");
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+				give(player, ItemId.BEER.id(), 1);
 			} else {
-				say(p, n, "Oh dear. I don't seem to have enough money");
+				say(player, n, "Oh dear. I don't seem to have enough money");
 			}
 		} else if (reply == 1) {
-			npcsay(p, n,
+			npcsay(player, n,
 				"It's funny you should say that",
 				"An adventurer passed through here, the other day,",
 				"claiming to have found a dungeon full of treasure,",
@@ -57,9 +57,9 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"Now how much faith you put in that story is up to you,",
 				"but it probably wouldn't do any harm to have a look"
 			);
-			say(p, n, "Thanks", "I may try that at some point");
+			say(player, n, "Thanks", "I may try that at some point");
 		} else if (reply == 2) {
-			npcsay(p, n,
+			npcsay(player, n,
 				"I'm not that well up on the gossip out here",
 				"I've heard that the bartender in the Blue Moon Inn has gone a little crazy",
 				"He keeps claiming he is part of something called a computer game",
@@ -67,44 +67,44 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"That's probably old news by now though"
 			);
 		} else if (reply == 3) {
-			npcsay(p, n, "Ah, there seems to be a fair few doing that one these days",
+			npcsay(player, n, "Ah, there seems to be a fair few doing that one these days",
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");
-			if (ifheld(p, ItemId.COINS.id(), 10)) {
-				p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
-				mes(p, "You buy a pint of Olde Suspiciouse",
+			if (ifheld(player, ItemId.COINS.id(), 10)) {
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
+				mes(player, "You buy a pint of Olde Suspiciouse",
 					"You gulp it down",
 					"Your head is spinning");
-				drinkAle(p);
-				mes(p, "The bartender signs your card");
-				p.getCache().store("barone", true);
-				say(p, n, "Thanksh very mush");
+				drinkAle(player);
+				mes(player, "The bartender signs your card");
+				player.getCache().store("barone", true);
+				say(player, n, "Thanksh very mush");
 			} else {
-				say(p, n, "I don't have 10 coins right now");
+				say(player, n, "I don't have 10 coins right now");
 			}
 		}
 	}
 
-	private void drinkAle(Player p) {
+	private void drinkAle(Player player) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.MAGIC, Skills.CRAFTING, Skills.MINING};
 		for (int i = 0; i < skillIDs.length; i++) {
-			setAleEffect(p, skillIDs[i]);
+			setAleEffect(player, skillIDs[i]);
 		}
 	}
 
-	private void setAleEffect(Player p, int skillId) {
+	private void setAleEffect(Player player, int skillId) {
 		int reduction, currentStat, maxStat;
-		maxStat = p.getSkills().getMaxStat(skillId);
+		maxStat = player.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
 			maxStat < 40 ? 6 :
 			maxStat < 75 ? 7 : 8;
-		currentStat = p.getSkills().getLevel(skillId);
+		currentStat = player.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {
-			p.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
+			player.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
 		}
 		else {
-			p.getSkills().setLevel(skillId, currentStat - reduction);
+			player.getSkills().setLevel(skillId, currentStat - reduction);
 		}
 	}
 }

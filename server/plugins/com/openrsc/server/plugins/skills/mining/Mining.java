@@ -29,10 +29,10 @@ public final class Mining implements OpLocTrigger {
 		Arrays.sort(ids);
 	}*/
 
-	public static int getAxe(Player p) {
-		int lvl = p.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+	public static int getAxe(Player player) {
+		int lvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
-			if (p.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
+			if (player.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
 				if (lvl >= Formulae.miningAxeLvls[i]) {
 					return Formulae.miningAxeIDs[i];
 				}

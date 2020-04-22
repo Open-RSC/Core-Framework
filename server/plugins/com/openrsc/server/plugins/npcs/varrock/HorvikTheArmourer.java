@@ -22,7 +22,7 @@ public final class HorvikTheArmourer implements
 		new Item(ItemId.BLACK_PLATE_MAIL_BODY.id(), 1), new Item(ItemId.MITHRIL_PLATE_MAIL_BODY.id(), 1), new Item(ItemId.IRON_PLATE_MAIL_LEGS.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.HORVIK_THE_ARMOURER.id();
 	}
 
@@ -37,16 +37,16 @@ public final class HorvikTheArmourer implements
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Hello, do you need any help?");
-		int option = multi(p, n,
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello, do you need any help?");
+		int option = multi(player, n,
 			"No thanks. I'm just looking around",
 			"Do you want to trade?");
 
 		if (option == 1) {
-			npcsay(p, n, "Yes, I have a fine selection of armour");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "Yes, I have a fine selection of armour");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 

@@ -15,41 +15,41 @@ import static com.openrsc.server.plugins.Functions.*;
 public class DarkMage implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.DARK_MAGE.id()) {
-			say(p, n, "hello there");
-			npcsay(p, n, "why do do you interupt me traveller?");
-			say(p, n, "i just wondered what you're doing?");
-			npcsay(p, n, "i experiment with dark magic",
+			say(player, n, "hello there");
+			npcsay(player, n, "why do do you interupt me traveller?");
+			say(player, n, "i just wondered what you're doing?");
+			npcsay(player, n, "i experiment with dark magic",
 				"it's a dangerous craft");
-			if (p.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.of(false)) && p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
-				say(p, n, "could you fix this staff?");
-				p.message("you show the mage your staff of iban");
-				npcsay(p, n, "almighty zamorak! the staff of iban!");
-				say(p, n, "can you fix it?");
-				npcsay(p, n, "this truly is dangerous magic traveller",
+			if (player.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.of(false)) && player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
+				say(player, n, "could you fix this staff?");
+				player.message("you show the mage your staff of iban");
+				npcsay(player, n, "almighty zamorak! the staff of iban!");
+				say(player, n, "can you fix it?");
+				npcsay(player, n, "this truly is dangerous magic traveller",
 					"i can fix it, but it will cost you",
 					"the process could kill me");
-				say(p, n, "how much?");
-				npcsay(p, n, "200,000 gold pieces, not a penny less");
-				int menu = multi(p, n,
+				say(player, n, "how much?");
+				npcsay(player, n, "200,000 gold pieces, not a penny less");
+				int menu = multi(player, n,
 					"no chance, that's ridiculous",
 					"ok then");
 				if (menu == 0) {
-					npcsay(p, n, "fine by me");
+					npcsay(player, n, "fine by me");
 				} else if (menu == 1) {
-					if (!ifheld(p, ItemId.COINS.id(), 200000)) {
-						p.message("you don't have enough money");
-						say(p, n, "oops, i'm a bit short");
+					if (!ifheld(player, ItemId.COINS.id(), 200000)) {
+						player.message("you don't have enough money");
+						say(player, n, "oops, i'm a bit short");
 					} else {
-						mes(p, "you give the mage 200,000 coins",
+						mes(player, "you give the mage 200,000 coins",
 							"and the staff of iban");
-						p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
-						p.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));
-						p.message("the mage fixes the staff and returns it to you");
-						give(p, ItemId.STAFF_OF_IBAN.id(), 1);
-						say(p, n, "thanks mage");
-						npcsay(p, n, "you be carefull with that thing");
+						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
+						player.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));
+						player.message("the mage fixes the staff and returns it to you");
+						give(player, ItemId.STAFF_OF_IBAN.id(), 1);
+						say(player, n, "thanks mage");
+						npcsay(player, n, "you be carefull with that thing");
 					}
 				}
 			}
@@ -57,7 +57,7 @@ public class DarkMage implements TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.DARK_MAGE.id();
 	}
 

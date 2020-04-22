@@ -12,19 +12,19 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Brimstail implements TalkNpcTrigger, OpLocTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BRIMSTAIL.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		p.setBusy(true);
-		say(p, "Hello");
-		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-		p.message("The gnome is chanting");
-		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-		p.message("he does not respond");
-		p.setBusy(false);
+	public void onTalkNpc(Player player, final Npc n) {
+		player.setBusy(true);
+		say(player, "Hello");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("The gnome is chanting");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("he does not respond");
+		player.setBusy(false);
 	}
 
 	@Override
@@ -33,14 +33,14 @@ public class Brimstail implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
-		p.setBusy(true);
-		p.message("you enter the cave");
-		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-		p.message("it leads to a ladder");
-		delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-		p.message("you climb down");
-		p.teleport(730, 3334, false);
-		p.setBusy(false);
+	public void onOpLoc(GameObject obj, String command, Player player) {
+		player.setBusy(true);
+		player.message("you enter the cave");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("it leads to a ladder");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("you climb down");
+		player.teleport(730, 3334, false);
+		player.setBusy(false);
 	}
 }

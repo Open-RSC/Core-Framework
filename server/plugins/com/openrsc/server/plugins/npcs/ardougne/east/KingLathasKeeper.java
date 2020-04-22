@@ -28,23 +28,23 @@ public final class KingLathasKeeper implements ShopInterface,
 		new Item(ItemId.ADAMANTITE_2_HANDED_SWORD.id(), 1));
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		say(p, n, "hello");
-		npcsay(p, n, "so are you looking to buy some weapons",
+	public void onTalkNpc(final Player player, final Npc n) {
+		say(player, n, "hello");
+		npcsay(player, n, "so are you looking to buy some weapons",
 			"king lathas keeps us very well stocked");
-		int option = multi(p, n, "what do you have?", "no thanks");
+		int option = multi(player, n, "what do you have?", "no thanks");
 		switch (option) {
 
 			case 0:
-				npcsay(p, n, "take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "take a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SHOP_KEEPER_TRAINING_CAMP.id();
 	}
 

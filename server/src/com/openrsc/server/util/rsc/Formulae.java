@@ -126,9 +126,7 @@ public final class Formulae {
 			if (deltaY == 0) {
 				return 2; // West
 			}
-			if (deltaY < 0) {
-				return 3; // South-West
-			}
+			return 3; // South-West
 		}
 		if (deltaX > 0) {
 			if (deltaY < 0) {
@@ -137,18 +135,16 @@ public final class Formulae {
 			if (deltaY == 0) {
 				return 6; // East
 			}
-			if (deltaY > 0) {
-				return 7; // North-East
-			}
+			return 7; // North-East
 		}
-		if (deltaX == 0) {
-			if (deltaY > 0) {
-				return 0; // North
-			}
-			if (deltaY < 0) {
-				return 4; // South
-			}
+
+		if (deltaY > 0) {
+			return 0; // North
 		}
+		if (deltaY < 0) {
+			return 4; // South
+		}
+
 		return -1;
 	}
 
@@ -249,7 +245,6 @@ public final class Formulae {
 			case 2:
 				return 1;
 			case 4:
-				return -1;
 			case 8:
 				return -1;
 		}
@@ -274,18 +269,18 @@ public final class Formulae {
 	 * Decide if the food we are cooking should be burned or not Gauntlets of
 	 * Cooking. These gauntlets lowers lvl to burn of lobs, sword and shark
 	 */
-	public static boolean burnFood(Player p, int foodId, int cookingLevel) {
+	public static boolean burnFood(Player player, int foodId, int cookingLevel) {
 		//gauntlets of cooking effective on lobsters, swordfish and shark
 		//chef: Wearing them means you will burn your lobsters, swordfish and shark less
-		int bonusLevel = p.getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id()) ?
+		int bonusLevel = player.getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id()) ?
 			(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
-		int levelReq = p.getWorld().getServer().getEntityHandler().getItemCookingDef(foodId).getReqLevel();
+		int levelReq = player.getWorld().getServer().getEntityHandler().getItemCookingDef(foodId).getReqLevel();
 		//if not on def file from cooking training table, level stop failing
 		//is usually 35 since player can cook item
-		int levelStopFail = p.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
-			p.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
+		int levelStopFail = player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
+			player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
 		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
 	}
 
@@ -440,17 +435,14 @@ public final class Formulae {
 
 	private static int getBowBonus(Player player) {
 		switch (ItemId.getById(player.getRangeEquip())) {
-			case PHOENIX_CROSSBOW:
-				return 10;
-			case CROSSBOW:
-				return 10;
 			case LONGBOW:
 				return 8;
 			case SHORTBOW:
 				return 5;
-
 			case OAK_LONGBOW:
 				return 13;
+			case PHOENIX_CROSSBOW:
+			case CROSSBOW:
 			case OAK_SHORTBOW:
 				return 10;
 			case WILLOW_LONGBOW:
@@ -533,8 +525,8 @@ public final class Formulae {
 	 * Decide if we fall off the obstacle or not
 	 */
 	// TODO: This should be moved to the appropriate plugin class.
-	public static boolean failCalculation(Player p, int skill, int reqLevel) {
-		int levelDiff = p.getSkills().getMaxStat(skill) - reqLevel;
+	public static boolean failCalculation(Player player, int skill, int reqLevel) {
+		int levelDiff = player.getSkills().getMaxStat(skill) - reqLevel;
 		if (levelDiff < 0) {
 			return false;
 		}
@@ -775,10 +767,10 @@ public final class Formulae {
 		return Formulae.calcProductionSuccessful(levelReq, firemakingLvl, true, levelStopFail);
 	}
 
-	public static int getLevelsToReduceAttackKBD(Player p) {
+	public static int getLevelsToReduceAttackKBD(Player player) {
 		int levels = 0;
-		int currLvl = getCurrentLevel(p, Skills.RANGED);
-		int maxLvl = getMaxLevel(p, Skills.RANGED);
+		int currLvl = getCurrentLevel(player, Skills.RANGED);
+		int maxLvl = getMaxLevel(player, Skills.RANGED);
 		int ratio = currLvl * 100 / maxLvl;
 		if (currLvl <= 3) {
 			return 0;
@@ -838,7 +830,7 @@ public final class Formulae {
 	 */
 	public static double parseDouble(double number) {
 		String numberString = String.valueOf(number);
-		return Double.valueOf(numberString.substring(0, numberString.indexOf(".") + 2));
+		return Double.parseDouble(numberString.substring(0, numberString.indexOf(".") + 2));
 	}
 
 	public static int styleBonus(Mob mob, int skill) {
@@ -867,8 +859,8 @@ public final class Formulae {
 		return -1;
 	}
 
-	public static int getRepeatTimes(Player p, int skill) {
-		int maxStat = p.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
+	public static int getRepeatTimes(Player player, int skill) {
+		int maxStat = player.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
 		if (maxStat <= 10)
 			return 40;
 		if (maxStat <= 19)
@@ -945,18 +937,17 @@ public final class Formulae {
 
 	public static int getSplendorBoost(int amount) {
 		int boost = amount * 9;
-		return boost > 1000 ? 1000 : boost;
+		return Math.min(boost, 1000);
 	}
 
-	public static int calculateGemDrop(Player p) throws InvalidParameterException {
+	public static int calculateGemDrop(Player player) throws InvalidParameterException {
 		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
 		if (roll1 != ItemId.NOTHING_REROLL.id())
 			return roll1;
-		int roll2 = calculateRareDrop(p);
-		return roll2;
+		return calculateRareDrop(player);
 	}
 
-	public static int calculateRareDrop(Player p) throws InvalidParameterException {
+	public static int calculateRareDrop(Player player) throws InvalidParameterException {
 		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
 

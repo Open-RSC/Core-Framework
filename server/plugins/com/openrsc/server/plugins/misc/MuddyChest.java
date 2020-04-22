@@ -15,39 +15,39 @@ public class MuddyChest implements OpLocTrigger, UseLocTrigger {
 	private final int MUDDY_CHEST_OPEN = 221;
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == MUDDY_CHEST) {
-			p.message("the chest is locked");
+			player.message("the chest is locked");
 		}
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == MUDDY_CHEST && item.getCatalogId() == ItemId.MUDDY_KEY.id()) {
 			int respawnTime = 3000;
-			p.message("you unlock the chest with your key");
+			player.message("you unlock the chest with your key");
 			changeloc(obj, respawnTime, MUDDY_CHEST_OPEN);
-			p.message("You find some treasure in the chest");
+			player.message("You find some treasure in the chest");
 
-			p.getCarriedItems().remove(new Item(ItemId.MUDDY_KEY.id())); // remove the muddy key.
-			give(p, ItemId.UNCUT_RUBY.id(), 1);
-			give(p, ItemId.MITHRIL_BAR.id(), 1);
-			give(p, ItemId.LAW_RUNE.id(), 2);
-			give(p, ItemId.ANCHOVIE_PIZZA.id(), 1);
-			give(p, ItemId.MITHRIL_DAGGER.id(), 1);
-			give(p, ItemId.COINS.id(), 50);
-			give(p, ItemId.DEATH_RUNE.id(), 2);
-			give(p, ItemId.CHAOS_RUNE.id(), 10);
+			player.getCarriedItems().remove(new Item(ItemId.MUDDY_KEY.id())); // remove the muddy key.
+			give(player, ItemId.UNCUT_RUBY.id(), 1);
+			give(player, ItemId.MITHRIL_BAR.id(), 1);
+			give(player, ItemId.LAW_RUNE.id(), 2);
+			give(player, ItemId.ANCHOVIE_PIZZA.id(), 1);
+			give(player, ItemId.MITHRIL_DAGGER.id(), 1);
+			give(player, ItemId.COINS.id(), 50);
+			give(player, ItemId.DEATH_RUNE.id(), 2);
+			give(player, ItemId.CHAOS_RUNE.id(), 10);
 		}
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == MUDDY_CHEST;
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == MUDDY_CHEST && item.getCatalogId() == ItemId.MUDDY_KEY.id();
 	}
 }

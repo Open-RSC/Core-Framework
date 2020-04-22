@@ -85,9 +85,9 @@ public class NpcBehavior {
 					npc.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
 					return;
 				}
-				Point p = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
+				Point point = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
 					Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
-				npc.walk(p.getX(), p.getY());
+				npc.walk(point.getX(), point.getY());
 			}
 		}
 
@@ -98,7 +98,7 @@ public class NpcBehavior {
 				|| (blackKnightsFortress)) {
 
 				// We loop through all players in view.
-				for (Player p : npc.getViewArea().getPlayersInView()) {
+				for (Player player : npc.getViewArea().getPlayersInView()) {
 
 					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
 					switch (NpcId.getById(npc.getID())) {
@@ -109,20 +109,20 @@ public class NpcBehavior {
 							range = 10;
 					}
 
-					if (!canAggro(p) || !p.withinRange(npc, range))
+					if (!canAggro(player) || !player.withinRange(npc, range))
 						continue; // Can't aggro or is not in range.
 
 					state = State.AGGRO;
-					target = p;
+					target = player;
 
 					// Remove the opponent if the player has not been engaged in > 10 seconds
-					if (npc.getLastOpponent() == p && (p.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
+					if (npc.getLastOpponent() == player && (player.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
 						npc.setLastOpponent(null);
 						setRoaming();
 
 					// AggroEvent, as NPC should target this player.
 					} else {
-						new AggroEvent(npc.getWorld(), npc, p);
+						new AggroEvent(npc.getWorld(), npc, player);
 					}
 
 					break;
@@ -133,15 +133,15 @@ public class NpcBehavior {
 		else if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
 			npc.getDef().getName().toLowerCase().equals("gnome baller")
 			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
-			for (Player p : npc.getViewArea().getPlayersInView()) {
+			for (Player player : npc.getViewArea().getPlayersInView()) {
 				int range = 1;
-				if (!p.withinRange(npc, range) || !p.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
-					|| !inArray(p.getAttribute("gnomeball_npc", -1), -1, 0))
+				if (!player.withinRange(npc, range) || !player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
+					|| !inArray(player.getAttribute("gnomeball_npc", -1), -1, 0))
 					continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
 
 				//set tackle
 				state = State.TACKLE;
-				target = p;
+				target = player;
 			}
 		}
 	}
@@ -250,31 +250,31 @@ public class NpcBehavior {
 		}
 	}
 
-	private synchronized void attemptTackle(final Npc n, final Player p) {
-		int otherNpcId = p.getAttribute("gnomeball_npc", -1);
-		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || p.getAttribute("throwing_ball_game", false)) {
+	private synchronized void attemptTackle(final Npc n, final Player player) {
+		int otherNpcId = player.getAttribute("gnomeball_npc", -1);
+		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || player.getAttribute("throwing_ball_game", false)) {
 			return;
 		}
 		lastTackleAttempt = System.currentTimeMillis();
-		thinkbubble(p, new Item(ItemId.GNOME_BALL.id()));
-		p.message("the gnome trys to tackle you");
+		thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
+		player.message("the gnome trys to tackle you");
 		if (DataConversions.random(0, 1) == 0) {
 			//successful avoiding tackles gives agility xp
-			p.playerServerMessage(MessageType.QUEST, "You manage to push him away");
-			npcYell(p, npc, "grrrrr");
-			p.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
+			player.playerServerMessage(MessageType.QUEST, "You manage to push him away");
+			npcYell(player, npc, "grrrrr");
+			player.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
-			if (!inArray(p.getAttribute("gnomeball_npc", -1), -1, 0) || p.getAttribute("throwing_ball_game", false)) {
+			if (!inArray(player.getAttribute("gnomeball_npc", -1), -1, 0) || player.getAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
 				return;
 			}
-			p.setAttribute("gnomeball_npc", npc.getID());
-			p.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
-			p.playerServerMessage(MessageType.QUEST, "he takes the ball...");
-			p.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			p.damage((int) (Math.ceil(p.getSkills().getLevel(Skills.HITS) * 0.05)));
-			say(p, null, "ouch");
-			npcYell(p, npc, "yeah");
+			player.setAttribute("gnomeball_npc", npc.getID());
+			player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
+			player.playerServerMessage(MessageType.QUEST, "he takes the ball...");
+			player.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
+			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skills.HITS) * 0.05)));
+			say(player, null, "ouch");
+			npcYell(player, npc, "yeah");
 		}
 	}
 
@@ -310,29 +310,29 @@ public class NpcBehavior {
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
-	private boolean shouldContinueChase(final Npc n, final Mob p) {
-		return p.getLocation().inWilderness()
-			|| (!p.getLocation().inWilderness() && !npc.getLocation().inWilderness() &&
-			p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1));
+	private boolean shouldContinueChase(final Npc n, final Mob player) {
+		return player.getLocation().inWilderness()
+			|| (!player.getLocation().inWilderness() && !npc.getLocation().inWilderness() &&
+			player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1));
 	}
 
-	private boolean canAggro(final Mob p) {
-		boolean outOfBounds = !p.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
+	private boolean canAggro(final Mob player) {
+		boolean outOfBounds = !player.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
 			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
 
-		boolean playerOccupied = p.inCombat();
+		boolean playerOccupied = player.inCombat();
 		boolean playerCombatTimeout = System.currentTimeMillis()
-			- p.getCombatTimer() < (p.getCombatState() == CombatState.RUNNING
-			|| p.getCombatState() == CombatState.WAITING ? 3000 : 1500);
+			- player.getCombatTimer() < (player.getCombatState() == CombatState.RUNNING
+			|| player.getCombatState() == CombatState.WAITING ? 3000 : 1500);
 
-		boolean shouldAttack = (npc.getDef().isAggressive() && (p.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-			|| (p.getLocation().inWilderness() && npc.getLocation().inWilderness())))
-			|| (npc.getLastOpponent() == p && shouldContinueChase(npc, p) && !shouldRetreat(npc));
+		boolean shouldAttack = (npc.getDef().isAggressive() && (player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
+			|| (player.getLocation().inWilderness() && npc.getLocation().inWilderness())))
+			|| (npc.getLastOpponent() == player && shouldContinueChase(npc, player) && !shouldRetreat(npc));
 
-		boolean closeEnough = npc.canReach(p);
+		boolean closeEnough = npc.canReach(player);
 
 		return closeEnough && shouldAttack
-			&& (p instanceof Player && (!((Player) p).isInvulnerableTo(npc) && !((Player) p).isInvisibleTo(npc)))
+			&& (player instanceof Player && (!((Player) player).isInvulnerableTo(npc) && !((Player) player).isInvisibleTo(npc)))
 			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
 	}
 

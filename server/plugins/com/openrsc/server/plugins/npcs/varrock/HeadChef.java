@@ -13,26 +13,26 @@ import static com.openrsc.server.plugins.Functions.*;
 public class HeadChef implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Hello welcome to the chef's guild",
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello welcome to the chef's guild",
 			"Only accomplished chefs and cooks are allowed in here",
 			"Feel free to use any of our facilities");
-		if (p.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
-		&& getMaxLevel(p, Skills.COOKING) >= 99) {
-			npcsay(p, n, "Also for your skill level",
+		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+		&& getMaxLevel(player, Skills.COOKING) >= 99) {
+			npcsay(player, n, "Also for your skill level",
 				"i can offer you cape",
 				"to show all your skill of cooking",
 				"the cost is 99,000 coins");
-			int choice2 = multi(p, n, true, "I'll buy one", "Not at the moment");
+			int choice2 = multi(player, n, true, "I'll buy one", "Not at the moment");
 			if (choice2 == 0) {
-				if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-					if (p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-						give(p, ItemId.COOKING_CAPE.id(), 1);
-						npcsay(p, n, "if you wear this cape while cooking",
+				if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+						give(player, ItemId.COOKING_CAPE.id(), 1);
+						npcsay(player, n, "if you wear this cape while cooking",
 							"you'll be able to cook much faster");
 					}
 				} else {
-					npcsay(p, n, "come back with the money anytime");
+					npcsay(player, n, "come back with the money anytime");
 				}
 			}
 		}
@@ -40,7 +40,7 @@ public class HeadChef implements TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.HEAD_CHEF.id();
 	}
 

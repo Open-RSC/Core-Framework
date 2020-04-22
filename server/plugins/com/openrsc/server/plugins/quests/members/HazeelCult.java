@@ -44,201 +44,201 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 	}
 
 	@Override
-	public void handleReward(Player p) {
-		if (p.getCache().hasKey("good_side")) {
-			p.message("Well done you have completed the Hazeel cult quest");
-			incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
-			p.message("@gre@You haved gained 1 quest point!");
-			p.message("ceril gives you 2000 gold coins");
-			give(p, ItemId.COINS.id(), 2000);
-		} else if (p.getCache().hasKey("evil_side")) {
-			p.message("Hazeel gives you some coins");
-			give(p, ItemId.COINS.id(), 2000);
-			incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
-			p.message("@gre@You haved gained 1 quest point!");
-			p.message("you have completed the hazeel cult quest");
+	public void handleReward(Player player) {
+		if (player.getCache().hasKey("good_side")) {
+			player.message("Well done you have completed the Hazeel cult quest");
+			incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
+			player.message("@gre@You haved gained 1 quest point!");
+			player.message("ceril gives you 2000 gold coins");
+			give(player, ItemId.COINS.id(), 2000);
+		} else if (player.getCache().hasKey("evil_side")) {
+			player.message("Hazeel gives you some coins");
+			give(player, ItemId.COINS.id(), 2000);
+			incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
+			player.message("@gre@You haved gained 1 quest point!");
+			player.message("you have completed the hazeel cult quest");
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.CLAUS.id(), NpcId.CERIL.id(), NpcId.BUTLER.id(), NpcId.HENRYETA.id(), NpcId.PHILIPE.id(),
 				NpcId.CARNILLEAN_GUARD.id(), NpcId.CLIVET.id(), NpcId.CULT_MEMBER.id(), NpcId.ALOMONE.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.CERIL.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					say(p, n, "hello there");
-					npcsay(p, n, "blooming, thieving, wierdos",
+					say(player, n, "hello there");
+					npcsay(player, n, "blooming, thieving, wierdos",
 						"why don't they leave me alone?");
-					int menu = multi(p, n, false, //do not send over
+					int menu = multi(player, n, false, //do not send over
 						"What's wrong?",
 						"You probably deserve it",
 						"You seem uptight, I'll leave you alone");
 					if (menu == 0) {
-						say(p, n, "What's wrong?");
-						npcsay(p, n, "it's those strange folk from the forest",
+						say(player, n, "What's wrong?");
+						npcsay(player, n, "it's those strange folk from the forest",
 							"those freaks keep breaking into my house");
-						say(p, n, "have they taken much?");
-						npcsay(p, n, "they first broke in months ago and stole a suit of armour",
+						say(player, n, "have they taken much?");
+						npcsay(player, n, "they first broke in months ago and stole a suit of armour",
 							"the strange thing is that they've broken in four times since",
 							"but took nothing");
-						say(p, n, "and you are...?");
-						npcsay(p, n, "why, i'm ceril carnillean",
+						say(player, n, "and you are...?");
+						npcsay(player, n, "why, i'm ceril carnillean",
 							"we really are quite a famous bloodline",
 							"we've played a large part in ardounge pollitics for generations",
 							"maybe you could help retrieve the armour?",
 							"of course there would be a handsom cash reward for yourself");
-						int option = multi(p, n, false, //do not send over
+						int option = multi(player, n, false, //do not send over
 							"No thanks i've got plans",
 							"yes, off course,i'd be happy to help");
 						if (option == 0) {
-							say(p, n, "no thanks i've got plans");
-							npcsay(p, n, "no wonder i'm the one with the big house and you're on the streets");
+							say(player, n, "no thanks i've got plans");
+							npcsay(player, n, "no wonder i'm the one with the big house and you're on the streets");
 						} else if (option == 1) {
-							say(p, n, "yes of course, i'd be happy to help");
-							npcsay(p, n, "that's very kind of you",
+							say(player, n, "yes of course, i'd be happy to help");
+							npcsay(player, n, "that's very kind of you",
 								"I caught a glimpse of the thieves leaving",
 								"but due to ermm... my cold... I was unable to give chase",
 								"they were dressed all in black",
 								"I think they may have belonged to some sort of cult");
-							say(p, n, "do you know where they are?");
-							npcsay(p, n, "my old butler once followed them",
+							say(player, n, "do you know where they are?");
+							npcsay(player, n, "my old butler once followed them",
 								"to a cave entrance in the forest south of here",
 								"unfortunately the next night he died in his sleep");
-							say(p, n, "that's awful");
-							npcsay(p, n, "it's ok, a replacement arrived the next day",
+							say(player, n, "that's awful");
+							npcsay(player, n, "it's ok, a replacement arrived the next day",
 								"he's been great, cooks an excellent broth");
-							say(p, n, "ok ceril, i'll see what i can do");
-							p.updateQuestStage(this, 1);
+							say(player, n, "ok ceril, i'll see what i can do");
+							player.updateQuestStage(this, 1);
 						}
 					} else if (menu == 1) {
-						say(p, n, "you probably deserve it");
-						npcsay(p, n, "who are you to judge me?",
+						say(player, n, "you probably deserve it");
+						npcsay(player, n, "who are you to judge me?",
 							"hmmm, you look like a peasant",
 							"i'm wasting my time talking to you");
 					} else if (menu == 2) {
-						say(p, n, "you seem uptight,i'll leave you alone");
-						npcsay(p, n, "yes, i doubt you could help");
+						say(player, n, "you seem uptight,i'll leave you alone");
+						npcsay(player, n, "yes, i doubt you could help");
 					}
 					break;
 				case 1:
 				case 2:
-					say(p, n, "hello ceril");
-					npcsay(p, n, "it's sir ceril to you",
+					say(player, n, "hello ceril");
+					npcsay(player, n, "it's sir ceril to you",
 						"and shouldn't you be out recovering my suit of armour?");
 					break;
 				case 3:
-					npcsay(p, n, "have you had any luck yet?");
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello ceril, i've discovered the hideout");
-						npcsay(p, n, "well done... and the armour?");
-						say(p, n, "i'm afraid not",
+					npcsay(player, n, "have you had any luck yet?");
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello ceril, i've discovered the hideout");
+						npcsay(player, n, "well done... and the armour?");
+						say(player, n, "i'm afraid not",
 							"i spoke to a cult member in the entrance of the cave",
 							"but he escaped into the sewer systems",
 							"seems they have a grievance with your family",
 							"something to do with some bloke called hazeel");
-						npcsay(p, n, "err errmm... no",
+						npcsay(player, n, "err errmm... no",
 							"They're obviously all mad",
 							"just find them and bring back the armour");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "i'm afraid not ceril");
-						npcsay(p, n, "well that's strange",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "i'm afraid not ceril");
+						npcsay(player, n, "well that's strange",
 							"the butler seemed quite sure about their location");
 						return;
 					}
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						if (p.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.of(false))) {
-							say(p, n, "ceril, how are you?",
+					if (player.getCache().hasKey("good_side")) {
+						if (player.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.of(false))) {
+							say(player, n, "ceril, how are you?",
 								"Look, I've found the armour");
-							npcsay(p, n, "well done i must say i am impressed");
-							mes(p, "you give ceril the family armour");
-							p.getCarriedItems().remove(new Item(ItemId.CARNILLEAN_ARMOUR.id()));
-							npcsay(p, n, "before we send you on your way",
+							npcsay(player, n, "well done i must say i am impressed");
+							mes(player, "you give ceril the family armour");
+							player.getCarriedItems().remove(new Item(ItemId.CARNILLEAN_ARMOUR.id()));
+							npcsay(player, n, "before we send you on your way",
 								"i'll get our butler jones",
 								"to whip you up some of his special broth");
-							say(p, n, "i'd rather not",
+							say(player, n, "i'd rather not",
 								"i overheard the cult members talking",
 								"the buttler is really working for them");
-							npcsay(p, n, "that's it, come with me",
+							npcsay(player, n, "that's it, come with me",
 								"we'll sort this out once and for all");
-							mes(p, "you follow ceril up to butler Jones' room");
-							p.teleport(613, 1562);
-							mes(p, "ceril speaks briefly with Jones");
-							Npc ceril = ifnearvisnpc(p, NpcId.CERIL.id(), 10);
-							npcsay(p, ceril, "Well, he assures me that he's a loyal hard working man",
+							mes(player, "you follow ceril up to butler Jones' room");
+							player.teleport(613, 1562);
+							mes(player, "ceril speaks briefly with Jones");
+							Npc ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
+							npcsay(player, ceril, "Well, he assures me that he's a loyal hard working man",
 								"I cannot fathom, why you would believe he is a spy");
-							say(p, ceril, "surely you won't take his word for it?");
-							npcsay(p, ceril, "we have also decided that due to the humilliation you have caused",
+							say(player, ceril, "surely you won't take his word for it?");
+							npcsay(player, ceril, "we have also decided that due to the humilliation you have caused",
 								"it is only fair that Jones shall recieve your reward",
 								"you shall recieve payment more suited to your low life personality");
-							mes(p, "ceril gives you 5 gold coins");
-							give(p, ItemId.COINS.id(), 5);
-							mes(p, "ceril gives jones 695 gold coins");
-							npcsay(p, ceril, "now take it and leave");
-							mes(p, "butler Jones has a slight grin",
+							mes(player, "ceril gives you 5 gold coins");
+							give(player, ItemId.COINS.id(), 5);
+							mes(player, "ceril gives jones 695 gold coins");
+							npcsay(player, ceril, "now take it and leave");
+							mes(player, "butler Jones has a slight grin",
 								"You're going to need more than just your word",
 								"To prove Jones' treachary");
-							p.updateQuestStage(this, 5);
+							player.updateQuestStage(this, 5);
 						} else {
-							say(p, n, "ceril, how are you?");
-							npcsay(p, n, "Im ok. Have you found the armour");
-							say(p, n, "i'm afraid not");
-							npcsay(p, n, "well i'm not paying you to see the sights");
-							say(p, n, "okay, i'll go and try and retrieve it for you");
+							say(player, n, "ceril, how are you?");
+							npcsay(player, n, "Im ok. Have you found the armour");
+							say(player, n, "i'm afraid not");
+							npcsay(player, n, "well i'm not paying you to see the sights");
+							say(player, n, "okay, i'll go and try and retrieve it for you");
 						}
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello again");
-						npcsay(p, n, "oh my, the misery, the pain",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello again");
+						npcsay(player, n, "oh my, the misery, the pain",
 							"my son is a good boy but stupid as well",
 							"i can't believe he gave his dinner to scruffy",
 							"without having the servents check it for poison first",
 							"how could he be so careless?");
-						say(p, n, "scruffy?");
-						npcsay(p, n, "he's been in the family for twenty years the poor dog",
+						say(player, n, "scruffy?");
+						npcsay(player, n, "he's been in the family for twenty years the poor dog",
 							"what did he ever do to hurt anyone?");
 						return;
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "you owe me money");
-						npcsay(p, n, "i owe you nothing now go away",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "you owe me money");
+						npcsay(player, n, "i owe you nothing now go away",
 							"before i have jones throw you out");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "ceril, how are you?");
-						npcsay(p, n, "I'm devestated",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "ceril, how are you?");
+						npcsay(player, n, "I'm devestated",
 							"i don't know what to do with myself since i lost scruffy");
-						mes(p, "ceril bursts into tears");
+						mes(player, "ceril bursts into tears");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello ceril, how are you?");
-					npcsay(p, n, "I think the thieves may have been back in the house");
-					say(p, n, "why?");
-					npcsay(p, n, "i'm not sure but it seem's as if some of my books",
+					say(player, n, "hello ceril, how are you?");
+					npcsay(player, n, "I think the thieves may have been back in the house");
+					say(player, n, "why?");
+					npcsay(player, n, "i'm not sure but it seem's as if some of my books",
 						"have been re-arranged in my study",
 						"it's either that or i'm losing my marbles");
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello ceril");
-						npcsay(p, n, "well hello there",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello ceril");
+						npcsay(player, n, "well hello there",
 							"brave adventurer, it's good to see you again",
 							"if it wasn't for you",
 							"that butler jones would have poisoned me by now");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello ceril");
-						npcsay(p, n, "i maybe wrong",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello ceril");
+						npcsay(player, n, "i maybe wrong",
 							"but ever since i asked for your help",
 							"thing's have gone from bad to worse",
 							"i think from now on you better keep out of my way");
@@ -247,71 +247,71 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 			}
 		}
 		else if (n.getID() == NpcId.BUTLER.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 2:
-					say(p, n, "hello there");
-					npcsay(p, n, "hello,how are you today?");
-					say(p, n, "good thanks and yourself");
-					npcsay(p, n, "fine and dandy");
+					say(player, n, "hello there");
+					npcsay(player, n, "hello,how are you today?");
+					say(player, n, "good thanks and yourself");
+					npcsay(player, n, "fine and dandy");
 					break;
 				case 1:
-					say(p, n, "hello, what is this building?");
-					npcsay(p, n, "this is the property of Sir Ceril Carnillean",
+					say(player, n, "hello, what is this building?");
+					npcsay(player, n, "this is the property of Sir Ceril Carnillean",
 						"of the noble carnillean family",
 						"you're welcome to look around",
 						"but i'm afraid i'll have to keep an eye on you",
 						"we've been having a real problem with thieves",
 						"strange cult folk coming out the forest");
-					say(p, n, "that's a shame");
-					npcsay(p, n, "yes well these things are bound to happen",
+					say(player, n, "that's a shame");
+					npcsay(player, n, "yes well these things are bound to happen",
 						"when you're as wealthy as the Varnilleans");
-					int butMenu = multi(p, n, false, //do not send over
+					int butMenu = multi(player, n, false, //do not send over
 						"Have you any more info on the carnilleans?",
 						"How long have you worked here?",
 						"Ok then take care");
 					if (butMenu == 0) {
-						say(p, n, "Have you any more info on the carnilleans?");
-						npcsay(p, n, "there's a lot i could tell you",
+						say(player, n, "Have you any more info on the carnilleans?");
+						npcsay(player, n, "there's a lot i could tell you",
 							"about the carnillean family history",
 							"i'm afraid if did speak about such matter's",
 							"i would lose my job and that i cannot risk");
 					} else if (butMenu == 1) {
-						say(p, n, "how long have you worked here?");
-						npcsay(p, n, "long enough to know the carnilleans",
+						say(player, n, "how long have you worked here?");
+						npcsay(player, n, "long enough to know the carnilleans",
 							"are not as innocent or noble as they seem");
 					} else if (butMenu == 2) {
-						say(p, n, "ok then take care");
-						npcsay(p, n, "you to");
+						say(player, n, "ok then take care");
+						npcsay(player, n, "you to");
 					}
 					break;
 				case 3:
-					say(p, n, "how long have you worked here?");
-					npcsay(p, n, "long enough to know the carnillean's",
+					say(player, n, "how long have you worked here?");
+					npcsay(player, n, "long enough to know the carnillean's",
 						"are not as innocent or noble as they seem");
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "jones i need to talk to you");
-						npcsay(p, n, "do you need some help with your quest?");
-						say(p, n, "you can stop the act jones",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "jones i need to talk to you");
+						npcsay(player, n, "do you need some help with your quest?");
+						say(player, n, "you can stop the act jones",
 							"i know you're working for the cult");
-						npcsay(p, n, "what? don't be so silly");
-						say(p, n, "I overheard the cult leader talking about you");
-						npcsay(p, n, "look here,you may think you know something",
+						npcsay(player, n, "what? don't be so silly");
+						say(player, n, "I overheard the cult leader talking about you");
+						npcsay(player, n, "look here,you may think you know something",
 							"but really you have no idea");
-						say(p, n, "i know once i reveal the truth",
+						say(player, n, "i know once i reveal the truth",
 							"you'll be locked up");
-						npcsay(p, n, "you think that old fool ceril",
+						npcsay(player, n, "you think that old fool ceril",
 							"will take your word over mine",
 							"he completely trust's me");
-						say(p, n, "we will have to see about that");
-						npcsay(p, n, "i'll warn you once more traveller",
+						say(player, n, "we will have to see about that");
+						npcsay(player, n, "i'll warn you once more traveller",
 							"don't get involved");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "hello friend,i heard about your handy work",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "hello friend,i heard about your handy work",
 							"quite amusing really",
 							"I'm sure hazeel will be pleased with you anyway",
 							"keep up the good work");
@@ -319,110 +319,110 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "you fool",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "you fool",
 							"did you think you could simply accuse me and save the day?",
 							"we've been working on this for years",
 							"your interference is only a minor set back to our plans",
 							"and when the mighty hazeel does return",
 							"the likes of you and the carnilleans will be the first of many to suffer");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						npcsay(p, n, "hello again friend",
+					} else if (player.getCache().hasKey("evil_side")) {
+						npcsay(player, n, "hello again friend",
 							"I see you you have the mark",
 							"you should keep that covered up");
-						say(p, n, "oh that's just an old family pass down");
-						npcsay(p, n, "you don't have to pretend to me friend",
+						say(player, n, "oh that's just an old family pass down");
+						npcsay(player, n, "you don't have to pretend to me friend",
 							"our cause is one and the same",
 							"the sooner lord hazeel is avenged",
 							"the better for us and this city");
-						say(p, n, "have you any idea where the sacred script is");
-						npcsay(p, n, "no idea i'm afraid",
+						say(player, n, "have you any idea where the sacred script is");
+						npcsay(player, n, "no idea i'm afraid",
 							"it must be somewhere in the house",
 							"but i can't find it for the life of me",
 							"i've searched high and low");
-						say(p, n, "doesn't ceril get suspisous");
-						npcsay(p, n, "that old fool",
+						say(player, n, "doesn't ceril get suspisous");
+						npcsay(player, n, "that old fool",
 							"he can't can't see the forest for the tree's");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello jones");
-					npcsay(p, n, "have you managed to find the script?");
-					if (p.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
-						say(p, n, "I have it here");
-						npcsay(p, n, "incredible, we owe you a lot",
+					say(player, n, "hello jones");
+					npcsay(player, n, "have you managed to find the script?");
+					if (player.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
+						say(player, n, "I have it here");
+						npcsay(player, n, "incredible, we owe you a lot",
 							"you better get it back to our hideout as quick as you can",
 							"these our exciting times traveller",
 							"once the great hazeel returns",
 							"things are going to really change around here");
 					} else {
-						say(p, n, "i'm afraid i've lost it");
-						npcsay(p, n, "how could you be so foolish",
+						say(player, n, "i'm afraid i've lost it");
+						npcsay(player, n, "how could you be so foolish",
 							"the future of our people completly relys on that script",
 							"you better find it again quickly");
 					}
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello stranger");
-						npcsay(p, n, "why hello there");
-						say(p, n, "i take it you're the new butler");
-						npcsay(p, n, "that's right",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello stranger");
+						npcsay(player, n, "why hello there");
+						say(player, n, "i take it you're the new butler");
+						npcsay(player, n, "that's right",
 							"i think they had some problems with the last one");
-						say(p, n, "you could say that");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello jones");
-						npcsay(p, n, "it's an honour to be in your presence again traveller",
+						say(player, n, "you could say that");
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello jones");
+						npcsay(player, n, "it's an honour to be in your presence again traveller",
 							"I hope things are well");
-						say(p, n, "not bad, yourself");
-						npcsay(p, n, "i'm good thanks");
+						say(player, n, "not bad, yourself");
+						npcsay(player, n, "i'm good thanks");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.HENRYETA.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
-					say(p, n, "hello");
-					npcsay(p, n, "oh hello",
+					say(player, n, "hello");
+					npcsay(player, n, "oh hello",
 						"if you wish to look around the carnillean family home",
 						"please refraine from touching anything",
 						"with those grubby hands of yours");
 					break;
 				case 3:
-					say(p, n, "hello madam");
-					npcsay(p, n, "i hope you've found those awful holigans",
+					say(player, n, "hello madam");
+					npcsay(player, n, "i hope you've found those awful holigans",
 						"I can't sleep at night");
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "i'm working on it madam");
-						npcsay(p, n, "i don't know",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "i'm working on it madam");
+						npcsay(player, n, "i don't know",
 							"there really are some strange folk around these parts");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "I'm afraid not");
-						npcsay(p, n, "you really are useless");
-						say(p, n, "thanks a lot");
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "I'm afraid not");
+						npcsay(player, n, "you really are useless");
+						say(player, n, "thanks a lot");
 					}
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "oh, hello there adventurer",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "oh, hello there adventurer",
 							"i hope you were careful dealing with those nasty men");
-						say(p, n, "i was fine, thanks");
+						say(player, n, "i was fine, thanks");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello are you ok?");
-						npcsay(p, n, "no i'm not ok",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello are you ok?");
+						npcsay(player, n, "no i'm not ok",
 							"those animals slaughtered my precious scruffy",
 							"i'll never recover",
 							"i'm emotionaly scarred for life");
-						say(p, n, "i'm sorry to hear that");
-						npcsay(p, n, "don't be sorry it's not your fault",
+						say(player, n, "i'm sorry to hear that");
+						npcsay(player, n, "don't be sorry it's not your fault",
 							"just find those animals and punish them severely",
 							"before i get to them first");
 						return;
@@ -430,239 +430,239 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					break;
 				case 5:
 				case 6:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello henyeta");
-						npcsay(p, n, "don't think you can accuse my trusted staff",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello henyeta");
+						npcsay(player, n, "don't think you can accuse my trusted staff",
 							"then be friends with me");
-						say(p, n, "what i said about jones is true");
-						npcsay(p, n, "don't be so ridiculous",
+						say(player, n, "what i said about jones is true");
+						npcsay(player, n, "don't be so ridiculous",
 							"next you'll tell me he murdered our old butler");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "i'm sorry i'm too depressed to talk to you",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "i'm sorry i'm too depressed to talk to you",
 							"poor scruffy...");
-						say(p, n, "yeah, poor scruffy!");
+						say(player, n, "yeah, poor scruffy!");
 						return;
 					}
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "hello again adventurer\"",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "hello again adventurer\"",
 							"things really have picked up around here",
 							"since you dealt with those nasty cult members",
 							"good to hear");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "i've been instructed by my husband not to talk to you",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "i've been instructed by my husband not to talk to you",
 							"so go away and leave me alone");
-						say(p, n, "charming");
+						say(player, n, "charming");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.PHILIPE.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
-					say(p, n, "hello there");
-					npcsay(p, n, "what have you brought me?",
+					say(player, n, "hello there");
+					npcsay(player, n, "what have you brought me?",
 						"I want some more toys");
-					say(p, n, "I'm afraid i don't have any");
-					npcsay(p, n, "toys, i want toys");
+					say(player, n, "I'm afraid i don't have any");
+					npcsay(player, n, "toys, i want toys");
 					break;
 				case 3:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "i want more toys");
-						say(p, n, "sorry i don't have any");
-						npcsay(p, n, "i want sweets, gimme sweets");
-						say(p, n, "no sorrry i don't have sweets either");
-						npcsay(p, n, "i hate you, i want my mum");
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "i want more toys");
+						say(player, n, "sorry i don't have any");
+						npcsay(player, n, "i want sweets, gimme sweets");
+						say(player, n, "no sorrry i don't have sweets either");
+						npcsay(player, n, "i hate you, i want my mum");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "i want more toys");
-						say(p, n, "sorry i don't have any");
-						npcsay(p, n, "i want sweets, gimme sweets");
-						say(p, n, "no sorrry i don't have sweets either");
-						npcsay(p, n, "i hate you, i want my mum");
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "i want more toys");
+						say(player, n, "sorry i don't have any");
+						npcsay(player, n, "i want sweets, gimme sweets");
+						say(player, n, "no sorrry i don't have sweets either");
+						npcsay(player, n, "i hate you, i want my mum");
 						return;
 					}
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "mommy said your here to",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "mommy said your here to",
 							"kill all the nasty men",
 							"that come into our house");
-						say(p, n, "something like that");
-						npcsay(p, n, "can i watch?");
-						say(p, n, "no");
+						say(player, n, "something like that");
+						npcsay(player, n, "can i watch?");
+						say(player, n, "no");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello youngster");
-						mes(p, "the boy looks very upset");
-						npcsay(p, n, "someone killed scruffy",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello youngster");
+						mes(player, "the boy looks very upset");
+						npcsay(player, n, "someone killed scruffy",
 							"i liked scruffy",
 							"he never told me off");
-						say(p, n, "that's unfortunate");
-						npcsay(p, n, "i want my mommy");
+						say(player, n, "that's unfortunate");
+						npcsay(player, n, "i want my mommy");
 						return;
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello youngster");
-						npcsay(p, n, "daddy say's you dont like Jones",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello youngster");
+						npcsay(player, n, "daddy say's you dont like Jones",
 							"Jones is nice",
 							"he brings me toys and sweets");
-						say(p, n, "jones is a bad person philipe");
-						npcsay(p, n, "you're a bad person",
+						say(player, n, "jones is a bad person philipe");
+						npcsay(player, n, "you're a bad person",
 							"i don't like you");
-						say(p, n, "ok");
+						say(player, n, "ok");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "mommy said your here to",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "mommy said your here to",
 							"kill all the nasty men",
 							"that come into our house");
-						say(p, n, "something like that");
-						npcsay(p, n, "can i watch?");
-						say(p, n, "no");
+						say(player, n, "something like that");
+						npcsay(player, n, "can i watch?");
+						say(player, n, "no");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello youngster");
-					npcsay(p, n, "why are you still here?");
-					say(p, n, "just looking around");
-					npcsay(p, n, "have you got me some toys?");
-					say(p, n, "no");
-					npcsay(p, n, "then i don't like you");
-					say(p, n, "that's a shame");
+					say(player, n, "hello youngster");
+					npcsay(player, n, "why are you still here?");
+					say(player, n, "just looking around");
+					npcsay(player, n, "have you got me some toys?");
+					say(player, n, "no");
+					npcsay(player, n, "then i don't like you");
+					say(player, n, "that's a shame");
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello philipe");
-						npcsay(p, n, "i want more toys");
-						say(p, n, "sorry i don't have any");
-						npcsay(p, n, "i want sweets, gimme sweets");
-						say(p, n, "no sorrry",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello philipe");
+						npcsay(player, n, "i want more toys");
+						say(player, n, "sorry i don't have any");
+						npcsay(player, n, "i want sweets, gimme sweets");
+						say(player, n, "no sorrry",
 							"I don't have any sweets either");
-						npcsay(p, n, "i hate you,i want my mum");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello philipe");
-						npcsay(p, n, "i want more toys");
-						say(p, n, "sorry i don't have any");
-						npcsay(p, n, "i want sweets, gimme sweets");
-						say(p, n, "no sorrry",
+						npcsay(player, n, "i hate you,i want my mum");
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello philipe");
+						npcsay(player, n, "i want more toys");
+						say(player, n, "sorry i don't have any");
+						npcsay(player, n, "i want sweets, gimme sweets");
+						say(player, n, "no sorrry",
 							"I don't have any sweets either");
-						npcsay(p, n, "i hate you,i want my mum");
+						npcsay(player, n, "i hate you,i want my mum");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.CLAUS.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
-					say(p, n, "hello");
-					npcsay(p, n, "sorry i can't talk now",
+					say(player, n, "hello");
+					npcsay(player, n, "sorry i can't talk now",
 						"you would be amazed how many",
 						"meals this family can go through");
 					break;
 				case 2:
 					break;
 				case 3:
-					say(p, n, "hello");
-					npcsay(p, n, "you're that chap they've asked to help get those nasty folk",
+					say(player, n, "hello");
+					npcsay(player, n, "you're that chap they've asked to help get those nasty folk",
 						"that keep breaking in");
-					say(p, n, "yep, that's me");
-					npcsay(p, n, "well i wish the best of luck");
+					say(player, n, "yep, that's me");
+					npcsay(player, n, "well i wish the best of luck");
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "hello, how are you today");
-						say(p, n, "not bad thanks");
-						npcsay(p, n, "good good");
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "hello, how are you today");
+						say(player, n, "not bad thanks");
+						npcsay(player, n, "good good");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						npcsay(p, n, "hello there",
+					} else if (player.getCache().hasKey("evil_side")) {
+						npcsay(player, n, "hello there",
 							"caught any thieves yet?");
-						say(p, n, "afraid not");
-						npcsay(p, n, "keep at it");
+						say(player, n, "afraid not");
+						npcsay(player, n, "keep at it");
 						return;
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "i don't understand it",
+					if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "i don't understand it",
 							"how could someone slip poison in my cooking",
 							"without me even noticing",
 							"I'll be lucky if the carnilleans don't fire me",
 							"those animals how could they do it",
 							"poor scruffy");
 						return;
-					} else if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "hello, how are you today");
-						say(p, n, "not bad thanks");
-						npcsay(p, n, "good good");
+					} else if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "hello, how are you today");
+						say(player, n, "not bad thanks");
+						npcsay(player, n, "good good");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello there");
-					npcsay(p, n, "those animals how could they do it",
+					say(player, n, "hello there");
+					npcsay(player, n, "those animals how could they do it",
 						"poor scruffy");
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello cook");
-						npcsay(p, n, "well hello there traveller",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello cook");
+						npcsay(player, n, "well hello there traveller",
 							"are we fit and well");
-						say(p, n, "yes i'm fine");
-						npcsay(p, n, "good to hear");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello cook");
-						npcsay(p, n, "get out of my kitchen",
+						say(player, n, "yes i'm fine");
+						npcsay(player, n, "good to hear");
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello cook");
+						npcsay(player, n, "get out of my kitchen",
 							"can't you tell your not welcome around here");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.CARNILLEAN_GUARD.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
-					say(p, n, "hello");
-					npcsay(p, n, "hello,i haven't seen you before",
+					say(player, n, "hello");
+					npcsay(player, n, "hello,i haven't seen you before",
 						"if you've come to look at the carnillean family home",
 						"just make sure you behave yourself",
 						"we've had enough wierdos causing trouble",
 						"round here of late");
 					break;
 				case 3:
-					say(p, n, "hello");
-					npcsay(p, n, "hi i heard you're after the cult",
+					say(player, n, "hello");
+					npcsay(player, n, "hi i heard you're after the cult",
 						"who broke in the other night",
 						"blooming wierdo's");
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "hello brave adventurer",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "hello brave adventurer",
 							"keep up the good work");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "oh hello, did you hear?",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "oh hello, did you hear?",
 							"the cult members have been back",
 							"I don't know what they've done",
 							"but ceril is really upset");
@@ -670,9 +670,9 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "hello adventurer",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "hello adventurer",
 							"i heard you've accused butler jones",
 							"of being involved with the cult",
 							"that's right",
@@ -681,30 +681,30 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"a day after the old butler died",
 							"it seems too much of a coincidence to me");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "hello adventurer",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "hello adventurer",
 							"you're still hanging around then");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello guard");
-					npcsay(p, n, "hello there",
+					say(player, n, "hello guard");
+					npcsay(player, n, "hello there",
 						"i hope you find the cult soon",
 						"we think there may have been another burglary");
-					say(p, n, "that's worrying");
-					npcsay(p, n, "i just don't know how they do it",
+					say(player, n, "that's worrying");
+					npcsay(player, n, "i just don't know how they do it",
 						"it seems like they're right under our noses");
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "well if it isn't our own local hero",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "well if it isn't our own local hero",
 							"it's good to see you in these parts again");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "you again",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "you again",
 							"didn't i tell you you're not welcome around here",
 							"now leave before we have to get rough with you");
 					}
@@ -712,32 +712,32 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 			}
 		}
 		else if (n.getID() == NpcId.CLIVET.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					say(p, n, "hello there");
-					npcsay(p, n, "what do you want traveller");
-					say(p, n, "just passing by");
-					npcsay(p, n, "you have no business here",
+					say(player, n, "hello there");
+					npcsay(player, n, "what do you want traveller");
+					say(player, n, "just passing by");
+					npcsay(player, n, "you have no business here",
 						"leave...now");
 					break;
 				case 1:
-					say(p, n, "do you know the carnilleans?");
-					npcsay(p, n, "i'll mind my business you mind yours");
-					say(p, n, "look i know you're hiding something",
+					say(player, n, "do you know the carnilleans?");
+					npcsay(player, n, "i'll mind my business you mind yours");
+					say(player, n, "look i know you're hiding something",
 						"i've heard there's a cult hideout down here");
-					npcsay(p, n, "if you know what's best for you you'll leave now");
-					say(p, n, "i have my orders");
-					npcsay(p, n, "so that two faced cold hearted snob has got to you too has he?");
-					say(p, n, "ceril carnillean is a decent man");
-					npcsay(p, n, "there's a lot more than meets the eye to the carnilleans",
+					npcsay(player, n, "if you know what's best for you you'll leave now");
+					say(player, n, "i have my orders");
+					npcsay(player, n, "so that two faced cold hearted snob has got to you too has he?");
+					say(player, n, "ceril carnillean is a decent man");
+					npcsay(player, n, "there's a lot more than meets the eye to the carnilleans",
 						"and none of it's decent");
-					p.updateQuestStage(this, 2);
-					int menu = multi(p, n, false, //do not send over
+					player.updateQuestStage(this, 2);
+					int menu = multi(player, n, false, //do not send over
 						"What do you mean?",
 						"I've heard enough of your rubbish");
 					if (menu == 0) {
-						say(p, n, "what do you mean?");
-						npcsay(p, n, "the carnillean family house does not belong to them",
+						say(player, n, "what do you mean?");
+						npcsay(player, n, "the carnillean family house does not belong to them",
 							"it's original owner was lord hazeel",
 							"hazeel was one of the mahjarrat followers of zamorak",
 							"The carnilleans harassed hazeel and his family for decades",
@@ -745,73 +745,73 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"one by one they tortured and then butchered him and his family",
 							"the next day the carnillean forefathers moved into the property",
 							"they've lived there on hazeel's wealth ever since");
-						say(p, n, "ardounge history and pollitics are not my concern",
+						say(player, n, "ardounge history and pollitics are not my concern",
 							"i've been asked to do a job and i plan to carry it through");
-						npcsay(p, n, "well now i'm asking you to do a job",
+						npcsay(player, n, "well now i'm asking you to do a job",
 							"hazeel is going to return my friend",
 							"those who aid his journey will gain rewards",
 							"help us avenge hazeel's spirit so he may return");
-						int chooseSideMenu = multi(p, n, false, //do not send over
+						int chooseSideMenu = multi(player, n, false, //do not send over
 							"You're crazy, i'd never help you",
 							"So what would i have to do?");
 						if (chooseSideMenu == 0) {
 							//GOOD SIDE;
-							say(p, n, "You're crazy, i'd never help you");
-							npcsay(p, n, "then you're a fool",
+							say(player, n, "You're crazy, i'd never help you");
+							npcsay(player, n, "then you're a fool",
 								"go back to your adventures traveller");
-							mes(p, "clivet boards the raft and pushes of down the sewer system");
+							mes(player, "clivet boards the raft and pushes of down the sewer system");
 							n.remove();
-							mes(p, "you hear him call out",
+							mes(player, "you hear him call out",
 								"@yel@clivet:you'll never find us...");
 							//SET GOOD SIDE;
-							p.updateQuestStage(this, 3);
-							p.getCache().store("good_side", true);
+							player.updateQuestStage(this, 3);
+							player.getCache().store("good_side", true);
 						} else if (chooseSideMenu == 1) {
 							//EVIL SIDE;
-							say(p, n, "so what would i have to do?");
-							npcsay(p, n, "first you must prove your loyalty to the cause",
+							say(player, n, "so what would i have to do?");
+							npcsay(player, n, "first you must prove your loyalty to the cause",
 								"you must kill one of the carnillean family members",
 								"then we will know who's side you're really on",
 								"so will you do it?");
-							int whichSideMenu = multi(p, n, false, //do not send over
+							int whichSideMenu = multi(player, n, false, //do not send over
 								"No i won't do it",
 								"Ok i'll do it");
 							if (whichSideMenu == 0) {
-								say(p, n, "no i won't do it");
-								npcsay(p, n, "then you're a fool",
+								say(player, n, "no i won't do it");
+								npcsay(player, n, "then you're a fool",
 									"go back to your adventures traveller");
-								mes(p, "clivet boards the raft and pushes of down the sewer system");
+								mes(player, "clivet boards the raft and pushes of down the sewer system");
 								n.remove();
-								mes(p, "you hear him call out",
+								mes(player, "you hear him call out",
 									"@yel@clivet:you'll never find us...");
 								//SET GOOD SIDE;
-								p.updateQuestStage(this, 3);
-								p.getCache().store("good_side", true);
+								player.updateQuestStage(this, 3);
+								player.getCache().store("good_side", true);
 							} else if (whichSideMenu == 1) {
-								say(p, n, "ok, i'll do it");
-								npcsay(p, n, "good, few see through the carnillean lies",
+								say(player, n, "ok, i'll do it");
+								npcsay(player, n, "good, few see through the carnillean lies",
 									"but i guessed you were of stronger character",
 									"here take this poison, pour it into one of their meals",
 									"once the deed is done return here");
-								give(p, ItemId.POISON.id(), 1);
-								p.updateQuestStage(this, 3);
-								p.getCache().store("evil_side", true);
+								give(player, ItemId.POISON.id(), 1);
+								player.updateQuestStage(this, 3);
+								player.getCache().store("evil_side", true);
 							}
 						}
 					} else if (menu == 1) {
-						say(p, n, "I've heard enough of your rubbish");
-						npcsay(p, n, "then leave, fool");
+						say(player, n, "I've heard enough of your rubbish");
+						npcsay(player, n, "then leave, fool");
 					}
 					break;
 				case 2:
-					say(p, n, "hello");
-					npcsay(p, n, "so you've returned\"",
+					say(player, n, "hello");
+					npcsay(player, n, "so you've returned\"",
 						"now do you want to know the truth about the carnilleans?");
-					int menu2 = multi(p, n, false, //do not send over
+					int menu2 = multi(player, n, false, //do not send over
 						"What do you mean?", "I've heard enough of your rubbish");
 					if (menu2 == 0) {
-						say(p, n, "what do you mean?");
-						npcsay(p, n, "the carnillean family house does not belong to them",
+						say(player, n, "what do you mean?");
+						npcsay(player, n, "the carnillean family house does not belong to them",
 							"it's original owner was lord hazeel",
 							"hazeel was one of the mahjarrat followers of zamorak",
 							"The carnilleans harassed hazeel and his family for decades",
@@ -819,228 +819,228 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"one by one they tortured and then butchered him and his family",
 							"the next day the carnillean forefathers moved into the property",
 							"they've lived there on hazeel's wealth ever since");
-						say(p, n, "ardounge history and pollitics are not my concern",
+						say(player, n, "ardounge history and pollitics are not my concern",
 							"i've been asked to do a job and i plan to carry it through");
-						npcsay(p, n, "well now i'm asking you to do a job",
+						npcsay(player, n, "well now i'm asking you to do a job",
 							"hazeel is going to return my friend",
 							"those who aid his journey will gain rewards",
 							"help us avenge hazeel's spirit so he may return");
-						int chooseSideMenu = multi(p, n, false, //do not send over
+						int chooseSideMenu = multi(player, n, false, //do not send over
 							"You're crazy, i'd never help you",
 							"So what would i have to do?");
 						if (chooseSideMenu == 0) {
 							//GOOD SIDE;
-							say(p, n, "You're crazy, i'd never help you");
-							npcsay(p, n, "then you're a fool",
+							say(player, n, "You're crazy, i'd never help you");
+							npcsay(player, n, "then you're a fool",
 								"go back to your adventures traveller");
-							mes(p, "the man jumps onto a small raft",
+							mes(player, "the man jumps onto a small raft",
 								"and pushes off down the sewer system");
 							n.remove();
-							mes(p, "you hear him call out",
+							mes(player, "you hear him call out",
 								"@yel@clivet:you'll never find us...");
 							//SET GOOD SIDE;
-							p.updateQuestStage(this, 3);
-							p.getCache().store("good_side", true);
+							player.updateQuestStage(this, 3);
+							player.getCache().store("good_side", true);
 						} else if (chooseSideMenu == 1) {
 							//EVIL SIDE;
-							say(p, n, "so what would i have to do?");
-							npcsay(p, n, "first you must prove your loyalty to the cause",
+							say(player, n, "so what would i have to do?");
+							npcsay(player, n, "first you must prove your loyalty to the cause",
 								"you must kill one of the carnillean family members",
 								"then we will know who's side you're really on",
 								"so will you do it?");
-							int whichSideMenu = multi(p, n, false, //do not send over
+							int whichSideMenu = multi(player, n, false, //do not send over
 								"No i won't do it",
 								"Ok i'll do it");
 							if (whichSideMenu == 0) {
-								say(p, n, "no i won't do it");
-								npcsay(p, n, "then you're a fool",
+								say(player, n, "no i won't do it");
+								npcsay(player, n, "then you're a fool",
 									"go back to your adventures traveller");
-								mes(p, "clivet boards the raft and pushes of down the sewer system");
+								mes(player, "clivet boards the raft and pushes of down the sewer system");
 								n.remove();
-								mes(p, "you hear him call out",
+								mes(player, "you hear him call out",
 									"@yel@clivet:you'll never find us...");
 								//SET GOOD SIDE;
-								p.updateQuestStage(this, 3);
-								p.getCache().store("good_side", true);
+								player.updateQuestStage(this, 3);
+								player.getCache().store("good_side", true);
 							} else if (whichSideMenu == 1) {
-								say(p, n, "ok, i'll do it");
-								npcsay(p, n, "good, few see through the carnillean lies",
+								say(player, n, "ok, i'll do it");
+								npcsay(player, n, "good, few see through the carnillean lies",
 									"but i guessed you were of stronger character",
 									"here take this poison, pour it into one of their meals",
 									"once the deed is done return here");
-								give(p, ItemId.POISON.id(), 1);
-								p.updateQuestStage(this, 3);
-								p.getCache().store("evil_side", true);
+								give(player, ItemId.POISON.id(), 1);
+								player.updateQuestStage(this, 3);
+								player.getCache().store("evil_side", true);
 							}
 						}
 					} else if (menu2 == 1) {
-						say(p, n, "I've heard enough of your rubbish");
-						npcsay(p, n, "then leave, fool");
+						say(player, n, "I've heard enough of your rubbish");
+						npcsay(player, n, "then leave, fool");
 					}
 					break;
 				case 3:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "oh not you again");
-						say(p, n, "where is the cult hideout?");
-						npcsay(p, n, "you're a fool if you think you'll ever find it",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "oh not you again");
+						say(player, n, "where is the cult hideout?");
+						npcsay(player, n, "you're a fool if you think you'll ever find it",
 							"soon hazeel will return and you'll be punished");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "traveller you have a mission",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "traveller you have a mission",
 							"go to the carnillean house and poison their meal");
 						return;
 					}
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "You again! I warned you to keep away",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "You again! I warned you to keep away",
 							"hazeel will punish you for your interference");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						if (!p.getCarriedItems().hasCatalogID(ItemId.MARK_OF_HAZEEL.id(), Optional.of(false))) {
-							say(p, n, "hello",
+					} else if (player.getCache().hasKey("evil_side")) {
+						if (!player.getCarriedItems().hasCatalogID(ItemId.MARK_OF_HAZEEL.id(), Optional.of(false))) {
+							say(player, n, "hello",
 								"I poured the poison into the carnillean's meal as requested");
-							npcsay(p, n, "yes we have people on the inside who informed me of your deed",
+							npcsay(player, n, "yes we have people on the inside who informed me of your deed",
 								"hazeel will reward you for your loyalty");
-							say(p, n, "ok, so what's next?");
-							npcsay(p, n, "first you must wear the sign of hazeel");
-							mes(p, "clivet hands you a small metal amulet");
-							give(p, ItemId.MARK_OF_HAZEEL.id(), 1);
-							npcsay(p, n, "the amulet is proof to other cult members that you're one of us",
+							say(player, n, "ok, so what's next?");
+							npcsay(player, n, "first you must wear the sign of hazeel");
+							mes(player, "clivet hands you a small metal amulet");
+							give(player, ItemId.MARK_OF_HAZEEL.id(), 1);
+							npcsay(player, n, "the amulet is proof to other cult members that you're one of us",
 								"it is also the key to finding the cult hideout");
-							say(p, n, "in what way?");
-							npcsay(p, n, "the flow of the sewer's are controlled by 5 sewer valves above",
+							say(player, n, "in what way?");
+							npcsay(player, n, "the flow of the sewer's are controlled by 5 sewer valves above",
 								"turn them correctly and the sewer will carry you to the hideout",
 								"the sign of hazeel is your guide - you must begin at the tail",
 								"The cult leader alomone shall be expecting you");
 						} else {
-							say(p, n, "hello");
-							npcsay(p, n, "hello traveller",
+							say(player, n, "hello");
+							npcsay(player, n, "hello traveller",
 								"have you found the cult hideout yet?");
-							say(p, n, "not yet im afraid");
-							npcsay(p, n, "hurry! soon hazeel will return");
+							say(player, n, "not yet im afraid");
+							npcsay(player, n, "hurry! soon hazeel will return");
 						}
 						return;
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "You again! I warned you to keep away",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "You again! I warned you to keep away",
 							"hazeel will punish you for your interference");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "hello traveller",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "hello traveller",
 							"all we need now is the sacred script of hazeel",
 							"once we have that Hazeel can return");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello again");
-					npcsay(p, n, "have you managed to find the script of hazeel?");
-					if (p.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
-						say(p, n, "yes, i found it in the house");
-						npcsay(p, n, "amazing, the last piece",
+					say(player, n, "hello again");
+					npcsay(player, n, "have you managed to find the script of hazeel?");
+					if (player.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
+						say(player, n, "yes, i found it in the house");
+						npcsay(player, n, "amazing, the last piece",
 							"now the time has come to change history and avenge lord hazeel",
 							"take the script to alomone as quick as you can");
 					} else {
-						say(p, n, "errm, no, i misplaced it");
-						npcsay(p, n, "go to the house and don't return until you have the script");
+						say(player, n, "errm, no, i misplaced it");
+						npcsay(player, n, "go to the house and don't return until you have the script");
 					}
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "You again! I warned you to keep away",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "You again! I warned you to keep away",
 							"bother someone else",
 							"go find some goblins to hack up");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "It's good to see you again",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "It's good to see you again",
 							"i am patiently waiting for for hazeel to call upon me");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.CULT_MEMBER.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
-					say(p, n, "hello");
-					npcsay(p, n, "what how did you get in here?",
+					say(player, n, "hello");
+					npcsay(player, n, "what how did you get in here?",
 						"leave now traveller");
 					break;
 				case 3:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "what, how did you get in here",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "what, how did you get in here",
 							"leave now traveller");
-						n.setChasing(p);
+						n.setChasing(player);
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello there");
-						npcsay(p, n, "can't you see i'm busy",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello there");
+						npcsay(player, n, "can't you see i'm busy",
 							"the great hazeel shall return soon");
 
 						return;
 					}
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "what, an outsider",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "what, an outsider",
 							"how did you get in here",
 							"you must leave, now");
-						n.setChasing(p);
+						n.setChasing(player);
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hi");
-						npcsay(p, n, "hello, oh, are you new");
-						say(p, n, "that's right");
-						npcsay(p, n, "well it's good to have you on board",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hi");
+						npcsay(player, n, "hello, oh, are you new");
+						say(player, n, "that's right");
+						npcsay(player, n, "well it's good to have you on board",
 							"soon we should retrieved the sacred hazeel script",
 							"then at last we can bring are lord back from the dead");
 						return;
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "what, an outsider",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "what, an outsider",
 							"how did you get in here",
 							"you must leave, now");
-						n.setChasing(p);
+						n.setChasing(player);
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "hello there",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "hello there",
 							"untill we have the hazeel script",
 							"we cannot summon our master");
 						return;
 					}
 					break;
 				case 6:
-					say(p, n, "hello");
-					npcsay(p, n, "you truly are our savior",
+					say(player, n, "hello");
+					npcsay(player, n, "you truly are our savior",
 						"you found the script of hazeel",
 						"now his injustice can be resolved");
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "An outsider!",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "An outsider!",
 							"how did you get in here?",
 							"leave now fool or die");
-						n.setChasing(p);
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "the traveller returns",
+						n.setChasing(player);
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "the traveller returns",
 							"we are forever in your dept brave adventurer",
 							"i bow before you");
 					}
@@ -1048,42 +1048,42 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 			}
 		}
 		else if (n.getID() == NpcId.ALOMONE.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
 				case 1:
 				case 2:
-					say(p, n, "hello");
-					npcsay(p, n, "what, an intruder",
+					say(player, n, "hello");
+					npcsay(player, n, "what, an intruder",
 						"kill him");
-					Npc cults = ifnearvisnpc(p, NpcId.CULT_MEMBER.id(), 20);
-					cults.setChasing(p);
+					Npc cults = ifnearvisnpc(player, NpcId.CULT_MEMBER.id(), 20);
+					cults.setChasing(player);
 					break;
 				case 3:
-					if (p.getCache().hasKey("good_side")) {
-						npcsay(p, n, "How did get you get in here?");
-						say(p, n, "I've come for the carnillean family armour");
-						npcsay(p, n, "I thought I told the butler to get rid of you",
+					if (player.getCache().hasKey("good_side")) {
+						npcsay(player, n, "How did get you get in here?");
+						say(player, n, "I've come for the carnillean family armour");
+						npcsay(player, n, "I thought I told the butler to get rid of you",
 							"he must be going soft");
-						say(p, n, "so the butler is working for you too?",
+						say(player, n, "so the butler is working for you too?",
 							"Why's it always the Butler? I should have guessed");
-						delay(p.getWorld().getServer().getConfig().GAME_TICK * 3);
-						n.setChasing(p);
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "Can't you see I'm busy?");
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+						n.setChasing(player);
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "Can't you see I'm busy?");
 						return;
 					}
 					break;
 				case 4:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello alomone");
-						npcsay(p, n, "out of my way",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello alomone");
+						npcsay(player, n, "out of my way",
 							"can't you see we're busy here?");
-						n.setChasing(p);
+						n.setChasing(player);
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hi there");
-						npcsay(p, n, "well well, we have a new recruit",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hi there");
+						npcsay(player, n, "well well, we have a new recruit",
 							"Clivet told me about your willingness to prove yourself",
 							"we must retrieve the sacred script of hazeel",
 							"From the Carnillean house",
@@ -1093,56 +1093,56 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"we have eyes in the house",
 							"Butler Jones is one of us",
 							"go back to the house and try to find the script");
-						p.updateQuestStage(this, 5);
+						player.updateQuestStage(this, 5);
 						return;
 					}
 					break;
 				case 5:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello");
-						npcsay(p, n, "out of my way",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello");
+						npcsay(player, n, "out of my way",
 							"can't you see we're busy here?");
 						return;
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello alomone");
-						npcsay(p, n, "hazeel has waited long enough traveller",
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello alomone");
+						npcsay(player, n, "hazeel has waited long enough traveller",
 							"the sooner you find the hazeel script the better");
 						return;
 					}
 					break;
 				case 6:
 					/** COMPLETE EVIL SIDE **/
-					say(p, n, "hello");
-					npcsay(p, n, "Do you have the sacred script of hazeel?");
-					if (p.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
-						say(p, n, "yes I have it here");
-						npcsay(p, n, "finally our lord hazeel can return");
-						mes(p, "alomone takes the hazeel script");
-						p.getCarriedItems().remove(new Item(ItemId.SCRIPT_OF_HAZEEL.id()));
-						npcsay(p, n, "with these words our lord will return and save us all",
+					say(player, n, "hello");
+					npcsay(player, n, "Do you have the sacred script of hazeel?");
+					if (player.getCarriedItems().hasCatalogID(ItemId.SCRIPT_OF_HAZEEL.id(), Optional.of(false))) {
+						say(player, n, "yes I have it here");
+						npcsay(player, n, "finally our lord hazeel can return");
+						mes(player, "alomone takes the hazeel script");
+						player.getCarriedItems().remove(new Item(ItemId.SCRIPT_OF_HAZEEL.id()));
+						npcsay(player, n, "with these words our lord will return and save us all",
 							"come with me adventurer and let the ceromony begin");
-						p.teleport(580, 3419);
+						player.teleport(580, 3419);
 						n.teleport(580, 3419);
-						npcsay(p, n, "I do this for you lord hazeel and all followers of zamorak");
-						mes(p, "alomone kneels down infront of the shrine",
+						npcsay(player, n, "I do this for you lord hazeel and all followers of zamorak");
+						mes(player, "alomone kneels down infront of the shrine",
 							"he begins to read the script");
-						p.message("the language is something you have never heard");
-						mes(p, "alomone reads on",
+						player.message("the language is something you have never heard");
+						mes(player, "alomone reads on",
 							"Alomone finishes the script",
 							"the room is silent",
 							"suddenly a shrill scream comes from the coffin of hazeel",
 							"A shadowy figure appears");
-						Npc lord_hazeel = addnpc(p.getWorld(), NpcId.LORD_HAZEEL.id(), 580, 3420, 60000 * 2);
-						ActionSender.sendTeleBubble(p, 580,
+						Npc lord_hazeel = addnpc(player.getWorld(), NpcId.LORD_HAZEEL.id(), 580, 3420, 60000 * 2);
+						ActionSender.sendTeleBubble(player, 580,
 							3420, true);
-						for (Player pe : p.getViewArea().getPlayersInView()) {
+						for (Player pe : player.getViewArea().getPlayersInView()) {
 							ActionSender.sendTeleBubble(pe, 580,
 								3420, true);
 						}
-						lord_hazeel.face(p);
-						p.face(lord_hazeel);
-						mes(p, "the cult begin to chant");
-						npcsay(p, lord_hazeel, "my followers i am proud of you all",
+						lord_hazeel.face(player);
+						player.face(lord_hazeel);
+						mes(player, "the cult begin to chant");
+						npcsay(player, lord_hazeel, "my followers i am proud of you all",
 							"I never expected to retun to these lands",
 							"I can see I have much to attend to",
 							"In due time you will all be rewarded for your part",
@@ -1152,38 +1152,38 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"for this I certainly shall call upon your help in the future",
 							"my people gain strength day to day",
 							"you would be wise to join us while you can");
-						say(p, lord_hazeel, "I fight for myself");
-						npcsay(p, lord_hazeel, "hmm, fair enough for now",
+						say(player, lord_hazeel, "I fight for myself");
+						npcsay(player, lord_hazeel, "hmm, fair enough for now",
 							"I shall reward you with money",
 							"But your reward of Zamorak's approval is far greater");
-						p.sendQuestComplete(Quests.THE_HAZEEL_CULT);
-						npcsay(p, lord_hazeel, "now i must leave you",
+						player.sendQuestComplete(Quests.THE_HAZEEL_CULT);
+						npcsay(player, lord_hazeel, "now i must leave you",
 							"i have much business to attend to with my brothers in the north",
 							"i will see you all again but be aware",
 							"soon much blood will be spilt over runescape");
 						if (lord_hazeel != null) {
 							lord_hazeel.remove();
 						}
-						ActionSender.sendTeleBubble(p, 580,
+						ActionSender.sendTeleBubble(player, 580,
 							3420, true);
-						for (Player pe : p.getViewArea().getPlayersInView()) {
+						for (Player pe : player.getViewArea().getPlayersInView()) {
 							ActionSender.sendTeleBubble(pe, 580,
 								3420, true);
 						}
 					} else {
-						say(p, n, "i'm afraid not");
-						npcsay(p, n, "we need the script if hazeel is to return");
+						say(player, n, "i'm afraid not");
+						npcsay(player, n, "we need the script if hazeel is to return");
 					}
 					break;
 				case -1:
-					if (p.getCache().hasKey("good_side")) {
-						say(p, n, "hello again");
-						npcsay(p, n, "leave here now intruder",
+					if (player.getCache().hasKey("good_side")) {
+						say(player, n, "hello again");
+						npcsay(player, n, "leave here now intruder",
 							"before i loose my patience");
-					} else if (p.getCache().hasKey("evil_side")) {
-						say(p, n, "hello again");
-						npcsay(p, n, "we wait patiently for lord hazeel's calling");
-						say(p, n, "ok, take care");
+					} else if (player.getCache().hasKey("evil_side")) {
+						say(player, n, "hello again");
+						npcsay(player, n, "we wait patiently for lord hazeel's calling");
+						say(player, n, "ok, take care");
 					}
 					break;
 			}
@@ -1191,27 +1191,27 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ALOMONE.id();
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.ALOMONE.id()) {
-			if (p.getCache().hasKey("good_side")) {
-				n.killedBy(p);
-				if (!p.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.empty())) {
-					mes(p, "you have killed alomone",
+			if (player.getCache().hasKey("good_side")) {
+				n.killedBy(player);
+				if (!player.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.empty())) {
+					mes(player, "you have killed alomone",
 						"lying behind his corpse",
 						"you see the carnillean family armour",
 						"you place it in your bag");
-					give(p, ItemId.CARNILLEAN_ARMOUR.id(), 1);
-					if (p.getQuestStage(this) == 3) {
-						p.updateQuestStage(this, 4);
+					give(player, ItemId.CARNILLEAN_ARMOUR.id(), 1);
+					if (player.getQuestStage(this) == 3) {
+						player.updateQuestStage(this, 4);
 					}
 				}
 			} else {
-				n.killedBy(p);
+				n.killedBy(player);
 			}
 		}
 	}

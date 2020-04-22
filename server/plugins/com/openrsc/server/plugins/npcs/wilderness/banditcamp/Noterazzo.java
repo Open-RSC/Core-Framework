@@ -21,26 +21,26 @@ public class Noterazzo implements ShopInterface, TalkNpcTrigger {
 		new Item(ItemId.BRONZE_AXE.id(), 10));
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.NOTERAZZO.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.NOTERAZZO.id()) {
 
-			npcsay(p, n, "Hey wanna trade?, I'll give the best deals you can find");
-			int menu = multi(p, n, "Yes please", "No thankyou", "How can you afford to give such good deals?");
+			npcsay(player, n, "Hey wanna trade?, I'll give the best deals you can find");
+			int menu = multi(player, n, "Yes please", "No thankyou", "How can you afford to give such good deals?");
 			if (menu == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (menu == 1) {
 				//NOTHING
 			} else if (menu == 2) {
-				npcsay(p, n, "The general stores in Asgarnia and Misthalin are heavily taxed",
+				npcsay(player, n, "The general stores in Asgarnia and Misthalin are heavily taxed",
 					"It really makes it hard for them to run an effective buisness",
 					"For some reason taxmen don't visit my store");
-				p.message("Noterazzo winks at you");
+				player.message("Noterazzo winks at you");
 			}
 		}
 	}

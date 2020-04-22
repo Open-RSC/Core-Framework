@@ -15,8 +15,8 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Eating implements OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
-		return item.isEdible(p.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
+	public boolean blockOpInv(Item item, Player player, String command) {
+		return item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override

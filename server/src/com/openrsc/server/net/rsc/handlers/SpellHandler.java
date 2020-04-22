@@ -108,7 +108,7 @@ public class SpellHandler implements PacketHandler {
 		return items;
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
 			return;
@@ -116,7 +116,7 @@ public class SpellHandler implements PacketHandler {
 		if (!canCast(player)) {
 			return;
 		}
-		int pID = p.getID();
+		int pID = packet.getID();
 		int CAST_ON_SELF = OpcodeIn.CAST_ON_SELF.getOpcode();
 		int CAST_ON_PLAYER = OpcodeIn.PLAYER_CAST_SPELL.getOpcode();
 		int CAST_ON_NPC = OpcodeIn.NPC_CAST_SPELL.getOpcode();
@@ -127,7 +127,7 @@ public class SpellHandler implements PacketHandler {
 		int CAST_ON_LAND = OpcodeIn.CAST_ON_LAND.getOpcode();
 
 		player.resetAllExceptDueling();
-		int idx = p.readShort();
+		int idx = packet.readShort();
 		if (idx < 0 || idx >= 49) {
 			player.setSuspiciousPlayer(true, "idx < 0 or idx >= 49");
 			return;
@@ -183,7 +183,7 @@ public class SpellHandler implements PacketHandler {
 		// Cast on player
 		else if (pID == CAST_ON_PLAYER) {
 			if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
-				Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
+				Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
 				if (affectedPlayer == null) {
 					player.resetPath();
 					return;
@@ -198,7 +198,7 @@ public class SpellHandler implements PacketHandler {
 		// Cast on Npc
 		else if (pID == CAST_ON_NPC) {
 			if (spell.getSpellType() == 2) {
-				Npc affectedNpc = player.getWorld().getNpc(p.readShort());
+				Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
 				if (affectedNpc == null) {
 					player.resetPath();
 					return;
@@ -213,7 +213,7 @@ public class SpellHandler implements PacketHandler {
 		// Cast on Inventory Item
 		else if (pID == CAST_ON_INV_ITEM) {
 			if (spell.getSpellType() == 3) {
-				Item item = player.getCarriedItems().getInventory().get(p.readShort());
+				Item item = player.getCarriedItems().getInventory().get(packet.readShort());
 				if (item == null) {
 					player.resetPath();
 					return;
@@ -242,8 +242,8 @@ public class SpellHandler implements PacketHandler {
 
 		// Cast on game object
 		else if (pID == CAST_ON_GAME_OBJECT) {
-			int objectX = p.readShort();
-			int objectY = p.readShort();
+			int objectX = packet.readShort();
+			int objectY = packet.readShort();
 			GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
 			if (gameObject == null) {
 				return;
@@ -259,8 +259,8 @@ public class SpellHandler implements PacketHandler {
 
 		// Cast on ground item
 		else if (pID == CAST_ON_GROUNDITEM) {
-			Point location = Point.location(p.readShort(), p.readShort());
-			int itemId = p.readShort();
+			Point location = Point.location(packet.readShort(), packet.readShort());
+			int itemId = packet.readShort();
 			GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
 			if (affectedItem == null) {
 				return;
@@ -861,8 +861,8 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						ActionSender.sendTeleBubble(getPlayer(), getLocation().getX(), getLocation().getY(), true);
-						for (Player p : getPlayer().getViewArea().getPlayersInView()) {
-							ActionSender.sendTeleBubble(p, getLocation().getX(), getLocation().getY(), true);
+						for (Player player : getPlayer().getViewArea().getPlayersInView()) {
+							ActionSender.sendTeleBubble(player, getLocation().getX(), getLocation().getY(), true);
 						}
 
 						getPlayer().getWorld().unregisterItem(affectedItem);

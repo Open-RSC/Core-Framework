@@ -21,29 +21,29 @@ public final class SiegfriedErkel implements ShopInterface, TalkNpcTrigger {
 		new Item(ItemId.MAZE_KEY.id(), 3), new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1), new Item(ItemId.CAPE_OF_LEGENDS.id(), 3));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		if (p.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
-			npcsay(p, n, "I'm sorry but the services of this shop are only for ",
+	public void onTalkNpc(Player player, final Npc n) {
+		if (player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+			npcsay(player, n, "I'm sorry but the services of this shop are only for ",
 				"the pleasure of those who are rightfull members of the ",
 				"Legends Guild. I would get into serious trouble if I sold ",
 				"a non-member an item from this store.");
 		} else {
-			npcsay(p, n, "Hello there and welcome to the shop of useful items.",
+			npcsay(player, n, "Hello there and welcome to the shop of useful items.",
 				"Can I help you at all?");
-			int option = multi(p, n, "Yes please. What are you selling?",
+			int option = multi(player, n, "Yes please. What are you selling?",
 				"No thanks");
 			if (option == 0) {
-				npcsay(p, n, "Take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Take a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (option == 1) {
-				npcsay(p, n, "Ok, well, if you change your mind, do pop back.");
+				npcsay(player, n, "Ok, well, if you change your mind, do pop back.");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SIEGFRIED_ERKLE.id();
 	}
 

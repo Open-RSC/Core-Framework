@@ -28,7 +28,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 	}
 
-	public boolean blockOpInv(final Item i, Player p, String command) {
+	public boolean blockOpInv(final Item i, Player player, String command) {
 		return command.equalsIgnoreCase("Identify");
 	}
 
@@ -237,11 +237,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 	}
 
-	public boolean blockUseInv(Player p, Item item, Item usedWith) {
+	public boolean blockUseInv(Player player, Item item, Item usedWith) {
 		int itemID = item.getCatalogId();
 		int usedWithID = usedWith.getCatalogId();
-		if ((p.getWorld().getServer().getEntityHandler().getItemHerbSecond(itemID, usedWithID)) != null
-			|| (p.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWithID, itemID)) != null) {
+		if ((player.getWorld().getServer().getEntityHandler().getItemHerbSecond(itemID, usedWithID)) != null
+			|| (player.getWorld().getServer().getEntityHandler().getItemHerbSecond(usedWithID, itemID)) != null) {
 			return true;
 		} else if (itemID == ItemId.PESTLE_AND_MORTAR.id() || usedWithID == ItemId.PESTLE_AND_MORTAR.id()) {
 			return true;

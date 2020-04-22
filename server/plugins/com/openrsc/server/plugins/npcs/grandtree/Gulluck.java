@@ -26,20 +26,20 @@ public final class Gulluck implements ShopInterface,
 		new Item(ItemId.BLACK_2_HANDED_SWORD.id(), 1), new Item(ItemId.MITHRIL_2_HANDED_SWORD.id(), 1), new Item(ItemId.ADAMANTITE_2_HANDED_SWORD.id(), 1));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 		if (n.getID() == NpcId.GULLUCK.id()) {
-			say(p, n, "hello");
-			npcsay(p, n, "good day brave adventurer",
+			say(player, n, "hello");
+			npcsay(player, n, "good day brave adventurer",
 				"could i interest you in my fine selection of weapons?");
 
-			int option = multi(p, n, "i'll take a look", "no thanks");
+			int option = multi(player, n, "i'll take a look", "no thanks");
 			switch (option) {
 				case 0:
-					p.setAccessingShop(shop);
-					ActionSender.showShop(p, shop);
+					player.setAccessingShop(shop);
+					ActionSender.showShop(player, shop);
 					break;
 				case 1:
-					npcsay(p, n, "grrrr");
+					npcsay(player, n, "grrrr");
 					break;
 
 			}
@@ -47,7 +47,7 @@ public final class Gulluck implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GULLUCK.id();
 	}
 

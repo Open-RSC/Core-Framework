@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public final class ItemDropHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception{
+	public void handlePacket(Packet packet, Player player) throws Exception{
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
@@ -20,8 +20,8 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		int idx = (int) p.readShort();
-		int amount = p.readInt();
+		int idx = (int) packet.readShort();
+		int amount = packet.readInt();
 
 		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "item drop item idx < -1 or idx >= inv size");
@@ -31,7 +31,7 @@ public final class ItemDropHandler implements PacketHandler {
 
 		//User wants to drop the item from equipment tab
 		if (idx == -1) {
-			int realid = (int) p.readShort();
+			int realid = (int) packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1)
 				tempitem = player.getCarriedItems().getEquipment().get(slot);

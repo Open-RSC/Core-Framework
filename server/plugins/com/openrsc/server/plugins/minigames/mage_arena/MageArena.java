@@ -42,164 +42,164 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	@Override
-	public void handleReward(Player p) {
+	public void handleReward(Player player) {
 		//mini-quest complete handled already
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		if (getMaxLevel(p, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
-			say(p, n, "hello there", "what is this place?");
-			npcsay(p, n, "do not waste my time with trivial questions!",
+	public void onTalkNpc(final Player player, final Npc n) {
+		if (getMaxLevel(player, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
+			say(player, n, "hello there", "what is this place?");
+			npcsay(player, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
-			say(p, n, "can i enter?");
-			npcsay(p, n, "hah, a wizard of your level..don't be absurd");
-		} else if (p.getCache().hasKey("mage_arena")) {
-			int stage = p.getCache().getInt("mage_arena");
+			say(player, n, "can i enter?");
+			npcsay(player, n, "hah, a wizard of your level..don't be absurd");
+		} else if (player.getCache().hasKey("mage_arena")) {
+			int stage = player.getCache().getInt("mage_arena");
 			/* Started but failed. */
 			if (stage == 1) {
-				say(p, n, "hi");
-				npcsay(p, n, "you return young conjurer..", "..you obviously have a taste for the darkside of magic",
+				say(player, n, "hi");
+				npcsay(player, n, "you return young conjurer..", "..you obviously have a taste for the darkside of magic",
 					"let us continue with the battle...now");
-				if (cantGo(p)) {
-					mes(p, "You cannot enter the arena...", "...while carrying weapons or armour");
+				if (cantGo(player)) {
+					mes(player, "You cannot enter the arena...", "...while carrying weapons or armour");
 					return;
 				}
-				teleport(p, 229, 130);
-				setCurrentLevel(p, 0, 0);
-				setCurrentLevel(p, 2, 0);
-				spawnKolodion(p, p.getCache().getInt("kolodion_stage"));
-				startKolodionEvent(p);
+				teleport(player, 229, 130);
+				setCurrentLevel(player, 0, 0);
+				setCurrentLevel(player, 2, 0);
+				spawnKolodion(player, player.getCache().getInt("kolodion_stage"));
+				startKolodionEvent(player);
 
 			} else if (stage >= 2) {
-				say(p, n, "hello kolodion");
-				npcsay(p, n, "hey there, how are you?, enjoying the bloodshed?");
-				say(p, n, "it's not bad, i've seen worse");
-				int menu = multi(p, n,
+				say(player, n, "hello kolodion");
+				npcsay(player, n, "hey there, how are you?, enjoying the bloodshed?");
+				say(player, n, "it's not bad, i've seen worse");
+				int menu = multi(player, n,
 					"i think i've had enough for now",
 					"how can i use my new spells outside of the arena?");
 				if (menu == 0) {
-					npcsay(p, n, "shame , you're a good battle mage",
+					npcsay(player, n, "shame , you're a good battle mage",
 						"hope to see you soon");
 				} else if (menu == 1) {
-					npcsay(p, n, "experience my friend, experience",
+					npcsay(player, n, "experience my friend, experience",
 						"once you've used the spell enough times in the arena...",
 						"...you'll be able to use them in the rest of runescape");
-					say(p, n, "good stuff");
-					npcsay(p, n, "not so good for the citizens, they won't stand a chance");
-					say(p, n, "how am i doing so far?");
-					if (p.getCache().hasKey("Saradomin strike_casts") && p.getCache().getInt("Saradomin strike_casts") >= 100) {
-						npcsay(p, n, "you're fully trained to use the strike spell anywhere");
+					say(player, n, "good stuff");
+					npcsay(player, n, "not so good for the citizens, they won't stand a chance");
+					say(player, n, "how am i doing so far?");
+					if (player.getCache().hasKey("Saradomin strike_casts") && player.getCache().getInt("Saradomin strike_casts") >= 100) {
+						npcsay(player, n, "you're fully trained to use the strike spell anywhere");
 					} else {
-						npcsay(p, n, "you still need to train with the strike spell...",
+						npcsay(player, n, "you still need to train with the strike spell...",
 							"...inside the arena before you can use it outside");
 					}
-					if (p.getCache().hasKey("Claws of Guthix_casts") && p.getCache().getInt("Claws of Guthix_casts") >= 100) {
-						npcsay(p, n, "you're fully trained to use the claw spell anywhere");
+					if (player.getCache().hasKey("Claws of Guthix_casts") && player.getCache().getInt("Claws of Guthix_casts") >= 100) {
+						npcsay(player, n, "you're fully trained to use the claw spell anywhere");
 					} else {
-						npcsay(p, n, "you still need to train with the claw spell...",
+						npcsay(player, n, "you still need to train with the claw spell...",
 							"...inside the arena before you can use it outside");
 					}
-					if (p.getCache().hasKey("Flames of Zamorak_casts") && p.getCache().getInt("Flames of Zamorak_casts") >= 100) {
-						npcsay(p, n, "you're fully trained to use the flame spell anywhere");
+					if (player.getCache().hasKey("Flames of Zamorak_casts") && player.getCache().getInt("Flames of Zamorak_casts") >= 100) {
+						npcsay(player, n, "you're fully trained to use the flame spell anywhere");
 					} else {
-						npcsay(p, n, "you still need to train with the flame spell...",
+						npcsay(player, n, "you still need to train with the flame spell...",
 							"...inside the arena before you can use it outside");
 					}
 				}
 			}
 		} else {
-			say(p, n, "hello there",
+			say(player, n, "hello there",
 				"what is this place?");
-			npcsay(p, n, "i am the great kolodion, master of battle magic ...",
+			npcsay(player, n, "i am the great kolodion, master of battle magic ...",
 				"... and this is my battle arena",
 				"top wizards travel from all over to fight here");
-			int choice = multi(p, n, "can i fight here?", "what's the point of that?", "that's barbaric");
+			int choice = multi(player, n, "can i fight here?", "what's the point of that?", "that's barbaric");
 			if (choice == 0) {
-				canifight(p, n);
+				canifight(player, n);
 			} else if (choice == 1) {
-				whatsthepoint(p, n);
+				whatsthepoint(player, n);
 			} else if (choice == 2) {
-				barbaric(p, n);
+				barbaric(player, n);
 			}
 		}
 	}
 
-	public void canifight(Player p, Npc n) {
-		npcsay(p, n, "my arena is open to any high level wizard",
+	public void canifight(Player player, Npc n) {
+		npcsay(player, n, "my arena is open to any high level wizard",
 				"but this is no game traveller, wizards fall in this arena..",
 				"..never to rise again, the strongest of mage's have been destroyed",
 				"but if you're sure you want in?");
-		int choice = multi(p, n, "yes indeedy", "no, i don't");
+		int choice = multi(player, n, "yes indeedy", "no, i don't");
 		if (choice == 0) {
-			joinfight(p, n);
+			joinfight(player, n);
 		} else if (choice == 1) {
-			npcsay(p, n, "your loss");
+			npcsay(player, n, "your loss");
 		}
 	}
 
-	public void whatsthepoint(Player p, Npc n) {
-		npcsay(p, n, "we learn how to use our magic to it fullest...",
+	public void whatsthepoint(Player player, Npc n) {
+		npcsay(player, n, "we learn how to use our magic to it fullest...",
 			"..,how to channel forces of the cosmos into our world..",
 			"..,but mainly I just like blasting people into dust");
-		int choice = multi(p, n, "can i fight here?", "that's barbaric");
+		int choice = multi(player, n, "can i fight here?", "that's barbaric");
 		if (choice == 0) {
-			canifight(p, n);
+			canifight(player, n);
 		} else if (choice == 1) {
-			barbaric(p, n);
+			barbaric(player, n);
 		}
 	}
 
-	public void barbaric(Player p, Npc n) {
-		npcsay(p, n, "nope, it's magic, but I know what you mean",
+	public void barbaric(Player player, Npc n) {
+		npcsay(player, n, "nope, it's magic, but I know what you mean",
 				"so do you want to join us?");
-		int choice = multi(p, n, "yes indeedy", "no, i don't");
+		int choice = multi(player, n, "yes indeedy", "no, i don't");
 		if (choice == 0) {
-			joinfight(p, n);
+			joinfight(player, n);
 		} else if (choice == 1) {
-			npcsay(p, n, "your loss");
+			npcsay(player, n, "your loss");
 		}
 	}
 
-	public void joinfight(Player p, Npc n) {
-		npcsay(p, n, "good..good, you have a healthy sense of competition",
+	public void joinfight(Player player, Npc n) {
+		npcsay(player, n, "good..good, you have a healthy sense of competition",
 			"remember traveller in my arena hand to hand combat is useless",
 			"your strength will diminish as you enter the arena",
 			"but the spells you can learn are amongst the most powerful in runescape",
 			"before i can accept you in, we must duel",
 			"you may not take armour or weapons into the arena");
-		if (cantGo(p)) {
-			mes(p, "You cannot enter the arena...", "...while carrying weapons or armour");
+		if (cantGo(player)) {
+			mes(player, "You cannot enter the arena...", "...while carrying weapons or armour");
 		}
 		else {
-			int choice = multi(p, n, "ok let's fight", "no thanks");
+			int choice = multi(player, n, "ok let's fight", "no thanks");
 			if (choice == 0) {
-				npcsay(p, n, "I must check that you're up to scratch");
-				say(p, n, "you don't need to worry about that");
-				npcsay(p, n, "not just any magician can enter traveller",
+				npcsay(player, n, "I must check that you're up to scratch");
+				say(player, n, "you don't need to worry about that");
+				npcsay(player, n, "not just any magician can enter traveller",
 						"only the most powerful, the most feared",
 						"before you use the power of this arena",
 						"you must prove yourself against me",
 						"now!");
-				if (!p.getCache().hasKey("mage_arena")) {
-					p.getCache().set("mage_arena", 1);
+				if (!player.getCache().hasKey("mage_arena")) {
+					player.getCache().set("mage_arena", 1);
 				}
-				teleport(p, 229, 130);
-				setCurrentLevel(p, Skills.ATTACK, 0);
-				setCurrentLevel(p, Skills.STRENGTH, 0);
+				teleport(player, 229, 130);
+				setCurrentLevel(player, Skills.ATTACK, 0);
+				setCurrentLevel(player, Skills.STRENGTH, 0);
 
-				startKolodionEvent(p);
-				spawnKolodion(p, NpcId.KOLODION_HUMAN.id());
-				delay(p.getWorld().getServer().getConfig().GAME_TICK);
+				startKolodionEvent(player);
+				spawnKolodion(player, NpcId.KOLODION_HUMAN.id());
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			} else if (choice == 1) {
-				npcsay(p, n, "your loss");
+				npcsay(player, n, "your loss");
 			}
 		}
 	}
 
-	public void learnSpellEvent(Player p) {
-		DelayedEvent mageArena = p.getAttribute("mageArenaEvent", null);
-		DelayedEvent mageArenaEvent = new DelayedEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Mage Arena Learn Spell Event") {
+	public void learnSpellEvent(Player player) {
+		DelayedEvent mageArena = player.getAttribute("mageArenaEvent", null);
+		DelayedEvent mageArenaEvent = new DelayedEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Mage Arena Learn Spell Event") {
 			@Override
 			public void run() {
 				/* Player logged out. */
@@ -218,13 +218,13 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					getOwner().getSkills().setLevel(Skills.ATTACK, 0);
 					getOwner().getSkills().setLevel(Skills.STRENGTH, 0);
 				}
-				Npc Guthix = ifnearvisnpc(p, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
-				Npc Zamorak = ifnearvisnpc(p, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
-				Npc Saradomin = ifnearvisnpc(p, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
+				Npc Guthix = ifnearvisnpc(player, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
+				Npc Zamorak = ifnearvisnpc(player, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
+				Npc Saradomin = ifnearvisnpc(player, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
 				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 33);
-					p.message(randomMessage[2]);
+					player.message(randomMessage[2]);
 					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
@@ -232,7 +232,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 35);
-					p.message(randomMessage[0]);
+					player.message(randomMessage[0]);
 					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
@@ -240,7 +240,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 34);
-					p.message(randomMessage[1]);
+					player.message(randomMessage[1]);
 					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
@@ -251,18 +251,18 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		};
 		if (mageArena != null) {
 			if (mageArena.shouldRemove()) {
-				p.setAttribute("mageArenaEvent", mageArenaEvent);
-				p.getWorld().getServer().getGameEventHandler().add(mageArenaEvent);
+				player.setAttribute("mageArenaEvent", mageArenaEvent);
+				player.getWorld().getServer().getGameEventHandler().add(mageArenaEvent);
 			}
 		} else {
-			p.setAttribute("mageArenaEvent", mageArenaEvent);
-			p.getWorld().getServer().getGameEventHandler().add(mageArenaEvent);
+			player.setAttribute("mageArenaEvent", mageArenaEvent);
+			player.getWorld().getServer().getGameEventHandler().add(mageArenaEvent);
 		}
 	}
 
-	private void startKolodionEvent(Player p) {
-		DelayedEvent kolE = p.getAttribute("kolodionEvent", null);
-		DelayedEvent kolodionEvent = new DelayedEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK, "Mage Arena Kolodion Event") {
+	private void startKolodionEvent(Player player) {
+		DelayedEvent kolE = player.getAttribute("kolodionEvent", null);
+		DelayedEvent kolodionEvent = new DelayedEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Mage Arena Kolodion Event") {
 			@Override
 			public void run() {
 				Npc npc = getOwner().getAttribute("spawned_kolodion");
@@ -276,7 +276,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					return;
 				}
 				/* Npc has been removed from the world. */
-				if (!p.getWorld().hasNpc(npc)) {
+				if (!player.getWorld().hasNpc(npc)) {
 					stop();
 					return;
 				}
@@ -315,12 +315,12 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		};
 		if (kolE != null) {
 			if (kolE.shouldRemove()) {
-				p.setAttribute("kolodionEvent", kolodionEvent);
-				p.getWorld().getServer().getGameEventHandler().add(kolodionEvent);
+				player.setAttribute("kolodionEvent", kolodionEvent);
+				player.getWorld().getServer().getGameEventHandler().add(kolodionEvent);
 			}
 		} else {
-			p.setAttribute("kolodionEvent", kolodionEvent);
-			p.getWorld().getServer().getGameEventHandler().add(kolodionEvent);
+			player.setAttribute("kolodionEvent", kolodionEvent);
+			player.getWorld().getServer().getGameEventHandler().add(kolodionEvent);
 		}
 	}
 
@@ -333,10 +333,10 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 	}
 
-	private boolean cantGo(Player p) {
-		synchronized(p.getCarriedItems().getInventory().getItems()) {
-			for (Item item : p.getCarriedItems().getInventory().getItems()) {
-				String name = item.getDef(p.getWorld()).getName().toLowerCase();
+	private boolean cantGo(Player player) {
+		synchronized(player.getCarriedItems().getInventory().getItems()) {
+			for (Item item : player.getCarriedItems().getInventory().getItems()) {
+				String name = item.getDef(player.getWorld()).getName().toLowerCase();
 				if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
 					|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
 					&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
@@ -352,83 +352,83 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.KOLODION.id();
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id());
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
 			n.remove();
 
 			if (n.getID() == NpcId.KOLODION_HUMAN.id()) {
-				mes(p, "kolodion slumps to the floor..");
-				mes(p, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
-				spawnKolodion(p, NpcId.KOLODION_OGRE.id());
+				mes(player, "kolodion slumps to the floor..");
+				mes(player, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
+				spawnKolodion(player, NpcId.KOLODION_OGRE.id());
 			} else if (n.getID() == NpcId.KOLODION_OGRE.id()) {
-				mes(p, "kolodion slumps to the floor once more..",
+				mes(player, "kolodion slumps to the floor once more..",
 					"..but again his body begins to grow and he changes form", "He becomes an enormous spider");
-				spawnKolodion(p, NpcId.KOLODION_SPIDER.id());
+				spawnKolodion(player, NpcId.KOLODION_SPIDER.id());
 			} else if (n.getID() == NpcId.KOLODION_SPIDER.id()) {
-				mes(p, "kolodion again slumps to the floor..",
+				mes(player, "kolodion again slumps to the floor..",
 					"..but again his body begins to grow as he changes form", "He becomes an ethereal being");
-				spawnKolodion(p, NpcId.KOLODION_SOULESS.id());
+				spawnKolodion(player, NpcId.KOLODION_SOULESS.id());
 			} else if (n.getID() == NpcId.KOLODION_SOULESS.id()) {
-				mes(p, "kolodion again slumps to the floor..motionless",
+				mes(player, "kolodion again slumps to the floor..motionless",
 					"..but again his body begins to grow as he changes form", "...larger this time",
 					"He becomes a vicious demon");
-				spawnKolodion(p, NpcId.KOLODION_DEMON.id());
+				spawnKolodion(player, NpcId.KOLODION_DEMON.id());
 			} else if (n.getID() == NpcId.KOLODION_DEMON.id()) {
-				mes(p, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
-				mes(p, "@yel@Kolodion: \"well done young adventurer\"",
+				mes(player, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
+				mes(player, "@yel@Kolodion: \"well done young adventurer\"",
 					"@yel@Kolodion: \"you truly are a worthy battle mage\"");
-				p.message("kolodion teleports you to his cave");
-				p.teleport(446, 3370);
-				Npc kolodion = ifnearvisnpc(p, NpcId.KOLODION.id(), 5);
+				player.message("kolodion teleports you to his cave");
+				player.teleport(446, 3370);
+				Npc kolodion = ifnearvisnpc(player, NpcId.KOLODION.id(), 5);
 				if (kolodion == null) {
-					p.message("kolodion is currently busy");
+					player.message("kolodion is currently busy");
 					return;
 				}
-				say(p, kolodion, "what now kolodion? how can i learn some of those spells?");
-				npcsay(p, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
+				say(player, kolodion, "what now kolodion? how can i learn some of those spells?");
+				npcsay(player, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
 					"...you will represent in the mage arena");
-				say(p, kolodion, "cool");
-				npcsay(p, kolodion, "step into the magic pool, it will carry you to the chamber");
-				say(p, kolodion, "the chamber?");
+				say(player, kolodion, "cool");
+				npcsay(player, kolodion, "step into the magic pool, it will carry you to the chamber");
+				say(player, kolodion, "the chamber?");
 
-				npcsay(p, kolodion, "there you must decide your loyalty");
-				say(p, kolodion, "ok kolodion , thanks for the battle");
-				npcsay(p, kolodion, "remember young mage, you must use the spells...",
+				npcsay(player, kolodion, "there you must decide your loyalty");
+				say(player, kolodion, "ok kolodion , thanks for the battle");
+				npcsay(player, kolodion, "remember young mage, you must use the spells...",
 					"...many times in the arena before you can use them outside");
-				say(p, kolodion, "no problem");
-				p.getCache().set("mage_arena", 2);
-				p.getCache().remove("kolodion_stage");
+				say(player, kolodion, "no problem");
+				player.getCache().set("mage_arena", 2);
+				player.getCache().remove("kolodion_stage");
 			}
 		}
 	}
 
 	@Override
-	public void onSpellNpc(Player p, Npc n) {
+	public void onSpellNpc(Player player, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 			NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
-			if (!n.getAttribute("spawnedFor", null).equals(p)) {
-				p.message("that mage is busy.");
+			if (!n.getAttribute("spawnedFor", null).equals(player)) {
+				player.message("that mage is busy.");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockSpellNpc(final Player p, final Npc n) {
+	public boolean blockSpellNpc(final Player player, final Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
-			if (!n.getAttribute("spawnedFor", null).equals(p)) {
+			if (!n.getAttribute("spawnedFor", null).equals(player)) {
 				return true;
 			}
 		}
@@ -584,17 +584,17 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	@Override
-	public void onAttackNpc(Player p, Npc affectedmob) {
-		if (!affectedmob.getAttribute("spawnedFor", null).equals(p)) {
-			p.message("that mage is busy.");
+	public void onAttackNpc(Player player, Npc affectedmob) {
+		if (!affectedmob.getAttribute("spawnedFor", null).equals(player)) {
+			player.message("that mage is busy.");
 		}
 	}
 
 	@Override
-	public boolean blockAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player player, Npc n) {
 		if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 				NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
-			if(!n.getAttribute("spawnedFor", null).equals(p)) {
+			if(!n.getAttribute("spawnedFor", null).equals(player)) {
 				return true;
 			}
 		}
@@ -603,32 +603,32 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	@Override
-	public void onPlayerDeath(Player p) {
-		if (p.getAttribute("spawned_kolodion", null) != null) {
-			p.setAttribute("spawned_kolodion", null);
+	public void onPlayerDeath(Player player) {
+		if (player.getAttribute("spawned_kolodion", null) != null) {
+			player.setAttribute("spawned_kolodion", null);
 		}
 	}
 
 	@Override
-	public boolean blockPlayerDeath(Player p) {
+	public boolean blockPlayerDeath(Player player) {
 		return false;
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		return i.getID() == ItemId.ZAMORAK_CAPE.id() || i.getID() == ItemId.SARADOMIN_CAPE.id() || i.getID() == ItemId.GUTHIX_CAPE.id();
 	}
 
 	@Override
-	public void onTakeObj(Player p, GroundItem i) {
+	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.ZAMORAK_CAPE.id() || i.getID() == ItemId.SARADOMIN_CAPE.id() || i.getID() == ItemId.GUTHIX_CAPE.id()) {
-			if (alreadyHasCape(p)) {
-				p.message("you may only possess one sacred cape at a time");
+			if (alreadyHasCape(player)) {
+				player.message("you may only possess one sacred cape at a time");
 			} else {
 				Item Item = new Item(i.getID(), i.getAmount());
-				p.getWorld().unregisterItem(i);
-				p.playSound("takeobject");
-				p.getCarriedItems().getInventory().add(Item);
+				player.getWorld().unregisterItem(i);
+				player.playSound("takeobject");
+				player.getCarriedItems().getInventory().add(Item);
 			}
 		}
 

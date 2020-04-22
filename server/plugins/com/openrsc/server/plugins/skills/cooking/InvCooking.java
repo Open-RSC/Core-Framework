@@ -105,13 +105,13 @@ public class InvCooking implements UseInvTrigger {
 		}
 	}
 
-	private void handleCombineCooking(Player p, Item itemOne, Item itemTwo) {
+	private void handleCombineCooking(Player player, Item itemOne, Item itemTwo) {
 		CombineCooking combine = null;
 
 		// Pizza order matters!
 		if ((itemOne.getCatalogId() == ItemId.PIZZA_BASE.id() || itemTwo.getCatalogId() == ItemId.PIZZA_BASE.id())
 			&& (itemOne.getCatalogId() == ItemId.CHEESE.id() || itemTwo.getCatalogId() == ItemId.CHEESE.id())) {
-			p.playerServerMessage(MessageType.QUEST, "I should add the tomato first");
+			player.playerServerMessage(MessageType.QUEST, "I should add the tomato first");
 			return;
 		}
 
@@ -120,40 +120,40 @@ public class InvCooking implements UseInvTrigger {
 				combine = c;
 			}
 		}
-		if (p.getSkills().getLevel(Skills.COOKING) < combine.requiredLevel) {
-			p.playerServerMessage(MessageType.QUEST, "You need level " + combine.requiredLevel + " cooking to do this");
+		if (player.getSkills().getLevel(Skills.COOKING) < combine.requiredLevel) {
+			player.playerServerMessage(MessageType.QUEST, "You need level " + combine.requiredLevel + " cooking to do this");
 			return;
 		}
 		if (combine.resultItem == ItemId.TOMATO_MIXTURE.id() || combine.resultItem == ItemId.ONION_MIXTURE.id()
 				|| combine.resultItem == ItemId.ONION_AND_TOMATO_MIXTURE.id() || combine.resultItem == ItemId.TASTY_UGTHANKI_KEBAB.id()) {
-			if (!p.getCarriedItems().hasCatalogID(ItemId.KNIFE.id())) { // No knife
-				p.message("You need a knife in order to cut this");
+			if (!player.getCarriedItems().hasCatalogID(ItemId.KNIFE.id())) { // No knife
+				player.message("You need a knife in order to cut this");
 				return;
 			}
 		}
 
-		if (p.getCarriedItems().remove(new Item(combine.itemID)) != -1
-			&& p.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
+		if (player.getCarriedItems().remove(new Item(combine.itemID)) != -1
+			&& player.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
 
 			// Check for tasty kebab failure
 			if (combine.resultItem == ItemId.TASTY_UGTHANKI_KEBAB.id() && DataConversions.random(0, 31) < 1) {
-				give(p, ItemId.UGTHANKI_KEBAB.id(), 1);
-				p.playerServerMessage(MessageType.QUEST, "You make a dodgy looking ugthanki kebab");
+				give(player, ItemId.UGTHANKI_KEBAB.id(), 1);
+				player.playerServerMessage(MessageType.QUEST, "You make a dodgy looking ugthanki kebab");
 				return;
 			}
 
 			if (combine.messages.length > 1)
-				mes(p, combine.messages[0]);
+				mes(player, combine.messages[0]);
 			else
-				p.message(combine.messages[0]);
+				player.message(combine.messages[0]);
 
-			give(p, combine.resultItem, 1);
-			p.incExp(Skills.COOKING, combine.experience, true);
+			give(player, combine.resultItem, 1);
+			player.incExp(Skills.COOKING, combine.experience, true);
 
 			if (combine.messages.length > 1)
-				p.playerServerMessage(MessageType.QUEST, combine.messages[1]);
+				player.playerServerMessage(MessageType.QUEST, combine.messages[1]);
 			if (combine.messages.length > 2)
-				p.playerServerMessage(MessageType.QUEST, combine.messages[2]);
+				player.playerServerMessage(MessageType.QUEST, combine.messages[2]);
 		}
 	}
 

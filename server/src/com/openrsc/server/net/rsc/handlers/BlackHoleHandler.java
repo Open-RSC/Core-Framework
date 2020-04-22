@@ -12,7 +12,7 @@ import java.util.Optional;
 public class BlackHoleHandler implements PacketHandler {
 
 	@Override
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 		if (player == null) {
 			return;
 		}

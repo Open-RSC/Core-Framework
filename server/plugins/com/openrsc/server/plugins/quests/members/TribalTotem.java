@@ -47,79 +47,79 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void handleReward(Player p) {
-		p.message("Well done you have completed the tribal totem quest");
-		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TRIBAL_TOTEM), true);
-		p.message("@gre@You haved gained 1 quest point!");
+	public void handleReward(Player player) {
+		player.message("Well done you have completed the tribal totem quest");
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TRIBAL_TOTEM), true);
+		player.message("@gre@You haved gained 1 quest point!");
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.KANGAI_MAU.id(), NpcId.HORACIO.id(),
 				NpcId.WIZARD_CROMPERTY.id(), NpcId.RPDT_EMPLOYEE.id()}, n.getID());
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KANGAI_MAU.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcsay(p, n, "Hello I Kangai Mau", "Of the Rantuki tribe");
-					int opt = multi(p, n,
+					npcsay(player, n, "Hello I Kangai Mau", "Of the Rantuki tribe");
+					int opt = multi(player, n,
 						"And what are you doing in Brimhaven?",
 						"I'm in search of adventure",
 						"Who are the Rantuki tribe?");
 					if (opt == 0) {
-						npcsay(p, n, "I looking for someone brave",
+						npcsay(player, n, "I looking for someone brave",
 							"To go on important mission for me",
 							"Someone skilled in thievery and sneaking about",
 							"I am told I can find such people in Brimhaven");
-						int sub_opt = multi(p, n, "Tell me of this mission",
+						int sub_opt = multi(player, n, "Tell me of this mission",
 							"Yep I have heard there are many of that type here");
 						if (sub_opt == 0) {
-							say(p, n, "I may be able to help");
-							npcsay(p,
+							say(player, n, "I may be able to help");
+							npcsay(player,
 								n,
 								"I need someone to go on a mission",
 								"To the city of Ardougne",
 								"There you will need to find the house of Lord Handelmort",
 								"In his house he has our tribal totem",
 								"We need it back");
-							int sub_menu = multi(p, n, false, //do not send over
+							int sub_menu = multi(player, n, false, //do not send over
 								"Ok I will get it back",
 								"Why does he have it?",
 								"How can I find Handelmort's house?");
 							if (sub_menu == 0) {
-								say(p, n, "Ok I will get it back");
-								p.updateQuestStage(this, 1);
+								say(player, n, "Ok I will get it back");
+								player.updateQuestStage(this, 1);
 							} else if (sub_menu == 1) {
-								say(p, n, "Why does he have it?");
-								npcsay(p,
+								say(player, n, "Why does he have it?");
+								npcsay(player,
 									n,
 									"Lord Handelmort is an Ardougnese explorer",
 									"Which mean he think he allowed to come and steal our stuff",
 									"To put in his private museum");
-								int sub_opt1 = multi(p, n, false, //do not send over
+								int sub_opt1 = multi(player, n, false, //do not send over
 									"Ok I will get it back",
 									"How can I find Handlemort's house?");
 								if (sub_opt1 == 0) {
-									say(p, n, "Ok I will get it back");
-									p.updateQuestStage(this, 1);
+									say(player, n, "Ok I will get it back");
+									player.updateQuestStage(this, 1);
 								} else if (sub_opt1 == 1) {
-									say(p, n, "How can I find Handelmort's house",
+									say(player, n, "How can I find Handelmort's house",
 										"Ardougne is a big place");
-									npcsay(p, n, "I don't know Ardougne");
+									npcsay(player, n, "I don't know Ardougne");
 								}
 
 							} else if (sub_menu == 2) {
-								say(p, n, "How can I find Handelmort's house",
+								say(player, n, "How can I find Handelmort's house",
 									"Ardougne is a big place");
-								npcsay(p, n, "I don't know Ardougne");
+								npcsay(player, n, "I don't know Ardougne");
 							}
 
 						}
 					} else if (opt == 1) {
-						npcsay(p,
+						npcsay(player,
 							n,
 							"Adventure is something I may be able to give",
 							"I need someone to go on a mission",
@@ -127,202 +127,202 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 							"There you will need to find the house of Lord Handelmort",
 							"In his house he has our tribal totem",
 							"We need it back");
-						int sub_opt = multi(p, n, false, //do not send over
+						int sub_opt = multi(player, n, false, //do not send over
 							"Ok I will get it back",
 							"Why does he have it?",
 							"How can I find Handelmort's house?");
 						if (sub_opt == 0) {
-							say(p, n, "Ok I will get it back");
-							p.updateQuestStage(this, 1);
+							say(player, n, "Ok I will get it back");
+							player.updateQuestStage(this, 1);
 						} else if (sub_opt == 1) {
-							say(p, n, "Why does he have it?");
-							npcsay(p,
+							say(player, n, "Why does he have it?");
+							npcsay(player,
 								n,
 								"Lord Handelmort is an Ardougnese explorer",
 								"Which mean he think he allowed to come and steal our stuff",
 								"To put in his private museum");
-							int sub_opt1 = multi(p, n, false, //do not send over
+							int sub_opt1 = multi(player, n, false, //do not send over
 								"Ok I will get it back",
 								"How can I find Handelmort's house?");
 							if (sub_opt1 == 0) {
-								say(p, n, "Ok I will get it back");
-								p.updateQuestStage(this, 1);
+								say(player, n, "Ok I will get it back");
+								player.updateQuestStage(this, 1);
 							} else if (sub_opt1 == 1) {
-								say(p, n, "How can I find Handelmort's house",
+								say(player, n, "How can I find Handelmort's house",
 									"Ardougne is a big place");
-								npcsay(p, n, "I don't know Ardougne");
+								npcsay(player, n, "I don't know Ardougne");
 							}
 
 						} else if (sub_opt == 2) {
-							say(p, n, "How can I find Handelmort's house",
+							say(player, n, "How can I find Handelmort's house",
 								"Ardougne is a big place");
-							npcsay(p, n, "I don't know Ardougne");
+							npcsay(player, n, "I don't know Ardougne");
 						}
 					} else if (opt == 2) {
-						npcsay(p, n, "A proud and noble tribe of Karamja",
+						npcsay(player, n, "A proud and noble tribe of Karamja",
 							"Now we are few", "Men come from across sea",
 							"And settle on our hunting grounds");
 					}
 					break;
 				case 1:
 				case 2:
-					npcsay(p, n, "Have you got our totem back?");
-					if (p.getCarriedItems().getInventory().countId(ItemId.TRIBAL_TOTEM.id()) >= 1) {
-						say(p, n, "Yes I have");
-						npcsay(p, n, "Thank you brave adventurer");
-						p.sendQuestComplete(Quests.TRIBAL_TOTEM);
-						npcsay(p, n, "Here have some freshly cooked Karamja fish",
+					npcsay(player, n, "Have you got our totem back?");
+					if (player.getCarriedItems().getInventory().countId(ItemId.TRIBAL_TOTEM.id()) >= 1) {
+						say(player, n, "Yes I have");
+						npcsay(player, n, "Thank you brave adventurer");
+						player.sendQuestComplete(Quests.TRIBAL_TOTEM);
+						npcsay(player, n, "Here have some freshly cooked Karamja fish",
 							"Caught specially by our people");
-						p.getCarriedItems().remove(new Item(ItemId.TRIBAL_TOTEM.id()));
-						give(p, ItemId.SWORDFISH.id(), 5);
+						player.getCarriedItems().remove(new Item(ItemId.TRIBAL_TOTEM.id()));
+						give(player, ItemId.SWORDFISH.id(), 5);
 					} else {
-						say(p, n, "No it's not that easy");
-						npcsay(p, n, "Bah, you no good");
+						say(player, n, "No it's not that easy");
+						npcsay(player, n, "Bah, you no good");
 					}
 					break;
 				case -1:
-					npcsay(p, n, "greetings esteemed thief");
+					npcsay(player, n, "greetings esteemed thief");
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.HORACIO.id()) {
-			npcsay(p, n, "It's a fine day to be out in the garden isn't it?");
-			int menu = multi(p, n, false, //do not send over
+			npcsay(player, n, "It's a fine day to be out in the garden isn't it?");
+			int menu = multi(player, n, false, //do not send over
 				"Yes, it's very nice", "So who are you?");
 			if (menu == 0) {
-				say(p, n, "Yes, it's very nice");
+				say(player, n, "Yes, it's very nice");
 			} else if (menu == 1) {
-				say(p, n, "So who are you");
-				npcsay(p, n, "My name is Horacio Dobson",
+				say(player, n, "So who are you");
+				npcsay(player, n, "My name is Horacio Dobson",
 					"I am the gardener to Lord Handelmort",
 					"All this around you is my handywork");
-				if (p.getQuestStage(this) != 0) {
-					int sub_menu = multi(p, n,
+				if (player.getQuestStage(this) != 0) {
+					int sub_menu = multi(player, n,
 						"So do you garden round the back too?",
 						"Do you need any help?");
 					if (sub_menu == 0) {
-						npcsay(p, n, "That I do");
-						say(p, n, "Doesn't all this security in this house",
+						npcsay(player, n, "That I do");
+						say(player, n, "Doesn't all this security in this house",
 							"get in your way?");
-						npcsay(p,
+						npcsay(player,
 							n,
 							"Ah, I'm used to all that",
 							"I have my keys, the dogs knows me",
 							"And I know by heart the combination to the door lock",
 							"It's rather easy, it's his middle name");
-						say(p, n, "Who's middle name?");
-						npcsay(p, n, "Hmm I shouldn't have said that",
+						say(player, n, "Who's middle name?");
+						npcsay(player, n, "Hmm I shouldn't have said that",
 							"Forget I said it");
 					} else if (sub_menu == 1) {
-						npcsay(p, n, "Trying to muscle in on my job ehh?",
+						npcsay(player, n, "Trying to muscle in on my job ehh?",
 							"I'm happy to do this all myself");
 					}
 				}
 			}
 		}
 		else if (n.getID() == NpcId.WIZARD_CROMPERTY.id()) {
-			npcsay(p, n, "Hello there", "My name is Cromperty",
+			npcsay(player, n, "Hello there", "My name is Cromperty",
 				"I am a wizard and an inventor");
-			int menu = multi(p, n, "Two jobs, thats got to be tough",
+			int menu = multi(player, n, "Two jobs, thats got to be tough",
 				"So what have you invented?");
 			if (menu == 0) {
-				npcsay(p, n, "Not when you combine them it isn't",
+				npcsay(player, n, "Not when you combine them it isn't",
 					"I invent magic things");
-				int sub_menu = multi(p, n, "So what have you invented?",
+				int sub_menu = multi(player, n, "So what have you invented?",
 					"Well I shall leave you to your inventing");
 				if (sub_menu == 0) {
-					inventedDialogue(p, n);
+					inventedDialogue(player, n);
 				}
 			} else if (menu == 1) {
-				inventedDialogue(p, n);
+				inventedDialogue(player, n);
 			}
 		}
 		else if (n.getID() == NpcId.RPDT_EMPLOYEE.id()) {
-			npcsay(p, n, "Welcome to RPDT");
-			if (p.getCache().hasKey("label") && p.getQuestStage(this) == 1) {
-				int menu = multi(p, n,
+			npcsay(player, n, "Welcome to RPDT");
+			if (player.getCache().hasKey("label") && player.getQuestStage(this) == 1) {
+				int menu = multi(player, n,
 					"So when are you going to deliver this crate?",
 					"Thank you, it's interesting in here");
 				if (menu == 0) {
-					npcsay(p, n, "I suppose I could do it now");
+					npcsay(player, n, "I suppose I could do it now");
 					n.teleport(558, 616);
-					GameObject obj = p.getViewArea().getGameObject(
+					GameObject obj = player.getViewArea().getGameObject(
 						Point.location(558, 617));
-					p.getWorld().unregisterGameObject(obj);
-					p.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
-					mes(p, "The employee picks up the crate");
+					player.getWorld().unregisterGameObject(obj);
+					player.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
+					mes(player, "The employee picks up the crate");
 					n.teleport(559, 612);
-					mes(p, "And takes it out to be delivered");
-					p.getCache().remove("label");
-					p.updateQuestStage(this, 2);
+					mes(player, "And takes it out to be delivered");
+					player.getCache().remove("label");
+					player.updateQuestStage(this, 2);
 				}
 			} else {
-				say(p, n, "Thank you very much");
+				say(player, n, "Thank you very much");
 			}
 		}
 	}
 
-	private void inventedDialogue(Player p, Npc n) {
-		npcsay(p, n,
+	private void inventedDialogue(Player player, Npc n) {
+		npcsay(player, n,
 			"My latest inevention is my patent pending teleport block",
 			"Stand on this block here",
 			"I do a bit of the old hocus pocus",
 			"And abracadabra you end up on the other teleport block");
-		int sub_menu1 = multi(p, n, "So where is the other block?",
+		int sub_menu1 = multi(player, n, "So where is the other block?",
 			"Can I be teleported please?", "Well done, that's very clever");
 		if (sub_menu1 == 0) {
-			npcsay(p,
+			npcsay(player,
 				n,
 				"I would guess somewhere between here and the wizards tower in Misthalin",
 				"All I know is it hasn't got there yet",
 				"Or the wizards there would have contacted me",
 				"I am using the RPDT to deliver it");
-			int menu3 = multi(p, n, "Can I be teleported please?",
+			int menu3 = multi(player, n, "Can I be teleported please?",
 				"Who are the RPDT?");
 			if (menu3 == 0) {
-				npcsay(p, n, "By all means",
+				npcsay(player, n, "By all means",
 					"Though I don't know where you will come out",
 					"Wherever the other teleport block is I suppose");
-				int tp = multi(p, n, false, //do not send over
+				int tp = multi(player, n, false, //do not send over
 					"Yes, that sounds good teleport me",
 					"That sounds dangerous leave me here");
 				if (tp == 0) {
-					say(p, n, "Yes, that sounds good",
+					say(player, n, "Yes, that sounds good",
 						"teleport me");
-					p.teleport(545, 577, false);
-					mes(p, "Cromperty takes out a small box",
+					player.teleport(545, 577, false);
+					mes(player, "Cromperty takes out a small box",
 						"Cromperty presses a switch on the box");
-					if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == -1) {
-						p.teleport(560, 588, true);
+					if (player.getQuestStage(this) == 2 || player.getQuestStage(this) == -1) {
+						player.teleport(560, 588, true);
 					} else {
-						p.teleport(558, 617, true);
+						player.teleport(558, 617, true);
 					}
 				} else if (tp == 1) {
-					say(p, n, "That sounds dangerous leave me here");
+					say(player, n, "That sounds dangerous leave me here");
 				}
 			} else if (menu3 == 1) {
-				npcsay(p, n, "The runescape parcel delivery team");
+				npcsay(player, n, "The runescape parcel delivery team");
 			}
 		} else if (sub_menu1 == 1) {
-			npcsay(p, n, "By all means",
+			npcsay(player, n, "By all means",
 				"Though I don't know where you will come out",
 				"Wherever the other teleport block is I suppose");
-			int tp = multi(p, n, false, //do not send over
+			int tp = multi(player, n, false, //do not send over
 				"Yes, that sounds good teleport me",
 				"That sounds dangerous leave me here");
 			if (tp == 0) {
-				say(p, n, "Yes, that sounds good",
+				say(player, n, "Yes, that sounds good",
 					"teleport me");
-				p.teleport(545, 577, false);
-				mes(p, "Cromperty takes out a small box",
+				player.teleport(545, 577, false);
+				mes(player, "Cromperty takes out a small box",
 					"Cromperty presses a switch on the box");
-				if (p.getQuestStage(this) == 2 || p.getQuestStage(this) == -1) {
-					p.teleport(560, 588, true);
+				if (player.getQuestStage(this) == 2 || player.getQuestStage(this) == -1) {
+					player.teleport(560, 588, true);
 				} else {
-					p.teleport(558, 617, true);
+					player.teleport(558, 617, true);
 				}
 			} else if (tp == 1) {
-				say(p, n, "That sounds dangerous leave me here");
+				say(player, n, "That sounds dangerous leave me here");
 			}
 		}
 	}
@@ -339,67 +339,67 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615
 			|| obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614) {
-			p.message("The crate is empty");
+			player.message("The crate is empty");
 		}
 		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
-			mes(p, "There is a label on this crate", "It says",
+			mes(player, "There is a label on this crate", "It says",
 				"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
-			if (p.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || p.getCache().hasKey("label")) {
-				mes(p, "It doesn't seem possible to open the crate");
+			if (player.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || player.getCache().hasKey("label")) {
+				mes(player, "It doesn't seem possible to open the crate");
 			} else {
-				mes(p, "You take the label");
-				give(p, ItemId.ADDRESS_LABEL.id(), 1);
+				mes(player, "You take the label");
+				give(player, ItemId.ADDRESS_LABEL.id(), 1);
 			}
 		}
 		else if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
-			if (p.getCache().hasKey("label")) {
-				mes(p, "There is a label on this crate", "It says",
+			if (player.getCache().hasKey("label")) {
+				mes(player, "There is a label on this crate", "It says",
 					"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
 				return;
 			}
-			mes(p, "Its ready to be delivered",
+			mes(player, "Its ready to be delivered",
 				"To the wizard's tower in Misthalin",
 				"It doesn't seem possible to open the crate");
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				if (getCurrentLevel(p, Skills.THIEVING) < 21) {
-					mes(p, "You don't find anything interesting");
+				if (getCurrentLevel(player, Skills.THIEVING) < 21) {
+					mes(player, "You don't find anything interesting");
 				} else {
-					mes(p, "You find a trap in the stairs",
+					mes(player, "You find a trap in the stairs",
 						"You make a note of the trap's location",
 						"Ready for next time you go up the stairs");
-					p.getCache().store("trapy", true);
+					player.getCache().store("trapy", true);
 				}
 			} else if (command.equalsIgnoreCase("Go up")) {
-				if (p.getCache().hasKey("trapy")) {
-					p.message("You go up the stairs");
-					p.getCache().remove("trapy");
-					p.teleport(563, 1534, false);
+				if (player.getCache().hasKey("trapy")) {
+					player.message("You go up the stairs");
+					player.getCache().remove("trapy");
+					player.teleport(563, 1534, false);
 				} else {
-					mes(p, "You here a click beneath you",
+					mes(player, "You here a click beneath you",
 						"You feel yourself falling",
 						"You have fallen through a trap");
-					p.teleport(563, 3418, false);
-					p.damage(7);
+					player.teleport(563, 3418, false);
+					player.damage(7);
 				}
 			}
 		}
 		else if ((obj.getID() == HANDELMORT_CHEST_OPEN || obj.getID() == HANDELMORT_CHEST_CLOSED) && obj.getX() == 560 && obj.getY() == 1531) {
 			if (command.equalsIgnoreCase("open")) {
-				openGenericObject(obj, p, HANDELMORT_CHEST_OPEN, "You open the chest");
+				openGenericObject(obj, player, HANDELMORT_CHEST_OPEN, "You open the chest");
 			} else if (command.equalsIgnoreCase("close")) {
-				closeGenericObject(obj, p, HANDELMORT_CHEST_CLOSED, "You close the chest");
+				closeGenericObject(obj, player, HANDELMORT_CHEST_CLOSED, "You close the chest");
 			} else {
-				p.message("You search the chest");
-				if (p.getCarriedItems().hasCatalogID(ItemId.TRIBAL_TOTEM.id(), Optional.empty())) {
-					p.message("The chest is empty");
+				player.message("You search the chest");
+				if (player.getCarriedItems().hasCatalogID(ItemId.TRIBAL_TOTEM.id(), Optional.empty())) {
+					player.message("The chest is empty");
 				} else {
-					p.message("You find a tribal totem which you take");
-					give(p, ItemId.TRIBAL_TOTEM.id(), 1);
+					player.message("You find a tribal totem which you take");
+					give(player, ItemId.TRIBAL_TOTEM.id(), 1);
 				}
 			}
 		}
@@ -412,15 +412,15 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id()) {
-			if (p.getQuestStage(this) == -1) {
-				p.message("You've already done this!");
+			if (player.getQuestStage(this) == -1) {
+				player.message("You've already done this!");
 			} else {
-				p.message("You stick the label on the crate");
-				say(p, null, "Now I just need someone to deliver it for me");
-				p.getCarriedItems().remove(new Item(ItemId.ADDRESS_LABEL.id()));
-				p.getCache().store("label", true);
+				player.message("You stick the label on the crate");
+				say(player, null, "Now I just need someone to deliver it for me");
+				player.getCarriedItems().remove(new Item(ItemId.ADDRESS_LABEL.id()));
+				player.getCache().store("label", true);
 			}
 		}
 
@@ -433,40 +433,40 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586
 			&& click == 0) {
-			p.message("choose a position for dial 1");
-			int dial = multi(p, "postition A", "position B",
+			player.message("choose a position for dial 1");
+			int dial = multi(player, "postition A", "position B",
 				"Position C", "Position D");
 			if (dial >= 0 || dial <= 3) {
 				if (dial == 1) {
 					firstOpt = true;
 				}
-				p.message("choose a position for dial 2");
-				int dial2 = multi(p, "position R", "position S",
+				player.message("choose a position for dial 2");
+				int dial2 = multi(player, "position R", "position S",
 					"position T", "Position U");
 				if (dial2 >= 0 || dial2 <= 3) {
 					if (dial2 == 0) {
 						secondOpt = true;
 					}
-					p.message("choose a position for dial 3");
-					int dial3 = multi(p, "postition A", "position B",
+					player.message("choose a position for dial 3");
+					int dial3 = multi(player, "postition A", "position B",
 						"Position C", "Position D");
 					if (dial3 >= 0 || dial3 <= 3) {
 						if (dial3 == 0) {
 							thirdOpt = true;
 						}
-						p.message("choose a position for dial 4");
-						int dial4 = multi(p, "postition A",
+						player.message("choose a position for dial 4");
+						int dial4 = multi(player, "postition A",
 							"position B", "Position C", "Position D");
 						if (dial4 >= 0 || dial4 <= 3) {
 							if (firstOpt && secondOpt && thirdOpt && dial4 == 3) {
-								p.message("You here a satisfying click");
-								p.message("You go through the door");
-								doDoor(obj, p);
+								player.message("You here a satisfying click");
+								player.message("You go through the door");
+								doDoor(obj, player);
 							} else {
-								p.message("The door fails to open");
+								player.message("The door fails to open");
 							}
 						}
 					}

@@ -22,7 +22,7 @@ public class Drogo implements ShopInterface,
 		new Item(ItemId.IRON_BAR.id(), 0), new Item(ItemId.GOLD_BAR.id(), 0));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.DROGO.id();
 	}
 
@@ -37,21 +37,21 @@ public class Drogo implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Ello");
-		int m = multi(p, n, false, //do not send over
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Ello");
+		int m = multi(player, n, false, //do not send over
 			"Do you want to trade?", "Hello shorty",
 			"Why don't you ever restock ores and bars?");
 		if (m == 0) {
-			say(p, n, "Do you want to trade?");
-			npcsay(p, n, "Yeah sure, I run a mining store.");
-			ActionSender.showShop(p, shop);
+			say(player, n, "Do you want to trade?");
+			npcsay(player, n, "Yeah sure, I run a mining store.");
+			ActionSender.showShop(player, shop);
 		} else if (m == 1) {
-			say(p, n, "Hello Shorty.");
-			npcsay(p, n, "I may be short, but at least I've got manners");
+			say(player, n, "Hello Shorty.");
+			npcsay(player, n, "I may be short, but at least I've got manners");
 		} else if (m == 2) {
-			say(p, n, "Why don't you ever restock ores and bars?");
-			npcsay(p, n, "The only ores and bars I sell are those sold to me");
+			say(player, n, "Why don't you ever restock ores and bars?");
+			npcsay(player, n, "The only ores and bars I sell are those sold to me");
 		}
 	}
 }

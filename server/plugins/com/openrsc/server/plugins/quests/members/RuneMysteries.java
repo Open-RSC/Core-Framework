@@ -26,14 +26,14 @@ public class RuneMysteries implements QuestInterface {
 		return true;
 	}
 
-	public static void dukeDialog(int questState, Player p, Npc n) {
+	public static void dukeDialog(int questState, Player player, Npc n) {
 		switch (questState) {
 			case -1:
-				npcsay(p, n, "All is well for me",
+				npcsay(player, n, "All is well for me",
 					"Thanks again for your help with the talisman");
 				break;
 			case 0:
-				npcsay(p, n, "Well, it's not really a quest, but",
+				npcsay(player, n, "Well, it's not really a quest, but",
 					"I recently discovered this strange talisman.",
 					"It's not like anything I have seen before",
 					"Would you take it to the head wizard",
@@ -45,25 +45,25 @@ public class RuneMysteries implements QuestInterface {
 					"Sure, I have some spare time",
 					"No thanks"
 				};
-				int choice = multi(p, n, false, menu);
+				int choice = multi(player, n, false, menu);
 				if (choice == 0) {
-					say(p, n, "Sure, I have some spare time");
-					npcsay(p, n, "Thank you very much, stranger",
+					say(player, n, "Sure, I have some spare time");
+					npcsay(player, n, "Thank you very much, stranger",
 						"I am sure the head wizard will reward you",
 						"for such an interesting find");
-					if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
-						mes(p, "The Duke hands you a talisman.");
-						give(p, ItemId.AIR_TALISMAN.id(), 1);
-						p.setQuestStage(Quests.RUNE_MYSTERIES, 1);
+					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+						mes(player, "The Duke hands you a talisman.");
+						give(player, ItemId.AIR_TALISMAN.id(), 1);
+						player.setQuestStage(Quests.RUNE_MYSTERIES, 1);
 					} else {
-						npcsay(p, n, "Make some room in your inventory",
+						npcsay(player, n, "Make some room in your inventory",
 							"and see me again");
 					}
 				}
 				break;
 			case 1:
-				say(p, n, "What was I supposed to do again?");
-				npcsay(p, n, "Take the air talisman to the head wizard",
+				say(player, n, "What was I supposed to do again?");
+				npcsay(player, n, "Take the air talisman to the head wizard",
 					"in the basement of Wizards' Tower");
 				break;
 			default:
@@ -71,13 +71,13 @@ public class RuneMysteries implements QuestInterface {
 		}
 	}
 
-	public static void sedridorDialog(Player p, Npc n, int choice) {
+	public static void sedridorDialog(Player player, Npc n, int choice) {
 
-		switch (p.getQuestStage(Quests.RUNE_MYSTERIES)) {
+		switch (player.getQuestStage(Quests.RUNE_MYSTERIES)) {
 			case -1:
-				npcsay(p, n, "Senventior disthine molenko!");
-				p.getCache().set("essence_entrance",1);
-				p.teleport(695, 22);
+				npcsay(player, n, "Senventior disthine molenko!");
+				player.getCache().set("essence_entrance",1);
+				player.teleport(695, 22);
 				break;
 			case 0:
 			case 1:
@@ -85,8 +85,8 @@ public class RuneMysteries implements QuestInterface {
 				switch (choice) {
 					case 1:
 
-						say(p, n, "What are you doing down here?");
-						npcsay(p, n, "That is, indeed, a good question.",
+						say(player, n, "What are you doing down here?");
+						npcsay(player, n, "That is, indeed, a good question.",
 							"Here in the cellar of the Wizards' Tower",
 							"you find the remains of the old Wizards' Tower,",
 							"destroyed by fire many years past by the",
@@ -97,18 +97,18 @@ public class RuneMysteries implements QuestInterface {
 							"to show the world our dedication to the",
 							"mysteries of magic. I am here sifting",
 							"through fragments for knowledge of artefacts of our past.");
-						say(p, n, "Have you found anything useful?");
-						npcsay(p, n, "Ah, that would be telling, adventurer.",
+						say(player, n, "Have you found anything useful?");
+						npcsay(player, n, "Ah, that would be telling, adventurer.",
 							"Anything I have found I cannot speak freely of,",
 							"for fear of the treachery we have",
 							"already seen once in the past.");
-						choice = multi(p, n, "Okay, well I'll leave you to it.", "What do you mean, 'treachery'?");
+						choice = multi(player, n, "Okay, well I'll leave you to it.", "What do you mean, 'treachery'?");
 						if (choice == 0) {
-							say(p, n, "Okay, well, I'll leave you to it");
+							say(player, n, "Okay, well, I'll leave you to it");
 							return;
 						} else if (choice == 1) {
-							say(p, n, "What do you mean, 'treachery'?");
-							npcsay(p, n, "It is a long story. Many years ago, this Wizards' Tower",
+							say(player, n, "What do you mean, 'treachery'?");
+							npcsay(player, n, "It is a long story. Many years ago, this Wizards' Tower",
 								"was a focus of great learning, where mages studied together",
 								"to learn the secrets behind the runes that allow us",
 								"to use magic. Who makes them? Where do they come from?",
@@ -116,8 +116,8 @@ public class RuneMysteries implements QuestInterface {
 								"All of these questions and more are unknown to us,",
 								"but were once known by our ancestors. Legends tell us",
 								"that in the past, mages could fashion runes almost at will.");
-							say(p, n, "But they cannot anymore?");
-							npcsay(p, n, "No, unfortunately not. Many years past, the wizards",
+							say(player, n, "But they cannot anymore?");
+							npcsay(player, n, "No, unfortunately not. Many years past, the wizards",
 								"of Zamorak, the god of chaos, burned this tower to the ground.",
 								"and all who were inside. To this day, we do not know why",
 								"they did this terrible thing, but all of our research",
@@ -129,33 +129,33 @@ public class RuneMysteries implements QuestInterface {
 								"with each use. I hope we may once again create our own",
 								"runes, and the Wizards' Tower will return to its",
 								"former position of glory!");
-							say(p, n, "Right, I'll leave you to it.");
-							npcsay(p, n, "Goodbye, " + p.getUsername());
-							say(p, n, "How did you know my name?");
-							npcsay(p, n, "Well, I AM the head wizard.");
+							say(player, n, "Right, I'll leave you to it.");
+							npcsay(player, n, "Goodbye, " + player.getUsername());
+							say(player, n, "How did you know my name?");
+							npcsay(player, n, "Well, I AM the head wizard.");
 							return;
 						}
 						break;
 					case 2:
-						npcsay(p, n, "That's me, but why would you be doing that?");
-						say(p, n, "The Duke of Lumbridge sent me to find...er, you..",
+						npcsay(player, n, "That's me, but why would you be doing that?");
+						say(player, n, "The Duke of Lumbridge sent me to find...er, you..",
 							"I have a weird talisman that the Duke found.",
 							"He said the head wizard would be interested in it.");
-						npcsay(p, n, "Did he now? Well, that IS interesting.",
+						npcsay(player, n, "Did he now? Well, that IS interesting.",
 							"Hand it over, then, adventurer - let me see what",
 							"all the hubbub is about. Just some crude amulet, I'll wager.");
-						say(p, n, "Okay, here you go.");
+						say(player, n, "Okay, here you go.");
 
-						if (!p.getCarriedItems().hasCatalogID(ItemId.AIR_TALISMAN.id())) {
-							say(p, n, "Oh, I seem to have lost the talisman.");
-							npcsay(p, n, "Pity. If you happen to find it, bring it to me.");
+						if (!player.getCarriedItems().hasCatalogID(ItemId.AIR_TALISMAN.id())) {
+							say(player, n, "Oh, I seem to have lost the talisman.");
+							npcsay(player, n, "Pity. If you happen to find it, bring it to me.");
 							return;
 						}
-						mes(p, "You give the talisman to the wizard.");
-						npcsay(p, n, "Wow! This is incredible! Th-this talisman you brought me...",
+						mes(player, "You give the talisman to the wizard.");
+						npcsay(player, n, "Wow! This is incredible! Th-this talisman you brought me...",
 							"it is the last piece of the puzzle. Finally! the legacy of our",
 							"ancestors will return to us once more! I need time to",
-							"study this, " + p.getUsername() + ", can you please perform",
+							"study this, " + player.getUsername() + ", can you please perform",
 							"one task while I study this talisman? In the mighty city",
 							"of Varrock, located north-east of here, there is",
 							"a certain shop that sells magical runes. I have, in this",
@@ -166,56 +166,56 @@ public class RuneMysteries implements QuestInterface {
 							"correct, I will let you in on one of the greatest",
 							"secrets this world has ever known. It is a secret",
 							"so powerful that it destroyed the original Wizards' Tower",
-							"many centuries ago! Do this thing for me, " + p.getUsername(),
+							"many centuries ago! Do this thing for me, " + player.getUsername(),
 							"and you will be rewarded.");
 
-						int choice2 = multi(p, "Yes, certainly", "No, I'm busy.");
+						int choice2 = multi(player, "Yes, certainly", "No, I'm busy.");
 						if (choice2 == 0) {
-							npcsay(p, n, "Take this package to Varrock, the large city",
+							npcsay(player, n, "Take this package to Varrock, the large city",
 								"north of Lumbrdige. Aubury's rune shop is in the",
 								"south-east quarter. He will give you a special item -",
 								"bring it back to me and I will show you the mystery of runes.");
 
-							p.getCarriedItems().remove(new Item(ItemId.AIR_TALISMAN.id()));
-							mes(p, "The head wizard gives you a research package.");
-							give(p, ItemId.RESEARCH_PACKAGE.id(), 1);
-							npcsay(p, n, "Best of luck with your quest, " + p.getUsername());
-							p.setQuestStage(Quests.RUNE_MYSTERIES, 2);
+							player.getCarriedItems().remove(new Item(ItemId.AIR_TALISMAN.id()));
+							mes(player, "The head wizard gives you a research package.");
+							give(player, ItemId.RESEARCH_PACKAGE.id(), 1);
+							npcsay(player, n, "Best of luck with your quest, " + player.getUsername());
+							player.setQuestStage(Quests.RUNE_MYSTERIES, 2);
 						}
 						break;
 				}
 				break;
 			case 2:
-				if (!p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_PACKAGE.id())) {
-					say(p, n, "I lost the research package");
-					npcsay(p, n, "My my... I think I can pack up another one.");
+				if (!player.getCarriedItems().hasCatalogID(ItemId.RESEARCH_PACKAGE.id())) {
+					say(player, n, "I lost the research package");
+					npcsay(player, n, "My my... I think I can pack up another one.");
 
-					if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
-						mes(p, "The head wizard gives you a research package.");
-						npcsay(p, n, "Be more careful this time");
-						give(p, ItemId.RESEARCH_PACKAGE.id(), 1);
+					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+						mes(player, "The head wizard gives you a research package.");
+						npcsay(player, n, "Be more careful this time");
+						give(player, ItemId.RESEARCH_PACKAGE.id(), 1);
 					} else {
-						mes(p, "The head wizard tried to give you a research package, but your inventory was full.");
+						mes(player, "The head wizard tried to give you a research package, but your inventory was full.");
 					}
 				} else {
-					say(p, n, "What was I supposed to do with this package again?");
-					npcsay(p, n, "Deliver it to Aubury's rune shop in Varrock please.");
+					say(player, n, "What was I supposed to do with this package again?");
+					npcsay(player, n, "Deliver it to Aubury's rune shop in Varrock please.");
 				}
 				break;
 			case 3:
-				npcsay(p, n, "Ah, " + p.getUsername() + ". How goes your quest?",
+				npcsay(player, n, "Ah, " + player.getUsername() + ". How goes your quest?",
 					"Have you delivered the research package to my friend yet?");
-				say(p, n, "Yes, I have. He gave me some research notes to pass on to you.");
-				npcsay(p, n, "May I have them?");
+				say(player, n, "Yes, I have. He gave me some research notes to pass on to you.");
+				npcsay(player, n, "May I have them?");
 
-				if (!p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_NOTES.id())) {
-					say(p, n, "Er... I seem to have lost them.");
-					npcsay(p, n, "Sigh... go find them and return to me.");
+				if (!player.getCarriedItems().hasCatalogID(ItemId.RESEARCH_NOTES.id())) {
+					say(player, n, "Er... I seem to have lost them.");
+					npcsay(player, n, "Sigh... go find them and return to me.");
 					return;
 				}
 
-				say(p, n, "Sure. I have them here.");
-				npcsay(p, n, "You have been nothing but helpful, adventurer.",
+				say(player, n, "Sure. I have them here.");
+				npcsay(player, n, "You have been nothing but helpful, adventurer.",
 					"In return, I can let you in on the secret of our research.",
 					"Many centuries ago, the wizards of the Wizards' Tower",
 					"learn the secret of creating runes, which allowed them",
@@ -244,8 +244,8 @@ public class RuneMysteries implements QuestInterface {
 					"spoken of in the ancient texts, we would once",
 					"more be able to create runes as",
 					"our ancestors had done.");
-				say(p, n, "I'm still not sure how I fit into this little story of yours.");
-				npcsay(p, n, "You haven't guessed? The talisman you brought me",
+				say(player, n, "I'm still not sure how I fit into this little story of yours.");
+				npcsay(player, n, "You haven't guessed? The talisman you brought me",
 					"is a key to the elemental altar of air! When you hold",
 					"it, it directs you to the entrance of the long",
 					"forgotten Air Altar. By bringing pieces of the",
@@ -271,31 +271,31 @@ public class RuneMysteries implements QuestInterface {
 					"Any time you wish to visit the rune essence,",
 					"speak to me or Aubury and we will open a",
 					"portal to that mystical place.");
-				say(p, n, "So, only you and Aubury know the teleport",
+				say(player, n, "So, only you and Aubury know the teleport",
 					"spell to the rune essence?");
-				npcsay(p, n, "No, there are others. When you speak",
+				npcsay(player, n, "No, there are others. When you speak",
 					"to them, they will know you and grant you access to",
 					"that place when asked. Use the air talisman to",
 					"locate the Air Altar and use any further talismans",
 					"you find to locate the other altars.",
 					"Now, my research notes, please?");
-				p.getCarriedItems().remove(new Item(ItemId.RESEARCH_NOTES.id()));
-				mes(p, "You hand Sedridor the research notes.");
-				give(p, ItemId.AIR_TALISMAN.id(), 1);
-				p.sendQuestComplete(Quests.RUNE_MYSTERIES);
+				player.getCarriedItems().remove(new Item(ItemId.RESEARCH_NOTES.id()));
+				mes(player, "You hand Sedridor the research notes.");
+				give(player, ItemId.AIR_TALISMAN.id(), 1);
+				player.sendQuestComplete(Quests.RUNE_MYSTERIES);
 				break;
 		}
 	}
 
-	public static void auburyDialog(Player p, Npc n) {
-		if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 2) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_PACKAGE.id())) {
-				say(p, n, "I've been sent here with a package for you.",
+	public static void auburyDialog(Player player, Npc n) {
+		if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 2) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.RESEARCH_PACKAGE.id())) {
+				say(player, n, "I've been sent here with a package for you.",
 					"It's from Sedridor, the head wizard at the Wizards' Tower.");
-				npcsay(p, n, "Really? Surely he can't have...",
+				npcsay(player, n, "Really? Surely he can't have...",
 					"Please... let me have it.");
-				mes(p, "You have Aubury the research package.");
-				npcsay(p, n, "My gratitude, adventurer, for bringing me this research package.",
+				mes(player, "You have Aubury the research package.");
+				npcsay(player, n, "My gratitude, adventurer, for bringing me this research package.",
 					"Combined with the information I have already collated",
 					"regarding rune essence, I think we have finally",
 					"unlocked the power to... No..",
@@ -303,50 +303,50 @@ public class RuneMysteries implements QuestInterface {
 					"of my research back to Sedridor in the basement of the",
 					"Wizards' Tower. He will know whether or not",
 					"to let you in on our little secret.");
-				p.getCarriedItems().remove(new Item(ItemId.RESEARCH_PACKAGE.id()));
-				give(p, ItemId.RESEARCH_NOTES.id(), 1);
-				p.setQuestStage(Quests.RUNE_MYSTERIES, 3);
-				mes(p, "Aubury gives you his research notes.");
-				npcsay(p, n, "Now, I'm sure I can spare a couple of runes for",
+				player.getCarriedItems().remove(new Item(ItemId.RESEARCH_PACKAGE.id()));
+				give(player, ItemId.RESEARCH_NOTES.id(), 1);
+				player.setQuestStage(Quests.RUNE_MYSTERIES, 3);
+				mes(player, "Aubury gives you his research notes.");
+				npcsay(player, n, "Now, I'm sure I can spare a couple of runes for",
 					"such a worthy cause as these notes.",
 					"Do you want me to teleport you back?");
-				int choice = multi(p, "Yes, please.", "No, thank you.");
+				int choice = multi(player, "Yes, please.", "No, thank you.");
 				if (choice == 0) {
-					p.teleport(217, 685, true);
+					player.teleport(217, 685, true);
 				}
 
 			} else {
-				say(p, n, "I had a package for you... But I lost it");
-				npcsay(p, n, "See if you can find another one and return to me");
+				say(player, n, "I had a package for you... But I lost it");
+				npcsay(player, n, "See if you can find another one and return to me");
 			}
-		} else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 3) {
-			if (!p.getCarriedItems().hasCatalogID(ItemId.RESEARCH_NOTES.id())) {
-				say(p, n, "I lost your research notes...");
-				npcsay(p, n, "I see. Here, I have another copy.");
+		} else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 3) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.RESEARCH_NOTES.id())) {
+				say(player, n, "I lost your research notes...");
+				npcsay(player, n, "I see. Here, I have another copy.");
 
-				if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
-					mes(p, "Aubury hands you his research notes.");
-					give(p, ItemId.RESEARCH_NOTES.id(), 1);
+				if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+					mes(player, "Aubury hands you his research notes.");
+					give(player, ItemId.RESEARCH_NOTES.id(), 1);
 				} else {
-					mes(p, "Aubury tried to give you notes, but your inventory is full.");
+					mes(player, "Aubury tried to give you notes, but your inventory is full.");
 				}
 			} else {
-				say(p, n, "What am I to do with these notes?");
-				npcsay(p, n, "Take them to Sedridor in the Wizards' Tower.");
+				say(player, n, "What am I to do with these notes?");
+				npcsay(player, n, "Take them to Sedridor in the Wizards' Tower.");
 			}
-		} else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == -1) {
-			npcsay(p, n, "Senventior disthine molenko!");
-			p.getCache().set("essence_entrance",0);
-			p.teleport(695, 22);
+		} else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == -1) {
+			npcsay(player, n, "Senventior disthine molenko!");
+			player.getCache().set("essence_entrance",0);
+			player.teleport(695, 22);
 		}
 
 	}
 
 	@Override
-	public void handleReward(Player p) {
-		p.message("Well done you have completed the rune mysteries quest");
-		p.message("@gre@You haved gained 1 quest point!");
-		p.message("You now have access to the Runecrafting skill!");
-		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.RUNE_MYSTERIES), true);
+	public void handleReward(Player player) {
+		player.message("Well done you have completed the rune mysteries quest");
+		player.message("@gre@You haved gained 1 quest point!");
+		player.message("You now have access to the Runecrafting skill!");
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.RUNE_MYSTERIES), true);
 	}
 }

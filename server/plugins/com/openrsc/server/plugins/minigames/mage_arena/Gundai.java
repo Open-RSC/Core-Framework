@@ -73,27 +73,27 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GUNDAI.id();
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player player) {
 		if (n.getID() == NpcId.GUNDAI.id()) {
 			if (command.equalsIgnoreCase("Bank")) {
-				quickFeature(n, p, false);
-			} else if (p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
-				quickFeature(n, p, true);
+				quickFeature(n, player, false);
+			} else if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+				quickFeature(n, player, true);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if (n.getID() == NpcId.GUNDAI.id() && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+		if (n.getID() == NpcId.GUNDAI.id() && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;

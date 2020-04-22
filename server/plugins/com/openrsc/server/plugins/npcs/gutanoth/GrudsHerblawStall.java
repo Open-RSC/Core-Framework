@@ -20,22 +20,22 @@ public class GrudsHerblawStall implements ShopInterface,
 		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Does The little creature want to buy sumfin'");
-		int menu = multi(p, n,
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Does The little creature want to buy sumfin'");
+		int menu = multi(player, n,
 			"Yes I do",
 			"No I don't");
 		if (menu == 0) {
-			npcsay(p, n, "Welcome to Grud's herblaw stall");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "Welcome to Grud's herblaw stall");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (menu == 1) {
-			npcsay(p, n, "Suit yourself");
+			npcsay(player, n, "Suit yourself");
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OGRE_MERCHANT.id();
 	}
 

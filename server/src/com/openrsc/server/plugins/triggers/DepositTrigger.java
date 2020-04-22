@@ -11,5 +11,5 @@ public interface DepositTrigger {
 	/**
 	 * Return true if you wish to prevent a user from depositing an item
 	 */
-	boolean blockDeposit(Player p, Integer catalogID, Integer amount);
+	boolean blockDeposit(Player player, Integer catalogID, Integer amount);
 }

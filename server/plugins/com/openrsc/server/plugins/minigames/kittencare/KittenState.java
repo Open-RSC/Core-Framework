@@ -37,28 +37,28 @@ public class KittenState {
 		this.loneliness = loneliness;
 	}
 	
-	public void loadState(Player p) {
-		if (p.getAttribute("kitten_events", -1) == -1 && p.getCache().hasKey("kitten_events")) {
-			events = p.getCache().getInt("kitten_events");
+	public void loadState(Player player) {
+		if (player.getAttribute("kitten_events", -1) == -1 && player.getCache().hasKey("kitten_events")) {
+			events = player.getCache().getInt("kitten_events");
 		} else {
-			events = p.getAttribute("kitten_events", 0);
+			events = player.getAttribute("kitten_events", 0);
 		}
-		if (p.getAttribute("kitten_hunger", -1) == -1 && p.getCache().hasKey("kitten_hunger")) {
-			hunger = p.getCache().getInt("kitten_hunger");
+		if (player.getAttribute("kitten_hunger", -1) == -1 && player.getCache().hasKey("kitten_hunger")) {
+			hunger = player.getCache().getInt("kitten_hunger");
 		} else {
-			hunger = p.getAttribute("kitten_hunger", 0);
+			hunger = player.getAttribute("kitten_hunger", 0);
 		}
-		if (p.getAttribute("kitten_loneliness", -1) == -1 && p.getCache().hasKey("kitten_loneliness")) {
-			loneliness = p.getCache().getInt("kitten_loneliness");
+		if (player.getAttribute("kitten_loneliness", -1) == -1 && player.getCache().hasKey("kitten_loneliness")) {
+			loneliness = player.getCache().getInt("kitten_loneliness");
 		} else {
-			loneliness = p.getAttribute("kitten_loneliness", 0);
+			loneliness = player.getAttribute("kitten_loneliness", 0);
 		}
 	}
 	
-	public void saveState(Player p) {
-		p.setAttribute("kitten_events", events);
-		p.setAttribute("kitten_hunger", hunger);
-		p.setAttribute("kitten_loneliness", loneliness);
+	public void saveState(Player player) {
+		player.setAttribute("kitten_events", events);
+		player.setAttribute("kitten_hunger", hunger);
+		player.setAttribute("kitten_loneliness", loneliness);
 	}
 	
 }

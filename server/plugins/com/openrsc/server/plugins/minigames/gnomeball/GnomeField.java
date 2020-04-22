@@ -22,13 +22,13 @@ public class GnomeField {
 	
 	//see gnome field map
 	//since the field is odd, takes into account unwalkable pos to simplify when possible
-	public Zone resolvePositionToZone(Player p) {
-		int distanceXToGoal = p.getX() - GNOME_GOAL.getX();
-		int distanceYToGoal = p.getY() - GNOME_GOAL.getY();
+	public Zone resolvePositionToZone(Player player) {
+		int distanceXToGoal = player.getX() - GNOME_GOAL.getX();
+		int distanceYToGoal = player.getY() - GNOME_GOAL.getY();
 		double skewedYdistToGoal = distanceYToGoal + 0.5;
 		//the central Y-ref of low field is the same as the gnome goal
 		//so additionally only the x distance to low field is calculated
-		int distanceXToLowField = p.getX() - LOW_FIELD.getX();
+		int distanceXToLowField = player.getX() - LOW_FIELD.getX();
 		//zone of 2XP (inner)
 		if (Math.abs(distanceYToGoal) <= 2 && distanceXToGoal >= 0 && distanceXToGoal <= 2) {
 			return Zone.ZONE_2XP_INNER;
@@ -49,8 +49,8 @@ public class GnomeField {
 		}
 		//zone of passing the ball
 		//pyramid-like from low field
-		else if ((p.getX() == LOW_FIELD.getX() && distanceYToGoal >= -5 && distanceYToGoal <= -1)
-				|| (p.getX() > LOW_FIELD.getX() && discreteDistance(new Point(LOW_FIELD.getX()+1, LOW_FIELD.getY()), new Point(p.getX(), p.getY()), true, true) <= 3)) {
+		else if ((player.getX() == LOW_FIELD.getX() && distanceYToGoal >= -5 && distanceYToGoal <= -1)
+				|| (player.getX() > LOW_FIELD.getX() && discreteDistance(new Point(LOW_FIELD.getX()+1, LOW_FIELD.getY()), new Point(player.getX(), player.getY()), true, true) <= 3)) {
 			return Zone.ZONE_PASS;
 		}
 		//zone of no pass (intercepts of zone of passes checked earlier)
@@ -60,7 +60,7 @@ public class GnomeField {
 			return Zone.ZONE_NO_PASS;
 		}
 		//no visibility zone
-		else if ( (p.getX() == LOW_FIELD.getX() && distanceYToGoal >= 0 && distanceYToGoal <= 4) ||
+		else if ( (player.getX() == LOW_FIELD.getX() && distanceYToGoal >= 0 && distanceYToGoal <= 4) ||
 				  (distanceXToLowField >= -2 && distanceXToLowField <= -1 && (int)Math.abs(skewedYdistToGoal) == 6) ||
 				  (Math.abs(skewedYdistToGoal) < 5 && distanceXToGoal >= -1 && distanceXToLowField <= 0) ||
 				  (distanceXToLowField == 2 && Math.abs(skewedYdistToGoal) < 4)
@@ -68,18 +68,18 @@ public class GnomeField {
 			return Zone.ZONE_NOT_VISIBLE;
 		} 
 		//outside but throwable
-		else if ((p.getX() >= 720 && p.getX() <= 743) && (p.getY() >= 440 && p.getY() <= 463)) {
+		else if ((player.getX() >= 720 && player.getX() <= 743) && (player.getY() >= 440 && player.getY() <= 463)) {
 			return Zone.ZONE_OUTSIDE_THROWABLE;
 		}
 		//outside but non-throwable (kept by player)
 		return Zone.ZONE_OUTSIDE_KEEP;
 	}
 	
-	private int discreteDistance(Point base, Point p, boolean skewX, boolean skewY) {
+	private int discreteDistance(Point base, Point point, boolean skewX, boolean skewY) {
 		double offsetX = skewX ? 0.5 : 0.0;
 		double offsetY = skewY ? 0.5 : 0.0;
-		int distanceX = (int) Math.abs(p.getX() - base.getX() + offsetX); //skew to right
-		int distanceY = (int) Math.abs(p.getY() - base.getY() + offsetY); //skew to up
+		int distanceX = (int) Math.abs(point.getX() - base.getX() + offsetX); //skew to right
+		int distanceY = (int) Math.abs(point.getY() - base.getY() + offsetY); //skew to up
 		return distanceX + distanceY;
 	}
 	

@@ -16,9 +16,9 @@ import java.util.Optional;
 
 public final class InterfaceShopHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = p.getID();
+		int pID = packet.getID();
 		if (player.isBusy()) {
 			player.resetShop();
 			return;
@@ -39,9 +39,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 			player.resetShop();
 			return;
 		}
-		int categoryID = p.readShort();
-		int shopAmount = p.readShort();
-		int amount = p.readShort();
+		int categoryID = packet.readShort();
+		int shopAmount = packet.readShort();
+		int amount = packet.readShort();
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(categoryID);
 		if (def.isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();

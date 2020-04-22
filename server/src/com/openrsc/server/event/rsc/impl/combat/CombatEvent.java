@@ -139,9 +139,9 @@ public class CombatEvent extends GameTickEvent {
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
-			Player p = ((Player) hitter);
+			Player player = ((Player) hitter);
 			damage = Math.min(damage, n.getLevel(Skills.HITPOINTS));
-			n.addCombatDamage(p, damage);
+			n.addCombatDamage(player, damage);
 		}
 
 		String combatSound = null;
@@ -216,8 +216,8 @@ public class CombatEvent extends GameTickEvent {
 					Player p1;
 					p1 = ((Player) defenderMob);
 					if (p1.getParty() != null){
-						for (Player p : getWorld().getPlayers()) {
-							if(p1.getParty() == p.getParty()){
+						for (Player player : getWorld().getPlayers()) {
+							if(p1.getParty() == player.getParty()){
 								//ActionSender.sendParty(p);
 							}
 						}
@@ -245,8 +245,8 @@ public class CombatEvent extends GameTickEvent {
 					Player p2;
 					p2 = ((Player) attackerMob);
 					if (p2.getParty() != null){
-						for (Player p : getWorld().getPlayers()) {
-							if(p2.getParty() == p.getParty()){
+						for (Player player : getWorld().getPlayers()) {
+							if(p2.getParty() == player.getParty()){
 								//ActionSender.sendParty(p);
 							}
 						}

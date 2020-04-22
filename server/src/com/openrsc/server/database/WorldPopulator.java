@@ -46,12 +46,12 @@ public final class WorldPopulator {
 			try {
 				int countOBJ = 0;
 				while (result.next()) {
-					Point p = new Point(result.getInt("x"), result.getInt("y"));
-					if (Formulae.isP2P(false, p.getX(), p.getY())
+					Point point = new Point(result.getInt("x"), result.getInt("y"));
+					if (Formulae.isP2P(false, point.getX(), point.getY())
 						&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 						continue;
 					}
-					GameObject obj = new GameObject(getWorld(), p, result.getInt("id"),
+					GameObject obj = new GameObject(getWorld(), point, result.getInt("id"),
 						result.getInt("direction"), result.getInt("type"));
 
 					getWorld().registerGameObject(obj);

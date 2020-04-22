@@ -46,9 +46,9 @@ public abstract class Entity {
 		return withinRange(e.getLocation(), radius);
 	}
 
-	public boolean withinRange(final Point p, final int radius) {
-		int xDiff = Math.abs(getLocation().getX() - p.getX());
-		int yDiff = Math.abs(getLocation().getY() - p.getY());
+	public boolean withinRange(final Point point, final int radius) {
+		int xDiff = Math.abs(getLocation().getX() - point.getX());
+		int yDiff = Math.abs(getLocation().getY() - point.getY());
 		return xDiff <= radius && yDiff <= radius;
 	}
 
@@ -56,9 +56,9 @@ public abstract class Entity {
 		return withinRange90Deg(e.getLocation(), radius);
 	}
 
-	public boolean withinRange90Deg(final Point p, final int radius) {
-		int xDiff = Math.abs(getLocation().getX() - p.getX());
-		int yDiff = Math.abs(getLocation().getY() - p.getY());
+	public boolean withinRange90Deg(final Point point, final int radius) {
+		int xDiff = Math.abs(getLocation().getX() - point.getX());
+		int yDiff = Math.abs(getLocation().getY() - point.getY());
 		return xDiff <= radius && yDiff == 0 || xDiff == 0 && yDiff <= radius;
 	}
 
@@ -106,7 +106,7 @@ public abstract class Entity {
 		return location.get();
 	}
 
-	public void setLocation(final Point p) {
+	public void setLocation(final Point player) {
 		/*if (this.isPlayer() && location != null) {
 			Player pl = (Player) this;
 			if (pl != null && getX() > 0 && getY() > 0) {
@@ -117,13 +117,13 @@ public abstract class Entity {
 			}
 
 		}*/
-		location.set(p);
+		location.set(player);
 		updateRegion();
 	}
 
-	public void setInitialLocation(Point p) {
+	public void setInitialLocation(Point player) {
 		// Used when logging in a player in order to not cause exceptions of missing locations while updating the region
-		location.set(p);
+		location.set(player);
 	}
 
 	public Region getRegion() {

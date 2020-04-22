@@ -7,8 +7,8 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 public class DiskOfReturning implements OpInvTrigger {
 
-	public boolean insideMines(Player p) {
-		return ((p.getX() >= 250 && p.getX() <= 315) && (p.getY() >= 3325 && p.getY() <= 3400));
+	public boolean insideMines(Player player) {
+		return ((player.getX() >= 250 && player.getX() <= 315) && (player.getY() >= 3325 && player.getY() <= 3400));
 	}
 
 	@Override

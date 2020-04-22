@@ -13,117 +13,117 @@ import com.openrsc.server.constants.NpcId;
 public class Thordur implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		say(p, n, "Hello");
-		npcsay(p, n, "Hello adventurer",
+	public void onTalkNpc(final Player player, final Npc n) {
+		say(player, n, "Hello");
+		npcsay(player, n, "Hello adventurer",
 				"What brings you to this place?");
-		int opts = multi(p, n, "I just wanted to come by and say Hi",
+		int opts = multi(player, n, "I just wanted to come by and say Hi",
 				"Who are you?", "Do you like it here?");
 		if (opts == 0) {
-			thordurDialogue(p, n, WANTED_SAY_HI);
+			thordurDialogue(player, n, WANTED_SAY_HI);
 		}
 		else if (opts == 1) {
-			thordurDialogue(p, n, WHO_ARE_YOU);
+			thordurDialogue(player, n, WHO_ARE_YOU);
 		}
 		else if (opts == 2) {
-			thordurDialogue(p, n, LIKE_IT_HERE);
+			thordurDialogue(player, n, LIKE_IT_HERE);
 		}
 	}
 
-	private void thordurDialogue(Player p, Npc n, int cID) {
+	private void thordurDialogue(Player player, Npc n, int cID) {
 		switch (cID) {
 		case WANTED_SAY_HI:
-			npcsay(p, n, "Well hello there");
+			npcsay(player, n, "Well hello there");
 			break;
 		case WHO_ARE_YOU:
-			npcsay(p, n, "I am Thordur though names don't mean much");
-			int opts = multi(p, n, "So what do you do",
+			npcsay(player, n, "I am Thordur though names don't mean much");
+			int opts = multi(player, n, "So what do you do",
 					"Do you like it here?",
 					"Nice to meet you");
 			if (opts == 0) {
-				thordurDialogue(p, n, WHAT_DO_YOU_DO);
+				thordurDialogue(player, n, WHAT_DO_YOU_DO);
 			} else if (opts == 1) {
-				thordurDialogue(p, n, LIKE_IT_HERE);
+				thordurDialogue(player, n, LIKE_IT_HERE);
 			} else if (opts == 2) {
-				thordurDialogue(p, n, NICE_TO_MEET_YOU);
+				thordurDialogue(player, n, NICE_TO_MEET_YOU);
 			}
 			break;
 		case LIKE_IT_HERE:
-			npcsay(p, n, "Yes, its nice and quiet",
+			npcsay(player, n, "Yes, its nice and quiet",
 					"I get visitors once in a while",
 					"this place is home to me");
-			int opts1 = multi(p, n, "Visitors? what do you do?",
+			int opts1 = multi(player, n, "Visitors? what do you do?",
 					"Nice to meet you");
 			if (opts1 == 0) {
-				thordurDialogue(p, n, WHAT_DO_YOU_DO);
+				thordurDialogue(player, n, WHAT_DO_YOU_DO);
 			} else if (opts1 == 1) {
-				thordurDialogue(p, n, NICE_TO_MEET_YOU);
+				thordurDialogue(player, n, NICE_TO_MEET_YOU);
 			}
 			break;
 		case WHAT_DO_YOU_DO:
-			npcsay(p, n, "I run a tourist attraction called the Black Hole");
-			int opts2 = multi(p, n, "Oooh fancy, tell me more",
+			npcsay(player, n, "I run a tourist attraction called the Black Hole");
+			int opts2 = multi(player, n, "Oooh fancy, tell me more",
 					"You mean like the prison where bad players are sent?",
 					"Sounds good, how can I visit it?");
 			if (opts2 == 0) {
-				npcsay(p, n, "Well back in the day players tried",
+				npcsay(player, n, "Well back in the day players tried",
 						"to play unfairly and get advantage over other",
 						"players, so moderators would trap them in the void space,",
 						"often refered as the Black Hole");
-				thordurDialogue(p, n, PRISON_BAD_PLAYERS);
+				thordurDialogue(player, n, PRISON_BAD_PLAYERS);
 			} else if (opts2 == 1) {
-				thordurDialogue(p, n, PRISON_BAD_PLAYERS);
+				thordurDialogue(player, n, PRISON_BAD_PLAYERS);
 			} else if (opts2 == 2) {
-				thordurDialogue(p, n, CAN_I_VISIT);
+				thordurDialogue(player, n, CAN_I_VISIT);
 			}
 			break;
 		case NICE_TO_MEET_YOU:
-			npcsay(p, n, "Nice to meet you too");
+			npcsay(player, n, "Nice to meet you too");
 			break;
 		case PRISON_BAD_PLAYERS:
-			npcsay(p, n, "The prison used to be an old style of prisoning players",
+			npcsay(player, n, "The prison used to be an old style of prisoning players",
 					"who abused the rules",
 					"Nowadays they use other methods",
 					"My place allows players experience the void, allowing them",
 					"to make it back here");
-			int opts3 = multi(p, n, "I see, so can I visit the Black Hole",
+			int opts3 = multi(player, n, "I see, so can I visit the Black Hole",
 					"I have to go");
 			if (opts3 == 0) {
-				thordurDialogue(p, n, CAN_I_VISIT);
+				thordurDialogue(player, n, CAN_I_VISIT);
 			} else if (opts3 == 1) {
-				thordurDialogue(p, n, HAVE_TO_GO);
+				thordurDialogue(player, n, HAVE_TO_GO);
 			}
 			break;
 		case CAN_I_VISIT:
-			npcsay(p, n, "You will need a special disk that allows you to get there",
+			npcsay(player, n, "You will need a special disk that allows you to get there",
 					"and when you want to come back just spin it");
-			int opts4 = multi(p, n, "So about this disk, can I buy it?",
+			int opts4 = multi(player, n, "So about this disk, can I buy it?",
 					"I'll be right back");
 			if (opts4 == 0) {
-				thordurDialogue(p, n, CAN_I_BUY_IT);
+				thordurDialogue(player, n, CAN_I_BUY_IT);
 			} else if (opts4 == 1) {
-				thordurDialogue(p, n, BE_RIGHT_BACK);
+				thordurDialogue(player, n, BE_RIGHT_BACK);
 			}
 			break;
 		case HAVE_TO_GO:
-			npcsay(p, n, "Ok, have a nice day");
+			npcsay(player, n, "Ok, have a nice day");
 			break;
 		case CAN_I_BUY_IT:
-			npcsay(p, n, "I sell the disks for 10 coins",
+			npcsay(player, n, "I sell the disks for 10 coins",
 					"Would you like to buy one?");
-			int opts5 = multi(p, n, "Yes please",
+			int opts5 = multi(player, n, "Yes please",
 					"No thankyou");
 			if (opts5 == 0) {
-				if (!ifheld(p, ItemId.COINS.id(), 10)) {
-					say(p, n,
+				if (!ifheld(player, ItemId.COINS.id(), 10)) {
+					say(player, n,
 						"Oh dear I don't actually seem to have enough money");
 				} else {
-					p.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
-					give(p, ItemId.DISK_OF_RETURNING.id(), 1);
-					p.message("Thordur hands you a special disk");
-					delay(p.getWorld().getServer().getConfig().GAME_TICK * 2);
-					say(p, n, "Thank you");
-					npcsay(p, n, "If you ever happen to lose the disk whilst being in the Black Hole,",
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
+					give(player, ItemId.DISK_OF_RETURNING.id(), 1);
+					player.message("Thordur hands you a special disk");
+					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					say(player, n, "Thank you");
+					npcsay(player, n, "If you ever happen to lose the disk whilst being in the Black Hole,",
 							"the magical pool on the other side will allow you",
 							"to safely return here");
 				}
@@ -132,13 +132,13 @@ public class Thordur implements TalkNpcTrigger {
 			}
 			break;
 		case BE_RIGHT_BACK:
-			npcsay(p, n, "Ok");
+			npcsay(player, n, "Ok");
 			break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.THORDUR.id();
 	}
 

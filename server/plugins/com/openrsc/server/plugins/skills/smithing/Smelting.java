@@ -23,26 +23,26 @@ public class Smelting implements UseLocTrigger {
 	public static final int LAVA_FURNACE = 1284;
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId())) {
 			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
-				if (p.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
-					if (getCurrentLevel(p, Skills.SMITHING) < 30) {
-						p.message("You need at least level 30 smithing to make cannon balls");
+				if (player.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
+					if (getCurrentLevel(player, Skills.SMITHING) < 30) {
+						player.message("You need at least level 30 smithing to make cannon balls");
 						return;
 					}
-					if (p.getQuestStage(Quests.DWARF_CANNON) != -1) {
-						p.message("You need to complete the dwarf cannon quest");
+					if (player.getQuestStage(Quests.DWARF_CANNON) != -1) {
+						player.message("You need to complete the dwarf cannon quest");
 						return;
 					}
-					thinkbubble(p, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-					int messagedelay = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
-					int delay = p.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
-					mes(p, messagedelay, "you heat the steel bar into a liquid state",
+					thinkbubble(player, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
+					int messagedelay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
+					int delay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
+					mes(player, messagedelay, "you heat the steel bar into a liquid state",
 						"and pour it into your cannon ball mould",
 						"you then leave it to cool for a short while");
 
-					p.setBatchEvent(new BatchEvent(p.getWorld(), p, delay, "Smelting", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+					player.setBatchEvent(new BatchEvent(player.getWorld(), player, delay, "Smelting", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 						@Override
 						public void action() {
 							getOwner().incExp(Skills.SMITHING, 100, true);
@@ -95,15 +95,15 @@ public class Smelting implements UseLocTrigger {
 						}
 					});
 				} else { // No mould
-					p.message("you heat the steel bar");
+					player.message("you heat the steel bar");
 				}
 			} else {
-				handleRegularSmelting(item, p, obj);
+				handleRegularSmelting(item, player, obj);
 			}
 		} else if (obj.getID() == LAVA_FURNACE) {
-			int stage = p.getCache().hasKey("miniquest_dwarf_youth_rescue") ? p.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
 			if (stage != 2) {
-				p.message("You don't have permission to use this");
+				player.message("You don't have permission to use this");
 				return;
 			}
 			int amount = 0;
@@ -112,84 +112,84 @@ public class Smelting implements UseLocTrigger {
 			else if (item.getCatalogId() == ItemId.DRAGON_AXE.id())
 				amount = 2;
 			else {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 				return;
 			}
-			if (getCurrentLevel(p, Skills.SMITHING) < 90) {
-				p.message("90 smithing is required to use this forge");
+			if (getCurrentLevel(player, Skills.SMITHING) < 90) {
+				player.message("90 smithing is required to use this forge");
 				return;
 			}
-			if (p.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
-				p.message("You smelt the " + item.getDef(p.getWorld()).getName() + "...");
-				delay(p.getWorld().getServer().getConfig().GAME_TICK * 5);
-				p.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
-				give(p, ItemId.DRAGON_BAR.id(), amount);
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
+				player.message("You smelt the " + item.getDef(player.getWorld()).getName() + "...");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				player.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
+				give(player, ItemId.DRAGON_BAR.id(), amount);
 			}
 		}
 	}
 
-	private void handleRegularSmelting(final Item item, Player p, final GameObject obj) {
+	private void handleRegularSmelting(final Item item, Player player, final GameObject obj) {
 		if (!inArray(item.getCatalogId(), Smelt.ADAMANTITE_ORE.getID(), Smelt.COAL.getID(), Smelt.COPPER_ORE.getID(), Smelt.IRON_ORE.getID(), Smelt.GOLD.getID(), Smelt.MITHRIL_ORE.getID(), Smelt.RUNITE_ORE.getID(), Smelt.SILVER.getID(), Smelt.TIN_ORE.getID(), ItemId.GOLD_FAMILYCREST.id())) {
-			p.message("Nothing interesting happens");
+			player.message("Nothing interesting happens");
 			return;
 		}
-		String formattedName = item.getDef(p.getWorld()).getName().toUpperCase().replaceAll(" ", "_");
+		String formattedName = item.getDef(player.getWorld()).getName().toUpperCase().replaceAll(" ", "_");
 		Smelt smelt;
-		if (item.getCatalogId() == Smelt.IRON_ORE.getID() && getCurrentLevel(p, Skills.SMITHING) >= 30 && p.getCarriedItems().getInventory().countId(Smelt.COAL.getID()) >= 2) {
-			String coalChange = p.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
+		if (item.getCatalogId() == Smelt.IRON_ORE.getID() && getCurrentLevel(player, Skills.SMITHING) >= 30 && player.getCarriedItems().getInventory().countId(Smelt.COAL.getID()) >= 2) {
+			String coalChange = player.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
 			smelt = Smelt.valueOf(formattedName);
 		}
 
-		if (!p.getCarriedItems().getInventory().contains(item)) {
+		if (!player.getCarriedItems().getInventory().contains(item)) {
 			return;
 		}
 
 		if (obj.getLocation().equals(Point.location(399, 840))) {
 			// furnace in shilo village
-			if ((p.getLocation().getY() == 841 && !p.withinRange(obj, 2)) && !p.withinRange90Deg(obj, 2)) {
+			if ((player.getLocation().getY() == 841 && !player.withinRange(obj, 2)) && !player.withinRange90Deg(obj, 2)) {
 				return;
 			}
 		} else {
 			// some furnaces the player is 2 spaces away
-			if (!p.withinRange(obj, 1) && !p.withinRange90Deg(obj, 2)) {
+			if (!player.withinRange(obj, 1) && !player.withinRange90Deg(obj, 2)) {
 				return;
 			}
 		}
 
-		thinkbubble(p, item);
-		if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (p.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& p.getFatigue() >= p.MAX_FATIGUE) {
-				p.message("You are too tired to smelt this ore");
+		thinkbubble(player, item);
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to smelt this ore");
 				return;
 			}
 		}
-		if (getCurrentLevel(p, Skills.SMITHING) < smelt.getRequiredLevel()) {
-			p.playerServerMessage(MessageType.QUEST, "You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
+		if (getCurrentLevel(player, Skills.SMITHING) < smelt.getRequiredLevel()) {
+			player.playerServerMessage(MessageType.QUEST, "You need to be at least level-" + smelt.getRequiredLevel() + " smithing to " + (smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ") + player.getWorld().getServer().getEntityHandler().getItemDef(smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", ""));
 			if (smelt.getSmeltBarId() == ItemId.IRON_BAR.id())
-				p.playerServerMessage(MessageType.QUEST, "Practice your smithing using tin and copper to make bronze");
+				player.playerServerMessage(MessageType.QUEST, "Practice your smithing using tin and copper to make bronze");
 			return;
 		}
-		if (p.getCarriedItems().getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (p.getCarriedItems().getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
+		if (player.getCarriedItems().getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount() || (player.getCarriedItems().getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
 			if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getCatalogId() == Smelt.COPPER_ORE.getID()) {
-				p.playerServerMessage(MessageType.QUEST, "You also need some " + (item.getCatalogId() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
+				player.playerServerMessage(MessageType.QUEST, "You also need some " + (item.getCatalogId() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
 				return;
 			}
-			if (smelt.getID() == Smelt.COAL.getID() && (p.getCarriedItems().getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || p.getCarriedItems().getInventory().countId(Smelt.COAL.getID()) <= 1)) {
-				p.playerServerMessage(MessageType.QUEST, "You need 1 iron-ore and 2 coal to make steel");
+			if (smelt.getID() == Smelt.COAL.getID() && (player.getCarriedItems().getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || player.getCarriedItems().getInventory().countId(Smelt.COAL.getID()) <= 1)) {
+				player.playerServerMessage(MessageType.QUEST, "You need 1 iron-ore and 2 coal to make steel");
 				return;
 			} else {
-				p.playerServerMessage(MessageType.QUEST, "You need " + smelt.getReqOreAmount() + " heaps of " + p.getWorld().getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase()
+				player.playerServerMessage(MessageType.QUEST, "You need " + smelt.getReqOreAmount() + " heaps of " + player.getWorld().getServer().getEntityHandler().getItemDef(smelt.getReqOreId()).getName().toLowerCase()
 					+ " to smelt "
-					+ item.getDef(p.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
+					+ item.getDef(player.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
 				return;
 			}
 		}
 
-		p.playerServerMessage(MessageType.QUEST, smeltString(p.getWorld(), smelt, item));
-		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Smelt", Formulae.getRepeatTimes(p, Skills.SMITHING), false) {
+		player.playerServerMessage(MessageType.QUEST, smeltString(player.getWorld(), smelt, item));
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Smelt", Formulae.getRepeatTimes(player, Skills.SMITHING), false) {
 			@Override
 			public void action() {
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {

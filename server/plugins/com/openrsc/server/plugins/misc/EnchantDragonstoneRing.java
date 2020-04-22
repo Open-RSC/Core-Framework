@@ -11,23 +11,23 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
-	public boolean blockSpellInv(Player p, Integer itemID, Integer spellID) {
-		return (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+	public boolean blockSpellInv(Player player, Integer itemID, Integer spellID) {
+		return (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override
-	public void onSpellInv(Player p, Integer itemID, Integer spellID) {
-		SpellDef spellDef = p.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
+	public void onSpellInv(Player player, Integer itemID, Integer spellID) {
+		SpellDef spellDef = player.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
 		if (spellDef == null)
 			return;
-		Item item = p.getCarriedItems().getInventory().get(
-			p.getCarriedItems().getInventory().getLastIndexById(ItemId.DRAGONSTONE_RING.id()));
+		Item item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(ItemId.DRAGONSTONE_RING.id()));
 		if (item.getItemStatus().getNoted()) return;
 
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
-			p.message("What type of dragonstone ring would you like to make?");
-			delay(p.getWorld().getServer().getConfig().GAME_TICK);
-			int choice = multi(p, "Ring of Wealth", "Ring of Avarice");
+			player.message("What type of dragonstone ring would you like to make?");
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			int choice = multi(player, "Ring of Wealth", "Ring of Avarice");
 			int i;
 			if (choice == 0) {
 				i = ItemId.RING_OF_WEALTH.id();
@@ -36,11 +36,11 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 			} else {
 				return;
 			}
-			SpellHandler.checkAndRemoveRunes(p,spellDef);
+			SpellHandler.checkAndRemoveRunes(player,spellDef);
 			Item toRemove = new Item(item.getCatalogId(), 1, false, item.getItemId());
-			p.getCarriedItems().remove(toRemove);
-			p.getCarriedItems().getInventory().add(new Item(i));
-			SpellHandler.finalizeSpell(p, spellDef, "You succesfully enchant the ring");
+			player.getCarriedItems().remove(toRemove);
+			player.getCarriedItems().getInventory().add(new Item(i));
+			SpellHandler.finalizeSpell(player, spellDef, "You succesfully enchant the ring");
 		}
 	}
 	/*@Override

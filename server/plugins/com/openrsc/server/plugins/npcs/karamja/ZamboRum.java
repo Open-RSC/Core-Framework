@@ -20,7 +20,7 @@ public final class ZamboRum implements ShopInterface,
 		3), new Item(ItemId.KARAMJA_RUM.id(), 3), new Item(ItemId.WINE.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.ZAMBO.id();
 	}
 
@@ -35,16 +35,16 @@ public final class ZamboRum implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p,
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player,
 			n,
 			"Hey are you wanting to try some of my fine wines and spirits?",
 			"All brewed locally on Karamja island");
 
-		int option = multi(p, n, "Yes please", "No thankyou");
+		int option = multi(player, n, "Yes please", "No thankyou");
 		if (option == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 

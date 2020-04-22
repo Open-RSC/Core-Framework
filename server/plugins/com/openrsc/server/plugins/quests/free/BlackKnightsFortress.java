@@ -48,51 +48,51 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void handleReward(Player p) {
-		p.message("Sir Amik hands you 2500 coins");
-		give(p, ItemId.COINS.id(), 2500);
-		p.message("Well done. You have completed the Black Knights Fortress quest");
-		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
-		p.message("@gre@You haved gained 3 quest points!");
+	public void handleReward(Player player) {
+		player.message("Sir Amik hands you 2500 coins");
+		give(player, ItemId.COINS.id(), 2500);
+		player.message("Well done. You have completed the Black Knights Fortress quest");
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
+		player.message("@gre@You haved gained 3 quest points!");
 	}
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 		if (n.getID() == NpcId.SIR_AMIK_VARZE.id()) {
-			handleSirAmikVarze(p, n);
+			handleSirAmikVarze(player, n);
 		}
 	}
 
-	private void handleSirAmikVarze(final Player p, final Npc n) {
-		switch (p.getQuestStage(this)) {
+	private void handleSirAmikVarze(final Player player, final Npc n) {
+		switch (player.getQuestStage(this)) {
 			case 0:
-				npcsay(p, n, "I am the leader of the white knights of Falador",
+				npcsay(player, n, "I am the leader of the white knights of Falador",
 					"Why do you seek my audience?");
-				int menu = multi(p, n, "I seek a quest",
+				int menu = multi(player, n, "I seek a quest",
 					"I don't I'm just looking around");
 				if (menu == 0) {
-					if (p.getQuestPoints() < 12) {
-						npcsay(p, n,
+					if (player.getQuestPoints() < 12) {
+						npcsay(player, n,
 							"Well I do have a task, but it is very dangerous",
 							"and it's critical to us that no mistakes are made",
 							"I couldn't possibly let an unexperienced quester like yourself go");
-						p.message("You need 12 quest points to start this quest");
+						player.message("You need 12 quest points to start this quest");
 						return;
 					}
-					npcsay(p, n, "Well I need some spy work doing",
+					npcsay(player, n, "Well I need some spy work doing",
 						"It's quite dangerous",
 						"You will need to go into the Black Knight's fortress");
-					int sub_menu = multi(p, n, "I laugh in the face of danger",
+					int sub_menu = multi(player, n, "I laugh in the face of danger",
 						"I go and cower in a corner at the first sign of danger");
 					if (sub_menu == 0) {
-						npcsay(p, n,
+						npcsay(player, n,
 							"Well that's good",
 							"Don't get too overconfident though",
 							"You've come along just right actually",
 							"All of my knights are known to the black knights already",
 							"Subtlety isn't exactly our strong point");
-						say(p, n, "So, what needs doing?");
-						npcsay(p, n,
+						say(player, n, "So, what needs doing?");
+						npcsay(player, n,
 							"Well the black knights have started making strange threats to us",
 							"Demanding large amounts of money and land",
 							"And threataning to invade Falador if we don't pay",
@@ -101,18 +101,18 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 							"What I want you to do is get inside their fortress",
 							"Find out what their secret weapon is",
 							"And then sabotage it", "You will be well paid");
-						say(p, n, "Ok I'll give it a try");
-						p.updateQuestStage(getQuestId(), 1);
+						say(player, n, "Ok I'll give it a try");
+						player.updateQuestStage(getQuestId(), 1);
 					} else if (sub_menu == 1) {
-						npcsay(p, n, "Er", "well",
+						npcsay(player, n, "Er", "well",
 							"spy work does involve a little hiding in corners I suppose");
-						int sub = multi(p, n,
+						int sub = multi(player, n,
 							"Oh I suppose I'll give it a go then",
 							"No I'm not convinced");
 
 						if (sub == 0) {
-							say(p, n, "So, what needs doing?");
-							npcsay(p, n,
+							say(player, n, "So, what needs doing?");
+							npcsay(player, n,
 								"Well the black knights have started making strange threats to us",
 								"Demanding large amounts of money and land",
 								"And threataning to invade Falador if we don't pay",
@@ -121,50 +121,50 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 								"What I want you to do is get inside their fortress",
 								"Find out what their secret weapon is",
 								"And then sabotage it", "You will be well paid");
-							say(p, n, "Ok I'll give it a try");
-							p.updateQuestStage(getQuestId(), 1);
+							say(player, n, "Ok I'll give it a try");
+							player.updateQuestStage(getQuestId(), 1);
 						}
 					}
 				} else if (menu == 1) {
-					npcsay(p, n, "Ok, don't break anything");
+					npcsay(player, n, "Ok, don't break anything");
 				}
 				break;
 
 			case 1:
-				npcsay(p, n, "How's the mission going?");
-				say(p, n,
+				npcsay(player, n, "How's the mission going?");
+				say(player, n,
 					"I haven't managed to find what the secret weapon is yet.");
 				break;
 			case 2:
-				npcsay(p, n, "How's the mission going?");
+				npcsay(player, n, "How's the mission going?");
 
-				say(p, n,
+				say(player, n,
 					"I have found out what the Black Knights' secret weapon is.",
 					"It's a potion of invincibility.");
 
-				npcsay(p, n,
+				npcsay(player, n,
 					"That is bad news.",
 					"If you can sabotage it somehow, you will be paid well.");
 
 				break;
 			case 3:
-				say(p, n,
+				say(player, n,
 					"I have ruined the black knight's invincibility potion.",
 					"That should put a stop to your problem.");
 
-				npcsay(p, n,
+				npcsay(player, n,
 					"Yes we have just recieved a message from the black knights.",
 					"Saying they withdraw their demands.",
 					"Which confirms your story");
 
-				say(p, n, "You said you were going to pay me");
-				npcsay(p, n, "Yes that's right");
-				p.sendQuestComplete(Quests.BLACK_KNIGHTS_FORTRESS);
+				say(player, n, "You said you were going to pay me");
+				npcsay(player, n, "Yes that's right");
+				player.sendQuestComplete(Quests.BLACK_KNIGHTS_FORTRESS);
 				break;
 
 			case -1:
-				say(p, n, "Hello Sir Amik");
-				npcsay(p, n, "Hello friend");
+				say(player, n, "Hello Sir Amik");
+				npcsay(player, n, "Hello friend");
 				break;
 		}
 	}
@@ -197,7 +197,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SIR_AMIK_VARZE.id();
 	}
 

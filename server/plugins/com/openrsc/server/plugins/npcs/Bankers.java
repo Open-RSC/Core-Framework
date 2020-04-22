@@ -91,18 +91,18 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
+	public void onOpNpc(Npc n, String command, Player player) {
 		if (inArray(n.getID(), BANKERS)) {
-			if (command.equalsIgnoreCase("Bank") && p.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
-				quickFeature(n, p, false);
-			} else if (command.equalsIgnoreCase("Collect") && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
-				quickFeature(n, p, true);
+			if (command.equalsIgnoreCase("Bank") && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
+				quickFeature(n, player, false);
+			} else if (command.equalsIgnoreCase("Collect") && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+				quickFeature(n, player, true);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}

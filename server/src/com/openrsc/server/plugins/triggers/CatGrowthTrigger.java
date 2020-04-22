@@ -7,12 +7,12 @@ public interface CatGrowthTrigger {
 	/**
 	 * Called when a player has accumulated sufficient activity to advance kitten growth
 	 */
-	public void onCatGrowth(Player p);
+	public void onCatGrowth(Player player);
 
 	/**
 	 * Called when a player has accumulated sufficient activity to advance kitten growth
 	 *
 	 * @return
 	 */
-	boolean blockCatGrowth(Player p);
+	boolean blockCatGrowth(Player player);
 }

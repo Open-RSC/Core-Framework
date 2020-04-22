@@ -21,133 +21,133 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	private static int PANNING_POINT = 1058;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == PANNING_POINT;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == PANNING_POINT) {
-			p.message("If I had a panning tray I could pan here");
+			player.message("If I had a panning tray I could pan here");
 		}
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return obj.getID() == PANNING_POINT;
 	}
 
-	private boolean handlePanning(GameObject obj, Item item, Player p) {
-		if (!p.getCache().hasKey("unlocked_panning")) {
+	private boolean handlePanning(GameObject obj, Item item, Player player) {
+		if (!player.getCache().hasKey("unlocked_panning")) {
 			return false;
 		}
-		p.setBusy(true);
-		thinkbubble(p, new Item(ItemId.PANNING_TRAY.id()));
-		p.playSound("mix");
-		p.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
-		mes(p, "You swirl away the excess water");
+		player.setBusy(true);
+		thinkbubble(player, new Item(ItemId.PANNING_TRAY.id()));
+		player.playSound("mix");
+		player.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
+		mes(player, "You swirl away the excess water");
 		delay(1500);
-		thinkbubble(p, new Item(ItemId.PANNING_TRAY_FULL.id()));
-		p.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
-		p.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
-		p.incExp(Skills.MINING, 20, true);
-		p.setBusy(false);
+		thinkbubble(player, new Item(ItemId.PANNING_TRAY_FULL.id()));
+		player.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
+		player.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
+		player.incExp(Skills.MINING, 20, true);
+		player.setBusy(false);
 		return false;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == PANNING_POINT) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
-				Npc guide = ifnearvisnpc(p, NpcId.DIGSITE_GUIDE.id(), 15);
+				Npc guide = ifnearvisnpc(player, NpcId.DIGSITE_GUIDE.id(), 15);
 				if (guide != null) {
 					// NOT SURE? if(p.getQuestStage(Quests.DIGSITE) < 2) {
-					if (!p.getCache().hasKey("unlocked_panning")) {
-						npcsay(p, guide, "Hey! you can't pan yet!");
-						say(p, guide, "Why not ?");
-						npcsay(p, guide, "We do not allow the uninvited to pan here");
-						int menu = multi(p, guide,
+					if (!player.getCache().hasKey("unlocked_panning")) {
+						npcsay(player, guide, "Hey! you can't pan yet!");
+						say(player, guide, "Why not ?");
+						npcsay(player, guide, "We do not allow the uninvited to pan here");
+						int menu = multi(player, guide,
 							"Okay, forget it",
 							"So how do I become invited then ?");
 						if (menu == 0) {
-							npcsay(p, guide, "You can of course use this place when you know what you are doing");
+							npcsay(player, guide, "You can of course use this place when you know what you are doing");
 						} else if (menu == 1) {
-							npcsay(p, guide, "I'm not supposed to let people pan here",
+							npcsay(player, guide, "I'm not supposed to let people pan here",
 								"Unless they have permission from the authorities first",
 								"Mind you I could let you have a go...",
 								"If you're willing to do me a favour");
-							say(p, guide, "What's that ?");
-							npcsay(p, guide, "Well...to be honest...",
+							say(player, guide, "What's that ?");
+							npcsay(player, guide, "Well...to be honest...",
 								"What I would really like...",
 								"Is a nice cup of tea !");
-							say(p, guide, "Tea !?");
-							npcsay(p, guide, "Absolutely, I'm parched !",
+							say(player, guide, "Tea !?");
+							npcsay(player, guide, "Absolutely, I'm parched !",
 								"If you could bring me one of those...",
 								"I would be more than willing to let you pan here");
 						}
 					} else {
-						handlePanning(obj, item, p);
+						handlePanning(obj, item, player);
 					}
 				}
 			} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
-				p.playerServerMessage(MessageType.QUEST, "This panning tray already contains something");
+				player.playerServerMessage(MessageType.QUEST, "This panning tray already contains something");
 			} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
-				p.playerServerMessage(MessageType.QUEST, "This panning tray already contains gold");
+				player.playerServerMessage(MessageType.QUEST, "This panning tray already contains gold");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockUseNpc(Player p, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return npc.getID() == NpcId.DIGSITE_GUIDE.id();
 	}
 
 	@Override
-	public void onUseNpc(Player p, Npc npc, Item item) {
+	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.DIGSITE_GUIDE.id()) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
-				p.message("You give the panning tray to the guide");
-				npcsay(p, npc, "Yes, this is a panning tray...");
+				player.message("You give the panning tray to the guide");
+				npcsay(player, npc, "Yes, this is a panning tray...");
 			}
 			if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
-				p.message("You give the full panning tray to the guide");
-				npcsay(p, npc, "This is no good to me",
+				player.message("You give the full panning tray to the guide");
+				npcsay(player, npc, "This is no good to me",
 					"I don't deal with finds");
 			}
 			if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
-				p.message("You give the full panning tray to the guide");
-				npcsay(p, npc, "I am afraid I don't deal with finds",
+				player.message("You give the full panning tray to the guide");
+				npcsay(player, npc, "I am afraid I don't deal with finds",
 					"That's not my job");
 			}
 			if (item.getCatalogId() == ItemId.CUP_OF_TEA.id()) {
-				if (p.getCache().hasKey("unlocked_panning")) {
-					npcsay(p, npc, "No thanks, I've had enough!");
+				if (player.getCache().hasKey("unlocked_panning")) {
+					npcsay(player, npc, "No thanks, I've had enough!");
 				} else {
-					npcsay(p, npc, "Ah! Lovely!",
+					npcsay(player, npc, "Ah! Lovely!",
 						"You can't beat a good cuppa...",
 						"You're free to pan all you want");
-					say(p, npc, "Thanks");
-					p.getCarriedItems().remove(new Item(ItemId.CUP_OF_TEA.id()));
-					p.getCache().store("unlocked_panning", true);
+					say(player, npc, "Thanks");
+					player.getCarriedItems().remove(new Item(ItemId.CUP_OF_TEA.id()));
+					player.getCache().store("unlocked_panning", true);
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.PANNING_TRAY.id() || item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id() || item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id();
 	}
 
 
 	@Override
-	public void onOpInv(Item item, Player p, String command) {
+	public void onOpInv(Item item, Player player, String command) {
 		if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
-			p.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
-			say(p, null, "Err, why am I searching an empty tray ?");
+			player.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
+			say(player, null, "Err, why am I searching an empty tray ?");
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
-			p.setBusy(true);
-			mes(p, "You search the contents of the tray...");
+			player.setBusy(true);
+			mes(player, "You search the contents of the tray...");
 			delay(1500);
 			int randomNumber = DataConversions.random(0, 100);
 			int addItem = -1;
@@ -169,27 +169,27 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			} else if (randomNumber < 100) { // 10%
 				addItem = ItemId.UNCUT_SAPPHIRE.id();
 			}
-			p.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_FULL.id(), ItemId.PANNING_TRAY.id());
+			player.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_FULL.id(), ItemId.PANNING_TRAY.id());
 			if (addItem != -1) {
 				if (addItem == ItemId.COINS.id()) {
-					p.playerServerMessage(MessageType.QUEST, "You find some coins within the mud");
+					player.playerServerMessage(MessageType.QUEST, "You find some coins within the mud");
 				} else if (addItem == ItemId.ROCK_SAMPLE_ORANGE.id()) {
-					p.playerServerMessage(MessageType.QUEST, "You find a rock sample covered in mud");
+					player.playerServerMessage(MessageType.QUEST, "You find a rock sample covered in mud");
 				} else if (addItem == ItemId.UNCUT_OPAL.id() || addItem == ItemId.UNCUT_JADE.id() || addItem == ItemId.UNCUT_SAPPHIRE.id()) {
-					p.playerServerMessage(MessageType.QUEST, "You find a gem within the mud!");
+					player.playerServerMessage(MessageType.QUEST, "You find a gem within the mud!");
 				} else if (addItem == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
-					p.playerServerMessage(MessageType.QUEST, "You find some gold nuggets within the mud!");
+					player.playerServerMessage(MessageType.QUEST, "You find some gold nuggets within the mud!");
 				}
-				give(p, addItem, addAmount);
+				give(player, addItem, addAmount);
 			} else {
-				p.playerServerMessage(MessageType.QUEST, "The tray contains only plain mud");
+				player.playerServerMessage(MessageType.QUEST, "The tray contains only plain mud");
 			}
-			p.setBusy(false);
+			player.setBusy(false);
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
-			p.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_GOLD_NUGGET.id(), ItemId.PANNING_TRAY.id());
-			give(p, ItemId.GOLD_NUGGETS.id(), 1);
-			p.message("You take the gold form the panning tray");
-			p.message("You have a handful of gold nuggets");
+			player.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_GOLD_NUGGET.id(), ItemId.PANNING_TRAY.id());
+			give(player, ItemId.GOLD_NUGGETS.id(), 1);
+			player.message("You take the gold form the panning tray");
+			player.message("You have a handful of gold nuggets");
 		}
 	}
 }

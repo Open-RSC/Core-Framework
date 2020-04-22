@@ -23,9 +23,9 @@ public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == CRYSTAL_CHEST) {
-			p.message("the chest is locked");
+			player.message("the chest is locked");
 		}
 	}
 

@@ -39,7 +39,7 @@ public class AchievementTask {
 		this.amount = amount;
 	}
 
-	//public setAchievementStatus(Player p, int status) {
+	//public setAchievementStatus(Player player, int status) {
 
 	//}
 

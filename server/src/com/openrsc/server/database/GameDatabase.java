@@ -303,16 +303,16 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public String banPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) {
-		final Player p = getServer().getWorld().getPlayer(DataConversions.usernameToHash(userNameToBan));
+		final Player player = getServer().getWorld().getPlayer(DataConversions.usernameToHash(userNameToBan));
 
-		if (p != null) {
-			p.unregister(true, "You have been banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes"));
+		if (player != null) {
+			player.unregister(true, "You have been banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes"));
 		}
 
 		if (bannedForMinutes == 0) {
-			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, p, bannedBy.getUsername() + " was unbanned by " + bannedBy.getUsername()));
+			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, player, bannedBy.getUsername() + " was unbanned by " + bannedBy.getUsername()));
 		} else {
-			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, p, bannedBy.getUsername() + " was banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes")));
+			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, player, bannedBy.getUsername() + " was banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes")));
 		}
 
 		try {
