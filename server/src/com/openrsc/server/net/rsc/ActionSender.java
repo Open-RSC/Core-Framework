@@ -544,6 +544,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_HARVESTING + " 74");
 			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 75");
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 76");
+			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 77");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -642,6 +643,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
 		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 75
 		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 76
+		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 77
 		return s;
 	}
 

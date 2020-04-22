@@ -9,13 +9,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class GemTrader implements ShopInterface,
-	TalkNpcTrigger {
+public final class GemTrader extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 60000 * 10, 100, 70, 3,
 		new Item(ItemId.UNCUT_SAPPHIRE.id(), 1),
@@ -41,6 +39,11 @@ public final class GemTrader implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return false;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
@@ -87,5 +90,4 @@ public final class GemTrader implements ShopInterface,
 			}
 		}
 	}
-
 }

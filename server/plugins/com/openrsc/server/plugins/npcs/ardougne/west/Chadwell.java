@@ -8,12 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Chadwell implements ShopInterface, TalkNpcTrigger {
+public final class Chadwell extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 3000, 130, 40, 3, new Item(ItemId.ROPE.id(), 7), new Item(ItemId.BRONZE_PICKAXE.id(), 10), new Item(ItemId.SALMON.id(), 2), new Item(ItemId.BUCKET.id(), 2), new Item(ItemId.TINDERBOX.id(), 10), new Item(ItemId.MEAT_PIE.id(), 2), new Item(ItemId.HAMMER.id(), 5), new Item(ItemId.BREAD.id(), 10), new Item(ItemId.BOOTS.id(), 10), new Item(ItemId.POT.id(), 3), new Item(ItemId.COOKEDMEAT.id(), 2), new Item(ItemId.LONGBOW.id(), 2), new Item(ItemId.BRONZE_ARROWS.id(), 200), new Item(ItemId.SLEEPING_BAG.id(), 10));
 
@@ -50,5 +49,8 @@ public final class Chadwell implements ShopInterface, TalkNpcTrigger {
 		return true;
 	}
 
-
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

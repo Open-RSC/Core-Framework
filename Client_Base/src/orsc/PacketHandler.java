@@ -30,71 +30,71 @@ public class PacketHandler {
 	private Network_Socket clientStream;
 	private mudclient mc;
 
-	private static final Map< Integer,String > incomingOpcodeMap = new HashMap< Integer,String >() {{
-		put(4,"CLOSE_CONNECTION_NOTIFY");
-		put(5,"QUEST_STATUS");
-		put(6,"UPDATE_STAKED_ITEMS_OPPONENT");
-		put(15,"UPDATE_TRADE_ACCEPTANCE");
-		put(20,"SHOW_CONFIRM_TRADE");
-		put(25,"FLOOR_SET");
-		put(30,"SYNC_DUEL_SETTINGS");
-		put(33,"UPDATE_XP");
-		put(36,"DISPLAY_TELEPORT_TELEGRAB_BUBBLE");
-		put(42,"OPEN_BANK");
-		put(48,"SCENERY_HANDLER");
-		put(51,"PRIVACY_SETTINGS");
-		put(52,"UPDATE_SYSTEM_UPDATE_TIMER");
-		put(53,"SET_INVENTORY");
-		put(59,"SHOW_APPEARANCE_CHANGE");
-		put(79,"NPC_COORDS");
-		put(83,"DISPLAY_DEATH_SCREEN");
-		put(84,"WAKE_UP");
-		put(87,"SEND_PM");
-		put(89,"SHOW_DIALOGUE_SERVER_MESSAGE_NOT_TOP");
-		put(90,"SET_INVENTORY_SLOT");
-		put(91,"BOUNDARY_HANDLER");
-		put(92,"INITIATE_TRADE");
-		put(97,"UPDATE_ITEMS_TRADED_TO_YOU");
-		put(99,"GROUNDITEM_HANDLER");
-		put(101,"SHOW_SHOP");
-		put(104,"UPDATE_NPC");
-		put(109,"SET_IGNORE");
-		put(111,"COMPLETED_TUTORIAL");
-		put(114,"SET_FATIGUE");
-		put(117,"FALL_ASLEEP");
-		put(120,"RECEIVE_PM");
-		put(123,"REMOVE_INVENTORY_SLOT");
-		put(128,"CONCLUDE_TRADE");
-		put(131,"SEND_MESSAGE");
-		put(137,"EXIT_SHOP");
-		put(149,"UPDATE_FRIEND");
-		put(153,"SET_EQUIP_STATS");
-		put(156,"SET_STATS");
-		put(159,"UPDATE_STAT");
-		put(162,"UPDATE_TRADE_RECIPIENT_ACCEPTANCE");
-		put(165,"CLOSE_CONNECTION");
-		put(172,"SHOW_CONFIRM_DUEL");
-		put(176,"SHOW_DIALOGUE_DUEL");
-		put(182,"SHOW_WELCOME");
-		put(183,"DENY_LOGOUT");
-		put(191,"PLAYER_COORDS");
-		put(194,"INCORRECT_SLEEPWORD");
-		put(203,"CLOSE_BANK");
-		put(204,"PLAY_SOUND");
-		put(206,"SET_PRAYERS");
-		put(210,"UPDATE_DUEL_ACCEPTANCE");
-		put(211,"UPDATE_ENTITIES");
-		put(213,"NO_OP_WHILE_WAITING_FOR_NEW_APPEARANCE");
-		put(222,"SHOW_DIALOGUE_SERVER_MESSAGE_TOP");
-		put(225,"CANCEL_DUEL_DIALOGUE");
-		put(234,"UPDATE_PLAYERS");
-		put(237,"UPDATE_IGNORE_BECAUSE_OF_NAME_CHANGE");
-		put(240,"GAME_SETTINGS");
-		put(244,"SET_FATIGUE_SLEEPING");
-		put(245,"SHOW_DIALOGUE_MENU");
-		put(249,"UPDATE_BANK_ITEMS_DISPLAY");
-		put(252,"DISABLE_OPTION_MENU");
-		put(253,"UPDATE_DUEL_OPPONENT_ACCEPTANCE");
+	private static final Map<Integer, String> incomingOpcodeMap = new HashMap<Integer, String>() {{
+		put(4, "CLOSE_CONNECTION_NOTIFY");
+		put(5, "QUEST_STATUS");
+		put(6, "UPDATE_STAKED_ITEMS_OPPONENT");
+		put(15, "UPDATE_TRADE_ACCEPTANCE");
+		put(20, "SHOW_CONFIRM_TRADE");
+		put(25, "FLOOR_SET");
+		put(30, "SYNC_DUEL_SETTINGS");
+		put(33, "UPDATE_XP");
+		put(36, "DISPLAY_TELEPORT_TELEGRAB_BUBBLE");
+		put(42, "OPEN_BANK");
+		put(48, "SCENERY_HANDLER");
+		put(51, "PRIVACY_SETTINGS");
+		put(52, "UPDATE_SYSTEM_UPDATE_TIMER");
+		put(53, "SET_INVENTORY");
+		put(59, "SHOW_APPEARANCE_CHANGE");
+		put(79, "NPC_COORDS");
+		put(83, "DISPLAY_DEATH_SCREEN");
+		put(84, "WAKE_UP");
+		put(87, "SEND_PM");
+		put(89, "SHOW_DIALOGUE_SERVER_MESSAGE_NOT_TOP");
+		put(90, "SET_INVENTORY_SLOT");
+		put(91, "BOUNDARY_HANDLER");
+		put(92, "INITIATE_TRADE");
+		put(97, "UPDATE_ITEMS_TRADED_TO_YOU");
+		put(99, "GROUNDITEM_HANDLER");
+		put(101, "SHOW_SHOP");
+		put(104, "UPDATE_NPC");
+		put(109, "SET_IGNORE");
+		put(111, "COMPLETED_TUTORIAL");
+		put(114, "SET_FATIGUE");
+		put(117, "FALL_ASLEEP");
+		put(120, "RECEIVE_PM");
+		put(123, "REMOVE_INVENTORY_SLOT");
+		put(128, "CONCLUDE_TRADE");
+		put(131, "SEND_MESSAGE");
+		put(137, "EXIT_SHOP");
+		put(149, "UPDATE_FRIEND");
+		put(153, "SET_EQUIP_STATS");
+		put(156, "SET_STATS");
+		put(159, "UPDATE_STAT");
+		put(162, "UPDATE_TRADE_RECIPIENT_ACCEPTANCE");
+		put(165, "CLOSE_CONNECTION");
+		put(172, "SHOW_CONFIRM_DUEL");
+		put(176, "SHOW_DIALOGUE_DUEL");
+		put(182, "SHOW_WELCOME");
+		put(183, "DENY_LOGOUT");
+		put(191, "PLAYER_COORDS");
+		put(194, "INCORRECT_SLEEPWORD");
+		put(203, "CLOSE_BANK");
+		put(204, "PLAY_SOUND");
+		put(206, "SET_PRAYERS");
+		put(210, "UPDATE_DUEL_ACCEPTANCE");
+		put(211, "UPDATE_ENTITIES");
+		put(213, "NO_OP_WHILE_WAITING_FOR_NEW_APPEARANCE");
+		put(222, "SHOW_DIALOGUE_SERVER_MESSAGE_TOP");
+		put(225, "CANCEL_DUEL_DIALOGUE");
+		put(234, "UPDATE_PLAYERS");
+		put(237, "UPDATE_IGNORE_BECAUSE_OF_NAME_CHANGE");
+		put(240, "GAME_SETTINGS");
+		put(244, "SET_FATIGUE_SLEEPING");
+		put(245, "SHOW_DIALOGUE_MENU");
+		put(249, "UPDATE_BANK_ITEMS_DISPLAY");
+		put(252, "DISABLE_OPTION_MENU");
+		put(253, "UPDATE_DUEL_OPPONENT_ACCEPTANCE");
 
 		// CUSTOM
 		put(19, "SEND_SERVER_CONFIGS");
@@ -341,7 +341,7 @@ public class PacketHandler {
 				mc.updateQuestCommandOptions();
 			}
 
-				// Show Bank
+			// Show Bank
 			else if (opcode == 42) showBank();
 
 				// Update Experience
@@ -592,7 +592,7 @@ public class PacketHandler {
 		mc.getOnlineList().reset();
 		int onlinePlayerCount = packetsIncoming.getShort();
 		for (int i = 0; i < onlinePlayerCount; i++) {
-			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32(), i == (onlinePlayerCount -1 ));
+			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32(), i == (onlinePlayerCount - 1));
 		}
 		mc.getOnlineList().setVisible(true);
 	}
@@ -903,7 +903,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat;
+		int globalFriendChat, wantRightClickTrade;
 
 		String logoSpriteID;
 
@@ -984,6 +984,7 @@ public class PacketHandler {
 			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
 			hideLoginBox = this.getClientStream().getUnsignedByte(); // 75
 			globalFriendChat = this.getClientStream().getUnsignedByte(); // 76
+			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 77
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1061,6 +1062,7 @@ public class PacketHandler {
 			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
 			hideLoginBox = packetsIncoming.getUnsignedByte(); // 75
 			globalFriendChat = packetsIncoming.getUnsignedByte(); // 76
+			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 77
 		}
 
 		if (Config.DEBUG) {
@@ -1138,10 +1140,11 @@ public class PacketHandler {
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
 					"\nS_WANT_PK_BOTS " + wantPkBots + // 73
-					"\nS_WANT_HARVESTING " + wantHarvesting  + // 74
+					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
 					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
-					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat // 76
-					);
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade // 77
+			);
 		}
 
 		props.setProperty("SERVER_IP", ClientPort.loadIP()); // 0
@@ -1222,6 +1225,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
 		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
 		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
+		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1463,8 +1467,7 @@ public class PacketHandler {
 	}
 
 	private void updateInventory() {
-		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
-		{
+		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++) {
 			Item item = mc.getInventoryItem(i);
 			item.setItemDef(null);
 			item.setAmount(0);
@@ -1478,9 +1481,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setInventoryItemID(i, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//int itemID = packetsIncoming.getShort();
 			if (isNote.orElse(false)) {
 				mc.getInventoryItem(i).setNoted(true);
@@ -1529,8 +1532,7 @@ public class PacketHandler {
 		int equipslot = 0;
 		int itemID = 0;
 
-		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++)
-		{
+		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++) {
 			mc.equippedItems[i] = null;
 			mc.equippedItemAmount[i] = 0;
 		}
@@ -2040,9 +2042,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setTradeRecipientConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setTradeRecipientConfirmItems(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getTradeRecipientConfirmItem(var4).setNoted(true);
@@ -2058,9 +2060,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setTradeConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setTradeConfirmItems(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getTradeConfirmItem(var4).setNoted(true);
@@ -2078,9 +2080,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setDuelOpponentItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setDuelOpponentItemID(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getDuelOpponentItem(var4).setNoted(true);
@@ -2183,9 +2185,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setDuelOpponentConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setDuelOpponentConfirmItemID(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getDuelOpponentConfirmItem(var4).setNoted(true);
@@ -2201,9 +2203,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setDuelConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setDuelConfirmItemID(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getDuelConfirmItem(var4).setNoted(true);
@@ -2329,7 +2331,8 @@ public class PacketHandler {
 
 			// Only show player items if they are in a general store, or it's a note in a specialty store.
 			if (!(shopType == 1
-				|| (mc.getInventoryItem(inventoryIndex).getNoted() && mc.shopContains(mc.getInventoryItemID(inventoryIndex))))) continue;
+				|| (mc.getInventoryItem(inventoryIndex).getNoted() && mc.shopContains(mc.getInventoryItemID(inventoryIndex)))))
+				continue;
 
 			boolean foundEquivalentShopItem = false;
 			for (int currentShopSlot = 0; currentShopSlot < 40; ++currentShopSlot) {
@@ -2370,9 +2373,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setTradeRecipientItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setTradeRecipientItem(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getTradeRecipientItem(var4).setNoted(true);
@@ -2388,9 +2391,9 @@ public class PacketHandler {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
 			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int)itemInfo.get("id");
+			int itemID = (int) itemInfo.get("id");
 			mc.setTradeItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean)itemInfo.get("noted")) : Optional.empty();
+			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
 			//mc.setTradeItemID(var4, packetsIncoming.getShort());
 			if (isNote.orElse(false)) {
 				mc.getTradeItem(var4).setNoted(true);
@@ -2693,6 +2696,7 @@ public class PacketHandler {
 			}
 		}
 	}
+
 	private void updatePreset() {
 		int slot = packetsIncoming.getShort();
 		int itemID, amount;
@@ -2705,7 +2709,7 @@ public class PacketHandler {
 			if (itemBytes[0] == -1)
 				continue;
 			itemBytes[1] = packetsIncoming.getByte();
-			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
+			itemID = (((int) itemBytes[0] << 8) & 0xFF00) | (int) itemBytes[1] & 0xFF;
 			item = EntityHandler.getItemDef(itemID);
 			boolean noted = packetsIncoming.getByte() == 1;
 			if (item != null) {
@@ -2720,12 +2724,12 @@ public class PacketHandler {
 			}
 		}
 		//The server uses 2 more slots than the client
-		for (int i = 0; i < equipmentItems.length+2; i++) {
+		for (int i = 0; i < equipmentItems.length + 2; i++) {
 			itemBytes[0] = packetsIncoming.getByte();
 			if (itemBytes[0] == -1)
 				continue;
 			itemBytes[1] = packetsIncoming.getByte();
-			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
+			itemID = (((int) itemBytes[0] << 8) & 0xFF00) | (int) itemBytes[1] & 0xFF;
 			item = EntityHandler.getItemDef(itemID);
 			if (item != null) {
 				if (item.isStackable())

@@ -9,13 +9,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ArheinGeneralShop implements ShopInterface,
-	TalkNpcTrigger {
+public class ArheinGeneralShop extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 15000, 130, 40, 3, new Item(ItemId.BUCKET.id(), 10),
 		new Item(ItemId.BRONZE_PICKAXE.id(), 2), new Item(ItemId.BOWL.id(), 2), new Item(ItemId.CAKE_TIN.id(), 2),
@@ -35,6 +33,11 @@ public class ArheinGeneralShop implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override

@@ -9,13 +9,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class AlfonseTheWaiter implements ShopInterface, TalkNpcTrigger {
+public class AlfonseTheWaiter extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 10000, 110, 75, 2,
 		new Item(ItemId.HERRING.id(), 5), new Item(ItemId.COD.id(), 5),
@@ -65,4 +64,8 @@ public class AlfonseTheWaiter implements ShopInterface, TalkNpcTrigger {
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

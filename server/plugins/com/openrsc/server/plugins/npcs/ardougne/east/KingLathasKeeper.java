@@ -1,21 +1,18 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-
-public final class KingLathasKeeper implements ShopInterface,
-	TalkNpcTrigger {
+public final class KingLathasKeeper extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 150, 50, 2, new Item(ItemId.BRONZE_ARROWS.id(),
 		200), new Item(ItemId.CROSSBOW_BOLTS.id(), 150), new Item(ItemId.SHORTBOW.id(), 4),
@@ -58,4 +55,8 @@ public final class KingLathasKeeper implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

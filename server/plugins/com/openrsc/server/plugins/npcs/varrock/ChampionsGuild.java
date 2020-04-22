@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class ChampionsGuild implements ShopInterface,
-	TalkNpcTrigger {
+public final class ChampionsGuild extends AbstractShop {
 
 	private final Shop scavvosShop = new Shop(false, 300000, 100, 60, 2,
 		new Item(ItemId.RUNE_SKIRT.id(), 1), new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_MACE.id(), 1),
@@ -37,6 +35,11 @@ public final class ChampionsGuild implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return false;
+	}
+
+	@Override
+	public Shop getShop() {
+		return valsShop;
 	}
 
 	@Override
@@ -66,5 +69,4 @@ public final class ChampionsGuild implements ShopInterface,
 				break;
 		}
 	}
-
 }

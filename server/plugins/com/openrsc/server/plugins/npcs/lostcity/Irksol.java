@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Irksol implements ShopInterface,
-	TalkNpcTrigger {
+public final class Irksol extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 50, 30, 2,
 		new Item(ItemId.RUBY_RING.id(), 5));
@@ -56,4 +54,8 @@ public final class Irksol implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

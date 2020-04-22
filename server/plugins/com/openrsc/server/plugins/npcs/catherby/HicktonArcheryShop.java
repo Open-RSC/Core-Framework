@@ -9,16 +9,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-
-import static com.openrsc.server.plugins.Functions.*;
+import com.openrsc.server.plugins.AbstractShop;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HicktonArcheryShop implements ShopInterface,
-	TalkNpcTrigger {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class HicktonArcheryShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 10000, 100, 80, 1,
 		new Item(ItemId.CROSSBOW_BOLTS.id(), 200), new Item(ItemId.BRONZE_ARROWS.id(), 200), new Item(ItemId.IRON_ARROWS.id(), 200),
@@ -42,6 +40,11 @@ public class HicktonArcheryShop implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
@@ -86,5 +89,4 @@ public class HicktonArcheryShop implements ShopInterface,
 			}
 		}
 	}
-
 }

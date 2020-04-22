@@ -8,13 +8,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public final class VarrockSwords implements ShopInterface,
-	TalkNpcTrigger {
+public final class VarrockSwords extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2,
 		new Item(ItemId.BRONZE_SHORT_SWORD.id(), 5), new Item(ItemId.IRON_SHORT_SWORD.id(), 4), new Item(ItemId.STEEL_SHORT_SWORD.id(), 4),
@@ -41,6 +40,11 @@ public final class VarrockSwords implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id()
 			&& player.getLocation().inBounds(133, 522, 138, 527)) {
@@ -61,5 +65,4 @@ public final class VarrockSwords implements ShopInterface,
 			}
 		}
 	}
-
 }

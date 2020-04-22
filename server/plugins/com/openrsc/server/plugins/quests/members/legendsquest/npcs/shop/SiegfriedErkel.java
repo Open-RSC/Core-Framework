@@ -9,12 +9,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public final class SiegfriedErkel implements ShopInterface, TalkNpcTrigger {
+public final class SiegfriedErkel extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 60000, 150, 50, 2,
 		new Item(ItemId.MITHRIL_SEED.id(), 6), new Item(ItemId.DUSTY_KEY.id(), 5), new Item(ItemId.SILVERLIGHT.id(), 4),
@@ -57,4 +57,8 @@ public final class SiegfriedErkel implements ShopInterface, TalkNpcTrigger {
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

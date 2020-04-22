@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class FlynnMaces implements ShopInterface,
-	TalkNpcTrigger {
+public final class FlynnMaces extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 1,
 		new Item(ItemId.BRONZE_MACE.id(), 5), new Item(ItemId.IRON_MACE.id(), 4), new Item(ItemId.STEEL_MACE.id(), 4),
@@ -36,6 +34,11 @@ public final class FlynnMaces implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Hello do you want to buy or sell any maces?");
 
@@ -50,5 +53,4 @@ public final class FlynnMaces implements ShopInterface,
 		}
 
 	}
-
 }

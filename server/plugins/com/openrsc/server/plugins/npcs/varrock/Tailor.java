@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Tailor implements ShopInterface,
-	TalkNpcTrigger {
+public final class Tailor extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 130, 40, 2, new Item(ItemId.CHEFS_HAT.id(),
 		0), new Item(ItemId.BLUE_WIZARDSHAT.id(), 3), new Item(ItemId.YELLOW_CAPE.id(), 1), new Item(ItemId.GREY_WOLF_FUR.id(), 3),
@@ -40,6 +38,11 @@ public final class Tailor implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Now you look like someone who goes to a lot of fancy dress parties");
 		say(player, n, "Errr... what are you saying exactly?");
@@ -55,5 +58,4 @@ public final class Tailor implements ShopInterface,
 			ActionSender.showShop(player, shop);
 		}
 	}
-
 }

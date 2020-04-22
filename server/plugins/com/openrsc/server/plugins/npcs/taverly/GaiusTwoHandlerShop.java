@@ -1,20 +1,18 @@
 package com.openrsc.server.plugins.npcs.taverly;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
-public class GaiusTwoHandlerShop implements ShopInterface,
-	TalkNpcTrigger {
+public class GaiusTwoHandlerShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2,
 		new Item(ItemId.BRONZE_2_HANDED_SWORD.id(), 4), new Item(ItemId.IRON_2_HANDED_SWORD.id(), 3), new Item(ItemId.STEEL_2_HANDED_SWORD.id(), 2),
@@ -36,6 +34,11 @@ public class GaiusTwoHandlerShop implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Welcome to my two handed sword shop");
 		final int option = multi(player, n, false, //do not send over
@@ -48,5 +51,4 @@ public class GaiusTwoHandlerShop implements ShopInterface,
 			say(player, n, "Thankyou");
 		}
 	}
-
 }

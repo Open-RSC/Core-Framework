@@ -9,15 +9,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
+import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.npcsay;
 
-public final class TeaSeller implements ShopInterface,
-	TalkNpcTrigger,
-	TakeObjTrigger {
+public final class TeaSeller extends AbstractShop implements TakeObjTrigger {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.CUP_OF_TEA.id(),
 		20));
@@ -40,6 +38,11 @@ public final class TeaSeller implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
@@ -81,5 +84,4 @@ public final class TeaSeller implements ShopInterface,
 				break;
 		}
 	}
-
 }

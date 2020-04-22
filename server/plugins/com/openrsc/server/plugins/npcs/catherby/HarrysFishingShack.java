@@ -8,13 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HarrysFishingShack implements ShopInterface,
-	TalkNpcTrigger {
+public class HarrysFishingShack extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.NET.id(), 3),
 		new Item(ItemId.FISHING_ROD.id(), 3), new Item(ItemId.HARPOON.id(), 2), new Item(ItemId.LOBSTER_POT.id(), 2),
@@ -40,6 +38,11 @@ public class HarrysFishingShack implements ShopInterface,
 	}
 
 	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Welcome you can buy fishing equipment at my store",
 			"We'll also buy fish that you catch off you");
@@ -52,5 +55,4 @@ public class HarrysFishingShack implements ShopInterface,
 			say(player, n, "Sorry,I'm not interested");
 		}
 	}
-
 }
