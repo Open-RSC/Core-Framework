@@ -80,7 +80,7 @@ public final class AuburysRunes extends AbstractShop {
 	public void onOpNpc(Npc n, String command, Player player) {
 		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
 			player.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			ActionSender.showShop(player, shop);
 		} else {
 			RuneMysteries.auburyDialog(player, n);
 		}
