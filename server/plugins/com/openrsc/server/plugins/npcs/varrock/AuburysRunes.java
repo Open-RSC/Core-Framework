@@ -91,6 +91,7 @@ public final class AuburysRunes extends AbstractShop {
 		return ( n.getID() == 54 &&
 			player.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
-			command.equalsIgnoreCase("teleport"));
+			command.equalsIgnoreCase("teleport") ||
+			(n.getID() == 54 && command.equalsIgnoreCase("Trade")));
 	}
 }
