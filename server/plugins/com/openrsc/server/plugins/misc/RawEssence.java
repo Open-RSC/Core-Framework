@@ -30,7 +30,7 @@ public class RawEssence implements OpLocTrigger {
 				give(player, ItemId.RUNE_ESSENCE.id(), 1);
 				player.incExp(Skills.MINING, 20, true);
 				if (player.getCarriedItems().getInventory().full())
-					interrupt();
+					interruptBatch();
 			}
 		});
 	}

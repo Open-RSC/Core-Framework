@@ -29,7 +29,7 @@ public class BananaTree implements
 						player.message("you pick the last banana");
 						changeloc(obj, 60000 * 8, 184); // 8 minutes respawn time.
 						player.getCache().remove("banana_pick");
-						interrupt();
+						interruptBatch();
 					} else {
 						player.message("you pick a banana");
 					}

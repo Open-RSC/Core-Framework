@@ -57,7 +57,7 @@ public class Bones implements OpInvTrigger {
 					if (getOwner().getCarriedItems().remove(toRemove) > -1) {
 						buryBonesHelper(player, item);
 					} else
-						interrupt();
+						interruptBatch();
 
 					if (!this.isCompleted())
 						player.message("You dig a hole in the ground");

@@ -155,7 +155,7 @@ public class ObjectCooking implements UseLocTrigger {
 						itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 							itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
 						getOwner().playerServerMessage(MessageType.QUEST, "You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					Item cookedFood = new Item(cookingDef.getCookedId());
@@ -163,7 +163,7 @@ public class ObjectCooking implements UseLocTrigger {
 						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 							&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 							getOwner().message("You are too tired to cook this food");
-							interrupt();
+							interruptBatch();
 							return;
 						}
 					}
@@ -187,7 +187,7 @@ public class ObjectCooking implements UseLocTrigger {
 							}
 						}
 					} else {
-						interrupt();
+						interruptBatch();
 					}
 				}
 			});
@@ -229,7 +229,7 @@ public class ObjectCooking implements UseLocTrigger {
 					give(player, product, 1);
 				} else {
 					player.message("You don't have all the ingredients");
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});

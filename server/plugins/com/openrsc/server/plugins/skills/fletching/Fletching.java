@@ -113,14 +113,14 @@ public class Fletching implements UseInvTrigger {
 				for (int i = 0; i < 10; ++i) {
 					if (ci.getInventory().countId(featherID) < 1
 						|| ci.getInventory().countId(attachmentID) < 1) {
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					if (config.WANT_FATIGUE) {
 						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 							if (config.STOP_SKILLING_FATIGUED >= 2) {
 								owner.message("You are too tired to gain experience, get some rest!");
-								interrupt();
+								interruptBatch();
 								return;
 							}
 						}
@@ -132,7 +132,7 @@ public class Fletching implements UseInvTrigger {
 						owner.incExp(Skills.FLETCHING, exp, true);
 						// ActionSender.sendInventory(owner);
 					} else {
-						interrupt();
+						interruptBatch();
 					}
 				}
 			}
@@ -181,19 +181,19 @@ public class Fletching implements UseInvTrigger {
 					if (owner.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
 						owner.message("You need a fletching skill of "
 							+ headDef.getReqLevel() + " or above to do that");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					if (ci.getInventory().countId(arrowHeadsID) < 1
 						|| ci.getInventory().countId(headlessArrowsID) < 1) {
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					if (config.WANT_FATIGUE) {
 						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 							if (config.STOP_SKILLING_FATIGUED >= 2) {
 								owner.message("You are too tired to gain experience, get some rest!");
-								interrupt();
+								interruptBatch();
 								return;
 							}
 						}
@@ -207,7 +207,7 @@ public class Fletching implements UseInvTrigger {
 						owner.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
 						ActionSender.sendInventory(owner);
 					} else {
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -237,19 +237,19 @@ public class Fletching implements UseInvTrigger {
 				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
 					getOwner().message("You need a fletching skill of "
 						+ stringDef.getReqLevel() + " or above to do that");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getOwner().getCarriedItems().getInventory().countId(bow.getCatalogId()) < 1
 						|| getOwner().getCarriedItems().getInventory().countId(bowString.getCatalogId()) < 1) {
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to train");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -259,7 +259,7 @@ public class Fletching implements UseInvTrigger {
 					getOwner().getCarriedItems().getInventory().add(new Item(stringDef.getBowID(), 1));
 					getOwner().incExp(Skills.FLETCHING, stringDef.getExp(), true);
 				} else
-					interrupt();
+					interruptBatch();
 			}
 		});
 		return true;
@@ -327,14 +327,14 @@ public class Fletching implements UseInvTrigger {
 				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
 					getOwner().message("You need a fletching skill of "
 							+ requiredLvl + " or above to do that");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to train");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -343,7 +343,7 @@ public class Fletching implements UseInvTrigger {
 					give(getOwner(), itemID, amt);
 					getOwner().incExp(Skills.FLETCHING, experience, true);
 				} else
-					interrupt();
+					interruptBatch();
 			}
 		});
 	}
@@ -373,14 +373,14 @@ public class Fletching implements UseInvTrigger {
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
 					getOwner().message("You need a fletching skill of 34 to do that");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to train");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -388,7 +388,7 @@ public class Fletching implements UseInvTrigger {
 					getOwner().message("you chisel the pearls into small bolt tips");
 					give(getOwner(), com.openrsc.server.constants.ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
 					getOwner().incExp(Skills.FLETCHING, exp, true);
-				} else interrupt();
+				} else interruptBatch();
 			}
 		});
 		return true;
@@ -429,19 +429,19 @@ public class Fletching implements UseInvTrigger {
 				for (int i = 0; i < 10; ++i) {
 					if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
 						owner.message("You need a fletching skill of 34 to do that");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					if (ci.getInventory().countId(bolt) < 1
 						|| ci.getInventory().countId(tip) < 1) {
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					if (config.WANT_FATIGUE) {
 						if (owner.getFatigue() >= owner.MAX_FATIGUE) {
 							if (config.STOP_SKILLING_FATIGUED >= 2) {
 								owner.message("You are too tired to gain experience, get some rest!");
-								interrupt();
+								interruptBatch();
 								return;
 							}
 						}
@@ -453,7 +453,7 @@ public class Fletching implements UseInvTrigger {
 						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
 						ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
 						owner.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
-					} else interrupt();
+					} else interruptBatch();
 				}
 			}
 		});

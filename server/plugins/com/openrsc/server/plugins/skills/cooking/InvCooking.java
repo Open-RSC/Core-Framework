@@ -52,7 +52,7 @@ public class InvCooking implements UseInvTrigger {
 					public void action() {
 						if (getOwner().getSkills().getLevel(Skills.COOKING) < 35) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You need level 35 cooking to do this");
-							interrupt();
+							interruptBatch();
 							return;
 						}
 						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {

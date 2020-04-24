@@ -34,7 +34,7 @@ public final class Pick implements OpLocTrigger {
 				give(getOwner(), objID, 1);
 				getOwner().playSound("potato");
 				if (getOwner().getCarriedItems().getInventory().full())
-					interrupt();
+					interruptBatch();
 			}
 		});
 	}

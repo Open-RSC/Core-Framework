@@ -365,12 +365,12 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			public void action() {
 				getOwner().setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (npc.inCombat()) {
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getOwner().getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				boolean succeededPickpocket = succeedThieving(getOwner(), pickpocket.getRequiredLevel());
@@ -383,7 +383,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
 							getPlayerOwner().message("You are too tired to pickpocket this mob");
-							interrupt();
+							interruptBatch();
 							return;
 						}
 					}
@@ -422,7 +422,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 					getOwner().playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
 						.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, getOwner()));
-					interrupt();
+					interruptBatch();
 					npc.startCombat(getOwner());
 				}
 				if (!isCompleted()) {

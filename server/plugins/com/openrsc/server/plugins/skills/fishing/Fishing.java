@@ -119,7 +119,7 @@ public class Fishing implements OpLocTrigger {
 							+ (!command.contains("cage") ? "these fish"
 							: getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
 							.substring(4) + "s"));
-						interrupt();
+						interruptBatch();
 						return;
 					}
 					final int baitId = def.getBaitId();
@@ -127,7 +127,7 @@ public class Fishing implements OpLocTrigger {
 						if (getOwner().getCarriedItems().getInventory().countId(baitId) <= 0) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You don't have any " + getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
 								+ " left");
-							interrupt();
+							interruptBatch();
 							return;
 						}
 					}
@@ -135,7 +135,7 @@ public class Fishing implements OpLocTrigger {
 						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 							&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
-							interrupt();
+							interruptBatch();
 							return;
 						}
 					}
@@ -147,7 +147,7 @@ public class Fishing implements OpLocTrigger {
 						GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (obj == null) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-							interrupt();
+							interruptBatch();
 						} else {
 							if (baitId >= 0) {
 								int idx = getOwner().getCarriedItems().getInventory().getLastIndexById(baitId);
@@ -193,7 +193,7 @@ public class Fishing implements OpLocTrigger {
 						}
 						if (getWorld().getServer().getConfig().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 1000) <= def.getDepletion()) {
 							obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-							interrupt();
+							interruptBatch();
 							if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 								GameObject newObject = new GameObject(getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
 								getWorld().replaceGameObject(object, newObject);
@@ -208,7 +208,7 @@ public class Fishing implements OpLocTrigger {
 						if (object.getID() != 493 && getRepeatFor() > 1) {
 							GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 							if (checkObj == null) {
-								interrupt();
+								interruptBatch();
 							}
 						}
 					}

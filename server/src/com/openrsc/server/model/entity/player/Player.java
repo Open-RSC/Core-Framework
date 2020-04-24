@@ -615,7 +615,7 @@ public final class Player extends Mob {
 
 	public void checkAndInterruptBatchEvent() {
 		if (batchEvent != null) {
-			batchEvent.interrupt();
+			batchEvent.interruptBatch();
 			batchEvent = null;
 		}
 	}

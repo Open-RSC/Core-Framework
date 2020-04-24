@@ -163,7 +163,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 						});
 
 					getOwner().incExp(Skills.FIREMAKING, def.getExp(), true);
-					interrupt();
+					interruptBatch();
 
 					//Determine which direction to move
 					int xPos = getOwner().getX();

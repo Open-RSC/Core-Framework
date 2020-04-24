@@ -37,7 +37,7 @@ public class Sheep implements UseNpcTrigger {
 				} else {
 					player.message("The sheep manages to get away from you!");
 					npc.setBusyTimer(0);
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});

@@ -80,13 +80,13 @@ public final class Apothecary implements
 						public void action() {
 							if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 5) {
 								player.message("You don't have enough coins");
-								interrupt();
+								interruptBatch();
 								return;
 							}
 							if (player.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
 								|| player.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
 								player.message("You don't have all the ingredients");
-								interrupt();
+								interruptBatch();
 								return;
 							}
 							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));

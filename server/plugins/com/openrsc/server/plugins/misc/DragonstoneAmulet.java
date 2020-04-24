@@ -103,7 +103,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 					if (player.getCarriedItems().remove(item) > -1) {
 						player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 					} else
-						interrupt();
+						interruptBatch();
 				}
 			});
 			mes(player, "You feel more power emanating from it than before",

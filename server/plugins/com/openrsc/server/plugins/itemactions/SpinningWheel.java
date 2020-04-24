@@ -63,14 +63,14 @@ public class SpinningWheel implements UseLocTrigger {
 					mes(getOwner(), "You need to have a crafting of level "
 						+ requirement + " or higher to make a "
 						+ new Item(produce).getDef(getWorld()).getName().toLowerCase());
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -82,7 +82,7 @@ public class SpinningWheel implements UseLocTrigger {
 					getOwner().getCarriedItems().getInventory().add(new Item(produce, 1));
 					getOwner().incExp(Skills.CRAFTING, exp, true);
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});

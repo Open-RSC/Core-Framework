@@ -47,7 +47,7 @@ public class Refill implements UseLocTrigger {
 							);
 							getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
 						} else {
-							interrupt();
+							interruptBatch();
 						}
 					}
 				});

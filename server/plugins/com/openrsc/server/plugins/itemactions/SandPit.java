@@ -33,7 +33,7 @@ public class SandPit implements UseLocTrigger {
 					getOwner().message("you fill the bucket with sand");
 					getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});

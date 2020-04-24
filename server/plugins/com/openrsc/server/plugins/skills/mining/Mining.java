@@ -212,7 +212,7 @@ public final class Mining implements OpLocTrigger {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -222,7 +222,7 @@ public final class Mining implements OpLocTrigger {
 						Item gem = new Item(getGem(), 1);
 						getOwner().getCarriedItems().getInventory().add(gem);
 						getOwner().playerServerMessage(MessageType.QUEST, "You just found a" + gem.getDef(getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
-						interrupt();
+						interruptBatch();
 					} else {
 						//check if there is still ore at the rock
 						GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -245,7 +245,7 @@ public final class Mining implements OpLocTrigger {
 						if (object.getID() == 496 && getOwner().getCache().hasKey("tutorial") && getOwner().getCache().getInt("tutorial") == 51)
 							getOwner().getCache().set("tutorial", 52);
 						if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
-							interrupt();
+							interruptBatch();
 							if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 								GameObject newObject = new GameObject(getWorld(), object.getLocation(), 98, object.getDirection(), object.getType());
 								getWorld().replaceGameObject(object, newObject);
@@ -261,7 +261,7 @@ public final class Mining implements OpLocTrigger {
 						if (getRepeatFor() > 1) {
 							GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 							if (checkObj == null) {
-								interrupt();
+								interruptBatch();
 							}
 						}
 					}

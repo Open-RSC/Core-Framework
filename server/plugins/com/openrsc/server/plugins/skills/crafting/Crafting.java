@@ -301,19 +301,19 @@ public class Crafting implements UseInvTrigger,
 				Player owner = getOwner();
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
 					owner.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (gem != 0 && owner.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
 					owner.message("You don't have a " + reply.get() + ".");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -332,7 +332,7 @@ public class Crafting implements UseInvTrigger,
 					owner.incExp(Skills.CRAFTING, def.getExp(), true);
 				} else {
 					owner.message("You don't have a " + reply.get() + ".");
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
@@ -371,14 +371,14 @@ public class Crafting implements UseInvTrigger,
 				Player owner = getOwner();
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < 16) {
 					owner.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -389,7 +389,7 @@ public class Crafting implements UseInvTrigger,
 					owner.getCarriedItems().getInventory().add(result);
 					owner.incExp(Skills.CRAFTING, 200, true);
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
@@ -436,14 +436,14 @@ public class Crafting implements UseInvTrigger,
 				Player owner = getOwner();
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
 					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -453,7 +453,7 @@ public class Crafting implements UseInvTrigger,
 					owner.getCarriedItems().getInventory().add(result);
 					owner.incExp(Skills.CRAFTING, exp, true);
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
@@ -499,14 +499,14 @@ public class Crafting implements UseInvTrigger,
 				Player owner = getOwner();
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
 					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -531,7 +531,7 @@ public class Crafting implements UseInvTrigger,
 						});
 					}
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
@@ -550,14 +550,14 @@ public class Crafting implements UseInvTrigger,
 				Inventory inventory = owner.getCarriedItems().getInventory();
 				if (inventory.countId(otherItem) < 1 ||
 					inventory.countId(item.getCatalogId()) < 1) {
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -567,7 +567,7 @@ public class Crafting implements UseInvTrigger,
 					inventory.add(new Item(ItemId.BUCKET.id(), 1));
 					owner.incExp(Skills.CRAFTING, 80, true);
 				} else {
-					interrupt();
+					interruptBatch();
 					return;
 				}
 
@@ -606,14 +606,14 @@ public class Crafting implements UseInvTrigger,
 					owner.playerServerMessage(MessageType.QUEST,
 						"you need a crafting level of " + gemDef.getReqLevel()
 							+ " to cut " + (gem.getDef(getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -644,7 +644,7 @@ public class Crafting implements UseInvTrigger,
 					}
 				}
 				else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
@@ -704,14 +704,14 @@ public class Crafting implements UseInvTrigger,
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
 					owner.message(
 						"You need a crafting level of " + reqLvl + " to make " + resultGen);
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (config.WANT_FATIGUE) {
 					if (config.STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -815,14 +815,14 @@ public class Crafting implements UseInvTrigger,
 				Player owner = getOwner();
 				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
 					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to craft");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -888,14 +888,14 @@ public class Crafting implements UseInvTrigger,
 			public void action() {
 				Player owner = getOwner();
 				if (owner.getCarriedItems().getInventory().countId(item.getCatalogId()) <= 0 || owner.getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (owner.getCarriedItems().remove(woolBall) > -1 && owner.getCarriedItems().remove(item) > -1) {
 					owner.message("You put some string on your " + item.getDef(getWorld()).getName().toLowerCase());
 					owner.getCarriedItems().getInventory().add(new Item(newId));
 				} else {
-					interrupt();
+					interruptBatch();
 					return;
 				}
 			}

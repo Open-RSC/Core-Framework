@@ -58,19 +58,19 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				if (owner.getSkills().getLevel(Skills.HERBLAW) < herb.getLevelRequired()) {
 					owner.playerServerMessage(MessageType.QUEST, "You cannot identify this herb");
 					owner.playerServerMessage(MessageType.QUEST, "you need a higher herblaw level");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (owner.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
 					owner.message("You need to complete Druidic ritual quest first");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to identify this herb");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -338,12 +338,12 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				if (owner.getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
 					owner.playerServerMessage(MessageType.QUEST, "you need level " + herbDef.getReqLevel()
 						+ " herblaw to make this potion");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (owner.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
 					owner.message("You need to complete Druidic ritual quest first");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (ownerItems.hasCatalogID(vialID)
@@ -356,7 +356,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 					ownerItems.getInventory().add(
 						new Item(herbDef.getPotionId()));
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
@@ -405,19 +405,19 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				if (owner.getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
 					owner.playerServerMessage(MessageType.QUEST, "You need a herblaw level of "
 						+ def.getReqLevel() + " to make this potion");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (owner.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
 					owner.message("You need to complete Druidic ritual quest first");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
 						owner.message("You are too tired to make this potion");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -435,7 +435,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 					carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 					owner.incExp(Skills.HERBLAW, def.getExp(), true);
 				} else
-					interrupt();
+					interruptBatch();
 			}
 		});
 		return false;

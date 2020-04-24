@@ -158,7 +158,7 @@ public final class Harvesting implements OpLocTrigger {
 						GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (obj == null) {
 							getOwner().playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
-							interrupt();
+							interruptBatch();
 						} else {
 							getOwner().getCarriedItems().getInventory().add(present);
 							getOwner().playerServerMessage(MessageType.QUEST, "You get a nice looking present");
@@ -166,7 +166,7 @@ public final class Harvesting implements OpLocTrigger {
 						if (DataConversions.random(1, 1000) <= 100) {
 							obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 							int depletedId = 1239;
-							interrupt();
+							interruptBatch();
 							if (obj != null && obj.getID() == object.getID()) {
 								GameObject newObject = new GameObject(getWorld(), object.getLocation(), depletedId, object.getDirection(), object.getType());
 								getWorld().replaceGameObject(object, newObject);
@@ -178,7 +178,7 @@ public final class Harvesting implements OpLocTrigger {
 						if (getRepeatFor() > 1) {
 							GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 							if (checkObj == null) {
-								interrupt();
+								interruptBatch();
 							}
 						}
 					}
@@ -236,14 +236,14 @@ public final class Harvesting implements OpLocTrigger {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
 				if (!objName.contains("herb") && getOwner().getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
 						+ " harvesting to clip from the " + objName);
-					interrupt();
+					interruptBatch();
 					return;
 				}
 
@@ -252,7 +252,7 @@ public final class Harvesting implements OpLocTrigger {
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
-						interrupt();
+						interruptBatch();
 					} else {
 						getOwner().getCarriedItems().getInventory().add(produce);
 						getOwner().playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
@@ -262,7 +262,7 @@ public final class Harvesting implements OpLocTrigger {
 					if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
 						obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						int depId = 1270;
-						interrupt();
+						interruptBatch();
 						if (obj != null && obj.getID() == object.getID()) {
 							GameObject newObject = new GameObject(getWorld(), object.getLocation(), depId, object.getDirection(), object.getType());
 							getWorld().replaceGameObject(object, newObject);
@@ -274,7 +274,7 @@ public final class Harvesting implements OpLocTrigger {
 					if (getRepeatFor() > 1) {
 						GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (checkObj == null) {
-							interrupt();
+							interruptBatch();
 						}
 					}
 				}
@@ -306,13 +306,13 @@ public final class Harvesting implements OpLocTrigger {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
 				if (getOwner().getSkills().getLevel(Skills.HARVESTING) < def.getReqLevel()) {
 					getOwner().playerServerMessage(MessageType.QUEST,"You need a harvesting level of " + def.getReqLevel() + " to get produce from here");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 
@@ -325,7 +325,7 @@ public final class Harvesting implements OpLocTrigger {
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
-						interrupt();
+						interruptBatch();
 					} else {
 						String itemName = produce.getDef(player.getWorld()).getName().toLowerCase();
 						getOwner().getCarriedItems().getInventory().add(produce);
@@ -357,7 +357,7 @@ public final class Harvesting implements OpLocTrigger {
 						} else if (prodId == ItemId.CORN.id()) {
 							depId = 1272; //depleted corn
 						}
-						interrupt();
+						interruptBatch();
 						if (obj != null && obj.getID() == object.getID()) {
 							// if player did water (or have an active one) they get small chance not to deplete node
 							if (DataConversions.random(1, chanceAskWatering * 3) == 1
@@ -375,7 +375,7 @@ public final class Harvesting implements OpLocTrigger {
 					if (getRepeatFor() > 1) {
 						GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (checkObj == null) {
-							interrupt();
+							interruptBatch();
 						}
 					}
 				}

@@ -76,13 +76,13 @@ public class Woodcutting implements OpLocTrigger {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
 				if (getOwner().getSkills().getLevel(Skills.WOODCUT) < def.getReqLevel()) {
 					getOwner().message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 
@@ -91,7 +91,7 @@ public class Woodcutting implements OpLocTrigger {
 					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (obj == null) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
-						interrupt();
+						interruptBatch();
 					} else {
 						getOwner().getCarriedItems().getInventory().add(log);
 						getOwner().playerServerMessage(MessageType.QUEST, "You get some wood");
@@ -105,7 +105,7 @@ public class Woodcutting implements OpLocTrigger {
 						} else {
 							stumpId = 314; //wide tree stump
 						}
-						interrupt();
+						interruptBatch();
 						if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 							GameObject newObject = new GameObject(getWorld(), object.getLocation(), stumpId, object.getDirection(), object.getType());
 							getWorld().replaceGameObject(object, newObject);
@@ -117,7 +117,7 @@ public class Woodcutting implements OpLocTrigger {
 					if (getRepeatFor() > 1) {
 						GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 						if (checkObj == null) {
-							interrupt();
+							interruptBatch();
 						}
 					}
 				}

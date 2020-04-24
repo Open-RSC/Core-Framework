@@ -39,7 +39,7 @@ public abstract class BatchEvent extends DelayedEvent {
 	public void run() {
 		if (getOwner().hasMoved()) { // If the player walks away, stop batching
 			getOwner().setStatus(Action.IDLE);
-			interrupt();
+			interruptBatch();
 			return;
 		}
 		if (repeated < repeatFor) {
@@ -47,7 +47,7 @@ public abstract class BatchEvent extends DelayedEvent {
 			action();
 			if (++repeated >= repeatFor) {
 				getOwner().setStatus(Action.IDLE);
-				interrupt();
+				interruptBatch();
 				return;
 			}
 
@@ -65,7 +65,7 @@ public abstract class BatchEvent extends DelayedEvent {
 		return (repeated + 1) >= repeatFor || !super.running;
 	}
 
-	public void interrupt() {
+	public void interruptBatch() {
 		if (this.batchProgression) ActionSender.sendRemoveProgressBar(getOwner());
 		getOwner().setBusyTimer(0);
 		getOwner().setBatchEvent(null);

@@ -225,19 +225,19 @@ public class Smithing implements UseLocTrigger {
 				if (getOwner().getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
 					getOwner().message("You need to be at least level "
 						+ def.getRequiredLevel() + " smithing to do that");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) < def.getRequiredBars()) {
 					getOwner().message("You need " + def.getRequiredBars() + " bars of metal to make this item");
-					interrupt();
+					interruptBatch();
 					return;
 				}
 				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().message("You are too tired to smith");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}

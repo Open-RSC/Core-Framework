@@ -110,7 +110,7 @@ public class GemMining implements OpLocTrigger {
 					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
 						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
-						interrupt();
+						interruptBatch();
 						return;
 					}
 				}
@@ -127,7 +127,7 @@ public class GemMining implements OpLocTrigger {
 					}
 
 					if (!getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
-						interrupt();
+						interruptBatch();
 						if (object != null && object.getID() == obj.getID()) {
 							GameObject newObject = new GameObject(getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
 							getWorld().replaceGameObject(obj, newObject);
@@ -139,7 +139,7 @@ public class GemMining implements OpLocTrigger {
 					if (getRepeatFor() > 1) {
 						GameObject checkObj = getOwner().getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 						if (checkObj == null) {
-							interrupt();
+							interruptBatch();
 						}
 					}
 				}

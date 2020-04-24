@@ -33,7 +33,7 @@ public class SoilMound implements UseLocTrigger {
 					getOwner().message("you fill the bucket with soil");
 					getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
 				} else {
-					interrupt();
+					interruptBatch();
 				}
 			}
 		});
