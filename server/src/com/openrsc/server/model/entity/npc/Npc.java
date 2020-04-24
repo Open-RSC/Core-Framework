@@ -313,6 +313,12 @@ public class Npc extends Mob {
 		}
 
 		ItemDropDef[] drops = def.getDrops();
+		if (drops == null) {
+			// Some enemies have no drops
+			deathListeners.clear();
+			remove();
+			return;
+		}
 
 		// Drops that always occur on every kill
 		int total = 0;
