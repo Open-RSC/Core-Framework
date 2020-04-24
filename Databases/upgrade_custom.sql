@@ -1,4 +1,4 @@
-INSERT INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
+REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
                                `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
                                `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
                                `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`)
@@ -132,11 +132,3 @@ VALUES (1290, 'Ironman helm', 'For just a rather very independent scaper.', '', 
        (1375, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 6, 0, 0, 0, 0, 99000, 0),
        (1376, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000, 0),
        (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000, 0);
-
-
--- CABBAGE -- UNCOMMENT FOR RUNNING ON CABBAGE!!!!!!!!!!!!
-ALTER TABLE `openrsc_equipped` CHANGE `id` `itemID` int(10) UNSIGNED NOT NULL;
-ALTER TABLE `openrsc_equipped` DROP COLUMN `amount`;
-ALTER TABLE `openrsc_equipped` DROP COLUMN `dbid`;
-ALTER TABLE `openrsc_curstats` ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
-ALTER TABLE `openrsc_experience` ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;

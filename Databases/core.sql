@@ -381,7 +381,6 @@ CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions`
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS `openrsc_recovery_questions`;
 INSERT INTO `openrsc_recovery_questions` (`questionID`, `question`)
 VALUES (1, 'Where were you born?'),
        (2, 'What was your first teacher\'s name?'),

@@ -24,6 +24,11 @@ ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `bankNoteID`;
 ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `originalItemID`;
+ALTER TABLE `openrsc_equipped` CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
+ALTER TABLE `openrsc_equipped` DROP COLUMN IF EXISTS `amount`;
+ALTER TABLE `openrsc_equipped` DROP COLUMN IF EXISTS `dbid`;
+
+
 /*
  * Upgrade section
  * The queries performed in the section will upgrade previous versions of the database tables
