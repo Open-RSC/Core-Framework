@@ -1170,6 +1170,7 @@ public final class CustomBankInterface extends BankInterface {
 			if (inventoryItems[i] != null) {
 				presets[id].inventory[i].setItemDef(inventoryItems[i].getItemDef());
 				presets[id].inventory[i].setAmount(inventoryItems[i].getAmount());
+				presets[id].inventory[i].setNoted(inventoryItems[i].getNoted());
 			} else {
 				presets[id].inventory[i].setItemDef(null);
 				presets[id].inventory[i].setAmount(0);
@@ -1256,7 +1257,8 @@ public final class CustomBankInterface extends BankInterface {
 			drawString("Preset Slot " + (i + 1), x + presetButtonWidth / 2 + presetButtonWidth * i - mc.getSurface().stringWidth(1, "Preset Slot 1") / 2, inventoryYOffset + invrows * 34 + 21, 1, 0xFFFFFF);
 		}
 
-		drawString("Save current setup to this preset slot", x, inventoryYOffset + invrows * 34 + 50,1,0x0);
+		drawString("Click here to save your inventory and equipment to the currently selected preset slot", x + 10, inventoryYOffset + invrows * 34 + 75,1,0x0);
+
 		//Draw the inventory panel on the screen
 		for (int i = 0; i < invcolumns; i++) {
 			mc.getSurface().drawLineVert(inventoryXOffset + i * 49, inventoryYOffset, 0, invrows * 34);
@@ -1266,30 +1268,30 @@ public final class CustomBankInterface extends BankInterface {
 		}
 		int row = 0, col = 0;
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++) {
-			mc.getSurface().drawBoxAlpha(inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1, 48, 33, GenUtil.buildColor(181, 181, 181), 128);
+			mc.getSurface().drawBoxAlpha(inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1, 48, 33, GenUtil.buildColor(181, 181, 181), 128);
 			Item item = presets[selectedPresetSlot].inventory[i];
 			ItemDef def = item.getItemDef();
 			if (def != null) {
 				if (item.getNoted()) {
 					mc.getSurface().drawSpriteClipping(
 						mc.spriteSelect(EntityHandler.noteDef),
-						inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+						inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
 						48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-						EntityHandler.noteDef.getBlueMask(), false, 0, 0);
+						EntityHandler.noteDef.getBlueMask(), false, 0, 1);
 					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1, 33, 23,
+						inventoryXOffset + col * 49 + 7,inventoryYOffset + row * 34 + 7, 33, 23,
 						def.getPictureMask(), 0,
 						def.getBlueMask(), false, 0, 1);
 				} else {
 					mc.getSurface().drawSpriteClipping(
 						mc.spriteSelect(def),
-						inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+						inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
 						48, 32, def.getPictureMask(), 0,
 						def.getBlueMask(), false, 0, 0);
 				}
-				if (def.isStackable()) {
+				if (def.isStackable() || item.getNoted()) {
 					mc.getSurface().drawString("" + presets[selectedPresetSlot].inventory[i].getAmount(),
-						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1 + fontSizeHeight,
+						inventoryXOffset + col * 49 + 1,inventoryYOffset + row * 34 - 3 + fontSizeHeight,
 						0xFFFF00, 1);
 				}
 			}
@@ -1335,10 +1337,9 @@ public final class CustomBankInterface extends BankInterface {
 						y + 21 + mc.equipIconYLocations[i] + 11, 0xFFFF00, 1);
 			}
 		}
-
 	}
 
-	public static class Preset{
+	public static class Preset {
 		public Item[] inventory;
 		public Item[] equipment;
 

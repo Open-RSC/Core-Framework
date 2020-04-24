@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -487,16 +488,38 @@ public class Bank {
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				try {
-					for (int index = player.getCarriedItems().getInventory().getItems().size()-1; index >= 0; --index) {
-						Item inventoryItem = player.getCarriedItems().getInventory().get(index);
-						System.out.println("Depositing " + inventoryItem.getDef(player.getWorld()).getName() + "x"
-							+ inventoryItem.getAmount() + " from slot " + index);
-						if (!depositItemFromInventory(inventoryItem.getCatalogId(), inventoryItem.getAmount(), false))
+					for (int i = player.getCarriedItems().getInventory().getItems().size(); i-- > 0;) {
+						Item item = player.getCarriedItems().getInventory().getItems().get(i);
+						if (!depositItemFromInventory(item.getCatalogId(), item.getAmount(), true)) {
 							return false;
+						}
 					}
 
-					ActionSender.sendInventory(player);
 				} catch (Exception ex) {
+					LOGGER.error(ex.getMessage());
+					return false;
+				}
+				return true;
+			}
+		}
+	}
+
+	public boolean depositAllFromEquipment() {
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getEquipment().getList()) {
+				try {
+					for (int slot = 0; slot < player.getCarriedItems().getEquipment().SLOT_COUNT; slot++) {
+						Item item = player.getCarriedItems().getEquipment().getList()[slot];
+						if (item == null || item.getCatalogId() == ItemId.NOTHING.id()) continue;
+						UnequipRequest uer = new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false);
+						uer.equipmentSlot = Equipment.EquipmentSlot.get(slot);
+						Equipment.correctIndex(uer);
+						if (!player.getCarriedItems().getEquipment().unequipItem(uer)) {
+							return false;
+						}
+					}
+				}
+				catch (Exception ex) {
 					LOGGER.error(ex.getMessage());
 					return false;
 				}
@@ -520,17 +543,7 @@ public class Bank {
 					player.getCarriedItems().getInventory().getLastIndexById(catalogID));
 
 				// Find inventory slot that contains the requested catalogID
-				Item depositItem = null;
-				ListIterator<Item> playerItems = items.listIterator(items.size());
-				while (playerItems.hasPrevious()) {
-					Item i = playerItems.previous();
-					if (i.getItemId() == item.getItemId()) {
-						depositItem = i;
-						break;
-					}
-				}
-
-				// Double check there was an item found
+				Item depositItem = getItemFromList(items, item);
 				if (depositItem == null) {
 					System.out.println(player.getUsername() + " attempted to deposit an item that is null: " + catalogID);
 					return false;
@@ -544,14 +557,7 @@ public class Bank {
 				}
 
 				// Limit non-stackables to a withdraw of 1
-				int depositAmount = 1;
-				if (depositDef.isStackable() || depositItem.getNoted()) {
-					if (requestedAmount % 10 > 0) depositAmount = 1;
-					else if (requestedAmount % 100 > 0) depositAmount = 10;
-					else if (requestedAmount % 1000 > 0) depositAmount = 100;
-					else if (requestedAmount % 10000 > 0) depositAmount = 1000;
-					else if (requestedAmount % 100000 > 0) depositAmount = 10000;
-				}
+				int depositAmount = getTrickleAmount(depositDef, depositItem, requestedAmount);
 
 				// Make sure they have enough space in their bank to deposit it
 				if (!canHold(new Item(depositItem.getCatalogId(), depositAmount))) {
@@ -589,6 +595,31 @@ public class Bank {
 				}
 			}
 		}
+	}
+
+	private Item getItemFromList(List<Item> items, Item item) {
+		Item depositItem = null;
+		ListIterator<Item> playerItems = items.listIterator(items.size());
+		while (playerItems.hasPrevious()) {
+			Item i = playerItems.previous();
+			if (i.getItemId() == item.getItemId()) {
+				depositItem = i;
+				break;
+			}
+		}
+		return depositItem;
+	}
+
+	private int getTrickleAmount(ItemDefinition depositDef, Item depositItem, int requestedAmount) {
+		int depositAmount = 1;
+		if (depositDef.isStackable() || depositItem.getNoted()) {
+			if (requestedAmount % 10 > 0) depositAmount = 1;
+			else if (requestedAmount % 100 > 0) depositAmount = 10;
+			else if (requestedAmount % 1000 > 0) depositAmount = 100;
+			else if (requestedAmount % 10000 > 0) depositAmount = 1000;
+			else if (requestedAmount % 100000 > 0) depositAmount = 10000;
+		}
+		return depositAmount;
 	}
 
 	private static boolean isCert(int itemID) {

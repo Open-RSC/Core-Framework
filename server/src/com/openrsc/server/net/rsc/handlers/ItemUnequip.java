@@ -12,18 +12,18 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import static com.openrsc.server.net.rsc.handlers.ItemEquip.passCheck;
 
 public class ItemUnequip implements PacketHandler {
-	//Packets handled by this class:
-//	bind(OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY.getOpcode(), ItemUnequip.class);
-//	bind(OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode(), ItemUnequip.class);
-//	bind(OpcodeIn.ITEM_REMOVE_TO_BANK.getOpcode(), ItemUnequip.class);
+	// Packets handled by this class:
+	//	bind(OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY.getOpcode(), ItemUnequip.class);
+	//	bind(OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode(), ItemUnequip.class);
+	//	bind(OpcodeIn.ITEM_REMOVE_TO_BANK.getOpcode(), ItemUnequip.class);
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		OpcodeIn opcode = OpcodeIn.get(packet.getID());
 
-		//Make sure the opcode is valid
+		// Make sure the opcode is valid
 		if (opcode == null)
 			return;
 
-		//Make sure they're allowed to unequip something atm
+		// Make sure they're allowed to unequip something atm
 		if (!passCheck(player, opcode))
 			return;
 
@@ -54,8 +54,8 @@ public class ItemUnequip implements PacketHandler {
 
 			request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
 
-			//Client index and server index don't match. Find correct index.
-			correctIndex(request);
+			// Client index and server index don't match. Find correct index.
+			Equipment.correctIndex(request);
 		} else if (opcode == OpcodeIn.ITEM_REMOVE_TO_BANK) {
 			player.resetAllExceptBank();
 
@@ -68,50 +68,18 @@ public class ItemUnequip implements PacketHandler {
 			request.requestType = UnequipRequest.RequestType.FROM_BANK;
 
 			//Client index and server index don't match. Find correct index.
-			correctIndex(request);
-		} else
-			return;
+			Equipment.correctIndex(request);
+		}
 
-		//Check to make sure the item is wieldable
+		// Invalid opcode
+		else return;
+
+		// Check to make sure the item is wieldable
 		if (request.item == null || !request.item.getDef(player.getWorld()).isWieldable()) {
 			player.setSuspiciousPlayer(true, "tried to unequip item null or not wieldable");
 			return;
 		}
 
 		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "RemoveObj", new Object[]{request});
-	}
-
-	private void correctIndex(UnequipRequest request) {
-		if (request.equipmentSlot == EquipmentSlot.SLOT_LARGE_HELMET) {
-			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex()) != null) {
-				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex());
-				request.equipmentSlot = EquipmentSlot.SLOT_LARGE_HELMET;
-			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex()) != null) {
-				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex());
-				request.equipmentSlot = EquipmentSlot.SLOT_MEDIUM_HELMET;
-			}
-		} else if (request.equipmentSlot == Equipment.EquipmentSlot.SLOT_PLATE_BODY) {
-			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex()) != null) {
-				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex());
-				request.equipmentSlot = EquipmentSlot.SLOT_PLATE_BODY;
-			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex()) != null) {
-				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex());
-				request.equipmentSlot = EquipmentSlot.SLOT_CHAIN_BODY;
-			}
-		} else if (request.equipmentSlot == Equipment.EquipmentSlot.SLOT_PLATE_LEGS) {
-			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex()) != null) {
-				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex());
-				request.equipmentSlot = EquipmentSlot.SLOT_PLATE_LEGS;
-			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex()) != null) {
-				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex());
-				request.equipmentSlot = EquipmentSlot.SLOT_SKIRT;
-			}
-		} else if (request.equipmentSlot.getIndex() > 4) {
-			request.item = request.player.getCarriedItems().getEquipment().get(request.equipmentSlot.getIndex() + 3);
-			request.equipmentSlot = EquipmentSlot.get(request.equipmentSlot.getIndex() + 3);
-		} else {
-			request.item = request.player.getCarriedItems().getEquipment().get(request.equipmentSlot.getIndex());
-			request.equipmentSlot = EquipmentSlot.get(request.equipmentSlot.getIndex());
-		}
 	}
 }

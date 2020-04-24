@@ -732,6 +732,7 @@ public class ActionSender {
 
 			//Write catalog ID to the packet as a short
 			s.writeShort(item.getCatalogId());
+			s.writeByte(item.getNoted() ? 1 : 0);
 
 			//If the item is stackable or is noted, write the amount to the packet as an Int
 			if (item.getDef(player.getWorld()).isStackable() || item.getNoted())

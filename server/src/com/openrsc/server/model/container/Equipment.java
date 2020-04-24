@@ -308,18 +308,21 @@ public class Equipment {
 					return false;
 
 				int originalAmount = player.getBank().countId(request.item.getCatalogId());
+				Item toEquip = player.getBank().get(
+					player.getBank().getFirstIndexById(request.item.getCatalogId())
+				);
 
 				if (!itemDef.isStackable()) { /**Not a stackable item*/
-					if (player.getBank().remove(request.item.getCatalogId(), 1, request.item.getItemId()) == -1)
+					if (player.getBank().remove(toEquip.getCatalogId(), 1, toEquip.getItemId()) == -1)
 						return false;
 
 					if (originalAmount > 1) { /**Need to split the stack*/
-						add(new Item(request.item.getCatalogId(), 1));
+						add(new Item(toEquip.getCatalogId(), 1));
 					} else { /**Don't need to split the stack*/
 						add(request.item);
 					}
 				} else { /**Stackable item*/
-					if (player.getBank().remove(request.item.getCatalogId(), request.item.getAmount(), request.item.getItemId()) == -1)
+					if (player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount(), toEquip.getItemId()) == -1)
 						return false;
 
 					if (originalAmount > request.item.getAmount()) { /**Need to split the stack*/
@@ -742,6 +745,40 @@ public class Equipment {
 					return slot;
 			}
 			return null;
+		}
+	}
+
+	public static void correctIndex(UnequipRequest request) {
+		if (request.equipmentSlot == EquipmentSlot.SLOT_LARGE_HELMET) {
+			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_LARGE_HELMET.getIndex());
+				request.equipmentSlot = EquipmentSlot.SLOT_LARGE_HELMET;
+			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_MEDIUM_HELMET.getIndex());
+				request.equipmentSlot = EquipmentSlot.SLOT_MEDIUM_HELMET;
+			}
+		} else if (request.equipmentSlot == EquipmentSlot.SLOT_PLATE_BODY) {
+			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_BODY.getIndex());
+				request.equipmentSlot = EquipmentSlot.SLOT_PLATE_BODY;
+			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_CHAIN_BODY.getIndex());
+				request.equipmentSlot = EquipmentSlot.SLOT_CHAIN_BODY;
+			}
+		} else if (request.equipmentSlot == Equipment.EquipmentSlot.SLOT_PLATE_LEGS) {
+			if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_PLATE_LEGS.getIndex());
+				request.equipmentSlot = EquipmentSlot.SLOT_PLATE_LEGS;
+			} else if (request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex()) != null) {
+				request.item = request.player.getCarriedItems().getEquipment().get(EquipmentSlot.SLOT_SKIRT.getIndex());
+				request.equipmentSlot = EquipmentSlot.SLOT_SKIRT;
+			}
+		} else if (request.equipmentSlot.getIndex() > 4) {
+			request.item = request.player.getCarriedItems().getEquipment().get(request.equipmentSlot.getIndex() + 3);
+			request.equipmentSlot = EquipmentSlot.get(request.equipmentSlot.getIndex() + 3);
+		} else {
+			request.item = request.player.getCarriedItems().getEquipment().get(request.equipmentSlot.getIndex());
+			request.equipmentSlot = EquipmentSlot.get(request.equipmentSlot.getIndex());
 		}
 	}
 }

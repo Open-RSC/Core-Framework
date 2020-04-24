@@ -70,14 +70,7 @@ public final class BankHandler implements PacketHandler {
 					player.setSuspiciousPlayer(true, "bank deposit from equipment on authentic world");
 					return;
 				}
-				for (int k = Equipment.SLOT_COUNT - 1; k >= 0; k--) {
-					Item depoItem = player.getCarriedItems().getEquipment().get(k);
-					if (depoItem == null)
-						continue;
-					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UnWield", new Object[]{player, depoItem, false, true})) {
-						continue;
-					}
-				}
+				player.getBank().depositAllFromEquipment();
 				break;
 			case BANK_LOAD_PRESET:
 				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
@@ -104,15 +97,22 @@ public final class BankHandler implements PacketHandler {
 					return;
 				}
 				for (int k = 0; k < Inventory.MAX_SIZE; k++) {
-					if (k < player.getCarriedItems().getInventory().size())
-						player.getBank().getBankPreset(presetSlot).getInventory()[k] = player.getCarriedItems().getInventory().get(k);
+					if (k < player.getCarriedItems().getInventory().size()) {
+						Item inventoryItem = player.getCarriedItems().getInventory().get(k);
+						player.getBank().getBankPreset(presetSlot).getInventory()[k] = new Item(
+							inventoryItem.getCatalogId(), inventoryItem.getAmount(), inventoryItem.getNoted()
+						);
+					}
 					else
 						player.getBank().getBankPreset(presetSlot).getInventory()[k] = new Item(ItemId.NOTHING.id(),0);
 				}
 				for (int k = 0; k < Equipment.SLOT_COUNT; k++) {
 					Item equipmentItem = player.getCarriedItems().getEquipment().get(k);
-					if (equipmentItem != null)
-						player.getBank().getBankPreset(presetSlot).getEquipment()[k] = equipmentItem;
+					if (equipmentItem != null) {
+						player.getBank().getBankPreset(presetSlot).getEquipment()[k] = new Item(
+							equipmentItem.getCatalogId(), equipmentItem.getAmount()
+						);
+					}
 					else
 						player.getBank().getBankPreset(presetSlot).getEquipment()[k] = new Item(ItemId.NOTHING.id(),0);
 				}

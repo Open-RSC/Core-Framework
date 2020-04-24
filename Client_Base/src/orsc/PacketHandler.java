@@ -2680,14 +2680,16 @@ public class PacketHandler {
 			itemBytes[1] = packetsIncoming.getByte();
 			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
 			item = EntityHandler.getItemDef(itemID);
+			boolean noted = packetsIncoming.getByte() == 1;
 			if (item != null) {
-				if (item.isStackable())
+				if (item.isStackable() || noted)
 					amount = packetsIncoming.get32();
 				else
 					amount = 1;
 				inventoryItems[i] = new Item();
 				inventoryItems[i].setItemDef(itemID);
 				inventoryItems[i].setAmount(amount);
+				inventoryItems[i].setNoted(noted);
 			}
 		}
 		//The server uses 2 more slots than the client

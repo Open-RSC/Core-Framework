@@ -126,5 +126,8 @@ public class Item {
 		else
 			return this.itemDef.id;
 	}
-	//</editor-fold>
+
+	public String toString() {
+		return "Item(" + getCatalogID() + ", " + getAmount() + ", " + getNoted() + ")";
+	}
 }

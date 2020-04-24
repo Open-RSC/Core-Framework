@@ -4902,6 +4902,9 @@ public final class mudclient implements Runnable {
 							}
 							centerZ = this.groundItemX[centerX] * this.tileSize + 64;
 							int var4 = this.tileSize * this.groundItemZ[centerX] + 64;
+							if (S_WANT_BANK_NOTES) {
+								// TODO: DRAW NOTE BEHIND ITEM
+							}
 							this.scene.drawSprite('\u9c40' + this.groundItemID[centerX], var4, centerX + 20000, centerZ,
 								-this.world.getElevation(centerZ, var4) - this.groundItemHeight[centerX], 96, 64, (byte) 109);
 							++this.spriteCount;

@@ -817,7 +817,9 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 							inventoryWriter.writeByte(-1);
 						else {
 							inventoryWriter.writeShort(inventoryItem.getCatalogId());
-							if (inventoryItem.getDef(player.getWorld()) != null && inventoryItem.getDef(player.getWorld()).isStackable())
+							inventoryWriter.writeByte(inventoryItem.getNoted() ? 1 : 0);
+							if (inventoryItem.getDef(player.getWorld()) != null
+								&& (inventoryItem.getDef(player.getWorld()).isStackable() || inventoryItem.getNoted()))
 								inventoryWriter.writeInt(inventoryItem.getAmount());
 						}
 
