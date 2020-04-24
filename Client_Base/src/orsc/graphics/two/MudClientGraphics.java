@@ -3,6 +3,7 @@ package orsc.graphics.two;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.model.Sprite;
 
+import orsc.Config;
 import orsc.mudclient;
 import orsc.util.GenUtil;
 
@@ -16,7 +17,10 @@ public final class MudClientGraphics extends GraphicsController {
 	@Override
 	public final void drawEntity(int index, int x, int y, int width, int height, int overlayMovement, int topPixelSkew) {
 		try {
-			if (index < 50000) {
+			if (Config.S_WANT_BANK_NOTES && index == -1) {
+				this.mudClientRef.drawItemAt(-1, x, y, width, height, topPixelSkew);
+			}
+			else if (index < 50000) {
 				if (index < 40000) {
 					if (index >= 20000) {
 						this.mudClientRef.drawNPC(index - 20000, x, y, width, height, topPixelSkew, 105,

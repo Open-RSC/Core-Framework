@@ -115,6 +115,7 @@ public final class mudclient implements Runnable {
 	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
 	private final String[] optionsMenuText = new String[20];
 	private final int[] groundItemHeight = new int[5000];
+	private final boolean[] groundItemNoted = new boolean[5000];
 	private final int character2Colour = 2;
 	private final RSModel[] modelCache = new RSModel[1000];
 	private final int[] newBankItems = new int[500];
@@ -4902,11 +4903,13 @@ public final class mudclient implements Runnable {
 							}
 							centerZ = this.groundItemX[centerX] * this.tileSize + 64;
 							int var4 = this.tileSize * this.groundItemZ[centerX] + 64;
-							if (S_WANT_BANK_NOTES) {
-								// TODO: DRAW NOTE BEHIND ITEM
+							if (S_WANT_BANK_NOTES && this.groundItemNoted[centerX]) {
+								this.scene.drawSprite(-1, var4, centerX + 20000, centerZ,
+									-this.world.getElevation(centerZ, var4) - this.groundItemHeight[centerX], 96, 64, (byte) 109);
+							} else {
+								this.scene.drawSprite(40000 + this.groundItemID[centerX], var4, centerX + 20000, centerZ,
+									-this.world.getElevation(centerZ, var4) - this.groundItemHeight[centerX], 96, 64, (byte) 109);
 							}
-							this.scene.drawSprite('\u9c40' + this.groundItemID[centerX], var4, centerX + 20000, centerZ,
-								-this.world.getElevation(centerZ, var4) - this.groundItemHeight[centerX], 96, 64, (byte) 109);
 							++this.spriteCount;
 						}
 					}
@@ -5623,23 +5626,20 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	public final void drawItemAt(int id, int x, int y, int width, int height, int var2) {
+	public final void drawItemAt(int id, int x, int y, int width, int height, int topPixelSkew) {
 		try {
-			Sprite sprite = spriteSelect(EntityHandler.getItemDef(id));
+			Sprite sprite;
+			if (S_WANT_BANK_NOTES && id == -1) {
+				sprite = spriteSelect(EntityHandler.noteDef);
+			}
+			else {
+				sprite = spriteSelect(EntityHandler.getItemDef(id));
+			}
 			int mask = EntityHandler.getItemDef(id).getPictureMask();
 			this.getSurface().drawSpriteClipping(sprite, x, y, width, height, mask, 0,
 				EntityHandler.getItemDef(id).getBlueMask(), false, 0, 1);
-
-			//TODO: Need to add noted boolean to ground items
-			ItemDef def = EntityHandler.getItemDef(id);
-			if (def.getNotedFormOf() >= 0) {
-				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-				getSurface().drawSpriteClipping(spriteSelect(originalDef), x + 7, y + 4, width / 2 + 5,
-					height / 2 + 4, originalDef.getPictureMask(), 0, originalDef.getBlueMask(), false, 0, 1);
-			}
-
 		} catch (RuntimeException var10) {
-			throw GenUtil.makeThrowable(var10, "client.CA(" + height + ',' + var2 + ',' + x + ',' + id + ',' + width
+			throw GenUtil.makeThrowable(var10, "client.CA(" + height + ',' + topPixelSkew + ',' + x + ',' + id + ',' + width
 				+ ',' + "dummy" + ',' + y + ')');
 		}
 	}
@@ -15005,6 +15005,14 @@ public final class mudclient implements Runnable {
 
 	public int getGroundItemHeight(int i) {
 		return this.groundItemHeight[i];
+	}
+
+	public void setGroundItemNoted(int i, boolean n) {
+		this.groundItemNoted[i] = n;
+	}
+
+	public boolean getGroundItemNoted(int i) {
+		return this.groundItemNoted[i];
 	}
 
 	public ORSCharacter getPlayerFromServer(int i) {
