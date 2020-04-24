@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -20,9 +19,6 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author n0m
- */
 public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	UseInvTrigger,
 	OpBoundTrigger,
@@ -64,77 +60,77 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public void handleReward(Player p) {
-		p.teleport(410, 3481, false);
-		p.message("Well done you have completed the dragon slayer quest!");
-		p.message("@gre@You haved gained 2 quest points!");
-		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRAGON_SLAYER);
+	public void handleReward(Player player) {
+		player.teleport(410, 3481, false);
+		player.message("Well done you have completed the dragon slayer quest!");
+		player.message("@gre@You haved gained 2 quest points!");
+		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRAGON_SLAYER);
 		//keep order kosher
 		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(p, questData, i == (skillIDs.length - 1));
+			incQuestReward(player, questData, i == (skillIDs.length - 1));
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
-		return n.getID() == NpcId.OZIACH.id() && p.getQuestStage(this) != -1;
+	public boolean blockTalkNpc(Player player, Npc n) {
+		return n.getID() == NpcId.OZIACH.id() && player.getQuestStage(this) != -1;
 	}
 
-	public void oziachDialogue(Player p, Npc n, int cID) {
+	public void oziachDialogue(Player player, Npc n, int cID) {
 		if (cID == -1) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 2:
-					npcsay(p, n, "So how is thy quest going?");
-					int map = multi(p, n,
+					npcsay(player, n, "So how is thy quest going?");
+					int map = multi(player, n,
 						"So where can I find this dragon?",
 						"Where can I get an antidragon shield?");
 					if (map == 0) {
-						oziachDialogue(p, n, Oziach.FIND_DRAGON);
+						oziachDialogue(player, n, Oziach.FIND_DRAGON);
 					} else if (map == 1) {
-						oziachDialogue(p, n, Oziach.ANTIDRAGON_SHIELD);
+						oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 					}
 					break;
 				case 1:
-					npcsay(p, n, "Aye tiz a fair day my friend");
-					int menu = multi(p, n,
+					npcsay(player, n, "Aye tiz a fair day my friend");
+					int menu = multi(player, n,
 						"Can you sell me some rune plate mail?",
 						"I'm not your friend", "Yes it's a very nice day");
 					if (menu == 0) {
-						npcsay(p, n, "Soo how does thee know I 'ave some?");
-						int sub_menu = multi(p, n,
+						npcsay(player, n, "Soo how does thee know I 'ave some?");
+						int sub_menu = multi(player, n,
 							"The guildmaster of the champion guild told me",
 							"I am a master detective");
 						if (sub_menu == 0) {
-							npcsay(p,
+							npcsay(player,
 								n,
 								"Well if you're worthy of his advise",
 								"You must have something going for you",
 								"He has been known to let some weeklin's into his guild though",
 								"I don't want just any old pumpkinmush to have this armour",
 								"Jus cos they have a large amount of cash");
-							oziachDialogue(p, n, Oziach.HERO);
+							oziachDialogue(player, n, Oziach.HERO);
 						} else if (sub_menu == 1) {
-							npcsay(p, n, "well however you found out about it");
-							oziachDialogue(p, n, Oziach.HERO);
+							npcsay(player, n, "well however you found out about it");
+							oziachDialogue(player, n, Oziach.HERO);
 						}
 					} else if (menu == 1) {
-						npcsay(p, n,
+						npcsay(player, n,
 							"I'd be suprised if your anyone's friend with that sort of manners");
 					} else if (menu == 2) {
-						npcsay(p, n, "Aye may the Gods walk by your side");
+						npcsay(player, n, "Aye may the Gods walk by your side");
 					}
 					break;
 				case 0:
-					npcsay(p, n, "Aye tiz a fair day my friend");
-					int menu2 = multi(p, n,
+					npcsay(player, n, "Aye tiz a fair day my friend");
+					int menu2 = multi(player, n,
 						"I'm not your friend", "Yes it's a very nice day");
 					if (menu2 == 0) {
-						npcsay(p, n,
+						npcsay(player, n,
 							"I'd be suprised if your anyone's friend with that sort of manners");
 					} else if (menu2 == 1) {
-						npcsay(p, n, "Aye may the Gods walk by your side");
+						npcsay(player, n, "Aye may the Gods walk by your side");
 					}
 					break;
 			}
@@ -142,65 +138,65 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 		}
 		switch (cID) {
 			case Oziach.ANTIDRAGON_SHIELD:
-				npcsay(p, n,
+				npcsay(player, n,
 					"I believe the Duke of Lumbridge Castle may have one in his armoury");
-				int sub_menu4 = multi(p, n, "So where can I find this dragon?",
+				int sub_menu4 = multi(player, n, "So where can I find this dragon?",
 					"Ok I'll try and get everything together");
 				if (sub_menu4 == 0) {
-					oziachDialogue(p, n, Oziach.FIND_DRAGON);
+					oziachDialogue(player, n, Oziach.FIND_DRAGON);
 				}
 				if (sub_menu4 == 1) {
-					npcsay(p, n, "Fare ye well");
+					npcsay(player, n, "Fare ye well");
 				}
 				break;
 			case Oziach.DRAGON_FUN:
-				npcsay(p, n, "Elvarg really is one of the most powerful dragons");
-				npcsay(p, n,
+				npcsay(player, n, "Elvarg really is one of the most powerful dragons");
+				npcsay(player, n,
 					"I really wouldn't recommend charging in without special equipment");
-				npcsay(p, n, "Her breath is the main thing to watch out for");
-				npcsay(p, n, "You can get fried very fast");
-				npcsay(p, n,
+				npcsay(player, n, "Her breath is the main thing to watch out for");
+				npcsay(player, n, "You can get fried very fast");
+				npcsay(player, n,
 					"Unless you have a special flameproof antidragon shield");
-				npcsay(p, n, "It won't totally protect you");
-				npcsay(p, n, "but it should prevent some of the damage to you");
-				p.updateQuestStage(this, 2);
-				int funmenu = multi(p, n, "So where can I find this dragon?",
+				npcsay(player, n, "It won't totally protect you");
+				npcsay(player, n, "but it should prevent some of the damage to you");
+				player.updateQuestStage(this, 2);
+				int funmenu = multi(player, n, "So where can I find this dragon?",
 					"Where can I get an antidragon shield?");
 				if (funmenu == 0) {
-					oziachDialogue(p, n, Oziach.FIND_DRAGON);
+					oziachDialogue(player, n, Oziach.FIND_DRAGON);
 				}
 				if (funmenu == 1) {
-					oziachDialogue(p, n, Oziach.ANTIDRAGON_SHIELD);
+					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				}
 				break;
 			case Oziach.HERO:
-				npcsay(p, n, "This is armour fit for a hero to be sure",
+				npcsay(player, n, "This is armour fit for a hero to be sure",
 					"So you'll need to prove to me that you're a hero before you can buy some");
-				int sub_menu2 = multi(p, n, "So how am I meant to prove that?",
+				int sub_menu2 = multi(player, n, "So how am I meant to prove that?",
 					"That's a pity, I'm not a hero");
 				if (sub_menu2 == 0)
-					oziachDialogue(p, n, Oziach.PROVE_THAT);
+					oziachDialogue(player, n, Oziach.PROVE_THAT);
 				break;
 			case Oziach.PROVE_THAT:
-				npcsay(p, n, "Well if you want to prove yourself",
+				npcsay(player, n, "Well if you want to prove yourself",
 					"You could try and defeat Elvarg the dragon of the Isle of Crandor");
-				int sub_menu3 = multi(p, n, false, "A dragon, that sounds like fun",
+				int sub_menu3 = multi(player, n, false, "A dragon, that sounds like fun",
 					"And will i need anything to defeat this dragon",
 					"I may be a champion, but I don't think I'm up to dragon killing yet");
 				if (sub_menu3 == 0) {
-					say(p, n, "A dragon, that sounds like fun");
-					oziachDialogue(p, n, Oziach.DRAGON_FUN);
+					say(player, n, "A dragon, that sounds like fun");
+					oziachDialogue(player, n, Oziach.DRAGON_FUN);
 				} else if (sub_menu3 == 1) {
-					say(p, n, "And will I need anything to defeat this dragon?");
-					npcsay(p, n, "It's funny you shoud say that");
-					oziachDialogue(p, n, Oziach.DRAGON_FUN);
+					say(player, n, "And will I need anything to defeat this dragon?");
+					npcsay(player, n, "It's funny you shoud say that");
+					oziachDialogue(player, n, Oziach.DRAGON_FUN);
 				} else if (sub_menu3 == 2) {
-					say(p, n, "I may be a champion, but I don't think I'm up to dragon killing yet");
-					npcsay(p, n, "Yes I can understand that");
+					say(player, n, "I may be a champion, but I don't think I'm up to dragon killing yet");
+					npcsay(player, n, "Yes I can understand that");
 				}
 				break;
 			case Oziach.FIND_DRAGON:
-				npcsay(p,
+				npcsay(player,
 					n,
 					"That is a problem too yes",
 					"No one knows where the Isle of Crandor is located",
@@ -208,77 +204,77 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					"But it was torn up into three pieces",
 					"Which are now scattered across Asgarnia",
 					"You'll also struggle to find someone bold enough to take a ship to Crandor Island");
-				int map = multi(p, n, "Where is the first piece of map?",
+				int map = multi(player, n, "Where is the first piece of map?",
 					"Where is the second piece of map?",
 					"Where is the third piece of map?",
 					"Where can I get an antidragon shield?");
 				if (map == 0) {
-					oziachDialogue(p, n, Oziach.FIRST_PIECE);
+					oziachDialogue(player, n, Oziach.FIRST_PIECE);
 				} else if (map == 1) {
-					oziachDialogue(p, n, Oziach.SECOND_PIECE);
+					oziachDialogue(player, n, Oziach.SECOND_PIECE);
 				} else if (map == 2) {
-					oziachDialogue(p, n, Oziach.THIRD_PIECE);
+					oziachDialogue(player, n, Oziach.THIRD_PIECE);
 				} else if (map == 3) {
-					oziachDialogue(p, n, Oziach.ANTIDRAGON_SHIELD);
+					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				}
 
 				break;
 			case Oziach.FIRST_PIECE:
-				npcsay(p, n, "deep in a strange building known as Melzar's maze");
-				npcsay(p, n, "Located north west of Rimmington");
-				if (!p.getCarriedItems().hasCatalogID(ItemId.MAZE_KEY.id(), Optional.of(false))) {
-					npcsay(p, n, "You will need this to get in");
-					npcsay(p, n,
+				npcsay(player, n, "deep in a strange building known as Melzar's maze");
+				npcsay(player, n, "Located north west of Rimmington");
+				if (!player.getCarriedItems().hasCatalogID(ItemId.MAZE_KEY.id(), Optional.of(false))) {
+					npcsay(player, n, "You will need this to get in");
+					npcsay(player, n,
 						"This is the key to the front entrance to the maze");
-					Functions.mes(p, "Oziach hands you a key");
-					give(p, ItemId.MAZE_KEY.id(), 1);
+					mes(player, "Oziach hands you a key");
+					give(player, ItemId.MAZE_KEY.id(), 1);
 				}
-				int menu = multi(p, n, "Where can I get an antidragon shield?",
+				int menu = multi(player, n, "Where can I get an antidragon shield?",
 					"Where is the second piece of map?",
 					"Where is the third piece of map?",
 					"Ok I'll try and get everything together");
 				if (menu == 0) {
-					oziachDialogue(p, n, Oziach.ANTIDRAGON_SHIELD);
+					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu == 1) {
-					oziachDialogue(p, n, Oziach.SECOND_PIECE);
+					oziachDialogue(player, n, Oziach.SECOND_PIECE);
 				} else if (menu == 2) {
-					oziachDialogue(p, n, Oziach.THIRD_PIECE);
+					oziachDialogue(player, n, Oziach.THIRD_PIECE);
 				} else if (menu == 3) {
-					npcsay(p, n, "Fare ye well");
+					npcsay(player, n, "Fare ye well");
 				}
 				break;
 			case Oziach.SECOND_PIECE:
-				npcsay(p, n,
+				npcsay(player, n,
 					"You will need to talk to the oracle on the ice mountain");
-				int menu2 = multi(p, n, "Where can I get an antidragon shield?",
+				int menu2 = multi(player, n, "Where can I get an antidragon shield?",
 					"Where is the first piece of map?",
 					"Where is the third piece of map?",
 					"Ok I'll try and get everything together");
 				if (menu2 == 0) {
-					oziachDialogue(p, n, Oziach.ANTIDRAGON_SHIELD);
+					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu2 == 1) {
-					oziachDialogue(p, n, Oziach.FIRST_PIECE);
+					oziachDialogue(player, n, Oziach.FIRST_PIECE);
 				} else if (menu2 == 1) {
-					oziachDialogue(p, n, Oziach.THIRD_PIECE);
+					oziachDialogue(player, n, Oziach.THIRD_PIECE);
 				} else if (menu2 == 1) {
-					npcsay(p, n, "Fare ye well");
+					npcsay(player, n, "Fare ye well");
 				}
 				break;
 			case Oziach.THIRD_PIECE:
-				npcsay(p, n,
+				npcsay(player, n,
 					"That was stolen by one of the goblins from the goblin village");
-				int menu3 = multi(p, n, "Where can I get an antidragon shield?",
+				int menu3 = multi(player, n, "Where can I get an antidragon shield?",
 					"Where is the first piece of map?",
 					"Where is the second piece of map?",
 					"Ok I'll try and get everything together");
 				if (menu3 == 0) {
-					oziachDialogue(p, n, Oziach.ANTIDRAGON_SHIELD);
+					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu3 == 1) {
-					oziachDialogue(p, n, Oziach.FIRST_PIECE);
+					oziachDialogue(player, n, Oziach.FIRST_PIECE);
 				} else if (menu3 == 1) {
-					oziachDialogue(p, n, Oziach.SECOND_PIECE);
+					oziachDialogue(player, n, Oziach.SECOND_PIECE);
 				} else if (menu3 == 1) {
-					npcsay(p, n, "Fare ye well");
+					npcsay(player, n, "Fare ye well");
 				}
 				break;
 
@@ -296,131 +292,131 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		switch (obj.getID()) {
 			case DWARVEN_CHEST_OPEN:
 			case DWARVEN_CHEST_CLOSED:
 				if (command.equalsIgnoreCase("open")) {
-					openGenericObject(obj, p, DWARVEN_CHEST_OPEN, "You open the chest");
+					openGenericObject(obj, player, DWARVEN_CHEST_OPEN, "You open the chest");
 				} else if (command.equalsIgnoreCase("close")) {
-					closeGenericObject(obj, p, DWARVEN_CHEST_CLOSED, "You close the chest");
+					closeGenericObject(obj, player, DWARVEN_CHEST_CLOSED, "You close the chest");
 				} else {
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-					if (!p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.empty()) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
-						&& p.getCache().hasKey("dwarven_unlocked")) {
-						give(p, ItemId.MAP_PIECE_3.id(), 1);
-						p.message("You find a piece of map in the chest");
-						p.getCache().remove("dwarven_unlocked");
+					if (!player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.empty()) && player.getQuestStage(Quests.DRAGON_SLAYER) == 2
+						&& player.getCache().hasKey("dwarven_unlocked")) {
+						give(player, ItemId.MAP_PIECE_3.id(), 1);
+						player.message("You find a piece of map in the chest");
+						player.getCache().remove("dwarven_unlocked");
 					} else {
-						p.message("You find nothing in the chest");
+						player.message("You find nothing in the chest");
 					}
 				}
 				break;
 			case MELZAR_CHEST_OPEN:
 			case MELZAR_CHEST_CLOSED:
 				if (command.equalsIgnoreCase("open")) {
-					openGenericObject(obj, p, MELZAR_CHEST_OPEN, "You open the chest");
+					openGenericObject(obj, player, MELZAR_CHEST_OPEN, "You open the chest");
 				} else if (command.equalsIgnoreCase("close")) {
-					closeGenericObject(obj, p, MELZAR_CHEST_CLOSED, "You close the chest");
+					closeGenericObject(obj, player, MELZAR_CHEST_CLOSED, "You close the chest");
 				} else {
 					//kosher: could not "drop trick" easy, had to re-enter the door for another piece
-					if (!p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.empty()) && p.getQuestStage(Quests.DRAGON_SLAYER) == 2
-						&& p.getCache().hasKey("melzar_unlocked")) {
-						give(p, ItemId.MAP_PIECE_2.id(), 1);
-						p.message("You find a piece of map in the chest");
-						p.getCache().remove("melzar_unlocked");
+					if (!player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.empty()) && player.getQuestStage(Quests.DRAGON_SLAYER) == 2
+						&& player.getCache().hasKey("melzar_unlocked")) {
+						give(player, ItemId.MAP_PIECE_2.id(), 1);
+						player.message("You find a piece of map in the chest");
+						player.getCache().remove("melzar_unlocked");
 					} else {
-						p.message("You find nothing in the chest");
+						player.message("You find nothing in the chest");
 					}
 				}
 				break;
 			//clicking boat triggers klarense if available
 			case LUMBRIDGE_LADY_SARIM1:
 			case LUMBRIDGE_LADY_SARIM2:
-				if (p.getCache().hasKey("owns_ship")) {
+				if (player.getCache().hasKey("owns_ship")) {
 					//cases: a) ship not repaired and ned not hired -> teleport 259,3472 (first case when bought)
 					//or player has enabled the crandor shortcut
 					//b)ship repaired and ned not hired -> teleport 259,3493
 					//c)ned hired and ship not repaired -> teleport 281,3472 (case when player is getting back)
 					//location in c shared by location of arrival to crandor
 					//d)ned hired and ship repaired -> teleport 281,3493
-					p.getCache().set("lumb_lady", PORT_SARIM);
-					if ((!p.getCache().hasKey("ship_fixed") && !p.getCache().hasKey("ned_hired")) || p.getCache().hasKey("crandor_shortcut")) {
-						p.teleport(259, 3472, false);
-					} else if (p.getCache().hasKey("ship_fixed") && !p.getCache().hasKey("ned_hired")) {
-						p.teleport(259, 3493, false);
-					} else if (!p.getCache().hasKey("ship_fixed") && p.getCache().hasKey("ned_hired")) {
-						p.teleport(281, 3472, false);
-					} else if (p.getCache().hasKey("ship_fixed") && p.getCache().hasKey("ned_hired")) {
-						p.teleport(281, 3493, false);
+					player.getCache().set("lumb_lady", PORT_SARIM);
+					if ((!player.getCache().hasKey("ship_fixed") && !player.getCache().hasKey("ned_hired")) || player.getCache().hasKey("crandor_shortcut")) {
+						player.teleport(259, 3472, false);
+					} else if (player.getCache().hasKey("ship_fixed") && !player.getCache().hasKey("ned_hired")) {
+						player.teleport(259, 3493, false);
+					} else if (!player.getCache().hasKey("ship_fixed") && player.getCache().hasKey("ned_hired")) {
+						player.teleport(281, 3472, false);
+					} else if (player.getCache().hasKey("ship_fixed") && player.getCache().hasKey("ned_hired")) {
+						player.teleport(281, 3493, false);
 					}
 				} else {
-					Npc klarense = ifnearvisnpc(p, NpcId.KLARENSE.id(), 15);
+					Npc klarense = ifnearvisnpc(player, NpcId.KLARENSE.id(), 15);
 					if (klarense != null) {
-						klarense.initializeTalkScript(p);
+						klarense.initializeTalkScript(player);
 					} else {
-						p.message("You must talk to the owner about this.");
+						player.message("You must talk to the owner about this.");
 					}
 				}
 				break;
 			case BOATS_LADDER:
-				if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
-					p.teleport(409, 638, false);
+				if (player.getCache().hasKey("lumb_lady") && player.getCache().getInt("lumb_lady") == CRANDOR) {
+					player.teleport(409, 638, false);
 				} else {
-					p.teleport(259, 641, false);
+					player.teleport(259, 641, false);
 				}
-				p.message("You leave the ship");
+				player.message("You leave the ship");
 				break;
 			case LUMBRIDGE_LADY_CRANDOR1:
 			case LUMBRIDGE_LADY_CRANDOR2:
-				p.getCache().set("lumb_lady", CRANDOR);
-				if (p.getCache().hasKey("crandor_shortcut")) {
-					p.teleport(259, 3472, false);
+				player.getCache().set("lumb_lady", CRANDOR);
+				if (player.getCache().hasKey("crandor_shortcut")) {
+					player.teleport(259, 3472, false);
 				} else {
-					p.teleport(281, 3472, false);
+					player.teleport(281, 3472, false);
 				}
 				break;
 		}
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.OZIACH.id()) {
-			oziachDialogue(p, n, -1);
+			oziachDialogue(player, n, -1);
 		}
 	}
 
 	@Override
-	public void onKillNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.WORMBRAIN.id() && p.getQuestStage(this) >= 2) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, p));
+	public void onKillNpc(Player player, Npc n) {
+		if (n.getID() == NpcId.WORMBRAIN.id() && player.getQuestStage(this) >= 2) {
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, player));
 		}
 		if (n.getID() == NpcId.RAT_WMAZEKEY.id()) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, p));
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, player));
 		} else if (n.getID() == NpcId.GHOST_WMAZEKEY.id()) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, p));
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, player));
 		} else if (n.getID() == NpcId.SKELETON_WMAZEKEY.id()) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, p));
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, player));
 		} else if (n.getID() == NpcId.ZOMBIE_WMAZEKEY.id()) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, p));
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, player));
 		} else if (n.getID() == NpcId.MELZAR_THE_MAD.id()) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, p));
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, player));
 		} else if (n.getID() == NpcId.LESSER_DEMON_WMAZEKEY.id()) {
-			p.getWorld().registerItem(
-				new GroundItem(p.getWorld(), ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, p));
-		} else if (n.getID() == NpcId.DRAGON.id() && p.getQuestStage(this) == 3) {
-			p.sendQuestComplete(getQuestId());
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, player));
+		} else if (n.getID() == NpcId.DRAGON.id() && player.getQuestStage(this) == 3) {
+			player.sendQuestComplete(getQuestId());
 		}
 	}
 
 	@Override
-	public boolean blockKillNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return false;
 	}
 
@@ -430,54 +426,54 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == 57) {
 			//special door dwarven mine
-			if (p.getX() >= 259 && p.getCarriedItems().hasCatalogID(ItemId.WIZARDS_MIND_BOMB.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.SILK.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.LOBSTER_POT.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.UNFIRED_BOWL.id(), Optional.of(false))) {
-				Point location = Point.location(p.getX(), p.getY());
-				doDoor(obj, p);
-				if (!p.getLocation().equals(location)) {
-					remove(p, ItemId.WIZARDS_MIND_BOMB.id(), 1);
-					remove(p, ItemId.SILK.id(), 1);
-					remove(p, ItemId.LOBSTER_POT.id(), 1);
-					remove(p, ItemId.UNFIRED_BOWL.id(), 1);
-					p.getCache().store("dwarven_unlocked", true);
+			if (player.getX() >= 259 && player.getCarriedItems().hasCatalogID(ItemId.WIZARDS_MIND_BOMB.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.SILK.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.LOBSTER_POT.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.UNFIRED_BOWL.id(), Optional.of(false))) {
+				Point location = Point.location(player.getX(), player.getY());
+				doDoor(obj, player);
+				if (!player.getLocation().equals(location)) {
+					player.getCarriedItems().remove(new Item(ItemId.WIZARDS_MIND_BOMB.id()));
+					player.getCarriedItems().remove(new Item(ItemId.SILK.id()));
+					player.getCarriedItems().remove(new Item(ItemId.LOBSTER_POT.id()));
+					player.getCarriedItems().remove(new Item(ItemId.UNFIRED_BOWL.id()));
+					player.getCache().store("dwarven_unlocked", true);
 				}
-			} else if (p.getX() <= 258) {
-				doDoor(obj, p);
+			} else if (player.getX() <= 258) {
+				doDoor(obj, player);
 			} else {
-				p.message("the door is locked");
+				player.message("the door is locked");
 			}
 		} else if (obj.getID() == 58) {
 			//from side of crandor
-			if (p.getY() <= 3517) {
-				p.message("You just went through a secret door");
-				if (!p.getCache().hasKey("crandor_shortcut")) {
-					p.message("You remember where the door is for future use");
-					p.getCache().store("crandor_shortcut", true);
+			if (player.getY() <= 3517) {
+				player.message("You just went through a secret door");
+				if (!player.getCache().hasKey("crandor_shortcut")) {
+					player.message("You remember where the door is for future use");
+					player.getCache().store("crandor_shortcut", true);
 				}
-				doDoor(obj, p, 11);
+				doDoor(obj, player, 11);
 			} else {
-				if (p.getCache().hasKey("crandor_shortcut")) {
-					p.message("You just went through a secret door");
-					doDoor(obj, p, 11);
+				if (player.getCache().hasKey("crandor_shortcut")) {
+					player.message("You just went through a secret door");
+					doDoor(obj, player, 11);
 				} else {
-					p.message("nothing interesting happens");
+					player.message("nothing interesting happens");
 				}
 			}
 		}
 		//Door of Elvarg chamber
 		else if (obj.getID() == 59) {
-			if (p.getQuestStage(this) == 3 || p.getX() >= 414) {
-				doDoor(obj, p);
+			if (player.getQuestStage(this) == 3 || player.getX() >= 414) {
+				doDoor(obj, player);
 			} else {
-				p.playerServerMessage(MessageType.QUEST, "the door is locked");
+				player.playerServerMessage(MessageType.QUEST, "the door is locked");
 			}
 		} else if (obj.getID() == 60) {
-			p.message("Nothing interesting happens");
+			player.message("Nothing interesting happens");
 		}
 	}
 
@@ -488,16 +484,16 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public void onUseInv(Player p, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
 				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId())) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
-				&& p.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
-				remove(p, ItemId.MAP_PIECE_1.id(), 1);
-				remove(p, ItemId.MAP_PIECE_2.id(), 1);
-				remove(p, ItemId.MAP_PIECE_3.id(), 1);
-				give(p, ItemId.MAP.id(), 1);
+			if (player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
+				player.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_1.id()));
+				player.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_2.id()));
+				player.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_3.id()));
+				give(player, ItemId.MAP.id(), 1);
 			}
 		}
 	}
@@ -509,47 +505,47 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if ((obj.getID() == 226 || obj.getID() == 232) && item.getCatalogId() == ItemId.PLANK.id()) {
-			if (p.getCache().hasKey("lumb_lady") && p.getCache().getInt("lumb_lady") == CRANDOR) {
-				p.message("The ship doesn't seem easily repairable at the moment");
+			if (player.getCache().hasKey("lumb_lady") && player.getCache().getInt("lumb_lady") == CRANDOR) {
+				player.message("The ship doesn't seem easily repairable at the moment");
 			} else {
-				if (p.getCache().hasKey("crandor_shortcut")) {
-					p.message("You don't need to mess about with broken ships");
-					p.message("Now you have found that secret passage from Karamja");
-				} else if (!p.getCache().hasKey("ship_repair") && ifheld(p, ItemId.NAILS.id(), 4)
-					&& p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
-					p.message("You hammer the plank over the hole");
-					p.message("You still need more planks to close the hole completely");
-					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
-					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
-					p.getCache().set("ship_repair", 1);
-				} else if (ifheld(p, ItemId.NAILS.id(), 4) && p.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
-					int planks_added = p.getCache().getInt("ship_repair");
-					p.message("You hammer the plank over the hole");
-					p.getCarriedItems().remove(ItemId.NAILS.id(), 4);
-					p.getCarriedItems().remove(ItemId.PLANK.id(), 1);
+				if (player.getCache().hasKey("crandor_shortcut")) {
+					player.message("You don't need to mess about with broken ships");
+					player.message("Now you have found that secret passage from Karamja");
+				} else if (!player.getCache().hasKey("ship_repair") && ifheld(player, ItemId.NAILS.id(), 4)
+					&& player.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
+					player.message("You hammer the plank over the hole");
+					player.message("You still need more planks to close the hole completely");
+					player.getCarriedItems().remove(new Item(ItemId.NAILS.id(), 4));
+					player.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
+					player.getCache().set("ship_repair", 1);
+				} else if (ifheld(player, ItemId.NAILS.id(), 4) && player.getCarriedItems().hasCatalogID(ItemId.PLANK.id(), Optional.of(false))) {
+					int planks_added = player.getCache().getInt("ship_repair");
+					player.message("You hammer the plank over the hole");
+					player.getCarriedItems().remove(new Item(ItemId.NAILS.id(), 4));
+					player.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
 					if (planks_added + 1 == 3) {
-						p.getCache().remove("ship_repair");
-						p.getCache().store("ship_fixed", true);
-						p.message("You board up the hole in the ship");
-						p.teleport(281, 3493, false);
+						player.getCache().remove("ship_repair");
+						player.getCache().store("ship_fixed", true);
+						player.message("You board up the hole in the ship");
+						player.teleport(281, 3493, false);
 					} else {
-						p.getCache().set("ship_repair", planks_added + 1);
-						p.message("You still need more planks to close the hole completely");
+						player.getCache().set("ship_repair", planks_added + 1);
+						player.message("You still need more planks to close the hole completely");
 					}
-				} else if (!ifheld(p, ItemId.NAILS.id(), 4)) {
-					p.message("You need 4 steel nails to attach the plank with");
-				} else if (!p.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
-					p.message("You need a hammer to hammer the nails in with");
+				} else if (!ifheld(player, ItemId.NAILS.id(), 4)) {
+					player.message("You need 4 steel nails to attach the plank with");
+				} else if (!player.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
+					player.message("You need a hammer to hammer the nails in with");
 				} else {
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 				}
 			}
 		}
 		//only accept planks used
 		else if (obj.getID() == 226 || obj.getID() == 232) {
-			p.message("Nothing interesting happens");
+			player.message("Nothing interesting happens");
 		}
 	}
 

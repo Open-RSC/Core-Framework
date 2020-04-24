@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Obli implements ShopInterface,
 	TalkNpcTrigger {
@@ -29,24 +27,24 @@ public class Obli implements ShopInterface,
 		new Item(ItemId.MACHETTE.id(), 50));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.OBLI.id()) {
-			npcsay(p, n, "Welcome to Obli's General Store Bwana!",
+			npcsay(player, n, "Welcome to Obli's General Store Bwana!",
 				"Would you like to see my items?");
-			int menu = Functions.multi(p, n,
+			int menu = multi(player, n,
 				"Yes please!",
 				"No, but thanks for the offer.");
 			if (menu == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (menu == 1) {
-				npcsay(p, n, "That's fine and thanks for your interest.");
+				npcsay(player, n, "That's fine and thanks for your interest.");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OBLI.id();
 	}
 

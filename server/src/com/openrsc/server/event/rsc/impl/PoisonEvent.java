@@ -5,9 +5,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
-/**
- * @author n0m
- */
 public class PoisonEvent extends GameTickEvent {
 
 	private Mob mob;

@@ -8,18 +8,13 @@ import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
+import java.util.ArrayList;
+
 /**
- * <p>
- * A <code>WalkingQueue</code> stores steps the client needs to walk and allows
+ * A WalkingQueue stores steps the client needs to walk and allows
  * this queue of steps to be modified.
- * </p>
- *
- * <p>
- * The class will also process these steps when {@link #processNextMovement()}
+ * The class will also process these steps when processNextMovement()
  * is called. This should be called once per server cycle.
- * </p>
- *
- * @author Graham Edgecombe
  */
 public class WalkingQueue {
 
@@ -63,17 +58,22 @@ public class WalkingQueue {
 			if (DEBUG && mob.isPlayer()) System.out.println("Failed adjacent check, not pathing.");
 			return;
 		}
+
+		mob.face(Point.location(destX, destY));
+
 		if (mob.isNpc()) {
 			NPCLoc loc = ((Npc) mob).getLoc();
 			if (Point.location(destX, destY).inBounds(loc.minX() - 12, loc.minY() - 12,
 				loc.maxX() + 12, loc.maxY() + 12) || (destX == 0 && destY == 0)) {
+				mob.getWorld().removeNpcPosition((Npc) mob);
 				mob.setLocation(Point.location(destX, destY));
+				mob.getWorld().setNpcPosition((Npc) mob);
 			}
 		}
 		else {
-			Player p = (Player) mob;
-			p.setLocation(Point.location(destX, destY));
-			p.stepIncrementActivity();
+			Player player = (Player) mob;
+			player.setLocation(Point.location(destX, destY));
+			player.stepIncrementActivity();
 		}
 
 	}
@@ -189,7 +189,6 @@ public class WalkingQueue {
 	}
 
 	private boolean isMobBlocking(int x, int y) {
-		Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 
@@ -198,7 +197,8 @@ public class WalkingQueue {
 				return false;
 		}
 
-		Npc npc = region.getNpc(x, y);
+		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
+		Npc npc = npcsOnLoc != null && npcsOnLoc.size() > 0 ? npcsOnLoc.get(0) : null;
 
 		/*
 		 * NPC blocking config controlled
@@ -224,16 +224,22 @@ public class WalkingQueue {
 		}
 
 		if (mob.isNpc()) {
-			Player p = region.getPlayer(x, y);
-			return p != null;
+			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
+			Player player = region.getPlayer(x, y);
+			return player != null;
 		}
 		return false;
 	}
 
 	public void reset() {
 		path = null;
-		if (this.mob.isPlayer() && this.mob.getDropItemEvent() != null) {
-			this.mob.runDropEvent(true);
+		if (this.mob.isPlayer()) {
+			if (this.mob.getDropItemEvent() != null) {
+				this.mob.runDropEvent(true);
+			}
+		}
+		if (this.mob.getTalkToNpcEvent() != null) {
+			this.mob.runTalkToNpcEvent();
 		}
 	}
 

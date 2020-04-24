@@ -54,21 +54,21 @@ public final class GameStateUpdater {
 
 
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
-	public void sendUpdatePackets(Player p) {
+	public void sendUpdatePackets(Player player) {
 		// TODO: Should be private
 		try {
-			updatePlayers(p);
-			updatePlayerAppearances(p);
-			updateNpcs(p);
-			updateNpcAppearances(p);
-			updateGameObjects(p);
-			updateWallObjects(p);
-			updateGroundItems(p);
-			sendClearLocations(p);
-			updateTimeouts(p);
+			updatePlayers(player);
+			updatePlayerAppearances(player);
+			updateNpcs(player);
+			updateNpcAppearances(player);
+			updateGameObjects(player);
+			updateWallObjects(player);
+			updateGroundItems(player);
+			sendClearLocations(player);
+			updateTimeouts(player);
 		} catch (Exception e) {
 			LOGGER.catching(e);
-			p.unregister(true, "Exception while updating player " + p.getUsername());
+			player.unregister(true, "Exception while updating player " + player.getUsername());
 		}
 	}
 
@@ -647,17 +647,17 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	protected void sendClearLocations(Player p) {
-		if (p.getLocationsToClear().size() > 0) {
+	protected void sendClearLocations(Player player) {
+		if (player.getLocationsToClear().size() > 0) {
 			PacketBuilder packetBuilder = new PacketBuilder(211);
-			for (Point point : p.getLocationsToClear()) {
-				int offsetX = point.getX() - p.getX();
-				int offsetY = point.getY() - p.getY();
+			for (Point point : player.getLocationsToClear()) {
+				int offsetX = point.getX() - player.getX();
+				int offsetY = point.getY() - player.getY();
 				packetBuilder.writeShort(offsetX);
 				packetBuilder.writeShort(offsetY);
 			}
-			p.getLocationsToClear().clear();
-			p.write(packetBuilder.toPacket());
+			player.getLocationsToClear().clear();
+			player.write(packetBuilder.toPacket());
 		}
 	}
 
@@ -687,9 +687,9 @@ public final class GameStateUpdater {
 
 	protected final long updateClients() {
 		final long updateClientsStart	= System.currentTimeMillis();
-		for (Player p : players) {
-			sendUpdatePackets(p);
-			p.process();
+		for (Player player : players) {
+			sendUpdatePackets(player);
+			player.process();
 		}
 		final long updateClientsEnd		= System.currentTimeMillis();
 		return updateClientsEnd - updateClientsStart;
@@ -727,10 +727,10 @@ public final class GameStateUpdater {
 
 	protected final long executeWalkToActions() {
 		final long executeWalkToActionsStart	= System.currentTimeMillis();
-		for (Player p : players) {
-			if (p.getWalkToAction() != null) {
-				if (p.getWalkToAction().shouldExecute()) {
-					p.getWalkToAction().execute();
+		for (Player player : players) {
+			if (player.getWalkToAction() != null) {
+				if (player.getWalkToAction().shouldExecute()) {
+					player.getWalkToAction().execute();
 				}
 			}
 		}
@@ -767,39 +767,39 @@ public final class GameStateUpdater {
 	 */
 	protected final long processMessageQueues() {
 		final long processMessageQueuesStart	= System.currentTimeMillis();
-		for (Player p : players) {
-			PrivateMessage pm = p.getNextPrivateMessage();
+		for (Player player : players) {
+			PrivateMessage pm = player.getNextPrivateMessage();
 			if (pm != null) {
 				Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
 				if (affectedPlayer != null) {
-					if ((affectedPlayer.getSocial().isFriendsWith(p.getUsernameHash()) || !affectedPlayer.getSettings()
+					if ((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) || !affectedPlayer.getSettings()
 						.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
-						&& !affectedPlayer.getSocial().isIgnoring(p.getUsernameHash()) || p.isMod()) {
-						ActionSender.sendPrivateMessageSent(p, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
-						ActionSender.sendPrivateMessageReceived(affectedPlayer, p, pm.getMessage(), false);
+						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
+						ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
+						ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
 					}
 
-					p.getWorld().getServer().getGameLogger().addQuery(new PMLog(p.getWorld(), p.getUsername(), pm.getMessage(),
+					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
 						DataConversions.hashToUsername(pm.getFriend())));
 				}
 			}
 		}
 		GlobalMessage gm = null;
 		while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
-			for (Player p : players) {
-				if (p == gm.getPlayer()) {
+			for (Player player : players) {
+				if (player == gm.getPlayer()) {
 					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
 				}
-				else if (!p.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
-						&& !p.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
-					ActionSender.sendPrivateMessageReceived(p, gm.getPlayer(), gm.getMessage(), true);
+				else if (!player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
+						&& !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+					ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
 				}
 			}
 		}
-		for (Player p : players) {
-			if (p.requiresOfferUpdate()) {
-				ActionSender.sendTradeItems(p);
-				p.setRequiresOfferUpdate(false);
+		for (Player player : players) {
+			if (player.requiresOfferUpdate()) {
+				ActionSender.sendTradeItems(player);
+				player.setRequiresOfferUpdate(false);
 			}
 		}
 		final long processMessageQueuesEnd	= System.currentTimeMillis();
@@ -812,20 +812,20 @@ public final class GameStateUpdater {
 	 */
 	protected final long processPlayers() {
 		final long processPlayersStart	= System.currentTimeMillis();
-		for (Player p : players) {
+		for (Player player : players) {
 			// Checking login because we don't want to unregister more than once
-			if (p.isUnregistering() && p.isLoggedIn()) {
-				getServer().getWorld().unregisterPlayer(p);
+			if (player.isUnregistering() && player.isLoggedIn()) {
+				getServer().getWorld().unregisterPlayer(player);
 				continue;
 			}
 
 			// Only do the walking tick here if the Players' walking tick matches the game tick
 			if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
-				p.updatePosition();
+				player.updatePosition();
 			}
 
-			if (p.getUpdateFlags().hasAppearanceChanged()) {
-				p.incAppearanceID();
+			if (player.getUpdateFlags().hasAppearanceChanged()) {
+				player.incAppearanceID();
 			}
 		}
 		final long processPlayersEnd	= System.currentTimeMillis();

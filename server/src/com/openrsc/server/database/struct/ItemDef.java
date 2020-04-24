@@ -21,4 +21,5 @@ public class ItemDef {
 	public int magicBonus;
 	public int prayerBonus;
 	public int basePrice;
+	public boolean isNoteable;
 }

@@ -17,49 +17,6 @@ package com.openrsc.server.util;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 
-/**
- * BCrypt implements OpenBSD-style Blowfish password hashing using
- * the scheme described in "A Future-Adaptable Password Scheme" by
- * Niels Provos and David Mazieres.
- * <p>
- * This password hashing system tries to thwart off-line password
- * cracking using a computationally-intensive hashing algorithm,
- * based on Bruce Schneier's Blowfish cipher. The work factor of
- * the algorithm is parameterised, so it can be increased as
- * computers get faster.
- * <p>
- * Usage is really simple. To hash a password for the first time,
- * call the hashpw method with a random salt, like this:
- * <p>
- * <code>
- * String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt()); <br />
- * </code>
- * <p>
- * To check whether a plaintext password matches one that has been
- * hashed previously, use the checkpw method:
- * <p>
- * <code>
- * if (BCrypt.checkpw(candidate_password, stored_hash))<br />
- * &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("It matches");<br />
- * else<br />
- * &nbsp;&nbsp;&nbsp;&nbsp;System.out.println("It does not match");<br />
- * </code>
- * <p>
- * The gensalt() method takes an optional parameter (log_rounds)
- * that determines the computational complexity of the hashing:
- * <p>
- * <code>
- * String strong_salt = BCrypt.gensalt(10)<br />
- * String stronger_salt = BCrypt.gensalt(12)<br />
- * </code>
- * <p>
- * The amount of work increases exponentially (2**log_rounds), so 
- * each increment is twice as much work. The default log_rounds is
- * 10, and the valid range is 4 to 30.
- *
- * @author Damien Miller
- * @version 0.2
- */
 public class BCrypt {
 	// BCrypt parameters
 	private static final int GENSALT_DEFAULT_LOG2_ROUNDS = 10;

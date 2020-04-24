@@ -23,7 +23,7 @@ public final class GrumsGoldShop implements ShopInterface,
 		new Item(ItemId.GOLD_AMULET.id(), 0), new Item(ItemId.SAPPHIRE_AMULET.id(), 0));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.GRUM.id();
 	}
 
@@ -38,19 +38,19 @@ public final class GrumsGoldShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Would you like to buy or sell some gold jewellery?");
-		int option = multi(p, n, false, //do not send over
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy or sell some gold jewellery?");
+		int option = multi(player, n, false, //do not send over
 				"Yes please", "No, I'm not that rich");
 		switch (option) {
 			case 0:
-				say(p, n, "Yes Please");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "Yes Please");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 			case 1:
-				say(p, n, "No, I'm not that rich");
-				npcsay(p, n, "Get out then we don't want any riff-raff in here");
+				say(player, n, "No, I'm not that rich");
+				npcsay(player, n, "Get out then we don't want any riff-raff in here");
 				break;
 		}
 

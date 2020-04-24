@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.fishing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
@@ -10,7 +10,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -73,7 +72,7 @@ public class Fishing implements OpLocTrigger {
 			}
 		}
 		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
-			Functions.mes(player, "that's enough fishing for now",
+			mes(player, "that's enough fishing for now",
 					"go through the next door to continue the tutorial");
 			return;
 		}
@@ -110,7 +109,7 @@ public class Fishing implements OpLocTrigger {
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		thinkbubble(player, new Item(netId));
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Fishing", Formulae.getRepeatTimes(player, Skills.FISHING), true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Fishing", Formulae.getRepeatTimes(player, Skills.FISHING), true) {
 			@Override
 			public void action() {
 				try {
@@ -155,7 +154,7 @@ public class Fishing implements OpLocTrigger {
 								Item bait = getOwner().getCarriedItems().getInventory().get(idx);
 								int newCount = bait.getAmount() - 1;
 								if (newCount <= 0) {
-									getOwner().getCarriedItems().getInventory().remove(idx);
+									getOwner().getCarriedItems().remove(new Item(idx));
 								} else {
 									bait.changeAmount(getOwner().getWorld().getServer().getDatabase(),-1);
 								}

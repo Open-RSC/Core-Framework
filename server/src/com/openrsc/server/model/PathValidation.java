@@ -7,9 +7,6 @@ import com.openrsc.server.util.rsc.CollisionFlag;
 import java.util.Deque;
 import java.util.LinkedList;
 
-/**
- * @author Graham
- */
 public class PathValidation {
 
 	/* Used for non-walking specific pathing:

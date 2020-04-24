@@ -15,8 +15,8 @@ import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class AttackHandler implements PacketHandler {
-	public void handlePacket(Packet p, Player player) throws Exception {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		int pID = packet.getID();
 		if (player.isBusy()) {
 			if (player.inCombat())
 				player.message("You are already busy fighting");
@@ -29,7 +29,7 @@ public class AttackHandler implements PacketHandler {
 
 		player.resetAll();
 		Mob affectedMob = null;
-		int serverIndex = p.readShort();
+		int serverIndex = packet.readShort();
 		int packetOne = OpcodeIn.PLAYER_ATTACK.getOpcode();
 		int packetTwo = OpcodeIn.NPC_ATTACK1.getOpcode();
 

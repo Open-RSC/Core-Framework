@@ -17,11 +17,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.*;
 
-/**
- * @author n0m
- */
 public class RangeEvent extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
@@ -107,7 +104,7 @@ public class RangeEvent extends GameTickEvent {
 		} else {
 			getPlayerOwner().resetPath();
 
-			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
+			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (canShoot) {
 				if (!PathValidation.checkPath(getPlayerOwner().getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
 					getPlayerOwner().message("I can't get a clear shot from here");
@@ -115,7 +112,9 @@ public class RangeEvent extends GameTickEvent {
 					stop();
 					return;
 				}
-				getPlayerOwner().face(target);
+				//getPlayerOwner().face(target);
+				//authentic player always faced NW
+				getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
 				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
 				if (target.isPlayer()) {
@@ -178,7 +177,7 @@ public class RangeEvent extends GameTickEvent {
 						getPlayerOwner().resetRange();
 						return;
 					}
-					getPlayerOwner().getCarriedItems().getEquipment().remove(ammo.getCatalogId(), 1);
+					getPlayerOwner().getCarriedItems().getEquipment().remove(ammo, 1);
 					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
 				} else {
 					for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
@@ -230,8 +229,8 @@ public class RangeEvent extends GameTickEvent {
 								return;
 							}
 						}
-
-						getPlayerOwner().getCarriedItems().remove(arrow.getCatalogId(), 1, true);
+						Item toRemove = new Item(arrow.getCatalogId(), 1, false, arrow.getItemId());
+						getPlayerOwner().getCarriedItems().remove(toRemove);
 						break;
 					}
 				}

@@ -8,13 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
-
+import static com.openrsc.server.plugins.Functions.*;
 public class Jiminua implements ShopInterface,
 	TalkNpcTrigger {
 
@@ -29,22 +26,22 @@ public class Jiminua implements ShopInterface,
 		new Item(ItemId.MACHETTE.id(), 50));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.JIMINUA.id()) {
-			npcsay(p, n, "Welcome to the Jungle Store, Can I help you at all?");
-			int menu = Functions.multi(p, n,
+			npcsay(player, n, "Welcome to the Jungle Store, Can I help you at all?");
+			int menu = multi(player, n,
 				"Yes please. What are you selling?",
 				"No thanks");
 			if (menu == 0) {
-				npcsay(p, n, "Take yourself a good look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Take yourself a good look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.JIMINUA.id();
 	}
 

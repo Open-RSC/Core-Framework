@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-/**
- * @author n0m
- */
 public class HealEventNpc extends GameTickEvent {
 
 	private HashMap<Integer, Integer> restoringStats = new HashMap<Integer, Integer>();

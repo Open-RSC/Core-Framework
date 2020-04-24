@@ -6,7 +6,7 @@ import com.openrsc.server.model.world.World;
 public abstract class MiniEvent extends SingleEvent {
 
 	protected MiniEvent(final World world, final Player owner, final String descriptor) {
-		super(world, owner, 600, descriptor);
+		super(world, owner, world.getServer().getConfig().GAME_TICK, descriptor);
 	}
 
 	protected MiniEvent(final World world, final Player owner, final int delay, final String descriptor) {

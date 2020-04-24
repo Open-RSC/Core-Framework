@@ -1,16 +1,13 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.crafting;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.give;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.remove;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class BattlestaffCrafting implements UseInvTrigger {
 
@@ -24,28 +21,29 @@ public class BattlestaffCrafting implements UseInvTrigger {
 	}
 
 	@Override
-	public void onUseInv(Player p, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		Battlestaff combine = null;
 		for (Battlestaff c : Battlestaff.values()) {
 			if (c.isValid(item1.getCatalogId(), item2.getCatalogId())) {
 				combine = c;
 			}
 		}
-		if (p.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
-			p.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
+		if (player.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
+			player.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
-		if (Functions.remove(p, combine.itemID, 1) && Functions.remove(p, combine.itemIDOther, 1)) {
+		if (player.getCarriedItems().remove(new Item(combine.itemID)) != -1
+			&& player.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
 			if (combine.messages.length > 1)
-				mes(p, combine.messages[0]);
+				mes(player, combine.messages[0]);
 			else
-				p.message(combine.messages[0]);
+				player.message(combine.messages[0]);
 
-			give(p, combine.resultItem, 1);
-			p.incExp(Skills.CRAFTING, combine.experience, true);
+			give(player, combine.resultItem, 1);
+			player.incExp(Skills.CRAFTING, combine.experience, true);
 
 			if (combine.messages.length > 1)
-				p.message(combine.messages[1]);
+				player.message(combine.messages[1]);
 		}
 	}
 

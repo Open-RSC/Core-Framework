@@ -11,10 +11,10 @@ public interface IndirectTalkToNpcTrigger {
      * @param p
      * @param n
      */
-    void onIndirectTalkToNpc(Player p, Npc n);
+    void onIndirectTalkToNpc(Player player, Npc n);
 
 	/**
 	 * Return true to block a player from indirectly talking to a npc
 	 */
-	boolean blockIndirectTalkToNpc(Player p, Npc n);
+	boolean blockIndirectTalkToNpc(Player player, Npc n);
 }

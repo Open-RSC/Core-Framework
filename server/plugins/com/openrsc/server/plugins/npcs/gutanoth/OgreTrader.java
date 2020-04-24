@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class OgreTrader implements ShopInterface, TalkNpcTrigger {
 
@@ -28,22 +26,22 @@ public class OgreTrader implements ShopInterface, TalkNpcTrigger {
 		new Item(ItemId.SLEEPING_BAG.id(), 10));
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OGRE_TRADER_GENSTORE.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "What the human be wantin'");
-		int menu = Functions.multi(p, n,
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "What the human be wantin'");
+		int menu = multi(player, n,
 			"Can I see what you are selling ?",
 			"I don't need anything");
 		if (menu == 0) {
-			npcsay(p, n, "I suppose so...");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "I suppose so...");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (menu == 1) {
-			npcsay(p, n, "As you wish");
+			npcsay(player, n, "As you wish");
 		}
 	}
 

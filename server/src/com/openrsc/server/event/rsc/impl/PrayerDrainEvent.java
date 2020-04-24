@@ -24,7 +24,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 		for (Entry<PrayerDef, Long> entry : activePrayers.entrySet()) {
 			PrayerDef def = entry.getKey();
 			long lastDrain = entry.getValue();
-			int drainDelay = (int) (180000.0 / def.getDrainRate() * (1 + getPlayerOwner().getPrayerPoints() / 30.0));
+			int drainDelay = (int) ((300.0 * getWorld().getServer().getConfig().GAME_TICK / def.getDrainRate()) * (1 + (getPlayerOwner().getPrayerPoints() - 1) / 32.0));
 			if (System.currentTimeMillis() - lastDrain >= drainDelay) {
 				entry.setValue(System.currentTimeMillis());
 				drainPrayer();

@@ -1,8 +1,5 @@
 package com.openrsc.server.external;
 
-/**
- * @author ephemeral
- */
 public final class ItemDefinition extends EntityDef {
 	/**
 	 * The command for an <code>InventoryItem</code>,
@@ -149,10 +146,19 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	private int wornItemIndex;
 
+	/**
+	 * The noteability verifier-status for an
+	 * <code>InventoryItem</code>, or a
+	 * <code>GroundItem</code> represented by
+	 * this <code>ItemDefinition</code>.
+	 */
+	private boolean isNoteable;
+
 
 	/**
 	 * Creates a new default instance of this <code>ItemDefinition</code>.
 	 *
+	 * @param isNoteable
 	 * @param basePrice
 	 * @param prayerBonus
 	 * @param magicBonus
@@ -176,7 +182,7 @@ public final class ItemDefinition extends EntityDef {
 	public ItemDefinition(int id, String name, String description, String[] command, boolean isFemaleOnly, boolean isMembersOnly,
 						  boolean isStackable, boolean isUntradable, boolean isWearable, int appearanceID, int wearableID,
 						  int wearSlot, int requiredLevel, int requiredSkillID, int armourBonus, int weaponAimBonus,
-						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice) {
+						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice, boolean isNoteable) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -197,6 +203,7 @@ public final class ItemDefinition extends EntityDef {
 		this.magicBonus = magicBonus;
 		this.prayerBonus = prayerBonus;
 		this.defaultPrice = basePrice;
+		this.isNoteable = isNoteable;
 	}
 
 
@@ -417,7 +424,7 @@ public final class ItemDefinition extends EntityDef {
 	 * @return Returns the noteability
 	 * status.
 	 */
-	public final boolean isNoteable() { return !isStackable && !isUntradable; }
+	public final boolean isNoteable() { return !isStackable && (!isUntradable || isNoteable); }
 
 
 	@Deprecated

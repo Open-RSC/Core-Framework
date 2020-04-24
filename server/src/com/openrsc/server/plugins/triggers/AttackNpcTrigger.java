@@ -4,6 +4,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface AttackNpcTrigger {
-	void onAttackNpc(Player p, Npc affectedmob);
-	boolean blockAttackNpc(Player p, Npc affectedmob);
+	void onAttackNpc(Player player, Npc affectedmob);
+	boolean blockAttackNpc(Player player, Npc affectedmob);
 }

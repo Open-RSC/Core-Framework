@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.cooking;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -33,39 +32,39 @@ public class ObjectCooking implements UseLocTrigger {
 			handleCooking(item, owner, object);
 	}
 
-	private void handleCooking(final Item item, Player p,
+	private void handleCooking(final Item item, Player player,
 							   final GameObject object) {
 
 		// Tutorial Meat
 		if(object.getID() == 491) {
 			if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
-				p.setBusy(true);
-				thinkbubble(p, item);
-				p.playSound("cooking");
-				p.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
-				if(p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 25) {
-					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
-					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
-					Functions.mes(p, "sometimes you will burn food",
+				player.setBusy(true);
+				thinkbubble(player, item);
+				player.playSound("cooking");
+				player.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
+				if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 25) {
+					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
+					player.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					mes(player, "sometimes you will burn food",
 							"As your cooking level increases this will happen less",
 							"Now speak to the cooking instructor again");
-					p.getCache().set("tutorial", 30);
-				} else if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") == 30) {
-					final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
-					p.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
-					Functions.mes(p, "Now speak to the cooking instructor again");
-					p.incExp(Skills.COOKING, cookingDef.getExp(), true);
-					p.getCache().set("tutorial", 31);
-					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
+					player.getCache().set("tutorial", 30);
+				} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 30) {
+					final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
+					player.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
+					mes(player, "Now speak to the cooking instructor again");
+					player.incExp(Skills.COOKING, cookingDef.getExp(), true);
+					player.getCache().set("tutorial", 31);
+					player.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
 
 				} else {
 					//per-wiki says rest of meats are burned
-					p.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
-					p.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
+					player.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
 				}
-				p.setBusy(false);
+				player.setBusy(false);
 			} else {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 			}
 			return;
 		}
@@ -73,82 +72,82 @@ public class ObjectCooking implements UseLocTrigger {
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274)
-				mes(p, 1200, "You cook the meat on the fire...");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the fire...");
 			else
-				mes(p, 1200, "You cook the meat on the stove...");
-			remove(p, ItemId.RAW_OOMLIE_MEAT.id(), 1);
-			give(p, ItemId.BURNTMEAT.id(), 1);
-			mes(p, 1200, "This meat is too delicate to cook like this.");
-			mes(p, 1200, "Perhaps you can wrap something around it to protect it from the heat.");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the stove...");
+			player.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
+			give(player, ItemId.BURNTMEAT.id(), 1);
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This meat is too delicate to cook like this.");
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
 		}
 
 		// Poison (Hazeel Cult)
 		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
-			if (p.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && p.getCache().hasKey("evil_side")) {
-				Functions.mes(p, "you poor the poison into the hot pot",
+			if (player.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && player.getCache().hasKey("evil_side")) {
+				mes(player, "you poor the poison into the hot pot",
 					"the poison desolves into the soup");
-				remove(p, ItemId.POISON.id(), 1);
-				p.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
+				player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
+				player.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
 			} else {
-				p.message("nothing interesting happens");
+				player.message("nothing interesting happens");
 			}
 		} else if (item.getCatalogId() == ItemId.UNCOOKED_SWAMP_PASTE.id()) {
-			cookMethod(p, ItemId.UNCOOKED_SWAMP_PASTE.id(), ItemId.SWAMP_PASTE.id(), false, "you warm the paste over the fire", "it thickens into a sticky goo");
+			cookMethod(player, ItemId.UNCOOKED_SWAMP_PASTE.id(), ItemId.SWAMP_PASTE.id(), false, "you warm the paste over the fire", "it thickens into a sticky goo");
 		} else if (item.getCatalogId() == ItemId.SEAWEED.id()) { // Seaweed (Glass)
-			cookMethod(p, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), true, "You put the seaweed on the "
+			cookMethod(player, ItemId.SEAWEED.id(), ItemId.SODA_ASH.id(), true, "You put the seaweed on the "
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
 		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
-			if (p.getQuestStage(Quests.WITCHS_POTION) != -1) {
-				thinkbubble(p, item);
-				mes(p, 1800, cookingOnMessage(p, item, object, false));
-				remove(p, ItemId.COOKEDMEAT.id(), 1);
-				give(p, ItemId.BURNTMEAT.id(), 1);
-				p.playerServerMessage(MessageType.QUEST, "you burn the meat");
+			if (player.getQuestStage(Quests.WITCHS_POTION) != -1) {
+				thinkbubble(player, item);
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, cookingOnMessage(player, item, object, false));
+				player.getCarriedItems().remove(new Item(ItemId.COOKEDMEAT.id()));
+				give(player, ItemId.BURNTMEAT.id(), 1);
+				player.playerServerMessage(MessageType.QUEST, "you burn the meat");
 			} else {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 			}
 		} else {
-			final ItemCookingDef cookingDef = item.getCookingDef(p.getWorld());
+			final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 			if (cookingDef == null) {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 				return;
 			}
-			if (p.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
-				String itemName = item.getDef(p.getWorld()).getName().toLowerCase();
+			if (player.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
+				String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 				itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
-				p.playerServerMessage(MessageType.QUEST, "You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
+				player.playerServerMessage(MessageType.QUEST, "You need a cooking level of " + cookingDef.getReqLevel() + " to cook " + itemName);
 				return;
 			}
 			if(object.getID() == 11){
-				if (!p.withinRange(object, 2)) {
+				if (!player.withinRange(object, 2)) {
 					return;
 				}
 			} else {
-				if (!p.withinRange(object, 1)) {
+				if (!player.withinRange(object, 1)) {
 					return;
 				}
 			}
 			// Some need a RANGE not a FIRE
 			boolean needOven = false;
-			int timeToCook = p.getWorld().getServer().getConfig().GAME_TICK * 3;
+			int timeToCook = player.getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (isOvenFood(item)) {
 				needOven = true;
-				timeToCook = p.getWorld().getServer().getConfig().GAME_TICK * 5;
+				timeToCook = player.getWorld().getServer().getConfig().GAME_TICK * 5;
 			}
-			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id()))
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id()))
 				timeToCook *= 0.7;
 			if ((object.getID() == 97 || object.getID() == 274) && needOven) {
-				p.playerServerMessage(MessageType.QUEST, "You need a proper oven to cook this");
+				player.playerServerMessage(MessageType.QUEST, "You need a proper oven to cook this");
 				return;
 			}
 
 			if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT_PARCEL.id())
-				p.message("You prepare to cook the Oomlie meat parcel.");
+				player.message("You prepare to cook the Oomlie meat parcel.");
 			else
-				p.message(cookingOnMessage(p, item, object, needOven));
-			thinkbubble(p, item);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, timeToCook, "Cooking on Object", p.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+				player.message(cookingOnMessage(player, item, object, needOven));
+			thinkbubble(player, item);
+			player.setBatchEvent(new BatchEvent(player.getWorld(), player, timeToCook, "Cooking on Object", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
 				@Override
 				public void action() {
 					if (getOwner().getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
@@ -175,14 +174,14 @@ public class ObjectCooking implements UseLocTrigger {
 								|| item.getCatalogId() == ItemId.RAW_LAVA_EEL.id()
 								|| (item.getCatalogId() == ItemId.UNCOOKED_PITTA_BREAD.id() && getOwner().getSkills().getLevel(Skills.COOKING) >= 58)) {
 							getOwner().getCarriedItems().getInventory().add(cookedFood);
-							getOwner().message(cookedMessage(p, cookedFood, isOvenFood(item)));
+							getOwner().message(cookedMessage(player, cookedFood, isOvenFood(item)));
 							getOwner().incExp(Skills.COOKING, cookingDef.getExp(), true);
 						} else {
 							getOwner().getCarriedItems().getInventory().add(new Item(cookingDef.getBurnedId()));
 							if (cookedFood.getCatalogId() == ItemId.COOKEDMEAT.id()) {
 								getOwner().playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 							} else {
-								String food = cookedFood.getDef(p.getWorld()).getName().toLowerCase();
+								String food = cookedFood.getDef(player.getWorld()).getName().toLowerCase();
 								food = food.contains("pie") ? "pie" : food;
 								getOwner().playerServerMessage(MessageType.QUEST, "You accidentally burn the " + food);
 							}
@@ -217,27 +216,27 @@ public class ObjectCooking implements UseLocTrigger {
 		return cookingDef != null && Arrays.binarySearch(ids, obj.getID()) >= 0;
 	}
 
-	private void cookMethod(final Player p, final int itemID, final int product, final boolean hasBubble, final String... messages) {
-		p.setBatchEvent(new BatchEvent(p.getWorld(), p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", p.getCarriedItems().getInventory().countId(itemID), false) {
+	private void cookMethod(final Player player, final int itemID, final int product, final boolean hasBubble, final String... messages) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", player.getCarriedItems().getInventory().countId(itemID), false) {
 			@Override
 			public void action() {
-				if (p.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
+				if (player.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
 					if (hasBubble)
-						thinkbubble(p, new Item(itemID));
-					p.playSound("cooking");
-					Functions.mes(p, messages);
-					remove(p, itemID, 1);
-					give(p, product, 1);
+						thinkbubble(player, new Item(itemID));
+					player.playSound("cooking");
+					mes(player, messages);
+					player.getCarriedItems().remove(new Item(itemID));
+					give(player, product, 1);
 				} else {
-					p.message("You don't have all the ingredients");
+					player.message("You don't have all the ingredients");
 					interrupt();
 				}
 			}
 		});
 	}
 
-	private String cookingOnMessage(Player p, Item item, GameObject object, boolean needsOven) {
-		String itemName = item.getDef(p.getWorld()).getName().toLowerCase();
+	private String cookingOnMessage(Player player, Item item, GameObject object, boolean needsOven) {
+		String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 		itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 			itemName.contains("pie") ? "pie" :
 				itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
@@ -255,13 +254,13 @@ public class ObjectCooking implements UseLocTrigger {
 
 	}
 
-	private String cookedMessage(Player p, Item cookedFood, boolean needsOven) {
-		String message = "The " + cookedFood.getDef(p.getWorld()).getName().toLowerCase() + " is now nicely cooked";
+	private String cookedMessage(Player player, Item cookedFood, boolean needsOven) {
+		String message = "The " + cookedFood.getDef(player.getWorld()).getName().toLowerCase() + " is now nicely cooked";
 		if (cookedFood.getCatalogId() == ItemId.COOKEDMEAT.id()) {
 			message = "The meat is now nicely cooked";
 		}
 		if (needsOven) {
-			String cookedPastryFood = cookedFood.getDef(p.getWorld()).getName().toLowerCase();
+			String cookedPastryFood = cookedFood.getDef(player.getWorld()).getName().toLowerCase();
 			cookedPastryFood = cookedPastryFood.contains("pie") ? "pie" : cookedPastryFood;
 			message = "You remove the " + cookedPastryFood + " from the oven";
 		}

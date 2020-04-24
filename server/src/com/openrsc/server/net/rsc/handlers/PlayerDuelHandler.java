@@ -24,8 +24,8 @@ public class PlayerDuelHandler implements PacketHandler {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getTrade().isTradeActive();
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		int pID = packet.getID();
 		Player affectedPlayer = player.getDuel().getDuelRecipient();
 
 		if (player == affectedPlayer) {
@@ -60,15 +60,16 @@ public class PlayerDuelHandler implements PacketHandler {
 			return;
 		}
 
-		int packetOne = OpcodeIn.DUEL_DECLINED.getOpcode();
-		int packetTwo = OpcodeIn.DUEL_OFFER_ITEM.getOpcode();
-		int packetThree = OpcodeIn.DUEL_SECOND_ACCEPTED.getOpcode();
-		int packetFour = OpcodeIn.PLAYER_DUEL.getOpcode();
-		int packetFive = OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED.getOpcode();
-		int packetSix = OpcodeIn.DUEL_FIRST_ACCEPTED.getOpcode();
+		int duelDeclined = OpcodeIn.DUEL_DECLINED.getOpcode();
+		int duelOfferItem = OpcodeIn.DUEL_OFFER_ITEM.getOpcode();
+		int dualSecondAccept = OpcodeIn.DUEL_SECOND_ACCEPTED.getOpcode();
+		int duelInvite = OpcodeIn.PLAYER_DUEL.getOpcode();
+		int duelSetting = OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED.getOpcode();
+		int duelFirstAccept = OpcodeIn.DUEL_FIRST_ACCEPTED.getOpcode();
 
-		if (pID == packetFour) { // Sending duel request
-			affectedPlayer = player.getWorld().getPlayer(p.readShort());
+		if (pID == duelInvite) { // Sending duel request
+			int playerIndex = packet.readShort();
+			affectedPlayer = player.getWorld().getPlayer(playerIndex);
 			if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
 				|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
 				player.getDuel().setDuelRecipient(null);
@@ -131,7 +132,7 @@ public class PlayerDuelHandler implements PacketHandler {
 							+ "(level-" + player.getCombatLevel() + ")@whi@ wishes to duel with you",
 						player.getIcon());
 			}
-		} else if (pID == packetSix) { // Duel accepted
+		} else if (pID == duelFirstAccept) { // Duel accepted
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive()) {
@@ -148,7 +149,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				ActionSender.sendDuelConfirmScreen(player);
 				ActionSender.sendDuelConfirmScreen(affectedPlayer);
 			}
-		} else if (pID == packetThree) { // Confirm accepted
+		} else if (pID == dualSecondAccept) { // Confirm accepted
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive() || !player.getDuel().isDuelAccepted()
@@ -297,7 +298,7 @@ public class PlayerDuelHandler implements PacketHandler {
 					}
 				});
 			}
-		} else if (pID == packetOne) {
+		} else if (pID == duelDeclined) {
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive()) {
@@ -307,7 +308,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			}
 			affectedPlayer.message("Other player left duel screen");
 			player.getDuel().resetAll();
-		} else if (pID == packetTwo) { // Receive offered item data
+		} else if (pID == duelOfferItem) { // Receive offered item data
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive()
@@ -323,14 +324,13 @@ public class PlayerDuelHandler implements PacketHandler {
 			affectedPlayer.getDuel().setDuelAccepted(false);
 			affectedPlayer.getDuel().setDuelConfirmAccepted(false);
 
-			// ActionSender.sendDuelAcceptUpdate(player); this seems to be done
-			// client-side.
-			// ActionSender.sendDuelAcceptUpdate(affectedPlayer);
-
 			player.getDuel().resetDuelOffer();
-			int count = (int) p.readByte();
+			int count = packet.readByte();
 			for (int slot = 0; slot < count; slot++) {
-				Item tItem = new Item(p.readShort(), p.readInt(), p.readShort() == 1);
+				int catalogID = packet.readShort();
+				int amount = packet.readInt();
+				int noted = packet.readShort();
+				Item tItem = new Item(catalogID, amount, noted == 1);
 				if (tItem.getAmount() < 1) {
 					player.setSuspiciousPlayer(true, "duel item amount < 1");
 					continue;
@@ -359,7 +359,7 @@ public class PlayerDuelHandler implements PacketHandler {
 			}
 			ActionSender.sendDuelOpponentItems(affectedPlayer);
 			ActionSender.sendDuelOpponentItems(player);
-		} else if (pID == packetFive) { // Set duel options
+		} else if (pID == duelSetting) { // Set duel options
 			affectedPlayer = player.getDuel().getDuelRecipient();
 			if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 				|| !affectedPlayer.getDuel().isDuelActive()
@@ -378,12 +378,9 @@ public class PlayerDuelHandler implements PacketHandler {
 			affectedPlayer.getDuel().setDuelConfirmAccepted(false);
 			affectedPlayer.getDuel().setDuelAccepted(false);
 
-			// ActionSender.sendDuelAcceptUpdate(player); seems to be done
-			// serverside
-			// ActionSender.sendDuelAcceptUpdate(affectedPlayer);
-
+			// Read each setting and set them accordingly.
 			for (int i = 0; i < 4; i++) {
-				boolean b = p.readByte() == 1;
+				boolean b = packet.readByte() == 1;
 				player.getDuel().setDuelSetting(i, b);
 				affectedPlayer.getDuel().setDuelSetting(i, b);
 			}
@@ -413,10 +410,10 @@ public class PlayerDuelHandler implements PacketHandler {
 		}
 	}
 
-	private void unsetOptions(Player p) {
-		if (p == null) {
+	private void unsetOptions(Player player) {
+		if (player == null) {
 			return;
 		}
-		p.getDuel().resetAll();
+		player.getDuel().resetAll();
 	}
 }

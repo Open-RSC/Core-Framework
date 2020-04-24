@@ -26,7 +26,7 @@ public class MarketDatabase {
 			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement(
 				"INSERT INTO `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "auctions`(`itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time`) VALUES (?,?,?,?,?,?,?,?)");
-			statement.setInt(1, item.getItemID());
+			statement.setInt(1, item.getCatalogID());
 			statement.setInt(2, item.getAmount());
 			statement.setInt(3, item.getAmountLeft());
 			statement.setInt(4, item.getPrice());

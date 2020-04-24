@@ -6,19 +6,18 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class HeadWizard implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		if (p.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id()) {
-			if (getCurrentLevel(p, Skills.MAGIC) < 66) {
-				npcsay(p, n, "Hello, you need a magic level of 66 to get in here",
+	public void onTalkNpc(Player player, Npc n) {
+		if (player.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id()) {
+			if (getCurrentLevel(player, Skills.MAGIC) < 66) {
+				npcsay(player, n, "Hello, you need a magic level of 66 to get in here",
 						"The magical energy in here is unsafe for those below that level");
 			} else {
-				npcsay(p, n, "Hello welcome to the wizard's guild",
+				npcsay(player, n, "Hello welcome to the wizard's guild",
 						"Only accomplished wizards are allowed in here",
 						"Feel free to use any of our facilities");
 			}
@@ -26,8 +25,8 @@ public class HeadWizard implements TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
-		return p.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id();
+	public boolean blockTalkNpc(Player player, Npc n) {
+		return player.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id();
 	}
 
 }

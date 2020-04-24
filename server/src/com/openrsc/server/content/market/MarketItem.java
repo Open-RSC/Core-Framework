@@ -5,15 +5,15 @@ public class MarketItem {
 	// private static final int TIME_LIMIT = (60 * 60 * 24 * 5); // Number of hours an auction lasts until it expires - 5 days
 	private static final int TIME_LIMIT = Integer.MAX_VALUE;
 
-	private int auctionID, itemID, amount, amount_left, price;
+	private int auctionID, catalogID, amount, amount_left, price;
 	private String buyers;
 	private int seller;
 	private long time;
 	private String sellerName;
 
-	MarketItem(int auctionID, int itemID, int amount, int amount_left, int price, int seller, String sellerName, String buyers, long t) {
+	MarketItem(int auctionID, int catalogID, int amount, int amount_left, int price, int seller, String sellerName, String buyers, long t) {
 		this.auctionID = auctionID;
-		this.itemID = itemID;
+		this.catalogID = catalogID;
 		this.amount = amount;
 		this.setAmountLeft(amount_left);
 		this.price = price;
@@ -70,12 +70,12 @@ public class MarketItem {
 		return (int) (timeDiff / 60 / 60); // Displays in hours the remaining time left on an auction
 	}
 
-	public int getItemID() {
-		return itemID;
+	public int getCatalogID() {
+		return catalogID;
 	}
 
-	public void setItemID(int itemID) {
-		this.itemID = itemID;
+	public void setCatalogID(int catalogID) {
+		this.catalogID = catalogID;
 	}
 
 	public int getPrice() {

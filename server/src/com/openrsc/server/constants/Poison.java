@@ -2,10 +2,6 @@ package com.openrsc.server.constants;
 
 import java.util.HashMap;
 
-/**
- * Author: Kenix
- */
-
 public class Poison {
 	public static final int POISON_SCORPION = 271;
 	public static final int POISON_SPIDER = 292;

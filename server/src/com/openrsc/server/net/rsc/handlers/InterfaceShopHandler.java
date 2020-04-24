@@ -12,15 +12,13 @@ import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 
+import java.util.Optional;
+
 public final class InterfaceShopHandler implements PacketHandler {
 
-	/**
-	 * Author: Imposter
-	 */
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
-
-		int pID = p.getID();
+		int pID = packet.getID();
 		if (player.isBusy()) {
 			player.resetShop();
 			return;
@@ -33,29 +31,29 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
-		int packetOne = OpcodeIn.SHOP_CLOSE.getOpcode();
-		int packetTwo = OpcodeIn.SHOP_BUY.getOpcode();
-		int packetThree = OpcodeIn.SHOP_SELL.getOpcode();
+		int closeShop = OpcodeIn.SHOP_CLOSE.getOpcode();
+		int buyItem = OpcodeIn.SHOP_BUY.getOpcode();
+		int sellItem = OpcodeIn.SHOP_SELL.getOpcode();
 
-		if (pID == packetOne) { // Close shop
+		if (pID == closeShop) { // Close shop
 			player.resetShop();
 			return;
 		}
-		int itemID = p.readShort();
-		int shopAmount = p.readShort();
-		int amount = p.readShort();
-		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(itemID);
+		int categoryID = packet.readShort();
+		int shopAmount = packet.readShort();
+		int amount = packet.readShort();
+		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(categoryID);
 		if (def.isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
-		if (pID == packetTwo) { // Buy item
+		if (pID == buyItem) { // Buy item
 			int totalBought = 0;
 			int totalMoneySpent = 0;
 
-			int price = shop.getItemBuyPrice(itemID, def.getDefaultPrice(), 0);
+			int price = shop.getItemBuyPrice(categoryID, def.getDefaultPrice(), 0);
 			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) == price && player.getCarriedItems().getInventory().size() == 30 && amount == 1) {
-				if (shop.getItemCount(itemID) - totalBought < 1) {
+				if (shop.getItemCount(categoryID) - totalBought < 1) {
 					player.message("The shop has ran out of stock");
 					return;
 				}
@@ -65,18 +63,18 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 
 			for (int i = 0; i < amount; i++) {
-				Item itemBeingBought = new Item(itemID, 1);
+				Item itemBeingBought = new Item(categoryID);
 				if ((player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))
-					&& shop.getItemCount(itemID) > shop.getStock(itemID)) {
+					&& shop.getItemCount(categoryID) > shop.getStock(categoryID)) {
 					player.message("Iron Men may not buy items that are over-stocked in a shop.");
 					break;
 				}
-				if (shop.getItemCount(itemID) - totalBought < 1) {
+				if (shop.getItemCount(categoryID) - totalBought < 1) {
 					player.message("The shop has ran out of stock");
 					break;
 				}
-				price = shop.getItemBuyPrice(itemID, def.getDefaultPrice(), totalBought);
+				price = shop.getItemBuyPrice(categoryID, def.getDefaultPrice(), totalBought);
 				if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < (totalMoneySpent + price)) {
 					player.message("You don't have enough coins");
 					break;
@@ -96,62 +94,63 @@ public final class InterfaceShopHandler implements PacketHandler {
 				return;
 			}
 
-			shop.removeShopItem(new Item(itemID, totalBought));
-			player.getCarriedItems().remove(ItemId.COINS.id(), totalMoneySpent);
+			shop.removeShopItem(new Item(categoryID, totalBought));
+			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
 			int correctItemsBought = totalBought;
 			for (; totalBought > 0; totalBought--) {
-				player.getCarriedItems().getInventory().add(new Item(itemID, 1));
+				player.getCarriedItems().getInventory().add(new Item(categoryID));
 			}
 
 			player.playSound("coins");
 			player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " bought " + def.getName() + " x" + correctItemsBought + " for " + totalMoneySpent + "gp" + " at " + player.getLocation().toString()));
 
-		} else if (pID == packetThree) { // Sell item
-			if (def.isUntradable() || !shop.shouldStock(itemID)) {
+		} else if (pID == sellItem) { // Sell item
+			if (def.isUntradable() || !shop.shouldStock(categoryID)) {
 				player.message("This object can't be sold in shops");
 				return;
 			}
-			if (!shop.canHoldItem(new Item(itemID, 1))) {
+			if (!shop.canHoldItem(new Item(categoryID))) {
 				player.message("The shop is currently full!");
 				return;
 			}
 
+			// TODO: How to handle this case?
+			if (amount < 0) return;
+
 			int totalMoney = 0;
 			int totalSold = 0;
-			for (int i = 0; i < amount; i++) {
-			    int sellAmount = 0;
-				/* If no noted version can be removed */
-				if (player.getCarriedItems().remove(def.getNoteID(), 1) == -1) {
-					/* Try removing with original item ID */
-					if (player.getCarriedItems().remove(itemID, 1) == -1) {
-						/* Break, player doesn't have anything. */
-						player.message("You don't have that many items");
-						break;
-					}
-					//}
-
-					totalSold++;
-					/* if we are selling noted item, calculate price from the original item */
-					if (def.getOriginalItemID() != -1) {
-						sellAmount += shop.getItemSellPrice(def.getOriginalItemID(),
-							player.getWorld().getServer().getEntityHandler().getItemDef(def.getOriginalItemID()).getDefaultPrice(), 1);
-					} else {
-						sellAmount += shop.getItemSellPrice(itemID, def.getDefaultPrice(), 1);
-					}
-
-					totalMoney += sellAmount;
+			int ticker = 1;
+			for (int i = 0; i < amount; amount -= ticker) {
+				if (amount % 10 > 0) ticker = 1;
+				else if (amount % 100 > 10) ticker = 10;
+				else if (amount % 1000 > 100) ticker = 100;
+				else if (amount % 10000 > 1000) ticker = 1000;
+				else if (amount % 100000 > 10000) ticker = 10000;
+				// Start with selling noted and move to normal after.
+				Item toSell = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(true))
+				);
+				if (toSell == null) {
+					toSell = player.getCarriedItems().getInventory().get(
+						player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(false))
+					);
 				}
+				ticker = Math.min(ticker, toSell.getAmount());
+				if (player.getCarriedItems().remove(new Item(toSell.getCatalogId(), ticker, toSell.getNoted(), toSell.getItemId())) == -1) {
+					/* Break, player doesn't have anything. */
+					player.message("You don't have that many items");
+					break;
+				}
+
+				int sellAmount = shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
+				totalMoney += sellAmount;
+				totalSold++;
+
 				if (sellAmount > 0) {
 					player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
 				}
 
-				// Determine if we are selling a Noted item
-				Item originalItem = null;
-				if (def.getOriginalItemID() != -1) {
-					originalItem = new Item(def.getOriginalItemID(), 1);
-				}
-
-				shop.addShopItem(originalItem != null ? originalItem : new Item(itemID, 1));
+				shop.addShopItem(new Item(categoryID, ticker));
 
     			// TODO: Does the authentic code send an update per item?
     			ActionSender.sendInventory(player);

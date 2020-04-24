@@ -8,11 +8,6 @@ import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.netty.util.AttributeMap;
 
-/*
- *
- * @author Imposter
- *
- */
 public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> implements AttributeMap {
 
 	@Override

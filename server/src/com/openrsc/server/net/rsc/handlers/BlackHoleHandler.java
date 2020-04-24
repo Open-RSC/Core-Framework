@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -11,7 +12,7 @@ import java.util.Optional;
 public class BlackHoleHandler implements PacketHandler {
 
 	@Override
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 		if (player == null) {
 			return;
 		}
@@ -25,7 +26,7 @@ public class BlackHoleHandler implements PacketHandler {
 			player.teleport(311, 3348);
 			player.message("you return to the dwarven mines");
 			if (player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
-				player.getCarriedItems().remove(ItemId.DISK_OF_RETURNING.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.DISK_OF_RETURNING.id()));
 				player.message("consuming your disk of returning");
 			}
 			ActionSender.sendPlayerOnBlackHole(player);

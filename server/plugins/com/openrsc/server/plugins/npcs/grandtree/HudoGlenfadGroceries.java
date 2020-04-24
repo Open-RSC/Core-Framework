@@ -26,27 +26,27 @@ public final class HudoGlenfadGroceries implements ShopInterface,
 		new Item(ItemId.MILK.id(), 5), new Item(ItemId.KNIFE.id(), 5), new Item(ItemId.GIANNE_COOK_BOOK.id(), 5));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		say(p, n, "hello there");
-		npcsay(p, n, "good day ..and a beautiful one at that",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "hello there");
+		npcsay(player, n, "good day ..and a beautiful one at that",
 			"would you like some groceries? i have a large selection");
 
-		int option = multi(p, n, "no thankyou", "i'll have a look");
+		int option = multi(player, n, "no thankyou", "i'll have a look");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "ahh well, all the best to you");
+				npcsay(player, n, "ahh well, all the best to you");
 				break;
 
 			case 1:
-				npcsay(p, n, "great stuff");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "great stuff");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.HUDO_GLENFAD.id();
 	}
 

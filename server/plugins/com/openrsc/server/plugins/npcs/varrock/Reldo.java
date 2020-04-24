@@ -12,7 +12,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class Reldo implements TalkNpcTrigger {
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.RELDO.id();
 	}
 
@@ -21,64 +21,64 @@ public final class Reldo implements TalkNpcTrigger {
 	 * is bad choice.
 	 */
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		Menu defaultMenu = new Menu();
-		if (p.getCache().hasKey("read_arrav")
-			&& p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
-			say(p, n, "OK I've read the book",
+		if (player.getCache().hasKey("read_arrav")
+			&& player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
+			say(player, n, "OK I've read the book",
 				"Do you know where I can find the Phoenix Gang");
-			npcsay(p, n, "No I don't",
+			npcsay(player, n, "No I don't",
 				"I think I know someone who will though",
 				"Talk to Baraek, the fur trader in the market place",
 				"I've heard he has connections with the Phoenix Gang");
-			say(p, n, "Thanks, I'll try that");
-			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
-				p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
+			say(player, n, "Thanks, I'll try that");
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
+				player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
 			}
 			return;
 		}
-		say(p, n, "Hello");
-		npcsay(p, n, "Hello stranger");
-		if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
+		say(player, n, "Hello");
+		npcsay(player, n, "Hello stranger");
+		if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
 			defaultMenu.addOption(new Option("I'm in search of a quest") {
 				@Override
 				public void action() {
-					npcsay(p, n, "I don't think there's any here");
-					delay(600);
-					npcsay(p, n, "Let me think actually",
+					npcsay(player, n, "I don't think there's any here");
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					npcsay(player, n, "Let me think actually",
 						"If you look in a book",
 						"called the shield of Arrav",
 						"You'll find a quest in there",
 						"I'm not sure where the book is mind you",
 						"I'm sure it's somewhere in here");
-					say(p, n, "Thankyou");
-					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
+					say(player, n, "Thankyou");
+					player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
 				}
 			});
 		}
 		defaultMenu.addOption(new Option("Do you have anything to trade?") {
 			@Override
 			public void action() {
-				npcsay(p, n, "No, sorry. I'm not the trading type");
-				say(p, n, "ah well");
+				npcsay(player, n, "No, sorry. I'm not the trading type");
+				say(player, n, "ah well");
 			}
 		});
 		defaultMenu.addOption(new Option("What do you do?") {
 			@Override
 			public void action() {
-				npcsay(p, n, "I'm the palace librarian");
-				say(p, n, "Ah that's why you're in the library then");
-				npcsay(p, n, "Yes",
+				npcsay(player, n, "I'm the palace librarian");
+				say(player, n, "Ah that's why you're in the library then");
+				npcsay(player, n, "Yes",
 					"Though I might be in here even if I didn't work here",
 					"I like reading");
 			}
 		});
-		if (p.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
+		if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
 			defaultMenu.addOption(new Option(
 				"What do you know about the Imcando dwarves?") {
 				@Override
 				public void action() {
-					npcsay(p,
+					npcsay(player,
 						n,
 						"The Imcando Dwarves, you say?",
 						"They were the world's most skilled smiths about a hundred years ago",
@@ -86,8 +86,8 @@ public final class Reldo implements TalkNpcTrigger {
 						"Which they passed down from generation to generation",
 						"Unfortunatly about a century ago the once thriving race",
 						"Was wiped out during the barbarian invasions of that time");
-					say(p, n, "So are there any Imcando left at all?");
-					npcsay(p,
+					say(player, n, "So are there any Imcando left at all?");
+					npcsay(player,
 						n,
 						"A few of them survived",
 						"But with the bulk of their population destroyed",
@@ -99,11 +99,11 @@ public final class Reldo implements TalkNpcTrigger {
 						"Which is why people think that the tribe has died out totally",
 						"you may have more luck talking to them if you bring them some red berry pie",
 						"They really like red berry pie");
-					p.updateQuestStage(Quests.THE_KNIGHTS_SWORD, 2);
+					player.updateQuestStage(Quests.THE_KNIGHTS_SWORD, 2);
 				}
 			});
 		}
 
-		defaultMenu.showMenu(p);
+		defaultMenu.showMenu(player);
 	}
 }

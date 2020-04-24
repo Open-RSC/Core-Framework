@@ -9,9 +9,9 @@ import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 
 public final class SleepHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		String sleepword = p.readString().trim();
+		String sleepword = packet.readString().trim();
 		if (sleepword.equalsIgnoreCase("-null-")) {
 			player.incrementSleepTries();
 

@@ -14,6 +14,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PlayerTradeHandler implements PacketHandler {
 
@@ -176,7 +177,7 @@ public class PlayerTradeHandler implements PacketHandler {
 						continue;
 					}
 
-					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), tItem.getNoted())) {
+					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), Optional.of(tItem.getNoted()))) {
 						player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
 						player.getTrade().resetAll();
 						return;
@@ -251,11 +252,11 @@ public class PlayerTradeHandler implements PacketHandler {
 								// Create item to be traded.
 								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
 
-								// Remove item to be traded quantity from inventory.
-								item = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted());
+								// Create item to be traded.
+								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
-								// Remove item to be traded quanti:qty from inventory.
-								player.getCarriedItems().remove(item);
+								// Remove item to be traded quantity from inventory.
+								player.getCarriedItems().remove(affectedItem);
 							}
 
 							for (Item item : theirOffer) {
@@ -272,16 +273,18 @@ public class PlayerTradeHandler implements PacketHandler {
 								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
 
 								// Create item to be traded.
-								item = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted());
+								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
 								// Remove item to be traded quantity from inventory.
-								affectedPlayer.getCarriedItems().remove(item);
+								affectedPlayer.getCarriedItems().remove(affectedItem);
 							}
 
 							for (Item item : myOffer) {
+								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 								affectedPlayer.getCarriedItems().getInventory().add(item);
 							}
 							for (Item item : theirOffer) {
+								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 								player.getCarriedItems().getInventory().add(item);
 							}
 

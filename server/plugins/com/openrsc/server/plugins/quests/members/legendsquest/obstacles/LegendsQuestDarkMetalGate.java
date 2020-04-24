@@ -5,13 +5,10 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.SpellLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.say;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger {
 
@@ -19,39 +16,39 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 	public static final int DARK_METAL_GATE = 1165;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == DARK_METAL_GATE;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == DARK_METAL_GATE) {
 			if (command.equalsIgnoreCase("open")) {
-				if (p.getY() <= 3715) {
-					Functions.mes(p, 1300, "You open the gates and walk through..");
-					p.teleport(474, 3720);
-					p.message("You magically appear in another area of the cave system.");
+				if (player.getY() <= 3715) {
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You open the gates and walk through..");
+					player.teleport(474, 3720);
+					player.message("You magically appear in another area of the cave system.");
 					return;
 				}
-				Functions.mes(p, 1300, "This gate is fused with rock, it doesn't seem possible to open it.",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This gate is fused with rock, it doesn't seem possible to open it.",
 					"But it does look slightly strange in some way.");
 			} else if (command.equalsIgnoreCase("search")) {
-				Functions.mes(p, 3200, "It just looks like a normal gate...");
-				Functions.mes(p, 650, "At first...");
-				Functions.mes(p, 1300, "And then you notice that some of the bars of metal make up letters.",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "It just looks like a normal gate...");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "At first...");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "And then you notice that some of the bars of metal make up letters.",
 					"After some time you manage to make sense of it...",
 					"Would you like to read it?");
-				int menu = Functions.multi(p,
+				int menu = multi(player,
 					"Yes, I'll read it.",
 					"No, I don't want to read that.",
 					"Search further...");
 				if (menu == 0) {
-					Functions.mes(p, 1300, "You attempt to read the message in the gate...");
-					ActionSender.sendBox(p, "Gates of metal will not be kind, % %To those who care not for the way of mind. % %To all men of learning and supernatural powers, % %With book and rune spend the long dark hours. % %If passage further you would endure, % %Give me a taste of your power so pure. % %", true);
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You attempt to read the message in the gate...");
+					ActionSender.sendBox(player, "Gates of metal will not be kind, % %To those who care not for the way of mind. % %To all men of learning and supernatural powers, % %With book and rune spend the long dark hours. % %If passage further you would endure, % %Give me a taste of your power so pure. % %", true);
 				} else if (menu == 1) {
-					p.message("You decide not to read the message.");
+					player.message("You decide not to read the message.");
 				} else if (menu == 2) {
-					Functions.mes(p, 1300, "You scour the gate for any more clues...",
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You scour the gate for any more clues...",
 						"Something etched into the wall nearby catches your eye...",
 						"It looks like a picture of four pillars or constructions.",
 						"Over the first pillar is a picture of a cloud...",
@@ -59,34 +56,34 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 						"Over the third pillar is the carved image of a dew drop or a tear...",
 						"Over the fourth pillar is the likeness of a ploughed field...",
 						"All of these images are contained within a sphere.");
-					Functions.say(p, null, "Hmmm, I wonder what they could mean?");
+					say(player, null, "Hmmm, I wonder what they could mean?");
 				}
 			}
 		}
 	}
 
 	@Override
-	public void onSpellLoc(Player p, GameObject obj, SpellDef spell) {
+	public void onSpellLoc(Player player, GameObject obj, SpellDef spell) {
 		if (obj.getID() == DARK_METAL_GATE) {
 			switch (spell.getName()) {
 				case "Charge Fire Orb":
 				case "Charge air Orb":
 				case "Charge Water Orb":
 				case "Charge earth Orb":
-					if (!SpellHandler.checkAndRemoveRunes(p, spell)) {
+					if (!SpellHandler.checkAndRemoveRunes(player, spell)) {
 						return;
 					}
-					Functions.mes(p, 1300, "The orb shatters with the power of the magic.",
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The orb shatters with the power of the magic.",
 						"The spell works and the gates open.");
-					p.teleport(474, 3714);
-					Functions.mes(p, 5000, "You magically appear in a different part of the cave system.");
-					Functions.mes(p, 1300, "It seems that the gate was a test of magical ability.",
+					player.teleport(474, 3714);
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 8, "You magically appear in a different part of the cave system.");
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "It seems that the gate was a test of magical ability.",
 						"As soon as you enter this room, you are filled with dread.",
 						"In the centre of the room is a large gaping hole.",
 						"It goes down a long way...");
 					break;
 				default:
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					break;
 			}
 		}

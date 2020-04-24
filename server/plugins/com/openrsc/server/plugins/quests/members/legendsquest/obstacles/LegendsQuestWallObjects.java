@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.quests.members.legendsquest.npcs.LegendsQuestUngadulu;
@@ -41,96 +40,96 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (obj.getID() == ANCIENT_WALL) {
 			if (click == USE) {
-				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-					mes(p, 1300, "You walk into the darkness of the magical doorway.",
+				if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You walk into the darkness of the magical doorway.",
 						"You walk for a short way before pushing open another door.");
 					if (obj.getX() == 464 && obj.getY() == 3721) {
-						p.message("You appear in a large cavern like room filled with pools of water.");
-						p.teleport(467, 3724);
+						player.message("You appear in a large cavern like room filled with pools of water.");
+						player.teleport(467, 3724);
 					} else {
-						mes(p, 1300, "You appear in a small walled cavern ");
-						p.message("There seems to be an exit to the south east.");
-						p.teleport(463, 3720);
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You appear in a small walled cavern ");
+						player.message("There seems to be an exit to the south east.");
+						player.teleport(463, 3720);
 					}
 				} else {
-					mes(p, 1300, "You see no way to use that...");
-					p.message("Perhaps you should search it?");
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see no way to use that...");
+					player.message("Perhaps you should search it?");
 				}
 			} else if (click == SEARCH) {
-				mes(p, 1300, "You search the wall...");
-				if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-					mes(p, 1300, "You find the word 'SMELL' marked on the wall.",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You search the wall...");
+				if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You find the word 'SMELL' marked on the wall.",
 						"The outline of a door appears on the wall.");
-					p.message("What would you like to do?.");
-					int option = multi(p,
+					player.message("What would you like to do?.");
+					int option = multi(player,
 						"Read the message on the wall.",
 						"Investigate the outline of the door.");
 					if (option == 0) {
-						ActionSender.sendBox(p, "Place the five in order to pass % %or your life will dwindle until the last% %All five are stones of magical power% %Place them wrong and your fate will sour% %First is of the spirit of man or beast% %Second is the place where thoughts are born% %Third is the soil from which good things grow% %Four and five are the rules all men should know% %All put together make the word of a basic sense% %And from perspective help make maps from indifference.", true);
+						ActionSender.sendBox(player, "Place the five in order to pass % %or your life will dwindle until the last% %All five are stones of magical power% %Place them wrong and your fate will sour% %First is of the spirit of man or beast% %Second is the place where thoughts are born% %Third is the soil from which good things grow% %Four and five are the rules all men should know% %All put together make the word of a basic sense% %And from perspective help make maps from indifference.", true);
 					} else if (option == 1) {
-						ancientDoorWalkThrough(p, obj);
+						ancientDoorWalkThrough(player, obj);
 					}
 				} else {
-					mes(p, 1300, "You find five slightly round depressions and some strange markings..",
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You find five slightly round depressions and some strange markings..",
 						"There is a lot of dirt and mould growing over the markings, but you clear it out.",
 						"After a while you manage to see that it is some form of message.",
 						"Would you like to read it.");
-					int menu = multi(p,
+					int menu = multi(player,
 						"Yes, I'll read it.",
 						"No, I won't read it.");
 					if (menu == 0) {
-						ActionSender.sendBox(p, "Place the five in order to pass % %or your life will dwindle until the last% %All five are stones of magical power% %Place them wrong and your fate will sour% %First is of the spirit of man or beast% %Second is the place where thoughts are born% %Third is the soil from which good things grow% %Four and five are the rules all men should know% %All put together make the word of a basic sense% %And from perspective help make maps from indifference.", true);
+						ActionSender.sendBox(player, "Place the five in order to pass % %or your life will dwindle until the last% %All five are stones of magical power% %Place them wrong and your fate will sour% %First is of the spirit of man or beast% %Second is the place where thoughts are born% %Third is the soil from which good things grow% %Four and five are the rules all men should know% %All put together make the word of a basic sense% %And from perspective help make maps from indifference.", true);
 					} else if (menu == 1) {
-						p.message("You decide against reading the message.");
+						player.message("You decide against reading the message.");
 					}
 				}
 			}
 		}
 		else if (obj.getID() == RUINED_WALL) {
-			if (getCurrentLevel(p, Skills.AGILITY) < 50) {
-				p.message("You need an agility level of 50 to jump this wall");
-				p.setBusy(false);
+			if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+				player.message("You need an agility level of 50 to jump this wall");
+				player.setBusy(false);
 				return;
 			}
-			mes(p, 1300, "You take a run at the wall...");
-			if (ShiloVillageUtils.succeed(p, 50)) {
-				mes(p, 1300, "You take a good run up and sail majestically over the wall.",
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a run at the wall...");
+			if (ShiloVillageUtils.succeed(player, 50)) {
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a good run up and sail majestically over the wall.",
 					"You land perfectly and stand ready for action.");
 			} else {
-				mes(p, 1300, "You fail to jump the wall properly and clip the wall with your leg.",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You fail to jump the wall properly and clip the wall with your leg.",
 					"You're spun around mid air and hit the floor heavily.",
 					"The fall knocks the wind out of you.");
-				p.damage(6);
-				say(p, null, "Ughhh!");
+				player.damage(6);
+				say(player, null, "Ughhh!");
 			}
-			if (p.getY() >= 3729) {
-				p.teleport(457, 3727);
+			if (player.getY() >= 3729) {
+				player.teleport(457, 3727);
 			} else {
-				p.teleport(455, 3729);
+				player.teleport(455, 3729);
 			}
 		}
 		else if (obj.getID() == FLAME_WALL) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.MAGICAL_FIRE_PASS.id(), Optional.of(false))) {
-				doWallMovePlayer(obj, p, 210, 5000, false);
-				p.message("You feel completely fine to walk through these flames..");
+			if (player.getCarriedItems().hasCatalogID(ItemId.MAGICAL_FIRE_PASS.id(), Optional.of(false))) {
+				doWallMovePlayer(obj, player, 210, player.getWorld().getServer().getConfig().GAME_TICK * 8, false);
+				player.message("You feel completely fine to walk through these flames..");
 				return;
 			} else {
 				if (click == TOUCH) {
-					Functions.mes(p, "You walk blindly into the intense heat of the supernatural flames.");
+					mes(player, "You walk blindly into the intense heat of the supernatural flames.");
 					if (DataConversions.random(0, 9) <= 3) {
-						mes(p, 1300, "The heat is so intense that it burns you.");
-						p.damage((int) Math.ceil((double) p.getSkills().getLevel(Skills.HITS) / 10 + 1));
-						say(p, null, "Owwww!");
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The heat is so intense that it burns you.");
+						player.damage((int) Math.ceil((double) player.getSkills().getLevel(Skills.HITS) / 10 + 1));
+						say(player, null, "Owwww!");
 					} else {
-						mes(p, 1300, "The heat is intense and just before you burn yourself,",
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The heat is intense and just before you burn yourself,",
 							"you pull your hand out of the way of the flame.");
-						say(p, null, "Whew!");
+						say(player, null, "Whew!");
 					}
 				} else if (click == INVESTIGATE) {
-					switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
+					switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 						case 2:
 						case 3:
 						case 4:
@@ -142,51 +141,51 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						case 10:
 						case 11:
 						case -1:
-							mes(p, 1300, "You look closely at the flames, they seem to form a straight wall.",
+							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You look closely at the flames, they seem to form a straight wall.",
 								"Something about them looks very strange, they look completely supernatural.",
 								"For example, they seem to appear to come from straight out of the ground.");
-							say(p, null, "Mmmm, pretty!");
-							if (p.getX() >= 450 && p.getX() <= 455 && p.getY() >= 3704 && p.getY() <= 3711
-								|| p.getX() == 456 && p.getY() >= 3707 && p.getY() <= 3708
-								|| p.getX() == 449 && p.getY() >= 3707 && p.getY() <= 3708) {
-								p.message("What would you like to do?");
-								int leave = multi(p,
+							say(player, null, "Mmmm, pretty!");
+							if (player.getX() >= 450 && player.getX() <= 455 && player.getY() >= 3704 && player.getY() <= 3711
+								|| player.getX() == 456 && player.getY() >= 3707 && player.getY() <= 3708
+								|| player.getX() == 449 && player.getY() >= 3707 && player.getY() <= 3708) {
+								player.message("What would you like to do?");
+								int leave = multi(player,
 									"Leap out of the flaming Octagram...",
 									"Attract Shamans's attention.");
 								if (leave == 0) {
-									mes(p, 1300, "This is quite dangerous, but you find a suitable location to jump.");
-									p.teleport(453, 3705);
-									delay(1300);
-									mes(p, 1300, "You take a run up...");
+									mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This is quite dangerous, but you find a suitable location to jump.");
+									player.teleport(453, 3705);
+									delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+									mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a run up...");
 									int burnDegRnd = DataConversions.random(0, 5);
 									if (burnDegRnd <= 2) {
-										mes(p, 1300, "You sail over the tops of the flames, just getting slightly burnt by the flames...");
-										p.damage(DataConversions.random(3,7));
+										mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You sail over the tops of the flames, just getting slightly burnt by the flames...");
+										player.damage(DataConversions.random(3,7));
 									}
 									else if (burnDegRnd <= 4) {
-										mes(p, 1300, "You get severly burned as you jump across the flames...");
-										p.damage(DataConversions.random(8,17));
+										mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You get severly burned as you jump across the flames...");
+										player.damage(DataConversions.random(8,17));
 									}
 									else if (burnDegRnd <= 5) {
-										mes(p, 1300, "You get severly burned as you jump across the flames...",
+										mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You get severly burned as you jump across the flames...",
 												"You feel very un well..");
-										p.damage(DataConversions.random(18,37));
+										player.damage(DataConversions.random(18,37));
 									}
-									p.teleport(455, 3702);
+									player.teleport(455, 3702);
 								} else if (leave == 1) {
-									Npc ungadulu = ifnearvisnpc(p, NpcId.UNGADULU.id(), 8);
+									Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 									if (ungadulu == null) {
-										addnpc(p.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
+										addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
 									}
-									LegendsQuestUngadulu.ungaduluWallDialogue(p, ungadulu, -1);
+									LegendsQuestUngadulu.ungaduluWallDialogue(player, ungadulu, -1);
 								}
 							} else {
-								mes(p, 1300, "You see a white clad figure in the midst of the flames...");
-								Npc ungadulu = ifnearvisnpc(p, NpcId.UNGADULU.id(), 8);
+								mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see a white clad figure in the midst of the flames...");
+								Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 								if (ungadulu == null) {
-									addnpc(p.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
+									addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
 								}
-								LegendsQuestUngadulu.ungaduluWallDialogue(p, ungadulu, -1);
+								LegendsQuestUngadulu.ungaduluWallDialogue(player, ungadulu, -1);
 							}
 							break;
 					}
@@ -194,45 +193,45 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 			}
 		}
 		if (obj.getID() == RUT) {
-			p.message("This looks like a rut has been etched into the ground.");
+			player.message("This looks like a rut has been etched into the ground.");
 		}
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player p) {
+	public boolean blockUseBound(GameObject obj, Item item, Player player) {
 		return obj.getID() == FLAME_WALL || obj.getID() == ANCIENT_WALL;
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player p) {
+	public void onUseBound(GameObject obj, Item item, Player player) {
 		if (obj.getID() == FLAME_WALL) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case BLESSED_GOLDEN_BOWL_WITH_PURE_WATER:
-					p.message("You splash some pure water on the flames");
-					if (!p.getCache().hasKey("douse_flames")) {
-						p.getCache().set("douse_flames", 1);
+					player.message("You splash some pure water on the flames");
+					if (!player.getCache().hasKey("douse_flames")) {
+						player.getCache().set("douse_flames", 1);
 					} else {
-						int pourCount = p.getCache().getInt("douse_flames");
-						p.getCache().set("douse_flames", pourCount + 1);
+						int pourCount = player.getCache().getInt("douse_flames");
+						player.getCache().set("douse_flames", pourCount + 1);
 						if (pourCount >= 4) {
-							p.getCache().remove("douse_flames");
-							p.message("The pure water in the golden bowl has run out...");
-							p.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
+							player.getCache().remove("douse_flames");
+							player.message("The pure water in the golden bowl has run out...");
+							player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
 						}
 					}
-					p.message("You quickly walk over the doused flames.");
-					doWallMovePlayer(obj, p, 206, 5000, true);
+					player.message("You quickly walk over the doused flames.");
+					doWallMovePlayer(obj, player, 206, player.getWorld().getServer().getConfig().GAME_TICK * 8, true);
 					break;
 				case BUCKET_OF_WATER:
 				case JUG_OF_WATER:
 				case BOWL_OF_WATER:
 				case VIAL:
 				case GOLDEN_BOWL_WITH_PURE_WATER:
-					mes(p, 1300, "The water seems to evaporate in a cloud of steam",
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The water seems to evaporate in a cloud of steam",
 						"before it gets anywhere near the flames.");
 					break;
 				default:
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					break;
 			}
 		}
@@ -248,107 +247,107 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 				case BODY_RUNE:
 				case LIFE_RUNE:
 				case CHAOS_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-						ancientDoorWalkThrough(p, obj);
+					if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+						ancientDoorWalkThrough(player, obj);
 					} else {
-						runesFail(p, item);
+						runesFail(player, item);
 					}
 					break;
 				case SOUL_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-						ancientDoorWalkThrough(p, obj);
-					} else if (!p.getCache().hasKey("ancient_wall_runes")) {
-						remove(p, ItemId.SOUL_RUNE.id(), 1);
-						mes(p, 1300, "You slide the Soul-Rune into the first depression...",
+					if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+						ancientDoorWalkThrough(player, obj);
+					} else if (!player.getCache().hasKey("ancient_wall_runes")) {
+						player.getCarriedItems().remove(new Item(ItemId.SOUL_RUNE.id()));
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You slide the Soul-Rune into the first depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'S' appears where the Soul-Rune merged with the door.");
-						p.getCache().put("ancient_wall_runes", 1);
+						player.getCache().put("ancient_wall_runes", 1);
 					} else {
-						runesFail(p, item);
+						runesFail(player, item);
 					}
 					break;
 				case MIND_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-						ancientDoorWalkThrough(p, obj);
-					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 1) {
-						remove(p, ItemId.MIND_RUNE.id(), 1);
-						mes(p, 1300, "You slide the Mind-Rune into the second slot depression...",
+					if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+						ancientDoorWalkThrough(player, obj);
+					} else if (player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 1) {
+						player.getCarriedItems().remove(new Item(ItemId.MIND_RUNE.id()));
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You slide the Mind-Rune into the second slot depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'M' appears where the Mind-Rune merged with the door.");
-						p.getCache().put("ancient_wall_runes", 2);
+						player.getCache().put("ancient_wall_runes", 2);
 					} else {
-						runesFail(p, item);
+						runesFail(player, item);
 					}
 					break;
 				case EARTH_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-						ancientDoorWalkThrough(p, obj);
-					} else if (p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 2) {
-						remove(p, ItemId.EARTH_RUNE.id(), 1);
-						mes(p, 1300, "You slide the Earth-Rune into the third depression...",
+					if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+						ancientDoorWalkThrough(player, obj);
+					} else if (player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 2) {
+						player.getCarriedItems().remove(new Item(ItemId.EARTH_RUNE.id()));
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You slide the Earth-Rune into the third depression...",
 							"It glows slightly and merges with the wall.",
 							"The letter 'E' appears where the Earth-Rune merged with the door.");
-						p.getCache().put("ancient_wall_runes", 3);
+						player.getCache().put("ancient_wall_runes", 3);
 					} else {
-						runesFail(p, item);
+						runesFail(player, item);
 					}
 					break;
 				case LAW_RUNE:
-					if ((p.getCache().hasKey("ancient_wall_runes") && p.getCache().getInt("ancient_wall_runes") == 5) || p.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-						ancientDoorWalkThrough(p, obj);
-					} else if (p.getCache().hasKey("ancient_wall_runes") && (p.getCache().getInt("ancient_wall_runes") == 3 || p.getCache().getInt("ancient_wall_runes") == 4)) {
-						int getRuneCount = p.getCache().getInt("ancient_wall_runes");
-						remove(p, ItemId.LAW_RUNE.id(), 1);
+					if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
+						ancientDoorWalkThrough(player, obj);
+					} else if (player.getCache().hasKey("ancient_wall_runes") && (player.getCache().getInt("ancient_wall_runes") == 3 || player.getCache().getInt("ancient_wall_runes") == 4)) {
+						int getRuneCount = player.getCache().getInt("ancient_wall_runes");
+						player.getCarriedItems().remove(new Item(ItemId.LAW_RUNE.id()));
 						if (getRuneCount == 4) {
-							p.getCache().put("ancient_wall_runes", 5);
-							mes(p, 1300, "You slide the Law-Rune into the fifth depression...",
+							player.getCache().put("ancient_wall_runes", 5);
+							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You slide the Law-Rune into the fifth depression...",
 								"It glows slightly and merges with the wall.",
 								"The letter 'L' appears where the Law-Rune merged with the door.");
-							ancientDoorWalkThrough(p, obj);
+							ancientDoorWalkThrough(player, obj);
 						} else {
-							mes(p, 1300, "You slide the Law-Rune into the fourth depression...",
+							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You slide the Law-Rune into the fourth depression...",
 								"It glows slightly and merges with the wall.",
 								"The letter 'L' appears where the Law-Rune merged with the door.");
-							p.getCache().put("ancient_wall_runes", getRuneCount + 1);
+							player.getCache().put("ancient_wall_runes", getRuneCount + 1);
 						}
 					} else {
-						runesFail(p, item);
+						runesFail(player, item);
 					}
 					break;
 				default:
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					break;
 			}
 		}
 	}
 
-	private void ancientDoorWalkThrough(Player p, GameObject obj) {
-		mes(p, 1300, "You see a small door outline starting to form in the wall.",
+	private void ancientDoorWalkThrough(Player player, GameObject obj) {
+		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see a small door outline starting to form in the wall.",
 			"And then a well formed door handle emerges, suddenly the door cracks open.");
-		p.message("Would you like to go through?");
-		int goThrough = multi(p,
+		player.message("Would you like to go through?");
+		int goThrough = multi(player,
 			"Yes, I'll go through.",
 			"No, I'll stay here.");
 		if (goThrough == 0) {
-			mes(p, 1300, "You walk into the darkness of the magical doorway.",
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You walk into the darkness of the magical doorway.",
 				"You walk for a short way before pushing open another door.");
 			if (obj.getX() == 464 && obj.getY() == 3721) {
-				p.message("You appear in a large cavern like room filled with pools of water.");
-				p.teleport(467, 3724);
+				player.message("You appear in a large cavern like room filled with pools of water.");
+				player.teleport(467, 3724);
 			} else {
-				mes(p, 1300, "You appear in a small walled cavern ");
-				p.message("There seems to be an exit to the south east.");
-				p.teleport(463, 3720);
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You appear in a small walled cavern ");
+				player.message("There seems to be an exit to the south east.");
+				player.teleport(463, 3720);
 			}
 		} else if (goThrough == 1) {
-			p.message("You decide to stay where you are.");
+			player.message("You decide to stay where you are.");
 		}
 	}
 
-	private void runesFail(Player p, Item item) {
-		p.message("The rune stone burns red hot in your hand, you drop it to the floor.");
-		p.damage(DataConversions.random(1, 5));
-		remove(p, item.getCatalogId(), 1);
-		addobject(item.getCatalogId(), 1, p.getX(), p.getY(), p);
+	private void runesFail(Player player, Item item) {
+		player.message("The rune stone burns red hot in your hand, you drop it to the floor.");
+		player.damage(DataConversions.random(1, 5));
+		player.getCarriedItems().remove(new Item(item.getCatalogId()));
+		addobject(item.getCatalogId(), 1, player.getX(), player.getY(), player);
 	}
 }

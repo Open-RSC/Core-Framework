@@ -4,15 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
-import static com.openrsc.server.plugins.Functions.remove;
-import static com.openrsc.server.plugins.Functions.changeloc;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 
@@ -25,9 +23,9 @@ public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == CRYSTAL_CHEST) {
-			p.message("the chest is locked");
+			player.message("the chest is locked");
 		}
 	}
 
@@ -44,7 +42,7 @@ public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 			changeloc(obj, respawnTime, CRYSTAL_CHEST_OPEN);
 			player.message("You find some treasure in the chest");
 
-			Functions.remove(player, ItemId.CRYSTAL_KEY.id(), 1); // remove the crystal key.
+			player.getCarriedItems().remove(new Item(ItemId.CRYSTAL_KEY.id())); // remove the crystal key.
 			ArrayList<Item> loot = new ArrayList<Item>();
 			loot.add(new Item(ItemId.UNCUT_DRAGONSTONE.id(), 1));
 			int percent = DataConversions.random(0, 10000);

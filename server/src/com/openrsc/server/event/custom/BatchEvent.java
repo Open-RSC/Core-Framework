@@ -24,7 +24,7 @@ public abstract class BatchEvent extends DelayedEvent {
 		else if (repeatFor > 1000) this.repeatFor = repeatFor - 1000; // Mining default
 		else this.repeatFor = 1; // Always 1, otherwise.
 
-		if (this.batchProgression) ActionSender.sendProgressBar(owner, delay, repeatFor);
+		if (this.batchProgression && repeatFor > 1) ActionSender.sendProgressBar(owner, delay, repeatFor);
 	}
 
 	public BatchEvent(World world, Player owner, int delay, String descriptor, int repeatFor, boolean gathering) {

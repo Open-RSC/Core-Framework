@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.smithing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
@@ -10,7 +10,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -47,7 +46,7 @@ public class Smithing implements UseLocTrigger {
 						player.message("You need 90 smithing to work dragon metal");
 						return;
 					}
-					if (player.getCarriedItems().remove(ItemId.DRAGON_BAR.id(), 1) > -1) {
+					if (player.getCarriedItems().remove(new Item(ItemId.DRAGON_BAR.id())) > -1) {
 						give(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
 						player.incExp(Skills.SMITHING, 1000, true);
 					}
@@ -149,13 +148,13 @@ public class Smithing implements UseLocTrigger {
 				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			mes(player, 1200, "You set to work trying to fix the ancient shield.",
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
 					"You hammer long and hard and use all of your skill.",
 					"Eventually, it is ready...",
 					"You have repaired the Dragon Square Shield.");
-			player.getCarriedItems().remove(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
-			player.getCarriedItems().remove(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1);
-			player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id(), 1));
+			player.getCarriedItems().remove(new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()));
+			player.getCarriedItems().remove(new Item(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id()));
 			player.incExp(Skills.SMITHING, 300, true);
 		}
 	}
@@ -166,13 +165,13 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 		if (goldOption == 0) {
-			Functions.mes(player, "You hammer the metal...");
+			mes(player, "You hammer the metal...");
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
 				if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skills.SMITHING))) {
 					for (int x = 0; x < 2; x++) {
-						player.getCarriedItems().remove(ItemId.GOLD_BAR.id(), 1);
+						player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
 					}
 					player.message("You forge a beautiful bowl made out of solid gold.");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
@@ -180,7 +179,7 @@ public class Smithing implements UseLocTrigger {
 				} else {
 					player.message("You make a mistake forging the bowl..");
 					player.message("You pour molten gold all over the floor..");
-					player.getCarriedItems().remove(ItemId.GOLD_BAR.id(), 1);
+					player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
 					player.incExp(Skills.SMITHING, 4, true);
 				}
 			}
@@ -220,7 +219,7 @@ public class Smithing implements UseLocTrigger {
 
 		if (makeCount == -1) return;
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Smithing", makeCount, false) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Smithing", makeCount, false) {
 			@Override
 			public void action() {
 				if (getOwner().getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
@@ -244,7 +243,7 @@ public class Smithing implements UseLocTrigger {
 				}
 				getOwner().playSound("anvil");
 				for (int x = 0; x < def.getRequiredBars(); x++) {
-					getOwner().getCarriedItems().remove(new Item(item.getCatalogId(), 1));
+					getOwner().getCarriedItems().remove(new Item(item.getCatalogId()));
 				}
 
 				thinkbubble(getOwner(), item);
@@ -380,7 +379,7 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 		thinkbubble(player, item);
-		player.getCarriedItems().remove(ItemId.STEEL_BAR.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.NAILS.id(), 2));
 		player.incExp(Skills.SMITHING, 70, true);
@@ -402,7 +401,7 @@ public class Smithing implements UseLocTrigger {
 		}
 		if (bronzeWireOption == 0) {
 			thinkbubble(player, item);
-			player.getCarriedItems().remove(ItemId.BRONZE_BAR.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 			player.playerServerMessage(MessageType.QUEST, "You hammer the Bronze Bar and make some bronze wire");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
 			player.incExp(Skills.SMITHING, 50, true);

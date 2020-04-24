@@ -195,31 +195,23 @@ public class Inventory {
 		}
 	}
 
-	public void remove(int index) {
-		synchronized (list) {
-			Item item = get(index);
-			if (item == null) {
-				return;
-			}
-			remove(item.getCatalogId(), item.getAmount(), true);
-		}
-	}
-
-	public int remove(int catalogId, int amount, boolean sendInventory) {
+	public int remove(Item item, boolean sendInventory) {
 		synchronized (list) {
 			try {
 				// Confirm items exist in the inventory
 				if (list.isEmpty())
 					return -1;
 
+				int catalogId = item.getCatalogId();
+				int amount = item.getAmount();
+				int itemID = item.getItemId();
 
 				int size = list.size();
 				ListIterator<Item> iterator = list.listIterator(size);
-				for (int index = size - 1; iterator.hasPrevious(); --index) {
+				for (int index = size - 1; iterator.hasPrevious(); index--) {
 					Item inventoryItem = iterator.previous();
-
 					// Loop until we have the correct item.
-					if (inventoryItem.getCatalogId() != catalogId)
+					if (inventoryItem.getItemId() != itemID)
 						continue;
 
 					// Confirm itemDef exists.
@@ -242,18 +234,20 @@ public class Inventory {
 							// Update the Database - Remove item status
 							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
+							// Update the client
+							if (sendInventory)
+								ActionSender.sendRemoveItem(player, index);
+
 						// Removing only part of the stack
 						} else {
 
 							// Update the Database and Server Bank
 							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+
+							// Update the client
+							if (sendInventory)
+								ActionSender.sendInventoryUpdateItem(player, index);
 						}
-
-						// Update the Client
-						if (sendInventory)
-							ActionSender.sendInventory(player);
-
-						return inventoryItem.getItemId();
 
 					// Non-stacking items
 					} else {
@@ -272,37 +266,20 @@ public class Inventory {
 						// Update the Database
 						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
-						//Update the client
+						// Update the client
 						if (sendInventory)
-							ActionSender.sendInventory(player);
-
-						return inventoryItem.getItemId();
+							ActionSender.sendRemoveItem(player, index);
 					}
+
+					return inventoryItem.getItemId();
 				}
+				System.out.println("Item not found: " + item.getItemId() + " for player " + player.getUsername());
 			} catch (GameDatabaseException ex) {
 				LOGGER.error(ex.getMessage());
 			}
 		}
 		return -1;
 	}
-
-	/*
-	public int remove(int id, int amount) {
-		return remove(id, amount, true);
-	}
-	*/
-
-	/*
-	public int remove(Item item, boolean updatePlayer) {
-		return remove(item.getCatalogId(), item.getAmount(), updatePlayer);
-	}
-	*/
-
-	/*
-	public int remove(Item item) {
-		return remove(item.getCatalogId(), item.getAmount(), true);
-	}
-	*/
 
 	public void replace(int i, int j) {
 		this.replace(i, j, true);
@@ -316,7 +293,7 @@ public class Inventory {
 			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
 			&& player.getCarriedItems().getEquipment().hasEquipped(i)) {
 			newitem.setWielded(false);
-			if (player.getCarriedItems().getEquipment().remove(old.getCatalogId(), old.getAmount()) != -1)
+			if (player.getCarriedItems().getEquipment().remove(old, old.getAmount()) != -1)
 				player.getCarriedItems().getEquipment().add(newitem);
 			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
 				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
@@ -325,7 +302,7 @@ public class Inventory {
 				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
 			ActionSender.sendEquipmentStats(player);
 		} else {
-			if (remove(i, 1, false) != -1);
+			if (remove(new Item(i), true) != -1);
 			add(new Item(j), false);
 			if (sendInventory)
 				ActionSender.sendInventory(player);
@@ -400,13 +377,14 @@ public class Inventory {
 		boolean shattered = false;
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
 			&& (player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID)) != -1) {
-			player.getCarriedItems().getEquipment().remove(itemID, 1);
+			Item item = player.getCarriedItems().getEquipment().get(itemID);
+			player.getCarriedItems().getEquipment().remove(item, 1);
 			shattered = true;
 		} else {
 			for (int i = 0; i < player.getCarriedItems().getInventory().size(); i++) {
 				Item item = player.getCarriedItems().getInventory().get(i);
 				if (item != null && item.getCatalogId() == itemID) {
-					player.getCarriedItems().getInventory().remove(i);
+					player.getCarriedItems().remove(new Item(i));
 					shattered = true;
 					break;
 				}
@@ -441,14 +419,14 @@ public class Inventory {
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getCarriedItems().getEquipment().remove(equipped.getCatalogId(), equipped.getAmount());
+					player.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
 				}
 			}
 		}
 		for (Item invItem : list) {
 			def = invItem.getDef(player.getWorld());
 			// stackable always lost
-			key = def.isStackable() ? -1 : def.getDefaultPrice();
+			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice();
 			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
 			value.add(invItem);
 			deathItemsMap.put(key, value);
@@ -485,16 +463,19 @@ public class Inventory {
 			iterator.remove();
 
 			log.addDroppedItem(item);
+			Player dropOwner;
+			GroundItem groundItem;
 			if (item.getDef(player.getWorld()).isUntradable()) {
-				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player));
+				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player, item.getNoted());
 			} else {
-				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner);
+				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
+				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
 				if (dropOwner.getIronMan() != IronmanMode.None.id()) {
 					groundItem.setAttribute("playerKill", true);
 				}
-				player.getWorld().registerItem(groundItem, 644000); // 10m 44s
 			}
+			player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 1000);
+
 		}
 
 		//check for fam crest gloves in bank, if not present there give player
@@ -559,17 +540,7 @@ public class Inventory {
 		}
 		return null;
 	}
-	public int searchInventoryForItem(int id, boolean noted) {
-		synchronized (list) {
-			Item item;
-			for (int i = 0; i < size(); i++) {
-				item = list.get(i);
-				if (item != null && item.getCatalogId() == id && item.getItemStatus().getNoted() == noted)
-					return i;
-			}
-			return -1;
-		}
-	}
+
 	public boolean contains(Item i) {
 		//synchronized (list) {
 		//	return list.contains(i);
@@ -578,10 +549,14 @@ public class Inventory {
 	}
 
 	public int countId(long id) {
+		return countId(id, Optional.empty());
+	}
+
+	public int countId(long id, Optional<Boolean> noted) {
 		synchronized (list) {
 			int temp = 0;
 			for (Item i : list) {
-				if (i.getCatalogId() == id) {
+				if (i.getCatalogId() == id && (!noted.isPresent() || (i.getNoted() == noted.get()))) {
 					temp += i.getAmount();
 				}
 			}
@@ -589,22 +564,31 @@ public class Inventory {
 		}
 	}
 
-	public int countId(long id, boolean noted) {
+	public int countSlotsOccupied(Item item, int totalAmount) {
 		synchronized (list) {
-			int temp = 0;
-			for (Item i : list) {
-				if (i.getCatalogId() == id && i.getNoted() == noted) {
-					temp += i.getAmount();
+			int slots = 0;
+			int amountFound = 0;
+			for (int x = list.size() - 1; x >= 0; x--) {
+				if (amountFound >= totalAmount) break;
+				Item i = list.get(x);
+				if (i.getCatalogId() == item.getCatalogId() && i.getItemStatus().getNoted() == item.getItemStatus().getNoted()) {
+					slots++;
+					amountFound += i.getAmount();
 				}
 			}
-			return temp;
+			return slots;
 		}
 	}
 
 	public int getLastIndexById(int id) {
+		return getLastIndexById(id, Optional.empty());
+	}
+
+	public int getLastIndexById(int id, Optional<Boolean> wantNoted) {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).getCatalogId() == id) {
+				Item item = list.get(index);
+				if (item.getCatalogId() == id && (!wantNoted.isPresent() || item.getNoted() == wantNoted.get())) {
 					return index;
 				}
 			}

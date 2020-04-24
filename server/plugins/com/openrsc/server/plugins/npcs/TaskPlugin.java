@@ -35,10 +35,10 @@ public class TaskPlugin implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		ArrayList<Achievement> availableTasks = p.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(p, n);
+	public void onTalkNpc(Player player, Npc n) {
+		ArrayList<Achievement> availableTasks = player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, n);
 		if (availableTasks.size() > 1) {
-			p.message("You can get multiple tasks from this character");
+			player.message("You can get multiple tasks from this character");
 			Menu menu = new Menu();
 			for (Achievement task : availableTasks) {
 				menu.addOption(new Option(task.getName()) {
@@ -48,7 +48,7 @@ public class TaskPlugin implements TalkNpcTrigger, OpLocTrigger {
 					}
 				});
 			}
-			menu.showMenu(p);
+			menu.showMenu(player);
 		} else if (availableTasks.size() == 1) {
 			//AchievementSystem.triggerTask(p, n, availableTasks.get(0));
 		}
@@ -60,7 +60,7 @@ public class TaskPlugin implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
-		return p.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(p, n).size() > 0;
+	public boolean blockTalkNpc(Player player, Npc n) {
+		return player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, n).size() > 0;
 	}
 }

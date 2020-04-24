@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Used to create a Character on the Login thread
- *
- * @author Kenix
  */
 public class CharacterCreateRequest extends LoginExecutorProcess{
 

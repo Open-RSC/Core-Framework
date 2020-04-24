@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -12,8 +13,8 @@ public class FillHole implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(GameObject obj, String command, Player player) {
-		player.setBusyTimer(650);
-		if (remove(player, ItemId.SWAMP_PASTE.id(), 1)) {
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
+		if (player.getCarriedItems().remove(new Item(ItemId.SWAMP_PASTE.id())) != -1) {
 			delloc(obj);
 			mes(player, 0, "you fill the hole with swamp paste");
 		} else {

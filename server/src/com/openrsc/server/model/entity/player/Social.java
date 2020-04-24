@@ -92,15 +92,15 @@ public class Social {
 		}
 	}
 
-	public void alertOfLogin(Player p) {
-		if (friendList.containsKey(p.getUsernameHash()) && (!p.getSettings().getPrivacySetting(1) || p.getSocial().isFriendsWith(player.getUsernameHash()))) {
-			ActionSender.sendFriendUpdate(player, p.getUsernameHash());
+	public void alertOfLogin(Player player) {
+		if (friendList.containsKey(player.getUsernameHash()) && (!player.getSettings().getPrivacySetting(1) || player.getSocial().isFriendsWith(player.getUsernameHash()))) {
+			ActionSender.sendFriendUpdate(player, player.getUsernameHash());
 		}
 	}
 
-	public void alertOfLogout(Player p) {
-		if (friendList.containsKey(p.getUsernameHash())) {
-			ActionSender.sendFriendUpdate(player, p.getUsernameHash());
+	public void alertOfLogout(Player player) {
+		if (friendList.containsKey(player.getUsernameHash())) {
+			ActionSender.sendFriendUpdate(player, player.getUsernameHash());
 		}
 	}
 }

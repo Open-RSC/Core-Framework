@@ -15,9 +15,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class WalkRequest implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int packetOpcode = p.getID();
+		int packetOpcode = packet.getID();
 		if (player.inCombat()) {
 			if (packetOpcode == OpcodeIn.WALK_TO_POINT.getOpcode()) {
 				Mob opponent = player.getOpponent();
@@ -72,16 +72,16 @@ public class WalkRequest implements PacketHandler {
 		player.resetAll();
 		player.resetPath();
 
-		int firstStepX = p.readAnotherShort();
-		int firstStepY = p.readAnotherShort();
+		int firstStepX = packet.readAnotherShort();
+		int firstStepY = packet.readAnotherShort();
 		PathType pathType = packetOpcode == OpcodeIn.WALK_TO_POINT.getOpcode() ? PathType.WALK_TO_POINT : PathType.WALK_TO_ENTITY;
 		Path path = new Path(player, pathType);
 		{
 			path.addStep(firstStepX, firstStepY);
-			int numWaypoints = p.getReadableBytes() / 2;
+			int numWaypoints = packet.getReadableBytes() / 2;
 			for (int stepCount = 0; stepCount < numWaypoints; stepCount++) {
-				int stepDiffX = p.readByte();
-				int stepDiffY = p.readByte();
+				int stepDiffX = packet.readByte();
+				int stepDiffY = packet.readByte();
 				path.addStep(firstStepX + stepDiffX, firstStepY + stepDiffY);
 			}
 			path.finish();

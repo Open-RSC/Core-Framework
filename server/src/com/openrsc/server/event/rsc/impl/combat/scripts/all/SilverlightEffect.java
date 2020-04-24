@@ -8,9 +8,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 
-/**
- * @author n0m
- */
 public class SilverlightEffect implements OnCombatStartScript {
 
 	@Override

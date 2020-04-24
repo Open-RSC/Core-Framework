@@ -17,18 +17,18 @@ public class MagicGuildPortals implements OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player p) {
+	public void onOpBound(GameObject obj, Integer click, Player player) {
 		if (inArray(obj.getID(), MAGIC_PORTALS)) {
-			p.playerServerMessage(MessageType.QUEST, "you enter the magic portal");
+			player.playerServerMessage(MessageType.QUEST, "you enter the magic portal");
 			if (obj.getID() == MAGIC_PORTALS[0]) {
-				p.teleport(212, 695);
+				player.teleport(212, 695);
 			} else if (obj.getID() == MAGIC_PORTALS[1]) {
-				p.teleport(511, 1452);
+				player.teleport(511, 1452);
 			} else if (obj.getID() == MAGIC_PORTALS[2]) {
-				p.teleport(362, 1515);
+				player.teleport(362, 1515);
 			}
-			delay(600);
-			displayTeleportBubble(p, p.getX(), p.getY(), false);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			displayTeleportBubble(player, player.getX(), player.getY(), false);
 		}
 	}
 }

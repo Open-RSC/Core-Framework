@@ -22,7 +22,7 @@ public final class HerquinGems implements ShopInterface,
 		new Item(ItemId.DIAMOND.id(), 0));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.HERQUIN.id();
 	}
 
@@ -37,16 +37,16 @@ public final class HerquinGems implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		int option = multi(p, n, false, //do not send over
+	public void onTalkNpc(final Player player, final Npc n) {
+		int option = multi(player, n, false, //do not send over
 			"Do you wish to trade?", "Sorry i don't want to talk to you actually");
 		if (option == 0) {
-			say(p, n, "Do you wish to trade?");
-			npcsay(p, n, "Why yes this a jewel shop after all");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Do you wish to trade?");
+			npcsay(player, n, "Why yes this a jewel shop after all");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "Sorry I don't want to talk to you actually");
+			say(player, n, "Sorry I don't want to talk to you actually");
 		}
 	}
 

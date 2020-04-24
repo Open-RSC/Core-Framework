@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class FishingGuildGeneralShop implements
 	ShopInterface, TalkNpcTrigger {
@@ -26,7 +24,7 @@ public class FishingGuildGeneralShop implements
 		new Item(ItemId.LOBSTER.id(), 0));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.SHOPKEEPER_FISHING_GUILD.id();
 	}
 
@@ -41,14 +39,14 @@ public class FishingGuildGeneralShop implements
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Would you like to buy some fishing equipment",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy some fishing equipment",
 			"Or sell some fish");
-		final int option = Functions.multi(p, n, "Yes please",
+		final int option = multi(player, n, "Yes please",
 			"No thankyou");
 		if (option == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 

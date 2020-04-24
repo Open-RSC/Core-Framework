@@ -49,22 +49,20 @@ public class BuyMarketItemTask extends MarketTask {
 			return;
 		}
 
-		ItemDefinition def = playerBuyer.getWorld().getServer().getEntityHandler().getItemDef(item.getItemID());
+		ItemDefinition def = playerBuyer.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogID());
 		if (!playerBuyer.getCarriedItems().getInventory().full()
 			&& (!def.isStackable() && playerBuyer.getCarriedItems().getInventory().size() + amount <= 30)) {
-			if (!def.isStackable()) {
-				for (int i = 0; i < amount; i++)
-					playerBuyer.getCarriedItems().getInventory().add(new Item(item.getItemID(), 1));
-			} else {
-				playerBuyer.getCarriedItems().getInventory().add(new Item(item.getItemID(), amount));
-			}
-			playerBuyer.getCarriedItems().remove(ItemId.COINS.id(), auctionPrice);
+			if (!def.isStackable() && amount == 1)
+				playerBuyer.getCarriedItems().getInventory().add(new Item(item.getCatalogID(), 1));
+			else
+				playerBuyer.getCarriedItems().getInventory().add(new Item(item.getCatalogID(), amount, !def.isStackable()));
+			playerBuyer.getCarriedItems().remove(new Item(ItemId.COINS.id(), auctionPrice));
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your inventory.", false);
 			updateDiscord = true;
 			playerBuyer.save();
 		} else if (!playerBuyer.getBank().full()) {
-			playerBuyer.getBank().add(new Item(item.getItemID(), amount));
-			playerBuyer.getCarriedItems().remove(ItemId.COINS.id(), auctionPrice);
+			playerBuyer.getBank().add(new Item(item.getCatalogID(), amount));
+			playerBuyer.getCarriedItems().remove(new Item(ItemId.COINS.id(), auctionPrice));
 			ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your bank.", false);
 			updateDiscord = true;
 			playerBuyer.save();
@@ -82,7 +80,7 @@ public class BuyMarketItemTask extends MarketTask {
 			sellerPlayer.save();
 		}
 
-		playerBuyer.getWorld().getMarket().getMarketDatabase().addCollectableItem("Sold " + def.getName() + "(" + item.getItemID() + ") x" + amount + " for " + auctionPrice + "gp", 10, auctionPrice, sellerUsernameID);
+		playerBuyer.getWorld().getMarket().getMarketDatabase().addCollectableItem("Sold " + def.getName() + "(" + item.getCatalogID() + ") x" + amount + " for " + auctionPrice + "gp", 10, auctionPrice, sellerUsernameID);
 		item.setBuyers(!item.getBuyers().isEmpty() ? item.getBuyers() + ", \n" + "[" + (System.currentTimeMillis() / 1000) + ": "
 			+ playerBuyer.getUsername() + ": x" + amount + "]" : "[" + (System.currentTimeMillis() / 1000) + ": "
 			+ playerBuyer.getUsername() + ": x" + amount + "]");

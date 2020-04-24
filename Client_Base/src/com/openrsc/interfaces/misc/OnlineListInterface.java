@@ -4,7 +4,6 @@ import com.openrsc.interfaces.InputListener;
 import com.openrsc.interfaces.MenuAction;
 import com.openrsc.interfaces.NComponent;
 import com.openrsc.interfaces.NRightClickMenu;
-
 import orsc.graphics.gui.Panel;
 import orsc.mudclient;
 
@@ -80,7 +79,7 @@ public class OnlineListInterface extends NComponent {
 		setVisible(false);
 	}
 
-	public void addOnlineUser(final String user, final int crownID) {
+	public void addOnlineUser(final String user, final int crownID, boolean isLast) {
 		int textWidth = graphics().stringWidth(1, user) + (crownID > 0 ? 15 : 0);
 		int textHeight = graphics().fontHeight(1) - 1;
 		if (currentX + textWidth > userListContainer.getWidth()) {
@@ -88,7 +87,7 @@ public class OnlineListInterface extends NComponent {
 			currentY += textHeight;
 		}
 		final NComponent userComponent = new NComponent(getClient());
-		userComponent.setText(user + ", ");
+		userComponent.setText(isLast ? user : user + ", ");
 		userComponent.setFontColor(0xFFFFFF, 0xFF0000);
 		userComponent.setTextSize(1);
 		userComponent.setLocation(currentX, currentY);

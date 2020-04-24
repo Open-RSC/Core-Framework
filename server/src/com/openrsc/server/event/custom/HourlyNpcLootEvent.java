@@ -6,10 +6,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.MessageType;
 
-/****
- * Author: Kenix
- */
-
 public class HourlyNpcLootEvent extends HourlyEvent  {
 	private Point location;
 	private int npcId;

@@ -3,9 +3,9 @@ package com.openrsc.server.plugins.npcs.seers;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
@@ -16,31 +16,31 @@ public final class SeersBartender implements
 	TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BARTENDER_SEERS.id();
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Good morning, what would you like?");
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Good morning, what would you like?");
 		Menu defaultMenu = new Menu();
 		defaultMenu.addOption(new Option("What do you have?") {
 			@Override
 			public void action() {
-				npcsay(p, n, "Well we have beer",
+				npcsay(player, n, "Well we have beer",
 					"Or if you want some food, we have our home made stew and meat pies");
 				Menu def = new Menu();
 				def.addOption(new Option("Beer please") {
 					@Override
 					public void action() {
-						npcsay(p, n, "one beer coming up",
+						npcsay(player, n, "one beer coming up",
 							"Ok, that'll be two coins");
-						if (ifheld(p, ItemId.COINS.id(), 2)) {
-							p.message("You buy a pint of beer");
-							give(p, ItemId.BEER.id(), 1);
-							p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+						if (ifheld(player, ItemId.COINS.id(), 2)) {
+							player.message("You buy a pint of beer");
+							give(player, ItemId.BEER.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 						} else {
-							say(p, n,
+							say(player, n,
 								"Oh dear. I don't seem to have enough money");
 						}
 
@@ -49,13 +49,13 @@ public final class SeersBartender implements
 				def.addOption(new Option("I'll try the meat pie") {
 					@Override
 					public void action() {
-						npcsay(p, n, "Ok, that'll be 16 gold");
-						if (ifheld(p, ItemId.COINS.id(), 16)) {
-							p.message("You buy a nice hot meat pie");
-							give(p, ItemId.MEAT_PIE.id(), 1);
-							p.getCarriedItems().remove(ItemId.COINS.id(), 16);
+						npcsay(player, n, "Ok, that'll be 16 gold");
+						if (ifheld(player, ItemId.COINS.id(), 16)) {
+							player.message("You buy a nice hot meat pie");
+							give(player, ItemId.MEAT_PIE.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 16));
 						} else {
-							say(p, n,
+							say(player, n,
 								"Oh dear. I don't seem to have enough money");
 						}
 
@@ -64,14 +64,14 @@ public final class SeersBartender implements
 				def.addOption(new Option("Could I have some stew please") {
 					@Override
 					public void action() {
-						npcsay(p, n,
+						npcsay(player, n,
 							"A bowl of stew, that'll be 20 gold please");
-						if (ifheld(p, ItemId.COINS.id(), 20)) {
-							p.message("You buy a bowl of home made stew");
-							give(p, ItemId.STEW.id(), 1);
-							p.getCarriedItems().remove(ItemId.COINS.id(), 20);
+						if (ifheld(player, ItemId.COINS.id(), 20)) {
+							player.message("You buy a bowl of home made stew");
+							give(player, ItemId.STEW.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 						} else {
-							say(p, n,
+							say(player, n,
 								"Oh dear. I don't seem to have enough money");
 						}
 
@@ -83,46 +83,46 @@ public final class SeersBartender implements
 					public void action() {
 					}
 				});
-				def.showMenu(p);
+				def.showMenu(player);
 			}
 		});
 		defaultMenu.addOption(new Option("Beer please") {
 			@Override
 			public void action() {
-				npcsay(p, n, "one beer coming up",
+				npcsay(player, n, "one beer coming up",
 					"Ok, that'll be two coins");
-				if (ifheld(p, ItemId.COINS.id(), 2)) {
-					p.message("You buy a pint of beer");
-					give(p, ItemId.BEER.id(), 1);
-					p.getCarriedItems().remove(ItemId.COINS.id(), 2);
+				if (ifheld(player, ItemId.COINS.id(), 2)) {
+					player.message("You buy a pint of beer");
+					give(player, ItemId.BEER.id(), 1);
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 				} else {
-					say(p, n,
+					say(player, n,
 						"Oh dear. I don't seem to have enough money");
 				}
 			}
 		});
-		if (p.getCache().hasKey("barcrawl")
-			&& !p.getCache().hasKey("barfive")) {
+		if (player.getCache().hasKey("barcrawl")
+			&& !player.getCache().hasKey("barfive")) {
 			defaultMenu.addOption(new Option(
 				"I'm doing Alfred Grimhand's barcrawl") {
 				@Override
 				public void action() {
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Oh you're a barbarian then",
 						"Now which of these was the barrels contained the liverbane ale?",
 						"That'll be 18 coins please");
-					if (ifheld(p, ItemId.COINS.id(), 18)) {
-						p.getCarriedItems().remove(ItemId.COINS.id(), 18);
-						Functions.mes(p,
+					if (ifheld(player, ItemId.COINS.id(), 18)) {
+						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
+						mes(player,
 							"The bartender gives you a glass of liverbane ale",
 							"You gulp it down",
 							"The room seems to be swaying");
-						drinkAle(p);
-						Functions.mes(p, "The bartender scrawls his signiture on your card");
-						p.getCache().store("barfive", true);
+						drinkAle(player);
+						mes(player, "The bartender scrawls his signiture on your card");
+						player.getCache().store("barfive", true);
 					} else {
-						say(p, n, "Sorry I don't have 18 coins");
+						say(player, n, "Sorry I don't have 18 coins");
 					}
 				}
 			});
@@ -133,29 +133,29 @@ public final class SeersBartender implements
 			public void action() {
 			}
 		});
-		defaultMenu.showMenu(p);
+		defaultMenu.showMenu(player);
 	}
 
-	private void drinkAle(Player p) {
+	private void drinkAle(Player player) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.WOODCUT, Skills.FLETCHING, Skills.FIREMAKING};
 		for (int i = 0; i < skillIDs.length; i++) {
-			setAleEffect(p, skillIDs[i]);
+			setAleEffect(player, skillIDs[i]);
 		}
 	}
 
-	private void setAleEffect(Player p, int skillId) {
+	private void setAleEffect(Player player, int skillId) {
 		int reduction, currentStat, maxStat;
-		maxStat = p.getSkills().getMaxStat(skillId);
+		maxStat = player.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
 			maxStat < 40 ? 6 :
 			maxStat < 75 ? 7 : 8;
-		currentStat = p.getSkills().getLevel(skillId);
+		currentStat = player.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {
-			p.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
+			player.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
 		}
 		else {
-			p.getSkills().setLevel(skillId, currentStat - reduction);
+			player.getSkills().setLevel(skillId, currentStat - reduction);
 		}
 	}
 

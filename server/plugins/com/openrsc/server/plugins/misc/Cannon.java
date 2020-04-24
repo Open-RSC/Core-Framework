@@ -10,8 +10,7 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.inArray;
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Cannon implements OpLocTrigger,
 	OpInvTrigger,
@@ -129,7 +128,7 @@ public class Cannon implements OpLocTrigger,
 			player.setBusy(true);
 			player.message("you place the cannon base on the ground");
 			delay(1500);
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_BASE.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_BASE.id()));
 
 			GameObject cannonBase = new GameObject(
 				player.getWorld(),
@@ -154,7 +153,7 @@ public class Cannon implements OpLocTrigger,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
 			player.setBusy(true);
 			player.message("you add the stand");
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_STAND.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_STAND.id()));
 
 			player.getCache().set("cannon_stage", 2);
 			player.getWorld().unregisterGameObject(object);
@@ -171,7 +170,7 @@ public class Cannon implements OpLocTrigger,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
 			player.setBusy(true);
 			player.message("you add the barrels");
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_BARRELS.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
 
 			player.getWorld().unregisterGameObject(object);
 			GameObject cannonBarrels = new GameObject(player.getWorld(), object.getLocation(),
@@ -189,7 +188,7 @@ public class Cannon implements OpLocTrigger,
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
 			player.setBusy(true);
 			player.message("you add the furnace");
-			player.getCarriedItems().remove(ItemId.DWARF_CANNON_FURNACE.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
 
 			player.getWorld().unregisterGameObject(object);
 			GameObject cannonFurnace = new GameObject(player.getWorld(), object.getLocation(),
@@ -202,16 +201,16 @@ public class Cannon implements OpLocTrigger,
 		}
 	}
 
-	private void handleFire(Player p) {
-		if (!p.getCarriedItems().getInventory().contains(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
-			p.message("you're out of ammo");
+	private void handleFire(Player player) {
+		if (!player.getCarriedItems().getInventory().contains(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
+			player.message("you're out of ammo");
 			return;
-		} else if (p.isCannonEventActive()) {
+		} else if (player.isCannonEventActive()) {
 			return;
 		}
-		FireCannonEvent cannonEvent = new FireCannonEvent(p.getWorld(), p);
-		p.setCannonEvent(cannonEvent);
-		p.getWorld().getServer().getGameEventHandler().add(cannonEvent);
+		FireCannonEvent cannonEvent = new FireCannonEvent(player.getWorld(), player);
+		player.setCannonEvent(cannonEvent);
+		player.getWorld().getServer().getGameEventHandler().add(cannonEvent);
 	}
 
 	@Override
@@ -264,7 +263,7 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 946) {
 			return true;
 		}
@@ -278,30 +277,30 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 946) {
-			if (!obj.getOwner().equals(p.getUsername())) {
-				p.message("you can only add this stand to your own base");
+			if (!obj.getOwner().equals(player.getUsername())) {
+				player.message("you can only add this stand to your own base");
 				return;
 			}
-			addCannonStand(p, item, obj);
+			addCannonStand(player, item, obj);
 		}
 		if (obj.getID() == 947) {
-			if (!obj.getOwner().equals(p.getUsername())) {
-				p.message("you can only add the barrels to your own cannon");
+			if (!obj.getOwner().equals(player.getUsername())) {
+				player.message("you can only add the barrels to your own cannon");
 				return;
 			}
-			addCannonBarrels(p, item, obj);
+			addCannonBarrels(player, item, obj);
 		}
 		if (obj.getID() == 948) {
-			if (!obj.getOwner().equals(p.getUsername())) {
-				p.message("you can only add the furnace to your own cannon");
+			if (!obj.getOwner().equals(player.getUsername())) {
+				player.message("you can only add the furnace to your own cannon");
 				return;
 			}
-			addCannonFurnace(p, item, obj);
+			addCannonFurnace(player, item, obj);
 		}
 		if (obj.getID() == 943 && item.getCatalogId() == ItemId.MULTI_CANNON_BALL.id()) {
-			p.message("the cannon loads automatically");
+			player.message("the cannon loads automatically");
 		}
 	}
 }

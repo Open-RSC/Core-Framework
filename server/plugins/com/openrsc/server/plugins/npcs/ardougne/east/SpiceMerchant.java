@@ -20,34 +20,34 @@ public class SpiceMerchant implements ShopInterface, TalkNpcTrigger {
 	private final Shop shop = new Shop(false, 15000, 100, 70, 2, new Item(ItemId.SPICE.id(), 1));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		if (p.getCache().hasKey("spiceStolen") && Instant.now().getEpochSecond() < p.getCache().getLong("spiceStolen") + 1200) {
-			npcsay(p, n, "Do you really think I'm going to buy something",
+	public void onTalkNpc(Player player, Npc n) {
+		if (player.getCache().hasKey("spiceStolen") && Instant.now().getEpochSecond() < player.getCache().getLong("spiceStolen") + 1200) {
+			npcsay(player, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = ifnearvisnpc(p, NpcId.HERO.id(), 5); // Hero first
+			Npc attacker = ifnearvisnpc(player, NpcId.HERO.id(), 5); // Hero first
 			if (attacker == null)
-				attacker = ifnearvisnpc(p, NpcId.PALADIN.id(), 5); // Paladin second
+				attacker = ifnearvisnpc(player, NpcId.PALADIN.id(), 5); // Paladin second
 			if (attacker == null)
-				attacker = ifnearvisnpc(p, NpcId.KNIGHT.id(), 5); // Knight third
+				attacker = ifnearvisnpc(player, NpcId.KNIGHT.id(), 5); // Knight third
 			if (attacker == null)
-				attacker = ifnearvisnpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
+				attacker = ifnearvisnpc(player, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
 
 			if (attacker != null)
-				attacker.setChasing(p);
+				attacker.setChasing(player);
 
 		} else {
-			npcsay(p, n, "Get your exotic spices here",
+			npcsay(player, n, "Get your exotic spices here",
 				"rare very valuable spices here");
 			//from wiki
-			int menu = multi(p, n, false, "Lets have a look them then", "No thank you I'm not interested");
+			int menu = multi(player, n, false, "Lets have a look them then", "No thank you I'm not interested");
 			if (menu == 0) {
-				say(p, n, "Lets have a look then");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "Lets have a look then");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (menu == 1) {
-				say(p, n, "No thank you");
+				say(player, n, "No thank you");
 			}
 		}
 	}
@@ -56,7 +56,7 @@ public class SpiceMerchant implements ShopInterface, TalkNpcTrigger {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SPICE_MERCHANT.id();
 	}
 

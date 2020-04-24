@@ -6,13 +6,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-public class InvAction extends Functions implements OpInvTrigger {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class InvAction implements OpInvTrigger {
 
 	@Override
 	public boolean blockOpInv(Item item, Player player, String command) {
@@ -384,7 +385,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 			return;
 		}
 		mes(player, "The sticks catch alight");
-		if (remove(player, ItemId.UNLIT_TORCH.id(), 1)) {
+		if (player.getCarriedItems().remove(new Item(ItemId.UNLIT_TORCH.id())) != -1) {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_TORCH.id()));
@@ -417,7 +418,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 				"Provided you have the required runes and magic level",
 				"The scroll crumbles to dust");
 		}
-		remove(player, ItemId.MAGIC_SCROLL.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.MAGIC_SCROLL.id()));
 		if (!player.getCache().hasKey("ardougne_scroll")) {
 			player.getCache().store("ardougne_scroll", true);
 		}
@@ -432,7 +433,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 				"Provided you have the required runes and magic level",
 				"The scroll crumbles to dust");
 		}
-		remove(player, ItemId.SPELL_SCROLL.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.SPELL_SCROLL.id()));
 		if (!player.getCache().hasKey("watchtower_scroll")) {
 			player.getCache().store("watchtower_scroll", true);
 		}
@@ -509,7 +510,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 
 	private void handleJangerberries(Player player) {
 		mes(player, "You eat the Jangerberries");
-		remove(player, ItemId.JANGERBERRIES.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id()));
 		int Attack = player.getSkills().getMaxStat(Skills.ATTACK) + 2;
 		int Strength = player.getSkills().getMaxStat(Skills.STRENGTH) + 1;
 		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
@@ -601,7 +602,7 @@ public class InvAction extends Functions implements OpInvTrigger {
 
 	private void handleNightshade(Player player) {
 		player.message("You eat the nightshade...");
-		remove(player, ItemId.NIGHTSHADE.id(), 1);
+		player.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id()));
 		say(player, null, "Ahhhh! what have I done !");
 		player.damage((int) ((getCurrentLevel(player, Skills.HITS) * 0.2D) + 10));
 		player.message("The nightshade was highly poisonous");

@@ -161,8 +161,8 @@ public class Npc extends Mob {
 
 	public void displayNpcTeleportBubble(final int x, final int y) {
 		for (Object o : getViewArea().getPlayersInView()) {
-			Player p = ((Player) o);
-			ActionSender.sendTeleBubble(p, x, y, false);
+			Player player = ((Player) o);
+			ActionSender.sendTeleBubble(player, x, y, false);
 		}
 		setTeleporting(true);
 	}
@@ -604,24 +604,24 @@ public class Npc extends Mob {
 		return UUIDWithMostDamage;
 	}
 
-	public void initializeTalkScript(final Player p) {
+	public void initializeTalkScript(final Player player) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().handlePlugin(p, "TalkNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, npc});
 			}
 		});
 	}
 
-	public void initializeIndirectTalkScript(final Player p) {
+	public void initializeIndirectTalkScript(final Player player) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().handlePlugin(p, "IndirectTalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().handlePlugin(player, "IndirectTalkToNpc", new Object[]{player, npc});
 			}
 		});
 	}
@@ -635,6 +635,7 @@ public class Npc extends Mob {
 		}
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
+			getWorld().removeNpcPosition(this);
 			teleport(0, 0);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
@@ -769,25 +770,25 @@ public class Npc extends Mob {
 		return this.executedAggroScript;
 	}
 
-	public static boolean handleRingOfAvarice(final Player p, final Item item) {
+	public static boolean handleRingOfAvarice(final Player player, final Item item) {
 		try {
 			int slot = -1;
-			if (p.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
-				ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
+				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
 				if (itemDef != null && itemDef.isStackable()) {
-					if (p.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
-						p.getCarriedItems().getInventory().add(item);
+					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+						player.getCarriedItems().getInventory().add(item);
 						return true;
-					} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
-						Item equipped = p.getCarriedItems().getEquipment().get(slot);
-						equipped.changeAmount(p.getWorld().getServer().getDatabase(), item.getAmount());
+					} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+						Item equipped = player.getCarriedItems().getEquipment().get(slot);
+						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
 						return true;
 					} else {
-						if (p.getCarriedItems().getInventory().getFreeSlots() > 0) {
-							p.getCarriedItems().getInventory().add(item);
+						if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+							player.getCarriedItems().getInventory().add(item);
 							return true;
 						} else {
-							p.message("Your ring of Avarice tried to activate, but your inventory was full.");
+							player.message("Your ring of Avarice tried to activate, but your inventory was full.");
 							return false;
 						}
 					}

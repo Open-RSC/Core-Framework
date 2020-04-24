@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -48,7 +49,7 @@ public class FireCannonEvent extends GameTickEvent {
 		int cannonBallDamage = DataConversions.random(0, max);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getOwner(), target, cannonBallDamage, 5));
 		getPlayerOwner().playSound("shoot");
-		getPlayerOwner().getCarriedItems().remove(ItemId.MULTI_CANNON_BALL.id(), 1);
+		getPlayerOwner().getCarriedItems().remove(new Item(ItemId.MULTI_CANNON_BALL.id()));
 
 		this.count += 1;
 		if (this.count >= 20) {

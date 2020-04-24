@@ -7,9 +7,6 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Player cache
- *
- * @author Peeter
- * <p/>
  * This system enables a programmer to store key/value pairs in the
  * database with ease.
  */

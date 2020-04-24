@@ -1,8 +1,5 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
-
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -14,9 +11,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-/**
- * @author n0m
- */
+import static com.openrsc.server.plugins.Functions.*;
+
 public class DragonFireBreath implements OnCombatStartScript {
 
 	@Override

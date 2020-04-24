@@ -6,12 +6,10 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class SpinningWheel implements UseLocTrigger {
 
@@ -56,7 +54,7 @@ public class SpinningWheel implements UseLocTrigger {
 		if (produce == -1 || requirement == -1 || exp == -1) {
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Spinning Wheel", Formulae
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Spinning Wheel", Formulae
 			.getRepeatTimes(player, Skills.CRAFTING), false) {
 
 			@Override
@@ -76,8 +74,8 @@ public class SpinningWheel implements UseLocTrigger {
 						return;
 					}
 				}
-				if (getOwner().getCarriedItems().remove(item.getCatalogId(), 1) > -1) {
-					Functions.thinkbubble(getOwner(), item);
+				if (getOwner().getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
+					thinkbubble(getOwner(), item);
 					getOwner().playSound("mechanical");
 					getOwner().message("You " + verb + " the "
 						+ consumedItem + " into a " + producedItem);

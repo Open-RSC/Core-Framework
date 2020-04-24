@@ -5,10 +5,6 @@ import com.openrsc.server.external.SkillDef;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Author: Kenix
- */
-
 public class Skills {
 
 	//public static final int SKILL_COUNT = 19;

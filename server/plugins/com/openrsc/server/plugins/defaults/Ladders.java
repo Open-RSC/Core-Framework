@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -31,7 +30,7 @@ public class Ladders {
 	}
 
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		player.setBusyTimer(650);
+		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		if (obj.getID() == 487 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
@@ -79,21 +78,21 @@ public class Ladders {
 		} else if (obj.getID() == 487) {
 			player.message("You pull the lever");
 			player.teleport(567, 3330);
-			delay(600);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (player.getX() == 567 && player.getY() == 3330) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 488) {
 			player.message("You pull the lever");
 			player.teleport(282, 3019);
-			delay(600);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (player.getX() == 282 && player.getY() == 3019) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 349) {
 			player.playerServerMessage(MessageType.QUEST, "You pull the lever");
 			player.teleport(621, 596);
-			delay(600);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (player.getX() == 621 && player.getY() == 596) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
@@ -114,7 +113,7 @@ public class Ladders {
 				player.message("you pull the lever");
 				player.teleport(180, 128);
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
-				delay(600);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				if (player.getX() == 180 && player.getY() == 128) {
 					displayTeleportBubble(player, player.getX(), player.getY(), false);
 				}
@@ -198,9 +197,9 @@ public class Ladders {
 			}
 		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
 			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
-				Functions.mes(player, "you seem to be missing a disk to use the ladder");
+				mes(player, "you seem to be missing a disk to use the ladder");
 			} else {
-				mes(player, 1200, "You climb down the ladder");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You climb down the ladder");
 				int offX = DataConversions.random(0,4) - 2;
 				int offY = DataConversions.random(0,4) - 2;
 				player.teleport(305 + offX, 3300 + offY);
@@ -211,7 +210,7 @@ public class Ladders {
 			if (paladinGuard != null) {
 				npcYell(player, paladinGuard, "Stop right there");
 				paladinGuard.setChasing(player);
-				delay(1000);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (player.inCombat()) {
 					return;
 				}

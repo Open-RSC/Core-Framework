@@ -26,9 +26,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Author: Kenix
- */
 public abstract class GameDatabase extends GameDatabaseQueries{
 	/**
 	 * The asynchronous logger.
@@ -92,13 +89,22 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
 	protected abstract ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException;
 	protected abstract ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException;
-	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId) throws GameDatabaseException;
+	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException;
+	protected abstract void queryInsertPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions, String tableName) throws GameDatabaseException;
 	protected abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
+	protected abstract void queryCancelRecoveryChange(int playerId) throws GameDatabaseException;
+	protected abstract PlayerContactDetails queryContactDetails(int playerId) throws GameDatabaseException;
+	protected abstract void queryInsertContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
+	protected abstract void queryUpdateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
 
 	protected abstract ClanDef[] queryClans() throws GameDatabaseException;
 	protected abstract ClanMember[] queryClanMembers(final int clanId) throws GameDatabaseException;
 	protected abstract int queryNewClan(final String name, final String tag, final String leader) throws GameDatabaseException;
-	protected abstract void queryNewClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException;
+	protected abstract void querySaveClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException;
+	protected abstract void queryDeleteClan(final int clanId) throws GameDatabaseException;
+	protected abstract void queryDeleteClanMembers(final int clanId) throws GameDatabaseException;
+	protected abstract void queryUpdateClan(final ClanDef clan) throws GameDatabaseException;
+	protected abstract void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
@@ -243,9 +249,14 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 			savePlayerSkills(player);
 			savePlayerSocial(player);
 
+			commitTransaction();
+
 			return true;
 		} catch (final Exception ex) {
-			rollbackTransaction();
+			try {
+				rollbackTransaction();
+				LOGGER.error(ex.getMessage());
+			} catch (final Exception e) { }
 			LOGGER.catching(ex);
 			return false;
 		}
@@ -292,16 +303,16 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public String banPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) {
-		final Player p = getServer().getWorld().getPlayer(DataConversions.usernameToHash(userNameToBan));
+		final Player player = getServer().getWorld().getPlayer(DataConversions.usernameToHash(userNameToBan));
 
-		if (p != null) {
-			p.unregister(true, "You have been banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes"));
+		if (player != null) {
+			player.unregister(true, "You have been banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes"));
 		}
 
 		if (bannedForMinutes == 0) {
-			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, p, bannedBy.getUsername() + " was unbanned by " + bannedBy.getUsername()));
+			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, player, bannedBy.getUsername() + " was unbanned by " + bannedBy.getUsername()));
 		} else {
-			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, p, bannedBy.getUsername() + " was banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes")));
+			getServer().getGameLogger().addQuery(new StaffLog(bannedBy, 11, player, bannedBy.getUsername() + " was banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes")));
 		}
 
 		try {
@@ -387,12 +398,40 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	}
 
 	public PlayerRecoveryQuestions getPlayerRecoveryData(int playerId) throws GameDatabaseException {
-		return queryPlayerRecoveryData(playerId);
+		return queryPlayerRecoveryData(playerId, "player_recovery");
+	}
+
+	public PlayerRecoveryQuestions getPlayerChangeRecoveryData(int playerId) throws GameDatabaseException {
+		return queryPlayerRecoveryData(playerId, "player_change_recovery");
+	}
+
+	public void newPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions) throws GameDatabaseException {
+		queryInsertPlayerRecoveryData(playerId, recoveryQuestions, "player_recovery");
+	}
+
+	public void newPlayerChangeRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions) throws GameDatabaseException {
+		queryInsertPlayerRecoveryData(playerId, recoveryQuestions, "player_change_recovery");
 	}
 
 	// Inserts a new recovery attempt into the database and returns the database index of the attempt.
 	public int newRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException {
 		return queryInsertRecoveryAttempt(playerId, username, time, ip);
+	}
+
+	public void cancelRecoveryChangeRequest(int playerId) throws GameDatabaseException {
+		queryCancelRecoveryChange(playerId);
+	}
+
+	public PlayerContactDetails getContactDetails(int playerId) throws GameDatabaseException {
+		return queryContactDetails(playerId);
+	}
+
+	public void newContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException {
+		queryInsertContactDetails(playerId, contactDetails);
+	}
+
+	public void updateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException {
+		queryUpdateContactDetails(playerId, contactDetails);
 	}
 
 	public ClanDef[] getClans() throws GameDatabaseException {
@@ -407,8 +446,25 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 		return queryNewClan(name, tag, leader);
 	}
 
-	public void newClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException {
-		queryNewClanMembers(clanId, clanMembers);
+	public void saveClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException {
+		querySaveClanMembers(clanId, clanMembers);
+	}
+
+	public void deleteClan(final int clanId) throws GameDatabaseException {
+		queryDeleteClan(clanId);
+		queryDeleteClanMembers(clanId);
+	}
+
+	public void deleteClanMembers(final int clanId) throws GameDatabaseException {
+		queryDeleteClanMembers(clanId);
+	}
+
+	public void updateClan(final ClanDef clan) throws GameDatabaseException {
+		queryUpdateClan(clan);
+	}
+
+	public void updateClanMember(final ClanMember clanMember) throws GameDatabaseException {
+		queryUpdateClanMember(clanMember);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {
@@ -761,7 +817,9 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 							inventoryWriter.writeByte(-1);
 						else {
 							inventoryWriter.writeShort(inventoryItem.getCatalogId());
-							if (inventoryItem.getDef(player.getWorld()) != null && inventoryItem.getDef(player.getWorld()).isStackable())
+							inventoryWriter.writeByte(inventoryItem.getNoted() ? 1 : 0);
+							if (inventoryItem.getDef(player.getWorld()) != null
+								&& (inventoryItem.getDef(player.getWorld()).isStackable() || inventoryItem.getNoted()))
 								inventoryWriter.writeInt(inventoryItem.getAmount());
 						}
 

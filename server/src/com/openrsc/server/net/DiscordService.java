@@ -175,7 +175,7 @@ public class DiscordService implements Runnable{
 								while (e.hasNext()) {
 									MarketItem a = e.next();
 									if (a.getSeller() == dbID)
-										reply = reply + server.getEntityHandler().getItemDef(a.getItemID()).getName() + " (" + a.getAmountLeft() + ") @ " + a.getPrice() + "gp ea. (" + a.getHoursLeft() + "hrs)\n";
+										reply = reply + server.getEntityHandler().getItemDef(a.getCatalogID()).getName() + " (" + a.getAmountLeft() + ") @ " + a.getPrice() + "gp ea. (" + a.getHoursLeft() + "hrs)\n";
 								}
 							} else
 								reply = "You have not paired an account yet. Type !help for more information";
@@ -408,7 +408,7 @@ public class DiscordService implements Runnable{
 
 		String addMessage = String.format(pluralHandlerMessage,
 				addItem.getAmount(),
-				getServer().getEntityHandler().getItemDef(addItem.getItemID()).getName(),
+				getServer().getEntityHandler().getItemDef(addItem.getCatalogID()).getName(),
 				addItem.getPrice() / addItem.getAmount(),
 				addItem.getSellerName(),
 				addItem.getHoursLeft()
@@ -423,11 +423,11 @@ public class DiscordService implements Runnable{
 			try {
 				while (results.next()) {
 					String watchlist = results.getString("value");
-					if (watchlist.contains(String.valueOf(addItem.getItemID()))) {
+					if (watchlist.contains(String.valueOf(addItem.getCatalogID()))) {
 						String key = results.getString("key").substring(10);
 						try {
 							long discordID = Long.parseLong(key);
-							ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getItemID());
+							ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getCatalogID());
 							if (itemDef != null) {
 								String message = "[" + server.getConfig().SERVER_NAME + " watchlist] " + itemDef.getName() + " ( " + addItem.getAmountLeft() + " @ " + addItem.getPrice() + "gp)";
 								sendPM(discordID, message);
@@ -448,7 +448,7 @@ public class DiscordService implements Runnable{
 
 	public void auctionBuy(MarketItem buyItem) {
 		String buyMessage = String.format("%s purchased from %s.  %d left in auction.",
-			getServer().getEntityHandler().getItemDef(buyItem.getItemID()).getName(),
+			getServer().getEntityHandler().getItemDef(buyItem.getCatalogID()).getName(),
 				buyItem.getSellerName(),
 				buyItem.getAmountLeft()
 		);
@@ -459,7 +459,7 @@ public class DiscordService implements Runnable{
 	public void auctionCancel(MarketItem cancelItem) {
 		String cancelMessage = String.format("%d x %s cancelled from auction by %s.",
 				cancelItem.getAmount(),
-				getServer().getEntityHandler().getItemDef(cancelItem.getItemID()).getName(),
+				getServer().getEntityHandler().getItemDef(cancelItem.getCatalogID()).getName(),
 				cancelItem.getSellerName()
 		);
 
@@ -469,7 +469,7 @@ public class DiscordService implements Runnable{
 	public void auctionModDelete(MarketItem deleteItem) {
 		String cancelMessage = String.format("%d x %s, auctioned by %s, has been deleted by moderator.",
 				deleteItem.getAmount(),
-				getServer().getEntityHandler().getItemDef(deleteItem.getItemID()).getName(),
+				getServer().getEntityHandler().getItemDef(deleteItem.getCatalogID()).getName(),
 				deleteItem.getSellerName()
 		);
 

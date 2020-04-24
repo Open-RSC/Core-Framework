@@ -23,7 +23,7 @@ public class ArheinGeneralShop implements ShopInterface,
 		new Item(ItemId.ROPE.id(), 2), new Item(ItemId.POT.id(), 2));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.ARHEIN.id();
 	}
 
@@ -38,82 +38,82 @@ public class ArheinGeneralShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Hello would you like to trade");
-		int option = multi(p, n, "Yes ok",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello would you like to trade");
+		int option = multi(player, n, "Yes ok",
 			"No thankyou",
 			"Is that your ship?");
 		if (option == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 2) {
-			npcsay(p, n,
+			npcsay(player, n,
 				"Yes I use it to make deliver my goods up and down the coast",
 				"These crates here are all ready for my next trip");
 
 			String[] menuOptions = new String[] {"Where do you deliver too?", "Are you rich then?"};
-			if (p.getQuestStage(Quests.MERLINS_CRYSTAL) == 2) {
+			if (player.getQuestStage(Quests.MERLINS_CRYSTAL) == 2) {
 				menuOptions = new String[] {"Do you deliver to the fort just down the coast?",
 						"Where do you deliver too?",
 						"Are you rich then?"};
 
-				option = multi(p, n, false, menuOptions);
-				shipBranchDialogue(p, n, option);
+				option = multi(player, n, false, menuOptions);
+				shipBranchDialogue(player, n, option);
 			} else {
-				option = multi(p, n, false, menuOptions);
+				option = multi(player, n, false, menuOptions);
 				if (option >= 0)
-					shipBranchDialogue(p, n, option + 1);
+					shipBranchDialogue(player, n, option + 1);
 			}
 		}
 	}
 
-	public void shipBranchDialogue(final Player p, final Npc n, int option) {
+	public void shipBranchDialogue(final Player player, final Npc n, int option) {
 		if (option == 0) {
-			say(p, n, "Do you deliver to the fort just down the coast?");
-			npcsay(p, n,
+			say(player, n, "Do you deliver to the fort just down the coast?");
+			npcsay(player, n,
 				"Yes I do have orders to deliver there from time to time",
 				"I think I may have some bits and pieces for them",
 				"when I leave here next actually"
 			);
 
-			option = multi(p, n, false, //do not send over
+			option = multi(player, n, false, //do not send over
 				"Can you drop me off on the way down please",
 				"Aren't you worried about supplying evil knights?");
 
 			if (option == 0) {
-				say(p, n, "can you drop me off on the way down please");
-				npcsay(p, n,
+				say(player, n, "can you drop me off on the way down please");
+				npcsay(player, n,
 					"I don't think Sir Mordred would like that",
 					"He wants as few outsiders visiting as possible",
 					"I wouldn't want to lose his buisness"
 				);
 			} else if (option == 1) {
-				say(p, n, "Aren't you worried about supplying evil knights");
-				npcsay(p, n,
+				say(player, n, "Aren't you worried about supplying evil knights");
+				npcsay(player, n,
 					"Hey you gotta take business where you can find it these days",
 					"Besides if I didn't supply them, someone else would"
 				);
 			}
 		} else if (option == 1) {
-			say(p, n, "Where do you deliver to?");
-			npcsay(p, n,
+			say(player, n, "Where do you deliver to?");
+			npcsay(player, n,
 				"Oh various places up and down the coast",
 				"Mostly Karamja and Port Sarim"
 			);
 
-			option = multi(p, n, false, //do not send over
+			option = multi(player, n, false, //do not send over
 				"I don't suppose I could get a lift anywhere?",
 				"Well good luck with the buisness");
 
 			if (option == 0) {
-				say(p, n, "I don't suppose I could get a lift anywhere?");
-				npcsay(p, n, "I'm not quite ready to sail yet");
+				say(player, n, "I don't suppose I could get a lift anywhere?");
+				npcsay(player, n, "I'm not quite ready to sail yet");
 			} else if (option == 1) {
-				say(p, n, "Well good luck with your business");
+				say(player, n, "Well good luck with your business");
 			}
 		} else if (option == 2) {
-			say(p, n, "Are you rich then?");
-			npcsay(p, n,
+			say(player, n, "Are you rich then?");
+			npcsay(player, n,
 				"Business is going reasonably well",
 				"I wouldn't say I was the richest of merchants ever",
 				"But I'm doing reasonably well"

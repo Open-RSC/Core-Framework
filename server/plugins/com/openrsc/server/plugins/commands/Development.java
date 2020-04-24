@@ -397,12 +397,12 @@ public final class Development implements CommandTrigger {
 				.replaceAll("\n", "%"), true);
 		}
 		else if (cmd.equalsIgnoreCase("coords")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p != null)
-				player.message(messagePrefix + p.getStaffName() + " is at: " + p.getLocation());
+			if(targetPlayer != null)
+				player.message(messagePrefix + targetPlayer.getStaffName() + " is at: " + targetPlayer.getLocation());
 			else
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}

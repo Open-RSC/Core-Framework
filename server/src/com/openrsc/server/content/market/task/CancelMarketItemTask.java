@@ -21,14 +21,15 @@ public class CancelMarketItemTask extends MarketTask {
 		boolean updateDiscord = false;
 		MarketItem item = owner.getWorld().getMarket().getMarketDatabase().getAuctionItem(auctionID);
 		if (item != null) {
-			int itemIndex = item.getItemID();
+			int itemIndex = item.getCatalogID();
 			int amount = item.getAmountLeft();
 			ItemDefinition def = owner.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
 			if (!owner.getCarriedItems().getInventory().full() && (!def.isStackable() && owner.getCarriedItems().getInventory().size() + amount <= 30)) {
 				if (owner.getWorld().getMarket().getMarketDatabase().cancel(item)) {
-					if (!def.isStackable()) for (int i = 0; i < amount; i++)
+					if (!def.isStackable() && amount == 1)
 						owner.getCarriedItems().getInventory().add(new Item(itemIndex, 1));
-					else owner.getCarriedItems().getInventory().add(new Item(itemIndex, amount));
+					else
+						owner.getCarriedItems().getInventory().add(new Item(itemIndex, amount, !def.isStackable()));
 					ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ The item has been canceled and returned to your inventory.", false);
 					updateDiscord = true;
 				}

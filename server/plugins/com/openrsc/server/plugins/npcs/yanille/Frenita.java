@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Frenita implements ShopInterface,
 	TalkNpcTrigger {
@@ -25,22 +23,22 @@ public final class Frenita implements ShopInterface,
 		new Item(ItemId.POT_OF_FLOUR.id(), 8));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
-		npcsay(p, n, "Would you like to buy some cooking equipment");
+	public void onTalkNpc(Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy some cooking equipment");
 
-		int option = Functions.multi(p, n, "Yes please", "No thankyou");
+		int option = multi(player, n, "Yes please", "No thankyou");
 		switch (option) {
 
 			case 0:
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FRENITA.id();
 	}
 

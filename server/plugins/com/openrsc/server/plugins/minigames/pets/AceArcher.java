@@ -55,7 +55,7 @@ public class AceArcher implements UseNpcTrigger {
 					}*/
 					if (random(0, 4) != 0) {
 						player.message("You catch the baby blue dragon in the crystal.");
-						remove(player, ItemId.A_GLOWING_RED_CRYSTAL.id(), 1);
+						player.getCarriedItems().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 						give(player, ItemId.A_RED_CRYSTAL.id(), 1);
 						ActionSender.sendInventory(player);
 						player.setBusy(false);

@@ -12,8 +12,6 @@ import java.util.List;
 /**
  * TODO: Change log to builder design (ex: new TradeLog().build())
  * Logic should never be involved in preparing statements other than passing data to the database
- *
- * @author openfrog
  */
 
 

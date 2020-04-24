@@ -21,7 +21,7 @@ public final class BriansBattleAxes implements ShopInterface,
 		new Item(ItemId.MITHRIL_BATTLE_AXE.id(), 1), new Item(ItemId.ADAMANTITE_BATTLE_AXE.id(), 1));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.BRIAN.id();
 	}
 
@@ -36,18 +36,18 @@ public final class BriansBattleAxes implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "ello");
-		int option = multi(p, n, false, //do not send over
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "ello");
+		int option = multi(player, n, false, //do not send over
 				"So are you selling something?", "ello");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "Yep take a look at these great axes");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Yep take a look at these great axes");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 			case 1:
-				say(p, n, "Ello");
+				say(player, n, "Ello");
 				break;
 		}
 	}

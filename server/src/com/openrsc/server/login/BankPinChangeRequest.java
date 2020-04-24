@@ -10,8 +10,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Used to change bank pins on the Login thread
- *
- * @author Kenix
  */
 public class BankPinChangeRequest extends LoginExecutorProcess {
 	/**

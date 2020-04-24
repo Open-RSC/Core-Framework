@@ -11,9 +11,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcCommand implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) {
-		int pID = p.getID();
-		int serverIndex = p.readShort();
+	public void handlePacket(Packet packet, Player player) {
+		int pID = packet.getID();
+		int serverIndex = packet.readShort();
 		if (player == null) return;
 		if (player.isBusy()) {
 			if (player.inCombat()) {

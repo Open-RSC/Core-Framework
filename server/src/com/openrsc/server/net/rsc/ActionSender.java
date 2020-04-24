@@ -35,9 +35,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map.Entry;
 
-/**
- * @author n0m
- */
 public class ActionSender {
 	/**
 	 * The asynchronous logger.
@@ -735,6 +732,7 @@ public class ActionSender {
 
 			//Write catalog ID to the packet as a short
 			s.writeShort(item.getCatalogId());
+			s.writeByte(item.getNoted() ? 1 : 0);
 
 			//If the item is stackable or is noted, write the amount to the packet as an Int
 			if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
@@ -994,19 +992,19 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	public static void sendExperience(Player p, int stat) {
+	public static void sendExperience(Player player, int stat) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPERIENCE.opcode);
 		s.writeByte((byte) stat);
-		s.writeInt(p.getSkills().getExperience(stat));
-		p.write(s.toPacket());
+		s.writeInt(player.getSkills().getExperience(stat));
+		player.write(s.toPacket());
 	}
 
-	public static void sendExperienceToggle(Player p) {
+	public static void sendExperienceToggle(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPERIENCE_TOGGLE.opcode);
-		s.writeByte((byte) (p.isExperienceFrozen() ? 1 : 0));
-		p.write(s.toPacket());
+		s.writeByte((byte) (player.isExperienceFrozen() ? 1 : 0));
+		player.write(s.toPacket());
 	}
 
 	/**
@@ -1065,10 +1063,10 @@ public class ActionSender {
 		if (with == null) { // This shouldn't happen
 			return;
 		}
-		PacketBuilder p = new PacketBuilder();
-		p.setID(Opcode.SEND_TRADE_OTHER_ACCEPTED.opcode);
-		p.writeByte((byte) (with.getTrade().isTradeAccepted() ? 1 : 0));
-		player.write(p.toPacket());
+		PacketBuilder pb = new PacketBuilder();
+		pb.setID(Opcode.SEND_TRADE_OTHER_ACCEPTED.opcode);
+		pb.writeByte((byte) (with.getTrade().isTradeAccepted() ? 1 : 0));
+		player.write(pb.toPacket());
 	}
 
 	public static void sendOwnTradeAcceptUpdate(Player player) {
@@ -1076,10 +1074,10 @@ public class ActionSender {
 		if (with == null) { // This shouldn't happen
 			return;
 		}
-		PacketBuilder p = new PacketBuilder();
-		p.setID(Opcode.SEND_TRADE_ACCPETED.opcode);
-		p.writeByte((byte) (player.getTrade().isTradeAccepted() ? 1 : 0));
-		player.write(p.toPacket());
+		PacketBuilder pb = new PacketBuilder();
+		pb.setID(Opcode.SEND_TRADE_ACCPETED.opcode);
+		pb.writeByte((byte) (player.getTrade().isTradeAccepted() ? 1 : 0));
+		player.write(pb.toPacket());
 	}
 
 	public static void sendTradeItems(Player player) {
@@ -1308,44 +1306,44 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
-	public static void sendUpdatedPlayer(Player p) {
+	public static void sendUpdatedPlayer(Player player) {
 		try {
-			p.getWorld().getServer().getGameUpdater().sendUpdatePackets(p);
+			player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
 		} catch (Throwable e) {
 			LOGGER.catching(e);
 		}
 	}
 
-	static void sendLogin(Player p) {
+	static void sendLogin(Player player) {
 		try {
-			if (p.getWorld().registerPlayer(p)) {
-				sendWorldInfo(p);
-				p.getWorld().getServer().getGameUpdater().sendUpdatePackets(p);
-				long timeTillShutdown = p.getWorld().getServer().timeTillShutdown();
+			if (player.getWorld().registerPlayer(player)) {
+				sendWorldInfo(player);
+				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
+				long timeTillShutdown = player.getWorld().getServer().timeTillShutdown();
 				if (timeTillShutdown > -1)
-					startShutdown(p, (int)(timeTillShutdown / 1000));
+					startShutdown(player, (int)(timeTillShutdown / 1000));
 
-				int elixir = p.getElixir();
+				int elixir = player.getElixir();
 				if (elixir > -1)
-					sendElixirTimer(p, p.getElixir());
+					sendElixirTimer(player, player.getElixir());
 
-				sendPlayerOnTutorial(p);
-				sendPlayerOnBlackHole(p);
-				if (p.getLastLogin() == 0L) {
-					sendAppearanceScreen(p);
-					for (int itemId : p.getWorld().getServer().getConstants().STARTER_ITEMS) {
+				sendPlayerOnTutorial(player);
+				sendPlayerOnBlackHole(player);
+				if (player.getLastLogin() == 0L) {
+					sendAppearanceScreen(player);
+					for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
 						Item i = new Item(itemId);
-						p.getCarriedItems().getInventory().add(i, false);
+						player.getCarriedItems().getInventory().add(i, false);
 					}
 					//Block PK chat by default.
-					p.getCache().set("setting_block_global", 3);
+					player.getCache().set("setting_block_global", 3);
 				}
 
-				sendWakeUp(p, false, true);
-				sendGameSettings(p);
-				sendLoginBox(p);
+				sendWakeUp(player, false, true);
+				sendGameSettings(player);
+				sendLoginBox(player);
 
-				for (Npc n : p.getWorld().getNpcs()) {
+				for (Npc n : player.getWorld().getNpcs()) {
 					if(n instanceof PkBot) {
 						PkBot bot = (PkBot)n;
 						if (bot.getSkullType() > 0) {
@@ -1353,7 +1351,7 @@ public class ActionSender {
 						}
 					}
 				}
-				for (Npc n : p.getWorld().getNpcs()) {
+				for (Npc n : player.getWorld().getNpcs()) {
 					if(n instanceof PkBot) {
 						PkBot bot = (PkBot)n;
 						if (bot.getWield() > 0 || bot.getWield2() > 0) {
@@ -1363,52 +1361,52 @@ public class ActionSender {
 					}
 				}
 
-				sendMessage(p, null, 0, MessageType.QUEST, "Welcome to " + p.getWorld().getServer().getConfig().SERVER_NAME + "!", 0);
-				if (p.isMuted()) {
-					sendMessage(p, "You are muted for "
-						+ (double) (System.currentTimeMillis() - p.getMuteExpires()) / 3600000D + " hours.");
+				sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getWorld().getServer().getConfig().SERVER_NAME + "!", 0);
+				if (player.isMuted()) {
+					sendMessage(player, "You are muted for "
+						+ (double) (System.currentTimeMillis() - player.getMuteExpires()) / 3600000D + " hours.");
 				}
 
-				if (p.getLocation().inTutorialLanding()) {
-					sendBox(p, "@gre@Welcome to the " + p.getWorld().getServer().getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
+				if (player.getLocation().inTutorialLanding()) {
+					sendBox(player, "@gre@Welcome to the " + player.getWorld().getServer().getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				sendPrivacySettings(p);
+				sendPrivacySettings(player);
 
-				sendStats(p);
-				sendEquipmentStats(p);
-				sendFatigue(p);
-				sendKills2(p);
+				sendStats(player);
+				sendEquipmentStats(player);
+				sendFatigue(player);
+				sendKills2(player);
 
-				sendCombatStyle(p);
-				sendIronManMode(p);
+				sendCombatStyle(player);
+				sendIronManMode(player);
 
-				sendInventory(p);
-				p.checkEquipment();
+				sendInventory(player);
+				player.checkEquipment();
 
-				if (p.getWorld().getServer().getConfig().WANT_BANK_PRESETS)
-					sendBankPresets(p);
+				if (player.getWorld().getServer().getConfig().WANT_BANK_PRESETS)
+					sendBankPresets(player);
 
-				if (!p.getWorld().getServer().getConfig().WANT_FATIGUE)
-					sendExperienceToggle(p);
+				if (!player.getWorld().getServer().getConfig().WANT_FATIGUE)
+					sendExperienceToggle(player);
 
 				/*if (!getServer().getConfig().MEMBER_WORLD) {
 					p.unwieldMembersItems();
 				}*/
 
-				if (!p.getLocation().inWilderness()) {
-					if (p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
-						p.getWorld().getMarket().addCollectableItemsNotificationTask(p);
+				if (!player.getLocation().inWilderness()) {
+					if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+						player.getWorld().getMarket().addCollectableItemsNotificationTask(player);
 					}
 				}
 
-				sendQuestInfo(p);
+				sendQuestInfo(player);
 				//AchievementSystem.achievementListGUI(p);
-				sendFriendList(p);
-				sendIgnoreList(p);
+				sendFriendList(player);
+				sendIgnoreList(player);
 			} else {
-				LOGGER.info("Send Login, Failed: " + p.getUsername());
-				p.getChannel().close();
+				LOGGER.info("Send Login, Failed: " + player.getUsername());
+				player.getChannel().close();
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
@@ -1418,28 +1416,28 @@ public class ActionSender {
 	public static void sendOnlineList(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
 		pb.writeShort(player.getWorld().getPlayers().size());
-		for (Player p : player.getWorld().getPlayers()) {
-			pb.writeString(p.getUsername());
-			pb.writeInt(p.getIcon());
+		for (Player friend : player.getWorld().getPlayers()) {
+			pb.writeString(friend.getUsername());
+			pb.writeInt(friend.getIcon());
 		}
 		player.write(pb.toPacket());
 	}
 
-	public static void showFishingTrawlerInterface(Player p) {
+	public static void showFishingTrawlerInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
 		pb.writeByte(0);
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
-	public static void hideFishingTrawlerInterface(Player p) {
+	public static void hideFishingTrawlerInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
 		pb.writeByte(2);
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
-	public static void updateFishingTrawler(Player p, int waterLevel, int minutesLeft, int fishCaught,
+	public static void updateFishingTrawler(Player player, int waterLevel, int minutesLeft, int fishCaught,
 											boolean netBroken) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
 		pb.writeByte(6);
@@ -1448,7 +1446,7 @@ public class ActionSender {
 		pb.writeShort(fishCaught);
 		pb.writeByte(minutesLeft);
 		pb.writeByte(netBroken ? 1 : 0);
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
@@ -1464,29 +1462,29 @@ public class ActionSender {
 		player.getWorld().getMarket().addRequestOpenAuctionHouseTask(player);
 	}
 
-	public static void sendClan(Player p) {
+	public static void sendClan(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(0);
-		pb.writeString(p.getClan().getClanName());
-		pb.writeString(p.getClan().getClanTag());
-		pb.writeString(p.getClan().getLeader().getUsername());
-		pb.writeByte(p.getClan().getLeader().getUsername().equalsIgnoreCase(p.getUsername()) ? 1 : 0);
-		pb.writeByte(p.getClan().getPlayers().size());
-		for (ClanPlayer m : p.getClan().getPlayers()) {
+		pb.writeString(player.getClan().getClanName());
+		pb.writeString(player.getClan().getClanTag());
+		pb.writeString(player.getClan().getLeader().getUsername());
+		pb.writeByte(player.getClan().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
+		pb.writeByte(player.getClan().getPlayers().size());
+		for (ClanPlayer m : player.getClan().getPlayers()) {
 			pb.writeString(m.getUsername());
 			pb.writeByte(m.getRank().getRankIndex());
 			pb.writeByte(m.isOnline() ? 1 : 0);
 		}
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
-	public static void sendParty(Player p) {
+	public static void sendParty(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(0);
-		pb.writeString(p.getParty().getLeader().getUsername());
-		pb.writeByte(p.getParty().getLeader().getUsername().equalsIgnoreCase(p.getUsername()) ? 1 : 0);
-		pb.writeByte(p.getParty().getPlayers().size());
-		for (PartyPlayer m : p.getParty().getPlayers()) {
+		pb.writeString(player.getParty().getLeader().getUsername());
+		pb.writeByte(player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
+		pb.writeByte(player.getParty().getPlayers().size());
+		for (PartyPlayer m : player.getParty().getPlayers()) {
 			pb.writeString(m.getUsername());
 			pb.writeByte(m.getRank().getRankIndex());
 			pb.writeByte(m.isOnline() ? 1 : 0);
@@ -1501,10 +1499,10 @@ public class ActionSender {
 			pb.writeByte(m.getShareExp());
 			pb.writeLong(m.getExpShared2());
 		}
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
-	public static void sendClans(Player p) {
+	public static void sendClans(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(4);
 		pb.writeShort(ClanManager.clans.size());
@@ -1519,23 +1517,23 @@ public class ActionSender {
 			pb.writeInt(c.getClanPoints());
 			pb.writeShort(rank++);
 		}
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
-	public static void sendParties(Player p) {
+	public static void sendParties(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(4);
-		pb.writeShort(p.getWorld().getPartyManager().parties.size());
+		pb.writeShort(player.getWorld().getPartyManager().parties.size());
 		int rank = 1;
-		p.getWorld().getPartyManager().parties.sort(PartyManager.PARTY_COMPERATOR);
-		for (Party c : p.getWorld().getPartyManager().parties) {
+		player.getWorld().getPartyManager().parties.sort(PartyManager.PARTY_COMPERATOR);
+		for (Party c : player.getWorld().getPartyManager().parties) {
 			pb.writeShort(c.getPartyID());
 			pb.writeByte(c.getPlayers().size());
 			pb.writeByte(c.getAllowSearchJoin());
 			pb.writeInt(c.getPartyPoints());
 			pb.writeShort(rank++);
 		}
-		p.write(pb.toPacket());
+		player.write(pb.toPacket());
 	}
 
 	public static void sendLeaveClan(Player playerReference) {
@@ -1566,26 +1564,26 @@ public class ActionSender {
 		invited.write(pb.toPacket());
 	}
 
-	public static void sendClanSetting(Player p) {
+	public static void sendClanSetting(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(3);
-		pb.writeByte(p.getClan().getKickSetting());
-		pb.writeByte(p.getClan().getInviteSetting());
-		pb.writeByte(p.getClan().getAllowSearchJoin());
-		pb.writeByte(p.getClan().isAllowed(0, p) ? 1 : 0);
-		pb.writeByte(p.getClan().isAllowed(1, p) ? 1 : 0);
-		p.write(pb.toPacket());
+		pb.writeByte(player.getClan().getKickSetting());
+		pb.writeByte(player.getClan().getInviteSetting());
+		pb.writeByte(player.getClan().getAllowSearchJoin());
+		pb.writeByte(player.getClan().isAllowed(0, player) ? 1 : 0);
+		pb.writeByte(player.getClan().isAllowed(1, player) ? 1 : 0);
+		player.write(pb.toPacket());
 	}
 
-	public static void sendPartySetting(Player p) {
+	public static void sendPartySetting(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(3);
-		pb.writeByte(p.getParty().getKickSetting());
-		pb.writeByte(p.getParty().getInviteSetting());
-		pb.writeByte(p.getParty().getAllowSearchJoin());
-		pb.writeByte(p.getParty().isAllowed(0, p) ? 1 : 0);
-		pb.writeByte(p.getParty().isAllowed(1, p) ? 1 : 0);
-		p.write(pb.toPacket());
+		pb.writeByte(player.getParty().getKickSetting());
+		pb.writeByte(player.getParty().getInviteSetting());
+		pb.writeByte(player.getParty().getAllowSearchJoin());
+		pb.writeByte(player.getParty().isAllowed(0, player) ? 1 : 0);
+		pb.writeByte(player.getParty().isAllowed(1, player) ? 1 : 0);
+		player.write(pb.toPacket());
 	}
 
 	public static void sendIronManMode(Player player) {
@@ -1634,6 +1632,7 @@ public class ActionSender {
 		SEND_EXPERIENCE_TOGGLE(34),
 		SEND_BUBBLE(36),
 		SEND_BANK_OPEN(42),
+		SEND_PRIVACY_SETTINGS(51),
 		SEND_SYSTEM_UPDATE(52),
 		SEND_INVENTORY(53),
 		SEND_ELIXIR(54),
@@ -1675,7 +1674,6 @@ public class ActionSender {
 		SEND_BANK_PRESET(150),
 		SEND_EQUIPMENT_STATS(153),
 		SEND_STATS(156),
-		SEND_PRIVACY_SETTINGS(158),
 		SEND_STAT(159),
 		SEND_UPDATE_STAT(159),
 		SEND_TRADE_OTHER_ACCEPTED(162),

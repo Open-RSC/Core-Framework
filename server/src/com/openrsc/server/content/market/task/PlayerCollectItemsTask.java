@@ -20,8 +20,8 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 	private Player player;
 
-	public PlayerCollectItemsTask(Player p) {
-		this.player = p;
+	public PlayerCollectItemsTask(Player player) {
+		this.player = player;
 	}
 
 	@Override

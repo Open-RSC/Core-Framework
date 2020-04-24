@@ -6,10 +6,6 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * Author: Kenix
- */
-
 // Send monitoring info as a game event so that it can be profiled.
 public class MonitoringEvent {
 

@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -42,25 +41,25 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void handleReward(Player p) {
-		p.message("@gre@You haved gained 2 quest points!");
-		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
+	public void handleReward(Player player) {
+		player.message("@gre@You haved gained 2 quest points!");
+		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
 		questData[Quests.MAPIDX_SKILL] = Skills.CRAFTING;
-		incQuestReward(p, questData, true);
-		p.getCache().remove("keep_key_gate");
+		incQuestReward(player, questData, true);
+		player.getCache().remove("keep_key_gate");
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OBSERVATORY_ASSISTANT.id() || n.getID() == NpcId.OBSERVATORY_PROFESSOR.id() || n.getID() == NpcId.PROFESSOR.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.PROFESSOR.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcsay(p, n, "Hello friend", "This is my poorly telescope",
+					npcsay(player, n, "Hello friend", "This is my poorly telescope",
 						"It's been tampered with and is not working", "If your good at crafting",
 						"I would appreciate your help!", "Come to the reception if you can");
 					break;
@@ -69,170 +68,170 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 				case 3:
 				case 4:
 				case 5:
-					npcsay(p, n, "Hello friend", "I hope you get all the parts soon",
+					npcsay(player, n, "Hello friend", "I hope you get all the parts soon",
 						"Return to the reception", "When you have the things I need");
 					break;
 				case 6:
-					npcsay(p, n, "Hello friend", "It's time to use the telescope");
+					npcsay(player, n, "Hello friend", "It's time to use the telescope");
 					break;
 				case -1:
-					npcsay(p, n, "Hello friend", "The stars hold many secrets",
+					npcsay(player, n, "Hello friend", "The stars hold many secrets",
 						"The moon rises in Scorpio...");
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.OBSERVATORY_ASSISTANT.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcsay(p, n, "Hello wanderer",
+					npcsay(player, n, "Hello wanderer",
 						"Do you require any assistance ?");
-					int first = multi(p, n, "Yes, what do you two do here ?",
+					int first = multi(player, n, "Yes, what do you two do here ?",
 						"No, just looking around thanks",
 						"Can I have a look through that telescope ?");
 					if (first == 0) {
-						npcsay(p, n, "This is the observatory reception",
+						npcsay(player, n, "This is the observatory reception",
 							"Up on the cliff is the observatory dome",
 							"From here we view the heavens",
 							"That is before the telescope was damaged",
 							"By those monsters outside...");
 					} else if (first == 1) {
-						npcsay(p, n, "Okay, be my guest",
+						npcsay(player, n, "Okay, be my guest",
 							"If you need any help let me know...");
 					} else if (first == 2) {
-						npcsay(p, n, "I'm sorry but it's broken!",
+						npcsay(player, n, "I'm sorry but it's broken!",
 							"The Professor will explain if you speak to him");
 					}
 					break;
 				case 1:
-					npcsay(p, n, "How can I help you ?");
-					int help = multi(p, n, "I can't find any planks!",
+					npcsay(player, n, "How can I help you ?");
+					int help = multi(player, n, "I can't find any planks!",
 						"I dont need any help thanks");
 					if (help == 0) {
-						npcsay(p,
+						npcsay(player,
 							n,
 							"I understand planks can be found at the barbarian outpost",
 							"To the north east of ardougne",
 							"You will probably have to trek over there to find some...");
 					} else if (help == 1) {
-						npcsay(p, n, "Oh, okay then if you are sure");
-						p.message("The assistant continues with his work");
+						npcsay(player, n, "Oh, okay then if you are sure");
+						player.message("The assistant continues with his work");
 					}
 					break;
 				case 2:
-					npcsay(p, n, "How can I help you ?");
-					int bronze = multi(p, n, "I can't see any bronze around",
+					npcsay(player, n, "How can I help you ?");
+					int bronze = multi(player, n, "I can't see any bronze around",
 						"I dont need any help thanks");
 					if (bronze == 0) {
-						npcsay(p,
+						npcsay(player,
 							n,
 							"You'll need to mix purified copper and tin together",
 							"To produce this metal");
 					} else if (bronze == 1) {
-						npcsay(p, n, "Oh, okay then if you are sure");
-						p.message("The assistant continues with his work");
+						npcsay(player, n, "Oh, okay then if you are sure");
+						player.message("The assistant continues with his work");
 					}
 					break;
 				case 3:
-					npcsay(p, n, "How can I help you ?");
-					int molten = multi(p, n,
+					npcsay(player, n, "How can I help you ?");
+					int molten = multi(player, n,
 						"I'm having problems getting glass",
 						"I don't need any help thanks");
 					if (molten == 0) {
-						npcsay(p, n, "Don't you know how to make glass ?",
+						npcsay(player, n, "Don't you know how to make glass ?",
 							"Unfortunately we dont have those skills",
 							"I remember reading about that somewhere...");
 					} else if (molten == 1) {
-						npcsay(p, n, "Oh, okay then if you are sure");
-						p.message("The assistant continues with his work");
+						npcsay(player, n, "Oh, okay then if you are sure");
+						player.message("The assistant continues with his work");
 					}
 					break;
 				case 4:
-					npcsay(p, n, " How can I help you ?");
-					int mould = multi(p, n, "I cant find the lens mould",
+					npcsay(player, n, " How can I help you ?");
+					int mould = multi(player, n, "I cant find the lens mould",
 						"I don't need any help thanks");
 					if (mould == 0) {
-						npcsay(p,
+						npcsay(player,
 							n,
 							"Can't you find the mould ?",
 							"I'm sure I heard one of those goblins talking about it...",
 							"I bet they have hidden it somewhere");
 					} else if (mould == 1) {
-						npcsay(p, n, "Oh, okay then if you are sure");
-						p.message("The assistant continues with his work");
+						npcsay(player, n, "Oh, okay then if you are sure");
+						player.message("The assistant continues with his work");
 					}
 					break;
 				case 5:
-					npcsay(p, n, "How can I help you ?");
-					int lens = multi(p, n, "I can't make the lens!",
+					npcsay(player, n, "How can I help you ?");
+					int lens = multi(player, n, "I can't make the lens!",
 						"I don't need any help thanks");
 					if (lens == 0) {
-						npcsay(p, n, "Crafting objects like this requires skill",
+						npcsay(player, n, "Crafting objects like this requires skill",
 							"You may need to practice more first...");
 					} else if (lens == 1) {
-						npcsay(p, n, "Oh, okay then if you are sure");
-						p.message("The assistant continues with his work");
+						npcsay(player, n, "Oh, okay then if you are sure");
+						player.message("The assistant continues with his work");
 					}
 					break;
 				case 6:
-					npcsay(p, n, "Well hello again",
+					npcsay(player, n, "Well hello again",
 						"thanks for helping out the professor",
 						"You've made my life much easier!",
 						"Have a drink on me!");
-					p.message("The assistant gives you some wine");
-					say(p, n, "Thanks very much");
-					give(p, ItemId.WINE.id(), 1);
+					player.message("The assistant gives you some wine");
+					say(player, n, "Thanks very much");
+					give(player, ItemId.WINE.id(), 1);
 					break;
 				case -1:
-					if (!p.getCache().hasKey("observatory_assistant_drink")) {
-						npcsay(p, n, "Well hello again",
+					if (!player.getCache().hasKey("observatory_assistant_drink")) {
+						npcsay(player, n, "Well hello again",
 							"thanks for helping out the professor",
 							"You've made my life much easier!",
 							"Have a drink on me!");
-						p.message("The assistant gives you some wine");
-						give(p, ItemId.WINE.id(), 1);
-						say(p, n, "Thanks very much");
-						p.getCache().store("observatory_assistant_drink", true);
+						player.message("The assistant gives you some wine");
+						give(player, ItemId.WINE.id(), 1);
+						say(player, n, "Thanks very much");
+						player.getCache().store("observatory_assistant_drink", true);
 						return;
 					}
-					npcsay(p, n, "Thanks again");
+					npcsay(player, n, "Thanks again");
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.OBSERVATORY_PROFESSOR.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcsay(p, n, "Hello adventurer",
+					npcsay(player, n, "Hello adventurer",
 						"What brings you to these parts ?");
-					int first = multi(p, n, "I am lost!!!",
+					int first = multi(player, n, "I am lost!!!",
 						"I'd like to have a look through that telescope",
 						"Whats the ladder over there for ?",
 						"It is of no concern of yours...");
 					if (first == 0) {
-						npcsay(p,
+						npcsay(player,
 							n,
 							"Lost ? it must have been those gnomes that have lead you astray",
 							"Head North-East to find the land Ardougne");
-						say(p, n, "I'm sure I'll find the way",
+						say(player, n, "I'm sure I'll find the way",
 							"Thanks for your help");
-						npcsay(p, n, "No problem at all, come and visit again");
+						npcsay(player, n, "No problem at all, come and visit again");
 					} else if (first == 1) {
-						npcsay(p, n, "So would I !!",
+						npcsay(player, n, "So would I !!",
 							"The trouble is, its not working");
-						say(p, n, "What do you mean ?");
-						npcsay(p, n, "Did you see those houses outside ?");
-						say(p, n, "Yes, I've seen them");
-						npcsay(p,
+						say(player, n, "What do you mean ?");
+						npcsay(player, n, "Did you see those houses outside ?");
+						say(player, n, "Yes, I've seen them");
+						npcsay(player,
 							n,
 							"Well it's a family of goblins",
 							"Since they moved here they cause me nothing but trouble",
 							"Last week my telescope was tampered with",
 							"And now parts need replacing before it can be used again",
 							"Err, I don't suppose you would be willing to help?");
-						int second = multi(p, n,
+						int second = multi(player, n,
 							"Sounds interesting, what can I do for you ?",
 							"Oh sorry, I don't have time for that");
 						if (second == 0) {
-							npcsay(p,
+							npcsay(player,
 								n,
 								"Oh thanks so much!",
 								"I need three new parts for the telescope so it can be used again",
@@ -241,175 +240,175 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 								"And glass for a replacement lens",
 								"My assistant will help you obtaining these",
 								"Ask him if you need any help");
-							say(p, n, "Okay what do I need to do ?");
-							npcsay(p, n,
+							say(player, n, "Okay what do I need to do ?");
+							npcsay(player, n,
 								"First I need three planks of wood for the tripod");
-							p.updateQuestStage(getQuestId(), 1);
+							player.updateQuestStage(getQuestId(), 1);
 						} else if (second == 1) {
-							npcsay(p, n, "Oh dear, I really do need some help",
+							npcsay(player, n, "Oh dear, I really do need some help",
 								"If you see anyone who can help please send them my way");
-							p.message("The Professor carries on with his duties");
+							player.message("The Professor carries on with his duties");
 						}
 
 					} else if (first == 2) {
-						npcsay(p, n,
+						npcsay(player, n,
 							"The ladder leads to the entrance of the cavern",
 							"That leads from here to the observatory");
 					} else if (first == 3) {
-						npcsay(p, n, "Okay Okay, there's no need to be insulting!");
-						p.message("The professor carries on with his studies");
+						npcsay(player, n, "Okay Okay, there's no need to be insulting!");
+						player.message("The professor carries on with his studies");
 					}
 					break;
 				case 1:
-					npcsay(p, n, "I'ts my helping hand back again!",
+					npcsay(player, n, "I'ts my helping hand back again!",
 						"Do you have the planks yet ?");
-					int planks = multi(p, n, "Yes I've got them",
+					int planks = multi(player, n, "Yes I've got them",
 						"No, sorry not yet");
 					if (planks == 0) {
-						if (p.getCarriedItems().getInventory().countId(ItemId.PLANK.id()) >= 3) {
-							npcsay(p,
+						if (player.getCarriedItems().getInventory().countId(ItemId.PLANK.id()) >= 3) {
+							npcsay(player,
 								n,
 								"Well done, I can start the tripod construction now",
 								"Now for the bronze");
-							p.getCarriedItems().remove(ItemId.PLANK.id(), 3);
+							player.getCarriedItems().remove(new Item(ItemId.PLANK.id(), 3));
 
-							p.updateQuestStage(getQuestId(), 2);
+							player.updateQuestStage(getQuestId(), 2);
 						} else {
-							npcsay(p, n, "You don't seem to have enough planks!",
+							npcsay(player, n, "You don't seem to have enough planks!",
 								"I need three in total");
 						}
 					} else if (planks == 1) {
-						npcsay(p, n, "Oh dear, well please bring them soon");
+						npcsay(player, n, "Oh dear, well please bring them soon");
 					}
 					break;
 				case 2:
-					npcsay(p, n, " Hello again, do you have the bronze yet ?");
-					int bronze = multi(p, n, "Yes I have it",
+					npcsay(player, n, " Hello again, do you have the bronze yet ?");
+					int bronze = multi(player, n, "Yes I have it",
 						"I'm still looking");
 					if (bronze == 0) {
-						if (p.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
-							npcsay(p, n, "Great, now all I need is the lens made",
+						if (player.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id()) >= 1) {
+							npcsay(player, n, "Great, now all I need is the lens made",
 								"Next on the list is molten glass");
-							p.getCarriedItems().remove(ItemId.BRONZE_BAR.id(), 1);
+							player.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 
-							p.updateQuestStage(getQuestId(), 3);
+							player.updateQuestStage(getQuestId(), 3);
 						} else {
-							npcsay(p, n, "That's not bronze!",
+							npcsay(player, n, "That's not bronze!",
 								"Please bring me some");
 						}
 					} else if (bronze == 1) {
-						npcsay(p, n, "Please carry on trying to find some");
+						npcsay(player, n, "Please carry on trying to find some");
 					}
 					break;
 				case 3:
-					npcsay(p, n, "How are you getting on finding me some glass ?");
-					int molten = multi(p, n, "Here it is!",
+					npcsay(player, n, "How are you getting on finding me some glass ?");
+					int molten = multi(player, n, "Here it is!",
 						"No luck yet I'm afraid");
 					if (molten == 0) {
-						if (p.getCarriedItems().getInventory().countId(ItemId.MOLTEN_GLASS.id()) >= 1) {
-							npcsay(p,
+						if (player.getCarriedItems().getInventory().countId(ItemId.MOLTEN_GLASS.id()) >= 1) {
+							npcsay(player,
 								n,
 								"Excellent! now all I need is to make the lens",
 								"Oh no, I can't use this glass!",
 								"Until I find the lens mould used to cast it");
-							say(p, n, "What do you mean, lens mould");
-							npcsay(p, n, "I need my lens mould",
+							say(player, n, "What do you mean, lens mould");
+							npcsay(player, n, "I need my lens mould",
 								"Without it I'll never get the correct shape",
 								"I'll have to ask you to try and find it");
-							p.updateQuestStage(getQuestId(), 4);
+							player.updateQuestStage(getQuestId(), 4);
 						} else {
-							npcsay(p, n,
+							npcsay(player, n,
 								"Sorry, you don't have any glass with you",
 								"Please don't tease me, I really need this part!");
 						}
 					} else if (molten == 1) {
-						npcsay(p, n, "I hope you find some soon");
+						npcsay(player, n, "I hope you find some soon");
 					}
 					break;
 				case 4:
-					npcsay(p, n, "Did you bring me the mould ?");
-					int mould = multi(p, n, "Yes, I've managed to find it",
+					npcsay(player, n, "Did you bring me the mould ?");
+					int mould = multi(player, n, "Yes, I've managed to find it",
 						"I haven't found it yet", "I had it then lost it");
 					if (mould == 0) {
-						if (p.getCarriedItems().getInventory().countId(ItemId.LENS_MOULD.id()) >= 1) {
-							npcsay(p, n,
+						if (player.getCarriedItems().getInventory().countId(ItemId.LENS_MOULD.id()) >= 1) {
+							npcsay(player, n,
 								"At last you've brought all the items I need",
 								"To repair the telescope",
 								"Oh no! I can't do this");
-							say(p, n, "What do you mean ?");
-							npcsay(p, n, "My crafting skill is not good enough",
+							say(player, n, "What do you mean ?");
+							npcsay(player, n, "My crafting skill is not good enough",
 								"To finish this off",
 								"Are you skilled at crafting ?");
-							int craft = multi(p, n,
+							int craft = multi(player, n,
 								"Yes I have much experience in crafting",
 								"No sorry I'm not good at that");
 							if (craft == 0) {
-								npcsay(p, n, "Thank goodness for that!",
+								npcsay(player, n, "Thank goodness for that!",
 									"You can use the mould with molten glass",
 									"To make a new lens",
 									"As long as you have practised your crafting skills");
-								p.updateQuestStage(getQuestId(), 5);
+								player.updateQuestStage(getQuestId(), 5);
 							} else if (craft == 1) {
-								npcsay(p, n,
+								npcsay(player, n,
 									"Oh dear, without the lens its useless",
 									"Maybe you'll find someone who can Finish the job for you ?");
-								p.updateQuestStage(getQuestId(), 5);
+								player.updateQuestStage(getQuestId(), 5);
 							}
 						} else {
-							npcsay(p,
+							npcsay(player,
 								n,
 								"Where is the mould! You dont even have it on you",
 								"Please try and find it");
 						}
 					} else if (mould == 1) {
-						npcsay(p, n, "Perhaps the goblins have stolen it ?");
+						npcsay(player, n, "Perhaps the goblins have stolen it ?");
 					} else if (mould == 2) {
-						npcsay(p, n, "Well, I wouldn't worry",
+						npcsay(player, n, "Well, I wouldn't worry",
 							"No doubt the goblins copied the design",
 							"I'm sure if you checked again",
 							"You'll find another one");
 					}
 					break;
 				case 5:
-					npcsay(p, n, "Is the lens finished ?");
-					int finished = multi(p, n, "Yes here it is",
+					npcsay(player, n, "Is the lens finished ?");
+					int finished = multi(player, n, "Yes here it is",
 						"I haven't finished it yet");
 					if (finished == 0) {
-						if (p.getCarriedItems().getInventory().countId(ItemId.LENS.id()) >= 1) {
-							remove(p, ItemId.LENS.id(), 1);
-							npcsay(p, n,
+						if (player.getCarriedItems().getInventory().countId(ItemId.LENS.id()) >= 1) {
+							player.getCarriedItems().remove(new Item(ItemId.LENS.id()));
+							npcsay(player, n,
 								"Wonderful, at last I can fix the telescope");
-							if (p.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
-								npcsay(p, n,
+							if (player.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
+								npcsay(player, n,
 									"I'll take back that mould for use again");
-								remove(p, ItemId.LENS_MOULD.id(), 1);
+								player.getCarriedItems().remove(new Item(ItemId.LENS_MOULD.id()));
 							}
-							npcsay(p, n, "Meet me at the Observatory later...");
-							p.updateQuestStage(getQuestId(), 6);
+							npcsay(player, n, "Meet me at the Observatory later...");
+							player.updateQuestStage(getQuestId(), 6);
 						} else {
-							npcsay(p, n, "Why do you tell lies ?",
+							npcsay(player, n, "Why do you tell lies ?",
 								"Please come back when the lens is made");
 						}
 					} else if (finished == 1) {
-						npcsay(p, n, "Oh, okay please hurry");
+						npcsay(player, n, "Oh, okay please hurry");
 					}
 
 					break;
 				case 6:
-					npcsay(p, n, "The telescope is now repaired",
+					npcsay(player, n, "The telescope is now repaired",
 						"Let's go to the Observatory");
 					break;
 				case -1:
-					npcsay(p, n, "Aha, my friend returns",
+					npcsay(player, n, "Aha, my friend returns",
 						"Thanks for all your help with the telescope",
 						"What can I do for you ?");
-					int completedQuest = multi(p, n,
+					int completedQuest = multi(player, n,
 						"Do you have any more quests", "Nothing, thanks");
 					if (completedQuest == 0) {
-						npcsay(p, n, "No I'm all out of quests now",
+						npcsay(player, n, "No I'm all out of quests now",
 							"But the stars may hold a secret for you...");
 					} else if (completedQuest == 1) {
-						npcsay(p, n, "Okay no problem");
+						npcsay(player, n, "Okay no problem");
 					}
 					break;
 			}
@@ -424,282 +423,282 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == 928) {
-			if (p.getQuestStage(getQuestId()) == 0) {
-				p.teleport(712, 3512, false);
-				p.message("You climb down the ladder");
+			if (player.getQuestStage(getQuestId()) == 0) {
+				player.teleport(712, 3512, false);
+				player.message("You climb down the ladder");
 				return;
 			}
-			if (p.getQuestStage(getQuestId()) == 6
-				|| p.getQuestStage(getQuestId()) == -1) {
-				p.teleport(712, 3512, false);
+			if (player.getQuestStage(getQuestId()) == 6
+				|| player.getQuestStage(getQuestId()) == -1) {
+				player.teleport(712, 3512, false);
 				return;
 			}
-			if (p.getQuestStage(getQuestId()) >= 1
-				|| p.getQuestStage(getQuestId()) <= 5) {
-				Npc assistant = ifnearvisnpc(p, NpcId.OBSERVATORY_ASSISTANT.id(), 6);
+			if (player.getQuestStage(getQuestId()) >= 1
+				|| player.getQuestStage(getQuestId()) <= 5) {
+				Npc assistant = ifnearvisnpc(player, NpcId.OBSERVATORY_ASSISTANT.id(), 6);
 				if (assistant != null) {
-					npcsay(p, assistant, "Take great care down there",
+					npcsay(player, assistant, "Take great care down there",
 						"Remember the goblins have taken over the cavern");
-					say(p, assistant, "Oh, okay thanks for the warning");
-					p.teleport(712, 3512, false);
+					say(player, assistant, "Oh, okay thanks for the warning");
+					player.teleport(712, 3512, false);
 				}
 				return;
 			}
 		}
 		else if (obj.getID() == 937) {
-			p.message("You open the chest");
-			p.getWorld().replaceGameObject(obj,
+			player.message("You open the chest");
+			player.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 936, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 936) {
-			p.message("You search the chest");
-			p.message("The chest contains nothing");
-			p.getWorld().replaceGameObject(obj,
+			player.message("You search the chest");
+			player.message("The chest contains nothing");
+			player.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 937, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 929) {
-			p.message("You open the chest");
-			p.getWorld().replaceGameObject(obj,
+			player.message("You open the chest");
+			player.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 917, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 917) {
-			p.message("You search the chest");
-			p.message("The chest contains a poisonous spider!");
-			Npc spider = addnpc(p.getWorld(), NpcId.DUNGEON_SPIDER.id(), obj.getX(), obj.getY(), 120000);
-			spider.setChasing(p);
-			p.getWorld().registerGameObject(
+			player.message("You search the chest");
+			player.message("The chest contains a poisonous spider!");
+			Npc spider = addnpc(player.getWorld(), NpcId.DUNGEON_SPIDER.id(), obj.getX(), obj.getY(), 120000);
+			spider.setChasing(player);
+			player.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 929, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 930) {
-			p.message("You open the chest");
-			p.getWorld().registerGameObject(
+			player.message("You open the chest");
+			player.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 919, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 919) { // KEY CHEST FOUND!
-			p.message("You search the chest");
-			p.message("You find a small key inside");
-			if (p.getCarriedItems().hasCatalogID(ItemId.KEEP_KEY.id(), Optional.of(false))) {
-				Functions.mes(p, "You already have a keep key",
+			player.message("You search the chest");
+			player.message("You find a small key inside");
+			if (player.getCarriedItems().hasCatalogID(ItemId.KEEP_KEY.id(), Optional.of(false))) {
+				mes(player, "You already have a keep key",
 					"Another one will have no use");
 			} else {
-				give(p, ItemId.KEEP_KEY.id(), 1);
+				give(player, ItemId.KEEP_KEY.id(), 1);
 			}
-			p.getWorld().registerGameObject(
+			player.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 930, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 935) {
-			p.message("You open the chest");
-			p.getWorld().registerGameObject(
+			player.message("You open the chest");
+			player.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 934, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 934) { // POISON CURE FOUND!
-			p.message("You search the chest");
-			p.message("The chest contains some poison cure");
-			give(p, ItemId.ONE_CURE_POISON_POTION.id(), 1);
-			p.getWorld().registerGameObject(
+			player.message("You search the chest");
+			player.message("The chest contains some poison cure");
+			give(player, ItemId.ONE_CURE_POISON_POTION.id(), 1);
+			player.getWorld().registerGameObject(
 				new GameObject(obj.getWorld(), obj.getLocation(), 935, obj.getDirection(),
 					obj.getType()));
 		}
 		else if (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513) { // 690
 			// 3514
-			if (p.getCache().hasKey("keep_key_gate")
-				|| p.getQuestStage(getQuestId()) == -1) {
-				if (p.getY() <= 3513) {
-					p.teleport(690, 3514, false);
-					say(p, null, "I'd better be quick",
+			if (player.getCache().hasKey("keep_key_gate")
+				|| player.getQuestStage(getQuestId()) == -1) {
+				if (player.getY() <= 3513) {
+					player.teleport(690, 3514, false);
+					say(player, null, "I'd better be quick",
 						"There may be more guards about");
 				} else {
-					p.message("you go through the gate");
-					p.teleport(690, 3513, false);
+					player.message("you go through the gate");
+					player.teleport(690, 3513, false);
 				}
 			} else {
-				p.message("The gate is locked");
+				player.message("The gate is locked");
 			}
 		}
 		else if (obj.getID() == 927) {
-			if (!p.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
-				p.message("Underneath you find a peculiar mould");
-				give(p, ItemId.LENS_MOULD.id(), 1);
+			if (!player.getCarriedItems().hasCatalogID(ItemId.LENS_MOULD.id(), Optional.of(false))) {
+				player.message("Underneath you find a peculiar mould");
+				give(player, ItemId.LENS_MOULD.id(), 1);
 			} else {
-				p.message("You already have this lens mould");
-				p.message("Another one will be of no use");
+				player.message("You already have this lens mould");
+				player.message("Another one will be of no use");
 			}
 		}
 		else if (obj.getID() == 925) {
-			if (p.getQuestStage(getQuestId()) == -1) {
-				Npc professor = ifnearvisnpc(p, NpcId.PROFESSOR.id(), 10);
+			if (player.getQuestStage(getQuestId()) == -1) {
+				Npc professor = ifnearvisnpc(player, NpcId.PROFESSOR.id(), 10);
 				if (professor != null) {
-					p.message("You look through the telescope");
-					constellation(p, p.getQuestStage(getQuestId()));
-					int completedQuest = multi(p, professor,
+					player.message("You look through the telescope");
+					constellation(player, player.getQuestStage(getQuestId()));
+					int completedQuest = multi(player, professor,
 						"I can see a constellation through the telescope",
 						"I see something, but I don't know what it is");
 					if (completedQuest == 0) {
-						npcsay(p, professor,
+						npcsay(player, professor,
 							"Yes, I feel the stars have a message for you...");
 					} else if (completedQuest == 1) {
-						npcsay(p, professor, "With time you may come to learn",
+						npcsay(player, professor, "With time you may come to learn",
 							"The secrets of the stars");
 					}
 				}
 				return;
-			} else if (p.getQuestStage(getQuestId()) == 6) {
-				Npc professor = ifnearvisnpc(p, NpcId.PROFESSOR.id(), 10);
+			} else if (player.getQuestStage(getQuestId()) == 6) {
+				Npc professor = ifnearvisnpc(player, NpcId.PROFESSOR.id(), 10);
 				if (professor != null) {
-					npcsay(p, professor, "Well done, well done!!",
+					npcsay(player, professor, "Well done, well done!!",
 						"Let's see what the stars have in store for us today");
-					p.message("You look through the telescope");
-					constellation(p, p.getQuestStage(getQuestId()));
-					int telescop = multi(p, professor,
+					player.message("You look through the telescope");
+					constellation(player, player.getQuestStage(getQuestId()));
+					int telescop = multi(player, professor,
 						"I can see a constellation", "What am I looking at ?");
 					if (telescop == 0) {
-						npcsay(p, professor, "Yes, with this device",
+						npcsay(player, professor, "Yes, with this device",
 							"The heavens are opened to us...",
 							"The constellation you saw was");
-						constellationNameAndReward(p, professor);
-						p.sendQuestComplete(Quests.OBSERVATORY_QUEST);
-						npcsay(p, professor, "By Saradomin's earlobes!",
+						constellationNameAndReward(player, professor);
+						player.sendQuestComplete(Quests.OBSERVATORY_QUEST);
+						npcsay(player, professor, "By Saradomin's earlobes!",
 							"You must be a friend of the gods indeed");
-						p.message("Well done, you have completed the Observatory quest");
-						npcsay(p, professor,
+						player.message("Well done, you have completed the Observatory quest");
+						npcsay(player, professor,
 							"Look in your backpack for your reward",
 							"In payment for your work");
-						p.message("After repairing the telescope you feel more knowledgable in the skill of crafting");
-						npcsay(p, professor, "Now I have work to do...");
-						p.message("The professor goes about his business");
+						player.message("After repairing the telescope you feel more knowledgable in the skill of crafting");
+						npcsay(player, professor, "Now I have work to do...");
+						player.message("The professor goes about his business");
 					} else if (telescop == 1) {
-						npcsay(p, professor, "This is the revealed sky",
+						npcsay(player, professor, "This is the revealed sky",
 							"The constellation you saw was");
-						p.sendQuestComplete(Quests.OBSERVATORY_QUEST);
-						npcsay(p, professor, "By Saradomin's earlobes!",
+						player.sendQuestComplete(Quests.OBSERVATORY_QUEST);
+						npcsay(player, professor, "By Saradomin's earlobes!",
 							"You must be a friend of the gods indeed");
-						p.message("Well done, you have completed the Observatory quest");
-						npcsay(p, professor,
+						player.message("Well done, you have completed the Observatory quest");
+						npcsay(player, professor,
 							"Look in your backpack for your reward",
 							"In payment for your work");
-						p.message("After repairing the telescope you feel more knowledgable in the skill of crafting");
-						npcsay(p, professor, "Now I have work to do...");
-						p.message("The professor goes about his business");
+						player.message("After repairing the telescope you feel more knowledgable in the skill of crafting");
+						npcsay(player, professor, "Now I have work to do...");
+						player.message("The professor goes about his business");
 					}
 				}
 			} else {
-				p.message("It seems that the telescope is not operational");
-				constellation(p, p.getQuestStage(getQuestId()));
+				player.message("It seems that the telescope is not operational");
+				constellation(player, player.getQuestStage(getQuestId()));
 			}
 		}
 	}
 
-	private void constellationNameAndReward(Player p, Npc n) {
+	private void constellationNameAndReward(Player player, Npc n) {
 		int baseReductor = 2;
 		int varReductor = 4;
-		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
+		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
 		questData[Quests.MAPIDX_BASE] /= baseReductor;
 		questData[Quests.MAPIDX_VAR] /= varReductor;
 		if (selectedNumber == 0) {
-			npcsay(p, n, "Virgo the virtuous",
+			npcsay(player, n, "Virgo the virtuous",
 				"The strong and peaceful nature of virgo boosts your defence");
 			questData[Quests.MAPIDX_SKILL] = Skills.DEFENSE;
-			incQuestReward(p, questData, false);
+			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 1) {
-			npcsay(p, n, "Libra the scales",
+			npcsay(player, n, "Libra the scales",
 				"The scales of justice award you with Law Runes");
-			give(p, ItemId.LAW_RUNE.id(), 3);
+			give(player, ItemId.LAW_RUNE.id(), 3);
 		} else if (selectedNumber == 2) {
-			npcsay(p, n, "Gemini the twins",
+			npcsay(player, n, "Gemini the twins",
 				"The double nature of Gemini awards you a two-handed weapon");
-			give(p, ItemId.BLACK_2_HANDED_SWORD.id(), 1);
+			give(player, ItemId.BLACK_2_HANDED_SWORD.id(), 1);
 		} else if (selectedNumber == 3) {
-			npcsay(p, n, "Pisces the fish",
+			npcsay(player, n, "Pisces the fish",
 				"The gods rain food from the sea on you");
-			give(p, ItemId.TUNA.id(), 3);
+			give(player, ItemId.TUNA.id(), 3);
 		} else if (selectedNumber == 4) {
-			npcsay(p, n, "Taurus the bull",
+			npcsay(player, n, "Taurus the bull",
 				"You are given the strength of a bull");
-			give(p, ItemId.FULL_SUPER_STRENGTH_POTION.id(), 1);
+			give(player, ItemId.FULL_SUPER_STRENGTH_POTION.id(), 1);
 		} else if (selectedNumber == 5) {
-			npcsay(p, n, "Aquarius the water-bearer",
+			npcsay(player, n, "Aquarius the water-bearer",
 				"the Gods of water award you with water runes");
-			give(p, ItemId.WATER_RUNE.id(), 25);
+			give(player, ItemId.WATER_RUNE.id(), 25);
 		} else if (selectedNumber == 6) {
-			npcsay(p, n, "Scorpio the scorpion",
+			npcsay(player, n, "Scorpio the scorpion",
 				"The scorpion gives you poison from it's sting");
-			give(p, ItemId.WEAPON_POISON.id(), 1);
+			give(player, ItemId.WEAPON_POISON.id(), 1);
 		} else if (selectedNumber == 7) {
-			npcsay(p, n, "Aries the ram",
+			npcsay(player, n, "Aries the ram",
 				"The ram's strength improves your attack abilities");
 			questData[Quests.MAPIDX_SKILL] = Skills.ATTACK;
-			incQuestReward(p, questData, false);
+			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 8) {
-			npcsay(p, n, "Sagittarius the Centaur",
+			npcsay(player, n, "Sagittarius the Centaur",
 				"The Gods award you a maple longbow");
-			give(p, ItemId.MAPLE_LONGBOW.id(), 1);
+			give(player, ItemId.MAPLE_LONGBOW.id(), 1);
 		} else if (selectedNumber == 9) {
-			npcsay(p, n, "Leo the lion",
+			npcsay(player, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
 			questData[Quests.MAPIDX_SKILL] = Skills.HITS;
-			incQuestReward(p, questData, false);
+			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 10) {
-			npcsay(p, n, "Capricorn the goat",
+			npcsay(player, n, "Capricorn the goat",
 				"you are granted an increase in strength");
 			questData[Quests.MAPIDX_SKILL] = Skills.STRENGTH;
-			incQuestReward(p, questData, false);
+			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 11) {
-			npcsay(p, n, "Cancer the crab",
+			npcsay(player, n, "Cancer the crab",
 				"The armoured crab gives you an amulet of protection");
-			give(p, ItemId.EMERALD_AMULET_OF_PROTECTION.id(), 1);
+			give(player, ItemId.EMERALD_AMULET_OF_PROTECTION.id(), 1);
 		}
 		// all constellations give uncut sapphire
-		give(p, ItemId.UNCUT_SAPPHIRE.id(), 1);
+		give(player, ItemId.UNCUT_SAPPHIRE.id(), 1);
 	}
 
-	private void constellation(Player p, int stage) {
+	private void constellation(Player player, int stage) {
 		selectedNumber = 0;
 
 		// quest completed, always show scorpion
 		if (stage == -1) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                 *                                                                                                                               *                                                                                                      *                                                                                                                     *                    *                                                                                                                                                                                                                                                     *                                                                                         *                                                                                                                                                                                                                                *              *                                                                                                    *                    *                                                                                                   *        *                                                                           ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                 *                                                                                                                               *                                                                                                      *                                                                                                                     *                    *                                                                                                                                                                                                                                                     *                                                                                         *                                                                                                                                                                                                                                *              *                                                                                                    *                    *                                                                                                   *        *                                                                           ", true);
 			return;
 		}
 		// show no image on telescope at this stage
 		else if (stage < 6) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ", true);
 			return;
 		}
 
 		int random = DataConversions.random(0, 11);
 		if (random == 0) { //
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                    *                                                                                               *                                                                                                                             *                                   *                                                                                                               *                  *                                                                     *         *                                                                                                                                                 *     *                                                                                  *                          *                                                                                                                    *                                                                                                    *                                                                                                                                 *                                                          ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                    *                                                                                               *                                                                                                                             *                                   *                                                                                                               *                  *                                                                     *         *                                                                                                                                                 *     *                                                                                  *                          *                                                                                                                    *                                                                                                    *                                                                                                                                 *                                                          ", true);
 		} else if (random == 1) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                *                                                                                            *                                                                                                                           *             *                                                                                                                                                                                                                                                                    *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               *                                                                                                                                                                                                                             *                                                    ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                *                                                                                            *                                                                                                                           *             *                                                                                                                                                                                                                                                                    *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               *                                                                                                                                                                                                                             *                                                    ", true);
 		} else if (random == 2) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                 *                                                                                                                                 *                                                                                                        *                                                                                                                                                                                                                                                 *                        *                                                                                                                               *                                                                                                                                                                                                                        *                                                                                                                              *                                                                                                                  *                                                                                                                                      *                                     ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                 *                                                                                                                                 *                                                                                                        *                                                                                                                                                                                                                                                 *                        *                                                                                                                               *                                                                                                                                                                                                                        *                                                                                                                              *                                                                                                                  *                                                                                                                                      *                                     ", true);
 		} else if (random == 3) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                              *                                                                                                                    *                                                                                                                                                                                                                                                 *                                                                                                                                                                                                                                            *                                                                                                                                                                                                                                           *                                                                                                                                                                                                                                           *          *                   *                                                                                                                                       *             *                                                                                                                   *                                                                                                                                   *                                                                                             *        *                          ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                              *                                                                                                                    *                                                                                                                                                                                                                                                 *                                                                                                                                                                                                                                            *                                                                                                                                                                                                                                           *                                                                                                                                                                                                                                           *          *                   *                                                                                                                                       *             *                                                                                                                   *                                                                                                                                   *                                                                                             *        *                          ", true);
 		} else if (random == 4) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                       *                                                                                                                                                                                                                                               *                                                                                                                                                                                                                                                                          *                                                                                                                    *                                                                                                                              *                                                                                                                                          *                                                                                                               *           *                                                                                                                                                                                                                                   *                                                                                                                                                                                                                                         *                                    ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                       *                                                                                                                                                                                                                                               *                                                                                                                                                                                                                                                                          *                                                                                                                    *                                                                                                                              *                                                                                                                                          *                                                                                                               *           *                                                                                                                                                                                                                                   *                                                                                                                                                                                                                                         *                                    ", true);
 		} else if (random == 5) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                      *                                                                                                                      *                                                                                                                                          *                                                                                                *                                    *                                                                                              *                                                                                                                                                                                                                       *                                                                                                                *                                                                                                                            *                                                                      ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                      *                                                                                                                      *                                                                                                                                          *                                                                                                *                                    *                                                                                              *                                                                                                                                                                                                                       *                                                                                                                *                                                                                                                            *                                                                      ", true);
 		} else if (random == 6) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                 *                                                                                                                               *                                                                                                      *                                                                                                                     *                    *                                                                                                                                                                                                                                                     *                                                                                         *                                                                                                                                                                                                                                *              *                                                                                                    *                    *                                                                                                   *        *                                                                           ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                 *                                                                                                                               *                                                                                                      *                                                                                                                     *                    *                                                                                                                                                                                                                                                     *                                                                                         *                                                                                                                                                                                                                                *              *                                                                                                    *                    *                                                                                                   *        *                                                                           ", true);
 		} else if (random == 7) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             *                                                                                                                                     *                                                                                                                             *                                                                                            *                                                                                                                *                                                                                                                                                       *                            ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             *                                                                                                                                     *                                                                                                                             *                                                                                            *                                                                                                                *                                                                                                                                                       *                            ", true);
 		} else if (random == 8) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                        *  *                                                                                                                                         *                                                                                                                   *                                                                                                             *                                                                                                                                                                                                                                                               *                                                                                                      *                                                                                                                                                *                                                                                                                                                                                                                                        *                                                                                 *                                                              ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                        *  *                                                                                                                                         *                                                                                                                   *                                                                                                             *                                                                                                                                                                                                                                                               *                                                                                                      *                                                                                                                                                *                                                                                                                                                                                                                                        *                                                                                 *                                                              ", true);
 		} else if (random == 9) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                   *                                                                                                             *                                                                                                        *                              *                                                                                                              *                                                                                          *                                                                                                                                        *             *                                                                                                                                                                                                                               *                                                                                                                                           *                                                                                                                               *                                 ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                   *                                                                                                             *                                                                                                        *                              *                                                                                                              *                                                                                          *                                                                                                                                        *             *                                                                                                                                                                                                                               *                                                                                                                                           *                                                                                                                               *                                 ", true);
 		} else if (random == 10) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                                               *                                                                                                                   *                                                                                         *                                                                                                                  *                *                                                                                                                                                                                                                                                                  *                                                                                                 *                                                                                                                                                                                                                                                     *       *                                               ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                                               *                                                                                                                   *                                                                                         *                                                                                                                  *                *                                                                                                                                                                                                                                                                  *                                                                                                 *                                                                                                                                                                                                                                                     *       *                                               ", true);
 		} else if (random == 11) {
-			ActionSender.sendBox(p, "                                                                                                                                                                                                                                                                                                           *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   *                                                                                                                                                                                                                                               *                                                                                                                                                                                                                                                                                                                                                                   *                                                                                                                                                                                                                                                                 *                                 ", true);
+			ActionSender.sendBox(player, "                                                                                                                                                                                                                                                                                                           *                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   *                                                                                                                                                                                                                                               *                                                                                                                                                                                                                                                                                                                                                                   *                                                                                                                                                                                                                                                                 *                                 ", true);
 		}
 		selectedNumber = random;
 	}
@@ -711,17 +710,17 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id()) {
-			Npc guard = ifnearvisnpc(p, NpcId.GOBLIN_GUARD.id(), 5);
+			Npc guard = ifnearvisnpc(player, NpcId.GOBLIN_GUARD.id(), 5);
 			if (guard != null) {
-				p.message("The gate unlocks");
-				p.message("The keep key is broken - I'll discard it");
-				remove(p, ItemId.KEEP_KEY.id(), 1);
-				if (!p.getCache().hasKey("keep_key_gate")) {
-					p.getCache().store("keep_key_gate", true);
+				player.message("The gate unlocks");
+				player.message("The keep key is broken - I'll discard it");
+				player.getCarriedItems().remove(new Item(ItemId.KEEP_KEY.id()));
+				if (!player.getCache().hasKey("keep_key_gate")) {
+					player.getCache().store("keep_key_gate", true);
 				}
-				guard.setChasing(p);
+				guard.setChasing(player);
 			}
 		}
 

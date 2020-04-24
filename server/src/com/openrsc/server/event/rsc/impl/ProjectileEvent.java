@@ -11,9 +11,6 @@ import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
-/**
- * @author n0m
- */
 public class ProjectileEvent extends SingleTickEvent {
 
 	Mob caster, opponent;

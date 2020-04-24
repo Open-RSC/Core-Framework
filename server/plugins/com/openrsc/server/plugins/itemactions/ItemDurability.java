@@ -3,10 +3,9 @@ package com.openrsc.server.plugins.itemactions;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class ItemDurability implements OpInvTrigger {
 	@Override
@@ -45,7 +44,7 @@ public class ItemDurability implements OpInvTrigger {
 		} else if (command.equalsIgnoreCase("break")) {
 			player.message("Are you sure you want to break your " + item.getDef(player.getWorld()).getName() + "?");
 			delay(300);
-			int choice = Functions.multi(player, "Yes", "No");
+			int choice = multi(player, "Yes", "No");
 			if (choice != 0)
 				return;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {

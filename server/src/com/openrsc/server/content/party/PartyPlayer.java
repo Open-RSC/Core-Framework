@@ -3,7 +3,7 @@ package com.openrsc.server.content.party;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.player.Player;
 
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class PartyPlayer {
 	private String username;

@@ -15,8 +15,6 @@ import java.net.InetSocketAddress;
 
 /**
  * Used to recovery character passwords on the Login thread
- *
- * @author Kenix
  */
 public class RecoveryAttemptRequest extends LoginExecutorProcess{
 
@@ -95,9 +93,10 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 		try {
 			server.getPacketFilter().addPasswordAttempt(getIpAddress());
 
-			if(getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
+			if(!getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 				getChannel().close();
+				return;
 			}
 
 			int pid = -1;

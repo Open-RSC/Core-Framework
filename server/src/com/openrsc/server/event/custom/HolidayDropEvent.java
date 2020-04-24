@@ -12,10 +12,6 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 
-/****
- * Author: Kenix
- */
-
 public class HolidayDropEvent extends HourlyEvent  {
 	private ArrayList<Integer> items;
 	private String eventMessage;

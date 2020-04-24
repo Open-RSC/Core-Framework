@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.runecrafting;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
@@ -123,7 +123,10 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 			int successCount = 0;
 			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id());
 			for (int loop = 0; loop < repeatTimes; ++loop) {
-				if (player.getCarriedItems().getInventory().remove(ItemId.RUNE_ESSENCE.id(), 1, false) != -1) {
+				Item i = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(ItemId.RUNE_ESSENCE.id()));
+				Item essenceToRemove = new Item(i.getCatalogId(), 1, false, i.getItemId());
+				if (player.getCarriedItems().getInventory().remove(essenceToRemove, false) != -1) {
 					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())),false);
 					++successCount;
 				}
@@ -164,99 +167,99 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 
-		if (p.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
+		if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
 		{
-			p.message("You need to complete Rune Mysteries first.");
+			player.message("You need to complete Rune Mysteries first.");
 			return;
 		}
-		p.message("You feel a powerful force take hold of you...");
-		delay(500);
+		player.message("You feel a powerful force take hold of you...");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		switch(ItemId.getById(item.getCatalogId()))
 		{
 			case AIR_TALISMAN:
-				p.teleport(985,19,false);
+				player.teleport(985,19,false);
 				break;
 			case MIND_TALISMAN:
-				p.teleport(934,14,false);
+				player.teleport(934,14,false);
 				break;
 			case WATER_TALISMAN:
-				p.teleport(986,63,false);
+				player.teleport(986,63,false);
 				break;
 			case EARTH_TALISMAN:
-				p.teleport(934,70,false);
+				player.teleport(934,70,false);
 				break;
 			case FIRE_TALISMAN:
-				p.teleport(887,26,false);
+				player.teleport(887,26,false);
 				break;
 			case BODY_TALISMAN:
-				p.teleport(893,71,false);
+				player.teleport(893,71,false);
 				break;
 			case COSMIC_TALISMAN:
-				p.teleport(839,26,false);
+				player.teleport(839,26,false);
 				break;
 			case CHAOS_TALISMAN:
-				p.teleport(826,90,false);
+				player.teleport(826,90,false);
 				break;
 			case NATURE_TALISMAN:
-				p.teleport(787,29,false);
+				player.teleport(787,29,false);
 				break;
 			case LAW_TALISMAN:
-				p.teleport(790,69,false);
+				player.teleport(790,69,false);
 				break;
 			case DEATH_TALISMAN:
-				p.teleport(934,14,false);
+				player.teleport(934,14,false);
 				break;
 			case BLOOD_TALISMAN:
-				p.teleport(743,22,false);
+				player.teleport(743,22,false);
 				break;
 		}
 	}
 
-	public int getRuneMultiplier(Player p, int runeId) {
+	public int getRuneMultiplier(Player player, int runeId) {
 		int retVal = 1;
 
 		switch(ItemId.getById(runeId)) {
 			case AIR_RUNE:
-				retVal =  (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/11.0)+1;
+				retVal =  (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/11.0)+1;
 				if (retVal > 10)
 					retVal = 10;
 				break;
 			case MIND_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/14.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/14.0)+1;
 				if (retVal > 8)
 					retVal = 8;
 				break;
 			case WATER_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/19.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/19.0)+1;
 				if (retVal > 6)
 					retVal = 6;
 				break;
 			case EARTH_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/26.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/26.0)+1;
 				if (retVal > 4)
 					retVal = 4;
 				break;
 			case FIRE_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/35.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/35.0)+1;
 				if (retVal > 3)
 					retVal = 3;
 				break;
 			case BODY_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(p, Skills.RUNECRAFTING)/46.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/46.0)+1;
 				if (retVal > 2)
 					retVal = 2;
 				break;
 			case COSMIC_RUNE:
-				retVal = getCurrentLevel(p,Skills.RUNECRAFTING) >= 59 ? 2 : 1;
+				retVal = getCurrentLevel(player,Skills.RUNECRAFTING) >= 59 ? 2 : 1;
 				break;
 			case CHAOS_RUNE:
-				retVal = getCurrentLevel(p,Skills.RUNECRAFTING) >= 74 ? 2 : 1;
+				retVal = getCurrentLevel(player,Skills.RUNECRAFTING) >= 74 ? 2 : 1;
 				break;
 			case NATURE_RUNE:
-				retVal = getCurrentLevel(p, Skills.RUNECRAFTING) >= 91 ? 2 : 1;
+				retVal = getCurrentLevel(player, Skills.RUNECRAFTING) >= 91 ? 2 : 1;
 				break;
 		}
 

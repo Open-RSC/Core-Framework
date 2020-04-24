@@ -7,9 +7,11 @@ import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
+import java.util.Optional;
+
 public final class ItemDropHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception{
+	public void handlePacket(Packet packet, Player player) throws Exception{
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
@@ -18,8 +20,8 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		int idx = (int) p.readShort();
-		int amount = p.readInt();
+		int idx = (int) packet.readShort();
+		int amount = packet.readInt();
 
 		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "item drop item idx < -1 or idx >= inv size");
@@ -29,7 +31,7 @@ public final class ItemDropHandler implements PacketHandler {
 
 		//User wants to drop the item from equipment tab
 		if (idx == -1) {
-			int realid = (int) p.readShort();
+			int realid = (int) packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1)
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
@@ -41,23 +43,18 @@ public final class ItemDropHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true, "item drop null item");
 			return;
 		}
-		final Item item = tempitem.clone();
+		final Item item = new Item(tempitem.getCatalogId(), amount, tempitem.getNoted(), tempitem.getItemId());
 
 		if (amount <= 0) {
 			return;
 		}
 
-		if (item.getDef(player.getWorld()).isStackable() || item.getItemStatus().getNoted()) {
-			if (amount > item.getAmount()) {
-				amount = item.getAmount();
-			}
-		} else if (idx != -1) {
-			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId())) {
-				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+		if (idx != -1) {
+			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()))) {
+				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
 			}
 		}
 
-		final int finalAmount = amount;
 		final boolean fromInventory = idx != -1;
 
 		// Set temporary amount until event executes and double checks.

@@ -689,10 +689,14 @@ public final class CustomBankInterface extends BankInterface {
 
 		if (rightClickMenu && mc.inputX_Action == InputXAction.ACT_0) {
 			// Recalcs menu height and width based on fontSize
-			int menuHeight = fontSizeHeight * 7 + 5;
+			int offset = 7;
 			if (lastXAmount > 1 && lastXAmount != 5 && lastXAmount != 10 && lastXAmount != 50) {
-				menuHeight = fontSizeHeight * 8 + 5;
+				offset++;
 			}
+			if (selectedBankSlot > -1 && !equipmentMode && bankItems.get(selectedBankSlot).getItem().getItemDef().isWieldable()) {
+				offset++;
+			}
+			int menuHeight = fontSizeHeight * offset + 5;
 			int menuWidth = mc.getSurface().stringWidth(fontSize, "Withdraw-All-But-1") + 8;
 			if (equipmentMode)
 				menuHeight = fontSizeHeight + 5;
@@ -741,54 +745,74 @@ public final class CustomBankInterface extends BankInterface {
 						}
 						drawString("Wield", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight + 20, fontSize, i);
 					} else {
-						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + 20
-							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight + 20) {
+						offset = 0;
+						int iq = 0xFFFFFF;
+						if (selectedBankSlot > -1 && bankItems.get(selectedBankSlot).getItem().getItemDef().isWieldable()) {
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + 20
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight + 20) {
+								if (mc.getMouseClick() == 1) {
+									mc.packetHandler.getClientStream().newPacket(172);
+									mc.packetHandler.getClientStream().bufferBits.putShort(selectedBankSlot);
+									mc.packetHandler.getClientStream().finishPacket();
+									selectedBankSlot = -1;
+									rightClickMenu = false;
+								} else if (mc.getMouseClick() == 0)
+									iq = 0xFDFF21;
+							}
+							offset++;
+						}
+						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 20
+							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 							i = 0xFDFF21;
 							if (mc.getMouseClick() == 1) {
 								sendWithdraw(1);
 							}
 						}
-
+						offset++;
 						int is = 0xffffff;
-						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight + 21
-							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 2 + 20) {
+						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 							is = 0xFDFF21;
 							if (mc.getMouseClick() == 1) {
 								sendWithdraw(5);
 							}
 						}
+						offset++;
 						int i3 = 0xffffff;
-						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 2 + 21
-							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 3 + 20) {
+						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 							i3 = 0xFDFF21;
 							if (mc.getMouseClick() == 1) {
 								sendWithdraw(10);
 							}
 						}
+						offset++;
 						int i4 = 0xffffff;
-						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 3 + 21
-							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 4 + 20) {
+						if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+							&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 							i4 = 0xFDFF21;
 							if (mc.getMouseClick() == 1) {
 								sendWithdraw(50);
 							}
 						}
+						offset++;
 						int i5 = 0xffffff, i6 = 0xffffff, i7 = 0xffffff, i8 = 0xffffff;
 						if (lastXAmount > 1 && lastXAmount != 5 && lastXAmount != 10 && lastXAmount != 50) {
 
 							// Send "Withdraw X" after filling out input.
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 4 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 5 + 20) {
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i5 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
 									sendWithdraw(lastXAmount);
 								}
 							}
+							offset++;
 
 							// Open "Withdraw X" input.
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 5 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 6 + 20) {
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i6 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = true;
@@ -797,20 +821,22 @@ public final class CustomBankInterface extends BankInterface {
 									mc.setMouseClick(0);
 								}
 							}
+							offset++;
 
 							// Send "Withdraw" with max value.
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 6 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 7 + 20) {
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i7 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
 									sendWithdraw(Integer.MAX_VALUE);
 								}
 							}
+							offset++;
 
 							// Send "Withdraw" with "all-but-one".
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 7 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 8 + 20) {
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i8 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
@@ -818,8 +844,8 @@ public final class CustomBankInterface extends BankInterface {
 								}
 							}
 						} else {
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 4 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 5 + 20) {
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i5 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = true;
@@ -828,16 +854,18 @@ public final class CustomBankInterface extends BankInterface {
 									mc.setMouseClick(0);
 								}
 							}
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 5 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 6 + 20) {
+							offset++;
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i6 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
 									sendWithdraw(bankItems.get(selectedBankSlot).getItem().getAmount() - 1);
 								}
 							}
-							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * 6 + 21
-								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * 7 + 20) {
+							offset++;
+							if (mc.getMouseX() > rightClickMenuX && mc.getMouseY() >= rightClickMenuY + fontSizeHeight * offset + 21
+								&& mc.getMouseX() < rightClickMenuX + menuWidth && mc.getMouseY() < rightClickMenuY + fontSizeHeight * (offset + 1) + 20) {
 								i7 = 0xFDFF21;
 								if (mc.getMouseClick() == 1) {
 									saveXAmount = false;
@@ -845,19 +873,33 @@ public final class CustomBankInterface extends BankInterface {
 								}
 							}
 						}
-						drawString("Withdraw-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight + 20, fontSize, i);
-						drawString("Withdraw-5", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 2 + 20, fontSize, is);
-						drawString("Withdraw-10", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 3 + 20, fontSize, i3);
-						drawString("Withdraw-50", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 4 + 20, fontSize, i4);
+						offset = 1;
+						if (selectedBankSlot > -1 && bankItems.get(selectedBankSlot).getItem().getItemDef().isWieldable()) {
+							drawString("Wield", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight + 20, fontSize, iq);
+							offset++;
+						}
+						drawString("Withdraw-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i);
+						offset++;
+						drawString("Withdraw-5", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, is);
+						offset++;
+						drawString("Withdraw-10", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i3);
+						offset++;
+						drawString("Withdraw-50", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i4);
+						offset++;
 						if (lastXAmount > 1 && lastXAmount != 5 && lastXAmount != 10 && lastXAmount != 50) {
-							drawString("Withdraw-" + lastXAmount, rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 5 + 20, fontSize, i5);
-							drawString("Withdraw-X", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 6 + 20, fontSize, i6);
-							drawString("Withdraw-All", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 7 + 20, fontSize, i7);
-							drawString("Withdraw-All-But-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 8 + 20, fontSize, i8);
+							drawString("Withdraw-" + lastXAmount, rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i5);
+							offset++;
+							drawString("Withdraw-X", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i6);
+							offset++;
+							drawString("Withdraw-All", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i7);
+							offset++;
+							drawString("Withdraw-All-But-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i8);
 						} else {
-							drawString("Withdraw-X", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 5 + 20, fontSize, i5);
-							drawString("Withdraw-All-But-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 6 + 20, fontSize, i6);
-							drawString("Withdraw-All", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * 7 + 20, fontSize, i7);
+							drawString("Withdraw-X", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i5);
+							offset++;
+							drawString("Withdraw-All-But-1", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i6);
+							offset++;
+							drawString("Withdraw-All", rightClickMenuX + 4, rightClickMenuY + fontSizeHeight * offset + 20, fontSize, i7);
 						}
 					}
 
@@ -1170,6 +1212,7 @@ public final class CustomBankInterface extends BankInterface {
 			if (inventoryItems[i] != null) {
 				presets[id].inventory[i].setItemDef(inventoryItems[i].getItemDef());
 				presets[id].inventory[i].setAmount(inventoryItems[i].getAmount());
+				presets[id].inventory[i].setNoted(inventoryItems[i].getNoted());
 			} else {
 				presets[id].inventory[i].setItemDef(null);
 				presets[id].inventory[i].setAmount(0);
@@ -1256,7 +1299,8 @@ public final class CustomBankInterface extends BankInterface {
 			drawString("Preset Slot " + (i + 1), x + presetButtonWidth / 2 + presetButtonWidth * i - mc.getSurface().stringWidth(1, "Preset Slot 1") / 2, inventoryYOffset + invrows * 34 + 21, 1, 0xFFFFFF);
 		}
 
-		drawString("Save current setup to this preset slot", x, inventoryYOffset + invrows * 34 + 50,1,0x0);
+		drawString("Click here to save your inventory and equipment to the currently selected preset slot", x + 10, inventoryYOffset + invrows * 34 + 75,1,0x0);
+
 		//Draw the inventory panel on the screen
 		for (int i = 0; i < invcolumns; i++) {
 			mc.getSurface().drawLineVert(inventoryXOffset + i * 49, inventoryYOffset, 0, invrows * 34);
@@ -1266,30 +1310,30 @@ public final class CustomBankInterface extends BankInterface {
 		}
 		int row = 0, col = 0;
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++) {
-			mc.getSurface().drawBoxAlpha(inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1, 48, 33, GenUtil.buildColor(181, 181, 181), 128);
+			mc.getSurface().drawBoxAlpha(inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1, 48, 33, GenUtil.buildColor(181, 181, 181), 128);
 			Item item = presets[selectedPresetSlot].inventory[i];
 			ItemDef def = item.getItemDef();
 			if (def != null) {
 				if (item.getNoted()) {
 					mc.getSurface().drawSpriteClipping(
 						mc.spriteSelect(EntityHandler.noteDef),
-						inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+						inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
 						48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-						EntityHandler.noteDef.getBlueMask(), false, 0, 0);
+						EntityHandler.noteDef.getBlueMask(), false, 0, 1);
 					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1, 33, 23,
+						inventoryXOffset + col * 49 + 7,inventoryYOffset + row * 34 + 7, 33, 23,
 						def.getPictureMask(), 0,
 						def.getBlueMask(), false, 0, 1);
 				} else {
 					mc.getSurface().drawSpriteClipping(
 						mc.spriteSelect(def),
-						inventoryXOffset + col * 49 +1, inventoryYOffset + row * 34+1,
+						inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
 						48, 32, def.getPictureMask(), 0,
 						def.getBlueMask(), false, 0, 0);
 				}
-				if (def.isStackable()) {
+				if (def.isStackable() || item.getNoted()) {
 					mc.getSurface().drawString("" + presets[selectedPresetSlot].inventory[i].getAmount(),
-						inventoryXOffset + col * 49 +1,inventoryYOffset + row * 34+1 + fontSizeHeight,
+						inventoryXOffset + col * 49 + 1,inventoryYOffset + row * 34 - 3 + fontSizeHeight,
 						0xFFFF00, 1);
 				}
 			}
@@ -1335,10 +1379,9 @@ public final class CustomBankInterface extends BankInterface {
 						y + 21 + mc.equipIconYLocations[i] + 11, 0xFFFF00, 1);
 			}
 		}
-
 	}
 
-	public static class Preset{
+	public static class Preset {
 		public Item[] inventory;
 		public Item[] equipment;
 

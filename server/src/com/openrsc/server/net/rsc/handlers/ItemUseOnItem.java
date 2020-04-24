@@ -8,15 +8,15 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class ItemUseOnItem implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		int itemIndex1 = p.readShort();
-		int itemIndex2 = p.readShort();
+		int itemIndex1 = packet.readShort();
+		int itemIndex2 = packet.readShort();
 		Item item1 = player.getCarriedItems().getInventory().get(itemIndex1);
 		Item item2 = player.getCarriedItems().getInventory().get(itemIndex2);
 
@@ -25,6 +25,11 @@ public final class ItemUseOnItem implements PacketHandler {
 			return;
 		}
 		if (itemIndex1 == itemIndex2) {
+			player.message("Nothing interesting happens");
+			return;
+		}
+
+		if (item1.getNoted() || item2.getNoted()) {
 			player.message("Nothing interesting happens");
 			return;
 		}

@@ -24,12 +24,12 @@ public class GnomeMixing implements UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Item item1, Item item2) {
 		return canMix(item1, item2);
 	}
 
 	@Override
-	public void onUseInv(Player p, Item item1, Item item2) {
+	public void onUseInv(Player player, Item item1, Item item2) {
 		GnomeMix gm = null;
 		for (GnomeMix mix : GnomeMix.values()) {
 			if (mix.isValid(item1.getCatalogId(), item2.getCatalogId())) {
@@ -37,62 +37,62 @@ public class GnomeMixing implements UseInvTrigger {
 			}
 		}
 
-		if (p.getCarriedItems().hasCatalogID(gm.itemIDOther, Optional.of(false))) {
-			p.setBusy(true);
+		if (player.getCarriedItems().hasCatalogID(gm.itemIDOther, Optional.of(false))) {
+			player.setBusy(true);
 
 			// Remove secondary ingredient
 			if (gm.itemIDOther != ItemId.GNOME_SPICE.id())
-				remove(p, gm.itemIDOther, 1);
+				player.getCarriedItems().remove(new Item(gm.itemIDOther));
 
-			gc.addGnomeRecipeCache(p, gm.itemID, gm.itemIDOther);
+			gc.addGnomeRecipeCache(player, gm.itemID, gm.itemIDOther);
 
 			String recipe = "";
-			if (p.getCache().hasKey("gnome_recipe")) {
-				recipe = p.getCache().getString("gnome_recipe");
+			if (player.getCache().hasKey("gnome_recipe")) {
+				recipe = player.getCache().getString("gnome_recipe");
 			}
 
 			// If complete (denoted with a trailing ! on the recipe)
 			if (recipe.endsWith("!")) {
-				remove(p, gm.itemID, 1); // Remove base item
+				player.getCarriedItems().remove(new Item(gm.itemID)); // Remove base item
 
 				if (gc.recipeStrings[gc.CHOC_CRUNCHIE].equals(recipe)) {
-					give(p, ItemId.CHOC_CRUNCHIES.id(), 1);
+					give(player, ItemId.CHOC_CRUNCHIES.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.WORM_CRUNCHIE].equals(recipe)) {
-					give(p, ItemId.WORM_CRUNCHIES.id(), 1);
+					give(player, ItemId.WORM_CRUNCHIES.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.TOAD_CRUNCHIE].equals(recipe)) {
-					give(p, ItemId.TOAD_CRUNCHIES.id(), 1);
+					give(player, ItemId.TOAD_CRUNCHIES.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.SPICY_CRUNCHIE].equals(recipe)) {
-					give(p, ItemId.SPICE_CRUNCHIES.id(), 1);
+					give(player, ItemId.SPICE_CRUNCHIES.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.CHEESE_AND_TOMATO_BATTA].equals(recipe)) {
-					give(p, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
+					give(player, ItemId.CHEESE_AND_TOMATO_BATTA.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.WORM_BATTA].equals(recipe)) {
-					give(p, ItemId.WORM_BATTA.id(), 1);
+					give(player, ItemId.WORM_BATTA.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.FRUIT_BATTA].equals(recipe)) {
-					give(p, ItemId.FRUIT_BATTA.id(), 1);
+					give(player, ItemId.FRUIT_BATTA.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.VEG_BATTA].equals(recipe)) {
-					give(p, ItemId.VEG_BATTA.id(), 1);
+					give(player, ItemId.VEG_BATTA.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.CHOC_BOMB].equals(recipe)) {
-					give(p, ItemId.CHOCOLATE_BOMB.id(), 1);
+					give(player, ItemId.CHOCOLATE_BOMB.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.VEGBALL].equals(recipe)) {
-					give(p, ItemId.VEGBALL.id(), 1);
+					give(player, ItemId.VEGBALL.id(), 1);
 				}
 				else if (gc.recipeStrings[gc.WORM_HOLE].equals(recipe)) {
-					give(p, ItemId.WORM_HOLE.id(), 1);
+					give(player, ItemId.WORM_HOLE.id(), 1);
 				}
-				resetGnomeCooking(p);
+				resetGnomeCooking(player);
 			}
 
-			p.message(gm.messages[0]);
-			p.setBusy(false);
+			player.message(gm.messages[0]);
+			player.setBusy(false);
 		}
 	}
 

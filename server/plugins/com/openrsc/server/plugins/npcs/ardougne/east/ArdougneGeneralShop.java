@@ -21,7 +21,7 @@ public class ArdougneGeneralShop implements ShopInterface, TalkNpcTrigger {
 		new Item(ItemId.ROPE.id(), 1), new Item(ItemId.PAPYRUS.id(), 50), new Item(ItemId.SLEEPING_BAG.id(), 10));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.KORTAN.id() || n.getID() == NpcId.AEMAD.id();
 	}
 
@@ -36,19 +36,19 @@ public class ArdougneGeneralShop implements ShopInterface, TalkNpcTrigger {
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		npcsay(p, n, "Hello you look like a bold adventurer",
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello you look like a bold adventurer",
 			"You've come to the right place for adventurer's equipment");
-		final int option = multi(p, n, false, //do not send over
+		final int option = multi(player, n, false, //do not send over
 			"Oh that sounds intersting",
 			"No I've come to the wrong place");
 		if (option == 0) {
-			say(p, n, "Oh that sounds interesting");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Oh that sounds interesting");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			say(p, n, "No I've come to the wrong place");
-			npcsay(p, n, "Hmph");
+			say(player, n, "No I've come to the wrong place");
+			npcsay(player, n, "Hmph");
 		}
 	}
 

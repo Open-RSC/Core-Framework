@@ -35,92 +35,92 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	public static final int LIMPWURT_ROOT_CERT = ItemId.LIMPWURT_ROOT_CERTIFICATE.id();
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == SIDNEY_SMITH;
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == SIDNEY_SMITH) {
-			sidneyCert(p, n, -1);
+			sidneyCert(player, n, -1);
 		}
 	}
 
-	private void sidneyCert(Player p, Npc n, int cID) {
+	private void sidneyCert(Player player, Npc n, int cID) {
 		if (cID == -1) {
-			npcsay(p, n, "Hello, I'm Sidney Smith, the certification Clerk.",
+			npcsay(player, n, "Hello, I'm Sidney Smith, the certification Clerk.",
 				"How can I help you ?");
-			int menu = multi(p, n,
+			int menu = multi(player, n,
 				"I'd like to certificate some goods please.",
 				"I'd like to change some certificates for goods please.",
 				"What is certification ?",
 				"Which goods do you certificate ?");
 			if (menu == 0) {
-				sidneyCert(p, n, Sidney.GOODS_TO_CERTIFICATE);
+				sidneyCert(player, n, Sidney.GOODS_TO_CERTIFICATE);
 			} else if (menu == 1) {
-				sidneyCert(p, n, Sidney.CERTIFICATE_TO_GOODS);
+				sidneyCert(player, n, Sidney.CERTIFICATE_TO_GOODS);
 			} else if (menu == 2) {
-				sidneyCert(p, n, Sidney.WHAT_IS_CERTIFICATION);
+				sidneyCert(player, n, Sidney.WHAT_IS_CERTIFICATION);
 			} else if (menu == 3) {
-				sidneyCert(p, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
+				sidneyCert(player, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
 			}
 		}
 		switch (cID) {
 			case Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE:
-				npcsay(p, n, "Well, I can certificate the following items.",
+				npcsay(player, n, "Well, I can certificate the following items.",
 					"Prayer Restore Potion,",
 					"Super Attack Potion,",
 					"Super Defense Potion,",
 					"Super Strength Potion,",
 					"Dragon Bones,",
 					"and Limpwurt Root.");
-				int SUB_MENU_ONE = multi(p, n,
+				int SUB_MENU_ONE = multi(player, n,
 					"How many items do you need to make a certificate.",
 					"I'd like to certificate some goods please.",
 					"I'd like to change some certificates for goods please.",
 					"Ok, thanks.");
 				if (SUB_MENU_ONE == 0) {
-					sidneyCert(p, n, Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE);
+					sidneyCert(player, n, Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE);
 				} else if (SUB_MENU_ONE == 1) {
-					sidneyCert(p, n, Sidney.GOODS_TO_CERTIFICATE);
+					sidneyCert(player, n, Sidney.GOODS_TO_CERTIFICATE);
 				} else if (SUB_MENU_ONE == 2) {
-					sidneyCert(p, n, Sidney.CERTIFICATE_TO_GOODS);
+					sidneyCert(player, n, Sidney.CERTIFICATE_TO_GOODS);
 				}
 				break;
 			case Sidney.WHAT_IS_CERTIFICATION:
-				npcsay(p, n, "It's quite easy really..",
+				npcsay(player, n, "It's quite easy really..",
 					"You swap some goods for certificates which are easier to store.",
 					"I specialise in certificating very rare items.",
 					"The kinds of items only Legendary Runescape citizens will own.");
-				int SUB_MENU_TWO = multi(p, n,
+				int SUB_MENU_TWO = multi(player, n,
 					"I'd like to certificate some goods please.",
 					"I'd like to change some certificates for goods please.",
 					"Ok thanks.");
 				if (SUB_MENU_TWO == 0) {
-					sidneyCert(p, n, Sidney.GOODS_TO_CERTIFICATE);
+					sidneyCert(player, n, Sidney.GOODS_TO_CERTIFICATE);
 				} else if (SUB_MENU_TWO == 1) {
-					sidneyCert(p, n, Sidney.CERTIFICATE_TO_GOODS);
+					sidneyCert(player, n, Sidney.CERTIFICATE_TO_GOODS);
 				}
 				break;
 			case Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE:
-				npcsay(p, n, "Well, you need at the least five items to make a certificate.",
+				npcsay(player, n, "Well, you need at the least five items to make a certificate.",
 					"We'll turn any five items into one certificate.",
 					"It makes storage and transportation much easier.");
-				int SUB_MENU_THREE = multi(p, n,
+				int SUB_MENU_THREE = multi(player, n,
 					"Which goods do you certificate?",
 					"Ok, thanks.");
 				if (SUB_MENU_THREE == 0) {
-					sidneyCert(p, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
+					sidneyCert(player, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
 				}
 				break;
 			case Sidney.CERTIFICATE_TO_GOODS:
-				if (!p.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false)) &&
-					!p.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false)) &&
-					!p.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false)) &&
-					!p.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false)) &&
-					!p.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false)) &&
-					!p.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
-					npcsay(p, n, "Sorry, but you don't have any certificates that I can change.",
+				if (!player.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false)) &&
+					!player.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false)) &&
+					!player.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false)) &&
+					!player.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false)) &&
+					!player.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false)) &&
+					!player.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
+					npcsay(player, n, "Sorry, but you don't have any certificates that I can change.",
 						"I can only change the following certificates into goods.",
 						"Dragon Bone Certificates,",
 						"Limpwurt Root Certificates,",
@@ -129,239 +129,239 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 						"Super Defense Potion Certificates,",
 						"and Super Strength Potion Certificates.");
 				} else {
-					npcsay(p, n, "Ok then, which certificates would you like to change?");
-					certMenuOne(p, n);
+					npcsay(player, n, "Ok then, which certificates would you like to change?");
+					certMenuOne(player, n);
 				}
 				break;
 			case Sidney.GOODS_TO_CERTIFICATE:
-				if (!ifheld(p, PRAYER_RESTORE_POT, 5) &&
-					!ifheld(p, SUPER_ATTACK_POT, 5) &&
-					!ifheld(p, SUPER_DEFENSE_POT, 5) &&
-					!ifheld(p, SUPER_STRENGTH_POT, 5) &&
-					!ifheld(p, DRAGON_BONES, 5) &&
-					!ifheld(p, LIMPWURT_ROOT, 5)) {
-					npcsay(p, n, "Sorry, but you either don't have enough items for me to certificate.",
+				if (!ifheld(player, PRAYER_RESTORE_POT, 5) &&
+					!ifheld(player, SUPER_ATTACK_POT, 5) &&
+					!ifheld(player, SUPER_DEFENSE_POT, 5) &&
+					!ifheld(player, SUPER_STRENGTH_POT, 5) &&
+					!ifheld(player, DRAGON_BONES, 5) &&
+					!ifheld(player, LIMPWURT_ROOT, 5)) {
+					npcsay(player, n, "Sorry, but you either don't have enough items for me to certificate.",
 						"or you don't have the right type of items for me to certificate.");
-					int SUB_MENU_FOUR = multi(p, n,
+					int SUB_MENU_FOUR = multi(player, n,
 						"Which goods do you certificate?",
 						"How many items do you need to make a certificate.");
 					if (SUB_MENU_FOUR == 0) {
-						sidneyCert(p, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
+						sidneyCert(player, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
 					} else if (SUB_MENU_FOUR == 1) {
-						sidneyCert(p, n, Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE);
+						sidneyCert(player, n, Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE);
 					}
 				} else {
-					npcsay(p, n, "Which goods would you like to certificate?");
-					goodsMenuOne(p, n);
+					npcsay(player, n, "Which goods would you like to certificate?");
+					goodsMenuOne(player, n);
 				}
 				break;
 		}
 	}
 
-	private void goodsMenuOne(Player p, Npc n) {
-		int goods = multi(p,
+	private void goodsMenuOne(Player player, Npc n) {
+		int goods = multi(player,
 			"* Prayer Restore Potion * ",
 			"* Super Attack Potion *",
 			"* Super Defense Potion *",
 			"* Super Strength Potion *",
 			"-*- Menu 2 -*-");
 		if (goods == 0) {
-			if (ifheld(p, PRAYER_RESTORE_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
+			if (ifheld(player, PRAYER_RESTORE_POT, 5)) {
+				calculateExchangeMenu(player, n, false, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
 			} else {
-				npcsay(p, n, "You don't have any Prayer potions to certificate.",
+				npcsay(player, n, "You don't have any Prayer potions to certificate.",
 					"Which goods would you like to certificate?");
-				goodsMenuOne(p, n);
+				goodsMenuOne(player, n);
 			}
 		} else if (goods == 1) {
-			if (ifheld(p, SUPER_ATTACK_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
+			if (ifheld(player, SUPER_ATTACK_POT, 5)) {
+				calculateExchangeMenu(player, n, false, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
 			} else {
-				npcsay(p, n, "You don't have enough Super Attack potions to certificate.");
-				say(p, n, "Ok thanks.");
+				npcsay(player, n, "You don't have enough Super Attack potions to certificate.");
+				say(player, n, "Ok thanks.");
 			}
 		} else if (goods == 2) {
-			if (ifheld(p, SUPER_DEFENSE_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
+			if (ifheld(player, SUPER_DEFENSE_POT, 5)) {
+				calculateExchangeMenu(player, n, false, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
 			} else {
-				npcsay(p, n, "You don't have any Super Defense potions to certificate.",
+				npcsay(player, n, "You don't have any Super Defense potions to certificate.",
 					"Which goods would you like to certificate?");
-				goodsMenuOne(p, n);
+				goodsMenuOne(player, n);
 			}
 		} else if (goods == 3) {
-			if (ifheld(p, SUPER_STRENGTH_POT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
+			if (ifheld(player, SUPER_STRENGTH_POT, 5)) {
+				calculateExchangeMenu(player, n, false, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
 			} else {
-				npcsay(p, n, "You don't have any Super Strength potions to certificate.",
+				npcsay(player, n, "You don't have any Super Strength potions to certificate.",
 					"Which goods would you like to certificate?");
-				goodsMenuOne(p, n);
+				goodsMenuOne(player, n);
 			}
 		} else if (goods == 4) {
-			goodsMenuTwo(p, n);
+			goodsMenuTwo(player, n);
 		}
 	}
 
-	private void goodsMenuTwo(Player p, Npc n) {
-		int goods = multi(p,
+	private void goodsMenuTwo(Player player, Npc n) {
+		int goods = multi(player,
 			"* Dragon Bones *",
 			"* Limpwurt Root *",
 			"-*- Menu 1 -*-");
 		if (goods == 0) {
-			if (ifheld(p, DRAGON_BONES, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
+			if (ifheld(player, DRAGON_BONES, 5)) {
+				calculateExchangeMenu(player, n, false, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
 			} else {
-				npcsay(p, n, "You don't have any Dragon Bones to certificate.",
+				npcsay(player, n, "You don't have any Dragon Bones to certificate.",
 					"Which goods would you like to certificate?");
-				goodsMenuOne(p, n);
+				goodsMenuOne(player, n);
 			}
 		} else if (goods == 1) {
-			if (ifheld(p, LIMPWURT_ROOT, 5)) {
-				calculateExchangeMenu(p, n, false, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
+			if (ifheld(player, LIMPWURT_ROOT, 5)) {
+				calculateExchangeMenu(player, n, false, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
 			} else {
-				npcsay(p, n, "You don't have any Limpwurt Roots to certificate.",
+				npcsay(player, n, "You don't have any Limpwurt Roots to certificate.",
 					"Which goods would you like to certificate?");
-				goodsMenuOne(p, n);
+				goodsMenuOne(player, n);
 			}
 		} else if (goods == 2) {
-			goodsMenuOne(p, n);
+			goodsMenuOne(player, n);
 		}
 	}
 
-	private void certMenuOne(Player p, Npc n) {
-		int certs = multi(p,
+	private void certMenuOne(Player player, Npc n) {
+		int certs = multi(player,
 			"* Restore Prayer Potion Certificates * ",
 			"* Super Attack Potion Certificates *",
 			"* Super Defense Potion Certificates *",
 			"* Super Strength Potion Certificates *",
 			"-*- Menu 2 -*-");
 		if (certs == 0) {
-			if (p.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false))) {
-				calculateExchangeMenu(p, n, true, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
+			if (player.getCarriedItems().hasCatalogID(PRAYER_CERT, Optional.of(false))) {
+				calculateExchangeMenu(player, n, true, new Item(PRAYER_RESTORE_POT), new Item(PRAYER_CERT));
 			} else {
-				npcsay(p, n, "Sorry, but you don't have any ",
+				npcsay(player, n, "Sorry, but you don't have any ",
 					"Prayer Restore Potion Certificates to change.");
 			}
 		} else if (certs == 1) {
-			if (p.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false))) {
-				calculateExchangeMenu(p, n, true, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
+			if (player.getCarriedItems().hasCatalogID(SUPER_ATTACK_CERT, Optional.of(false))) {
+				calculateExchangeMenu(player, n, true, new Item(SUPER_ATTACK_POT), new Item(SUPER_ATTACK_CERT));
 			} else {
-				npcsay(p, n, "Sorry, but you don't have any ",
+				npcsay(player, n, "Sorry, but you don't have any ",
 					"Super attack Potion Certificates to change.");
 			}
 		} else if (certs == 2) {
-			if (p.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false))) {
-				calculateExchangeMenu(p, n, true, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
+			if (player.getCarriedItems().hasCatalogID(SUPER_DEFENSE_CERT, Optional.of(false))) {
+				calculateExchangeMenu(player, n, true, new Item(SUPER_DEFENSE_POT), new Item(SUPER_DEFENSE_CERT));
 			} else {
-				npcsay(p, n, "Sorry, but you don't have any ",
+				npcsay(player, n, "Sorry, but you don't have any ",
 					"Super Defense Potion Certificates to change.");
 			}
 		} else if (certs == 3) {
-			if (p.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false))) {
-				calculateExchangeMenu(p, n, true, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
+			if (player.getCarriedItems().hasCatalogID(SUPER_STRENGTH_CERT, Optional.of(false))) {
+				calculateExchangeMenu(player, n, true, new Item(SUPER_STRENGTH_POT), new Item(SUPER_STRENGTH_CERT));
 			} else {
-				npcsay(p, n, "Sorry, but you don't have any ",
+				npcsay(player, n, "Sorry, but you don't have any ",
 					"Super Strength Potion Certificates to change.");
 			}
 		} else if (certs == 4) {
-			certMenuTwo(p, n);
+			certMenuTwo(player, n);
 		}
 	}
 
-	private void certMenuTwo(Player p, Npc n) {
-		int menu = multi(p,
+	private void certMenuTwo(Player player, Npc n) {
+		int menu = multi(player,
 			"* Dragon Bones Certificates *",
 			"* Limpwurt Root Certificates *",
 			"-*- Menu 1 -*-");
 		if (menu == 0) {
-			if (p.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false))) {
-				calculateExchangeMenu(p, n, true, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
+			if (player.getCarriedItems().hasCatalogID(DRAGON_BONES_CERT, Optional.of(false))) {
+				calculateExchangeMenu(player, n, true, new Item(DRAGON_BONES), new Item(DRAGON_BONES_CERT));
 			} else {
-				npcsay(p, n, "Sorry, but you don't have any ",
+				npcsay(player, n, "Sorry, but you don't have any ",
 					"Dragon Bone Certificates to change.");
 			}
 		} else if (menu == 1) {
-			if (p.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
-				calculateExchangeMenu(p, n, true, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
+			if (player.getCarriedItems().hasCatalogID(LIMPWURT_ROOT_CERT, Optional.of(false))) {
+				calculateExchangeMenu(player, n, true, new Item(LIMPWURT_ROOT), new Item(LIMPWURT_ROOT_CERT));
 			} else {
-				npcsay(p, n, "Sorry, but you don't have any ",
+				npcsay(player, n, "Sorry, but you don't have any ",
 					"Limpwurt Root Certificates to change.");
 			}
 		} else if (menu == 2) {
-			certMenuOne(p, n);
+			certMenuOne(player, n);
 		}
 	}
 
-	private void calculateExchangeMenu(Player p, Npc n, boolean useCertificate, Item i, Item certificate) {
-		int count = p.getCarriedItems().getInventory().countId(useCertificate ? certificate.getCatalogId() : i.getCatalogId());
+	private void calculateExchangeMenu(Player player, Npc n, boolean useCertificate, Item i, Item certificate) {
+		int count = player.getCarriedItems().getInventory().countId(useCertificate ? certificate.getCatalogId() : i.getCatalogId());
 		int mainMenu = -1;
 		if (useCertificate) {
-			npcsay(p, n, "How many " + i.getDef(p.getWorld()).getName() + " certificates do you want to change?");
+			npcsay(player, n, "How many " + i.getDef(player.getWorld()).getName() + " certificates do you want to change?");
 			if (count == 1) {
-				int firstMenu = multi(p, "None thanks.", "One Certificate please");
+				int firstMenu = multi(player, "None thanks.", "One Certificate please");
 				if (firstMenu != -1) {
 					if (firstMenu == 0) {
-						npcsay(p, n, "Ok, suit yourself.");
+						npcsay(player, n, "Ok, suit yourself.");
 						return;
 					} else if (firstMenu == 1) {
 						mainMenu = 0;
 					}
 				}
 			} else if (count == 2) {
-				mainMenu = multi(p, "One Certificate please", "Two Certificates Please");
+				mainMenu = multi(player, "One Certificate please", "Two Certificates Please");
 			} else if (count == 3) {
-				mainMenu = multi(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.");
+				mainMenu = multi(player, "One Certificate please", "Two Certificates Please", "Three Certificates Please.");
 			} else if (count == 4) {
-				mainMenu = multi(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please");
+				mainMenu = multi(player, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please");
 			} else if (count >= 5) {
-				mainMenu = multi(p, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please", "Five Certificates Please.");
+				mainMenu = multi(player, "One Certificate please", "Two Certificates Please", "Three Certificates Please.", "Four Certificates Please", "Five Certificates Please.");
 			}
 
 		} else {
-			npcsay(p, n, "How many " + i.getDef(p.getWorld()).getName() + " would you like to certificate?");
+			npcsay(player, n, "How many " + i.getDef(player.getWorld()).getName() + " would you like to certificate?");
 			if (count >= 5 && count < 10) {
-				int firstMenu = multi(p, "None", "Five");
+				int firstMenu = multi(player, "None", "Five");
 				if (firstMenu != -1) {
 					if (firstMenu == 0) {
-						p.message("You decide not to change any items.");
+						player.message("You decide not to change any items.");
 						return;
 					} else if (firstMenu == 1) {
 						mainMenu = 0;
 					}
 				}
 			} else if (count >= 10 && count < 15) {
-				mainMenu = multi(p, "Five", "Ten");
+				mainMenu = multi(player, "Five", "Ten");
 			} else if (count >= 15 && count < 20) {
-				mainMenu = multi(p, "Five", "Ten", "Fifteen");
+				mainMenu = multi(player, "Five", "Ten", "Fifteen");
 			} else if (count >= 20 && count < 25) {
-				mainMenu = multi(p, "Five", "Ten", "Fifteen", "Twenty");
+				mainMenu = multi(player, "Five", "Ten", "Fifteen", "Twenty");
 			} else if (count >= 25) {
-				mainMenu = multi(p, "Five", "Ten", "Fifteen", "Twenty", "Twenty Five");
+				mainMenu = multi(player, "Five", "Ten", "Fifteen", "Twenty", "Twenty Five");
 			} else {
-				npcsay(p, n, "Sorry, but you don't have enough " + i.getDef(p.getWorld()).getName() + ".",
+				npcsay(player, n, "Sorry, but you don't have enough " + i.getDef(player.getWorld()).getName() + ".",
 					"You need at least five to make a certificate.");
 				return;
 			}
 		}
 		if (mainMenu != -1) {
 			if (useCertificate) {
-				npcsay(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificates done.");
+				npcsay(player, n, "Ok, that's your " + i.getDef(player.getWorld()).getName() + " certificates done.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
-				if (p.getCarriedItems().remove(certificate.getCatalogId(), mainMenu) > -1) {
+				if (player.getCarriedItems().remove(new Item(certificate.getCatalogId(), mainMenu)) > -1) {
 					for (int x = 0; x < itemAmount; x++) {
-						p.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
+						player.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
 					}
 				}
-				say(p, n, "Ok thanks.");
+				say(player, n, "Ok thanks.");
 			} else {
-				npcsay(p, n, "Ok, that's your " + i.getDef(p.getWorld()).getName() + " certificated.");
+				npcsay(player, n, "Ok, that's your " + i.getDef(player.getWorld()).getName() + " certificated.");
 				mainMenu += 1;
 				int itemAmount = mainMenu * 5;
 				for (int x = 0; x < itemAmount; x++) {
-					p.getCarriedItems().remove(i.getCatalogId(), 1);
+					player.getCarriedItems().remove(new Item(i.getCatalogId()));
 				}
-				p.getCarriedItems().getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
-				say(p, n, "Ok thanks.");
+				player.getCarriedItems().getInventory().add(new Item(certificate.getCatalogId(), mainMenu));
+				say(player, n, "Ok thanks.");
 			}
 		}
 	}

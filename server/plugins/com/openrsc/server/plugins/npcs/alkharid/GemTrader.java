@@ -29,7 +29,7 @@ public final class GemTrader implements ShopInterface,
 	);
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.GEM_TRADER.id();
 	}
 
@@ -44,13 +44,13 @@ public final class GemTrader implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.GEM_TRADER.id()) {
-			npcsay(p, n, "good day to you " + ((p.isMale()) ? "sir"
+			npcsay(player, n, "good day to you " + ((player.isMale()) ? "sir"
 				: "madam"), "Would you be interested in buying some gems?");
 
 			final String[] options;
-			if (p.getQuestStage(Quests.FAMILY_CREST) <= 2 || p.getQuestStage(Quests.FAMILY_CREST) >= 5) {
+			if (player.getQuestStage(Quests.FAMILY_CREST) <= 2 || player.getQuestStage(Quests.FAMILY_CREST) >= 5) {
 				options = new String[]{
 					"Yes please",
 					"No thankyou"
@@ -62,17 +62,17 @@ public final class GemTrader implements ShopInterface,
 					"I'm in search of a man named adam fitzharmon"
 				};
 			}
-			int option = multi(p, n, false, options);
+			int option = multi(player, n, false, options);
 
 			if (option == 0) {
-				say(p, n, "Yes please");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "Yes please");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (option == 1) {
-				say(p, n, "No thankyou");
+				say(player, n, "No thankyou");
 			} else if (option == 2) {
-				say(p, n, "I'm in search of a man named Adam Fitzharmon");
-				npcsay(p,
+				say(player, n, "I'm in search of a man named Adam Fitzharmon");
+				npcsay(player,
 					n,
 					"Fitzharmon eh?",
 					"Thats the name of a Varrocian noble family if I'm not mistaken",
@@ -83,7 +83,7 @@ public final class GemTrader implements ShopInterface,
 					"He's round about the desert still, looking for the perfect gold",
 					"He'll be somewhere where he might get some gold I'd wager",
 					"He might even be desperate enough to brave the scorpions");
-				p.updateQuestStage(Quests.FAMILY_CREST, 4);
+				player.updateQuestStage(Quests.FAMILY_CREST, 4);
 			}
 		}
 	}

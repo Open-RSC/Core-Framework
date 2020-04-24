@@ -16,10 +16,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/**
- * @author Davve
- */
-
 public class ThrowingEvent extends GameTickEvent {
 
 	private Mob target;
@@ -86,7 +82,7 @@ public class ThrowingEvent extends GameTickEvent {
 		} else {
 			getPlayerOwner().resetPath();
 
-			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
+			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (canShoot) {
 				if (!PathValidation.checkPath(getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
 					getPlayerOwner().message("I can't get a clear shot from here");
@@ -136,7 +132,7 @@ public class ThrowingEvent extends GameTickEvent {
 					if (rangeType == null)
 						return;
 
-					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType.getCatalogId(), 1);
+					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType, 1);
 				} else {
 					slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(throwingID);
 					if (slot < 0) {
@@ -146,7 +142,8 @@ public class ThrowingEvent extends GameTickEvent {
 					if (rangeType == null) { // This shouldn't happen
 						return;
 					}
-					getPlayerOwner().getCarriedItems().remove(rangeType.getCatalogId(), 1, true);
+					Item toRemove = new Item(rangeType.getCatalogId(), 1, false, rangeType.getItemId());
+					getPlayerOwner().getCarriedItems().remove(toRemove);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {

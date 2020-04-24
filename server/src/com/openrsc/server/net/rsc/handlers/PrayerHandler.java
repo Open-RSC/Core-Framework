@@ -58,9 +58,9 @@ public class PrayerHandler implements PacketHandler {
 		return false;
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
-		int pID = p.getID();
-		int prayerID = (int) p.readByte();
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		int pID = packet.getID();
+		int prayerID = (int) packet.readByte();
 		if (prayerID < 0 || prayerID >= 14) {
 			player.setSuspiciousPlayer(true, "prayer id < 0 or prayer id >= 14");
 //			ActionSender.sendPrayers(player);TODO

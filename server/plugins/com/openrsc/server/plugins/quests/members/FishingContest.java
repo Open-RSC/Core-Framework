@@ -8,7 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -41,31 +40,31 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void handleReward(final Player p) {
-		p.updateQuestStage(Quests.FISHING_CONTEST, -1);
-		p.message("Well done you have completed the fishing competition quest");
-		p.message("@gre@You haved gained 1 quest point!");
-		int[] questData = p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FISHING_CONTEST);
-		if (p.getSkills().getMaxStat(Skills.FISHING) <= 23) {
+	public void handleReward(final Player player) {
+		player.updateQuestStage(Quests.FISHING_CONTEST, -1);
+		player.message("Well done you have completed the fishing competition quest");
+		player.message("@gre@You haved gained 1 quest point!");
+		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FISHING_CONTEST);
+		if (player.getSkills().getMaxStat(Skills.FISHING) <= 23) {
 			questData[Quests.MAPIDX_BASE] = 900;
-			incQuestReward(p, questData, true);
-		} else if (p.getSkills().getMaxStat(Skills.FISHING) >= 24) {
+			incQuestReward(player, questData, true);
+		} else if (player.getSkills().getMaxStat(Skills.FISHING) >= 24) {
 			questData[Quests.MAPIDX_BASE] = 1700;
-			incQuestReward(p, questData, true);
+			incQuestReward(player, questData, true);
 		}
 	}
 
-	private void addCatchCache(final Player p, int catchId) {
+	private void addCatchCache(final Player player, int catchId) {
 		String catchString = "";
-		if (p.getCache().hasKey("contest_catches")) {
-			catchString = p.getCache().getString("contest_catches") + "-";
+		if (player.getCache().hasKey("contest_catches")) {
+			catchString = player.getCache().getString("contest_catches") + "-";
 		}
 		catchString += catchId;
-		p.getCache().store("contest_catches", catchString);
+		player.getCache().store("contest_catches", catchString);
 	}
 
-	private void bigDaveDialogue(final Player p, final Npc n) {
-		npcsay(p, n, "Oi whaddya think ya doin'", "I'm fishin' here",
+	private void bigDaveDialogue(final Player player, final Npc n) {
+		npcsay(player, n, "Oi whaddya think ya doin'", "I'm fishin' here",
 			"Now beat it");
 	}
 
@@ -84,106 +83,106 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		// joshua and big dave were not interested in talking directly
 		return DataConversions.inArray(new int[] {NpcId.MOUNTAIN_DWARF.id(), NpcId.BONZO.id(), NpcId.SINISTER_STRANGER.id(),
 				NpcId.GRANDPA_JACK.id()}, n.getID());
 	}
 
-	private void bonzoDialogue(final Player p, final Npc n, final boolean isDirectTalk) {
-		Npc sinister = ifnearvisnpc(p, NpcId.SINISTER_STRANGER.id(), 10);
-		switch (p.getQuestStage(this)) {
+	private void bonzoDialogue(final Player player, final Npc n, final boolean isDirectTalk) {
+		Npc sinister = ifnearvisnpc(player, NpcId.SINISTER_STRANGER.id(), 10);
+		switch (player.getQuestStage(this)) {
 			// quest completed
 			case -1:
 				if (!isDirectTalk) {
-					Functions.mes(p, "you have already won the fishing competition");
+					mes(player, "you have already won the fishing competition");
 				} else {
-					npcsay(p, n, "Hello champ",
+					npcsay(player, n, "Hello champ",
 						"So any hints on how to fish so well");
-					say(p, n, "I think I'll keep them to myself");
+					say(player, n, "I think I'll keep them to myself");
 				}
 				break;
 			default: // EVERY OTHER QUEST STAGE
-				if (p.getCache().hasKey("paid_contest_fee")) {
+				if (player.getCache().hasKey("paid_contest_fee")) {
 					String catches[] = {};
 					boolean hasCarp = false;
 
-					if (p.getCache().hasKey("contest_catches")) {
-						catches = p.getCache().getString("contest_catches").split("-");
+					if (player.getCache().hasKey("contest_catches")) {
+						catches = player.getCache().getString("contest_catches").split("-");
 					}
 
 					for (String aCatch : catches) {
-						hasCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && p.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
+						hasCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && player.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
 					}
 
-					npcsay(p, n, "so how are you doing so far?");
+					npcsay(player, n, "so how are you doing so far?");
 					if (hasCarp) {
 						//do not send over
-						final int contestStartedMenu = multi(p, n, false,
+						final int contestStartedMenu = multi(player, n, false,
 							"I have this big fish,is it enough to win?",
 							"I think I might still be able to find a bigger fish");
 						if (contestStartedMenu == 0) {
-							say(p, n, "I have this big fish", "Is it enough to win?");
-							npcsay(p, n, "Well we'll just wait till time is up");
-							p.message("You wait");
-							delay(2000);
-							bonzoTimesUpDialogue(p, n);
+							say(player, n, "I have this big fish", "Is it enough to win?");
+							npcsay(player, n, "Well we'll just wait till time is up");
+							player.message("You wait");
+							delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+							bonzoTimesUpDialogue(player, n);
 						} else if (contestStartedMenu == 1) {
-							say(p, n, "I think I might still be able to find a bigger fish");
-							npcsay(p, n, "Ok, good luck");
+							say(player, n, "I think I might still be able to find a bigger fish");
+							npcsay(player, n, "Ok, good luck");
 						}
 					} else {
-						say(p, n, "I think I might still be able to find a bigger fish");
-						npcsay(p, n, "Ok, good luck");
+						say(player, n, "I think I might still be able to find a bigger fish");
+						npcsay(player, n, "Ok, good luck");
 					}
 
 					return;
 				} else {
 					// with trophy does not allow to enter competition
-					if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
-						npcsay(p, n, "Hello champ",
+					if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
+						npcsay(player, n, "Hello champ",
 							"So any hints on how to fish so well");
-						say(p, n, "I think I'll keep them to myself");
+						say(player, n, "I think I'll keep them to myself");
 						return;
 					}
 
 					if (isDirectTalk) {
-						npcsay(p, n, "Roll up, roll up",
+						npcsay(player, n, "Roll up, roll up",
 							"Enter the great Hemenster fishing competition",
 							"only 5gp entrance fee");
 					} else {
-						npcsay(p, n, "Hey you need to pay to join the competition first",
+						npcsay(player, n, "Hey you need to pay to join the competition first",
 							"only 5gp entrance fee");
 					}
-					final int first = multi(p, n,
+					final int first = multi(player, n,
 						"I'll give that a go then",
 						"No thanks, I'll just watch the fun");
 					if (first == 0) {
-						npcsay(p, n, "Marvelous");
-						if (p.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
-							p.message("You pay bonzo 5 coins");
-							remove(p, ItemId.COINS.id(), 5);
-							npcsay(p, n, "Ok we've got all the fishermen",
+						npcsay(player, n, "Marvelous");
+						if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
+							player.message("You pay bonzo 5 coins");
+							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
+							npcsay(player, n, "Ok we've got all the fishermen",
 								"It's time to roll",
 								"Ok nearly everyone is in there place already",
 								"You fish in the spot by the oak tree",
 								"And the Sinister stranger you fish by the pipes");
-							if (!p.getCache().hasKey("garlic_activated")) {
-								p.message("Your fishing competition spot is beside the oak tree");
+							if (!player.getCache().hasKey("garlic_activated")) {
+								player.message("Your fishing competition spot is beside the oak tree");
 							} else {
-								npcsay(p, sinister,
+								npcsay(player, sinister,
 									"Arrgh what is that ghastly smell",
 									"I think I will move over here instead");
 								sinister.teleport(570, 495);
-								npcsay(p, n,
+								npcsay(player, n,
 									"Hmm you'd better go and take the area by the pipes then");
-								p.message("Your fishing competition spot is beside the pipes");
+								player.message("Your fishing competition spot is beside the pipes");
 							}
-							p.getCache().store("paid_contest_fee", true);
+							player.getCache().store("paid_contest_fee", true);
 
 						} else {
-							Functions.mes(p, "I don't have the 5gp though");
-							npcsay(p, n, "No pay, no play");
+							mes(player, "I don't have the 5gp though");
+							npcsay(player, n, "No pay, no play");
 						}
 					} else if (first == 1) {
 						// NOTHING
@@ -193,63 +192,63 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
-	private void bonzoTimesUpDialogue(final Player p, final Npc n) {
+	private void bonzoTimesUpDialogue(final Player player, final Npc n) {
 		String catches[] = {};
 		boolean hadCarp = false;
 
-		if (p.getCache().hasKey("contest_catches")) {
-			catches = p.getCache().getString("contest_catches").split("-");
+		if (player.getCache().hasKey("contest_catches")) {
+			catches = player.getCache().getString("contest_catches").split("-");
 		}
 
-		npcsay(p, n, "Okay folks times up",
+		npcsay(player, n, "Okay folks times up",
 			"Lets see who caught the biggest fish");
-		Functions.mes(p, "You hand over your catch");
+		mes(player, "You hand over your catch");
 		for (String aCatch : catches) {
-			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && p.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
-			remove(p, Integer.valueOf(aCatch), 1);
+			hadCarp |= (Integer.valueOf(aCatch) == ItemId.RAW_GIANT_CARP.id() && player.getCarriedItems().hasCatalogID(ItemId.RAW_GIANT_CARP.id(), Optional.of(false)));
+			player.getCarriedItems().remove(new Item(Integer.valueOf(aCatch)));
 		}
-		p.getCache().remove("contest_catches");
-		p.getCache().remove("paid_contest_fee");
+		player.getCache().remove("contest_catches");
+		player.getCache().remove("paid_contest_fee");
 
 		if (hadCarp) {
-			npcsay(p, n, "We have a new winner");
-			npcsay(p, n, "The heroic looking person",
+			npcsay(player, n, "We have a new winner");
+			npcsay(player, n, "The heroic looking person",
 				"who was fishing by the pipes",
 				"Has caught the biggest carp",
 				"I've seen since Grandpa Jack used to compete");
-			p.message("you are given the Hemenster fishing trophy");
-			give(p, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
-			p.updateQuestStage(getQuestId(), 3);
+			player.message("you are given the Hemenster fishing trophy");
+			give(player, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
+			player.updateQuestStage(getQuestId(), 3);
 		}
 		// select another one from chance
 		else {
 			int chance_stranger = 80;
 			int chance_dave = 15;
 			int rol = DataConversions.random(0, 100);
-			npcsay(p, n, "And the winner is...");
+			npcsay(player, n, "And the winner is...");
 			if (chance_stranger > rol) {
-				npcsay(p, n, "The stranger in black");
+				npcsay(player, n, "The stranger in black");
 			} else if (chance_dave > rol - 80) {
-				npcsay(p, n, "local favourite- Big Dave");
+				npcsay(player, n, "local favourite- Big Dave");
 			} else {
-				npcsay(p, n, "the surprising Joshua");
+				npcsay(player, n, "the surprising Joshua");
 			}
 		}
 	}
 
-	private void grandpaJackDialogue(final Player p, final Npc n) {
-		switch (p.getQuestStage(this)) {
+	private void grandpaJackDialogue(final Player player, final Npc n) {
+		switch (player.getQuestStage(this)) {
 			case 1:
 			case 2:
-				npcsay(p, n, "Hello young man", "Come to visit old Grandpa Jack?",
+				npcsay(player, n, "Hello young man", "Come to visit old Grandpa Jack?",
 					"I can tell ye stories for sure",
 					"I used to be the best fisherman these parts have seen");
-				int first = multi(p, n,
+				int first = multi(player, n,
 					"Tell me a story then",
 					"Are you entering the fishing competition?",
 					"Sorry I don't have time now");
 				if (first == 0) {
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Well when I were a young man",
 						"We used to take fishing trips over to Catherby",
@@ -264,17 +263,17 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						"It contained a diamond the size of a radish",
 						"That's the best catch I've ever had!");
 				} else if (first == 1) {
-					npcsay(p, n, "Ah the Hemenster fishing competition",
+					npcsay(player, n, "Ah the Hemenster fishing competition",
 						"I know all about that",
 						"I won that four years straight",
 						"I'm to old for that lark now though");
 					//do not send over
-					final int second = multi(p, n, false,
+					final int second = multi(player, n, false,
 						"I don't suppose you could give me any hints?",
 						"That's less competition for me then");
 					if (second == 0) {
-						say(p, n, "I don't suppose you could give me any hints?");
-						npcsay(p,
+						say(player, n, "I don't suppose you could give me any hints?");
+						npcsay(player,
 							n,
 							"Well you sometimes get these really big fish",
 							"In the water just by the outflow pipes",
@@ -283,25 +282,25 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 							"The best sort of bait for them is red vine worms",
 							"I used to get those from McGruber's wood, north of here",
 							"dig around in the red vines up there");
-						if (p.getQuestStage(getQuestId()) != 2) {
-							p.updateQuestStage(getQuestId(), 2);
+						if (player.getQuestStage(getQuestId()) != 2) {
+							player.updateQuestStage(getQuestId(), 2);
 						}
 					} else if (second == 1) {
-						say(p, n, "That's less competition for me then\"");
+						say(player, n, "That's less competition for me then\"");
 					}
 				} else if (first == 2) {
-					npcsay(p, n, "sigh", "Young people - always in such a rush");
+					npcsay(player, n, "sigh", "Young people - always in such a rush");
 				}
 				break;
 			default:
-				npcsay(p, n, "Hello young man", "Come to visit old Grandpa Jack?",
+				npcsay(player, n, "Hello young man", "Come to visit old Grandpa Jack?",
 					"I can tell ye stories for sure",
 					"I used to be the best fisherman these parts have seen");
-				first = multi(p, n,
+				first = multi(player, n,
 					"Tell me a story then",
 					"Sorry I don't have time now");
 				if (first == 0) {
-					npcsay(p,
+					npcsay(player,
 						n,
 						"Well when I were a young man",
 						"We used to take fishing trips over to Catherby",
@@ -316,71 +315,71 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						"It contained a diamond the size of a radish",
 						"That's the best catch I've ever had!");
 				} else if (first == 1) {
-					npcsay(p, n, "sigh", "Young people - always in such a rush");
+					npcsay(player, n, "sigh", "Young people - always in such a rush");
 				}
 				break;
 		}
 	}
 
-	private void joshuaDialogue(final Player p, final Npc n) {
-		npcsay(p, n, "This is my fishing spot", "Ya don't wanna be fishing 'ere mate",
+	private void joshuaDialogue(final Player player, final Npc n) {
+		npcsay(player, n, "This is my fishing spot", "Ya don't wanna be fishing 'ere mate",
 			"Cos I'll break your knuckles");
 	}
 
-	private void mountainDwarfDialogue(final Player p, final Npc n) {
-		switch (p.getQuestStage(this)) {
+	private void mountainDwarfDialogue(final Player player, final Npc n) {
+		switch (player.getQuestStage(this)) {
 			case 0:
-				npcsay(p, n, "hmmph what do you want");
+				npcsay(player, n, "hmmph what do you want");
 
 				//do not send over
-				final int first = multi(p, n, false,
+				final int first = multi(player, n, false,
 					"I was wondering what was down those stairs?",
 					"I was just stopping to say hello");
 
 				if (first == 0) {
-					say(p, n, "I was just wondering what was down those stairs?");
-					npcsay(p, n, "You can't go down there");
+					say(player, n, "I was just wondering what was down those stairs?");
+					npcsay(player, n, "You can't go down there");
 					//do not send over
-					final int second = multi(p, n, false,
+					final int second = multi(player, n, false,
 						"I didn't want to anyway", "Why not?",
 						"I'm bigger than you let me by");
 					if (second == 0) {
-						say(p, n, "I didn't want to anyway");
-						npcsay(p, n, "Good");
+						say(player, n, "I didn't want to anyway");
+						npcsay(player, n, "Good");
 					} else if (second == 1) {
-						say(p, n, "Why not?");
-						npcsay(p, n, "This is the home of the mountain dwarves",
+						say(player, n, "Why not?");
+						npcsay(player, n, "This is the home of the mountain dwarves",
 							"How would you like it if I wanted to take a short cut through your home");
 						//do not send over
-						final int third = multi(p, n, false,
+						final int third = multi(player, n, false,
 							"Ooh is this a short cut to somewhere",
 							"Oh sorry I hadn't realised it was private",
 							"If you were my friend I wouldn't mind it");
 						if (third == 0) {
-							say(p, n, "Ooh is this a short cut to somewhere?");
-							npcsay(p, n, "Well it is easier to go this way",
+							say(player, n, "Ooh is this a short cut to somewhere?");
+							npcsay(player, n, "Well it is easier to go this way",
 								"Than through passes full of wolves");
 						} else if (third == 1) {
-							say(p, n, "Oh sorry I hadn't realised it was private");
+							say(player, n, "Oh sorry I hadn't realised it was private");
 						} else if (third == 2) {
-							say(p, n, "If you were my friend I wouldn't mind");
-							npcsay(p, n, "Yes, but I don't even know you");
+							say(player, n, "If you were my friend I wouldn't mind");
+							npcsay(player, n, "Yes, but I don't even know you");
 							//do not send over
-							final int fourth = multi(p, n, false,
+							final int fourth = multi(player, n, false,
 								"Well lets be friends",
 								"You're a grumpy little man aren't you?");
 							if (fourth == 0) {
-								say(p, n, "Well lets be friends");
-								npcsay(p, n, "I don't make friends easily",
+								say(player, n, "Well lets be friends");
+								npcsay(player, n, "I don't make friends easily",
 									"People need to earn my trust first");
 
 								//do not send over
-								final int fifth = multi(p, n, false,
+								final int fifth = multi(player, n, false,
 									"And how am I meant to do that?",
 									"You're a grumpy little man aren't you?");
 								if (fifth == 0) {
-									say(p, n, "And how am I meant to do that?");
-									npcsay(p,
+									say(player, n, "And how am I meant to do that?");
+									npcsay(player,
 										n,
 										"My we are the persistant one aren't we",
 										"Well theres a certain gold artifact we're after",
@@ -389,80 +388,80 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 										"Fortunately we have acquired a pass to enter that competition",
 										"Unfortunately Dwarves don't make good fishermen");
 									//do not send over
-									final int six = multi(p, n, false,
+									final int six = multi(player, n, false,
 										"Fortunately I'm alright at fishing",
 										"I'm not much of a fisherman either");
 									if (six == 0) {
-										say(p, n, "fortunately I'm alright at fishing");
-										npcsay(p,
+										say(player, n, "fortunately I'm alright at fishing");
+										npcsay(player,
 											n,
 											"Okay I entrust you with our competition pass",
 											"go to Hemenster and do us proud");
-										give(p, ItemId.FISHING_COMPETITION_PASS.id(), 1);
-										p.updateQuestStage(getQuestId(), 1);
+										give(player, ItemId.FISHING_COMPETITION_PASS.id(), 1);
+										player.updateQuestStage(getQuestId(), 1);
 									} else if (six == 1) {
-										say(p, n, "I'm not much of a fisherman either");
-										npcsay(p, n, "what good are you?");
+										say(player, n, "I'm not much of a fisherman either");
+										npcsay(player, n, "what good are you?");
 									}
 								} else if (fifth == 1) {
-									say(p, n, "You're a grumpy little man aren't you");
-									npcsay(p, n, " Don't you know it");
+									say(player, n, "You're a grumpy little man aren't you");
+									npcsay(player, n, " Don't you know it");
 								}
 
 							} else if (fourth == 1) {
-								say(p, n, "You're a grumpy little man aren't you");
-								npcsay(p, n, " Don't you know it");
+								say(player, n, "You're a grumpy little man aren't you");
+								npcsay(player, n, " Don't you know it");
 							}
 						}
 					} else if (second == 2) {
-						say(p, n, "I'm bigger than you", "Let me by");
-						npcsay(p, n, "Go away",
+						say(player, n, "I'm bigger than you", "Let me by");
+						npcsay(player, n, "Go away",
 							"You're not going to bully your way in here");
 					}
 				} else if (first == 1) {
-					say(p, n, "I was just stopping to say hello");
-					npcsay(p, n, "Hello then");
+					say(player, n, "I was just stopping to say hello");
+					npcsay(player, n, "Hello then");
 				}
 
 				break;
 			case 1:
 			case 2:
-				npcsay(p, n, "Have you won yet?");
-				if (!ifbankorheld(p, ItemId.FISHING_COMPETITION_PASS.id())) {
+				npcsay(player, n, "Have you won yet?");
+				if (!ifbankorheld(player, ItemId.FISHING_COMPETITION_PASS.id())) {
 					//do not send over
-					final int opts = multi(p, n, false,
+					final int opts = multi(player, n, false,
 						"No I need another competition pass",
 						"No it takes preparation to win fishing competitions");
 					if (opts == 0) {
-						say(p, n, "I need another competition pass");
-						npcsay(p, n, "Hmm its a good job they sent us spares",
+						say(player, n, "I need another competition pass");
+						npcsay(player, n, "Hmm its a good job they sent us spares",
 							"there you go");
-						give(p, ItemId.FISHING_COMPETITION_PASS.id(), 1);
+						give(player, ItemId.FISHING_COMPETITION_PASS.id(), 1);
 					} else if (opts == 1) {
-						say(p, n, "No it takes preparation to win fishing competitions");
-						npcsay(p, n, "Maybe that's where we are going wrong when we try fishing");
+						say(player, n, "No it takes preparation to win fishing competitions");
+						npcsay(player, n, "Maybe that's where we are going wrong when we try fishing");
 					}
 				} else {
-					say(p, n, "No not yet");
+					say(player, n, "No not yet");
 				}
 
 				break;
 			case 3:
-				npcsay(p, n, "Have you won yet?");
-				say(p, n, "Yes I have");
-				npcsay(p, n, "Well done, so where is the trophy?");
-				if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
-					say(p, n, "I have it right here");
-					Functions.mes(p, "you give the trophy to the dwarf");
-					remove(p, ItemId.HEMENSTER_FISHING_TROPHY.id(), 1);
-					npcsay(p, n, "Okay we will let you in now");
-					p.sendQuestComplete(Quests.FISHING_CONTEST);
+				npcsay(player, n, "Have you won yet?");
+				say(player, n, "Yes I have");
+				npcsay(player, n, "Well done, so where is the trophy?");
+				if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
+					say(player, n, "I have it right here");
+					mes(player, "you give the trophy to the dwarf");
+					player.getCarriedItems().remove(new Item(ItemId.HEMENSTER_FISHING_TROPHY.id()));
+					npcsay(player, n, "Okay we will let you in now");
+					player.sendQuestComplete(Quests.FISHING_CONTEST);
 				} else {
-					say(p, n, "I don't have it with me");
+					say(player, n, "I don't have it with me");
 				}
 				break;
 			case -1:
-				npcsay(p, n, "Welcome oh great fishing champion",
+				npcsay(player, n, "Welcome oh great fishing champion",
 					"Feel free to pop by any time");
 				break;
 		}
@@ -474,7 +473,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 		if (obj.getID() == 355 && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
-			Functions.mes(player, "you dig in amoungst the vines",
+			mes(player, "you dig in amoungst the vines",
 				"You find a red vine worm");
 			give(player, ItemId.RED_VINE_WORMS.id(), 1);
 		}
@@ -484,8 +483,8 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 			//stashing garlics in pipes should not check if other
 			//garlics have been stashed
-			Functions.mes(player, "You stash the garlic in the pipe");
-			player.getCarriedItems().remove(ItemId.GARLIC.id(), 1);
+			mes(player, "You stash the garlic in the pipe");
+			player.getCarriedItems().remove(new Item(ItemId.GARLIC.id()));
 			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
 				npcsay(player, sinister,
 					"Arrgh what is that ghastly smell",
@@ -503,267 +502,267 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onOpLoc(final GameObject obj, final String command,
-						final Player p) {
+						final Player player) {
 
 		if (obj.getID() == 358) {
-			Npc bonzo = ifnearvisnpc(p, NpcId.BONZO.id(), 15);
-			Npc morris = ifnearvisnpc(p, NpcId.MORRIS.id(), 15);
-			if (p.getX() <= 564) {
+			Npc bonzo = ifnearvisnpc(player, NpcId.BONZO.id(), 15);
+			Npc morris = ifnearvisnpc(player, NpcId.MORRIS.id(), 15);
+			if (player.getX() <= 564) {
 
 				if (morris != null) {
-					npcsay(p, morris, "competition pass please");
-					if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_COMPETITION_PASS.id(), Optional.of(false))) {
-						Functions.mes(p, "You show Morris your pass");
-						npcsay(p, morris, "Move on through");
-						doGate(p, obj, 357);
+					npcsay(player, morris, "competition pass please");
+					if (player.getCarriedItems().hasCatalogID(ItemId.FISHING_COMPETITION_PASS.id(), Optional.of(false))) {
+						mes(player, "You show Morris your pass");
+						npcsay(player, morris, "Move on through");
+						doGate(player, obj, 357);
 					} else {
-						int m = multi(p, morris,
+						int m = multi(player, morris,
 							"I don't have one of them",
 							"What do I need that for?");
 						if (m == 1) {
-							npcsay(p, morris,
+							npcsay(player, morris,
 								"This is the entrance to the Hementster fishing competition");
-							npcsay(p, morris, "It's a high class competition");
-							npcsay(p, morris, "Invitation only");
+							npcsay(player, morris, "It's a high class competition");
+							npcsay(player, morris, "Invitation only");
 						}
 					}
 				} else
 					System.err.println("morris is null");
-			} else if (p.getX() >= 565) {
-				if (p.getQuestStage(getQuestId()) == 3) {
-					doGate(p, obj, 357);
+			} else if (player.getX() >= 565) {
+				if (player.getQuestStage(getQuestId()) == 3) {
+					doGate(player, obj, 357);
 					return;
 				}
-				if (bonzo != null && p.getCache().hasKey("paid_contest_fee")) {
-					npcsay(p, bonzo,
+				if (bonzo != null && player.getCache().hasKey("paid_contest_fee")) {
+					npcsay(player, bonzo,
 						"so you're calling it quits here for now?");
-					int leaveMenu = multi(p, bonzo,
+					int leaveMenu = multi(player, bonzo,
 						"Yes I'll compete again another day",
 						"Actually I'll go back and catch some more");
 					if (leaveMenu == 0) {
-						p.getCache().remove("paid_contest_fee");
-						p.getCache().remove("contest_catches");
-						doGate(p, obj, 357);
+						player.getCache().remove("paid_contest_fee");
+						player.getCache().remove("contest_catches");
+						doGate(player, obj, 357);
 					} else if (leaveMenu == 1) {
-						npcsay(p, bonzo, "Good luck");
+						npcsay(player, bonzo, "Good luck");
 					}
 				} else {
-					doGate(p, obj, 357);
+					doGate(player, obj, 357);
 					return;
 				}
 			}
 		}
-		Npc sinister = ifnearvisnpc(p, NpcId.SINISTER_STRANGER.id(), 10);
-		Npc bonzo = ifnearvisnpc(p, NpcId.BONZO.id(), 15);
+		Npc sinister = ifnearvisnpc(player, NpcId.SINISTER_STRANGER.id(), 10);
+		Npc bonzo = ifnearvisnpc(player, NpcId.BONZO.id(), 15);
 		if (obj.getID() == 351) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
-				p.message("you have already won the fishing competition");
+			if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
+				player.message("you have already won the fishing competition");
 				return;
-			} else if (bonzo != null && !p.getCache().hasKey("paid_contest_fee")) {
-				bonzoDialogue(p, bonzo, false);
+			} else if (bonzo != null && !player.getCache().hasKey("paid_contest_fee")) {
+				bonzoDialogue(player, bonzo, false);
 				return;
 			}
-			if (p.getQuestStage(getQuestId()) > 0 && !p.getCache().hasKey("garlic_activated")) {
+			if (player.getQuestStage(getQuestId()) > 0 && !player.getCache().hasKey("garlic_activated")) {
 				//cases: not enough level
 				//no bait
 				//else do catch
-				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
-					p.message("You need at least level 10 fishing to lure these fish");
-				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
+				if (player.getSkills().getLevel(Skills.FISHING) < 10) {
+					player.message("You need at least level 10 fishing to lure these fish");
+				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
-					p.message("I don't have the equipment to catch a fish");
-				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))
-					&& !p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
-					p.message("you have no bait to catch fish here");
+					player.message("I don't have the equipment to catch a fish");
+				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))
+					&& !player.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
+					player.message("you have no bait to catch fish here");
 				}
 				// fishing using worm gives raw sardine
-				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
-					p.message("You catch a sardine");
-					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getCarriedItems().remove(ItemId.RED_VINE_WORMS.id(), 1);
-					addCatchCache(p, ItemId.RAW_SARDINE.id());
-				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
-					p.message("You catch some shrimps");
-					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
-					p.getCarriedItems().remove(ItemId.FISHING_BAIT.id(), 1);
-					addCatchCache(p, ItemId.RAW_SHRIMP.id());
+				else if (player.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
+					player.message("You catch a sardine");
+					player.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
+					player.getCarriedItems().remove(new Item(ItemId.RED_VINE_WORMS.id()));
+					addCatchCache(player, ItemId.RAW_SARDINE.id());
+				} else if (player.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
+					player.message("You catch some shrimps");
+					player.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SHRIMP.id()));
+					player.getCarriedItems().remove(new Item(ItemId.FISHING_BAIT.id()));
+					addCatchCache(player, ItemId.RAW_SHRIMP.id());
 				}
 
-				if (p.getCache().hasKey("contest_catches")) {
-					int numCatches = p.getCache().getString("contest_catches").split("-").length;
+				if (player.getCache().hasKey("contest_catches")) {
+					int numCatches = player.getCache().getString("contest_catches").split("-").length;
 					if (numCatches > 2 && bonzo != null) {
-						bonzoTimesUpDialogue(p, bonzo);
+						bonzoTimesUpDialogue(player, bonzo);
 					}
 				}
 			} else {
-				npcsay(p, sinister, "I think you will find that is my spot");
+				npcsay(player, sinister, "I think you will find that is my spot");
 			}
 		}
 		else if (obj.getID() == 352) {
-			if (p.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
-				p.message("you have already won the fishing competition");
+			if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
+				player.message("you have already won the fishing competition");
 				return;
-			} else if (bonzo != null && !p.getCache().hasKey("paid_contest_fee")) {
-				bonzoDialogue(p, bonzo, false);
+			} else if (bonzo != null && !player.getCache().hasKey("paid_contest_fee")) {
+				bonzoDialogue(player, bonzo, false);
 				return;
 			}
-			if (p.getQuestStage(getQuestId()) > 0 && p.getCache().hasKey("garlic_activated")) {
+			if (player.getQuestStage(getQuestId()) > 0 && player.getCache().hasKey("garlic_activated")) {
 				//cases: not enough level
 				//no rod
 				//no bait
 				//else do catch
-				if (p.getSkills().getLevel(Skills.FISHING) < 10) {
-					p.message("You need at least level 10 fishing to lure these fish");
-				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
+				if (player.getSkills().getLevel(Skills.FISHING) < 10) {
+					player.message("You need at least level 10 fishing to lure these fish");
+				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
-					p.message("I don't have the equipment to catch a fish");
-				} else if (!p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))
-					&& !p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
-					p.message("you have no bait to catch fish here");
+					player.message("I don't have the equipment to catch a fish");
+				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))
+					&& !player.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
+					player.message("you have no bait to catch fish here");
 				}
 				// fishing using worm gives raw carp
-				else if (p.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
-					p.message("You catch a giant carp");
-					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
-					p.getCarriedItems().remove(ItemId.RED_VINE_WORMS.id(), 1);
-					addCatchCache(p, ItemId.RAW_GIANT_CARP.id());
-				} else if (p.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
-					p.message("You catch a sardine");
-					p.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
-					p.getCarriedItems().remove(ItemId.FISHING_BAIT.id(), 1);
-					addCatchCache(p, ItemId.RAW_SARDINE.id());
+				else if (player.getCarriedItems().hasCatalogID(ItemId.RED_VINE_WORMS.id(), Optional.of(false))) {
+					player.message("You catch a giant carp");
+					player.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
+					player.getCarriedItems().remove(new Item(ItemId.RED_VINE_WORMS.id()));
+					addCatchCache(player, ItemId.RAW_GIANT_CARP.id());
+				} else if (player.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
+					player.message("You catch a sardine");
+					player.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
+					player.getCarriedItems().remove(new Item(ItemId.FISHING_BAIT.id()));
+					addCatchCache(player, ItemId.RAW_SARDINE.id());
 				}
 
-				if (p.getCache().hasKey("contest_catches")) {
-					int numCatches = p.getCache().getString("contest_catches").split("-").length;
+				if (player.getCache().hasKey("contest_catches")) {
+					int numCatches = player.getCache().getString("contest_catches").split("-").length;
 					if (numCatches > 2 && bonzo != null) {
-						bonzoTimesUpDialogue(p, bonzo);
+						bonzoTimesUpDialogue(player, bonzo);
 					}
 				}
 			} else {
-				npcsay(p, sinister, "I think you will find that is my spot");
-				say(p, sinister, "Can't you go to another spot?");
-				npcsay(p, sinister, "I like this place",
+				npcsay(player, sinister, "I think you will find that is my spot");
+				say(player, sinister, "Can't you go to another spot?");
+				npcsay(player, sinister, "I like this place",
 					"I like to savour the aroma coming from these pipes");
 			}
 		}
 		else if (obj.getID() == 353) {
-			Npc dave = ifnearvisnpc(p, NpcId.BIG_DAVE.id(), 10);
-			bigDaveDialogue(p, dave);
+			Npc dave = ifnearvisnpc(player, NpcId.BIG_DAVE.id(), 10);
+			bigDaveDialogue(player, dave);
 		}
 		else if (obj.getID() == 354) {
-			Npc joshua = ifnearvisnpc(p, NpcId.JOSHUA.id(), 10);
-			joshuaDialogue(p, joshua);
+			Npc joshua = ifnearvisnpc(player, NpcId.JOSHUA.id(), 10);
+			joshuaDialogue(player, joshua);
 		}
 		else if (obj.getID() == 359) {
-			if (p.getQuestStage(getQuestId()) == -1) {
-				p.message("You go down the stairs");
+			if (player.getQuestStage(getQuestId()) == -1) {
+				player.message("You go down the stairs");
 				if (obj.getX() == 426 && obj.getY() == 458) {
-					p.teleport(426, 3294, false);
+					player.teleport(426, 3294, false);
 				} else {
-					p.teleport(385, 3301, false);
+					player.teleport(385, 3301, false);
 				}
 			} else {
 				// from player's position
-				Npc dwarf = ifnearvisnpc(p, NpcId.MOUNTAIN_DWARF.id(), 25);
+				Npc dwarf = ifnearvisnpc(player, NpcId.MOUNTAIN_DWARF.id(), 25);
 				//final Npc dwarf = getWorld().getNpc(355, 375, 395, 445,
 				//		475);
 				if (dwarf != null) {
-					mountainDwarfDialogue(p, dwarf);
+					mountainDwarfDialogue(player, dwarf);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.MOUNTAIN_DWARF.id()) {
-			mountainDwarfDialogue(p, n);
+			mountainDwarfDialogue(player, n);
 		}
 		else if (n.getID() == NpcId.BONZO.id()) {
-			bonzoDialogue(p, n, true);
+			bonzoDialogue(player, n, true);
 		}
 		else if (n.getID() == NpcId.SINISTER_STRANGER.id()) {
-			sinisterDialogue(p, n, -1);
+			sinisterDialogue(player, n, -1);
 		}
 		else if (n.getID() == NpcId.GRANDPA_JACK.id()) {
-			grandpaJackDialogue(p, n);
+			grandpaJackDialogue(player, n);
 		}
 	}
 
-	private void sinisterDialogue(final Player p, final Npc n, final int cID) {
+	private void sinisterDialogue(final Player player, final Npc n, final int cID) {
 		if (cID == -1) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case 1:
 				case 2:
-					npcsay(p, n, "..");
+					npcsay(player, n, "..");
 					//do not send over
-					final int first = multi(p, n, false, "..?",
+					final int first = multi(player, n, false, "..?",
 						"Who are you?", "so you like fishing?");
 					if (first == 0) {
-						say(p, n, "..?");
-						npcsay(p, n, " ...");
+						say(player, n, "..?");
+						npcsay(player, n, " ...");
 					} else if (first == 1) {
-						say(p, n, "Who are you?");
-						npcsay(p, n, "My name is Vlad",
+						say(player, n, "Who are you?");
+						npcsay(player, n, "My name is Vlad",
 							"I come from far avay, vere the sun is not so bright");
-						final int second = multi(p, n,
+						final int second = multi(player, n,
 							"You're a vampire aren't you?",
 							"Is it nice there?");
 						if (second == 0) {
-							sinisterDialogue(p, n, SINISTER.VAMPIRE);
+							sinisterDialogue(player, n, SINISTER.VAMPIRE);
 						} else if (second == 1) {
-							npcsay(p, n, "It is vonderful",
+							npcsay(player, n, "It is vonderful",
 								"the vomen are beautiful",
 								"and the nights are long");
 							//do not send over
-							final int third = multi(p, n, false,
+							final int third = multi(player, n, false,
 								"You're a vampire aren't you?",
 								"So you like fishing?",
 								"Well good luck with the fishing");
 							if (third == 0) {
-								say(p, n, "You're a vampire aren't you?");
-								sinisterDialogue(p, n, SINISTER.VAMPIRE);
+								say(player, n, "You're a vampire aren't you?");
+								sinisterDialogue(player, n, SINISTER.VAMPIRE);
 							} else if (third == 1) {
-								say(p, n, "So you like fishing");
-								sinisterDialogue(p, n, SINISTER.FISHING);
+								say(player, n, "So you like fishing");
+								sinisterDialogue(player, n, SINISTER.FISHING);
 							} else if (third == 2) {
-								say(p, n, "Well good luck with the fishing");
-								npcsay(p, n, "Luck has nothing to do vith it",
+								say(player, n, "Well good luck with the fishing");
+								npcsay(player, n, "Luck has nothing to do vith it",
 									"It is all in the technique");
 							}
 						}
 
 					} else if (first == 2) {
-						say(p, n, "So you like fishing");
-						sinisterDialogue(p, n, SINISTER.FISHING);
+						say(player, n, "So you like fishing");
+						sinisterDialogue(player, n, SINISTER.FISHING);
 					}
 					break;
 			}
 		}
 		switch (cID) {
 			case SINISTER.VAMPIRE:
-				npcsay(p, n, "Just because I can't stand the smell of garlic",
+				npcsay(player, n, "Just because I can't stand the smell of garlic",
 					"and I don't like bright sunlight",
 					"Doesn't necessarily mean I'm a vampire");
 				break;
 			case SINISTER.FISHING:
-				npcsay(p, n, "My doctor told be to take up a velaxing hobby",
+				npcsay(player, n, "My doctor told be to take up a velaxing hobby",
 					"vhen I am stressed I tend to get a little..", "..thirsty");
 				//do not send over
-				final int third = multi(p, n, false,
+				final int third = multi(player, n, false,
 					"You're a vampire aren't you?",
 					"If you get thirsty you should drink something",
 					"Well good look with the fishing");
 				if (third == 0) {
-					say(p, n, "You're a vampire aren't you?");
-					sinisterDialogue(p, n, SINISTER.VAMPIRE);
+					say(player, n, "You're a vampire aren't you?");
+					sinisterDialogue(player, n, SINISTER.VAMPIRE);
 				} else if (third == 1) {
-					say(p, n, "If you get thirsty", "You should drink something");
-					npcsay(p, n, "I think I may do that soon");
+					say(player, n, "If you get thirsty", "You should drink something");
+					npcsay(player, n, "I think I may do that soon");
 				} else if (third == 2) {
-					say(p, n, "Well good luck with the fishing");
-					npcsay(p, n, "Luck has nothing to do vith it",
+					say(player, n, "Well good luck with the fishing");
+					npcsay(player, n, "Luck has nothing to do vith it",
 						"It is all in the technique");
 				}
 				break;
@@ -771,15 +770,15 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseNpc(Player p, Npc n, Item i) {
+	public boolean blockUseNpc(Player player, Npc n, Item i) {
 		//garlic on sinister stranger
 		return n.getID() == NpcId.SINISTER_STRANGER.id() && i.getCatalogId() == ItemId.GARLIC.id();
 	}
 
 	@Override
-	public void onUseNpc(Player p, Npc n, Item i) {
+	public void onUseNpc(Player player, Npc n, Item i) {
 		if (n.getID() == NpcId.SINISTER_STRANGER.id() && i.getCatalogId() == ItemId.GARLIC.id()) {
-			npcsay(p, n, "urrggh get zat horrible ving avay from me",
+			npcsay(player, n, "urrggh get zat horrible ving avay from me",
 				"How do people like to eat that stuff",
 				"I can't stand even to be near it for ten seconds");
 		}

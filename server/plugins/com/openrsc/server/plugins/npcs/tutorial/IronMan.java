@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -39,73 +38,73 @@ public class IronMan implements
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		if (!p.getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
+	public void onTalkNpc(Player player, Npc n) {
+		if (!player.getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
 
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
-			if (p.getAttribute("ironman_delete", false)) {
-				if (p.getCache().hasKey("bank_pin")) {
-					Functions.mes(p, n, 1000, "Enter your Bank PIN to downgrade your Iron Man status.");
+			if (player.getAttribute("ironman_delete", false)) {
+				if (player.getCache().hasKey("bank_pin")) {
+					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Enter your Bank PIN to downgrade your Iron Man status.");
 
-					if (!validatebankpin(p)) {
-						ActionSender.sendBox(p, "Incorrect bank pin", false);
-						p.setAttribute("ironman_delete", false);
-						ActionSender.sendIronManInterface(p);
+					if (!validatebankpin(player)) {
+						ActionSender.sendBox(player, "Incorrect bank pin", false);
+						player.setAttribute("ironman_delete", false);
+						ActionSender.sendIronManInterface(player);
 						return;
 					}
-					p.setAttribute("ironman_delete", false);
-					p.message("You have correctly entered your PIN");
-					int id = p.getAttribute("ironman_mode");
+					player.setAttribute("ironman_delete", false);
+					player.message("You have correctly entered your PIN");
+					int id = player.getAttribute("ironman_mode");
 					if (id != -1) {
-						p.setIronMan(id);
+						player.setIronMan(id);
 					}
-					p.message("You have downgraded your ironman status");
-					ActionSender.sendIronManMode(p);
-					ActionSender.sendIronManInterface(p);
+					player.message("You have downgraded your ironman status");
+					ActionSender.sendIronManMode(player);
+					ActionSender.sendIronManInterface(player);
 				}
 				return;
-			} else if (p.getAttribute("ironman_pin", false)) {
-				Functions.mes(p, n, 1000, "You'll need to set a Bank PIN for that.");
-				int menu = multi(p,
+			} else if (player.getAttribute("ironman_pin", false)) {
+				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need to set a Bank PIN for that.");
+				int menu = multi(player,
 					"Okay, let me set a PIN.",
 					"No, I don't want a Bank PIN.");
 				if (menu != -1) {
 					if (menu == 0) {
-						if (!p.getCache().hasKey("bank_pin")) {
-							if(setbankpin(p)) {
-								p.setIronManRestriction(0);
-								ActionSender.sendIronManMode(p);
-								ActionSender.sendIronManInterface(p);
+						if (!player.getCache().hasKey("bank_pin")) {
+							if(setbankpin(player)) {
+								player.setIronManRestriction(0);
+								ActionSender.sendIronManMode(player);
+								ActionSender.sendIronManInterface(player);
 							}
 
-							p.setAttribute("ironman_pin", false);
+							player.setAttribute("ironman_pin", false);
 						}
 					} else if (menu == 1) {
-						ActionSender.sendIronManInterface(p);
-						p.setAttribute("ironman_pin", false);
+						ActionSender.sendIronManInterface(player);
+						player.setAttribute("ironman_pin", false);
 					}
 				} else {
-					p.setAttribute("ironman_pin", false);
+					player.setAttribute("ironman_pin", false);
 				}
 				return;
 			}
-			if (p.isIronMan(IronmanMode.Ironman.id())) {
-				npcsay(p, n, "Hail, Iron Man!");
-			} else if (p.isIronMan(IronmanMode.Ultimate.id())) {
-				npcsay(p, n, "Hail, Ultimate Iron Man!");
-			} else if (p.isIronMan(IronmanMode.Hardcore.id())) {
-				npcsay(p, n, "Hail, Hardcore Iron Man!");
+			if (player.isIronMan(IronmanMode.Ironman.id())) {
+				npcsay(player, n, "Hail, Iron Man!");
+			} else if (player.isIronMan(IronmanMode.Ultimate.id())) {
+				npcsay(player, n, "Hail, Ultimate Iron Man!");
+			} else if (player.isIronMan(IronmanMode.Hardcore.id())) {
+				npcsay(player, n, "Hail, Hardcore Iron Man!");
 			} else {
-				npcsay(p, n, "Hello, " + p.getUsername() + ". We're the Iron Man tutors.");
+				npcsay(player, n, "Hello, " + player.getUsername() + ". We're the Iron Man tutors.");
 			}
-			npcsay(p, n, "What can we do for you?");
-			int menu = multi(p, n,
+			npcsay(player, n, "What can we do for you?");
+			int menu = multi(player, n,
 				"Tell me about Iron Men.",
-				"I'd like to " + (p.getLocation().onTutorialIsland() ? "change" : "review") + " my Iron Man mode.",
+				"I'd like to " + (player.getLocation().onTutorialIsland() ? "change" : "review") + " my Iron Man mode.",
 				"Have you any armour for me, please?",
 				"I'm fine, thanks.");
 			if (menu == 0) {
-				npcsay(p, n, "When you play as an Iron Man, you do everything",
+				npcsay(player, n, "When you play as an Iron Man, you do everything",
 					"for yourself. You don't trade with other players, or take",
 					"their items, or accept their help.",
 					"As an Iron Man, you choose to have these restrictions",
@@ -133,74 +132,74 @@ public class IronMan implements
 					"downgrade to a standard Iron Men,",
 					"and we'll let either Iron Man types of Iron Man become normal players.");
 			} else if (menu == 1) {
-				ActionSender.sendIronManInterface(p);
+				ActionSender.sendIronManInterface(player);
 			} else if (menu == 2) {
-				armourOption(p, n);
+				armourOption(player, n);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN;
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		return n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour");
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
-		if (!p.getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
+	public void onOpNpc(Npc n, String command, Player player) {
+		if (!player.getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) return;
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN && command.equalsIgnoreCase("Armour")) {
-			armourOption(p, n);
+			armourOption(player, n);
 		}
 	}
 
-	private void armourOption(Player p, Npc n) {
-		if ((!p.isIronMan(IronmanMode.Ironman.id())) && (!p.isIronMan(IronmanMode.Ultimate.id()) && (!p.isIronMan(IronmanMode.Hardcore.id())))) {
-			npcsay(p, n, "You're not an Iron Man.", "Our armour is only for them.");
+	private void armourOption(Player player, Npc n) {
+		if ((!player.isIronMan(IronmanMode.Ironman.id())) && (!player.isIronMan(IronmanMode.Ultimate.id()) && (!player.isIronMan(IronmanMode.Hardcore.id())))) {
+			npcsay(player, n, "You're not an Iron Man.", "Our armour is only for them.");
 		} else {
-			if (p.getLocation().onTutorialIsland()) {
-				npcsay(p, n, "We'll give you your armour once you're off this island.",
+			if (player.getLocation().onTutorialIsland()) {
+				npcsay(player, n, "We'll give you your armour once you're off this island.",
 					"Come and see us in Lumbridge.");
 			} else {
-				if (!ifbankorheld(p, expectedArmour(p, ArmourPart.HELM)) ||
-					!ifbankorheld(p, expectedArmour(p, ArmourPart.BODY)) ||
-					!ifbankorheld(p, expectedArmour(p, ArmourPart.LEGS))) {
-					if (p.getIronMan() == IronmanMode.Ironman.id()) {
-						if (!ifbankorheld(p, ItemId.IRONMAN_HELM.id()))
-							give(p, ItemId.IRONMAN_HELM.id(), 1);
-						if (!ifbankorheld(p, ItemId.IRONMAN_PLATEBODY.id()))
-							give(p, ItemId.IRONMAN_PLATEBODY.id(), 1);
-						if (!ifbankorheld(p, ItemId.IRONMAN_PLATELEGS.id()))
-							give(p, ItemId.IRONMAN_PLATELEGS.id(), 1);
-					} else if (p.getIronMan() == IronmanMode.Ultimate.id()) {
-						if (!ifbankorheld(p, ItemId.ULTIMATE_IRONMAN_HELM.id()))
-							give(p, ItemId.ULTIMATE_IRONMAN_HELM.id(), 1);
-						if (!ifbankorheld(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()))
-							give(p, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), 1);
-						if (!ifbankorheld(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()))
-							give(p, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), 1);
-					} else if (p.getIronMan() == IronmanMode.Hardcore.id()) {
-						if (!ifbankorheld(p, ItemId.HARDCORE_IRONMAN_HELM.id()))
-							give(p, ItemId.HARDCORE_IRONMAN_HELM.id(), 1);
-						if (!ifbankorheld(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id()))
-							give(p, ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), 1);
-						if (!ifbankorheld(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id()))
-							give(p, ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), 1);
+				if (!ifbankorheld(player, expectedArmour(player, ArmourPart.HELM)) ||
+					!ifbankorheld(player, expectedArmour(player, ArmourPart.BODY)) ||
+					!ifbankorheld(player, expectedArmour(player, ArmourPart.LEGS))) {
+					if (player.getIronMan() == IronmanMode.Ironman.id()) {
+						if (!ifbankorheld(player, ItemId.IRONMAN_HELM.id()))
+							give(player, ItemId.IRONMAN_HELM.id(), 1);
+						if (!ifbankorheld(player, ItemId.IRONMAN_PLATEBODY.id()))
+							give(player, ItemId.IRONMAN_PLATEBODY.id(), 1);
+						if (!ifbankorheld(player, ItemId.IRONMAN_PLATELEGS.id()))
+							give(player, ItemId.IRONMAN_PLATELEGS.id(), 1);
+					} else if (player.getIronMan() == IronmanMode.Ultimate.id()) {
+						if (!ifbankorheld(player, ItemId.ULTIMATE_IRONMAN_HELM.id()))
+							give(player, ItemId.ULTIMATE_IRONMAN_HELM.id(), 1);
+						if (!ifbankorheld(player, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()))
+							give(player, ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), 1);
+						if (!ifbankorheld(player, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()))
+							give(player, ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), 1);
+					} else if (player.getIronMan() == IronmanMode.Hardcore.id()) {
+						if (!ifbankorheld(player, ItemId.HARDCORE_IRONMAN_HELM.id()))
+							give(player, ItemId.HARDCORE_IRONMAN_HELM.id(), 1);
+						if (!ifbankorheld(player, ItemId.HARDCORE_IRONMAN_PLATEBODY.id()))
+							give(player, ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), 1);
+						if (!ifbankorheld(player, ItemId.HARDCORE_IRONMAN_PLATELEGS.id()))
+							give(player, ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), 1);
 					}
-					npcsay(p, n, "There you go. Wear it with pride.");
+					npcsay(player, n, "There you go. Wear it with pride.");
 				} else {
-					npcsay(p, n, "I think you've already got the whole set.");
+					npcsay(player, n, "I think you've already got the whole set.");
 				}
 			}
 		}
 	}
 
-	int expectedArmour(Player p, ArmourPart part) {
-		if (p.getIronMan() == IronmanMode.Ironman.id()) {
+	int expectedArmour(Player player, ArmourPart part) {
+		if (player.getIronMan() == IronmanMode.Ironman.id()) {
 			switch(part) {
 				case HELM:
 					return ItemId.IRONMAN_HELM.id();
@@ -209,7 +208,7 @@ public class IronMan implements
 				case LEGS:
 					return ItemId.IRONMAN_PLATELEGS.id();
 			}
-		} else if (p.getIronMan() == IronmanMode.Ultimate.id()) {
+		} else if (player.getIronMan() == IronmanMode.Ultimate.id()) {
 			switch(part) {
 				case HELM:
 					return ItemId.ULTIMATE_IRONMAN_HELM.id();
@@ -218,7 +217,7 @@ public class IronMan implements
 				case LEGS:
 					return ItemId.ULTIMATE_IRONMAN_PLATELEGS.id();
 			}
-		} else if (p.getIronMan() == IronmanMode.Hardcore.id()) {
+		} else if (player.getIronMan() == IronmanMode.Hardcore.id()) {
 			switch(part) {
 				case HELM:
 					return ItemId.HARDCORE_IRONMAN_HELM.id();
@@ -236,7 +235,7 @@ public class IronMan implements
 	}
 
 	@Override
-	public boolean blockTakeObj(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		return DataConversions.inArray(ironmanArmourPieces, i.getID());
 	}
 }

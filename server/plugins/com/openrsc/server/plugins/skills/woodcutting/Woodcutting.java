@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.woodcutting;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
@@ -7,7 +7,6 @@ import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -15,7 +14,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Woodcutting implements OpLocTrigger {
 
@@ -68,8 +67,8 @@ public class Woodcutting implements OpLocTrigger {
 
 		final int axeID = axeId;
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
-		Functions.thinkbubble(player, new Item(axeId));
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1800, "Woodcutting", Formulae.getRepeatTimes(player, Skills.WOODCUT), true) {
+		thinkbubble(player, new Item(axeId));
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Woodcutting", Formulae.getRepeatTimes(player, Skills.WOODCUT), true) {
 			@Override
 			public void action() {
 				final Item log = new Item(def.getLogId());
@@ -124,7 +123,7 @@ public class Woodcutting implements OpLocTrigger {
 				}
 				if (!isCompleted()) {
 					getOwner().playerServerMessage(MessageType.QUEST, "You swing your " + getWorld().getServer().getEntityHandler().getItemDef(axeID).getName().toLowerCase() + " at the tree...");
-					Functions.thinkbubble(getOwner(), new Item(axeID));
+					thinkbubble(getOwner(), new Item(axeID));
 				}
 			}
 		});

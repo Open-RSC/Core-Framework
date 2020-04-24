@@ -14,8 +14,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @author n0m
- * @revised Luis
  * Hit restoration event is independent of the other stats
  * The restoration tick may be re-synced if player has no stats to restore and new
  * trigger occurs such as drinking a potion
@@ -30,7 +28,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 	public StatRestorationEvent(World world, Mob mob) {
 		super(world, mob, 1, "Stat Restoration Event");
-		numberSkills = world.getServer().getConstants().getSkills().getSkillsCount();
+		numberSkills = mob.isPlayer() ? world.getServer().getConstants().getSkills().getSkillsCount() : 4;
 	}
 
 	@Override
@@ -95,8 +93,8 @@ public class StatRestorationEvent extends GameTickEvent {
 				if (restoringStats.get(stat) == 0) {
 					it.remove();
 					if (getOwner().isPlayer()) {
-						Player p = (Player) getOwner();
-						p.message("Your " + getOwner().getWorld().getServer().getConstants().getSkills().getSkillName(stat).toLowerCase()
+						Player player = (Player) getOwner();
+						player.message("Your " + getOwner().getWorld().getServer().getConstants().getSkills().getSkillName(stat).toLowerCase()
 							+ " ability has returned to normal.");
 					}
 				}

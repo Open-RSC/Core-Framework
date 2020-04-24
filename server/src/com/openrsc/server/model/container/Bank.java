@@ -1,16 +1,15 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.ByteBuffer;
 import java.util.*;
 
 
@@ -413,6 +412,8 @@ public class Bank {
 				// Check if the bank is empty
 				if (list.isEmpty()) return false;
 
+				Item item = list.get(getFirstIndexById(catalogID));
+
 				// Cap the max requestedAmount
 				requestedAmount = Math.min(requestedAmount, countId(catalogID));
 
@@ -423,7 +424,7 @@ public class Bank {
 				Item withdrawItem = null;
 
 				for (Item iteratedItem : list) {
-					if (iteratedItem.getCatalogId() == catalogID) {
+					if (iteratedItem.getItemId() == item.getItemId()) {
 						withdrawItem = iteratedItem;
 						break;
 					}
@@ -436,20 +437,20 @@ public class Bank {
 				ItemDefinition withdrawDef = withdrawItem.getDef(player.getWorld());
 				if (withdrawDef == null) return false;
 
-				// Don't allow notes for stackables
-				if (wantsNotes && withdrawDef.isStackable())
+				// Don't allow notes for non noteable items
+				if (wantsNotes && !withdrawDef.isNoteable())
 					withdrawNoted = false;
-
-				// If there are two stacks, let's make sure we don't take more
-				// than the stack we've selected has in it.
-				int withdrawAmount = requestedAmount = Math.min(withdrawItem.getAmount(), requestedAmount);
-
-				if (withdrawAmount <= 0) return false;
 
 				// Limit non-stackables to a withdraw of 1.
 				// (will call function again later if more than 1 requested.)
-				if (!withdrawDef.isStackable() && !withdrawNoted)
-					withdrawAmount = 1;
+				int withdrawAmount = 1;
+				if (withdrawDef.isStackable() || (withdrawItem.getNoted() && withdrawNoted)) {
+					if (requestedAmount % 10 > 0) withdrawAmount = 1;
+					else if (requestedAmount % 100 > 0) withdrawAmount = 10;
+					else if (requestedAmount % 1000 > 0) withdrawAmount = 100;
+					else if (requestedAmount % 10000 > 0) withdrawAmount = 1000;
+					else if (requestedAmount % 100000 > 0) withdrawAmount = 10000;
+				}
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted, withdrawItem.getItemId());
 
@@ -487,16 +488,38 @@ public class Bank {
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				try {
-					for (int index = player.getCarriedItems().getInventory().getItems().size()-1; index >= 0; --index) {
-						Item inventoryItem = player.getCarriedItems().getInventory().get(index);
-						System.out.println("Depositing " + inventoryItem.getDef(player.getWorld()).getName() + "x"
-							+ inventoryItem.getAmount() + " from slot " + index);
-						if (!depositItemFromInventory(inventoryItem.getCatalogId(), inventoryItem.getAmount(), false))
+					for (int i = player.getCarriedItems().getInventory().getItems().size(); i-- > 0;) {
+						Item item = player.getCarriedItems().getInventory().getItems().get(i);
+						if (!depositItemFromInventory(item.getCatalogId(), item.getAmount(), true)) {
 							return false;
+						}
 					}
 
-					ActionSender.sendInventory(player);
 				} catch (Exception ex) {
+					LOGGER.error(ex.getMessage());
+					return false;
+				}
+				return true;
+			}
+		}
+	}
+
+	public boolean depositAllFromEquipment() {
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getEquipment().getList()) {
+				try {
+					for (int slot = 0; slot < player.getCarriedItems().getEquipment().SLOT_COUNT; slot++) {
+						Item item = player.getCarriedItems().getEquipment().getList()[slot];
+						if (item == null || item.getCatalogId() == ItemId.NOTHING.id()) continue;
+						UnequipRequest uer = new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false);
+						uer.equipmentSlot = Equipment.EquipmentSlot.get(slot);
+						Equipment.correctIndex(uer);
+						if (!player.getCarriedItems().getEquipment().unequipItem(uer)) {
+							return false;
+						}
+					}
+				}
+				catch (Exception ex) {
 					LOGGER.error(ex.getMessage());
 					return false;
 				}
@@ -516,25 +539,15 @@ public class Bank {
 					return false;
 				}
 
-				// Find inventory slot that contains the requested catalogID
-				Item depositItem = null;
-				ListIterator<Item> playerItems = items.listIterator(items.size());
-				while (playerItems.hasPrevious()) {
-					Item i = playerItems.previous();
-					if (i.getCatalogId() == catalogID) {
-						depositItem = i;
-						break;
-					}
-				}
+				Item item = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(catalogID));
 
-				// Double check there was an item found
+				// Find inventory slot that contains the requested catalogID
+				Item depositItem = getItemFromList(items, item);
 				if (depositItem == null) {
 					System.out.println(player.getUsername() + " attempted to deposit an item that is null: " + catalogID);
 					return false;
 				}
-
-				// Ensure the requested deposit does not exceed item quantity.
-				int depositAmount = Math.min(depositItem.getAmount(), requestedAmount);
 
 				// Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
@@ -544,10 +557,7 @@ public class Bank {
 				}
 
 				// Limit non-stackables to a withdraw of 1
-				if (!depositDef.isStackable() && !depositItem.getNoted())
-					depositAmount = 1;
-				else
-					requestedAmount = depositAmount;
+				int depositAmount = getTrickleAmount(depositDef, depositItem, requestedAmount);
 
 				// Make sure they have enough space in their bank to deposit it
 				if (!canHold(new Item(depositItem.getCatalogId(), depositAmount))) {
@@ -555,15 +565,10 @@ public class Bank {
 					return false;
 				}
 
-				// Player's shouldn't be able to bank notes
-				if (depositItem.getNoted()) {
-					try{depositItem.setNoted(player.getWorld().getServer().getDatabase(), false);}
-					catch (GameDatabaseException ex) { LOGGER.error(ex.getMessage()); return false; }
-				}
-
 				// Attempt to remove the item from the inventory.
 				// Remove the item's status entry if none will be left in the inventory.
-				if (player.getCarriedItems().getInventory().remove(depositItem.getCatalogId(), depositAmount, updateClient) == -1) {
+				Item toRemove = new Item(depositItem.getCatalogId(), depositAmount, depositItem.getNoted(), depositItem.getItemId());
+				if (player.getCarriedItems().getInventory().remove(toRemove, updateClient) == -1) {
 					System.out.println(player.getUsername() + " failed to remove item from inventory: " + catalogID);
 					return false;
 				}
@@ -590,6 +595,31 @@ public class Bank {
 				}
 			}
 		}
+	}
+
+	private Item getItemFromList(List<Item> items, Item item) {
+		Item depositItem = null;
+		ListIterator<Item> playerItems = items.listIterator(items.size());
+		while (playerItems.hasPrevious()) {
+			Item i = playerItems.previous();
+			if (i.getItemId() == item.getItemId()) {
+				depositItem = i;
+				break;
+			}
+		}
+		return depositItem;
+	}
+
+	private int getTrickleAmount(ItemDefinition depositDef, Item depositItem, int requestedAmount) {
+		int depositAmount = 1;
+		if (depositDef.isStackable() || depositItem.getNoted()) {
+			if (requestedAmount % 10 > 0) depositAmount = 1;
+			else if (requestedAmount % 100 > 0) depositAmount = 10;
+			else if (requestedAmount % 1000 > 0) depositAmount = 100;
+			else if (requestedAmount % 10000 > 0) depositAmount = 1000;
+			else if (requestedAmount % 100000 > 0) depositAmount = 10000;
+		}
+		return depositAmount;
 	}
 
 	private static boolean isCert(int itemID) {

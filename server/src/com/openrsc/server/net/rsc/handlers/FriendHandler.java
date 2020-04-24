@@ -16,10 +16,10 @@ public final class FriendHandler implements PacketHandler {
 
 	private final int MEMBERS_MAX_FRIENDS = 200;
 
-	public void handlePacket(Packet p, Player player) {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) {
+		int pID = packet.getID();
 
-		String friendName = p.readString();
+		String friendName = packet.readString();
 		long friend = DataConversions.usernameToHash(friendName);
 
 		int packetOne = OpcodeIn.SOCIAL_ADD_FRIEND.getOpcode();
@@ -75,7 +75,7 @@ public final class FriendHandler implements PacketHandler {
 			}
 			String message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(
-					DataConversions.getEncryptedString(p, 32576)));
+					DataConversions.getEncryptedString(packet, 32576)));
 			if (friendName.toLowerCase().equals("global$") && player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}

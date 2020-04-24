@@ -7,9 +7,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class StyleHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int style = p.readByte();
+		int style = packet.readByte();
 		if (style < Skills.CONTROLLED_MODE || style > Skills.DEFENSIVE_MODE) {
 			player.setSuspiciousPlayer(true, "style handler style < 0 or style > 3");
 			return;

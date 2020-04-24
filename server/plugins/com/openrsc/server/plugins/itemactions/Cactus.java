@@ -9,11 +9,10 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.thinkbubble;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Cactus implements UseLocTrigger {
 
@@ -31,14 +30,15 @@ public class Cactus implements UseLocTrigger {
 		player.message("You use your woodcutting skill to extract some water from the cactus.");
 		int[] skins = {ItemId.WATER_SKIN_MOSTLY_FULL.id(), ItemId.WATER_SKIN_MOSTLY_EMPTY.id(),
 				ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), ItemId.EMPTY_WATER_SKIN.id()};
-		Functions.thinkbubble(player, item);
+		thinkbubble(player, item);
 		player.setBusy(true);
 		player.getWorld().getServer().getGameEventHandler()
 
 			.add(new ShortEvent(player.getWorld(), player, "Cactus Fill Waterskin") {
 				public void action() {
 					for (int s : skins) {
-						if (getOwner().getCarriedItems().remove(s, 1) > -1) {
+						Item toRemove = new Item(s, 1);
+						if (getOwner().getCarriedItems().remove(toRemove) > -1) {
 							boolean fail = Formulae.cutCacti();
 							if (fail) {
 								getOwner().message("You make a mistake and fail to fill your waterskin.");

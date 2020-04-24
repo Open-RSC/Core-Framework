@@ -12,7 +12,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcTalkTo implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (player.isBusy()) {
 			if (player.inCombat()) {
@@ -22,12 +22,12 @@ public final class NpcTalkTo implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final Npc n = player.getWorld().getNpc(p.readShort());
+		final Npc n = player.getWorld().getNpc(packet.readShort());
 
 		if (n == null) {
 			return;
 		}
-		player.setFollowing(n, 0);
+		player.setFollowing(n, 1);
 		player.setStatus(Action.TALKING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
@@ -54,18 +54,15 @@ public final class NpcTalkTo implements PacketHandler {
 								continue;
 							Point destination = canWalk(getPlayer().getWorld(), getPlayer().getX() - x, getPlayer().getY() - y);
 							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
-								n.teleport(destination.getX(), destination.getY());
-								break;
+								n.walk(destination.getX(), destination.getY());
+								n.setTalkToNpcEvent(getPlayer());
+								return;
 							}
 						}
 					}
 				}
-
-				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n}, this)) {
-					getPlayer().face(n);
-					n.face(getPlayer());
+				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n})) {
 					getPlayer().setInteractingNpc(n);
-					return;
 				}
 			}
 
@@ -119,14 +116,14 @@ public final class NpcTalkTo implements PacketHandler {
 
 			private boolean checkBlocking(World world, int x, int y, int bit) {
 				TileValue t = world.getTile(x, y);
-				Point p = new Point(x, y);
+				Point point = new Point(x, y);
 				for (Npc n : n.getViewArea().getNpcsInView()) {
-					if (n.getLocation().equals(p)) {
+					if (n.getLocation().equals(point)) {
 						return true;
 					}
 				}
 				for (Player areaPlayer : n.getViewArea().getPlayersInView()) {
-					if (areaPlayer.getLocation().equals(p)) {
+					if (areaPlayer.getLocation().equals(point)) {
 						return true;
 					}
 				}

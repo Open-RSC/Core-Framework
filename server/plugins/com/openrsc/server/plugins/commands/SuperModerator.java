@@ -44,16 +44,16 @@ public final class SuperModerator implements CommandTrigger {
 			int keyArg = args.length >= 3 ? 1 : 0;
 			int valArg = args.length >= 3 ? 2 : 1;
 
-			Player p = args.length >= 3 ?
+			Player targetPlayer = args.length >= 3 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
 				return;
 			}
@@ -68,8 +68,8 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			if (p.getCache().hasKey(args[keyArg])) {
-				player.message(messagePrefix + p.getUsername() + " already has that setting set.");
+			if (targetPlayer.getCache().hasKey(args[keyArg])) {
+				player.message(messagePrefix + targetPlayer.getUsername() + " already has that setting set.");
 				return;
 			}
 
@@ -79,8 +79,8 @@ public final class SuperModerator implements CommandTrigger {
 			} catch (NumberFormatException ex) {
 			}
 
-			p.getCache().store(args[keyArg], args[valArg]);
-			player.message(messagePrefix + "Added " + args[keyArg] + " with value " + args[valArg] + " to " + p.getUsername() + "'s cache");
+			targetPlayer.getCache().store(args[keyArg], args[valArg]);
+			player.message(messagePrefix + "Added " + args[keyArg] + " with value " + args[valArg] + " to " + targetPlayer.getUsername() + "'s cache");
 		} else if (cmd.equalsIgnoreCase("getcache") || cmd.equalsIgnoreCase("gcache") || cmd.equalsIgnoreCase("checkcache")) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [cache_key]");
@@ -89,21 +89,21 @@ public final class SuperModerator implements CommandTrigger {
 
 			int keyArg = args.length >= 2 ? 1 : 0;
 
-			Player p = args.length >= 2 ?
+			Player targetPlayer = args.length >= 2 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.getCache().hasKey(args[keyArg])) {
-				player.message(messagePrefix + p.getUsername() + " does not have the cache key " + args[keyArg] + " set");
+			if (!targetPlayer.getCache().hasKey(args[keyArg])) {
+				player.message(messagePrefix + targetPlayer.getUsername() + " does not have the cache key " + args[keyArg] + " set");
 				return;
 			}
 
-			player.message(messagePrefix + p.getUsername() + " has value " + p.getCache().getCacheMap().get(args[keyArg]).toString() + " for cache key " + args[keyArg]);
+			player.message(messagePrefix + targetPlayer.getUsername() + " has value " + targetPlayer.getCache().getCacheMap().get(args[keyArg]).toString() + " for cache key " + args[keyArg]);
 		} else if (cmd.equalsIgnoreCase("deletecache") || cmd.equalsIgnoreCase("dcache") || cmd.equalsIgnoreCase("removecache") || cmd.equalsIgnoreCase("rcache")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " (name) [cache_key]");
@@ -112,41 +112,41 @@ public final class SuperModerator implements CommandTrigger {
 
 			int keyArg = args.length >= 2 ? 1 : 0;
 
-			Player p = args.length >= 2 ?
+			Player targetPlayer = args.length >= 2 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not modify cache of a staff member of equal or greater rank.");
 				return;
 			}
 
-			if (!p.getCache().hasKey(args[keyArg])) {
-				player.message(messagePrefix + p.getUsername() + " does not have the cache key " + args[keyArg] + " set");
+			if (!targetPlayer.getCache().hasKey(args[keyArg])) {
+				player.message(messagePrefix + targetPlayer.getUsername() + " does not have the cache key " + args[keyArg] + " set");
 				return;
 			}
 
-			p.getCache().remove(args[keyArg]);
-			player.message(messagePrefix + "Removed " + p.getUsername() + "'s cache key " + args[keyArg]);
+			targetPlayer.getCache().remove(args[keyArg]);
+			player.message(messagePrefix + "Removed " + targetPlayer.getUsername() + "'s cache key " + args[keyArg]);
 		} else if (cmd.equalsIgnoreCase("setquest") || cmd.equalsIgnoreCase("queststage") || cmd.equalsIgnoreCase("setqueststage") || cmd.equalsIgnoreCase("resetquest") || cmd.equalsIgnoreCase("resetq")) {
 			if (args.length < 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId] (stage)");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
@@ -171,25 +171,25 @@ public final class SuperModerator implements CommandTrigger {
 				stage = 0;
 			}
 
-			p.updateQuestStage(quest, stage);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
+			targetPlayer.updateQuestStage(quest, stage);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
 			}
-			player.message(messagePrefix + "You have changed " + p.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
+			player.message(messagePrefix + "You have changed " + targetPlayer.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
 		} else if (cmd.equalsIgnoreCase("questcomplete") || cmd.equalsIgnoreCase("questcom")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not modify quests of a staff member of equal or greater rank.");
 				return;
 			}
@@ -202,20 +202,20 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			p.sendQuestComplete(quest);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
+			targetPlayer.sendQuestComplete(quest);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
 			}
-			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + p.getUsername());
+			player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + targetPlayer.getUsername());
 		} else if (cmd.equalsIgnoreCase("quest") || cmd.equalsIgnoreCase("getquest") || cmd.equalsIgnoreCase("checkquest")) {
 			if (args.length < 2) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [questId]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
@@ -228,7 +228,7 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			player.message(messagePrefix + p.getUsername() + " has stage " + p.getQuestStage(quest) + " for quest " + quest);
+			player.message(messagePrefix + targetPlayer.getUsername() + " has stage " + targetPlayer.getQuestStage(quest) + " for quest " + quest);
 		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
 			try {
 				final NpcDrop drops[] = player.getWorld().getServer().getDatabase().getNpcDrops();
@@ -265,15 +265,15 @@ public final class SuperModerator implements CommandTrigger {
 			}
 
 			if (args.length == 0) {
-				for (Player p : player.getWorld().getPlayers()) {
-					if (p == null)
+				for (Player playerToSummon : player.getWorld().getPlayers()) {
+					if (playerToSummon == null)
 						continue;
 
-					if (!p.isDefaultUser() && !p.isPlayerMod())
+					if (!playerToSummon.isDefaultUser() && !playerToSummon.isPlayerMod())
 						continue;
 
-					p.summon(player);
-					p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+					playerToSummon.summon(player);
+					playerToSummon.message(messagePrefix + "You have been summoned by " + player.getStaffName());
 				}
 			} else if (args.length >= 2) {
 				int width;
@@ -286,8 +286,8 @@ public final class SuperModerator implements CommandTrigger {
 					return;
 				}
 				Random rand = DataConversions.getRandom();
-				for (Player p : player.getWorld().getPlayers()) {
-					if (p != player) {
+				for (Player playerToSummon : player.getWorld().getPlayers()) {
+					if (playerToSummon != player) {
 						int x = rand.nextInt(width);
 						int y = rand.nextInt(height);
 						boolean XModifier = rand.nextInt(2) == 0;
@@ -299,8 +299,8 @@ public final class SuperModerator implements CommandTrigger {
 
 						Point summonLocation = new Point(x, y);
 
-						p.summon(summonLocation);
-						p.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+						playerToSummon.summon(summonLocation);
+						playerToSummon.message(messagePrefix + "You have been summoned by " + player.getStaffName());
 					}
 				}
 			}
@@ -308,15 +308,15 @@ public final class SuperModerator implements CommandTrigger {
 			player.message(messagePrefix + "You have summoned all players to " + player.getLocation());
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned all players to " + player.getLocation()));
 		} else if (cmd.equalsIgnoreCase("returnall")) {
-			for (Player p : player.getWorld().getPlayers()) {
-				if (p == null)
+			for (Player playerToSummon : player.getWorld().getPlayers()) {
+				if (playerToSummon == null)
 					continue;
 
-				if (!p.isDefaultUser() && !p.isPlayerMod())
+				if (!playerToSummon.isDefaultUser() && !playerToSummon.isPlayerMod())
 					continue;
 
-				p.returnFromSummon();
-				p.message(messagePrefix + "You have been returned by " + player.getStaffName());
+				playerToSummon.returnFromSummon();
+				playerToSummon.message(messagePrefix + "You have been returned by " + player.getStaffName());
 			}
 			player.message(messagePrefix + "All players who have been summoned were returned");
 		} else if (cmd.equalsIgnoreCase("fatigue")) {
@@ -325,14 +325,14 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not fatigue a staff member of equal or greater rank.");
 				return;
 			}
@@ -349,67 +349,70 @@ public final class SuperModerator implements CommandTrigger {
 				fatigue = 0;
 			if (fatigue > 100)
 				fatigue = 100;
-			p.setFatigue(fatigue * 1500);
+			targetPlayer.setFatigue(fatigue * 1500);
 
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "Your fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 1500) + "% by a staff member");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your fatigue has been set to " + ((targetPlayer.getFatigue() / 25) * 100 / 1500) + "% by a staff member");
 			}
-			player.message(messagePrefix + p.getUsername() + "'s fatigue has been set to " + ((p.getFatigue() / 25) * 100 / 1500 / 4) + "%");
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 12, p, p.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
+			player.message(messagePrefix + targetPlayer.getUsername() + "'s fatigue has been set to " + ((targetPlayer.getFatigue() / 25) * 100 / 1500 / 4) + "%");
+			player.getWorld().getServer().getGameLogger().addQuery(
+				new StaffLog(player, 12, targetPlayer, targetPlayer.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
 		} else if (cmd.equalsIgnoreCase("jail")) {
 			if (args.length != 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
 			}
 
-			Player p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (p.isJailed()) {
+			if (targetPlayer.isJailed()) {
 				player.message(messagePrefix + "You can not jail a player who has already been jailed.");
 				return;
 			}
 
-			if (p.hasElevatedPriveledges()) {
+			if (targetPlayer.hasElevatedPriveledges()) {
 				player.message(messagePrefix + "You can not jail a staff member.");
 				return;
 			}
 
-			Point originalLocation = p.jail();
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 5, player.getUsername() + " has summoned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
-			player.message(messagePrefix + "You have jailed " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "You have been jailed to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+			Point originalLocation = targetPlayer.jail();
+			player.getWorld().getServer().getGameLogger().addQuery(
+				new StaffLog(player, 5, player.getUsername() + " has summoned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
+			player.message(messagePrefix + "You have jailed " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "You have been jailed to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
 			}
 		} else if (cmd.equalsIgnoreCase("release")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (p.hasElevatedPriveledges()) {
+			if (targetPlayer.hasElevatedPriveledges()) {
 				player.message(messagePrefix + "You can not release a staff member.");
 				return;
 			}
 
-			if (!p.isJailed()) {
-				player.message(messagePrefix + p.getUsername() + " has not been jailed.");
+			if (!targetPlayer.isJailed()) {
+				player.message(messagePrefix + targetPlayer.getUsername() + " has not been jailed.");
 				return;
 			}
 
-			Point originalLocation = p.releaseFromJail();
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 5, player.getUsername() + " has returned " + p.getUsername() + " to " + p.getLocation() + " from " + originalLocation));
-			player.message(messagePrefix + "You have released " + p.getUsername() + " from jail to " + p.getLocation() + " from " + originalLocation);
-			if (p.getUsernameHash() != player.getUsernameHash()) {
-				p.message(messagePrefix + "You have been released from jail to " + p.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+			Point originalLocation = targetPlayer.releaseFromJail();
+			player.getWorld().getServer().getGameLogger().addQuery(
+				new StaffLog(player, 5, player.getUsername() + " has returned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
+			player.message(messagePrefix + "You have released " + targetPlayer.getUsername() + " from jail to " + targetPlayer.getLocation() + " from " + originalLocation);
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "You have been released from jail to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
 			}
 		} else if (cmd.equalsIgnoreCase("ban")) {
 			if (args.length < 1) {
@@ -419,7 +422,7 @@ public final class SuperModerator implements CommandTrigger {
 
 			final long userToBan = DataConversions.usernameToHash(args[0]);
 			final String usernameToBan = DataConversions.hashToUsername(userToBan);
-			final Player p = player.getWorld().getPlayer(userToBan);
+			final Player targetPlayer = player.getWorld().getPlayer(userToBan);
 
 			int time;
 			if (args.length >= 2) {
@@ -448,12 +451,12 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			if(p == null) {
+			if(targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if (!p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
 				return;
 			}
@@ -473,8 +476,8 @@ public final class SuperModerator implements CommandTrigger {
 			}
 
 			long userToBan = DataConversions.usernameToHash(args[0]);
-			Player p = player.getWorld().getPlayer(userToBan);
-			String ipToBan = (p != null) ? p.getCurrentIP() : "";
+			Player targetPlayer = player.getWorld().getPlayer(userToBan);
+			String ipToBan = (targetPlayer != null) ? targetPlayer.getCurrentIP() : "";
 			int time;
 			if (StringUtil.isIPv4Address(args[0]) || StringUtil.isIPv6Address(args[0])) {
 				ipToBan = args[0];
@@ -509,19 +512,21 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			if (p != null && !p.isDefaultUser() && p.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= p.getGroupID()) {
+			if (targetPlayer != null && !targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
 				return;
 			}
 
-			if (p != null) {
-				p.unregister(true, "You have been banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes"));
+			if (targetPlayer != null) {
+				targetPlayer.unregister(true, "You have been banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes"));
 			}
 
 			if (time == 0) {
-				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was unbanned by " + player.getUsername()));
+				player.getWorld().getServer().getGameLogger().addQuery(
+					new StaffLog(player, 11, targetPlayer, player.getUsername() + " was unbanned by " + player.getUsername()));
 			} else {
-				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 11, p, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
+				player.getWorld().getServer().getGameLogger().addQuery(
+					new StaffLog(player, 11, targetPlayer, player.getUsername() + " was banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes")));
 			}
 
 
@@ -529,22 +534,22 @@ public final class SuperModerator implements CommandTrigger {
 
 			player.getWorld().getServer().getPacketFilter().ipBanHost(ipToBan, (time == -1 || time == 0) ? time : (System.currentTimeMillis() + (time * 60 * 1000)), "by ipban command");
 		} else if (cmd.equalsIgnoreCase("ipcount")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if (p == null) {
+			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
 			int count = 0;
 			for (Player worldPlayer : player.getWorld().getPlayers()) {
-				if (worldPlayer.getCurrentIP().equals(p.getCurrentIP()))
+				if (worldPlayer.getCurrentIP().equals(targetPlayer.getCurrentIP()))
 					count++;
 			}
 
-			player.message(messagePrefix + p.getUsername() + " IP address: " + p.getCurrentIP() + " has " + count + " connections");
+			player.message(messagePrefix + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP() + " has " + count + " connections");
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.thieving;
 
 
 public class LootItem implements Comparable<LootItem> {

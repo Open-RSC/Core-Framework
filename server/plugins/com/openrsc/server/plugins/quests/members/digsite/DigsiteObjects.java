@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -44,7 +43,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 	private static final int X_BARREL_OPEN = 1083;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return DataConversions.inArray(new int[] {HOUSE_EAST_CHEST_OPEN, HOUSE_EAST_CHEST_CLOSED, HOUSE_EAST_CUPBOARD_OPEN, HOUSE_EAST_CUPBOARD_CLOSED,
 				HOUSE_WEST_CHESTS_OPEN, HOUSE_WEST_CHESTS_CLOSED, TENT_CHEST_OPEN, TENT_CHEST_LOCKED, HOUSE_BOOKCASE, SPECIMEN_TRAY,
 				CLIMB_UP_ROPE_SMALL_CAVE, CLIMB_UP_ROPE_BIG_CAVE, BRICK, X_BARREL_OPEN}, obj.getID()) || inArray(obj.getID(), SIGNPOST)
@@ -52,232 +51,232 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == X_BARREL_OPEN) {
-			p.message("You search the barrel");
-			p.message("The barrel has a foul-smelling liquid inside...");
-			say(p, null, "I can't pick this up with my bare hands!",
+			player.message("You search the barrel");
+			player.message("The barrel has a foul-smelling liquid inside...");
+			say(player, null, "I can't pick this up with my bare hands!",
 				"I'll need something to put it in");
 		}
 		else if (obj.getID() == BRICK) {
-			say(p, null, "Hmmm, There's a room past these bricks",
+			say(player, null, "Hmmm, There's a room past these bricks",
 				"If I could move them out of the way",
 				"Then I could find out what's inside...");
 		}
 		else if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
-			p.message("You climb the ladder");
+			player.message("You climb the ladder");
 			if (obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
-				p.teleport(25, 515);
+				player.teleport(25, 515);
 			} else if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE) {
-				p.teleport(14, 506);
+				player.teleport(14, 506);
 			}
 		}
 		else if (obj.getID() == TENT_CHEST_LOCKED) {
-			p.message("The chest is locked");
+			player.message("The chest is locked");
 		}
 		else if (obj.getID() == TENT_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
-				Functions.mes(p, "You search the chest");
-				p.message("You find some unusual powder inside...");
-				give(p, ItemId.UNIDENTIFIED_POWDER.id(), 1);
-				p.getWorld().registerGameObject(
+				mes(player, "You search the chest");
+				player.message("You find some unusual powder inside...");
+				give(player, ItemId.UNIDENTIFIED_POWDER.id(), 1);
+				player.getWorld().registerGameObject(
 						new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_LOCKED, obj.getDirection(),
 							obj.getType()));
 			}
 			//kosher special case - chest does not close on that command, player must search the chest
 			else {
-				p.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 			}
 		}
 		else if (inArray(obj.getID(), BUSH)) {
-			p.message("You search the bush");
+			player.message("You search the bush");
 			if (obj.getID() == BUSH[1]) {
-				say(p, null, "Hey, something has been dropped here...");
-				p.message("You find a rock sample!");
-				give(p, ItemId.ROCK_SAMPLE_PURPLE.id(), 1);
+				say(player, null, "Hey, something has been dropped here...");
+				player.message("You find a rock sample!");
+				give(player, ItemId.ROCK_SAMPLE_PURPLE.id(), 1);
 			} else {
-				p.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
+				player.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
 			}
 		}
 		else if (obj.getID() == SPECIMEN_TRAY) {
 			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
-			p.incExp(Skills.MINING, 4, true);
-			Functions.mes(p, "You sift through the earth in the tray");
+			player.incExp(Skills.MINING, 4, true);
+			mes(player, "You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];
-			DigsiteDigAreas.doDigsiteItemMessages(p, chosenItem);
+			DigsiteDigAreas.doDigsiteItemMessages(player, chosenItem);
 			if (chosenItem != ItemId.NOTHING.id()) {
-				give(p, chosenItem, 1);
+				give(player, chosenItem, 1);
 			}
 		}
 		else if (inArray(obj.getID(), SIGNPOST)) {
 			if (obj.getID() == SIGNPOST[0]) {
-				p.message("This site is for training purposes only");
+				player.message("This site is for training purposes only");
 			} else if (obj.getID() == SIGNPOST[1]) {
-				p.message("Level 1 digs only");
+				player.message("Level 1 digs only");
 			} else if (obj.getID() == SIGNPOST[2]) {
-				p.message("Level 2 digs only");
+				player.message("Level 2 digs only");
 			} else if (obj.getID() == SIGNPOST[3]) {
-				p.message("Level 3 digs only");
+				player.message("Level 3 digs only");
 			}
 		}
 		else if (inArray(obj.getID(), SACKS)) {
-			p.playerServerMessage(MessageType.QUEST, "You search the sacks");
-			if (obj.getID() == SACKS[0] || p.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
-				p.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
-			} else if (obj.getID() == SACKS[1] && !p.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
-				say(p, null, "Hey there's something under here");
-				p.message("You find a specimen jar!");
-				give(p, ItemId.SPECIMEN_JAR.id(), 1);
+			player.playerServerMessage(MessageType.QUEST, "You search the sacks");
+			if (obj.getID() == SACKS[0] || player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
+				player.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
+			} else if (obj.getID() == SACKS[1] && !player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
+				say(player, null, "Hey there's something under here");
+				player.message("You find a specimen jar!");
+				give(player, ItemId.SPECIMEN_JAR.id(), 1);
 			}
 		}
 		else if (inArray(obj.getID(), BURIED_SKELETON)) {
-			p.message("You search the skeleton");
-			p.message("You find nothing of interest");
+			player.message("You search the skeleton");
+			player.message("You find nothing of interest");
 		}
 		else if (obj.getID() == HOUSE_EAST_CHEST_CLOSED) {
-			p.message("You open the chest");
+			player.message("You open the chest");
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_EAST_CHEST_OPEN, obj.getDirection(), obj.getType()));
 		}
 		else if (obj.getID() == HOUSE_EAST_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
-				p.message("You search the chest");
-				p.message("You find a rock sample");
-				give(p, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
+				player.message("You search the chest");
+				player.message("You find a rock sample");
+				give(player, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_EAST_CHEST_CLOSED, obj.getDirection(), obj.getType()));
 			}
 		}
 		else if (obj.getID() == HOUSE_BOOKCASE) {
-			p.message("You search through the bookcase");
-			p.message("You find a book on chemicals");
-			give(p, ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(), 1);
+			player.message("You search through the bookcase");
+			player.message("You find a book on chemicals");
+			give(player, ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(), 1);
 		}
 		else if (obj.getID() == HOUSE_EAST_CUPBOARD_CLOSED) {
-			openCupboard(obj, p, HOUSE_EAST_CUPBOARD_OPEN);
+			openCupboard(obj, player, HOUSE_EAST_CUPBOARD_OPEN);
 		}
 		else if (obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
 			if (command.equalsIgnoreCase("search")) {
-				if (!p.getCarriedItems().hasCatalogID(ItemId.ROCK_PICK.id(), Optional.of(false))) {
-					p.message("You find a rock pick");
-					give(p, ItemId.ROCK_PICK.id(), 1);
+				if (!player.getCarriedItems().hasCatalogID(ItemId.ROCK_PICK.id(), Optional.of(false))) {
+					player.message("You find a rock pick");
+					give(player, ItemId.ROCK_PICK.id(), 1);
 				} else {
-					p.message("You find nothing of interest");
+					player.message("You find nothing of interest");
 				}
-				closeCupboard(obj, p, HOUSE_EAST_CUPBOARD_CLOSED);
+				closeCupboard(obj, player, HOUSE_EAST_CUPBOARD_CLOSED);
 			}
 		}
 		else if (obj.getID() == HOUSE_WEST_CHESTS_OPEN || obj.getID() == HOUSE_WEST_CHESTS_CLOSED) {
 			if (command.equalsIgnoreCase("Open")) {
-				p.message("You open the chest");
+				player.message("You open the chest");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_WEST_CHESTS_OPEN, obj.getDirection(), obj.getType()));
 			} else if (command.equalsIgnoreCase("Close")) {
-				p.message("You close the chest");
+				player.message("You close the chest");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_WEST_CHESTS_CLOSED, obj.getDirection(), obj.getType()));
 			} else if (command.equalsIgnoreCase("Search")) {
-				p.message("You search the chest, but find nothing");
+				player.message("You search the chest, but find nothing");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player p) {
+	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
 		return (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
 				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player p) {
+	public void onUseLoc(GameObject obj, Item item, Player player) {
 		if (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) {
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
-			p.message("you use the key in the chest");
-			p.message("you open the chest");
-			remove(p, ItemId.DIGSITE_CHEST_KEY.id(), 1);
-			say(p, null, "Oops I dropped the key",
+			player.message("you use the key in the chest");
+			player.message("you open the chest");
+			player.getCarriedItems().remove(new Item(ItemId.DIGSITE_CHEST_KEY.id()));
+			say(player, null, "Oops I dropped the key",
 				"Never mind it's open now...");
 		}
 		else if (obj.getID() == X_BARREL) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case BRONZE_PICKAXE:
-					say(p, null, "I better not - it might break it to pieces!");
+					say(player, null, "I better not - it might break it to pieces!");
 					break;
 				case ROCK_PICK:
-					say(p, null, "The rockpick is too fat to fit in the gap...");
+					say(player, null, "The rockpick is too fat to fit in the gap...");
 					break;
 				case SPADE:
-					say(p, null, "The spade is far too big to fit");
+					say(player, null, "The spade is far too big to fit");
 					break;
 				case IRON_DAGGER:
-					say(p, null, "The dagger's blade might break, I need something stronger");
+					say(player, null, "The dagger's blade might break, I need something stronger");
 					break;
 				case BROKEN_ARROW:
-					say(p, null, "It nearly fits, just a little too thin");
+					say(player, null, "It nearly fits, just a little too thin");
 					break;
 				case TROWEL:
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL_OPEN, obj.getDirection(), obj.getType()));
-					say(p, null, "Great, it's opened it!");
+					say(player, null, "Great, it's opened it!");
 					break;
 				default:
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					break;
 			}
 		}
 		else if (obj.getID() == X_BARREL_OPEN) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case PANNING_TRAY:
-					say(p, null, "Not the best idea i've had...",
+					say(player, null, "Not the best idea i've had...",
 						"It's likely to spill everywhere in that!");
 					break;
 				case SPECIMEN_JAR:
-					say(p, null, "Perhaps not, it might contaminate the samples");
+					say(player, null, "Perhaps not, it might contaminate the samples");
 					break;
 				case JUG:
-					say(p, null, "I had better not, someone might want to drink from this!");
+					say(player, null, "I had better not, someone might want to drink from this!");
 					break;
 				case EMPTY_VIAL:
-					p.message("You fill the vial with the liquid");
-					p.message("You close the barrel");
-					p.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
+					player.message("You fill the vial with the liquid");
+					player.message("You close the barrel");
+					player.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
-					say(p, null, "I'm not sure what this stuff is",
+					say(player, null, "I'm not sure what this stuff is",
 						"I had better be very careful with it",
 						"I had better not spill any I think...");
 					break;
 				default:
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					break;
 			}
 		}
 		else if (obj.getID() == BRICK) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case EXPLOSIVE_COMPOUND:
-					p.message("You pour the compound over the bricks");
-					remove(p, ItemId.EXPLOSIVE_COMPOUND.id(), 1);
-					say(p, null, "I need some way to ignite this compound...");
-					if (!p.getCache().hasKey("brick_ignite")) {
-						p.getCache().store("brick_ignite", true);
+					player.message("You pour the compound over the bricks");
+					player.getCarriedItems().remove(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
+					say(player, null, "I need some way to ignite this compound...");
+					if (!player.getCache().hasKey("brick_ignite")) {
+						player.getCache().store("brick_ignite", true);
 					}
 					break;
 				case TINDERBOX:
-					if (p.getCache().hasKey("brick_ignite")) {
-						p.message("You strike the tinderbox");
-						p.message("Fizz...");
+					if (player.getCache().hasKey("brick_ignite")) {
+						player.message("You strike the tinderbox");
+						player.message("Fizz...");
 						delay(300);
-						say(p, null, "Whoa! this is going to blow!\"",
+						say(player, null, "Whoa! this is going to blow!\"",
 							"I'd better run!");
 						delay(1500);
-						p.teleport(22, 3379);
-						p.updateQuestStage(Quests.DIGSITE, 6);
-						p.getCache().remove("brick_ignite");
-						Functions.mes(p, "\"Bang!!!\"");
-						say(p, null, "Wow that was a big explosion!",
+						player.teleport(22, 3379);
+						player.updateQuestStage(Quests.DIGSITE, 6);
+						player.getCache().remove("brick_ignite");
+						mes(player, "\"Bang!!!\"");
+						say(player, null, "Wow that was a big explosion!",
 							"...What's that noise I can hear ?",
 							"...Sounds like bones moving or something");
 					} else {
-						say(p, null, "Now what am I trying to achieve here ?");
+						say(player, null, "Now what am I trying to achieve here ?");
 					}
 					break;
 				default:
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					break;
 			}
 		}

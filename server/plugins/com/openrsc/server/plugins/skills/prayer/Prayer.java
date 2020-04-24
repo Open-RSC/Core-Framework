@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.skills.prayer;
 
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
@@ -6,10 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
-import static com.openrsc.server.plugins.Functions.getMaxLevel;
-import static com.openrsc.server.plugins.Functions.mes;
-import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Prayer implements OpLocTrigger {
 
@@ -28,7 +25,7 @@ public class Prayer implements OpLocTrigger {
 
 			}
 			if (object.getID() == 625 && object.getY() == 3573) {
-				delay(650);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				mes(player, "Suddenly a trapdoor opens beneath you");
 				player.teleport(608, 3525);
 			}

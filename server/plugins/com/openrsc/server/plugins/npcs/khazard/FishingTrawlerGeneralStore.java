@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class FishingTrawlerGeneralStore implements ShopInterface,
 	TalkNpcTrigger {
@@ -25,23 +23,23 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 		new Item(ItemId.POT_OF_FLOUR.id(), 30), new Item(ItemId.BAILING_BUCKET.id(), 30), new Item(ItemId.SWAMP_PASTE.id(), 30));
 
 	@Override
-	public void onTalkNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 
-		npcsay(p, n, "Can I help you at all?");
+		npcsay(player, n, "Can I help you at all?");
 
-		int option = Functions.multi(p, n, "Yes please. What are you selling?",
+		int option = multi(player, n, "Yes please. What are you selling?",
 				"No thanks");
 		switch (option) {
 			case 0:
-				npcsay(p, n, "Take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Take a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SHOPKEEPER_PORTKHAZARD.id();
 	}
 

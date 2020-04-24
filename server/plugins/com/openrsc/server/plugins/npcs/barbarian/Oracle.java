@@ -9,20 +9,20 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Oracle implements
 	TalkNpcTrigger {
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		Menu defaultMenu = new Menu();
-		if (p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+		if (player.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
 			defaultMenu.addOption(new Option(
 				"I seek a piece of the map of the isle of Crondor") {
 				@Override
 				public void action() {
-					npcsay(p, n, "The map's behind a door below",
+					npcsay(player, n, "The map's behind a door below",
 						"But entering is rather tough",
 						"And this is what you need to know",
 						"You must hold the following stuff",
@@ -36,44 +36,44 @@ public final class Oracle implements
 		defaultMenu.addOption(new Option(
 			"Can you impart your wise knowledge to me oh oracle?") {
 			public void action() {
-				if (p.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
-					npcsay(p, n, "You must search from within to find your true destiny");
+				if (player.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+					npcsay(player, n, "You must search from within to find your true destiny");
 				} else {
 					int rand = DataConversions.random(0, 7);
 					switch (rand) {
 					case 0:
-						npcsay(p, n, "You must search from within to find your true destiny");
+						npcsay(player, n, "You must search from within to find your true destiny");
 						break;
 					case 1:
-						npcsay(p, n, "No crisps at the party");
+						npcsay(player, n, "No crisps at the party");
 						break;
 					case 2:
-						npcsay(p, n, "It is cunning, almost foxlike");
+						npcsay(player, n, "It is cunning, almost foxlike");
 						break;
 					case 3:
-						npcsay(p, n, "Is it waking up time, I'm not quite sure");
+						npcsay(player, n, "Is it waking up time, I'm not quite sure");
 						break;
 					case 4:
-						npcsay(p, n, "When in Asgarnia do as the Asgarnians do");
+						npcsay(player, n, "When in Asgarnia do as the Asgarnians do");
 						break;
 					case 5:
-						npcsay(p, n, "The light at the end of the tunnel is the demon infested lava pit");
+						npcsay(player, n, "The light at the end of the tunnel is the demon infested lava pit");
 						break;
 					case 6:
-						npcsay(p, n, "Watch out for cabbages they are green and leafy");
+						npcsay(player, n, "Watch out for cabbages they are green and leafy");
 						break;
 					case 7:
-						npcsay(p, n, "Too many cooks spoil the anchovie pizza");
+						npcsay(player, n, "Too many cooks spoil the anchovie pizza");
 						break;
 					}
 				}
 			}
 		});
-		defaultMenu.showMenu(p);
+		defaultMenu.showMenu(player);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ORACLE.id();
 	}
 }

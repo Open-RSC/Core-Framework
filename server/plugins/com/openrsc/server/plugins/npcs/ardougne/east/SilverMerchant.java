@@ -21,26 +21,26 @@ public class SilverMerchant implements ShopInterface, TalkNpcTrigger {
 		2), new Item(ItemId.SILVER.id(), 1), new Item(ItemId.SILVER_BAR.id(), 1));
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		if (p.getCache().hasKey("silverStolen") && (Instant.now().getEpochSecond() < p.getCache().getLong("silverStolen") + 1200)) {
-			npcsay(p, n, "Do you really think I'm going to buy something",
+	public void onTalkNpc(Player player, Npc n) {
+		if (player.getCache().hasKey("silverStolen") && (Instant.now().getEpochSecond() < player.getCache().getLong("silverStolen") + 1200)) {
+			npcsay(player, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = ifnearvisnpc(p, NpcId.PALADIN.id(), 5); // Paladin first
+			Npc attacker = ifnearvisnpc(player, NpcId.PALADIN.id(), 5); // Paladin first
 			if (attacker == null)
-				attacker = ifnearvisnpc(p, NpcId.KNIGHT.id(), 5); // Knight second
+				attacker = ifnearvisnpc(player, NpcId.KNIGHT.id(), 5); // Knight second
 			if (attacker == null)
-				attacker = ifnearvisnpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard third
+				attacker = ifnearvisnpc(player, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard third
 
 			if (attacker != null)
-				attacker.setChasing(p);
+				attacker.setChasing(player);
 		} else {
-			npcsay(p, n, "Silver! Silver!", "Best prices for buying and selling in all Kandarin!");
-			int menu = multi(p, n, "Yes please", "No thankyou");
+			npcsay(player, n, "Silver! Silver!", "Best prices for buying and selling in all Kandarin!");
+			int menu = multi(player, n, "Yes please", "No thankyou");
 			if (menu == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}
@@ -49,7 +49,7 @@ public class SilverMerchant implements ShopInterface, TalkNpcTrigger {
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SILVER_MERCHANT.id();
 	}
 

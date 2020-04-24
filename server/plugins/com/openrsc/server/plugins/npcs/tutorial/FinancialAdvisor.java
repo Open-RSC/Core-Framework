@@ -2,27 +2,24 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.say;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
 public class FinancialAdvisor implements TalkNpcTrigger {
 	/**
-	 * @author Davve
 	 * Tutorial island financial advisor
 	 */
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
-		npcsay(p, n, "Hello there",
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello there",
 			"I'm your designated financial advisor");
-		Functions.say(p, n, "That's good because I don't have any money at the moment",
+		say(player, n, "That's good because I don't have any money at the moment",
 			"How do I get rich?");
-		npcsay(p, n, "There are many different ways to make money in runescape",
+		npcsay(player, n, "There are many different ways to make money in runescape",
 			"for example certain monsters will drop a bit of loot",
 			"To start with killing men and goblins might be a good idea",
 			"Some higher level monsters will drop quite a lot of treasure",
@@ -38,12 +35,12 @@ public class FinancialAdvisor implements TalkNpcTrigger {
 			"Sometimes you will find items lying around",
 			"Selling these to the shops makes some money too",
 			"Now continue through the next door");
-		if (p.getCache().hasKey("tutorial") && p.getCache().getInt("tutorial") < 40)
-			p.getCache().set("tutorial", 40);
+		if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") < 40)
+			player.getCache().set("tutorial", 40);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FINANCIAL_ADVISOR.id();
 	}
 

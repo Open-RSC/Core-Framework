@@ -95,8 +95,10 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	protected void processInternal() {
 		final int loginResponse = validateLogin();
 		loginValidated(loginResponse);
-		if ((loginResponse & 0x40) != LoginResponse.LOGIN_INSUCCESSFUL) {
+		if ((loginResponse & 0x40) != LoginResponse.LOGIN_UNSUCCESSFUL) {
 			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
+			loadedPlayer.setLoggedIn(true);
+
 			LOGGER.info("Player Loaded: " + getUsername());
 
 			getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
@@ -183,7 +185,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 
 		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
-			return (byte) LoginResponse.LOGIN_INSUCCESSFUL;
+			return (byte) LoginResponse.LOGIN_UNSUCCESSFUL;
 		}
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
 	}

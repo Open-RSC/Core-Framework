@@ -6,7 +6,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -16,25 +15,25 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 
 	private static final int MITHRIL_GATES = 1079;
 
-	private void legendsGuardDialogue(Player p, Npc n, int cID) {
+	private void legendsGuardDialogue(Player player, Npc n, int cID) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
+				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0: /* Not started Legends Quest */
-						npcsay(p, n, "Yes " + (p.isMale() ? "Sir" : "Ma'am") + ", how can I help you?");
-						int menu = multi(p, n,
+						npcsay(player, n, "Yes " + (player.isMale() ? "Sir" : "Ma'am") + ", how can I help you?");
+						int menu = multi(player, n,
 							"What is this place?",
 							"How do I get in here?",
 							"Can I speak to someone in charge?",
 							"It's Ok thanks.");
 						if (menu == 0) {
-							legendsGuardDialogue(p, n, LegendsGuard.WHAT_IS_THIS_PLACE);
+							legendsGuardDialogue(player, n, LegendsGuard.WHAT_IS_THIS_PLACE);
 						} else if (menu == 1) {
-							legendsGuardDialogue(p, n, LegendsGuard.HOW_DO_I_GET_IN_HERE);
+							legendsGuardDialogue(player, n, LegendsGuard.HOW_DO_I_GET_IN_HERE);
 						} else if (menu == 2) {
-							legendsGuardDialogue(p, n, LegendsGuard.CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE);
+							legendsGuardDialogue(player, n, LegendsGuard.CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE);
 						} else if (menu == 3) {
-							legendsGuardDialogue(p, n, LegendsGuard.ITS_OK_THANKS);
+							legendsGuardDialogue(player, n, LegendsGuard.ITS_OK_THANKS);
 						}
 						break;
 					case 1:
@@ -47,206 +46,206 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					case 8:
 					case 9:
 					case 10:
-						p.message("A guard nods at you as you walk past.");
-						npcsay(p, n, "Hope the quest is going well " + (p.isMale() ? "Sir" : "Ma'am") + " !");
+						player.message("A guard nods at you as you walk past.");
+						npcsay(player, n, "Hope the quest is going well " + (player.isMale() ? "Sir" : "Ma'am") + " !");
 						break;
 					case 11:
 					case -1:
-						p.message("The guards Salute you as you walk past.");
-						npcsay(p, n, "! ! ! Attention ! ! !",
+						player.message("The guards Salute you as you walk past.");
+						npcsay(player, n, "! ! ! Attention ! ! !",
 							"Legends Guild Member Approaching");
-						openGates(p);
+						openGates(player);
 						break;
 				}
 			}
 			switch (cID) {
 				case LegendsGuard.WHAT_IS_THIS_PLACE:
-					npcsay(p, n, "This is the Legends Guild " + (p.isMale() ? "sir" : "Maaam") + " !",
+					npcsay(player, n, "This is the Legends Guild " + (player.isMale() ? "sir" : "Maaam") + " !",
 						"Legendary RuneScape citizens are invited on a quest",
 						"in order to become members of the guild.");
-					int opt = multi(p, n,
+					int opt = multi(player, n,
 						"Can I go on the quest?",
 						"What kind of quest is it?");
 					if (opt == 0) {
-						legendsGuardDialogue(p, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
+						legendsGuardDialogue(player, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
 					} else if (opt == 1) {
-						legendsGuardDialogue(p, n, LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT);
+						legendsGuardDialogue(player, n, LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT);
 					}
 					break;
 				case LegendsGuard.HOW_DO_I_GET_IN_HERE:
-					npcsay(p, n, "Well " + (p.isMale() ? "sir" : "Ma'am") + ", ",
+					npcsay(player, n, "Well " + (player.isMale() ? "sir" : "Ma'am") + ", ",
 						"you'll need to be a legendary citizen of RuneScape.",
 						"If you want to use the Legends Hall, ",
 						"you'll be invited to complete a quest.",
 						"Once you have completed that Quest,",
 						"you'll be a fully fledged member of the Guild.");
-					int opt2 = multi(p, n,
+					int opt2 = multi(player, n,
 						"What is this place?",
 						"Can I speak to someone in charge?",
 						"Can I go on the quest?");
 					if (opt2 == 0) {
-						legendsGuardDialogue(p, n, LegendsGuard.WHAT_IS_THIS_PLACE);
+						legendsGuardDialogue(player, n, LegendsGuard.WHAT_IS_THIS_PLACE);
 					} else if (opt2 == 1) {
-						legendsGuardDialogue(p, n, LegendsGuard.CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE);
+						legendsGuardDialogue(player, n, LegendsGuard.CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE);
 					} else if (opt2 == 2) {
-						legendsGuardDialogue(p, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
+						legendsGuardDialogue(player, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
 					}
 					break;
 				case LegendsGuard.CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE:
-					npcsay(p, n, "Well, " + (p.isMale() ? "Sir" : "Ma'am") + ",",
+					npcsay(player, n, "Well, " + (player.isMale() ? "Sir" : "Ma'am") + ",",
 						"Radimus Erkle is the Grand Vizier of the Legends Guild.",
 						"He's a very busy man.",
 						"And he'll only talk to those people eligible for the quest.");
-					int opt3 = multi(p, n,
+					int opt3 = multi(player, n,
 						"Can I go on the quest?",
 						"What kind of quest is it?");
 					if (opt3 == 0) {
-						legendsGuardDialogue(p, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
+						legendsGuardDialogue(player, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
 					} else if (opt3 == 1) {
-						legendsGuardDialogue(p, n, LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT);
+						legendsGuardDialogue(player, n, LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT);
 					}
 					break;
 				case LegendsGuard.ITS_OK_THANKS:
-					npcsay(p, n, "Very well " + (p.isMale() ? "Sir" : "Ma'am") + " !");
+					npcsay(player, n, "Very well " + (player.isMale() ? "Sir" : "Ma'am") + " !");
 					break;
 				case LegendsGuard.CAN_I_GO_ON_THE_QUEST:
-					Functions.mes(p, "The guard gets out a scroll of paper and starts looking through it.");
-					if (p.getQuestPoints() >= 107
-						&& p.getQuestStage(Quests.HEROS_QUEST) == -1
-						&& p.getQuestStage(Quests.FAMILY_CREST) == -1
-						&& p.getQuestStage(Quests.SHILO_VILLAGE) == -1
-						&& p.getQuestStage(Quests.UNDERGROUND_PASS) == -1
-						&& p.getQuestStage(Quests.WATERFALL_QUEST) == -1) {
-						npcsay(p, n, "Well, it looks as if you are eligable for the quest.",
+					mes(player, "The guard gets out a scroll of paper and starts looking through it.");
+					if (player.getQuestPoints() >= 107
+						&& player.getQuestStage(Quests.HEROS_QUEST) == -1
+						&& player.getQuestStage(Quests.FAMILY_CREST) == -1
+						&& player.getQuestStage(Quests.SHILO_VILLAGE) == -1
+						&& player.getQuestStage(Quests.UNDERGROUND_PASS) == -1
+						&& player.getQuestStage(Quests.WATERFALL_QUEST) == -1) {
+						npcsay(player, n, "Well, it looks as if you are eligable for the quest.",
 							"Grand Vizier Erkle will give you the details about the quest.",
 							"You can go and talk to him about it if you like?");
-						int opt4 = multi(p, n,
+						int opt4 = multi(player, n,
 							"Who is Grand Vizier Erkle?",
 							"Yes, I'd like to talk to Grand Vizier Erkle.",
 							"Some other time perhaps.");
 						if (opt4 == 0) {
-							legendsGuardDialogue(p, n, LegendsGuard.WHO_IS_GRAND_VIZIER_ERKLE);
+							legendsGuardDialogue(player, n, LegendsGuard.WHO_IS_GRAND_VIZIER_ERKLE);
 						} else if (opt4 == 1) {
-							legendsGuardDialogue(p, n, LegendsGuard.LIKE_TO_TALK_TO_GVE);
+							legendsGuardDialogue(player, n, LegendsGuard.LIKE_TO_TALK_TO_GVE);
 						}
 					} else {
-						npcsay(p, n, "I'm very sorry,",
+						npcsay(player, n, "I'm very sorry,",
 							"But you need to complete more quests before you qualify.",
 							"You also need to have 107 quest points.");
-						int denyMenu = multi(p, n,
+						int denyMenu = multi(player, n,
 							"Which quests do I need to complete?",
 							"Ok thanks.");
 						if (denyMenu == 0) {
-							npcsay(p, n, "You need to complete the...");
-							if (p.getQuestStage(Quests.HEROS_QUEST) != -1) {
-								npcsay(p, n, "Hero's Quest.");
+							npcsay(player, n, "You need to complete the...");
+							if (player.getQuestStage(Quests.HEROS_QUEST) != -1) {
+								npcsay(player, n, "Hero's Quest.");
 							}
-							if (p.getQuestStage(Quests.FAMILY_CREST) != -1) {
-								npcsay(p, n, "Family Crest Quest.");
+							if (player.getQuestStage(Quests.FAMILY_CREST) != -1) {
+								npcsay(player, n, "Family Crest Quest.");
 							}
-							if (p.getQuestStage(Quests.SHILO_VILLAGE) != -1) {
-								npcsay(p, n, "Shilo Village Quest.");
+							if (player.getQuestStage(Quests.SHILO_VILLAGE) != -1) {
+								npcsay(player, n, "Shilo Village Quest.");
 							}
-							if (p.getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
-								npcsay(p, n, "Underground Pass Quest.");
+							if (player.getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
+								npcsay(player, n, "Underground Pass Quest.");
 							}
-							if (p.getQuestStage(Quests.WATERFALL_QUEST) != -1) {
-								npcsay(p, n, "Waterfall Quest.");
+							if (player.getQuestStage(Quests.WATERFALL_QUEST) != -1) {
+								npcsay(player, n, "Waterfall Quest.");
 							}
-							if (p.getQuestPoints() < 107) {
-								npcsay(p, n, "You also need to have 107 Quest Points as well!");
+							if (player.getQuestPoints() < 107) {
+								npcsay(player, n, "You also need to have 107 Quest Points as well!");
 							}
-							npcsay(p, n, "They don't call it the Legends Guild for nothing you know!",
+							npcsay(player, n, "They don't call it the Legends Guild for nothing you know!",
 								"Best of luck if you intend to become a member!");
 						} else if (denyMenu == 1) {
-							npcsay(p, n, "That's no problem...",
+							npcsay(player, n, "That's no problem...",
 								"Best of luck if you intend to become a member!");
 						}
 					}
 					break;
 				case LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT:
-					npcsay(p, n, "Well, to be honest " + (p.isMale() ? "Sir" : "Ma'am") + ", I'm not really sure.",
+					npcsay(player, n, "Well, to be honest " + (player.isMale() ? "Sir" : "Ma'am") + ", I'm not really sure.",
 						"You'll need to talk to Grand Vizier Erkle to find that out.");
-					int opt4 = multi(p, n, false, //do not send over
+					int opt4 = multi(player, n, false, //do not send over
 						"Can I go on the quest?",
 						"Thanks for your help.");
 					if (opt4 == 0) {
-						say(p, n, "Can I go on the quest?");
-						legendsGuardDialogue(p, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
+						say(player, n, "Can I go on the quest?");
+						legendsGuardDialogue(player, n, LegendsGuard.CAN_I_GO_ON_THE_QUEST);
 					} else if (opt4 == 1) {
-						say(p, n, "Thanks for your help");
-						npcsay(p, n, "You're welcome..");
-						p.message("The Guard marches off on patrol again.");
+						say(player, n, "Thanks for your help");
+						npcsay(player, n, "You're welcome..");
+						player.message("The Guard marches off on patrol again.");
 					}
 					break;
 				case LegendsGuard.WHO_IS_GRAND_VIZIER_ERKLE:
-					npcsay(p, n, "He is the head of the Legends Guild.",
+					npcsay(player, n, "He is the head of the Legends Guild.",
 						"His full name is Radimus Erkle.",
 						"Would you like to talk to him about the quest?");
-					int opt5 = multi(p, n, false, //do not send over
+					int opt5 = multi(player, n, false, //do not send over
 						"Yes, I'd like to talk to Grand Vizier Erkle.",
 						"Some other time perhaps.");
 					if (opt5 == 0) {
-						say(p, n, "Yes, I'd like to talk to Grand Vizier Erkle.");
-						legendsGuardDialogue(p, n, LegendsGuard.LIKE_TO_TALK_TO_GVE);
+						say(player, n, "Yes, I'd like to talk to Grand Vizier Erkle.");
+						legendsGuardDialogue(player, n, LegendsGuard.LIKE_TO_TALK_TO_GVE);
 					} else if (opt5 == 1) {
-						say(p, n, "Some other time perhaps");
+						say(player, n, "Some other time perhaps");
 					}
 					break;
 				case LegendsGuard.LIKE_TO_TALK_TO_GVE:
-					npcsay(p, n, "Ok, very well...",
+					npcsay(player, n, "Ok, very well...",
 						"You need  to go into the building on the left, he's in his study.");
-					p.message("The guard unlocks the gate and opens it for you.");
-					npcsay(p, n, "Good Luck!");
-					openGates(p);
+					player.message("The guard unlocks the gate and opens it for you.");
+					npcsay(player, n, "Good Luck!");
+					openGates(player);
 					break;
 			}
 		}
 	}
 
-	private void openGates(Player p) {
-		GameObject the_gate = p.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550));
-		Functions.changeloc(the_gate, 2500, 181);
-		p.teleport(513, 549);
+	private void openGates(Player player) {
+		GameObject the_gate = player.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550));
+		changeloc(the_gate, player.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
+		player.teleport(513, 549);
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.LEGENDS_GUILD_GUARD.id();
 	}
 
 	@Override
-	public void onTalkNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
-			if (p.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
-				mes(p, 1200, "You approach a nearby guard...");
+			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You approach a nearby guard...");
 			}
-			legendsGuardDialogue(p, n, -1);
+			legendsGuardDialogue(player, n, -1);
 		}
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return obj.getID() == MITHRIL_GATES;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (obj.getID() == MITHRIL_GATES) {
 			if (command.equals("open")) {
-				if (p.getY() <= 550) {
-					Functions.changeloc(obj, 2500, 181);
-					p.teleport(513, 552);
+				if (player.getY() <= 550) {
+					changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
+					player.teleport(513, 552);
 					return;
 				}
-				Npc legends_guard = ifnearvisnpc(p, NpcId.LEGENDS_GUILD_GUARD.id(), 5);
-				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
+				Npc legends_guard = ifnearvisnpc(player, NpcId.LEGENDS_GUILD_GUARD.id(), 5);
+				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0:
 						if (legends_guard != null) {
-							mes(p, 1200, "A nearby guard approaches you...");
-							legends_guard.initializeTalkScript(p);
+							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A nearby guard approaches you...");
+							legends_guard.initializeTalkScript(player);
 						} else {
-							p.message("The guards is currently busy.");
+							player.message("The guards is currently busy.");
 						}
 						break;
 					case 1:
@@ -260,28 +259,28 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					case 9:
 					case 10:
 						if (legends_guard != null) {
-							p.message("A guard nods at you as you walk past.");
-							npcsay(p, legends_guard, "Hope the quest is going well " + (p.isMale() ? "Sir" : "Ma'am") + " !");
+							player.message("A guard nods at you as you walk past.");
+							npcsay(player, legends_guard, "Hope the quest is going well " + (player.isMale() ? "Sir" : "Ma'am") + " !");
 						}
-						openGates(p);
+						openGates(player);
 						break;
 					case 11:
 					case -1:
 						if (legends_guard != null) {
-							p.message("The guards Salute you as you walk past.");
-							npcsay(p, legends_guard, "! ! ! Attention ! ! !",
+							player.message("The guards Salute you as you walk past.");
+							npcsay(player, legends_guard, "! ! ! Attention ! ! !",
 								"Legends Guild Member Approaching");
 						}
-						openGates(p);
+						openGates(player);
 						break;
 				}
 
 			} else if (command.equals("search")) {
-				mes(p, 1200, "The gates to the Legends Guild are made from wrought Mithril.");
-				mes(p, 1200, "A small path leads away up to a very grandiose building.");
-				mes(p, 1200, "To the left is a smaller out building, but it is no less impressive.");
-				mes(p, 1200, "All the buildings are set in wonderfully landscaped gardens.");
-				p.message("Two well dressed guards seem to be guarding the gate.");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The gates to the Legends Guild are made from wrought Mithril.");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A small path leads away up to a very grandiose building.");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "To the left is a smaller out building, but it is no less impressive.");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "All the buildings are set in wonderfully landscaped gardens.");
+				player.message("Two well dressed guards seem to be guarding the gate.");
 			}
 		}
 	}

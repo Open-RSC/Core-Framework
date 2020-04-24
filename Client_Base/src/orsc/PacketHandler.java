@@ -22,14 +22,89 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
+
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
 	private Network_Socket clientStream;
 	private mudclient mc;
+
+	private static final Map< Integer,String > incomingOpcodeMap = new HashMap< Integer,String >() {{
+		put(4,"CLOSE_CONNECTION_NOTIFY");
+		put(5,"QUEST_STATUS");
+		put(6,"UPDATE_STAKED_ITEMS_OPPONENT");
+		put(15,"UPDATE_TRADE_ACCEPTANCE");
+		put(20,"SHOW_CONFIRM_TRADE");
+		put(25,"FLOOR_SET");
+		put(30,"SYNC_DUEL_SETTINGS");
+		put(33,"UPDATE_XP");
+		put(36,"DISPLAY_TELEPORT_TELEGRAB_BUBBLE");
+		put(42,"OPEN_BANK");
+		put(48,"SCENERY_HANDLER");
+		put(51,"PRIVACY_SETTINGS");
+		put(52,"UPDATE_SYSTEM_UPDATE_TIMER");
+		put(53,"SET_INVENTORY");
+		put(59,"SHOW_APPEARANCE_CHANGE");
+		put(79,"NPC_COORDS");
+		put(83,"DISPLAY_DEATH_SCREEN");
+		put(84,"WAKE_UP");
+		put(87,"SEND_PM");
+		put(89,"SHOW_DIALOGUE_SERVER_MESSAGE_NOT_TOP");
+		put(90,"SET_INVENTORY_SLOT");
+		put(91,"BOUNDARY_HANDLER");
+		put(92,"INITIATE_TRADE");
+		put(97,"UPDATE_ITEMS_TRADED_TO_YOU");
+		put(99,"GROUNDITEM_HANDLER");
+		put(101,"SHOW_SHOP");
+		put(104,"UPDATE_NPC");
+		put(109,"SET_IGNORE");
+		put(111,"COMPLETED_TUTORIAL");
+		put(114,"SET_FATIGUE");
+		put(117,"FALL_ASLEEP");
+		put(120,"RECEIVE_PM");
+		put(123,"REMOVE_INVENTORY_SLOT");
+		put(128,"CONCLUDE_TRADE");
+		put(131,"SEND_MESSAGE");
+		put(137,"EXIT_SHOP");
+		put(149,"UPDATE_FRIEND");
+		put(153,"SET_EQUIP_STATS");
+		put(156,"SET_STATS");
+		put(159,"UPDATE_STAT");
+		put(162,"UPDATE_TRADE_RECIPIENT_ACCEPTANCE");
+		put(165,"CLOSE_CONNECTION");
+		put(172,"SHOW_CONFIRM_DUEL");
+		put(176,"SHOW_DIALOGUE_DUEL");
+		put(182,"SHOW_WELCOME");
+		put(183,"DENY_LOGOUT");
+		put(191,"PLAYER_COORDS");
+		put(194,"INCORRECT_SLEEPWORD");
+		put(203,"CLOSE_BANK");
+		put(204,"PLAY_SOUND");
+		put(206,"SET_PRAYERS");
+		put(210,"UPDATE_DUEL_ACCEPTANCE");
+		put(211,"UPDATE_ENTITIES");
+		put(213,"NO_OP_WHILE_WAITING_FOR_NEW_APPEARANCE");
+		put(222,"SHOW_DIALOGUE_SERVER_MESSAGE_TOP");
+		put(225,"CANCEL_DUEL_DIALOGUE");
+		put(234,"UPDATE_PLAYERS");
+		put(237,"UPDATE_IGNORE_BECAUSE_OF_NAME_CHANGE");
+		put(240,"GAME_SETTINGS");
+		put(244,"SET_FATIGUE_SLEEPING");
+		put(245,"SHOW_DIALOGUE_MENU");
+		put(249,"UPDATE_BANK_ITEMS_DISPLAY");
+		put(252,"DISABLE_OPTION_MENU");
+		put(253,"UPDATE_DUEL_OPPONENT_ACCEPTANCE");
+
+		// CUSTOM
+		put(19, "SEND_SERVER_CONFIGS");
+		put(113, "SEND_IRONMAN");
+		put(115, "SEND_ON_BLACK_HOLE");
+		put(135, "BANK_PIN_INTERFACE");
+		put(136, "ONLINE_LIST");
+		put(147, "SEND_KILLS2");
+	}};
+
 
 	public PacketHandler(mudclient mc) {
 		this.mc = mc;
@@ -77,7 +152,8 @@ public class PacketHandler {
 	private void handlePacket1(int opcode, int length) {
 		try {
 			if (Config.DEBUG) {
-				System.out.println("Frame: " + mc.getFrameCounter() + ", Opcode: " + opcode + ", Length: " + length);
+				System.out.println("Frame: " + mc.getFrameCounter()
+					+ ", Opcode: " + incomingOpcodeMap.get(opcode) + " (" + opcode + "), Length: " + length);
 			}
 
 			// Unhandled Opcodes Received...
@@ -167,7 +243,7 @@ public class PacketHandler {
 			else if (opcode == 109) updateIgnoreList();
 
 				// Chat Blocking Settings
-			else if (opcode == 158) updateChatBlockSettings();
+			else if (opcode == 51) updateChatBlockSettings();
 
 				// Receive Private Message
 			else if (opcode == 120) receivePrivateMessage();
@@ -197,7 +273,7 @@ public class PacketHandler {
 			else if (opcode == 48) showGameObjects(length);
 
 				// Inventory items
-			else if (opcode == 53) updateInventoryItems();
+			else if (opcode == 53) updateInventory();
 
 				//All Equipment sent
 			else if (opcode == 254) updateEquipment();
@@ -287,7 +363,7 @@ public class PacketHandler {
 			else if (opcode == 249) updateBank();
 
 				// Update Inventory
-			else if (opcode == 90) updateInventory();
+			else if (opcode == 90) updateInventoryItem();
 
 				// Experience Updates & Notification
 			else if (opcode == 159) updateExperience();
@@ -351,7 +427,7 @@ public class PacketHandler {
 			else if (opcode == 253) duelOpponentDecision();
 
 				// Drop Item
-			else if (opcode == 123) dropItem();
+			else if (opcode == 123) removeItem();
 
 				// Open Duel Dialog
 			else if (opcode == 176) beginDuelOptions();
@@ -516,7 +592,7 @@ public class PacketHandler {
 		mc.getOnlineList().reset();
 		int onlinePlayerCount = packetsIncoming.getShort();
 		for (int i = 0; i < onlinePlayerCount; i++) {
-			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32());
+			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32(), i == (onlinePlayerCount -1 ));
 		}
 		mc.getOnlineList().setVisible(true);
 	}
@@ -1360,7 +1436,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void dropItem() {
+	private void removeItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
 
@@ -1369,7 +1445,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void updateInventory() {
+	private void updateInventoryItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
 		boolean noted = packetsIncoming.getShort() == 1;
@@ -1386,7 +1462,7 @@ public class PacketHandler {
 		}
 	}
 
-	private void updateInventoryItems() {
+	private void updateInventory() {
 		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
 		{
 			Item item = mc.getInventoryItem(i);
@@ -1401,7 +1477,6 @@ public class PacketHandler {
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
 			String b64item = packetsIncoming.readString();
 			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			System.out.println(jsonString);
 			JSONObject itemInfo = new JSONObject(jsonString);
 			int itemID = (int)itemInfo.get("id");
 			mc.setInventoryItemID(i, itemID);
@@ -2236,44 +2311,51 @@ public class PacketHandler {
 		mc.setShopPriceMultiplier(packetsIncoming.getUnsignedByte());
 
 		for (int i = 0; i < 40; ++i) {
-			mc.setShopItemID(i, -1);
+			mc.setShopCategoryID(i, -1);
 		}
 
 		for (int i = 0; shopItemCount > i; ++i) {
-			mc.setShopItemID(i, packetsIncoming.getShort());
+			mc.setShopCategoryID(i, packetsIncoming.getShort());
 			mc.setShopItemCount(i, packetsIncoming.getShort());
 			mc.setShopItemPrice(i, packetsIncoming.getShort());
 		}
 
-		if (shopType == 1) {
-			int var6 = 39;
+		// Check through player's inventory items if this is a general store.
+		int lastAvailableShopSlotIndex = 39;
+		for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
+			&& shopItemCount <= lastAvailableShopSlotIndex; ++inventoryIndex) {
 
-			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-				&& shopItemCount <= var6; ++inventoryIndex) {
-				boolean var25 = false;
+			// Only show player items if they are in a general store, or it's a note in a specialty store.
+			if (!(shopType == 1
+				|| (mc.getInventoryItem(inventoryIndex).getNoted() && mc.shopContains(mc.getInventoryItemID(inventoryIndex))))) continue;
 
-				for (int var9 = 0; var9 < 40; ++var9) {
-					if (mc.getInventoryItemID(inventoryIndex) == mc.getShopItemID(var9)) {
-						var25 = true;
-						break;
-					}
+			boolean foundEquivalentShopItem = false;
+			for (int currentShopSlot = 0; currentShopSlot < 40; ++currentShopSlot) {
+
+				// Can only match if category matches and not noted.
+				if (mc.getInventoryItemID(inventoryIndex) == mc.getShopCategoryID(currentShopSlot)
+					&& mc.getInventoryItem(inventoryIndex).getNoted() == mc.getShopItemNoted(currentShopSlot)) {
+					foundEquivalentShopItem = true;
+					break;
 				}
+			}
 
-				if (mc.getInventoryItemID(inventoryIndex) == 10) {
-					var25 = true;
-				}
+			if (mc.getInventoryItemID(inventoryIndex) == 10) {
+				continue;
+			}
 
-				if (!var25) {
-					mc.setShopItemID(var6, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
-					mc.setShopItemCount(var6, 0);
-					mc.setShopItemPrice(var6, 0);
-					--var6;
-				}
+			// If we have not found an inventory item in the shop stock, add the item to the end of the shop.
+			if (!foundEquivalentShopItem) {
+				mc.setShopCategoryID(lastAvailableShopSlotIndex, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
+				mc.setShopItemCount(lastAvailableShopSlotIndex, 0);
+				mc.setShopItemPrice(lastAvailableShopSlotIndex, 0);
+				mc.setShopItemNoted(lastAvailableShopSlotIndex, mc.getInventoryItem(inventoryIndex).getNoted());
+				--lastAvailableShopSlotIndex;
 			}
 		}
 
 		if (mc.getShopSelectedItemIndex() >= 0 && 40 > mc.getShopSelectedItemIndex()
-			&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
+			&& mc.getShopSelectedItemType() != mc.getShopCategoryID(mc.getShopSelectedItemIndex())) {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
@@ -2598,14 +2680,16 @@ public class PacketHandler {
 			itemBytes[1] = packetsIncoming.getByte();
 			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
 			item = EntityHandler.getItemDef(itemID);
+			boolean noted = packetsIncoming.getByte() == 1;
 			if (item != null) {
-				if (item.isStackable())
+				if (item.isStackable() || noted)
 					amount = packetsIncoming.get32();
 				else
 					amount = 1;
 				inventoryItems[i] = new Item();
 				inventoryItems[i].setItemDef(itemID);
 				inventoryItems[i].setAmount(amount);
+				inventoryItems[i].setNoted(noted);
 			}
 		}
 		//The server uses 2 more slots than the client

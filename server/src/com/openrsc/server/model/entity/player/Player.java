@@ -477,24 +477,24 @@ public final class Player extends Mob {
 		this.lastCommand = newTime;
 	}
 
-	public boolean requiresAppearanceUpdateFor(final Player p) {
+	public boolean requiresAppearanceUpdateFor(final Player player) {
 		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
-			if (entry.getKey() == p.getUsernameHash()) {
-				if (entry.getValue() != p.getAppearanceID()) {
-					knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+			if (entry.getKey() == player.getUsernameHash()) {
+				if (entry.getValue() != player.getAppearanceID()) {
+					knownPlayersAppearanceIDs.put(player.getUsernameHash(), player.getAppearanceID());
 					return true;
 				}
 				return false;
 			}
 		}
-		knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+		knownPlayersAppearanceIDs.put(player.getUsernameHash(), player.getAppearanceID());
 		return true;
 	}
 
-	public boolean requiresAppearanceUpdateForPeek(final Player p) {
+	public boolean requiresAppearanceUpdateForPeek(final Player player) {
 		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet())
-			if (entry.getKey() == p.getUsernameHash())
-				return entry.getValue() != p.getAppearanceID();
+			if (entry.getKey() == player.getUsernameHash())
+				return entry.getValue() != player.getAppearanceID();
 		return true;
 	}
 
@@ -781,8 +781,8 @@ public final class Player extends Mob {
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof Player) {
-			Player p = (Player) o;
-			return usernameHash == p.getUsernameHash();
+			Player player = (Player) o;
+			return usernameHash == player.getUsernameHash();
 		}
 		return false;
 	}
@@ -1309,7 +1309,7 @@ public final class Player extends Mob {
 	}
 
 	public int getSpellWait() {
-		return DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D);
+		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
 	}
 
 	public synchronized Action getStatus() {
@@ -1503,14 +1503,14 @@ public final class Player extends Mob {
 					// apply combined multiplier
 					skillXP *= multipliers.get(0);
 					double ratio;
-					for (PartyPlayer p : this.getParty().getPlayers()) {
-						if (p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE) {
-							ratio = p.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
-							if (p.getPlayerReference().getUsername() != this.getUsername()) {
-								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
+					for (PartyPlayer player : this.getParty().getPlayers()) {
+						if (player.getPlayerReference().getFatigue() < player.getPlayerReference().MAX_FATIGUE) {
+							ratio = player.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
+							if (player.getPlayerReference().getUsername() != this.getUsername()) {
+								player.getPlayerReference().setFatigue(player.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
 								ActionSender.sendFatigue(this);
 							}
-							p.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / p.getPartyMembersNotTired() - 1);
+							player.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / player.getPartyMembersNotTired() - 1);
 						}
 					}
 					int p11 = partyLeader.getPartyMembersNotTired() - 1;
@@ -1903,9 +1903,9 @@ public final class Player extends Mob {
 					+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
 					+ " mins ago";
 
-				for (Player p : getWorld().getPlayers()) {
-					if (p.isMod()) {
-						p.message("@red@Server@whi@: " + string);
+				for (Player player : getWorld().getPlayers()) {
+					if (player.isMod()) {
+						player.message("@red@Server@whi@: " + string);
 					}
 				}
 				setSuspiciousPlayer(true, "mouse movement check");
@@ -1928,13 +1928,13 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (incomingPacketLock) {
-			for (Map.Entry<Integer, Packet> p : incomingPackets.entrySet()) {
-				PacketHandler ph = PacketHandlerLookup.get(p.getValue().getID());
-				if (ph != null && p.getValue().getBuffer().readableBytes() >= 0) {
+			for (Map.Entry<Integer, Packet> packet : incomingPackets.entrySet()) {
+				PacketHandler ph = PacketHandlerLookup.get(packet.getValue().getID());
+				if (ph != null && packet.getValue().getBuffer().readableBytes() >= 0) {
 					try {
 						/*if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
 							LOGGER.info("Handling Packet (CLASS: " + ph + "): " + this.username + " (ID: " + this.owner + ")");*/
-						ph.handlePacket(p.getValue(), this);
+						ph.handlePacket(packet.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
@@ -2069,12 +2069,15 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this));
+		save(false);
+	}
+
+	public void save(boolean logout) {
+		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this, logout));
 	}
 
 	public void logout() {
 		ActionSender.sendLogoutRequestConfirm(this);
-		setLoggedIn(false);
 
 		FishingTrawler trawlerInstance = getWorld().getFishingTrawler(this);
 
@@ -2102,7 +2105,12 @@ public final class Player extends Mob {
 		getCache().set("gnomeball_goals", getAttribute("gnomeball_goals", 0));
 		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
-		save();
+		save(true);
+	}
+
+	public void logoutSaveSuccess() {
+
+		setLoggedIn(false);
 
 		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
@@ -2252,7 +2260,7 @@ public final class Player extends Mob {
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, 600, "Start Sleep Event") {
+		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, getWorld().getServer().getConfig().GAME_TICK, "Start Sleep Event") {
 			@Override
 			public void run() {
 				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {
@@ -2287,9 +2295,9 @@ public final class Player extends Mob {
 		}
 
 		if (bubble) {
-			for (Player p : getViewArea().getPlayersInView()) {
-				if (!isInvisibleTo(p)) {
-					ActionSender.sendTeleBubble(p, getX(), getY(), false);
+			for (Player player : getViewArea().getPlayersInView()) {
+				if (!isInvisibleTo(player)) {
+					ActionSender.sendTeleBubble(player, getX(), getY(), false);
 				}
 			}
 			ActionSender.sendTeleBubble(this, getX(), getY(), false);
@@ -2301,7 +2309,7 @@ public final class Player extends Mob {
 	}
 
 	@Override
-	public void setLocation(final Point p, final boolean teleported) {
+	public void setLocation(final Point point, final boolean teleported) {
 		if (teleported || getSkullType() == 2 || getSkullType() == 0) {
 			// Inappropriate place for this to be getting set at for skulls, to me.
 			getUpdateFlags().setAppearanceChanged(true);
@@ -2309,7 +2317,7 @@ public final class Player extends Mob {
 				setTeleporting(true);
 		}
 
-		super.setLocation(p, teleported);
+		super.setLocation(point, teleported);
 
 	}
 

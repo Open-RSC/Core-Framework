@@ -6,7 +6,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,14 +15,14 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Eating implements OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
-		return item.isEdible(p.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
+	public boolean blockOpInv(Item item, Player player, String command) {
+		return item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
 	public void onOpInv(final Item item, final Player player, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
-			if (player.cantConsume())
+			if (player.cantConsume() || item.getItemStatus().getNoted())
 				return;
 
 			if (player.getCarriedItems().remove(item) == -1)
@@ -71,7 +70,7 @@ public class Eating implements OpInvTrigger {
 				player.message("it tastes.....slimey");
 			} else if (id == ItemId.ROCK_CAKE.id()) {
 				// authentic does not send message to quest tab
-				Functions.mes(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
+				mes(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				say(player, null, "Ow! I nearly broke a tooth!");
 				player.message("You feel strangely heavier and more tired");
 			} else if (id == ItemId.EQUA_LEAVES.id())
@@ -183,7 +182,7 @@ public class Eating implements OpInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, message);
 			} else if (id == ItemId.ROTTEN_APPLES.id()) {
 				// authentic does not give message to quest tab
-				Functions.mes(player, "you eat an apple");
+				mes(player, "you eat an apple");
 				say(player, null, "yuck");
 				player.message("it's rotten, you spit it out");
 			} else

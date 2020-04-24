@@ -8,12 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.ShopInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcsay;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class VarrockSwords implements ShopInterface,
 	TalkNpcTrigger {
@@ -27,9 +25,9 @@ public final class VarrockSwords implements ShopInterface,
 		new Item(ItemId.BLACK_DAGGER.id(), 4), new Item(ItemId.MITHRIL_DAGGER.id(), 3), new Item(ItemId.ADAMANTITE_DAGGER.id(), 2));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id())
-				&& p.getLocation().inBounds(133, 522, 138, 527);
+				&& player.getLocation().inBounds(133, 522, 138, 527);
 	}
 
 	@Override
@@ -43,22 +41,22 @@ public final class VarrockSwords implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id()
-			&& p.getLocation().inBounds(133, 522, 138, 527)) {
-			npcsay(p, n, "Hello bold adventurer",
+			&& player.getLocation().inBounds(133, 522, 138, 527)) {
+			npcsay(player, n, "Hello bold adventurer",
 				"Can I interest you in some swords?");
 
 			final String[] options = new String[]{"Yes please",
 				"No, I'm OK for swords right now"};
-			int option = Functions.multi(p, n, options);
+			int option = multi(player, n, options);
 			switch (option) {
 				case 0:
-					p.setAccessingShop(shop);
-					ActionSender.showShop(p, shop);
+					player.setAccessingShop(shop);
+					ActionSender.showShop(player, shop);
 					break;
 				case 1:
-					npcsay(p, n, "Come back if you need any");
+					npcsay(player, n, "Come back if you need any");
 					break;
 			}
 		}

@@ -12,9 +12,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public class GameObjectWallAction implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = p.getID();
+		int pID = packet.getID();
 		int packetTwo = OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode();
 
 		if (player.isBusy()) {
@@ -23,7 +23,7 @@ public class GameObjectWallAction implements PacketHandler {
 		}
 
 		player.resetAll();
-		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(p.readShort(), p.readShort()), p.readByte());
+		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
 		final int click = pID == packetTwo ? 0 : 1;
 		if (object == null) {
 			player.setSuspiciousPlayer(true, "game object wall has null object");

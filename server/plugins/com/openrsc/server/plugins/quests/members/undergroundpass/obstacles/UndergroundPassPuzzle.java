@@ -4,7 +4,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -23,74 +22,74 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 	public static int[] WORKING_GRILLS = {777, 785, 786, 787, 788, 789, 790, 791};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(GameObject obj, String command, Player player) {
 		return inArray(obj.getID(), WORKING_GRILLS) || obj.getID() == FAIL_GRILL || obj.getID() == WALK_HERE_ROCK_EAST
 				|| obj.getID() == WALK_HERE_ROCK_WEST || obj.getID() == LEVER;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player p) {
+	public void onOpLoc(GameObject obj, String command, Player player) {
 		if (inArray(obj.getID(), WORKING_GRILLS)) {
-			moveForward(p, obj);
+			moveForward(player, obj);
 		}
 		else if (obj.getID() == FAIL_GRILL) {
-			trap(p, obj);
+			trap(player, obj);
 		}
 		else if (obj.getID() == WALK_HERE_ROCK_EAST) {
-			p.teleport(679, 3447);
+			player.teleport(679, 3447);
 		}
 		else if (obj.getID() == WALK_HERE_ROCK_WEST) {
-			p.walkToEntity(689, 3452);
+			player.walkToEntity(689, 3452);
 		}
 		else if (obj.getID() == LEVER) {
-			Functions.mes(p, "you pull on the lever",
+			mes(player, "you pull on the lever",
 				"you hear a loud mechanical churning");
-			GameObject cage_closed = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
-			GameObject cage_open = new GameObject(p.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
-			p.getWorld().registerGameObject(cage_open);
-			p.getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
-			p.message("as the huge railing raises to the cave roof");
-			p.message("the cage lowers behind you");
-			p.teleport(690, 3451);
+			GameObject cage_closed = new GameObject(player.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
+			GameObject cage_open = new GameObject(player.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
+			player.getWorld().registerGameObject(cage_open);
+			player.getWorld().delayedSpawnObject(cage_closed.getLoc(), 5000);
+			player.message("as the huge railing raises to the cave roof");
+			player.message("the cage lowers behind you");
+			player.teleport(690, 3451);
 		}
 	}
 
-	private void trap(Player p, GameObject obj) {
-		Functions.mes(p, "you step onto the metal grill");
-		p.message("it's a trap");
-		p.teleport(711, 3464);
+	private void trap(Player player, GameObject obj) {
+		mes(player, "you step onto the metal grill");
+		player.message("it's a trap");
+		player.teleport(711, 3464);
 		delay(1600);
-		Functions.mes(p, "you fall onto a pit of spikes");
-		p.teleport(679, 3448);
-		p.damage((int) (getCurrentLevel(p, Skills.HITS) * 0.2D));
-		p.message("you crawl out of the pit");
-		p.getWorld().replaceGameObject(obj,
+		mes(player, "you fall onto a pit of spikes");
+		player.teleport(679, 3448);
+		player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
+		player.message("you crawl out of the pit");
+		player.getWorld().replaceGameObject(obj,
 			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
 				.getType()));
-		p.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
+		player.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
 		delay(1600);
-		p.message("and off the metal grill");
+		player.message("and off the metal grill");
 	}
 
-	private void moveForward(Player p, GameObject obj) {
-		p.message("you step onto the metal grill");
-		p.message("you tread carefully as you move forward");
+	private void moveForward(Player player, GameObject obj) {
+		player.message("you step onto the metal grill");
+		player.message("you tread carefully as you move forward");
 		if (obj.getID() == 777) {
-			p.teleport(681, 3446);
+			player.teleport(681, 3446);
 		} else if (obj.getID() == 785) {
-			p.teleport(683, 3446);
+			player.teleport(683, 3446);
 		} else if (obj.getID() == 786) {
-			p.teleport(683, 3448);
+			player.teleport(683, 3448);
 		} else if (obj.getID() == 787) {
-			p.teleport(685, 3448);
+			player.teleport(685, 3448);
 		} else if (obj.getID() == 788) {
-			p.teleport(687, 3448);
+			player.teleport(687, 3448);
 		} else if (obj.getID() == 789) {
-			p.teleport(687, 3450);
+			player.teleport(687, 3450);
 		} else if (obj.getID() == 790) {
-			p.teleport(687, 3452);
+			player.teleport(687, 3452);
 		} else if (obj.getID() == 791) {
-			p.teleport(689, 3452);
+			player.teleport(689, 3452);
 		}
 	}
 }

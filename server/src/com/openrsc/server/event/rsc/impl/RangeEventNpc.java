@@ -13,9 +13,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/**
- * @author n0m
- */
 public class RangeEventNpc extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
@@ -124,7 +121,7 @@ public class RangeEventNpc extends GameTickEvent {
 			} else {
 				getOwner().resetPath();
 
-				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > 1900;
+				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > getOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 				if (canShoot) {
 					if (!PathValidation.checkPath(getWorld(), getOwner().getLocation(), target.getLocation())) {
 						getOwner().resetRange();

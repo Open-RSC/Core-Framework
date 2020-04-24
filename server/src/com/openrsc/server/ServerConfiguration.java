@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-// Basically Rewritten by Ryan
-
 public class ServerConfiguration {
 
 	private static final Logger LOGGER = LogManager.getLogger();

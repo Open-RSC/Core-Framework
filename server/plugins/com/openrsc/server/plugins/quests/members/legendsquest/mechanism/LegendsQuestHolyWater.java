@@ -8,7 +8,6 @@ import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -23,7 +22,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player player, Item item1, Item item2) {
-		return Functions.compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
+		return compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
 	}
 
 	@Override
@@ -49,7 +48,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player p, String command) {
+	public boolean blockOpInv(Item item, Player player, String command) {
 		return item.getCatalogId() == ItemId.HOLY_WATER_VIAL.id();
 	}
 
@@ -65,7 +64,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 			}
 			else {
 				player.message("You throw the holy watervial at Ungadulu.");
-				remove(player, item.getCatalogId(), 1);
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				player.playSound("projectile");
 				player.getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(player.getWorld(), player, ungadulu, 1) {
 					@Override

@@ -25,7 +25,7 @@ public class Cow implements UseNpcTrigger {
 		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
 			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.MILK.id(),true);
 		}
-		mes(player, 3500, "You milk the cow");
+		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "You milk the cow");
 		npc.setBusy(false);
 	}
 }

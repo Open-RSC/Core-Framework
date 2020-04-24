@@ -26,7 +26,7 @@ public final class AuburysRunes implements ShopInterface,
 		50), new Item(ItemId.MIND_RUNE.id(), 50), new Item(ItemId.BODY_RUNE.id(), 50));
 
 	@Override
-	public boolean blockTalkNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.AUBURY.id();
 	}
 
@@ -41,49 +41,49 @@ public final class AuburysRunes implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		ArrayList<String> menu = new ArrayList<>();
 		menu.add("Yes please");
 		menu.add("Oh it's a rune shop. No thank you, then.");
 
-		if (p.getWorld().getServer().getConfig().WANT_RUNECRAFTING)
-			if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 2)
+		if (player.getWorld().getServer().getConfig().WANT_RUNECRAFTING)
+			if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 2)
 				menu.add("I've been sent here with a package for you.");
-			else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == 3)
+			else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 3)
 				menu.add("Rune mysteries");
-			else if (p.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
+			else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
 				menu.add("Teleport to rune essence");
 
-		npcsay(p, n, "Do you want to buy some runes?");
+		npcsay(player, n, "Do you want to buy some runes?");
 
-		int opt = multi(p, n, false, menu.toArray(new String[menu.size()]));
+		int opt = multi(player, n, false, menu.toArray(new String[menu.size()]));
 
 		if (opt == 0) {
-			say(p, n, "Yes Please");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "Yes Please");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 		else if (opt == 1) {
-			say(p, n, "Oh it's a rune shop. No thank you, then");
-			npcsay(p, n,
+			say(player, n, "Oh it's a rune shop. No thank you, then");
+			npcsay(player, n,
 				"Well if you find someone who does want runes,",
 				"send them my way");
 		}
 		else if (opt == 2) {
-			RuneMysteries.auburyDialog(p,n);
+			RuneMysteries.auburyDialog(player,n);
 		}
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player p) {
-		RuneMysteries.auburyDialog(p,n);
+	public void onOpNpc(Npc n, String command, Player player) {
+		RuneMysteries.auburyDialog(player,n);
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Npc n, String command, Player player) {
 		return ( n.getID() == 54 &&
-			p.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
-			p.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
+			player.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
+			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
 			command.equalsIgnoreCase("teleport"));
 	}
 }

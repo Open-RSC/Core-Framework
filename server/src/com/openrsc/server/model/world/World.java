@@ -75,6 +75,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
+	private HashMap<String, ArrayList<Npc>> npcPositions;
 	private final EntityList<Player> players;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
@@ -107,6 +108,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public World(Server server) {
 		this.server = server;
 		npcs = new EntityList<Npc>(4000);
+		npcPositions = new HashMap<>();
 		players = new EntityList<Player>(2000);
 		quests = Collections.synchronizedList( new LinkedList<QuestInterface>() );
 		minigames = Collections.synchronizedList( new LinkedList<MiniGameInterface>() );
@@ -137,8 +139,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 						int minutes = seconds / 60;
 						int remainder = seconds % 60;
 						if (getServer().restart(seconds)) {
-							for (Player p : getPlayers()) {
-								ActionSender.startShutdown(p, seconds);
+							for (Player player : getPlayers()) {
+								ActionSender.startShutdown(player, seconds);
 							}
 						}
 					}
@@ -150,8 +152,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 						int minutes = seconds / 60;
 						int remainder = seconds % 60;
 						if (getServer().restart(seconds)) {
-							for (Player p : getWorld().getPlayers()) {
-								ActionSender.startShutdown(p, seconds);
+							for (Player player : getWorld().getPlayers()) {
+								ActionSender.startShutdown(player, seconds);
 							}
 						}
 					}
@@ -169,8 +171,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				int minutes = seconds / 60;
 				int remainder = seconds % 60;
 				if (getServer().restart(seconds)) {
-					for (Player p : getPlayers()) {
-						ActionSender.startShutdown(p, seconds);
+					for (Player player : getPlayers()) {
+						ActionSender.startShutdown(player, seconds);
 					}
 				}
 				restartCommand();
@@ -294,8 +296,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 */
 	public Player getPlayer(int idx) {
 		try {
-			Player p = getPlayers().get(idx);
-			return p;
+			Player player = getPlayers().get(idx);
+			return player;
 		} catch (Exception e) {
 			return null;
 		}
@@ -306,9 +308,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Gets a player by their username hash
 	 */
 	public Player getPlayer(long usernameHash) {
-		for (Player p : getPlayers()) {
-			if (p.getUsernameHash() == usernameHash) {
-				return p;
+		for (Player player : getPlayers()) {
+			if (player.getUsernameHash() == usernameHash) {
+				return player;
 			}
 		}
 		return null;
@@ -318,9 +320,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Gets a player by their ID
 	 */
 	public Player getPlayerID(int databaseID) {
-		for (Player p : getPlayers()) {
-			if (p.getDatabaseID() == databaseID) {
-				return p;
+		for (Player player : getPlayers()) {
+			if (player.getDatabaseID() == databaseID) {
+				return player;
 			}
 		}
 		return null;
@@ -330,9 +332,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Gets a player by their UUID
 	 */
 	public Player getPlayerUUID(String uuid) {
-		for (Player p : getPlayers()) {
-			if (p.getUUID().equals(uuid)) {
-				return p;
+		for (Player player : getPlayers()) {
+			if (player.getUUID().equals(uuid)) {
+				return player;
 			}
 		}
 		return null;
@@ -398,8 +400,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return t;
 	}
 
-	public synchronized TileValue getTile(Point p) {
-		return getTile(p.getX(), p.getY());
+	public synchronized TileValue getTile(Point point) {
+		return getTile(point.getX(), point.getY());
 	}
 
 	public boolean hasNpc(Npc n) {
@@ -410,8 +412,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Classes - viewArea, world, region, gameObjectAction, GameObjectWallAction, ItemUseOnObject
 	 */
 
-	public boolean hasPlayer(Player p) {
-		return getPlayers().contains(p);
+	public boolean hasPlayer(Player player) {
+		return getPlayers().contains(player);
 	}
 
 	public boolean isLoggedIn(long usernameHash) {
@@ -553,7 +555,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void registerItem(final GroundItem i) {
-		registerItem(i, 128000);
+		registerItem(i, i.getWorld().getServer().getConfig().GAME_TICK * 200);
 	}
 
 	public void registerItem(final GroundItem i, int delayTime) {
@@ -580,6 +582,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 
 		getNpcs().add(n);
+		setNpcPosition(n);
 		return n;
 	}
 
@@ -593,7 +596,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		if (!getPlayers().contains(player)) {
 			player.setUUID(UUID.randomUUID().toString());
 
-			player.setLoggedIn(true);
 			player.setBusy(false);
 
 			getPlayers().add(player);
@@ -674,24 +676,24 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public void sendModAnnouncement(String string) {
-		for (Player p : getPlayers()) {
-			if (p.isMod()) {
-				p.message("[@cya@SERVER@whi@]: " + string);
+		for (Player player : getPlayers()) {
+			if (player.isMod()) {
+				player.message("[@cya@SERVER@whi@]: " + string);
 			}
 		}
 	}
 
 	public void sendWorldAnnouncement(String msg) {
 		if (getServer().getConfig().WANT_GLOBAL_CHAT) {
-			for (Player p : getPlayers()) {
-				p.playerServerMessage(MessageType.QUEST, "@gre@[Global] @whi@" + msg);
+			for (Player player : getPlayers()) {
+				player.playerServerMessage(MessageType.QUEST, "@gre@[Global] @whi@" + msg);
 			}
 		}
 	}
 
 	public void sendWorldMessage(String msg) {
-		for (Player p : getPlayers()) {
-			p.playerServerMessage(MessageType.QUEST, msg);
+		for (Player player : getPlayers()) {
+			player.playerServerMessage(MessageType.QUEST, msg);
 		}
 	}
 
@@ -829,11 +831,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
-	public FishingTrawler getFishingTrawler(Player p) {
-		if (fishingTrawler.get(TrawlerBoat.EAST) != null && fishingTrawler.get(TrawlerBoat.EAST).getPlayers().contains(p)) {
+	public FishingTrawler getFishingTrawler(Player player) {
+		if (fishingTrawler.get(TrawlerBoat.EAST) != null && fishingTrawler.get(TrawlerBoat.EAST).getPlayers().contains(player)) {
 			return fishingTrawler.get(TrawlerBoat.EAST);
 		}
-		if (fishingTrawler.get(TrawlerBoat.WEST) != null && fishingTrawler.get(TrawlerBoat.WEST).getPlayers().contains(p)) {
+		if (fishingTrawler.get(TrawlerBoat.WEST) != null && fishingTrawler.get(TrawlerBoat.WEST).getPlayers().contains(player)) {
 			return fishingTrawler.get(TrawlerBoat.WEST);
 		}
 		return null;
@@ -847,25 +849,25 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
-	public void produceUnderAttack(Player p) {
-		getPlayersUnderAttack().put(p, true);
+	public void produceUnderAttack(Player player) {
+		getPlayersUnderAttack().put(player, true);
 	}
 
 	public void produceUnderAttack(Npc n) {
 		getNpcsUnderAttack().put(n, true);
 	}
 
-	public boolean checkUnderAttack(Player p) {
-		return getPlayersUnderAttack().getOrDefault(p, false);
+	public boolean checkUnderAttack(Player player) {
+		return getPlayersUnderAttack().getOrDefault(player, false);
 	}
 
 	public boolean checkUnderAttack(Npc n) {
 		return getNpcsUnderAttack().getOrDefault(n, false);
 	}
 
-	public void releaseUnderAttack(Player p) {
-		if (getPlayersUnderAttack().containsKey(p)) {
-			getPlayersUnderAttack().remove(p);
+	public void releaseUnderAttack(Player player) {
+		if (getPlayersUnderAttack().containsKey(player)) {
+			getPlayersUnderAttack().remove(player);
 		}
 	}
 
@@ -1022,5 +1024,33 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public Queue<GlobalMessage> getGlobalMessageQueue() {
 		return globalMessageQueue;
+	}
+
+	public HashMap<String, ArrayList<Npc>> getNpcPositions() {
+		return npcPositions;
+	}
+
+	public void setNpcPosition(Npc n) {
+		String key = n.getX() + "," + n.getY();
+		npcPositions.putIfAbsent(key, new ArrayList<>());
+		npcPositions.get(key).add(n);
+	}
+
+	public void removeNpcPosition(Npc n) {
+		String key = n.getX() + "," + n.getY();
+		if (npcPositions.containsKey(key)) {
+			ArrayList<Npc> ar = npcPositions.get(key);
+			if (ar.size() > 1) {
+				for (int i = 0; i < ar.size(); i++) {
+					if (n.getUUID().equals(ar.get(i).getUUID())) {
+						ar.remove(i);
+						break;
+					}
+				}
+			}
+			else {
+				npcPositions.remove(key);
+			}
+		}
 	}
 }

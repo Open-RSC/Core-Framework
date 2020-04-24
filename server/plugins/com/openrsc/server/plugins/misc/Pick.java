@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills;
+package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -7,10 +7,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.give;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class Pick implements
-	OpLocTrigger {
+public final class Pick implements OpLocTrigger {
 
 	@Override
 	public boolean blockOpLoc(final GameObject obj,
@@ -27,6 +26,7 @@ public final class Pick implements
 		else if (delaytime == 420)
 			delaytime = 370;//cabbage
 
+		// TODO: This should be a config, because authentic RSC did not batch this behaviour.
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delaytime, "Pick Vegetal", 30, true) {
 			@Override
 			public void action() {
