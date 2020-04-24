@@ -28,7 +28,12 @@ public class PluginTickEvent extends GameTickEvent {
 		// We want to cancel this plugin event if the most recently executed walk to action is not the same as this plugin's context walk to action.
 		if (walkToAction != null && walkToAction != getPlayerOwner().getLastExecutedWalkToAction()) {
 			// If the task has not been submitted, then we just cancel this event
-			if (getFuture() == null || (!getPluginTask().isInitialized() && getFuture().cancel(false))) {
+			if (getFuture() == null || !getPluginTask().isInitialized()) {
+				if(getFuture() != null) {
+					// Do not interrupt because we will do that in stop()
+					getFuture().cancel(false);
+				}
+
 				stop();
 				return;
 			}

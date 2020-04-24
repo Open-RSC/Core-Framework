@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -329,6 +330,14 @@ public final class PluginHandler {
 								LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
 								m.invoke(cls, data);
 								return 1;
+							} catch (final InvocationTargetException ex) {
+								if (ex.getCause() instanceof PluginInterruptedException) {
+									// PluginTask.call() will do stop() after this which will correctly shut down the Plugin.
+									return 1;
+								} else {
+									LOGGER.catching(ex);
+									return 0;
+								}
 							} catch (final Exception ex) {
 								LOGGER.catching(ex);
 								return 0;

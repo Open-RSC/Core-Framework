@@ -34,24 +34,17 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		ownerIndex = owner == null ? -1 : owner.getIndex();
 	}
 
-	public Integer call() {
-		synchronized(this) {
-			pluginThread = Thread.currentThread();
-
-			try {
-				setInitialized(true);
-				registerPluginThread();
-				final int result = action();
-				stop();
-				return result;
-			} catch(final PluginInterruptedException ex) {
-				stop();
-				return 1;
-			} catch(final Exception ex) {
-				LOGGER.catching(ex);
-				stop();
-				return 0;
-			}
+	public synchronized Integer call() {
+		try {
+			setInitialized(true);
+			registerPluginThread();
+			final int result = action();
+			stop();
+			return result;
+		} catch(final Exception ex) {
+			LOGGER.catching(ex);
+			stop();
+			return 0;
 		}
 	}
 
@@ -82,6 +75,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	}
 
 	private synchronized void registerPluginThread() {
+		pluginThread = Thread.currentThread();
 		final String threadName = getPluginThread().getName();
 		setThreadRunning(true);
 		setTickCompleted(false);
@@ -89,11 +83,17 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	}
 
 	private synchronized void unregisterPluginThread() {
-		final String threadName = getPluginThread().getName();
-		setThreadRunning(false);
-		setTickCompleted(false);
-		tasksMap.remove(threadName);
-		getPluginThread().interrupt();
+		// Save the original thread to interrupt it after closing down data for the Plugin representation
+		final Thread thread = getPluginThread();
+
+		if(thread != null) {
+			setThreadRunning(false);
+			setTickCompleted(false);
+			tasksMap.remove(thread.getName());
+			pluginThread = null;
+
+			thread.interrupt();
+		}
 	}
 
 	public synchronized boolean isInitialized() {
