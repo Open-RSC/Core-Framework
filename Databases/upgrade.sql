@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS `openrsc_achievement_task`;
 DROP TABLE IF EXISTS `openrsc_achievement_status`;
 DROP TABLE IF EXISTS `openrsc_achievement_reward`;
 DROP TABLE IF EXISTS `openrsc_achievements`;
-ALTER TABLE `openrsc_players` DELETE IF EXISTS `highscoreopt` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_players` DROP IF EXISTS `highscoreopt`;
 
 
 /*
