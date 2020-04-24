@@ -4,7 +4,7 @@
     <file url="file://$PROJECT_DIR$/Databases/cabbage_game_server.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/Databases/core.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/Databases/custom.sql" dialect="MariaDB" />
-    <file url="file://$PROJECT_DIR$/Databases/rework_conversion.sql" dialect="MariaDB" />
+    <file url="file://$PROJECT_DIR$/Databases/openrsc_game_server.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$/Databases/upgrade.sql" dialect="MariaDB" />
   </component>
 </project>
