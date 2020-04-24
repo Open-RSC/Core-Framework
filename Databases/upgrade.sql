@@ -2366,22 +2366,30 @@ SELECT '3. Items updated in openrsc_itemstatuses.' AS '';
 
 TRUNCATE `openrsc_invitems`;
 
-ALTER TABLE `openrsc_invitems` DROP COLUMN IF EXISTS `dbid`;
-ALTER TABLE `openrsc_invitems` DROP COLUMN IF EXISTS `amount`;
-ALTER TABLE `openrsc_invitems` CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
+ALTER TABLE `openrsc_invitems`
+    DROP COLUMN IF EXISTS `dbid`;
+ALTER TABLE `openrsc_invitems`
+    DROP COLUMN IF EXISTS `amount`;
+ALTER TABLE `openrsc_invitems`
+    CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
 
-ALTER TABLE `openrsc_bank` DROP COLUMN IF EXISTS `dbid`;
-ALTER TABLE `openrsc_bank` DROP COLUMN IF EXISTS `amount`;
-ALTER TABLE `openrsc_bank` CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
+ALTER TABLE `openrsc_bank`
+    DROP COLUMN IF EXISTS `dbid`;
+ALTER TABLE `openrsc_bank`
+    DROP COLUMN IF EXISTS `amount`;
+ALTER TABLE `openrsc_bank`
+    CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
 
-ALTER TABLE `openrsc_itemstatuses` DROP COLUMN IF EXISTS `playerID`;
+ALTER TABLE `openrsc_itemstatuses`
+    DROP COLUMN IF EXISTS `playerID`;
 
 
 /*
  * Itemdef replacement
  *  Replaces the itemdef table depending on the database name and if it has not been upgraded yet
  */
-SET @DropColumnIfExist =
+
+SET @DropTableIfExist =
         (
             SELECT IF
                        (
@@ -2390,14 +2398,12 @@ SET @DropColumnIfExist =
                                    FROM INFORMATION_SCHEMA.COLUMNS
                                    WHERE table_name = 'openrsc_itemdef'
                                      AND column_name = 'bankNoteID'
-                                     AND table_schema = 'cabbage'
                                ) > 0,
                                "DROP TABLE `openrsc_itemdef`;",
-                       /* Personalize your message if the column doesn't exist or already dropped */
                                "SELECT 'openrsc_itemdef does not exist in the openrsc_itemdef table.'"
                        )
         );
-PREPARE alterIfNotExists FROM @DropColumnIfExist;
+PREPARE alterIfNotExists FROM @DropTableIfExist;
 EXECUTE alterIfNotExists;
 DEALLOCATE PREPARE alterIfNotExists;
 
@@ -2433,9 +2439,10 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemdef`
   DEFAULT CHARSET = utf8;
 
 REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
-                               `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
-                               `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
-                               `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`)
+                                      `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
+                                      `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
+                                      `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`,
+                                      `isNoteable`)
 VALUES (0, 'Iron Mace', 'A spiky mace', '', 0, 0, 0, 0, 1, 118, 16, 4, 1, 0, 0, 8, 6, 0, 0, 63, 1),
        (1, 'Iron Short Sword', 'A razor sharp sword', '', 0, 0, 0, 0, 1, 49, 16, 4, 1, 0, 0, 8, 8, 0, 0, 91, 1),
        (2, 'Iron Kite Shield', 'A large metal shield', '', 0, 0, 0, 0, 1, 99, 8, 3, 1, 1, 9, 0, 0, 0, 0,
@@ -2683,7 +2690,7 @@ VALUES (0, 'Iron Mace', 'A spiky mace', '', 0, 0, 0, 0, 1, 118, 16, 4, 1, 0, 0, 
        (155, 'coal', 'hmm a non-renewable energy source!', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0,
         45, 1),
        (156, 'Bronze Pickaxe', 'Used for mining', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 1, 1),
-       (157,  'uncut diamond', 'this would be worth more cut', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0,
+       (157, 'uncut diamond', 'this would be worth more cut', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0,
         0, 200, 1),
        (158, 'uncut ruby', 'this would be worth more cut', '', 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0,
         100, 1),
@@ -3109,9 +3116,10 @@ VALUES (0, 'Iron Mace', 'A spiky mace', '', 0, 0, 0, 0, 1, 118, 16, 4, 1, 0, 0, 
        (432, 'Black Square Shield', 'A medium metal shield', '', 0, 0, 0, 0, 1, 104, 8, 3, 10, 1, 15, 0, 0, 0,
         0, 1152, 1);
 REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
-                               `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
-                               `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
-                               `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`)
+                                      `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
+                                      `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
+                                      `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`,
+                                      `isNoteable`)
 VALUES (433, 'Black Kite Shield', 'A large metal shield', '', 0, 0, 0, 0, 1, 104, 8, 3, 10, 1, 18, 0, 0, 0, 0,
         1632, 1),
        (434, 'Black Plated skirt', 'designer leg protection', '', 0, 0, 0, 0, 1, 159, 640, 7, 10, 1, 20, 0, 0,
@@ -3801,9 +3809,10 @@ VALUES (433, 'Black Kite Shield', 'A large metal shield', '', 0, 0, 0, 0, 1, 104
        (843, 'gnomeshat', 'A silly pointed hat', '', 0, 1, 0, 0, 1, 194, 32, 5, 1, 1, 0, 0, 0, 3, 0, 160, 1),
        (844, 'gnomeshat', 'A silly pointed hat', '', 0, 1, 0, 0, 1, 195, 32, 5, 1, 1, 0, 0, 0, 3, 0, 160, 1);
 REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
-                               `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
-                               `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
-                               `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`)
+                                      `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
+                                      `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
+                                      `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`,
+                                      `isNoteable`)
 VALUES (845, 'gnomeshat', 'A silly pointed hat', '', 0, 1, 0, 0, 1, 196, 32, 5, 1, 1, 0, 0, 0, 3, 0, 160, 1),
        (846, 'gnome top', 'rometti - the ultimate in gnome design', '', 0, 1, 0, 0, 1, 197, 64, 6, 1, 1, 2, 0,
         0, 0, 0, 180, 1),
@@ -4502,9 +4511,10 @@ VALUES (845, 'gnomeshat', 'A silly pointed hat', '', 0, 1, 0, 0, 1, 196, 32, 5, 
        (1247, 'Burnt Manta ray', 'oops!', '', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 500, 1),
        (1248, 'Burnt Sea turtle', 'oops!', '', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 500, 1);
 REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
-                               `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
-                               `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
-                               `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`)
+                                      `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
+                                      `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
+                                      `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`,
+                                      `isNoteable`)
 VALUES (1249, 'Cut reed plant', 'A narrow long tube - it might be useful for something', '', 0, 1, 0, 0, 0, 0,
         0, -1, 0, -1, 0, 0, 0, 0, 0, 2, 1),
        (1250, 'Magical Fire Pass', 'A pass which allows you to cross the flaming walls into the Flaming Octagon',
@@ -4591,3 +4601,4 @@ VALUES (1249, 'Cut reed plant', 'A narrow long tube - it might be useful for som
         1, 7, 0, 0, 0, 0, 450, 1),
        (1289, 'Scythe', 'Get another from the clothes shop if you die', '', 0, 0, 0, 1, 1, 229, 8216, 4, 1, 0,
         0, 10, 10, 0, 0, 15, 1);
+
