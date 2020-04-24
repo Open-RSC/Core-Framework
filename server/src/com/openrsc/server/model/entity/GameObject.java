@@ -105,6 +105,22 @@ public class GameObject extends Entity {
 		return new Point[]{Point.location(minX, minY), Point.location(maxX, maxY)};
 	}
 
+	// Returns the closest point to supplied Point argument.
+	public Point closestBound(Point point) {
+		Point[] objectPoints = getObjectBoundary();
+		if (objectPoints.length == 0) return null;
+		Point closest = objectPoints[objectPoints.length - 1];
+		int closestTotal = Math.abs(closest.getX() - point.getX()) + Math.abs(closest.getY() - point.getY());
+		for (Point objectPoint : objectPoints) {
+			int current = Math.abs(objectPoint.getX() - point.getX()) + Math.abs(objectPoint.getY() - point.getY());
+			if (current < closestTotal) {
+				closestTotal = current;
+				closest = objectPoint;
+			}
+		}
+		return closest;
+	}
+
 	public boolean isOn(final int x, final int y) {
 		int width, height;
 		if (type == 1) {
