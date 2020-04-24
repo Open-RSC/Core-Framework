@@ -10,8 +10,16 @@ DROP TABLE IF EXISTS `openrsc_achievement_task`;
 DROP TABLE IF EXISTS `openrsc_achievement_status`;
 DROP TABLE IF EXISTS `openrsc_achievement_reward`;
 DROP TABLE IF EXISTS `openrsc_achievements`;
-ALTER TABLE `openrsc_players` DROP IF EXISTS `highscoreopt`;
-
+ALTER TABLE `openrsc_players`
+    DROP IF EXISTS `highscoreopt`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `skulled`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `charged`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `onexp_mode`;
+ALTER TABLE `openrsc_players`
+    DROP COLUMN IF EXISTS `forum_active`;
 
 /*
  * Upgrade section
