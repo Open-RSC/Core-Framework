@@ -11,6 +11,20 @@ ALTER TABLE `openrsc_players`
     ADD IF NOT EXISTS `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT 1;
 ALTER TABLE `openrsc_players`
     ADD IF NOT EXISTS `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_curstats`
+    ADD COLUMN IF NOT EXISTS `cur_runecraft` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
+ALTER TABLE `openrsc_experience`
+    ADD COLUMN IF NOT EXISTS `exp_runecraft` int(9) UNSIGNED  NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_curstats`
+    ADD COLUMN IF NOT EXISTS `cur_harvesting` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
+ALTER TABLE `openrsc_experience`
+    ADD COLUMN IF NOT EXISTS `exp_harvesting` int(9) UNSIGNED  NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_players`
+    ADD `petfatigue` INT(10) NULL DEFAULT '0' AFTER `fatigue`;
+ALTER TABLE `openrsc_players`
+    ADD `kills2` INT NOT NULL DEFAULT '0' AFTER `kills`;
+ALTER TABLE `openrsc_players`
+    ADD `pets` INT(10) NOT NULL DEFAULT '0' AFTER `kills2`;
 
 
 /*

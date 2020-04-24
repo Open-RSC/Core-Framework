@@ -378,7 +378,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_recovery_questions`
     `questionID` int(10) UNSIGNED NOT NULL,
     `question`   varchar(256)     NOT NULL DEFAULT '',
     PRIMARY KEY (`questionID`)
-) ENGINE = MyISAM
+) ENGINE = MyISA
+    M
   DEFAULT CHARSET = utf8;
 
 INSERT INTO `openrsc_recovery_questions` (`questionID`, `question`)
