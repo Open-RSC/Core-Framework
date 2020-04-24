@@ -113,9 +113,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_equipped`
  * The queries performed in the section will modify existing player tables to convert the database into one compatible with custom features
  */
 
-ALTER TABLE `openrsc_players` DROP COLUMN `amount`;
-ALTER TABLE `openrsc_players` ADD `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
-ALTER TABLE `openrsc_players` ADD `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
-ALTER TABLE `openrsc_players` ADD `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT 1;
-ALTER TABLE `openrsc_players` ADD `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_players` ADD IF NOT EXISTS `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_players` ADD IF NOT EXISTS `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `openrsc_players` ADD IF NOT EXISTS `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT 1;
+ALTER TABLE `openrsc_players` ADD IF NOT EXISTS `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
 
