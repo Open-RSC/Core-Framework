@@ -276,14 +276,14 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
-		return i.getCatalogId() == ItemId.CHEESE.id() && player.getLocation().inBounds(356, 357, 494, 496);
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+		return item.getCatalogId() == ItemId.CHEESE.id() && player.getLocation().inBounds(356, 357, 494, 496);
 	}
 
 	// room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.CHEESE.id() && player.getLocation().inBounds(356, 357, 494, 496)) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.CHEESE.id() && player.getLocation().inBounds(356, 357, 494, 496)) {
 			if (player.getQuestStage(this) == -1) {
 				say(player, null, "I would rather eat it to be honest");
 				return;

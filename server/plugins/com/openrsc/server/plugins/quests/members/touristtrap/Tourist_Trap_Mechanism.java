@@ -936,13 +936,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
-		return i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id();
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+		return item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				return;

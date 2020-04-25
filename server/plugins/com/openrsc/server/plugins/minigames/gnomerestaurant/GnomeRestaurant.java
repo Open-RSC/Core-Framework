@@ -575,14 +575,14 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.GNOMECRUNCHIE.id() || i.getCatalogId() == ItemId.GNOMEBOWL.id() || i.getCatalogId() == ItemId.GNOMEBATTA.id()) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.GNOMECRUNCHIE.id() || item.getCatalogId() == ItemId.GNOMEBOWL.id() || item.getCatalogId() == ItemId.GNOMEBATTA.id()) {
 			resetGnomeCooking(player);
 		}
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
 		return false;
 	}
 }

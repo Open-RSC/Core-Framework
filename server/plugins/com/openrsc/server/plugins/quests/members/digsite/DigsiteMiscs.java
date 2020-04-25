@@ -12,14 +12,14 @@ import static com.openrsc.server.plugins.Functions.*;
 public class DigsiteMiscs implements DropObjTrigger {
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
 		return DataConversions.inArray(new int[] {ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id(),
-				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, i.getCatalogId());
+				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, item.getCatalogId());
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			player.message("bang!");
 			player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.3D + 5));
@@ -27,15 +27,15 @@ public class DigsiteMiscs implements DropObjTrigger {
 			player.message("The liquid exploded!");
 			player.message("You were injured by the burning liquid");
 		}
-		else if (i.getCatalogId() == ItemId.MIXED_CHEMICALS_1.id() || i.getCatalogId() == ItemId.MIXED_CHEMICALS_2.id()) {
+		else if (item.getCatalogId() == ItemId.MIXED_CHEMICALS_1.id() || item.getCatalogId() == ItemId.MIXED_CHEMICALS_2.id()) {
 			player.message("bang!");
-			player.getCarriedItems().remove(new Item(i.getCatalogId()));
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 2 + 6));
 			say(player, null, "Ow!");
 			player.message("The chemicals exploded!");
 			player.message("You were injured by the exploding liquid");
 		}
-		else if (i.getCatalogId() == ItemId.NITROGLYCERIN.id()) {
+		else if (item.getCatalogId() == ItemId.NITROGLYCERIN.id()) {
 			player.message("bang!");
 			player.getCarriedItems().remove(new Item(ItemId.NITROGLYCERIN.id()));
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 2 - 3));
@@ -43,7 +43,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 			player.message("The nitroglycerin exploded!");
 			player.message("You were injured by the exploding liquid");
 		}
-		else if (i.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
+		else if (item.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
 			mes(player, "bang!");
 			player.getCarriedItems().remove(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
 			player.damage(61);
