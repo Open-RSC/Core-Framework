@@ -42,6 +42,10 @@ public abstract class Entity {
 		}
 	}
 
+	public boolean withinRange(final GameObject gameObject, final int radius) {
+		return withinRange(gameObject.closestBound(getLocation()), radius);
+	}
+
 	public boolean withinRange(final Entity e, final int radius) {
 		return withinRange(e.getLocation(), radius);
 	}

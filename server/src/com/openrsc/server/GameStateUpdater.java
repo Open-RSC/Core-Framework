@@ -565,19 +565,19 @@ public final class GameStateUpdater {
 					packet.writeByte(255);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
-					//System.out.println("Removing " + groundItem + " with grounditem remove: " + offsetX + ", " + offsetY);
-					it$.remove();
-					changed = true;
+					if (getServer().getConfig().WANT_BANK_NOTES)
+						packet.writeByte(groundItem.getNoted() ? 1 : 0);
 				} else {
 					playerToUpdate.getLocationsToClear().add(groundItem.getLocation());
-					//System.out.println("Removing " + groundItem + " with region remove");
-					it$.remove();
-					changed = true;
 				}
+				it$.remove();
+				changed = true;
 			} else if (groundItem.isRemoved() || groundItem.isInvisibleTo(playerToUpdate)) {
 				packet.writeShort(groundItem.getID() + 32768);
 				packet.writeByte(offsetX);
 				packet.writeByte(offsetY);
+				if (getServer().getConfig().WANT_BANK_NOTES)
+					packet.writeByte(groundItem.getNoted() ? 1 : 0);
 				//System.out.println("Removing " + groundItem + " with isRemoved() remove: " + offsetX + ", " + offsetY);
 				it$.remove();
 				changed = true;
@@ -595,6 +595,8 @@ public final class GameStateUpdater {
 			int offsetY = groundItem.getY() - playerToUpdate.getY();
 			packet.writeByte(offsetX);
 			packet.writeByte(offsetY);
+			if (getServer().getConfig().WANT_BANK_NOTES)
+				packet.writeByte(groundItem.getNoted() ? 1 : 0);
 			playerToUpdate.getLocalGroundItems().add(groundItem);
 			changed = true;
 

@@ -1291,6 +1291,100 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected void queryExpiredAuction(ExpiredAuction[] expiredAuctions) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().expiredAuction);
+			for (ExpiredAuction expiredAuction : expiredAuctions) {
+				statement.setInt(1, expiredAuction.item_id);
+				statement.setInt(2, expiredAuction.item_amount);
+				statement.setLong(3, expiredAuction.time);
+				statement.setInt(4, expiredAuction.playerID);
+				statement.setString(5, expiredAuction.explanation);
+				statement.addBatch();
+			}
+			try{statement.executeBatch();}
+			finally{statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryNewAuction(AuctionItem auctionItem) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newAuction);
+			statement.setInt(1, auctionItem.itemID);
+			statement.setInt(2, auctionItem.amount);
+			statement.setInt(3, auctionItem.amount_left);
+			statement.setInt(4, auctionItem.price);
+			statement.setInt(5, auctionItem.seller);
+			statement.setString(6, auctionItem.seller_username);
+			statement.setString(7, auctionItem.buyer_info);
+			statement.setLong(8, auctionItem.time);
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryCancelAuction(final int auctionId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().cancelAuction);
+			statement.setInt(1, auctionId);
+			try{statement.executeUpdate();}
+			finally{statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected int queryAuctionCount() throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().auctionCount);
+			ResultSet result = statement.executeQuery();
+			try {
+				if (result.next()) {
+					int auctionCount = result.getInt("auction_count");
+					return auctionCount;
+				}
+			} finally {
+				statement.close();
+				result.close();
+			}
+			return 0;
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected int queryPlayerAuctionCount(int playerId) throws GameDatabaseException {
+		try {
+			PreparedStatement statement = getConnection().prepareStatement(getQueries().playerAuctionCount);
+			statement.setInt(1, playerId);
+			ResultSet result = statement.executeQuery();
+			try {
+				if (result.next()) {
+					int auctionCount = result.getInt("my_slots");
+					return auctionCount;
+				}
+			} finally {
+				statement.close();
+				result.close();
+			}
+			return 0;
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_UpdateBasicInfo);
