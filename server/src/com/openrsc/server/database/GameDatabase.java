@@ -162,6 +162,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract void queryExpiredAuction(final ExpiredAuction[] expiredAuctions) throws GameDatabaseException;
 	protected abstract ExpiredAuction[] queryCollectibleItems(final int playerId) throws GameDatabaseException;
+	protected abstract void queryCollectItems(final ExpiredAuction[] claimedItems) throws GameDatabaseException;
 	protected abstract void queryNewAuction(final AuctionItem auctionItem) throws GameDatabaseException;
 	protected abstract void queryCancelAuction(final int auctionId) throws GameDatabaseException;
 	protected abstract int queryAuctionCount() throws GameDatabaseException;
@@ -563,6 +564,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public ExpiredAuction[] getCollectibleItems(final int playerId) throws GameDatabaseException {
 		return queryCollectibleItems(playerId);
+	}
+
+	public void collectItems(final ExpiredAuction[] collectedItems) throws GameDatabaseException {
+		queryCollectItems(collectedItems);
 	}
 
 	public void newAuction(final AuctionItem auctionItem) throws GameDatabaseException {

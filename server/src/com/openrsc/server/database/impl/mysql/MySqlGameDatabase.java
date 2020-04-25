@@ -1339,6 +1339,22 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected void queryCollectItems(ExpiredAuction[] claimedItems) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().collectItem);
+			for (ExpiredAuction item : claimedItems) {
+				statement.setLong(1, item.claim_time);
+				statement.setInt(2, item.claim_id);
+				statement.addBatch();
+			}
+			try {statement.executeBatch();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void queryNewAuction(AuctionItem auctionItem) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newAuction);
@@ -2414,7 +2430,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		return getConnection().isConnected();
 	}
 
-	// Should be private
+	// Should be protected
 	public MySqlGameDatabaseConnection getConnection() {
 		return connection;
 	}
