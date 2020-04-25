@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS `openrsc_bank`;
 CREATE TABLE IF NOT EXISTS `openrsc_bank`
 (
     `playerID` int(10) UNSIGNED NOT NULL,
-    `itemID`       int(10) UNSIGNED NOT NULL,
+    `itemID`   int(10) UNSIGNED NOT NULL,
     `slot`     int(5) UNSIGNED  NOT NULL DEFAULT 0,
     KEY (`playerID`)
 ) ENGINE = InnoDB
@@ -166,7 +166,7 @@ DROP TABLE IF EXISTS `openrsc_invitems`;
 CREATE TABLE IF NOT EXISTS `openrsc_invitems`
 (
     `playerID` int(10) UNSIGNED    NOT NULL,
-    `itemID`       int(10) UNSIGNED    NOT NULL,
+    `itemID`   int(10) UNSIGNED    NOT NULL,
     `wielded`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `slot`     int(5) UNSIGNED     NOT NULL,
     KEY (`playerID`)
@@ -244,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players`
     `offences`          int(11)          NOT NULL    DEFAULT 0,
     `muted`             varchar(255)     NOT NULL    DEFAULT '0',
     `kills`             int(10)          NOT NULL    DEFAULT 0,
-    `npc_kills`            INT(10)          NOT NULL    DEFAULT 0,
+    `npc_kills`         INT(10)          NOT NULL    DEFAULT 0,
     `deaths`            int(10)                      DEFAULT 0,
     `online`            tinyint(1) UNSIGNED ZEROFILL DEFAULT 0,
     `quest_points`      int(5)                       DEFAULT NULL,
@@ -33245,12 +33245,6 @@ VALUES (0, '1', 20, 0, 1),
        (791, '1', 20, 0, 2257),
        (792, '1', 20, 0, 2258),
        (793, '1', 20, 0, 2259),
-       (794, '1', 20, 0, 2260),
-       (795, '1', 20, 0, 2261),
-       (798, '1', 20, 0, 2264),
-       (799, '1', 20, 22, 2265),
-       (800, '1', 20, 0, 2266),
-       (801, '1', 20, 0, 2267),
        (102, '1', 160, 3800, 2356),
        (102, '1', 263, 540, 2357),
        (102, '1', 188, 2040, 2358),
@@ -34066,11 +34060,11 @@ VALUES (0, '1', 20, 0, 1),
        (344, '1', 404, 100, 13546),
        (344, '1', 93, 100, 13547),
        (344, '1', 165, 1000, 13551),
-       (344, '1', 795, 3, 13557),
-       (344, '3', 619, 500, 13573),
-       (344, '50', 31, 1500, 13576);
+       (344, '1', 795, 3, 13557);
 INSERT INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`)
-VALUES (344, '15', 619, 500, 13577),
+VALUES (344, '3', 619, 500, 13573),
+       (344, '50', 31, 1500, 13576),
+       (344, '15', 619, 500, 13577),
        (344, '3', 41, 1000, 13578),
        (344, '3', 40, 1000, 13579),
        (344, '25', 31, 1500, 13583),
@@ -34152,7 +34146,6 @@ VALUES (344, '15', 619, 500, 13577),
        (62, '1', 192, 12, 13833),
        (62, '1', 827, 45, 13834),
        (62, '1', 124, 4, 13835),
-       (797, '1', 413, 0, 13837),
        (477, '10', 42, 750, 13885),
        (477, '-1', -1, 1000, 13886),
        (477, '1', 81, 100, 13887),

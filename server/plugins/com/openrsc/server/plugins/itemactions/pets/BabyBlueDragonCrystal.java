@@ -6,7 +6,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.PlayerLoginTrigger;
 
-public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
+public class BabyBlueDragonCrystal implements OpInvTrigger {
+//public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
 
 	protected Player petOwnerA;
 
@@ -48,7 +49,7 @@ public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void onPlayerLogin(Player player) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
 			if (player.getCarriedItems().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id())) != -1) {
@@ -56,5 +57,5 @@ public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.A_RED_CRYSTAL.id()));
 			}
 		}
-	}
+	}*/
 }
