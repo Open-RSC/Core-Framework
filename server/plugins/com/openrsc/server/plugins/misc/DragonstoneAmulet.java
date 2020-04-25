@@ -71,7 +71,8 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				} else {
 					int rubs = player.getCache().getInt("charged_ds_amulet");
 					if (rubs >= 3) {
-						player.getCarriedItems().getInventory().replace(ItemId.CHARGED_DRAGONSTONE_AMULET.id(), ItemId.DRAGONSTONE_AMULET.id());
+						player.getCarriedItems().remove(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGONSTONE_AMULET.id()));
 						player.getCache().remove("charged_ds_amulet");
 					} else {
 						player.getCache().put("charged_ds_amulet", rubs + 1);

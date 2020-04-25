@@ -1,15 +1,20 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
+
 public class ItemStatus {
 	private int catalogId;
 	private int amount;
 	private boolean noted;
+	private boolean wielded;
 	private int durability;
 
 	public ItemStatus() {
 		this.catalogId = -1;
 		this.amount = 0;
 		this.noted = false;
+		this.wielded = false;
 		this.durability = 100;
 	}
 
@@ -39,6 +44,10 @@ public class ItemStatus {
 	public void setNoted(boolean noted) {
 		this.noted = noted;
 	}
+
+	public boolean isWielded() { return wielded; }
+
+	public void setWielded(boolean wielded) { this.wielded = wielded; }
 
 	public int getDurability() {
 		return durability;

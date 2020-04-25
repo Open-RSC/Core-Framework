@@ -28,7 +28,8 @@ public class DrinkHeating implements UseLocTrigger {
 			mes(player, "you briefly place the drink in the oven");
 			player.message("you remove the warm drink");
 			if (player.getCache().hasKey("drunk_dragon_base") && player.getCache().hasKey("diced_pa_to_drink") && player.getCache().hasKey("cream_into_drink")) {
-				player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.DRUNK_DRAGON.id());
+				player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.DRUNK_DRAGON.id()));
 				checkAndRemoveBlurberry(player, true);
 			}
 			if (player.getCache().hasKey("chocolate_saturday_base") && player.getCache().hasKey("choco_bar_in_drink")) {
@@ -36,7 +37,8 @@ public class DrinkHeating implements UseLocTrigger {
 					player.getCache().store("heated_choco_saturday", true);
 				}
 			} else {
-				player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+				player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 			}
 		}
 		if ((item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id())

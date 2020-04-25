@@ -127,7 +127,8 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				say(player, npc, "Shush...It's for your own good!");
 				mes(player, "You manage to squeeze Ana into the barrel,",
 					"despite her many complaints.");
-				player.getCarriedItems().getInventory().replace(ItemId.MINING_BARREL.id(), ItemId.ANA_IN_A_BARREL.id());
+				player.getCarriedItems().remove(new Item(ItemId.MINING_BARREL.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				if (npc != null) {
 					npc.remove();
 				}
@@ -194,7 +195,8 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
 			if (succeedRate(player)) {
 				mes(player, "You succesfully attach the feathers to the dart tip.");
-				player.getCarriedItems().getInventory().replace(ItemId.PROTOTYPE_DART_TIP.id(), ItemId.PROTOTYPE_THROWING_DART.id());
+				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 				//kosher: dependent on fletching level!
 				player.incExp(Skills.FLETCHING, getMaxLevel(player, Skills.FLETCHING) * 50, true);
 			} else {

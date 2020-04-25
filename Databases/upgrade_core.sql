@@ -4526,6 +4526,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses`
     `catalogID`  int(10) UNSIGNED    NOT NULL,
     `amount`     int(10) UNSIGNED    NOT NULL DEFAULT 1,
     `noted`      tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+    `wielded`      tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `durability` int(5) UNSIGNED     NOT NULL DEFAULT 0,
     `playerID`   int(10) UNSIGNED    NOT NULL,
     PRIMARY KEY (`itemID`)
@@ -4597,6 +4598,8 @@ ALTER TABLE `openrsc_invitems`
     DROP COLUMN IF EXISTS `dbid`;
 ALTER TABLE `openrsc_invitems`
     DROP COLUMN IF EXISTS `amount`;
+ALTER TABLE `openrsc_invitems`
+    DROP COLUMN IF EXISTS `wielded`;
 ALTER TABLE `openrsc_invitems`
     CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
 

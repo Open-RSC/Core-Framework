@@ -420,7 +420,8 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		if (compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
 			mes(player, "you rub the doogle leaves over the sardine");
 			player.getCarriedItems().remove(new Item(ItemId.DOOGLE_LEAVES.id()));
-			player.getCarriedItems().getInventory().replace(ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id());
+			player.getCarriedItems().remove(new Item(ItemId.RAW_SARDINE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.SEASONED_SARDINE.id()));
 		}
 	}
 

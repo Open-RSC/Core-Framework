@@ -188,7 +188,8 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					break;
 				case VIAL:
 					npcsay(player, npc, "Oh lovely, fresh water...thanks!");
-					player.getCarriedItems().getInventory().replace(ItemId.VIAL.id(), ItemId.EMPTY_VIAL.id());
+					player.getCarriedItems().remove(new Item(ItemId.VIAL.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.EMPTY_VIAL.id()));
 					break;
 				case SKAVID_MAP:
 					player.message("You give the map to the wizard");

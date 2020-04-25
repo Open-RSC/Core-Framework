@@ -390,7 +390,8 @@ public class Drinkables implements OpInvTrigger {
 			"No, I've had second thoughts...");
 		if (drink == 0) {
 			player.message("You drink the potion...");
-			player.getCarriedItems().getInventory().replace(ItemId.GUJUO_POTION.id(), ItemId.EMPTY_VIAL.id());
+			player.getCarriedItems().remove(new Item(ItemId.GUJUO_POTION.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.EMPTY_VIAL.id()));
 			if (!player.getCache().hasKey("gujuo_potion")) {
 				player.getCache().store("gujuo_potion", true);
 			}

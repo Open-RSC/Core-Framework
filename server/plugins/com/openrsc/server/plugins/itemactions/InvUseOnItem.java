@@ -46,7 +46,8 @@ public class InvUseOnItem implements UseInvTrigger {
 
 		else if (compareItemsIds(item1, item2, ItemId.POT_OF_FLOUR.id(), ItemId.SWAMP_TAR.id())) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false)) && player.getCarriedItems().remove(new Item(ItemId.SWAMP_TAR.id())) > -1) {
-				player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+				player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
 				player.message("you mix the flour with the swamp tar");
 				player.message("it mixes into a paste");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_SWAMP_PASTE.id()));

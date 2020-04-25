@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToMobAction;
@@ -227,11 +228,16 @@ public class PlayerDuelHandler implements PacketHandler {
 						ActionSender.sendEquipmentStats(player);
 
 						synchronized(affectedPlayer.getCarriedItems().getInventory().getItems()) {
-							for (Item item : affectedPlayer.getCarriedItems().getInventory().getItems()) {
-								if (item.isWielded()) {
-									item.setWielded(false);
-									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
+							try {
+								for (Item item : affectedPlayer.getCarriedItems().getInventory().getItems()) {
+									if (item.isWielded()) {
+										item.setWielded(affectedPlayer.getWorld().getServer().getDatabase(), false);
+										affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
+									}
 								}
+							}
+							catch (GameDatabaseException e) {
+								System.out.println(e.getMessage());
 							}
 						}
 						ActionSender.sendSound(affectedPlayer, "click");

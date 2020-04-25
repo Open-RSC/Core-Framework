@@ -91,7 +91,8 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		boolean feeded = false;
 		switch (ItemId.getById(item.getCatalogId())) {
 		case MILK:
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BUCKET.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			if(!isGrown) {
 				mes(player, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
@@ -203,7 +204,8 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			}
 			// kitten grows to cat - replace and reset counters
 			else if (kittenEvents >= 32) {
-				player.getCarriedItems().getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
+				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.CAT.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");

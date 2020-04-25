@@ -142,7 +142,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("It has produced a foul mixture");
 			thinkbubble(player, new Item(ItemId.AMMONIUM_NITRATE.id()));
 			carriedItems.remove(new Item(ItemId.AMMONIUM_NITRATE.id()));
-			carriedItems.getInventory().replace(ItemId.NITROGLYCERIN.id(), ItemId.MIXED_CHEMICALS_1.id());
+			carriedItems.remove(new Item(ItemId.NITROGLYCERIN.id()));
+			carriedItems.getInventory().add(new Item(ItemId.MIXED_CHEMICALS_1.id()));
 		} else if (usedWithID == ItemId.GROUND_CHARCOAL.id() && itemID == ItemId.MIXED_CHEMICALS_1.id()
 				|| usedWithID == ItemId.MIXED_CHEMICALS_1.id() && itemID == ItemId.GROUND_CHARCOAL.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
@@ -158,7 +159,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("It has produced an even fouler mixture");
 			thinkbubble(player, new Item(ItemId.GROUND_CHARCOAL.id()));
 			carriedItems.remove(new Item(ItemId.GROUND_CHARCOAL.id()));
-			carriedItems.getInventory().replace(ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id());
+			carriedItems.remove(new Item(ItemId.MIXED_CHEMICALS_1.id()));
+			carriedItems.getInventory().add(new Item(ItemId.MIXED_CHEMICALS_2.id()));
 		} else if (usedWithID == ItemId.ARCENIA_ROOT.id() && itemID == ItemId.MIXED_CHEMICALS_2.id()
 				|| usedWithID == ItemId.MIXED_CHEMICALS_2.id() && itemID == ItemId.ARCENIA_ROOT.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 10) {
@@ -174,7 +176,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("You produce a potentially explosive compound...");
 			thinkbubble(player, new Item(ItemId.ARCENIA_ROOT.id()));
 			carriedItems.remove(new Item(ItemId.ARCENIA_ROOT.id()));
-			carriedItems.getInventory().replace(ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id());
+			carriedItems.remove(new Item(ItemId.MIXED_CHEMICALS_2.id()));
+			carriedItems.getInventory().add(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
 			say(player, null, "Excellent this looks just right");
 
 		// Blamish oil (Heroes quest)
@@ -191,7 +194,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.incExp(Skills.HERBLAW, 320, true);
 			player.message("You mix the slime into your potion");
 			carriedItems.remove(new Item(ItemId.UNFINISHED_HARRALANDER_POTION.id()));
-			carriedItems.getInventory().replace(ItemId.BLAMISH_SNAIL_SLIME.id(), ItemId.BLAMISH_OIL.id());
+			carriedItems.remove(new Item(ItemId.BLAMISH_SNAIL_SLIME.id()));
+			carriedItems.getInventory().add(new Item(ItemId.BLAMISH_OIL.id()));
 
 		// Snakes weed potion (Legends quest)
 		} else if (usedWithID == ItemId.SNAKES_WEED_SOLUTION.id() && itemID == ItemId.ARDRIGAL.id()
@@ -213,7 +217,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("You add the Ardrigal to the Snakesweed Solution.");
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
 			carriedItems.remove(new Item(ItemId.ARDRIGAL.id()));
-			carriedItems.getInventory().replace(ItemId.SNAKES_WEED_SOLUTION.id(), ItemId.GUJUO_POTION.id());
+			carriedItems.remove(new Item(ItemId.SNAKES_WEED_SOLUTION.id()));
+			carriedItems.getInventory().add(new Item(ItemId.GUJUO_POTION.id()));
 		} else if (usedWithID == ItemId.ARDRIGAL_SOLUTION.id() && itemID == ItemId.SNAKE_WEED.id()
 				|| usedWithID == ItemId.SNAKE_WEED.id() && itemID == ItemId.ARDRIGAL_SOLUTION.id()) {
 			if (player.getSkills().getLevel(Skills.HERBLAW) < 45) {
@@ -233,7 +238,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("You add the Snake Weed to the Ardrigal solution.");
 			player.message("The mixture seems to bubble slightly with a strange effervescence...");
 			carriedItems.remove(new Item(ItemId.SNAKE_WEED.id()));
-			carriedItems.getInventory().replace(ItemId.ARDRIGAL_SOLUTION.id(), ItemId.GUJUO_POTION.id());
+			carriedItems.remove(new Item(ItemId.ARDRIGAL_SOLUTION.id()));
+			carriedItems.getInventory().add(new Item(ItemId.GUJUO_POTION.id()));
 		}
 	}
 

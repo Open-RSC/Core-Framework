@@ -45,24 +45,19 @@ public class Inventory {
 	//----------------------------------------------------------------
 	//Constructors----------------------------------------------------
 	public Inventory(Player player, PlayerInventory[] inventory) {
-		try {
-			this.player = player;
-			for (int i = 0; i < inventory.length; i++) {
-				Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
-				ItemDefinition itemDef = item.getDef(player.getWorld());
-				item.setWielded(false);
-				if (item.isWieldable(player.getWorld()) && inventory[i].wielded) {
-					if (itemDef != null) {
-						if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-							item.setWielded(true);
-						list.add(item);
+		this.player = player;
+		for (int i = 0; i < inventory.length; i++) {
+			Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (item.isWieldable(player.getWorld()) && inventory[i].item.isWielded()) {
+				if (itemDef != null) {
+					if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						item.getItemStatus().setWielded(true);
+						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 					}
-					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-				} else
-					list.add(item);
+				}
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			list.add(item);
 		}
 	}
 	//----------------------------------------------------------------
@@ -298,34 +293,11 @@ public class Inventory {
 		return -1;
 	}
 
-	public void replace(int i, int j) {
-		this.replace(i, j, true);
+	public void replace(Item itemToReplace, Item newItem, boolean sendInventory) {
+
 	}
 
-	public void replace(int i, int j, boolean sendInventory) {
-		Item old = new Item(i);
-		Item newitem = new Item(j);
-		if (old.getDef(player.getWorld()) != null && newitem.getDef(player.getWorld()) != null
-			&& player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
-			&& player.getCarriedItems().getEquipment().hasEquipped(i)) {
-			newitem.setWielded(false);
-			if (player.getCarriedItems().getEquipment().remove(old, old.getAmount()) != -1)
-				player.getCarriedItems().getEquipment().add(newitem);
-			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
-				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
-				old.getDef(player.getWorld()).getWearableId(), false);
-			player.updateWornItems(newitem.getDef(player.getWorld()).getWieldPosition(),
-				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
-			ActionSender.sendEquipmentStats(player);
-		} else {
-			if (remove(new Item(i), true) != -1);
-			add(new Item(j), false);
-			if (sendInventory)
-				ActionSender.sendInventory(player);
-		}
-	}
-
+	// Used in custom bank interface to swap items.
 	public void swap(int slot, int to) {
 		if (slot <= 0 && to <= 0 && to == slot) {
 			return;
@@ -343,6 +315,7 @@ public class Inventory {
 		}
 	}
 
+	// Used in custom bank interface to insert items.
 	public boolean insert(int slot, int to) {
 		if (slot < 0 || to < 0 || to == slot) {
 			return false;
@@ -475,7 +448,12 @@ public class Inventory {
 				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 					player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 					item.getDef(player.getWorld()).getWearableId(), false);
-				item.setWielded(false);
+				try {
+					item.setWielded(player.getWorld().getServer().getDatabase(), false);
+				}
+				catch (GameDatabaseException e) {
+					LOGGER.error(e);
+				}
 			}
 			iterator.remove();
 

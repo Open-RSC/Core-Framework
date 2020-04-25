@@ -943,9 +943,11 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");
 							if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))) {
-								player.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+								player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL.id()));
+								player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 							} else if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))) {
-								player.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+								player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id()));
+								player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
 							}
 							GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 						} else {

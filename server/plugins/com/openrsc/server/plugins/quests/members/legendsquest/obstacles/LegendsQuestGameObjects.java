@@ -686,7 +686,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		else if (obj.getID() == YOMMI_TREE && item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()) {
 			int objectX = obj.getX();
 			int objectY = obj.getY();
-			player.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 			displayTeleportBubble(player, obj.getX(), obj.getY(), true);
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You water the Yommi tree from the golden bowl...",
 				"It grows at a remarkable rate.");
@@ -771,7 +772,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You carefully place the Dragon Crystal on the rock.",
 				"The rocks seem to vibrate and hum and the crystal starts to glow.");
 			player.message("The vibration in the area diminishes, but the crystal continues to glow.");
-			player.getCarriedItems().getInventory().replace(ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id());
+			player.getCarriedItems().remove(new Item(ItemId.A_RED_CRYSTAL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 		}
 		else if (obj.getID() == ANCIENT_LAVA_FURNACE) {
 			switch (ItemId.getById(item.getCatalogId())) {
@@ -902,7 +904,8 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		else if (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 8 && player.getY() >= 3723 && player.getY() <= 3740) {
 				player.message("You fill the bowl up with water..");
-				player.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+				player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
 				return;
 			}
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The water is awkward to get to...",
@@ -940,15 +943,18 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You use the cut reed plant to syphon some water from the pool.");
 				if (emptyID == ItemId.GOLDEN_BOWL.id()) {
 					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "into your gold bowl.");
-					player.getCarriedItems().getInventory().replace(ItemId.GOLDEN_BOWL.id(), ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id());
+					player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id()));
 					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The water doesn't seem to sparkle as much as it did in the pool.");
 				} else if (emptyID == ItemId.BLESSED_GOLDEN_BOWL.id()) {
 					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "into your blessed gold bowl.");
-					player.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
+					player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
 					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The water seems to bubble and sparkle as if alive.");
 				} else {
 					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You put some water in the " + player.getWorld().getServer().getEntityHandler().getItemDef(emptyID).getName().toLowerCase() + ".");
-					player.getCarriedItems().getInventory().replace(emptyID, refilledID);
+					player.getCarriedItems().remove(new Item(emptyID));
+					player.getCarriedItems().getInventory().add(new Item(refilledID));
 				}
 				player.getCarriedItems().remove(new Item(ItemId.CUT_REED_PLANT.id()));
 				mes(player, 0, "The cut reed is soaked through with water and is now all soggy.");

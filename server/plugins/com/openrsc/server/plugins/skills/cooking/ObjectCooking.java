@@ -44,7 +44,8 @@ public class ObjectCooking implements UseLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
 				if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 25) {
 					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
-					player.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
 					mes(player, "sometimes you will burn food",
 							"As your cooking level increases this will happen less",
 							"Now speak to the cooking instructor again");
@@ -55,12 +56,14 @@ public class ObjectCooking implements UseLocTrigger {
 					mes(player, "Now speak to the cooking instructor again");
 					player.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					player.getCache().set("tutorial", 31);
-					player.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.COOKEDMEAT.id());
+					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.COOKEDMEAT.id()));
 
 				} else {
 					//per-wiki says rest of meats are burned
 					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
-					player.getCarriedItems().getInventory().replace(ItemId.RAW_RAT_MEAT.id(), ItemId.BURNTMEAT.id());
+					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
 				}
 				player.setBusy(false);
 			} else {

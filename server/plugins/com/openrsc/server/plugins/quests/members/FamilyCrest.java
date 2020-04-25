@@ -223,7 +223,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							mes(player, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
-							player.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
+							player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+							player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()));
 							player.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
 							npcsay(player, n,
@@ -378,7 +379,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					if (menu == 0) {
 						mes(player, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
-						player.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
+						player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_CHAOS.id()));
 						player.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
 					} else if (menu == 0) {
 						npcsay(player, n,

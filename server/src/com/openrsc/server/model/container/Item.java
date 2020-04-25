@@ -25,28 +25,11 @@ public class Item implements Comparable<Item> {
 	 */
 	private ItemStatus itemStatus;
 	/**
-	 * Flag for if the item is currently wielded
-	 */
-	private boolean wielded;
-	/**
 	 * The unique number given to each item instance
 	 */
 	private int itemId;
 	//-------------------------------------------------------------------
 	//Class overridden methods--------------------------------------------
-	@Override
-	public Item clone() {
-		Item retVal = new Item(getCatalogId());
-		ItemStatus retStatus = new ItemStatus();
-		retVal.itemId = ITEM_ID_UNASSIGNED;
-		retVal.wielded = this.isWielded();
-		retStatus.setNoted(this.getNoted());
-		retStatus.setAmount(this.getAmount());
-		retStatus.setCatalogId(this.getCatalogId());
-		retStatus.setDurability(this.getItemStatus().getDurability());
-		retVal.itemStatus = retStatus;
-		return retVal;
-	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -96,17 +79,17 @@ public class Item implements Comparable<Item> {
 		database.itemUpdate(this);
 	}
 
-	public void setAmount(GameDatabase database, int amount) throws GameDatabaseException{
+	public void setAmount(GameDatabase database, int amount) throws GameDatabaseException {
 		this.itemStatus.setAmount(amount);
 		database.itemUpdate(this);
 
 	}
 
-	public void changeAmount(GameDatabase database, int delta) throws GameDatabaseException{
+	public void changeAmount(GameDatabase database, int delta) throws GameDatabaseException {
 		setAmount(database, getAmount() + delta);
 	}
 
-	public void setNoted(GameDatabase database, boolean noted) throws GameDatabaseException{
+	public void setNoted(GameDatabase database, boolean noted) throws GameDatabaseException {
 		this.itemStatus.setNoted(noted);
 		database.itemUpdate(this);
 	}
@@ -119,8 +102,9 @@ public class Item implements Comparable<Item> {
 		this.itemStatus = itemStatus;
 	}
 
-	public void setWielded(boolean wielded) {
-		this.wielded = wielded;
+	public void setWielded(GameDatabase database, boolean wielded) throws GameDatabaseException {
+		this.itemStatus.setWielded(wielded);
+		database.itemUpdate(this);
 	}
 	//---------------------------------------------------------------
 	//Class Member Retrievals ----------------------------------------
@@ -143,7 +127,7 @@ public class Item implements Comparable<Item> {
 	public boolean getNoted() { return itemStatus.getNoted(); }
 
 	public boolean isWielded() {
-		return wielded;
+		return itemStatus.isWielded();
 	}
 	//---------------------------------------------------------------
     //Various methods------------------------------------------------

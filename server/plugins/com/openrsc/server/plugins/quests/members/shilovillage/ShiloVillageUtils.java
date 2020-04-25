@@ -99,7 +99,8 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				mes(player, "You see the ground in front of you shake ",
 					"as a shard of bone forces its way to the surface.");
 				player.message("You take the bone shard and place it in your inventory.");
-				player.getCarriedItems().getInventory().replace(ItemId.ZADIMUS_CORPSE.id(), ItemId.BONE_SHARD.id());
+				player.getCarriedItems().remove(new Item(ItemId.ZADIMUS_CORPSE.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_SHARD.id()));
 				if (player.getQuestStage(Quests.SHILO_VILLAGE) == 3) {
 					player.setQuestStage(Quests.SHILO_VILLAGE, 4);
 				}
@@ -402,7 +403,8 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			mes(player, "You successfully craft the beads and Bronze Wire ");
 			player.message("into a necklace which you name, 'Beads of the dead'");
 			player.getCarriedItems().remove(new Item(ItemId.BRONZE_WIRE.id()));
-			player.getCarriedItems().getInventory().replace(ItemId.BONE_BEADS.id(), ItemId.BEADS_OF_THE_DEAD.id());
+			player.getCarriedItems().remove(new Item(ItemId.BONE_BEADS.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BEADS_OF_THE_DEAD.id()));
 		}
 		else if (compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.BONE_SHARD.id())) {
 			if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
@@ -417,7 +419,8 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				mes(player, "Remembering Zadimus' words and the strange bone lock,",
 					"you start to craft the bone.");
 				player.message("You succesfully make a key out of the bone shard.");
-				player.getCarriedItems().getInventory().replace(ItemId.BONE_SHARD.id(), ItemId.BONE_KEY.id());
+				player.getCarriedItems().remove(new Item(ItemId.BONE_SHARD.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_KEY.id()));
 				player.incExp(Skills.CRAFTING, 35, true);
 			} else {
 				mes(player, "You're not quite sure what to make with this.");
@@ -433,7 +436,8 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				"You successfully craft some of the ivory into beads.");
 			player.message("They may look good as part of a necklace.");
 			player.incExp(Skills.CRAFTING, 35, true);
-			player.getCarriedItems().getInventory().replace(ItemId.SWORD_POMMEL.id(), ItemId.BONE_BEADS.id());
+			player.getCarriedItems().remove(new Item(ItemId.SWORD_POMMEL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_BEADS.id()));
 		}
 	}
 

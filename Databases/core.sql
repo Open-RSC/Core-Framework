@@ -167,7 +167,6 @@ CREATE TABLE IF NOT EXISTS `openrsc_invitems`
 (
     `playerID` int(10) UNSIGNED    NOT NULL,
     `itemID`   int(10) UNSIGNED    NOT NULL,
-    `wielded`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `slot`     int(5) UNSIGNED     NOT NULL,
     KEY (`playerID`)
 ) ENGINE = InnoDB
@@ -35884,6 +35883,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses`
     `catalogID`  int(10) UNSIGNED    NOT NULL,
     `amount`     int(10) UNSIGNED    NOT NULL DEFAULT 1,
     `noted`      tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+    `wielded`    tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `durability` int(5) UNSIGNED     NOT NULL DEFAULT 0,
     PRIMARY KEY (`itemID`)
 ) ENGINE = InnoDB

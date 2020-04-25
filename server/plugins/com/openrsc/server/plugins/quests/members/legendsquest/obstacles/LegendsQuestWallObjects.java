@@ -216,7 +216,8 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						if (pourCount >= 4) {
 							player.getCache().remove("douse_flames");
 							player.message("The pure water in the golden bowl has run out...");
-							player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
+							player.getCarriedItems().remove(new Item(item.getCatalogId()));
+							player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 						}
 					}
 					player.message("You quickly walk over the doused flames.");
