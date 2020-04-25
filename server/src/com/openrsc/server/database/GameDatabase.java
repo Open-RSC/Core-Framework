@@ -66,6 +66,14 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract ItemDef[] queryItemDefs() throws GameDatabaseException;
 
+	protected abstract NpcLocation[] queryNpcLocations() throws GameDatabaseException;
+
+	protected abstract SceneryObject[] queryObjects() throws GameDatabaseException;
+
+	protected abstract FloorItem[] queryGroundItems() throws GameDatabaseException;
+
+	protected abstract Integer[] queryInUseItemIds() throws GameDatabaseException;
+
 	protected abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
 
 	protected abstract PlayerLoginData queryPlayerLoginData(String username) throws GameDatabaseException;
@@ -427,6 +435,22 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public ItemDef[] getItemDefs() throws GameDatabaseException {
 		return queryItemDefs();
+	}
+
+	public NpcLocation[] getNpcLocs() throws GameDatabaseException {
+		return queryNpcLocations();
+	}
+
+	public SceneryObject[] getObjects() throws GameDatabaseException {
+		return queryObjects();
+	}
+
+	public FloorItem[] getGroundItems() throws GameDatabaseException {
+		return queryGroundItems();
+	}
+
+	public Integer[] getInUseItemIds() throws GameDatabaseException {
+		return queryInUseItemIds();
 	}
 
 	public int itemCreate(final Item item) throws GameDatabaseException {

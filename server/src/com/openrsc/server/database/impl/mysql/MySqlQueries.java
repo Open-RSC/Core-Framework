@@ -21,6 +21,7 @@ public class MySqlQueries {
 	public final String contactDetails, newContactDetails, updateContactDetails;
 	public final String dropLogSelect, dropLogInsert, dropLogUpdate, npcDefs, npcDrops, itemDefs, banPlayer, unbanPlayer;
 	public final String addNpcSpawn, removeNpcSpawn, addObjectSpawn, removeObjectSpawn, addItemSpawn, removeItemSpawn;
+	public final String objects, npcLocs, groundItems, inUseItemIds;
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
 
@@ -170,6 +171,10 @@ public class MySqlQueries {
 		removeObjectSpawn = "DELETE FROM `" + PREFIX + "objects` WHERE x=? AND y=? AND id=? AND direction=? AND type=?";
 		addItemSpawn = "INSERT INTO `" + PREFIX + "grounditems`(`id`, `x`, `y`, `amount`, `respawn`) VALUES (?, ?, ?, ?, ?)";
 		removeItemSpawn = "DELETE FROM `" + PREFIX + "grounditems` WHERE id=? AND x=? AND y=?";
+		objects = "SELECT `x`, `y`, `id`, `direction`, `type` FROM `" + PREFIX + "objects`";
+		npcLocs = "SELECT `id`, `startX`, `startY`, `minX`, `maxX`, `minY`, `maxY` FROM `" + PREFIX + "npclocs`";
+		groundItems = "SELECT `id`, `x`, `y`, `amount`, `respawn` FROM `" + PREFIX + "grounditems`";
+		inUseItemIds = "SELECT `itemID` FROM `" + PREFIX + "itemstatuses`";
 
 		clans = "SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `clan_points` FROM `" + PREFIX + "clan`";
 		clanMembers = "SELECT `username`, `rank`, `kills`, `deaths` FROM `\" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + \"clan_players` WHERE `clan_id`=?";

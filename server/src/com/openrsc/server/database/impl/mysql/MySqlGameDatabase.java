@@ -293,6 +293,108 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected NpcLocation[] queryNpcLocations() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().npcLocs);
+			final ResultSet result = statement.executeQuery();
+
+			final ArrayList<NpcLocation> npcLocs = new ArrayList<>();
+			try {
+				while (result.next()) {
+					NpcLocation npcLocation = new NpcLocation();
+					npcLocation.id = result.getInt("id");
+					npcLocation.startX = result.getInt("startX");
+					npcLocation.minX = result.getInt("minX");
+					npcLocation.maxX = result.getInt("maxX");
+					npcLocation.startY = result.getInt("startY");
+					npcLocation.minY = result.getInt("minY");
+					npcLocation.maxY = result.getInt("maxY");
+
+					npcLocs.add(npcLocation);
+				}
+				return npcLocs.toArray(new NpcLocation[npcLocs.size()]);
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected SceneryObject[] queryObjects() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().objects);
+			final ResultSet result = statement.executeQuery();
+
+			final ArrayList<SceneryObject> objects = new ArrayList<>();
+			try {
+				while (result.next()) {
+					SceneryObject object = new SceneryObject();
+					object.x = result.getInt("x");
+					object.y = result.getInt("y");
+					object.id = result.getInt("id");
+					object.direction = result.getInt("direction");
+					object.type = result.getInt("type");
+
+					objects.add(object);
+				}
+				return objects.toArray(new SceneryObject[objects.size()]);
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected FloorItem[] queryGroundItems() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().groundItems);
+			final ResultSet result = statement.executeQuery();
+
+			final ArrayList<FloorItem> groundItems = new ArrayList<>();
+			try {
+				while (result.next()) {
+					FloorItem groundItem = new FloorItem();
+					groundItem.id = result.getInt("id");
+					groundItem.x = result.getInt("x");
+					groundItem.y = result.getInt("y");
+					groundItem.amount = result.getInt("amount");
+					groundItem.respawn = result.getInt("respawn");
+
+					groundItems.add(groundItem);
+				}
+				return groundItems.toArray(new FloorItem[groundItems.size()]);
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected Integer[] queryInUseItemIds() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().inUseItemIds);
+			final ResultSet result = statement.executeQuery();
+
+			final ArrayList<Integer> inUseItemIds = new ArrayList<>();
+			while (result.next()) {
+				inUseItemIds.add(result.getInt("itemID"));
+			}
+			return inUseItemIds.toArray(new Integer[inUseItemIds.size()]);
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void queryAddDropLog(ItemDrop drop) throws GameDatabaseException {
 		try {
 			final PreparedStatement statementInsert = getConnection().prepareStatement(getQueries().dropLogInsert);
