@@ -24,9 +24,10 @@ ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `bankNoteID`;
 ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `originalItemID`;
-ALTER TABLE `openrsc_equipped` CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
-ALTER TABLE `openrsc_equipped` DROP COLUMN IF EXISTS `amount`;
-ALTER TABLE `openrsc_equipped` DROP COLUMN IF EXISTS `dbid`;
+
+ALTER TABLE `openrsc_npcdef` DROP COLUMN IF EXISTS `primary_id`;
+ALTER TABLE `openrsc_npcdef` DROP PRIMARY KEY;
+ALTER TABLE `openrsc_npcdef` CHANGE `id` `id` INT(11) NOT NULL, add PRIMARY KEY (`id`);
 
 
 /*
@@ -2391,7 +2392,7 @@ ALTER TABLE `openrsc_itemstatuses`
 
 /*
  * Itemdef replacement
- *  Replaces the itemdef table depending on the database name and if it has not been upgraded yet
+ *  Replaces the itemdef table depending if it has not been upgraded yet
  */
 
 SET @DropTableIfExist =
