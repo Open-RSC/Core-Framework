@@ -51,16 +51,27 @@ rank:
 create:
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "create database ${db};"
 
-# Imports the {db}_game_players.sql and {db}_game_server.sql files to a specified database
-# Call via "make import db=cabbage"
-import:
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/${db}_game_players.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/${db}_game_server.sql
+# Imports the core.sql and custom.sql files to a specified database
+# Call via "make import-core db=preservation"
+import-authentic:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/core.sql
 
-# Upgrades a database with only the {db}_game_server.sql file, not impacting any player save tables
-# Call via "make upgrade db=cabbage"
-upgrade:
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/${db}_game_server.sql
+# Imports the core.sql and custom.sql files to a specified database
+# Call via "make import-custom db=cabbage"
+import-custom:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/core.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/custom.sql
+
+# Upgrades a database
+# Call via "make upgrade-authentic db=preservation"
+upgrade-authentic:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/upgrade_core.sql
+
+# Upgrades a database
+# Call via "make upgrade-custom db=cabbage"
+upgrade-custom:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/upgrade_core.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/upgrade_custom.sql
 
 # Creates a database export of the specified database and saves to the output directory specified in the .env file.  Good for utilizing as a crontab.
 # Call via "make backup db=cabbage"
