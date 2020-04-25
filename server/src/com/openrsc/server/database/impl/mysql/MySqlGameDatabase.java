@@ -1735,7 +1735,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			for (PlayerInventory item : inventory) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
-				statement.setInt(4, item.slot);
+				statement.setInt(3, item.slot);
 				statement.addBatch();
 			}
 			try {
