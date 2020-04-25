@@ -289,8 +289,8 @@ public class Npc extends Mob {
 
 		ActionSender.sendSound(owner, "victory");
 		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
-		owner.incKills2();
-		ActionSender.sendKills2(owner);
+		owner.incnpc_kills();
+		ActionSender.sendnpc_kills(owner);
 
 		//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 		//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.

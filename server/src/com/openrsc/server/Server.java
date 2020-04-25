@@ -363,7 +363,9 @@ public class Server implements Runnable {
 
 	private void saveAndShutdown() {
 		LOGGER.info("Saving players for shutdown...");
-		getWorld().getClanManager().saveClans();
+		if (getConfig().WANT_CLANS) {
+			getWorld().getClanManager().saveClans();
+		}
 		for (Player p : getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}

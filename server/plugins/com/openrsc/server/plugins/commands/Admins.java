@@ -193,13 +193,13 @@ public final class Admins implements CommandTrigger {
 			}
 
 			player.message(messagePrefix + "There is no running Holiday Drop Event");
-		} else if (cmd.equalsIgnoreCase("kills2")) {
+		} else if (cmd.equalsIgnoreCase("npc_kills")) {
 			Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
 			if (targetPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
-			player.message(targetPlayer.getKills2() + "");
+			player.message(targetPlayer.getnpc_kills() + "");
 		}
 		/*else if (cmd.equalsIgnoreCase("fakecrystalchest")) {
 			String loot;
