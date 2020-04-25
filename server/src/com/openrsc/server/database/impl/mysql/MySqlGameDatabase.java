@@ -1310,6 +1310,35 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected ExpiredAuction[] queryCollectibleItems(int playerId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().collectibleItems);
+			statement.setInt(1, playerId);
+			final ResultSet result = statement.executeQuery();
+
+			final ArrayList<ExpiredAuction> expiredAuctions = new ArrayList<>();
+			try {
+				while (result.next()) {
+					ExpiredAuction item = new ExpiredAuction();
+					item.claim_id = result.getInt("claim_id");
+					item.item_id = result.getInt("item_id");
+					item.item_amount = result.getInt("item_amount");
+					item.playerID = result.getInt("playerID");
+					item.explanation = result.getString("explanation");
+
+					expiredAuctions.add(item);
+				}
+				return expiredAuctions.toArray(new ExpiredAuction[expiredAuctions.size()]);
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void queryNewAuction(AuctionItem auctionItem) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().newAuction);
@@ -1381,6 +1410,100 @@ public class MySqlGameDatabase extends GameDatabase {
 			return 0;
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected AuctionItem queryAuctionItem(int auctionId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().auctionItem);
+			statement.setInt(1, auctionId);
+			final ResultSet result = statement.executeQuery();
+
+			final AuctionItem auctionItem = new AuctionItem();
+			try {
+				if (result.next()) {
+					auctionItem.auctionID = result.getInt("auctionID");
+					auctionItem.itemID = result.getInt("itemID");
+					auctionItem.amount = result.getInt("amount");
+					auctionItem.amount_left = result.getInt("amount_left");
+					auctionItem.price = result.getInt("price");
+					auctionItem.seller = result.getInt("seller");
+					auctionItem.seller_username = result.getString("seller_username");
+					auctionItem.buyer_info = result.getString("buyer_info");
+					auctionItem.time = result.getLong("time");
+
+					return auctionItem;
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+			return null;
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected AuctionItem[] queryAuctionItems() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().auctionItems);
+			final ResultSet result = statement.executeQuery();
+
+			final ArrayList<AuctionItem> auctionItems = new ArrayList<>();
+			try {
+				while (result.next()) {
+					AuctionItem auctionItem = new AuctionItem();
+					auctionItem.auctionID = result.getInt("auctionID");
+					auctionItem.itemID = result.getInt("itemID");
+					auctionItem.amount = result.getInt("amount");
+					auctionItem.amount_left = result.getInt("amount_left");
+					auctionItem.price = result.getInt("price");
+					auctionItem.seller = result.getInt("seller");
+					auctionItem.seller_username = result.getString("seller_username");
+					auctionItem.buyer_info = result.getString("buyer_info");
+					auctionItem.time = result.getLong("time");
+
+					auctionItems.add(auctionItem);
+				}
+				return auctionItems.toArray(new AuctionItem[auctionItems.size()]);
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySetSoldOut(final AuctionItem auctionItem) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().auctionSellOut);
+			statement.setInt(1, auctionItem.amount_left);
+			statement.setInt(2, auctionItem.sold_out);
+			statement.setString(3, auctionItem.buyer_info);
+			statement.setInt(4, auctionItem.auctionID);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryUpdateAuction(final AuctionItem auctionItem) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateAuction);
+			statement.setInt(1, auctionItem.amount_left);
+			statement.setInt(2, auctionItem.price);
+			statement.setString(3, auctionItem.buyer_info);
+			statement.setInt(4, auctionItem.auctionID);
+			try{statement.executeUpdate();}
+			finally{statement.close();}
+		} catch (final SQLException e) {
+			throw new GameDatabaseException(this, e.getMessage());
 		}
 	}
 

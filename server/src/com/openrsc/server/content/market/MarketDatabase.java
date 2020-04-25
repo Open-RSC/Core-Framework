@@ -6,9 +6,6 @@ import com.openrsc.server.database.struct.ExpiredAuction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MarketDatabase {
@@ -99,112 +96,82 @@ public class MarketDatabase {
 
 	public MarketItem getAuctionItem(int auctionID) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` WHERE `auctionID`= ? AND `sold-out` = '0'");
-			statement.setInt(1, auctionID);
-
-			ResultSet result = statement.executeQuery();
 			MarketItem retVal = null;
-			try {
-				if (result.next()) {
-					retVal = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
-						result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
-						result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
-				}
-			} finally {
-				statement.close();
-				result.close();
+			AuctionItem auctionItem = getMarket().getWorld().getServer().getDatabase().getAuctionItem(auctionID);
+			if (auctionItem != null) {
+				retVal = new MarketItem(auctionItem.auctionID, auctionItem.itemID, auctionItem.amount,
+					auctionItem.amount_left, auctionItem.price, auctionItem.seller, auctionItem.seller_username,
+					auctionItem.buyer_info, auctionItem.time);
 			}
-
 			return retVal;
-		} catch (SQLException e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return null;
 		}
-		return null;
 	}
 
 	public ArrayList<MarketItem> getAuctionItemsOnSale() {
-		ArrayList<MarketItem> auctionItems = new ArrayList<>();
+		ArrayList<MarketItem> marketItems = new ArrayList<>();
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` WHERE `sold-out`='0'");
-			ResultSet result = statement.executeQuery();
-			try {
-				while (result.next()) {
-					MarketItem auctionItem = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
-						result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
-						result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
-					auctionItems.add(auctionItem);
-				}
-			} finally {
-				statement.close();
-				result.close();
+			AuctionItem auctionItems[] = getMarket().getWorld().getServer().getDatabase().getAuctionItems();
+			for (AuctionItem item : auctionItems) {
+				MarketItem marketItem = new MarketItem(item.auctionID, item.itemID, item.amount, item.amount_left,
+					item.price, item.seller,item.seller_username,item.buyer_info,item.time);
+				marketItems.add(marketItem);
 			}
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
-		return auctionItems;
+		return marketItems;
 	}
 
 	public boolean setSoldOut(MarketItem item) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` SET `amount_left`=?, `sold-out`=?, `buyer_info`=? WHERE `auctionID`=?");
-			statement.setInt(1, item.getAmountLeft());
-			statement.setInt(2, 1);
-			statement.setString(3, item.getBuyers());
-			statement.setInt(4, item.getAuctionID());
-			statement.executeUpdate();
+			AuctionItem auctionItem = new AuctionItem();
+			auctionItem.amount_left = item.getAmountLeft();
+			auctionItem.sold_out = 1;
+			auctionItem.buyer_info = item.getBuyers();
+			auctionItem.auctionID = item.getAuctionID();
+
+			getMarket().getWorld().getServer().getDatabase().setSoldOut(auctionItem);
+
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
 	public boolean update(MarketItem item) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement(
-				"UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` SET `amount_left`=?, `price` = ?, `buyer_info`=? WHERE `auctionID`= ?");
-			statement.setInt(1, item.getAmountLeft());
-			statement.setInt(2, item.getPrice());
-			statement.setString(3, item.getBuyers());
-			statement.setInt(4, item.getAuctionID());
-			try{statement.executeUpdate();}
-			finally{statement.close();}
+			AuctionItem auctionItem = new AuctionItem();
+			auctionItem.amount_left = item.getAmountLeft();
+			auctionItem.price = item.getPrice();
+			auctionItem.buyer_info = item.getBuyers();
+			auctionItem.auctionID = item.getAuctionID();
+
+			getMarket().getWorld().getServer().getDatabase().updateAuction(auctionItem);
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
-	public ArrayList<CollectableItem> getCollectableItemsFor(int player) {
-		ArrayList<CollectableItem> list = new ArrayList<>();
+	public ArrayList<CollectibleItem> getCollectibleItemsFor(int player) {
+		ArrayList<CollectibleItem> list = new ArrayList<>();
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-				+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'");
-			statement.setInt(1, player);
-			ResultSet result = statement.executeQuery();
-			try {
-				while (result.next()) {
-					CollectableItem item = new CollectableItem();
-					item.claim_id = result.getInt("claim_id");
-					item.item_id = result.getInt("item_id");
-					item.item_amount = result.getInt("item_amount");
-					item.playerID = result.getInt("playerID");
-					item.explanation = result.getString("explanation");
-					list.add(item);
-				}
-			} finally {
-				statement.close();
-				result.close();
+			ExpiredAuction expiredAuctions[] = getMarket().getWorld().getServer().getDatabase().getCollectibleItems(player);
+			for (ExpiredAuction collectible : expiredAuctions) {
+				CollectibleItem item = new CollectibleItem();
+				item.claim_id = collectible.claim_id;
+				item.item_id = collectible.item_id;
+				item.item_amount = collectible.item_amount;
+				item.playerID = collectible.playerID;
+				item.explanation = collectible.explanation;
+				list.add(item);
 			}
-		} catch (SQLException e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
 		return list;

@@ -63,7 +63,7 @@ public class Market implements Runnable {
 	}
 
 	public void addCollectableItemsNotificationTask(Player player) {
-		auctionTaskQueue.add(new CollectableItemsNotificationTask(player));
+		auctionTaskQueue.add(new CollectibleItemsNotificationTask(player));
 	}
 
 	public void addPlayerCollectItemsTask(Player player) {

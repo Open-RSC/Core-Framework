@@ -1,6 +1,6 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.content.market.CollectableItem;
+import com.openrsc.server.content.market.CollectibleItem;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -26,7 +26,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		ArrayList<CollectableItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectableItemsFor(player.getDatabaseID());
+		ArrayList<CollectibleItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectibleItemsFor(player.getDatabaseID());
 
 		if (list.size() == 0) {
 			player.message("You have no items to collect.");
@@ -39,7 +39,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 				.prepareStatement("UPDATE `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
 					+ "expired_auctions` SET `claim_time`= '" + System.currentTimeMillis()
 					+ "',`claimed`='1' WHERE `claim_id`=?");
-			for (CollectableItem i : list) {
+			for (CollectibleItem i : list) {
 				Item item = new Item(i.item_id, i.item_amount);
 				if (!player.getBank().canHold(item)) {
 					items.append("@gre@Rest of the items are still held by auctioneer% make more space in bank and claim.");

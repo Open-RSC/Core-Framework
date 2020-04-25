@@ -161,10 +161,15 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	protected abstract void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException;
 
 	protected abstract void queryExpiredAuction(final ExpiredAuction[] expiredAuctions) throws GameDatabaseException;
+	protected abstract ExpiredAuction[] queryCollectibleItems(final int playerId) throws GameDatabaseException;
 	protected abstract void queryNewAuction(final AuctionItem auctionItem) throws GameDatabaseException;
 	protected abstract void queryCancelAuction(final int auctionId) throws GameDatabaseException;
 	protected abstract int queryAuctionCount() throws GameDatabaseException;
 	protected abstract int queryPlayerAuctionCount(final int playerId) throws GameDatabaseException;
+	protected abstract AuctionItem queryAuctionItem(final int auctionId) throws GameDatabaseException;
+	protected abstract AuctionItem[] queryAuctionItems() throws GameDatabaseException;
+	protected abstract void querySetSoldOut(final AuctionItem auctionItem) throws GameDatabaseException;
+	protected abstract void queryUpdateAuction(final AuctionItem auctionItem) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 
@@ -556,6 +561,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		queryExpiredAuction(expiredAuctions);
 	}
 
+	public ExpiredAuction[] getCollectibleItems(final int playerId) throws GameDatabaseException {
+		return queryCollectibleItems(playerId);
+	}
+
 	public void newAuction(final AuctionItem auctionItem) throws GameDatabaseException {
 		queryNewAuction(auctionItem);
 	}
@@ -570,6 +579,22 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public int playerAuctionCount(final int playerId) throws GameDatabaseException {
 		return queryPlayerAuctionCount(playerId);
+	}
+
+	public AuctionItem getAuctionItem(final int auctionId) throws GameDatabaseException {
+		return queryAuctionItem(auctionId);
+	}
+
+	public AuctionItem[] getAuctionItems() throws GameDatabaseException {
+		return queryAuctionItems();
+	}
+
+	public void setSoldOut(AuctionItem auctionItem) throws GameDatabaseException {
+		querySetSoldOut(auctionItem);
+	}
+
+	public void updateAuction(AuctionItem auctionItem) throws GameDatabaseException {
+		queryUpdateAuction(auctionItem);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {
