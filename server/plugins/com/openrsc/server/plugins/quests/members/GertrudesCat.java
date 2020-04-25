@@ -462,13 +462,13 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
-		return i.getCatalogId() == ItemId.KITTENS.id();
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+		return item.getCatalogId() == ItemId.KITTENS.id();
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.KITTENS.id()) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.KITTENS.id()) {
 			mes(player, "you drop the kittens", "they run back to the crate");
 			player.getCarriedItems().remove(new Item(ItemId.KITTENS.id()));
 		}

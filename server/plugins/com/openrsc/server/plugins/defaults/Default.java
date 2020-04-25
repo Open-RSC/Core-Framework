@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.defaults;
 
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,6 +15,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.DefaultHandler;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.Optional;
 
 /**
  * We do not need to block, as everything that is not handled has a default here
@@ -135,33 +138,93 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (fromInventory) {
-			if (player.getCarriedItems().remove(i) < 0) {
-				player.setStatus(Action.IDLE);
-				return;
-			}
-		} else {
-			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(i.getCatalogId());
-			if (slot == -1 || player.getCarriedItems().getEquipment().get(slot).getAmount() != i.getAmount()) {
-				player.setStatus(Action.IDLE);
-				return;
-			}
-			player.getCarriedItems().getEquipment().remove(i, i.getAmount());
-			ActionSender.sendEquipmentStats(player);
-			if (i.getDef(player.getWorld()).getWieldPosition() < 12)
-				player.updateWornItems(i.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(i.getDef(player.getWorld()).getWieldPosition()));
-		}
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		final int finalAmount = item.getAmount(); // Possibly more than 1 for non-stack items, in this situation.
 
-		GroundItem groundItem = new GroundItem(player.getWorld(), i.getCatalogId(), player.getX(), player.getY(), i.getAmount(), player, i.getNoted());
-		ActionSender.sendSound(player, "dropobject");
-		player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 300);
-		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + i.getDef(player.getWorld()).getName() + " x"
-			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
+		// We need to figure out how many times MAX to loop the batch.
+		int slotsOccupiedByItem = player.getCarriedItems().getInventory().countSlotsOccupied(item, finalAmount);
+
+		player.setStatus(Action.DROPPING_GITEM);
+		player.getWorld().getServer().getGameEventHandler().add(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Player Batch Drop", slotsOccupiedByItem, false, true) {
+			int dropCount = 0;
+
+			public void action() {
+				// Player doesn't have the item in their inventory.
+				if (!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// Player moved after queuing up a drop.
+				if (getOwner().hasMoved()) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// We've exceeded the amount we requested to drop.
+				if (dropCount >= finalAmount) {
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// We don't have any more in the inventory to drop.
+				if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId(), Optional.of(item.getNoted()))) ||
+					(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
+					getOwner().message("You don't have the entered amount to drop");
+					stop();
+					getOwner().setStatus(Action.IDLE);
+					return;
+				}
+				// Grab the last item by the ID we are trying to drop.
+				Item i = null;
+				if (fromInventory) {
+					i = getOwner().getCarriedItems().getInventory().get(
+						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
+					);
+				}
+				else {
+					i = getOwner().getCarriedItems().getEquipment().get(
+						getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())
+					);
+				}
+				// Set temporary amount for dropping.
+				Item toDrop = new Item(i.getCatalogId(), Math.min(finalAmount, i.getAmount()), i.getNoted(), i.getItemId());
+
+				if (fromInventory) {
+					if (player.getCarriedItems().remove(toDrop) < 0) {
+						player.setStatus(Action.IDLE);
+						return;
+					}
+				} else {
+					int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(toDrop.getCatalogId());
+					if (slot == -1 || player.getCarriedItems().getEquipment().get(slot).getAmount() != toDrop.getAmount()) {
+						player.setStatus(Action.IDLE);
+						return;
+					}
+					player.getCarriedItems().getEquipment().remove(toDrop, toDrop.getAmount());
+					ActionSender.sendEquipmentStats(player);
+					if (toDrop.getDef(player.getWorld()).getWieldPosition() < 12)
+						player.updateWornItems(toDrop.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(toDrop.getDef(player.getWorld()).getWieldPosition()));
+				}
+
+				GroundItem groundItem = new GroundItem(player.getWorld(), toDrop.getCatalogId(), player.getX(), player.getY(), toDrop.getAmount(), player, toDrop.getNoted());
+				ActionSender.sendSound(player, "dropobject");
+				player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 300);
+				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + toDrop.getDef(player.getWorld()).getName() + " x"
+					+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
+
+				dropCount += toDrop.getAmount();
+
+				if (finalAmount > 1)
+					getOwner().message("Dropped " + Math.min(dropCount, finalAmount) + "/" + finalAmount);
+
+				getOwner().setStatus(Action.IDLE);
+			}
+		});
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
 		return false;
 	}
 

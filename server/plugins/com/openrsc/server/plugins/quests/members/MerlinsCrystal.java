@@ -288,13 +288,13 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
-		return player.getX() == 448 && player.getY() == 435 && i.getCatalogId() == ItemId.BAT_BONES.id()
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+		return player.getX() == 448 && player.getY() == 435 && item.getCatalogId() == ItemId.BAT_BONES.id()
 			&& player.getCache().hasKey("magic_words") && player.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false));
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
 		Npc n = addnpc(player.getWorld(), NpcId.THRANTAX.id(), player.getX(), player.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		player.message("Suddenly a demon appears");

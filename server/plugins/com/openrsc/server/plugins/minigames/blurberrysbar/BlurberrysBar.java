@@ -327,14 +327,14 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || i.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			checkAndRemoveBlurberry(player, true);
 		}
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
 		return false;
 	}
 

@@ -41,13 +41,13 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item i, Boolean fromInventory) {
-		return i.getCatalogId() == ItemId.KITTEN.id();
+	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onDropObj(Player player, Item i, Boolean fromInventory) {
-		if (i.getCatalogId() == ItemId.KITTEN.id()) {
+	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you drop the kitten");
 			mes(player, 0, "it's upset and runs away");
