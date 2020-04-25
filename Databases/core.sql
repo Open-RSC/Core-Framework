@@ -244,6 +244,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_players`
     `offences`          int(11)          NOT NULL    DEFAULT 0,
     `muted`             varchar(255)     NOT NULL    DEFAULT '0',
     `kills`             int(10)          NOT NULL    DEFAULT 0,
+    `npc_kills`            INT(10)          NOT NULL    DEFAULT 0,
     `deaths`            int(10)                      DEFAULT 0,
     `online`            tinyint(1) UNSIGNED ZEROFILL DEFAULT 0,
     `quest_points`      int(5)                       DEFAULT NULL,

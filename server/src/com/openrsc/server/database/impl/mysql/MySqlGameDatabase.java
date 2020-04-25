@@ -442,10 +442,12 @@ public class MySqlGameDatabase extends GameDatabase {
 				playerData.fatigue = result.getInt("fatigue");
 				playerData.kills = result.getInt("kills");
 				playerData.deaths = result.getInt("deaths");
-				playerData.kills2 = result.getInt("kills2");
-				playerData.ironMan = result.getInt("iron_man");
-				playerData.ironManRestriction = result.getInt("iron_man_restriction");
-				playerData.hcIronManDeath = result.getInt("hc_ironman_death");
+				playerData.npc_kills = result.getInt("npc_kills");
+				if (server.getConfig().SPAWN_IRON_MAN_NPCS) {
+					playerData.ironMan = result.getInt("iron_man");
+					playerData.ironManRestriction = result.getInt("iron_man_restriction");
+					playerData.hcIronManDeath = result.getInt("hc_ironman_death");
+				}
 				playerData.questPoints = result.getShort("quest_points");
 
 				playerData.blockChat = result.getInt("block_chat") == 1;
@@ -1393,10 +1395,12 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(5, playerData.fatigue);
 			statement.setInt(6, playerData.kills);
 			statement.setInt(7, playerData.deaths);
-			statement.setInt(8, playerData.kills2);
-			statement.setInt(9, playerData.ironMan);
-			statement.setInt(10, playerData.ironManRestriction);
-			statement.setInt(11, playerData.hcIronManDeath);
+			statement.setInt(8, playerData.npc_kills);
+			if (getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
+				statement.setInt(9, playerData.ironMan);
+				statement.setInt(10, playerData.ironManRestriction);
+				statement.setInt(11, playerData.hcIronManDeath);
+			}
 			statement.setInt(12, playerData.questPoints);
 			statement.setInt(13, playerData.hairColour);
 			statement.setInt(14, playerData.topColour);

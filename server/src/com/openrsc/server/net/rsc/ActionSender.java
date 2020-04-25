@@ -338,10 +338,10 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	public static void sendKills2(Player player) {
+	public static void sendnpc_kills(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_KILLS2.opcode);
-		s.writeShort(player.getKills2());
+		s.setID(Opcode.SEND_NPC_KILLS.opcode);
+		s.writeShort(player.getnpc_kills());
 		player.write(s.toPacket());
 	}
 
@@ -1376,7 +1376,7 @@ public class ActionSender {
 				sendStats(player);
 				sendEquipmentStats(player);
 				sendFatigue(player);
-				sendKills2(player);
+				sendnpc_kills(player);
 
 				sendCombatStyle(player);
 				sendIronManMode(player);
@@ -1652,7 +1652,7 @@ public class ActionSender {
 		SEND_CLAN(112),
 		SEND_PARTY(116),
 		SEND_IRONMAN(113),
-		SEND_KILLS2(147),
+		SEND_NPC_KILLS(147),
 		SEND_FATIGUE(114),
 		SEND_ON_BLACK_HOLE(115),
 		SEND_SLEEPSCREEN(117),

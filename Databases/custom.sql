@@ -22,11 +22,10 @@ ALTER TABLE `openrsc_experience`
 ALTER TABLE `openrsc_players`
     ADD `petfatigue` INT(10) NULL DEFAULT '0' AFTER `fatigue`;
 ALTER TABLE `openrsc_players`
-    ADD `kills2` INT NOT NULL DEFAULT '0' AFTER `kills`;
-ALTER TABLE `openrsc_players`
     ADD `pets` INT(10) NOT NULL DEFAULT '0' AFTER `kills2`;
 ALTER TABLE `openrsc_npcdef`
     ADD `pkBot` tinyint(1) DEFAULT 0;
+
 
 /*
  * New custom player tables section

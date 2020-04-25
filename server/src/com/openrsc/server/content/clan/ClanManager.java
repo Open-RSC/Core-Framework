@@ -51,9 +51,11 @@ public class ClanManager {
 	}
 
 	public void initialize() {
-		LOGGER.info("Loading Clans...");
-		loadClans();
-		LOGGER.info("Loaded " + clans.size() + " clans");
+		if (getWorld().getServer().getConfig().WANT_CLANS) {
+			LOGGER.info("Loading Clans...");
+			loadClans();
+			LOGGER.info("Loaded " + clans.size() + " clans");
+		}
 	}
 
 	public Clan getClan(String exist) {
