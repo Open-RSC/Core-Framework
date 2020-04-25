@@ -1,3 +1,18 @@
+/*
+ * Clean up section
+ * The queries performed in the section will remove depreciated tables and columns
+ */
+
+ALTER TABLE `openrsc_equipped` CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
+ALTER TABLE `openrsc_equipped` DROP COLUMN IF EXISTS `amount`;
+ALTER TABLE `openrsc_equipped` DROP COLUMN IF EXISTS `dbid`;
+
+
+/*
+ * Itemdef additions
+ *  Adds custom items to the itemdef table
+ */
+
 REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
                                `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`,
                                `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`,
