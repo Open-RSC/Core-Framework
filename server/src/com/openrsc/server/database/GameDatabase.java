@@ -293,8 +293,8 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			loadPlayerData(loaded);
 			loadPlayerSkills(loaded);
 			loadPlayerLastRecoveryChangeRequest(loaded);
-			loadPlayerInventory(loaded);
 			loadPlayerEquipment(loaded);
+			loadPlayerInventory(loaded);
 			loadPlayerBank(loaded);
 			loadPlayerBankPresets(loaded);
 			loadPlayerSocial(loaded);

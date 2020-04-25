@@ -45,24 +45,19 @@ public class Inventory {
 	//----------------------------------------------------------------
 	//Constructors----------------------------------------------------
 	public Inventory(Player player, PlayerInventory[] inventory) {
-		try {
-			this.player = player;
-			for (int i = 0; i < inventory.length; i++) {
-				Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
-				ItemDefinition itemDef = item.getDef(player.getWorld());
-				item.setWielded(player.getWorld().getServer().getDatabase(), false);
-				if (item.isWieldable(player.getWorld()) && inventory[i].wielded) {
-					if (itemDef != null) {
-						if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-							item.setWielded(player.getWorld().getServer().getDatabase(), true);
-						list.add(item);
+		this.player = player;
+		for (int i = 0; i < inventory.length; i++) {
+			Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (item.isWieldable(player.getWorld()) && inventory[i].item.isWielded()) {
+				if (itemDef != null) {
+					if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						item.getItemStatus().setWielded(true);
+						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 					}
-					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-				} else
-					list.add(item);
+				}
 			}
-		} catch (GameDatabaseException ex) {
-			ex.printStackTrace();
+			list.add(item);
 		}
 	}
 	//----------------------------------------------------------------

@@ -255,13 +255,17 @@ public class Equipment {
 		if (request.sound)
 			player.playSound("click");
 
-		//Update the look of the player
-		player.updateWornItems(request.item.getDef(player.getWorld()).getWieldPosition(), request.item.getDef(player.getWorld()).getAppearanceId(),
-			request.item.getDef(player.getWorld()).getWearableId(), true);
+		updateClient(request.item.getDef(player.getWorld()));
 
-		//Send new stats / equipment to client
-		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
 		return true;
+	}
+
+	public void updateClient(ItemDefinition item) {
+		// Update the look of the player
+		player.updateWornItems(item.getWieldPosition(), item.getAppearanceId(), item.getWearableId(), true);
+
+		// Send new stats / equipment to client
+		ActionSender.sendEquipmentStats(player, item.getWieldPosition());
 	}
 
 	/**
