@@ -313,6 +313,12 @@ public class Npc extends Mob {
 		}
 
 		ItemDropDef[] drops = def.getDrops();
+		if (drops == null) {
+			// Some enemies have no drops
+			deathListeners.clear();
+			remove();
+			return;
+		}
 
 		// Drops that always occur on every kill
 		int total = 0;
@@ -637,6 +643,7 @@ public class Npc extends Mob {
 			startRespawning();
 			getWorld().removeNpcPosition(this);
 			teleport(0, 0);
+			Npc n = this;
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
 					setRespawning(false);
@@ -648,6 +655,8 @@ public class Npc extends Mob {
 					mageDamagers.clear();
 					rangeDamagers.clear();
 					combatDamagers.clear();
+
+					getWorld().setNpcPosition(n);
 				}
 			});
 			setRespawning(true);
@@ -674,7 +683,7 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		return "[NPC:" + getDef().getName() + "]";
+		return "[NPC:" + getDef().getName() + " @ (" + getX() + ", " + getY() + ") ]";
 	}
 
 	public boolean isPkBot() {

@@ -129,11 +129,21 @@ public class Inventory {
 				// There is no existing stack in the inventory (or the item is not a STACK)
 				if (existingStack == null) {
 
-					// Make sure they have room in the inventory
-					if (list.size() >= MAX_SIZE) return false;
-
 					// TODO: Durability
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted());
+
+					// Make sure they have room in the inventory
+					if (list.size() >= MAX_SIZE) {
+						if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+							player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
+						}
+						player.getWorld().registerItem(
+							new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
+								itemToAdd.getAmount(), player, itemToAdd.getNoted()),
+								player.getWorld().getServer().getConfig().GAME_TICK * 150);
+
+						return false;
+					}
 
 					// Update the server inventory
 					list.add(itemToAdd);
@@ -164,17 +174,24 @@ public class Inventory {
 					// The added items will overflow the stack, create a second stack to hold the remainder.
 					} else {
 
-						// Make sure they have room in the inventory for the second stack.
-						if (list.size() >= MAX_SIZE)
-							return false;
-
-
-						// Update the existing stack amount to max value
-						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
-
 						// Determine how much is left over
 						// TODO: Durability
 						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
+
+						// Make sure they have room in the inventory for the second stack.
+						if (list.size() >= MAX_SIZE) {
+							if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+								player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
+							}
+							player.getWorld().registerItem(
+								new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
+									itemToAdd.getAmount(), player, itemToAdd.getNoted()),
+									player.getWorld().getServer().getConfig().GAME_TICK * 150);
+							return false;
+						}
+
+						// Update the existing stack amount to max value
+						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
 
 						// Update the server inventory
 						list.add(itemToAdd);

@@ -106,6 +106,12 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	protected abstract void queryUpdateClan(final ClanDef clan) throws GameDatabaseException;
 	protected abstract void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException;
 
+	protected abstract void queryExpiredAuction(final ExpiredAuction[] expiredAuctions) throws GameDatabaseException;
+	protected abstract void queryNewAuction(final AuctionItem auctionItem) throws GameDatabaseException;
+	protected abstract void queryCancelAuction(final int auctionId) throws GameDatabaseException;
+	protected abstract int queryAuctionCount() throws GameDatabaseException;
+	protected abstract int queryPlayerAuctionCount(final int playerId) throws GameDatabaseException;
+
 	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
 	protected abstract void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException;
@@ -465,6 +471,26 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 
 	public void updateClanMember(final ClanMember clanMember) throws GameDatabaseException {
 		queryUpdateClanMember(clanMember);
+	}
+
+	public void addExpiredAuction(final ExpiredAuction[] expiredAuctions) throws GameDatabaseException {
+		queryExpiredAuction(expiredAuctions);
+	}
+
+	public void newAuction(final AuctionItem auctionItem) throws GameDatabaseException {
+		queryNewAuction(auctionItem);
+	}
+
+	public void cancelAuction(final int auctionId) throws GameDatabaseException {
+		queryCancelAuction(auctionId);
+	}
+
+	public int auctionCount() throws GameDatabaseException {
+		return queryAuctionCount();
+	}
+
+	public int playerAuctionCount(final int playerId) throws GameDatabaseException {
+		return queryPlayerAuctionCount(playerId);
 	}
 
 	private void loadPlayerData(final Player player) throws GameDatabaseException {

@@ -1828,76 +1828,78 @@ public class PacketHandler {
 			int x = mc.getLocalPlayerX() + packetsIncoming.get16_V2() >> 3;
 			int z = mc.getLocalPlayerZ() + packetsIncoming.get16_V2() >> 3;
 
-			int count = 0;
-			for (int j = 0; j < mc.getGroundItemCount(); ++j) {
-				int var10 = (mc.getGroundItemX(j) >> 3) - x;
-				int var11 = (mc.getGroundItemZ(j) >> 3) - z;
-				if (var10 != 0 || var11 != 0) {
-					if (count != j) {
-						mc.setGroundItemX(count, mc.getGroundItemX(j));
-						mc.setGroundItemZ(count, mc.getGroundItemZ(j));
-						mc.setGroundItemID(count, mc.getGroundItemID(j));
-						mc.setGroundItemHeight(count, mc.getGroundItemHeight(j));
+			int newIndex = 0;
+			for (int oldIndex = 0; oldIndex < mc.getGroundItemCount(); ++oldIndex) {
+				int offsetX = (mc.getGroundItemX(oldIndex) >> 3) - x;
+				int offsetY = (mc.getGroundItemZ(oldIndex) >> 3) - z;
+				if (offsetX != 0 || offsetY != 0) {
+					if (newIndex != oldIndex) {
+						mc.setGroundItemX(newIndex, mc.getGroundItemX(oldIndex));
+						mc.setGroundItemZ(newIndex, mc.getGroundItemZ(oldIndex));
+						mc.setGroundItemID(newIndex, mc.getGroundItemID(oldIndex));
+						mc.setGroundItemHeight(newIndex, mc.getGroundItemHeight(oldIndex));
+						if (Config.S_WANT_BANK_NOTES)
+							mc.setGroundItemNoted(newIndex, mc.getGroundItemNoted(oldIndex));
 					}
 
-					++count;
+					++newIndex;
 				}
 			}
 
-			mc.setGroundItemCount(count);
+			mc.setGroundItemCount(newIndex);
 
 			// Game Object Counts
-			count = 0;
-			for (int j = 0; j < mc.getGameObjectInstanceCount(); ++j) {
-				int var10 = (mc.getGameObjectInstanceX(j) >> 3) - x;
-				int var11 = (mc.getGameObjectInstanceZ(j) >> 3) - z;
+			newIndex = 0;
+			for (int oldIndex = 0; oldIndex < mc.getGameObjectInstanceCount(); ++oldIndex) {
+				int var10 = (mc.getGameObjectInstanceX(oldIndex) >> 3) - x;
+				int var11 = (mc.getGameObjectInstanceZ(oldIndex) >> 3) - z;
 				if (var10 == 0 && var11 == 0) {
-					mc.getScene().removeModel(mc.getGameObjectInstanceModel(j));
+					mc.getScene().removeModel(mc.getGameObjectInstanceModel(oldIndex));
 					mc.getWorld().removeGameObject_CollisonFlags(
-						mc.getGameObjectInstanceID(j),
-						mc.getGameObjectInstanceX(j),
-						mc.getGameObjectInstanceZ(j));
+						mc.getGameObjectInstanceID(oldIndex),
+						mc.getGameObjectInstanceX(oldIndex),
+						mc.getGameObjectInstanceZ(oldIndex));
 				} else {
-					if (j != count) {
-						mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(j));
-						mc.setGameObjectInstanceX(count, mc.getGameObjectInstanceX(j));
-						mc.setGameObjectInstanceZ(count, mc.getGameObjectInstanceZ(j));
-						mc.setGameObjectInstanceID(count, mc.getGameObjectInstanceID(j));
-						mc.setGameObjectInstanceDir(count, mc.getGameObjectInstanceDir(j));
+					if (oldIndex != newIndex) {
+						mc.setGameObjectInstanceModel(newIndex, mc.getGameObjectInstanceModel(oldIndex));
+						mc.setGameObjectInstanceX(newIndex, mc.getGameObjectInstanceX(oldIndex));
+						mc.setGameObjectInstanceZ(newIndex, mc.getGameObjectInstanceZ(oldIndex));
+						mc.setGameObjectInstanceID(newIndex, mc.getGameObjectInstanceID(oldIndex));
+						mc.setGameObjectInstanceDir(newIndex, mc.getGameObjectInstanceDir(oldIndex));
 					}
 
-					++count;
+					++newIndex;
 				}
 			}
 
-			mc.setGameObjectInstanceCount(count);
+			mc.setGameObjectInstanceCount(newIndex);
 
 			// Wall Object Counts
-			count = 0;
-			for (int n = 0; mc.getWallObjectInstanceCount() > n; ++n) {
-				int wallX = (mc.getWallObjectInstanceX(n) >> 3) - x;
-				int wallZ = (mc.getWallObjectInstanceZ(n) >> 3) - z;
+			newIndex = 0;
+			for (int oldIndex = 0; mc.getWallObjectInstanceCount() > oldIndex; ++oldIndex) {
+				int wallX = (mc.getWallObjectInstanceX(oldIndex) >> 3) - x;
+				int wallZ = (mc.getWallObjectInstanceZ(oldIndex) >> 3) - z;
 				if (wallX == 0 && wallZ == 0) {
-					mc.getScene().removeModel(mc.getWallObjectInstanceModel(n));
+					mc.getScene().removeModel(mc.getWallObjectInstanceModel(oldIndex));
 					mc.getWorld().removeWallObject_CollisionFlags(true,
-						mc.getWallObjectInstanceDir(n),
-						mc.getWallObjectInstanceZ(n),
-						mc.getWallObjectInstanceX(n),
-						mc.getWallObjectInstanceID(n));
+						mc.getWallObjectInstanceDir(oldIndex),
+						mc.getWallObjectInstanceZ(oldIndex),
+						mc.getWallObjectInstanceX(oldIndex),
+						mc.getWallObjectInstanceID(oldIndex));
 				} else {
-					if (n != count) {
-						mc.setWallObjectInstanceModel(count, mc.getWallObjectInstanceModel(n));
-						mc.setWallObjectInstanceX(count, mc.getWallObjectInstanceX(n));
-						mc.setWallObjectInstanceZ(count, mc.getWallObjectInstanceZ(n));
-						mc.setWallObjectInstanceDir(count, mc.getWallObjectInstanceDir(n));
-						mc.setWallObjectInstanceID(count, mc.getWallObjectInstanceID(n));
+					if (oldIndex != newIndex) {
+						mc.setWallObjectInstanceModel(newIndex, mc.getWallObjectInstanceModel(oldIndex));
+						mc.setWallObjectInstanceX(newIndex, mc.getWallObjectInstanceX(oldIndex));
+						mc.setWallObjectInstanceZ(newIndex, mc.getWallObjectInstanceZ(oldIndex));
+						mc.setWallObjectInstanceDir(newIndex, mc.getWallObjectInstanceDir(oldIndex));
+						mc.setWallObjectInstanceID(newIndex, mc.getWallObjectInstanceID(oldIndex));
 					}
 
-					++count;
+					++newIndex;
 				}
 			}
 
-			mc.setWallObjectInstanceCount(count);
+			mc.setWallObjectInstanceCount(newIndex);
 		}
 	}
 
@@ -2597,42 +2599,61 @@ public class PacketHandler {
 
 	private void drawGroundItems(int length) {
 		while (length > packetsIncoming.packetEnd) {
+
+			boolean groundItemNoted = false;
+
+			// Ground items that are in range
 			if (packetsIncoming.getUnsignedByte() != 255) {
 				--packetsIncoming.packetEnd;
 				int groundItemID = packetsIncoming.getShort();
-				int var19 = mc.getLocalPlayerX() + packetsIncoming.getByte();
-				int var6 = mc.getLocalPlayerZ() + packetsIncoming.getByte();
+				int groundItemX = mc.getLocalPlayerX() + packetsIncoming.getByte();
+				int groundItemY = mc.getLocalPlayerZ() + packetsIncoming.getByte();
+				if (Config.S_WANT_BANK_NOTES)
+					groundItemNoted = packetsIncoming.getByte() == 1;
+
+				// Currently visible ground items
 				if ((groundItemID & 32768) != 0) {
 					groundItemID &= 32767;
-					int var7 = 0;
 
-					for (int dir = 0; dir < mc.getGroundItemCount(); ++dir) {
-						if (mc.getGroundItemX(dir) == var19 && mc.getGroundItemZ(dir) == var6
-							&& mc.getGroundItemID(dir) == groundItemID) {
+					// Loop through the ground items and check if they need to be reindexed.
+					int newIndex = 0;
+					for (int oldIndex = 0; oldIndex < mc.getGroundItemCount(); ++oldIndex) {
+
+						// No need to reindex if X, Y, and ID are the same.
+						if (mc.getGroundItemX(oldIndex) == groundItemX && mc.getGroundItemZ(oldIndex) == groundItemY
+							&& mc.getGroundItemID(oldIndex) == groundItemID) {
 							groundItemID = -123;
 						} else {
-							if (var7 != dir) {
-								mc.setGroundItemX(var7, mc.getGroundItemX(dir));
-								mc.setGroundItemZ(var7, mc.getGroundItemZ(dir));
-								mc.setGroundItemID(var7, mc.getGroundItemID(dir));
-								mc.setGroundItemHeight(var7, mc.getGroundItemHeight(dir));
+							if (newIndex != oldIndex) {
+								mc.setGroundItemX(newIndex, mc.getGroundItemX(oldIndex));
+								mc.setGroundItemZ(newIndex, mc.getGroundItemZ(oldIndex));
+								mc.setGroundItemID(newIndex, mc.getGroundItemID(oldIndex));
+								mc.setGroundItemHeight(newIndex, mc.getGroundItemHeight(oldIndex));
+								if (Config.S_WANT_BANK_NOTES)
+									mc.setGroundItemNoted(newIndex, mc.getGroundItemNoted(oldIndex));
 							}
 
-							++var7;
+							++newIndex;
 						}
 					}
 
-					mc.setGroundItemCount(var7);
+					// After the above loop, we now have our new count of ground items.
+					mc.setGroundItemCount(newIndex);
 
+				// Currently invisible ground items
 				} else {
-					mc.setGroundItemX(mc.getGroundItemCount(), var19);
-					mc.setGroundItemZ(mc.getGroundItemCount(), var6);
+					mc.setGroundItemX(mc.getGroundItemCount(), groundItemX);
+					mc.setGroundItemZ(mc.getGroundItemCount(), groundItemY);
 					mc.setGroundItemID(mc.getGroundItemCount(), groundItemID);
 					mc.setGroundItemHeight(mc.getGroundItemCount(), 0);
+					if (Config.S_WANT_BANK_NOTES) {
+						mc.setGroundItemNoted(mc.getGroundItemCount(), groundItemNoted);
+					}
 
 					for (int var7 = 0; mc.getGameObjectInstanceCount() > var7; ++var7) {
-						if (mc.getGameObjectInstanceX(var7) == var19
-							&& mc.getGameObjectInstanceZ(var7) == var6) {
+						if (mc.getGameObjectInstanceX(var7) == groundItemX
+							&& mc.getGameObjectInstanceZ(var7) == groundItemY) {
+							// Ground item is on a game object
 							mc.setGroundItemHeight(mc.getGroundItemCount(),
 								com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
 									mc.getGameObjectInstanceID(var7)).getGroundItemVar());
@@ -2643,26 +2664,32 @@ public class PacketHandler {
 					mc.setGroundItemCount(mc.getGroundItemCount() + 1);
 				}
 
+			// Ground items that are not in range.
 			} else {
-				int var4 = 0;
+				int newIndex = 0;
 				int offsetX = mc.getLocalPlayerX() + packetsIncoming.getByte() >> 3;
 				int offsetY = mc.getLocalPlayerZ() + packetsIncoming.getByte() >> 3;
 
-				for (int index = 0; mc.getGroundItemCount() > index; ++index) {
-					int tileX = (mc.getGroundItemX(index) >> 3) - offsetX;
-					int tileY = (mc.getGroundItemZ(index) >> 3) - offsetY;
+				if (Config.S_WANT_BANK_NOTES)
+					groundItemNoted = packetsIncoming.getByte() == 1;
+
+				for (int oldIndex = 0; mc.getGroundItemCount() > oldIndex; ++oldIndex) {
+					int tileX = (mc.getGroundItemX(oldIndex) >> 3) - offsetX;
+					int tileY = (mc.getGroundItemZ(oldIndex) >> 3) - offsetY;
 					if (tileX != 0 || tileY != 0) {
-						if (var4 != index) {
-							mc.setGroundItemX(var4, mc.getGroundItemX(index));
-							mc.setGroundItemZ(var4, mc.getGroundItemZ(index));
-							mc.setGroundItemID(var4, mc.getGroundItemID(index));
-							mc.setGroundItemHeight(var4, mc.getGroundItemHeight(index));
+						if (newIndex != oldIndex) {
+							mc.setGroundItemX(newIndex, mc.getGroundItemX(oldIndex));
+							mc.setGroundItemZ(newIndex, mc.getGroundItemZ(oldIndex));
+							mc.setGroundItemID(newIndex, mc.getGroundItemID(oldIndex));
+							mc.setGroundItemHeight(newIndex, mc.getGroundItemHeight(oldIndex));
+							if (Config.S_WANT_BANK_NOTES)
+								mc.setGroundItemNoted(newIndex, mc.getGroundItemNoted(oldIndex));
 						}
-						++var4;
+						++newIndex;
 					}
 				}
 
-				mc.setGroundItemCount(var4);
+				mc.setGroundItemCount(newIndex);
 			}
 		}
 	}

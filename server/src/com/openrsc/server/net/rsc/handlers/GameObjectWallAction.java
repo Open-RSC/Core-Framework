@@ -35,7 +35,11 @@ public class GameObjectWallAction implements PacketHandler {
 				DoorDef def = object.getDoorDef();
 				if (getPlayer().isBusy() || getPlayer().isRanging() || def == null
 					|| getPlayer().getStatus() != Action.USING_DOOR) {
-					getPlayer().message("NULL");
+					/*getPlayer().message(
+						"Busy: " + getPlayer().isBusy() +
+						" Ranging: " + getPlayer().isRanging() +
+						" Status: " + getPlayer().getStatus()
+					);*/
 					return;
 				}
 
