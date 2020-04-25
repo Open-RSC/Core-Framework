@@ -30,6 +30,7 @@ ALTER TABLE `openrsc_npcdef` CHANGE `primary_id` `primary_id` INT(11) NOT NULL;
 ALTER TABLE `openrsc`.`openrsc_npcdef` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`) USING BTREE;
 ALTER TABLE `openrsc_npcdef` DROP `primary_id`;
 ALTER TABLE `openrsc_players` CHANGE `kills2` `npc_kills` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `openrsc_itemdef` ADD `isNoteable` TINYINT(2) NOT NULL AFTER `basePrice`;
 
 
 /*
