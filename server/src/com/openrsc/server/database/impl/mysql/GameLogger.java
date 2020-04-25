@@ -1,8 +1,8 @@
-package com.openrsc.server.database;
+package com.openrsc.server.database.impl.mysql;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
-import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.impl.mysql.queries.Query;
 import com.openrsc.server.database.impl.mysql.queries.ResultQuery;
 import org.apache.logging.log4j.LogManager;
