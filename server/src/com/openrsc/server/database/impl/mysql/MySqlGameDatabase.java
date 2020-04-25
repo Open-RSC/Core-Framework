@@ -205,8 +205,9 @@ public class MySqlGameDatabase extends GameDatabase {
 					def.combatModel = result.getInt("combatModel");
 					def.combatSprite = result.getInt("combatSprite");
 					def.roundMode = result.getInt("roundMode");
-					def.pkBot = result.getBoolean("pkBot");
-
+					if (server.getConfig().WANT_PK_BOTS) {
+						def.pkBot = result.getBoolean("pkBot");
+					}
 					npcs.add(def);
 				}
 			} finally {
@@ -255,7 +256,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			final ArrayList<ItemDef> itemDefs = new ArrayList<>();
 
 			try {
-				while(result.next()) {
+				while (result.next()) {
 					ItemDef item = new ItemDef();
 					item.id = result.getInt("id");
 					item.name = result.getString("name");
@@ -351,8 +352,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setLong(4, System.currentTimeMillis() / 1000);
 			statement.setString(5, ip);
 
-			try {statement.executeUpdate();}
-			finally {statement.close();}
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -833,7 +837,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(1, playerId);
 			final ResultSet result = statement.executeQuery();
 			try {
-				if(!result.next()) {
+				if (!result.next()) {
 					result.close();
 				}
 				returnVal = result.getString("previous_pass");
@@ -948,7 +952,7 @@ public class MySqlGameDatabase extends GameDatabase {
 					recoveryQuestions.question4 = resultSet.getString("question4");
 					recoveryQuestions.question5 = resultSet.getString("question5");
 					for (int i = 0; i < 5; i++) {
-						recoveryQuestions.answers[i] = resultSet.getString("answer" + (i+1));
+						recoveryQuestions.answers[i] = resultSet.getString("answer" + (i + 1));
 					}
 					recoveryQuestions.dateSet = resultSet.getInt("date_set");
 					recoveryQuestions.ipSet = resultSet.getString("ip_set");
@@ -980,12 +984,15 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setString(7, recoveryQuestions.question4);
 			statement.setString(8, recoveryQuestions.question5);
 			for (int i = 0; i < recoveryQuestions.answers.length; i++) {
-				statement.setString(i+9, recoveryQuestions.answers[i]);
+				statement.setString(i + 9, recoveryQuestions.answers[i]);
 			}
 			statement.setLong(14, recoveryQuestions.dateSet);
 			statement.setString(15, recoveryQuestions.ipSet);
-			try { statement.executeUpdate(); }
-			finally { statement.close(); }
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1020,8 +1027,11 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().cancelRecoveryChangeRequest);
 			statement.setInt(1, playerId);
-			try { statement.executeUpdate(); }
-			finally { statement.close(); }
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1069,8 +1079,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setString(6, contactDetails.email);
 			statement.setLong(7, contactDetails.dateModified);
 			statement.setString(8, contactDetails.ip);
-			try { statement.executeUpdate(); }
-			finally { statement.close(); }
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1087,8 +1100,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setLong(5, contactDetails.dateModified);
 			statement.setString(6, contactDetails.ip);
 			statement.setInt(7, playerId);
-			try { statement.executeUpdate(); }
-			finally { statement.close(); }
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1191,8 +1207,11 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setInt(5, clanMember.deaths);
 				statement.addBatch();
 			}
-			try { statement.executeBatch(); }
-			finally { statement.close(); }
+			try {
+				statement.executeBatch();
+			} finally {
+				statement.close();
+			}
 
 		} catch (SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1205,8 +1224,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().deleteClan);
 			statement.setInt(1, clanId);
 
-			try {statement.executeUpdate();}
-			finally {statement.close();}
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1218,8 +1240,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().deleteClanMembers);
 			statement.setInt(1, clanId);
 
-			try {statement.executeUpdate();}
-			finally {statement.close();}
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1237,8 +1262,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(6, clan.allow_search_join);
 			statement.setInt(7, clan.clan_points);
 			statement.setInt(8, clan.id);
-			try {statement.executeUpdate();}
-			finally {statement.close();}
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException e) {
 			throw new GameDatabaseException(this, e.getMessage());
 		}
@@ -1250,8 +1278,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateClanMember);
 			statement.setInt(1, clanMember.rank);
 			statement.setString(2, clanMember.username);
-			try {statement.executeUpdate();}
-			finally {statement.close();}
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException e) {
 			throw new GameDatabaseException(this, e.getMessage());
 		}
@@ -1438,8 +1469,11 @@ public class MySqlGameDatabase extends GameDatabase {
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().playerLastRecoveryTryId);
 			statement.setInt(1, lastRecoveryTryId);
 			statement.setInt(2, playerId);
-			try { statement.executeUpdate(); }
-			finally { statement.close(); }
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
@@ -1523,7 +1557,8 @@ public class MySqlGameDatabase extends GameDatabase {
 					for (int i = 0; i < BankPreset.PRESET_COUNT; ++i) {
 						removeStatement.setInt(1, playerId);
 						removeStatement.setInt(2, i);
-						removeStatement.addBatch();;
+						removeStatement.addBatch();
+						;
 					}
 					removeStatement.executeBatch();
 				} finally {
@@ -1732,6 +1767,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}
+
 	@Override
 	protected int queryItemCreate(Item item) throws GameDatabaseException {
 		try {
@@ -1744,7 +1780,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 				ResultSet rs = statement.getGeneratedKeys();
 				int itemId = -1;
-				if(rs.next()) itemId = rs.getInt(1);
+				if (rs.next()) itemId = rs.getInt(1);
 				rs.close();
 				return itemId;
 			} finally {
@@ -1755,6 +1791,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 	}
+
 	@Override
 	protected void queryItemPurge(final Item item) throws GameDatabaseException {
 		try {
@@ -1820,6 +1857,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		}
 	}
+
 	@Override
 	protected void queryInventoryRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
@@ -1839,6 +1877,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		}
 	}
+
 	@Override
 	protected void queryEquipmentAdd(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
@@ -1905,6 +1944,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		}
 	}
+
 	@Override
 	protected void queryBankRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {

@@ -32,7 +32,7 @@ public abstract class GameDatabase extends GameDatabaseQueries{
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final Server server;
+	public final Server server;
 	private volatile Boolean open;
 
 	public GameDatabase(final Server server) {
