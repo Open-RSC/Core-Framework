@@ -24,10 +24,11 @@ ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `bankNoteID`;
 ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `originalItemID`;
-
-ALTER TABLE `openrsc_npcdef` DROP COLUMN IF EXISTS `primary_id`;
-ALTER TABLE `openrsc_npcdef` DROP PRIMARY KEY;
-ALTER TABLE `openrsc_npcdef` CHANGE `id` `id` INT(11) NOT NULL, add PRIMARY KEY (`id`);
+ALTER TABLE `openrsc_npcdef`
+    DROP COLUMN IF EXISTS `pkBot`;
+ALTER TABLE `openrsc_npcdef` CHANGE `primary_id` `primary_id` INT(11) NOT NULL;
+ALTER TABLE `openrsc`.`openrsc_npcdef` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`) USING BTREE;
+ALTER TABLE `openrsc_npcdef` DROP `primary_id`;
 
 
 /*
