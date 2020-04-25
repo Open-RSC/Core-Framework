@@ -1470,7 +1470,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 							player.message("You need something to put the flour in");
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.POT.id(), Optional.of(false))) {
 							player.message("You take some flour from the barrel");
-							player.getCarriedItems().getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
+							player.getCarriedItems().remove(new Item(ItemId.POT.id()));
+							player.getCarriedItems().getInventory().add(new Item(ItemId.POT_OF_FLOUR.id()));
 
 							player.message("Theres still plenty of flour left");
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
@@ -1544,14 +1545,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		if (compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle a small amount of flour on the murderweapon");
 			player.message("the murderweapon is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER.id(), ItemId.A_SILVER_DAGGER_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.A_SILVER_DAGGER.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.A_SILVER_DAGGER_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the floury dagger");
 			player.message("You have a clean impression of the murderers finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.A_SILVER_DAGGER_FLOUR.id(), ItemId.A_SILVER_DAGGER.id());
+			player.getCarriedItems().remove(new Item(ItemId.A_SILVER_DAGGER_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.A_SILVER_DAGGER.id()));
 			give(player, ItemId.UNIDENTIFIED_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1559,14 +1563,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle the flour on Annas Necklace");
 			player.message("the necklace is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.ANNAS_SILVER_NECKLACE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the flour covered Necklace");
 			player.message("You have a clean impression of Annas finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id(), ItemId.ANNAS_SILVER_NECKLACE.id());
+			player.getCarriedItems().remove(new Item(ItemId.ANNAS_SILVER_NECKLACE_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.ANNAS_SILVER_NECKLACE.id()));
 			give(player, ItemId.ANNAS_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1574,14 +1581,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle the flour on Bobs Cup");
 			player.message("the cup is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP.id(), ItemId.BOBS_SILVER_TEACUP_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.BOBS_SILVER_TEACUP.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BOBS_SILVER_TEACUP_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the flour covered Cup");
 			player.message("You have a clean impression of Bobs finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.BOBS_SILVER_TEACUP_FLOUR.id(), ItemId.BOBS_SILVER_TEACUP.id());
+			player.getCarriedItems().remove(new Item(ItemId.BOBS_SILVER_TEACUP_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BOBS_SILVER_TEACUP.id()));
 			give(player, ItemId.BOBS_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1589,14 +1599,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle the flour on Carols Bottle");
 			player.message("the bottle is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE.id(), ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.CAROLS_SILVER_BOTTLE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the flour covered Bottle");
 			player.message("You have a clean impression of Carols finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id(), ItemId.CAROLS_SILVER_BOTTLE.id());
+			player.getCarriedItems().remove(new Item(ItemId.CAROLS_SILVER_BOTTLE_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.CAROLS_SILVER_BOTTLE.id()));
 			give(player, ItemId.CAROLS_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1604,14 +1617,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle the flour on Davids Book");
 			player.message("the book is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK.id(), ItemId.DAVIDS_SILVER_BOOK_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.DAVIDS_SILVER_BOOK.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the flour covered Book");
 			player.message("You have a clean impression of Davids finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id(), ItemId.DAVIDS_SILVER_BOOK.id());
+			player.getCarriedItems().remove(new Item(ItemId.DAVIDS_SILVER_BOOK_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.DAVIDS_SILVER_BOOK.id()));
 			give(player, ItemId.DAVIDS_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1619,14 +1635,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle the flour on Elizabeths Needle");
 			player.message("the needle is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE.id(), ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.ELIZABETHS_SILVER_NEEDLE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the flour covered Needle");
 			player.message("You have a clean impression of Elizabeths finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id(), ItemId.ELIZABETHS_SILVER_NEEDLE.id());
+			player.getCarriedItems().remove(new Item(ItemId.ELIZABETHS_SILVER_NEEDLE_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.ELIZABETHS_SILVER_NEEDLE.id()));
 			give(player, ItemId.ELIZABETHS_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1634,14 +1653,17 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle the flour on Franks Pot");
 			player.message("the pot is now coated with a thin layer of flour");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
-			player.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT.id(), ItemId.FRANKS_SILVER_POT_FLOUR.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+			player.getCarriedItems().remove(new Item(ItemId.FRANKS_SILVER_POT.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.FRANKS_SILVER_POT_FLOUR.id()));
 
 		}
 		else if (compareItemsIds(item1, item2, ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FLYPAPER.id())) {
 			player.message("You use the flypaper on the flour covered Pot");
 			player.message("You have a clean impression of Franks finger prints");
-			player.getCarriedItems().getInventory().replace(ItemId.FRANKS_SILVER_POT_FLOUR.id(), ItemId.FRANKS_SILVER_POT.id());
+			player.getCarriedItems().remove(new Item(ItemId.FRANKS_SILVER_POT_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.FRANKS_SILVER_POT.id()));
 			give(player, ItemId.FRANKS_FINGERPRINT.id(), 1);
 			player.getCarriedItems().remove(new Item(ItemId.FLYPAPER.id()));
 
@@ -1649,7 +1671,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 		else if (compareItemsIds(item1, item2, ItemId.MURDER_SCENE_POT.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle a small amount of flour on the strange smelling pot");
 			player.message("The surface isn't shiny enough to take a fingerprint from");
-			player.getCarriedItems().getInventory().replace(ItemId.POT_OF_FLOUR.id(), ItemId.POT.id());
+			player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
 
 		}
 		else if ((item1.getCatalogId() == ItemId.UNIDENTIFIED_FINGERPRINT.id() &&
@@ -1661,7 +1684,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			if (item1.getCatalogId() == ItemId.DAVIDS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.DAVIDS_FINGERPRINT.id()) {
 				if (player.getCache().hasKey("murder_david")) {
 					player.message("The fingerprints are an exact match to Davids");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_FINGERPRINT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.MURDERERS_FINGERPRINT.id()));
 					if (!player.getCache().hasKey("culprit"))
 						player.getCache().store("culprit", true);
 				} else {
@@ -1674,7 +1698,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			} else if (item1.getCatalogId() == ItemId.BOBS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.BOBS_FINGERPRINT.id()) {
 				if (player.getCache().hasKey("murder_bob")) {
 					player.message("The fingerprints are an exact match to Bobs");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_FINGERPRINT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.MURDERERS_FINGERPRINT.id()));
 					if (!player.getCache().hasKey("culprit"))
 						player.getCache().store("culprit", true);
 				} else {
@@ -1687,7 +1712,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			} else if (item1.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id()) {
 				if (player.getCache().hasKey("murder_eliz")) {
 					player.message("The fingerprints are an exact match to Elizabeths");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_FINGERPRINT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.MURDERERS_FINGERPRINT.id()));
 					if (!player.getCache().hasKey("culprit"))
 						player.getCache().store("culprit", true);
 				} else {
@@ -1700,7 +1726,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			} else if (item1.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id()) {
 				if (player.getCache().hasKey("murder_anna")) {
 					player.message("The fingerprints are an exact match to Annas");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_FINGERPRINT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.MURDERERS_FINGERPRINT.id()));
 					if (!player.getCache().hasKey("culprit"))
 						player.getCache().store("culprit", true);
 				} else {
@@ -1713,7 +1740,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			} else if (item1.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id()) {
 				if (player.getCache().hasKey("murder_carol")) {
 					player.message("The fingerprints are an exact match to Carols");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_FINGERPRINT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.MURDERERS_FINGERPRINT.id()));
 					if (!player.getCache().hasKey("culprit"))
 						player.getCache().store("culprit", true);
 				} else {
@@ -1726,7 +1754,8 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			} else if (item1.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id()) {
 				if (player.getCache().hasKey("murder_frank")) {
 					player.message("The fingerprints are an exact match to Franks");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_FINGERPRINT.id(), ItemId.MURDERERS_FINGERPRINT.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_FINGERPRINT.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.MURDERERS_FINGERPRINT.id()));
 					if (!player.getCache().hasKey("culprit"))
 						player.getCache().store("culprit", true);
 				} else {

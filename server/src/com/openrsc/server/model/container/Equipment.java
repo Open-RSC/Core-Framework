@@ -153,49 +153,54 @@ public class Equipment {
 			return false;
 		}
 
-		switch (request.requestType) {
-			case FROM_INVENTORY:
-				request.item.setWielded(false);
-				break;
-			case FROM_EQUIPMENT:
-				synchronized (list) {
-					synchronized (player) {
-						//Can't unequip something if inventory is full
-						if (player.getCarriedItems().getInventory().full()) {
-							player.message("You need more inventory space to unequip that.");
-							return false;
-						}
-						if (remove(request.item, request.item.getAmount()) == -1)
-							return false;
-						request.item.setWielded(false);
-						player.getCarriedItems().getInventory().add(request.item, true);
+		try {
+			switch (request.requestType) {
+				case FROM_INVENTORY:
+					request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+					break;
+				case FROM_EQUIPMENT:
+					synchronized (list) {
+						synchronized (player) {
+							//Can't unequip something if inventory is full
+							if (player.getCarriedItems().getInventory().full()) {
+								player.message("You need more inventory space to unequip that.");
+								return false;
+							}
+							if (remove(request.item, request.item.getAmount()) == -1)
+								return false;
+							request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+							player.getCarriedItems().getInventory().add(request.item, true);
 
-					}
-				}
-				break;
-			case FROM_BANK:
-				synchronized (list) {
-					synchronized (player.getBank().getItems()) {
-						//Can't unequip something if bank is full
-						if (player.getBank().full()) {
-							player.message("You need more inventory space to unequip that.");
-							return false;
 						}
-						if (remove(request.item, request.item.getAmount()) == -1)
-							return false;
-						request.item.setWielded(false);
-						player.getBank().add(request.item);
-						ActionSender.showBank(player);
 					}
-				}
-				break;
-			case CHECK_IF_EQUIPMENT_TAB:
-				if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-					request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
-				} else {
-					request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
-				}
-				return unequipItem(request);
+					break;
+				case FROM_BANK:
+					synchronized (list) {
+						synchronized (player.getBank().getItems()) {
+							//Can't unequip something if bank is full
+							if (player.getBank().full()) {
+								player.message("You need more inventory space to unequip that.");
+								return false;
+							}
+							if (remove(request.item, request.item.getAmount()) == -1)
+								return false;
+							request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+							player.getBank().add(request.item);
+							ActionSender.showBank(player);
+						}
+					}
+					break;
+				case CHECK_IF_EQUIPMENT_TAB:
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
+					} else {
+						request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
+					}
+					return unequipItem(request);
+			}
+		}
+		catch (GameDatabaseException e) {
+			LOGGER.error(e);
 		}
 
 		if (request.sound) {
@@ -280,7 +285,12 @@ public class Equipment {
 				add(request.item);
 
 			} else { //On a world without equipment tab
-				request.item.setWielded(true);
+				try {
+					request.item.setWielded(player.getWorld().getServer().getDatabase(), true);
+				}
+				catch (GameDatabaseException e) {
+					LOGGER.error(e);
+				}
 			}
 
 		}

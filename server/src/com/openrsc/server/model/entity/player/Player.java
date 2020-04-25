@@ -11,6 +11,7 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
@@ -905,7 +906,12 @@ public final class Player extends Mob {
 				}
 
 				if (unWield) {
-					item.setWielded(false);
+					try {
+						item.setWielded(getWorld().getServer().getDatabase(), false);
+					}
+					catch (GameDatabaseException e) {
+						LOGGER.error(e);
+					}
 					updateWornItems(item.getDef(getWorld()).getWieldPosition(),
 						getSettings().getAppearance().getSprite(item.getDef(getWorld()).getWieldPosition()),
 						item.getDef(getWorld()).getWearableId(), false);

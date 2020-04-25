@@ -35,10 +35,12 @@ public class GnomeSlice implements UseInvTrigger {
 				"dice orange");
 			if (menu == 0) {
 				player.message("you slice the orange");
-				player.getCarriedItems().getInventory().replace(ItemId.ORANGE.id(), ItemId.ORANGE_SLICES.id());
+				player.getCarriedItems().remove(new Item(ItemId.ORANGE.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.ORANGE_SLICES.id()));
 			} else if (menu == 1) {
 				player.message("you cut the orange into chunks");
-				player.getCarriedItems().getInventory().replace(ItemId.ORANGE.id(), ItemId.DICED_ORANGE.id());
+				player.getCarriedItems().remove(new Item(ItemId.ORANGE.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.DICED_ORANGE.id()));
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LIME.id())) {
@@ -48,10 +50,12 @@ public class GnomeSlice implements UseInvTrigger {
 				"dice lime");
 			if (menu == 0) {
 				player.message("you slice the lime");
-				player.getCarriedItems().getInventory().replace(ItemId.LIME.id(), ItemId.LIME_SLICES.id());
+				player.getCarriedItems().remove(new Item(ItemId.LIME.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.LIME_SLICES.id()));
 			} else if (menu == 1) {
 				player.message("you cut the lime into chunks");
-				player.getCarriedItems().getInventory().replace(ItemId.LIME.id(), ItemId.LIME_CHUNKS.id());
+				player.getCarriedItems().remove(new Item(ItemId.LIME.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.LIME_CHUNKS.id()));
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.PINEAPPLE.id()) ||
@@ -68,11 +72,13 @@ public class GnomeSlice implements UseInvTrigger {
 				"dice pineapple");
 			if (menu == 0) {
 				player.message("you slice the pineapple into rings");
-				player.getCarriedItems().getInventory().replace(pineappleId, ItemId.PINEAPPLE_RING.id());
+				player.getCarriedItems().remove(new Item(pineappleId));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.PINEAPPLE_RING.id()));
 				give(player, ItemId.PINEAPPLE_RING.id(), 3);
 			} else if (menu == 1) {
 				player.message("you cut the pineapple into chunks");
-				player.getCarriedItems().getInventory().replace(pineappleId, ItemId.PINEAPPLE_CHUNKS.id());
+				player.getCarriedItems().remove(new Item(pineappleId));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.PINEAPPLE_CHUNKS.id()));
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LEMON.id())) {
@@ -82,10 +88,12 @@ public class GnomeSlice implements UseInvTrigger {
 				"dice lemon");
 			if (menu == 0) {
 				player.message("you slice the lemon");
-				player.getCarriedItems().getInventory().replace(ItemId.LEMON.id(), ItemId.LEMON_SLICES.id());
+				player.getCarriedItems().remove(new Item(ItemId.LEMON.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.LEMON_SLICES.id()));
 			} else if (menu == 1) {
 				player.message("you cut the lemon into chunks");
-				player.getCarriedItems().getInventory().replace(ItemId.LEMON.id(), ItemId.DICED_LEMON.id());
+				player.getCarriedItems().remove(new Item(ItemId.LEMON.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.DICED_LEMON.id()));
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.GRAPEFRUIT.id())) {
@@ -95,10 +103,12 @@ public class GnomeSlice implements UseInvTrigger {
 				"dice grapefruit");
 			if (menu == 0) {
 				player.message("you slice the grapefruit");
-				player.getCarriedItems().getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.GRAPEFRUIT_SLICES.id());
+				player.getCarriedItems().remove(new Item(ItemId.GRAPEFRUIT.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.GRAPEFRUIT_SLICES.id()));
 			} else if (menu == 1) {
 				player.message("you cut the grapefruit into chunks");
-				player.getCarriedItems().getInventory().replace(ItemId.GRAPEFRUIT.id(), ItemId.DICED_GRAPEFRUIT.id());
+				player.getCarriedItems().remove(new Item(ItemId.GRAPEFRUIT.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.DICED_GRAPEFRUIT.id()));
 			}
 		}
 	}

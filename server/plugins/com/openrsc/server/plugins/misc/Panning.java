@@ -49,7 +49,8 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		delay(1500);
 		thinkbubble(player, new Item(ItemId.PANNING_TRAY_FULL.id()));
 		player.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
-		player.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY.id(), ItemId.PANNING_TRAY_FULL.id());
+		player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY.id()));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY_FULL.id()));
 		player.incExp(Skills.MINING, 20, true);
 		player.setBusy(false);
 		return false;
@@ -169,7 +170,8 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			} else if (randomNumber < 100) { // 10%
 				addItem = ItemId.UNCUT_SAPPHIRE.id();
 			}
-			player.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_FULL.id(), ItemId.PANNING_TRAY.id());
+			player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY_FULL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY.id()));
 			if (addItem != -1) {
 				if (addItem == ItemId.COINS.id()) {
 					player.playerServerMessage(MessageType.QUEST, "You find some coins within the mud");
@@ -186,7 +188,8 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			}
 			player.setBusy(false);
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
-			player.getCarriedItems().getInventory().replace(ItemId.PANNING_TRAY_GOLD_NUGGET.id(), ItemId.PANNING_TRAY.id());
+			player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY_GOLD_NUGGET.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY.id()));
 			give(player, ItemId.GOLD_NUGGETS.id(), 1);
 			player.message("You take the gold form the panning tray");
 			player.message("You have a handful of gold nuggets");

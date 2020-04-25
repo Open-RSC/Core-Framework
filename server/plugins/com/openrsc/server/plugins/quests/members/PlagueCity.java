@@ -787,7 +787,8 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						mes(player, "you poor the water onto the soil",
 							"the soil softens slightly");
 					}
-					player.getCarriedItems().getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
+					player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 					BUCKETS_USED++;
 				} else {
 					player.message("You see no reason to do that at the moment");

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.skills.crafting;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -24,6 +25,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -697,7 +699,7 @@ public class Crafting implements UseInvTrigger,
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Glass Blowing", player.getCarriedItems().getInventory().countId(glass.getCatalogId()), false) {
 			@Override
 			public void action() {
-				final Item resultClone = result.clone();
+				final Item resultClone = new Item(result.getCatalogId(), result.getAmount());
 				Player owner = getOwner();
 				Inventory inventory = owner.getCarriedItems().getInventory();
 				ServerConfiguration config = getWorld().getServer().getConfig();
@@ -732,7 +734,12 @@ public class Crafting implements UseInvTrigger,
 							message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
 							resultClone.getItemStatus().setAmount(amnt);
 							if (owner.getLocation().inBounds(418, 559, 421,563)) {
-								resultClone.getItemStatus().setNoted(true);
+								try {
+									resultClone.setNoted(owner.getWorld().getServer().getDatabase(), true);
+								}
+								catch (GameDatabaseException e) {
+									System.out.println(e.getMessage());
+								}
 							}
 						}
 					}

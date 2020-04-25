@@ -23,7 +23,8 @@ public class SwampToads implements TakeObjTrigger, OpInvTrigger {
 		if (item.getCatalogId() == ItemId.SWAMP_TOAD.id()) {
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you pull the legs off the toad");
 			player.message("poor toad..at least they'll grow back");
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.TOAD_LEGS.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.TOAD_LEGS.id()));
 		}
 	}
 

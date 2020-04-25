@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -91,7 +92,8 @@ public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, Atta
 				npcsay(player, n, "Take challenge with me is useless for I am impervious to your attack",
 					"Take your fight to someone else, and maybe then get back on track.");
 			} else {
-				player.getCarriedItems().getInventory().replace(ItemId.DARK_DAGGER.id(), ItemId.GLOWING_DARK_DAGGER.id());
+				player.getCarriedItems().remove(new Item(ItemId.DARK_DAGGER.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.GLOWING_DARK_DAGGER.id()));
 				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You thrust the Dark Dagger at Viyeldi...");
 				npcsay(player, n, "So, you have fallen for the foul one's trick...");
 				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hit Viyeldi squarely with the Dagger .");

@@ -1029,9 +1029,15 @@ public final class Admins implements CommandTrigger {
 			for (; iterator.hasNext(); ) {
 				Item i = iterator.next();
 				if (i.isWielded()) {
-					i.setWielded(false);
-					targetPlayer.updateWornItems(i.getDef(targetPlayer.getWorld()).getWieldPosition(), i.getDef(targetPlayer.getWorld()).getAppearanceId(),
+					try {
+						i.setWielded(player.getWorld().getServer().getDatabase(), false);
+						;
+						targetPlayer.updateWornItems(i.getDef(targetPlayer.getWorld()).getWieldPosition(), i.getDef(targetPlayer.getWorld()).getAppearanceId(),
 							i.getDef(targetPlayer.getWorld()).getWearableId(), false);
+					}
+					catch (GameDatabaseException e) {
+						LOGGER.error(e);
+					}
 				}
 				iterator.remove();
 			}

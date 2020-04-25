@@ -492,11 +492,11 @@ public class MySqlGameDatabase extends GameDatabase {
 				while (result.next()) {
 					PlayerInventory invItem = new PlayerInventory();
 					invItem.itemId = result.getInt("itemId");
-					invItem.wielded = result.getInt("wielded") == 1;
 					invItem.slot = result.getInt("slot");
 					invItem.item = new Item(result.getInt("catalogId"));
 					invItem.item.getItemStatus().setAmount(result.getInt("amount"));
 					invItem.item.getItemStatus().setNoted(result.getInt("noted") == 1);
+					invItem.item.getItemStatus().setWielded(result.getInt("wielded") == 1);
 					invItem.item.getItemStatus().setDurability(result.getInt("durability"));
 					list.add(invItem);
 				}
@@ -529,6 +529,7 @@ public class MySqlGameDatabase extends GameDatabase {
 						itemStatus.setCatalogId(result.getInt("catalogId"));
 						itemStatus.setAmount(result.getInt("amount"));
 						itemStatus.setNoted(result.getInt("noted") == 1);
+						itemStatus.setWielded(result.getInt("wielded") == 1);
 						itemStatus.setDurability(result.getInt("durability"));
 						equipped.itemStatus = itemStatus;
 
@@ -563,6 +564,7 @@ public class MySqlGameDatabase extends GameDatabase {
 					itemStatus.setCatalogId(result.getInt("catalogId"));
 					itemStatus.setAmount(result.getInt("amount"));
 					itemStatus.setNoted(result.getInt("noted") == 1);
+					itemStatus.setWielded(result.getInt("wielded") == 1);
 					itemStatus.setDurability(result.getInt("durability"));
 					bankItem.itemStatus = itemStatus;
 
@@ -1631,7 +1633,6 @@ public class MySqlGameDatabase extends GameDatabase {
 			for (PlayerInventory item : inventory) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
-				statement.setInt(3, (item.wielded ? 1 : 0));
 				statement.setInt(4, item.slot);
 				statement.addBatch();
 			}
@@ -1920,7 +1921,8 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.setInt(1, item.getCatalogId());
 				statement.setInt(2, item.getItemStatus().getAmount());
 				statement.setInt(3, item.getItemStatus().getNoted() ? 1 : 0);
-				statement.setInt(4, item.getItemStatus().getDurability());
+				statement.setInt(4, item.getItemStatus().isWielded() ? 1 : 0);
+				statement.setInt(5, item.getItemStatus().getDurability());
 				statement.executeUpdate();
 				ResultSet rs = statement.getGeneratedKeys();
 				int itemId = -1;
@@ -1964,8 +1966,9 @@ public class MySqlGameDatabase extends GameDatabase {
 			try {
 				statement.setInt(1, item.getAmount());
 				statement.setInt(2, item.getNoted() ? 1 : 0);
-				statement.setInt(3, item.getItemStatus().getDurability());
-				statement.setInt(4, item.getItemId());
+				statement.setInt(3, item.isWielded() ? 1 : 0);
+				statement.setInt(4, item.getItemStatus().getDurability());
+				statement.setInt(5, item.getItemId());
 				statement.executeUpdate();
 			} finally {
 				statement.close();
@@ -1989,8 +1992,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				try {
 					statement.setInt(1, playerId);
 					statement.setInt(2, itemId);
-					statement.setInt(3, item.isWielded() ? 1 : 0);
-					statement.setInt(4, slot);
+					statement.setInt(3, slot);
 					statement.executeUpdate();
 				} finally {
 					statement.close();

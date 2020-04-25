@@ -31,7 +31,8 @@ public class SandPit implements UseLocTrigger {
 					thinkbubble(getOwner(), item);
 					delay(300);
 					getOwner().message("you fill the bucket with sand");
-					getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
+					getOwner().getCarriedItems().remove(new Item(itemID));
+					getOwner().getCarriedItems().getInventory().add(new Item(refilledID));
 				} else {
 					interruptBatch();
 				}
