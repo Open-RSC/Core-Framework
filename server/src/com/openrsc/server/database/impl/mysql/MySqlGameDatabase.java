@@ -1294,39 +1294,40 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_UpdateBasicInfo);
-			statement.setInt(1, playerData.combatLevel);
-			statement.setInt(2, playerData.totalLevel);
-			statement.setInt(3, playerData.xLocation);
-			statement.setInt(4, playerData.yLocation);
-			statement.setInt(5, playerData.fatigue);
-			statement.setInt(6, playerData.kills);
-			statement.setInt(7, playerData.deaths);
-			statement.setInt(8, playerData.npc_kills);
+			int counter = 1;
+			statement.setInt(counter++, playerData.combatLevel);
+			statement.setInt(counter++, playerData.totalLevel);
+			statement.setInt(counter++, playerData.xLocation);
+			statement.setInt(counter++, playerData.yLocation);
+			statement.setInt(counter++, playerData.fatigue);
+			statement.setInt(counter++, playerData.kills);
+			statement.setInt(counter++, playerData.deaths);
+			statement.setInt(counter++, playerData.npc_kills);
 			if (getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
-				statement.setInt(9, playerData.ironMan);
-				statement.setInt(10, playerData.ironManRestriction);
-				statement.setInt(11, playerData.hcIronManDeath);
+				statement.setInt(counter++, playerData.ironMan);
+				statement.setInt(counter++, playerData.ironManRestriction);
+				statement.setInt(counter++, playerData.hcIronManDeath);
 			}
-			statement.setInt(12, playerData.questPoints);
-			statement.setInt(13, playerData.hairColour);
-			statement.setInt(14, playerData.topColour);
-			statement.setInt(15, playerData.trouserColour);
-			statement.setInt(16, playerData.skinColour);
-			statement.setInt(17, playerData.headSprite);
-			statement.setInt(18, playerData.bodySprite);
-			statement.setInt(19, playerData.male ? 1 : 0);
-			statement.setInt(20, playerData.combatStyle);
-			statement.setLong(21, playerData.muteExpires);
-			statement.setInt(22, playerData.bankSize);
-			statement.setInt(23, playerData.groupId);
-			statement.setInt(24, playerData.blockChat ? 1 : 0);
-			statement.setInt(25, playerData.blockPrivate ? 1 : 0);
-			statement.setInt(26, playerData.blockTrade ? 1 : 0);
-			statement.setInt(27, playerData.blockDuel ? 1 : 0);
-			statement.setInt(28, playerData.cameraAuto ? 1 : 0);
-			statement.setInt(29, playerData.oneMouse ? 1 : 0);
-			statement.setInt(30, playerData.soundOff ? 1 : 0);
-			statement.setInt(31, playerId);
+			statement.setInt(counter++, playerData.questPoints);
+			statement.setInt(counter++, playerData.hairColour);
+			statement.setInt(counter++, playerData.topColour);
+			statement.setInt(counter++, playerData.trouserColour);
+			statement.setInt(counter++, playerData.skinColour);
+			statement.setInt(counter++, playerData.headSprite);
+			statement.setInt(counter++, playerData.bodySprite);
+			statement.setInt(counter++, playerData.male ? 1 : 0);
+			statement.setInt(counter++, playerData.combatStyle);
+			statement.setLong(counter++, playerData.muteExpires);
+			statement.setInt(counter++, playerData.bankSize);
+			statement.setInt(counter++, playerData.groupId);
+			statement.setInt(counter++, playerData.blockChat ? 1 : 0);
+			statement.setInt(counter++, playerData.blockPrivate ? 1 : 0);
+			statement.setInt(counter++, playerData.blockTrade ? 1 : 0);
+			statement.setInt(counter++, playerData.blockDuel ? 1 : 0);
+			statement.setInt(counter++, playerData.cameraAuto ? 1 : 0);
+			statement.setInt(counter++, playerData.oneMouse ? 1 : 0);
+			statement.setInt(counter++, playerData.soundOff ? 1 : 0);
+			statement.setInt(counter++, playerId);
 			try {
 				statement.executeUpdate();
 			} finally {

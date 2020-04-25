@@ -68,7 +68,9 @@ public class MySqlQueries {
 		playerExists = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
 		playerData = "SELECT `id`, `group_id`, "
 			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`,  `kills`,"
-			+ "`deaths`, `npc_kills`, `iron_man`, `iron_man_restriction`,`hc_ironman_death`, `quest_points`, `block_chat`, `block_private`,"
+			+ "`deaths`, `npc_kills`, "
+			+ (getServer().getConfig().SPAWN_IRON_MAN_NPCS ? "`iron_man`, `iron_man_restriction`,`hc_ironman_death`, " : "")
+			+ "`quest_points`, `block_chat`, `block_private`,"
 			+ "`block_trade`, `block_duel`, `cameraauto`,"
 			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
 			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
@@ -98,8 +100,9 @@ public class MySqlQueries {
 		save_EquipmentAdd = "INSERT INTO `" + PREFIX + "equipped`(`playerID`, `itemID`) VALUES(?, ?)";
 		save_EquipmentRemove = "DELETE FROM `" + PREFIX + "equipped` WHERE `playerID`=? AND `itemID`=?";
 		save_UpdateBasicInfo = "UPDATE `" + PREFIX + "players` SET `combat`=?, skill_total=?, " +
-			"`x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `npc_kills`=?, `iron_man`=?, `iron_man_restriction`=?, " +
-			"`hc_ironman_death`=?, `quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, " +
+			"`x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `npc_kills`=?, " +
+			(getServer().getConfig().SPAWN_IRON_MAN_NPCS ? "`iron_man`, `iron_man_restriction`,`hc_ironman_death`, " : "") +
+			"`quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, " +
 			"`headsprite`=?, `bodysprite`=?, `male`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=?," +
 			"`block_chat`=?, `block_private`=?, `block_trade`=?, `block_duel`=?, `cameraauto`=?, `onemouse`=?, `soundoff`=? WHERE `id`=?";
 		save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
