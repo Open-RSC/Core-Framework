@@ -50,7 +50,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 			return;
 		}
 
-		if (myItem.getItemStatus().getNoted() || myItem.getItemStatus().getNoted()) {
+		if (myItem.getItemStatus().getNoted() || item.getNoted()) {
 			player.message("Nothing interesting happens");
 			return;
 		}
