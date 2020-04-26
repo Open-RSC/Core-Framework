@@ -58,6 +58,8 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract int queryPlayerIdFromUsername(String username) throws GameDatabaseException;
 
+	protected abstract String queryUsernameFromPlayerId(final int playerId) throws GameDatabaseException;
+
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
 
 	protected abstract NpcDef[] queryNpcDefs() throws GameDatabaseException;
@@ -128,7 +130,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract PlayerSkills[] queryLoadPlayerSkills(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerExperience[] queryLoadPlayerExperience(Player player) throws GameDatabaseException;
+	protected abstract PlayerExperience[] queryLoadPlayerExperience(final int playerId) throws GameDatabaseException;
 
 	protected abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
 
@@ -230,6 +232,25 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	protected abstract void queryBankAdd(int playerId, Item item, int slot) throws GameDatabaseException;
 
 	protected abstract void queryBankRemove(int playerId, Item item) throws GameDatabaseException;
+
+	// Discord service queries
+	protected abstract int queryPlayerIdFromToken(final String token) throws GameDatabaseException;
+
+	protected abstract void queryPairPlayer(final int playerId, final long discordId) throws GameDatabaseException;
+
+	protected abstract void queryRemovePairToken(final int playerId) throws GameDatabaseException;
+
+	protected abstract String queryWatchlist(final long discordId) throws GameDatabaseException;
+
+	protected abstract void queryUpdateWatchlist(final long discordId, String watchlist) throws GameDatabaseException;
+
+	protected abstract void queryNewWatchlist(final long discordId, String watchlist) throws GameDatabaseException;
+
+	protected abstract void queryDeleteWatchlist(final long discordId) throws GameDatabaseException;
+
+	protected abstract DiscordWatchlist[] queryWatchlists() throws GameDatabaseException;
+
+	protected abstract int queryPlayerIdFromDiscordId(final long discordId) throws GameDatabaseException;
 
 	public void open() {
 		synchronized (open) {
@@ -367,6 +388,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public boolean playerExists(final String username) throws GameDatabaseException {
 		return queryPlayerExists(username);
+	}
+
+	public String usernameFromId(final int playerId) throws GameDatabaseException {
+		return queryUsernameFromPlayerId(playerId);
 	}
 
 	public String playerLoginIp(final String username) throws GameDatabaseException {
@@ -626,6 +651,43 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		queryUpdateAuction(auctionItem);
 	}
 
+	public int playerIdFromDiscordPairToken(final String token) throws GameDatabaseException {
+		return queryPlayerIdFromToken(token);
+	}
+
+	public void pairDiscord(final int playerId, final long discordId) throws GameDatabaseException {
+		queryPairPlayer(playerId, discordId);
+		queryRemovePairToken(playerId);
+	}
+
+	public PlayerExperience[] getPlayerExp(final int playerId) throws GameDatabaseException {
+		return queryLoadPlayerExperience(playerId);
+	}
+
+	public String getWatchlist(final long discordId) throws GameDatabaseException {
+		return queryWatchlist(discordId);
+	}
+
+	public void updateWatchlist(final long discordId, final String watchlist) throws GameDatabaseException {
+		queryUpdateWatchlist(discordId, watchlist);
+	}
+
+	public void newWatchlist(final long discordId, final String watchlist) throws GameDatabaseException {
+		queryNewWatchlist(discordId, watchlist);
+	}
+
+	public void deleteWatchlist(final long discordId) throws GameDatabaseException {
+		queryDeleteWatchlist(discordId);
+	}
+
+	public DiscordWatchlist[] getWaitlists() throws GameDatabaseException {
+		return queryWatchlists();
+	}
+
+	public int playerIdFromDiscordId(long discordId) throws GameDatabaseException {
+		return queryPlayerIdFromDiscordId(discordId);
+	}
+
 	private void loadPlayerData(final Player player) throws GameDatabaseException {
 		final PlayerData playerData = queryLoadPlayerData(player);
 
@@ -794,7 +856,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	private void loadPlayerSkills(final Player player) throws GameDatabaseException {
-		player.getSkills().loadExp(queryLoadPlayerExperience(player));
+		player.getSkills().loadExp(queryLoadPlayerExperience(player.getDatabaseID()));
 		player.getSkills().loadLevels(queryLoadPlayerSkills(player));
 	}
 

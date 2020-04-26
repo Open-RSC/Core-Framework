@@ -19,10 +19,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 public class MySqlGameDatabase extends GameDatabase {
@@ -128,6 +125,26 @@ public class MySqlGameDatabase extends GameDatabase {
 			throw new GameDatabaseException(this, ex.getMessage());
 		}
 		return -1;
+	}
+
+	@Override
+	protected String queryUsernameFromPlayerId(int playerId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = statementFromInteger(getQueries().idToUser, playerId);
+			final ResultSet result = statement.executeQuery();
+			try {
+				if (result.next()) {
+					return result.getString("username");
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return null;
 	}
 
 	@Override
@@ -919,9 +936,9 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerExperience[] queryLoadPlayerExperience(Player player) throws GameDatabaseException {
+	protected PlayerExperience[] queryLoadPlayerExperience(final int playerId) throws GameDatabaseException {
 		try {
-			int experience[] = fetchExperience(player.getDatabaseID());
+			int experience[] = fetchExperience(playerId);
 			PlayerExperience[] playerExperiences = new PlayerExperience[experience.length];
 			for (int i = 0; i < playerExperiences.length; i++) {
 				playerExperiences[i] = new PlayerExperience();
@@ -2214,6 +2231,157 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected int queryPlayerIdFromToken(String token) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().playerIdFromPairToken);
+			statement.setString(1, token);
+			final ResultSet result = statement.executeQuery();
+			try {
+				if (result.next()) {
+					return result.getInt("playerID");
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return -1;
+	}
+
+	@Override
+	protected void queryPairPlayer(int playerId, long discordId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().pairDiscord);
+			statement.setInt(1, playerId);
+			statement.setInt(2, 3);
+			statement.setString(3, "discordID");
+			statement.setLong(4, discordId);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryRemovePairToken(int playerId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().deleteTokenFromCache);
+			statement.setInt(1, playerId);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected String queryWatchlist(long discordId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().watchlist);
+			statement.setLong(1, discordId);
+			final ResultSet result = statement.executeQuery();
+			try {
+				if (result.next()) {
+					return result.getString("value");
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return null;
+	}
+
+	@Override
+	protected void queryUpdateWatchlist(long discordId, String watchlist) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateWatchlist);
+			statement.setString(1, watchlist);
+			statement.setLong(2, discordId);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryNewWatchlist(long discordId, String watchlist) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_AddCache);
+			statement.setInt(1, 0);
+			statement.setInt(2, 1);
+			statement.setString(3, "watchlist_" + discordId);
+			statement.setString(4, watchlist);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryDeleteWatchlist(long discordId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().deleteWatchlist);
+			statement.setLong(1, discordId);
+			try {statement.executeUpdate();}
+			finally {statement.close();}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected DiscordWatchlist[] queryWatchlists() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().watchlists);
+			final ResultSet result = statement.executeQuery();
+			final ArrayList<DiscordWatchlist> watchlists = new ArrayList<>();
+			try {
+				while (result.next()) {
+					DiscordWatchlist watchlist = new DiscordWatchlist();
+					watchlist.discordId = Long.parseLong(result.getString("key").substring(10));
+					watchlist.list = result.getString("value");
+					watchlists.add(watchlist);
+				}
+
+				return watchlists.toArray(new DiscordWatchlist[watchlists.size()]);
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected int queryPlayerIdFromDiscordId(long discordId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().discordIdToPlayerId);
+			statement.setLong(1, discordId);
+			final ResultSet results = statement.executeQuery();
+			try {
+				if (results.next()) {
+					return results.getInt("playerID");
+				}
+			} finally {
+				results.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return 0;
+	}
+
+	@Override
 	protected PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException {
 		try {
 			final ArrayList<PlayerRecoveryQuestions> list = new ArrayList<>();
@@ -2533,9 +2701,8 @@ public class MySqlGameDatabase extends GameDatabase {
 	public boolean isConnected() {
 		return getConnection().isConnected();
 	}
-
-	// Should be protected
-	public MySqlGameDatabaseConnection getConnection() {
+	
+	protected MySqlGameDatabaseConnection getConnection() {
 		return connection;
 	}
 

@@ -16,7 +16,7 @@ public class MySqlQueries {
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
 	public final String save_Password, save_PreviousPasswords, previousPassword, achievements, rewards, tasks;
-	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerRecoveryInfo, newPlayerRecoveryInfo, playerRecoveryAttempt, userToId, initializeOnlineUsers;
+	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerRecoveryInfo, newPlayerRecoveryInfo, playerRecoveryAttempt, userToId, idToUser, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate, playerLastRecoveryTryId, cancelRecoveryChangeRequest;
 	public final String contactDetails, newContactDetails, updateContactDetails;
 	public final String dropLogSelect, dropLogInsert, dropLogUpdate, npcDefs, npcDrops, itemDefs, banPlayer, unbanPlayer;
@@ -24,6 +24,7 @@ public class MySqlQueries {
 	public final String objects, npcLocs, groundItems, inUseItemIds;
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
+	public final String discordIdToPlayerId, playerIdFromPairToken, pairDiscord, deleteTokenFromCache, watchlist, watchlists, updateWatchlist, deleteWatchlist;
 
 	private final Server server;
 
@@ -133,6 +134,7 @@ public class MySqlQueries {
 		updateContactDetails = "UPDATE `" + PREFIX + "player_contact_details`" +
 			"SET `fullname`=?, `zipCode`=?, `country`=?, `email`=?, `date_modified`=?, `ip`=? WHERE `playerID`=?";
 		userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
+		idToUser = "SELECT DISTINCT `username` FROM `" + PREFIX + "players` WHERE `player_ID`=?";
 		npcKillSelectAll = "SELECT * FROM `" + PREFIX + "npckills` WHERE playerID = ?";
 		npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
 		npcKillInsert = "INSERT INTO `" + PREFIX + "npckills`(killCount, npcID, playerID) VALUES (?, ?, ?)";
@@ -200,6 +202,15 @@ public class MySqlQueries {
 			+ "auctions` WHERE `sold-out`='0'";
 		auctionSellOut = "UPDATE `" + PREFIX + "auctions` SET `amount_left`=?, `sold-out`=?, `buyer_info`=? WHERE `auctionID`=?";
 		updateAuction = "UPDATE `" + PREFIX + "auctions` SET `amount_left`=?, `price` = ?, `buyer_info`=? WHERE `auctionID`= ?";
+
+		discordIdToPlayerId = "SELECT `playerID` FROM `" + PREFIX + "player_cache` WHERE `value` = ?";
+		playerIdFromPairToken = "SELECT `playerID` FROM `" + PREFIX + "player_cache` WHERE `value` = ?";
+		pairDiscord = "INSERT INTO `" + PREFIX + "player_cache`(`playerID`, `type`, `key`, `value`) VALUES(?, ?, ?, ?)";
+		deleteTokenFromCache = "DELETE FROM `" + PREFIX + "player_cache` WHERE `playerID`=? AND `key`='pair_token'";
+		watchlist = "SELECT `value` FROM `" + PREFIX + "player_cache` WHERE`key`='watchlist_?'";
+		watchlists = "SELECT `value`, `key` FROM `" + PREFIX + "player_cache` WHERE `key` LIKE 'watchlist_%'";
+		updateWatchlist = "UPDATE `" + PREFIX + "player_cache` SET `value`=? WHERE `key`=`watchlist_?`";
+		deleteWatchlist = "DELETE FROM `" + PREFIX + "player_cache` WHERE `key`=`watchlist_?`";
 
 		//unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 		//teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";
