@@ -92,7 +92,8 @@ public final class WorldPopulator {
 			for (FloorItem groundItem : groundItems) {
 				ItemLoc i = new ItemLoc(groundItem.id,
 					groundItem.x, groundItem.y,
-					groundItem.y, groundItem.respawn);
+					groundItem.amount, groundItem.respawn);
+
 				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (getWorld().getServer().getEntityHandler().getItemDef(i.id).isMembersOnly()) {
 						continue;
