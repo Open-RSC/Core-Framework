@@ -183,7 +183,7 @@ public class ServerConfiguration {
 	public boolean WANT_SHOW_KITTENS_CIVILLIAN;
 	public boolean WANT_BARTER_WORMBRAINS;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
-	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
+	public boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
 	public boolean CAN_USE_CRACKER_ON_SELF;
 
 	public int RING_OF_RECOIL_LIMIT;
