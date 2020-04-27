@@ -66,11 +66,11 @@ public class Chef implements TalkNpcTrigger {
 				break;
 			case 2:
 				npcsay(player, n, "How is the fish collecting going?");
-				if (!(player.getCarriedItems().hasCatalogID(ItemId.SWORDFISH.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.BASS.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.TUNA.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.SALMON.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.SHRIMP.id(), Optional.of(false)))) {
+				if (!player.getCarriedItems().hasCatalogID(ItemId.SWORDFISH.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.BASS.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.TUNA.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.SALMON.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.SHRIMP.id(), Optional.of(false))) {
 					say(player, n, "I haven't got all the fish yet");
 					npcsay(player, n, "Remember I want cooked swordfish, bass, tuna, salmon and shrimp");
 				} else {
