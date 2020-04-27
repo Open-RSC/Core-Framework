@@ -11156,18 +11156,16 @@ public final class mudclient implements Runnable {
 							++this.mouseButtonDownTime;
 						}
 						if (!isAndroid()) {
-							if (this.mouseButtonDownTime > 500)
-								this.mouseButtonItemCountIncrement += 100000;
-							else if (this.mouseButtonDownTime > 350)
-								this.mouseButtonItemCountIncrement += 10000;
-							else if (this.mouseButtonDownTime > 250)
-								this.mouseButtonItemCountIncrement += 1000;
+							if (this.mouseButtonDownTime > 600)
+								this.mouseButtonItemCountIncrement += 5000;
+							else if (this.mouseButtonDownTime > 450)
+								this.mouseButtonItemCountIncrement += 500;
+							else if (this.mouseButtonDownTime > 300)
+								this.mouseButtonItemCountIncrement += 50;
 							else if (this.mouseButtonDownTime > 150)
-								this.mouseButtonItemCountIncrement += 100;
-							else if (this.mouseButtonDownTime > 100)
-								this.mouseButtonItemCountIncrement += 10;
+								this.mouseButtonItemCountIncrement += 5;
 							else if (this.mouseButtonDownTime > 50)
-								this.mouseButtonItemCountIncrement++;
+								++this.mouseButtonItemCountIncrement;
 							else if (this.mouseButtonDownTime > 20 && (this.mouseButtonDownTime & 5) == 0)
 								++this.mouseButtonItemCountIncrement;
 						}
