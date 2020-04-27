@@ -2701,7 +2701,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	public boolean isConnected() {
 		return getConnection().isConnected();
 	}
-	
+
 	protected MySqlGameDatabaseConnection getConnection() {
 		return connection;
 	}

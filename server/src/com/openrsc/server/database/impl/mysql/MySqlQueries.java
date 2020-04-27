@@ -179,7 +179,7 @@ public class MySqlQueries {
 		inUseItemIds = "SELECT `itemID` FROM `" + PREFIX + "itemstatuses`";
 
 		clans = "SELECT `id`, `name`, `tag`, `kick_setting`, `invite_setting`, `allow_search_join`, `clan_points` FROM `" + PREFIX + "clan`";
-		clanMembers = "SELECT `username`, `rank`, `kills`, `deaths` FROM `\" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + \"clan_players` WHERE `clan_id`=?";
+		clanMembers = "SELECT `username`, `rank`, `kills`, `deaths` FROM `" + PREFIX + "clan_players` WHERE `clan_id`=?";
 		newClan = "INSERT INTO `" + PREFIX + "clan`(`name`, `tag`, `leader`) VALUES (?,?,?)";
 		saveClanMember = "INSERT INTO `" + PREFIX + "clan_players`(`clan_id`, `username`, `rank`, `kills`, `deaths`) VALUES (?,?,?,?,?)";
 		deleteClan = "DELETE FROM `" + PREFIX + "clan` WHERE `id`=?";
