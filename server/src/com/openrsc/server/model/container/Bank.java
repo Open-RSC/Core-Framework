@@ -456,7 +456,10 @@ public class Bank {
 				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
 				if (requestedAmount < 0) return;
 
-				Item depositItem = new Item(catalogID, requestedAmount);
+				Item depositItem = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(catalogID)
+				);
+				if (depositItem == null) return;
 
 				// Make sure they have enough space in their bank to deposit it
 				if (!canHold(depositItem)) {
@@ -464,16 +467,13 @@ public class Bank {
 					return;
 				}
 
-				Item toAdd = new Item(catalogID, requestedAmount);
-
 				// Attempt to add the item to the bank (or fail out).
-				if (!add(toAdd)) return;
+				if (!add(new Item(depositItem.getCatalogId(), requestedAmount))) return;
 
 				// Check the item definition
-				ItemDefinition depositDef = toAdd.getDef(player.getWorld());
+				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
 				if (depositDef == null) return;
-
-				removeFromInventory(toAdd, depositDef, requestedAmount, updateClient);
+				removeFromInventory(depositItem, depositDef, requestedAmount, updateClient);
 			}
 		}
 	}
@@ -500,18 +500,21 @@ public class Bank {
 
 	// Remove the items from the inventory one slot at a time.
 	private void removeFromInventory(Item item, ItemDefinition def, int requestedAmount, boolean updateClient) {
-		int i = 1;
 		int slotAmount = 1;
 		if (def.isStackable() || item.getNoted()) {
-			i = slotAmount = requestedAmount;
+			slotAmount = Math.min(requestedAmount, item.getAmount());
 		}
-		for (; i <= requestedAmount; i++) {
 
-			// Always remove the last slot first.
+		// Always remove the last slot first.
+		item = new Item(item.getCatalogId(), slotAmount, item.getNoted(), item.getItemId());
+		if (player.getCarriedItems().getInventory().remove(item, updateClient) == -1) return;
+
+		if (slotAmount < requestedAmount) {
+			// Get next item
 			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId()));
-			item = new Item(item.getCatalogId(), slotAmount, item.getNoted(), item.getItemId());
-			if (player.getCarriedItems().getInventory().remove(item, updateClient) == -1) return;
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
+			);
+			removeFromInventory(item, def, requestedAmount - slotAmount, updateClient);
 		}
 	}
 

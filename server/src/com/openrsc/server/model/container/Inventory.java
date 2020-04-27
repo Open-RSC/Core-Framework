@@ -225,7 +225,6 @@ public class Inventory {
 					// Loop until we have the correct item.
 					if (inventoryItem.getItemId() != itemID)
 						continue;
-
 					// Confirm itemDef exists.
 					ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
 					if (inventoryDef == null)
@@ -240,7 +239,7 @@ public class Inventory {
 						// If we remove the entire stack, remove the item status.
 						if (inventoryItem.getAmount() == amount) {
 
-							// Update the Server Bank
+							// Update the Server
 							iterator.remove();
 
 							// Update the Database - Remove item status
