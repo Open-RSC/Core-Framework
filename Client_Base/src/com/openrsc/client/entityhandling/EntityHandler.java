@@ -3731,6 +3731,10 @@ public class EntityHandler {
 		items.add(new ItemDef("Thieving cape", "The cape worn by masters of thieving", "", 99000, -1, "items:496", false, true, 2048, 0, false, false, false, 1375));
 		items.add(new ItemDef("Fletching cape", "The cape worn by masters of fletching", "", 99000, -1, "items:486", false, true, 2048, 0, false, false, false, 1376));
 		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, false, 1377));
+
+		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 0, -1, "items:555", false, true, 32, 0, false, false, true, 1378));
+		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 0, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
+
 	}
 
 	// Bank note items
