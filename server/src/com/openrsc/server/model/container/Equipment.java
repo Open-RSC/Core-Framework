@@ -326,22 +326,22 @@ public class Equipment {
 					player.getBank().getFirstIndexById(request.item.getCatalogId())
 				);
 
-				if (!itemDef.isStackable()) { /**Not a stackable item*/
-					if (player.getBank().remove(toEquip.getCatalogId(), 1, toEquip.getItemId()) == -1)
+				if (!itemDef.isStackable()) {
+					if (!player.getBank().remove(toEquip.getCatalogId(), 1))
 						return false;
 
-					if (originalAmount > 1) { /**Need to split the stack*/
+					if (originalAmount > 1) {
 						add(new Item(toEquip.getCatalogId(), 1));
-					} else { /**Don't need to split the stack*/
+					} else {
 						add(request.item);
 					}
-				} else { /**Stackable item*/
-					if (player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount(), toEquip.getItemId()) == -1)
+				} else {
+					if (!player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount()))
 						return false;
 
-					if (originalAmount > request.item.getAmount()) { /**Need to split the stack*/
+					if (originalAmount > request.item.getAmount()) {
 						add(new Item(request.item.getCatalogId(), request.item.getAmount()));
-					} else { /**Don't need to split the stack*/
+					} else {
 						add(request.item);
 					}
 				}

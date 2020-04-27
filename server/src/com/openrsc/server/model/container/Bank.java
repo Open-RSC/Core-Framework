@@ -34,8 +34,6 @@ public class Bank {
 	/**
 	 * Attempts to add the item to the player's Bank.
 	 * Updates the database.
-	 * @param itemToAdd
-	 * @return BOOLEAN flag if successful
 	 */
 	public boolean add(Item itemToAdd) {
 		synchronized(list) {
@@ -77,7 +75,7 @@ public class Bank {
 					list.add(itemToAdd);
 
 					// Update the database
-					player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size());
+					player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					// Update the client bank
 					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
@@ -110,7 +108,7 @@ public class Bank {
 						list.add(itemToAdd);
 
 						// Update the database - second stack
-						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size());
+						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 						// Update the client - both stacks
 						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
@@ -125,9 +123,53 @@ public class Bank {
 		}
 	}
 
-	public boolean canHold(ArrayList<Item> items) {
+	public boolean remove(Item item) {
+		return remove(item.getCatalogId(), item.getAmount());
+	}
+
+	public boolean remove(int catalogID, int amount) {
 		synchronized(list) {
-			return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(items);
+			try {
+				int bankIndex = getFirstIndexById(catalogID);
+				Item bankItem = get(bankIndex);
+
+				// Continue until a matching catalogID is found.
+				if (bankItem == null) return false;
+
+				// Check that there's enough in the stack
+				if (bankItem.getAmount() < amount)
+					amount = bankItem.getAmount();
+
+				// We are removing all of the itemID from the bank
+				if (bankItem.getAmount() == amount) {
+
+					// Update the Server Bank
+					list.remove(bankIndex);
+
+					// Update the Database
+					player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
+
+					// Update the Client
+					// TODO: need a parameter for flagging to update the client or not
+					ActionSender.updateBankItem(player, bankIndex, 0, 0);
+
+				// We are removing only some of the total held in the bank
+				} else {
+
+					// Update the Database and Server Bank
+					bankItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+
+					// Update the Client
+					// TODO: Need a new parameter for the function that flags if should update the client
+					ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
+				}
+
+				return true;
+
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+			}
+			return false;
 		}
 	}
 
@@ -221,16 +263,6 @@ public class Bank {
 		}
 	}
 
-	public int getRequiredSlots(List<Item> items) {
-		synchronized(list) {
-			int requiredSlots = 0;
-			for (Item item : items) {
-				requiredSlots += getRequiredSlots(item);
-			}
-			return requiredSlots;
-		}
-	}
-
 	public boolean hasItemId(int id) {
 		synchronized(list) {
 			for (Item i : list) {
@@ -242,84 +274,10 @@ public class Bank {
 		}
 	}
 
-	public int searchBankSlots(int catalogID) {
-		synchronized (list) {
-			for (int i = 0; i < list.size(); ++i) {
-				if (list.get(i).getCatalogId() == catalogID)
-					return i;
-			}
-			return -1;
-		}
-	}
-
 	public ListIterator<Item> iterator() {
 		synchronized(list) {
 			return list.listIterator();
 		}
-	}
-
-	public void remove(int bankSlot) {
-		synchronized(list) {
-			Item item = get(bankSlot);
-			if (item == null) {
-				return;
-			}
-			remove(item.getCatalogId(), item.getAmount(), item.getItemId());
-		}
-	}
-
-	public int remove(int catalogID, int amount, int itemId) {
-		synchronized(list) {
-			try {
-				ListIterator<Item> iterator = list.listIterator();
-				Item bankItem = null;
-				for (int index=0; iterator.hasNext(); index++) {
-					bankItem = iterator.next();
-
-					// Continue until a matching catalogID is found.
-					if (bankItem.getCatalogId() != catalogID)
-						continue;
-
-					// Check that there's enough in the stack
-					if (bankItem.getAmount() < amount)
-						return -1;
-
-					// We are removing all of the itemID from the bank
-					if (bankItem.getAmount() == amount) {
-						bankItem.setItemId(player.getWorld().getServer().getDatabase(), itemId);
-
-						// Update the Server Bank
-						iterator.remove();
-
-						// Update the Database
-						player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
-
-						// Update the Client
-						// TODO: need a parameter for flagging to update the client or not
-						ActionSender.updateBankItem(player, index, 0, 0);
-
-					// We are removing only some of the total held in the bank
-					} else {
-
-						// Update the Database and Server Bank
-						bankItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
-
-						// Update the Client
-						// TODO: Need a new parameter for the function that flags if should update the client
-						ActionSender.updateBankItem(player, index, bankItem.getCatalogId(), bankItem.getAmount());
-					}
-
-					return index;
-				}
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
-			}
-			return -1;
-		}
-	}
-
-	public int remove(Item item) {
-		return remove(item.getCatalogId(), item.getAmount(), item.getItemId());
 	}
 
 	public int size() {
@@ -402,7 +360,52 @@ public class Bank {
 
 	}
 
-	public boolean withdrawItemToInventory(final Integer catalogID, Integer requestedAmount, final Boolean wantsNotes) {
+
+	public void depositAllFromInventory() {
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				try {
+					for (int i = player.getCarriedItems().getInventory().getItems().size(); i-- > 0;) {
+						Item item = player.getCarriedItems().getInventory().getItems().get(i);
+						depositItemFromInventory(item.getCatalogId(), item.getAmount(), true);
+					}
+				} catch (Exception ex) {
+					LOGGER.error(ex.getMessage());
+				}
+			}
+		}
+	}
+
+	public void depositAllFromEquipment() {
+		synchronized (list) {
+			synchronized (player.getCarriedItems().getEquipment().getList()) {
+				try {
+					for (int slot = 0; slot < Equipment.SLOT_COUNT; slot++) {
+						Item item = player.getCarriedItems().getEquipment().getList()[slot];
+						if (item == null || item.getCatalogId() == ItemId.NOTHING.id()) continue;
+						UnequipRequest uer = new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false);
+						uer.equipmentSlot = Equipment.EquipmentSlot.get(slot);
+						Equipment.correctIndex(uer);
+						if (!player.getCarriedItems().getEquipment().unequipItem(uer)) {
+							return;
+						}
+					}
+				}
+				catch (Exception ex) {
+					LOGGER.error(ex.getMessage());
+				}
+			}
+		}
+	}
+
+	/**
+	** The bank works in slots.
+	 * When you withdraw non-stack items, the bank will update with the value all at once, and the inventory
+	 * will "trickle" the items into it slot-by-slot.
+	 * When you withdraw stack items, it will withdraw the full quantity at once, updating the inventory AND bank stack
+	 * only one time.
+	 */
+	public void withdrawItemToInventory(final Integer catalogID, Integer requestedAmount, final Boolean wantsNotes) {
 
 		// Flag for if the item is withdrawn as a note
 		boolean withdrawNoted = wantsNotes;
@@ -410,216 +413,106 @@ public class Bank {
 		synchronized (list) {
 			synchronized (player.getCarriedItems().getInventory().getItems()) {
 				// Check if the bank is empty
-				if (list.isEmpty()) return false;
+				if (list.isEmpty()) return;
 
-				Item item = list.get(getFirstIndexById(catalogID));
-
-				// Cap the max requestedAmount
-				requestedAmount = Math.min(requestedAmount, countId(catalogID));
-
-				// Make sure they actually have the item in the bank
-				if (requestedAmount <= 0) return false;
-
-				// Find bank slot that contains the requested catalogID
-				Item withdrawItem = null;
-
-				for (Item iteratedItem : list) {
-					if (iteratedItem.getItemId() == item.getItemId()) {
-						withdrawItem = iteratedItem;
-						break;
-					}
-				}
-
-				// Double check the item was found
-				if (withdrawItem == null) return false;
+				Item withdrawItem = list.get(getFirstIndexById(catalogID));
+				if (withdrawItem == null) return;
 
 				// Check the item definition
 				ItemDefinition withdrawDef = withdrawItem.getDef(player.getWorld());
-				if (withdrawDef == null) return false;
+				if (withdrawDef == null) return;
+
+				// Make sure they actually have the item in the bank
+				requestedAmount = Math.min(requestedAmount, countId(catalogID));
+				if (requestedAmount <= 0) return;
 
 				// Don't allow notes for non noteable items
 				if (wantsNotes && !withdrawDef.isNoteable())
 					withdrawNoted = false;
 
-				// Limit non-stackables to a withdraw of 1.
-				// (will call function again later if more than 1 requested.)
-				int withdrawAmount = 1;
-				if (withdrawDef.isStackable() || (withdrawItem.getNoted() && withdrawNoted)) {
-					if (requestedAmount % 10 > 0) withdrawAmount = 1;
-					else if (requestedAmount % 100 > 0) withdrawAmount = 10;
-					else if (requestedAmount % 1000 > 0) withdrawAmount = 100;
-					else if (requestedAmount % 10000 > 0) withdrawAmount = 1000;
-					else if (requestedAmount % 100000 > 0) withdrawAmount = 10000;
-				}
-
-				withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted, withdrawItem.getItemId());
+				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
 				// Make sure they have enough space in their inventory
 				if (!player.getCarriedItems().getInventory().canHold(withdrawItem)) {
 					player.message("You don't have room to hold everything!");
-					return false;
+					return;
 				}
 
 				// Remove the item from the bank (or fail out).
-				if (remove(withdrawItem) == -1) return false;
+				if (!remove(withdrawItem)) return;
 
-				// We must set the itemId to 0 to ensure we get a new ItemStatus for the item.
-				withdrawItem = new Item(withdrawItem.getCatalogId(), withdrawAmount, withdrawNoted);
+				addToInventory(withdrawItem, withdrawDef, requestedAmount);
 
-				// Add the item to the inventory (or fail and place it back into the bank).
-				if (!player.getCarriedItems().getInventory().add(withdrawItem, true)) {
-					add(withdrawItem);
-					return false;
-				}
-
-				// Check if we need to withdraw again
-				if (withdrawAmount < requestedAmount)
-					return withdrawItemToInventory(withdrawItem.getCatalogId(), requestedAmount - withdrawAmount, wantsNotes);
-				else {
-					//Update the client
-					ActionSender.sendInventory(player);
-					return true;
-				}
 			}
 		}
 	}
 
-	public boolean depositAllFromInventory() {
-		synchronized (list) {
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				try {
-					for (int i = player.getCarriedItems().getInventory().getItems().size(); i-- > 0;) {
-						Item item = player.getCarriedItems().getInventory().getItems().get(i);
-						if (!depositItemFromInventory(item.getCatalogId(), item.getAmount(), true)) {
-							return false;
-						}
-					}
-
-				} catch (Exception ex) {
-					LOGGER.error(ex.getMessage());
-					return false;
-				}
-				return true;
-			}
-		}
-	}
-
-	public boolean depositAllFromEquipment() {
-		synchronized (list) {
-			synchronized (player.getCarriedItems().getEquipment().getList()) {
-				try {
-					for (int slot = 0; slot < player.getCarriedItems().getEquipment().SLOT_COUNT; slot++) {
-						Item item = player.getCarriedItems().getEquipment().getList()[slot];
-						if (item == null || item.getCatalogId() == ItemId.NOTHING.id()) continue;
-						UnequipRequest uer = new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false);
-						uer.equipmentSlot = Equipment.EquipmentSlot.get(slot);
-						Equipment.correctIndex(uer);
-						if (!player.getCarriedItems().getEquipment().unequipItem(uer)) {
-							return false;
-						}
-					}
-				}
-				catch (Exception ex) {
-					LOGGER.error(ex.getMessage());
-					return false;
-				}
-				return true;
-			}
-		}
-	}
-
-	public boolean depositItemFromInventory(final int catalogID, int requestedAmount, final Boolean updateClient) {
-
+	public void depositItemFromInventory(final int catalogID, int requestedAmount, final Boolean updateClient) {
 		synchronized (list) {
 			List<Item> items = player.getCarriedItems().getInventory().getItems();
 			synchronized (items) {
 
-				if (requestedAmount < 1) {
-					System.out.println(player.getUsername() + " attempted to deposit an item that is < 1 in quantity: " + catalogID);
-					return false;
-				}
+				// Ensure they have the item in their inventory.
+				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
+				if (requestedAmount < 0) return;
 
-				Item item = player.getCarriedItems().getInventory().get(
-					player.getCarriedItems().getInventory().getLastIndexById(catalogID));
-
-				// Find inventory slot that contains the requested catalogID
-				Item depositItem = getItemFromList(items, item);
-				if (depositItem == null) {
-					System.out.println(player.getUsername() + " attempted to deposit an item that is null: " + catalogID);
-					return false;
-				}
-
-				// Check the item definition
-				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
-				if (depositDef == null) {
-					System.out.println(player.getUsername() + " attempted to deposit an item that has a null def: " + catalogID);
-					return false;
-				}
-
-				// Limit non-stackables to a withdraw of 1
-				int depositAmount = getTrickleAmount(depositDef, depositItem, requestedAmount);
+				Item depositItem = new Item(catalogID, requestedAmount);
 
 				// Make sure they have enough space in their bank to deposit it
-				if (!canHold(new Item(depositItem.getCatalogId(), depositAmount))) {
+				if (!canHold(depositItem)) {
 					player.message("You don't have room for that in your bank");
-					return false;
+					return;
 				}
 
-				// Attempt to remove the item from the inventory.
-				// Remove the item's status entry if none will be left in the inventory.
-				Item toRemove = new Item(depositItem.getCatalogId(), depositAmount, depositItem.getNoted(), depositItem.getItemId());
-				if (player.getCarriedItems().getInventory().remove(toRemove, updateClient) == -1) {
-					System.out.println(player.getUsername() + " failed to remove item from inventory: " + catalogID);
-					return false;
-				}
+				Item toAdd = new Item(catalogID, requestedAmount);
 
-				// Attempt to add the item to the bank.
-				Item transactionItem = new Item(depositItem.getCatalogId(), depositAmount);
-				if (!add(transactionItem)) {
+				// Attempt to add the item to the bank (or fail out).
+				if (!add(toAdd)) return;
 
-					// The deposit failed. Re-add the items to the inventory
-					player.getCarriedItems().getInventory().add(transactionItem, true);
-					System.out.println(player.getUsername() + " failed to deposit an item: " + catalogID);
-					return false;
-				}
+				// Check the item definition
+				ItemDefinition depositDef = toAdd.getDef(player.getWorld());
+				if (depositDef == null) return;
 
-				// Check if we need to deposit again to meet the request
-				if (depositAmount < requestedAmount)
-					return depositItemFromInventory(
-						depositItem.getCatalogId(),
-						requestedAmount - depositAmount,
-						updateClient
-					);
-				else {
-					return true;
-				}
+				removeFromInventory(toAdd, depositDef, requestedAmount, updateClient);
 			}
 		}
 	}
 
-	private Item getItemFromList(List<Item> items, Item item) {
-		Item depositItem = null;
-		ListIterator<Item> playerItems = items.listIterator(items.size());
-		while (playerItems.hasPrevious()) {
-			Item i = playerItems.previous();
-			if (i.getItemId() == item.getItemId()) {
-				depositItem = i;
-				break;
+	// Add the items to the inventory one slot at a time.
+	private void addToInventory(Item item, ItemDefinition def, int requestedAmount) {
+		int i = 1;
+		int slotAmount = 1;
+		if(def.isStackable() || item.getNoted()) {
+			i = slotAmount = requestedAmount;
+		}
+		for (; i <= requestedAmount; i++) {
+			item = new Item(item.getCatalogId(), slotAmount, item.getNoted());
+
+			// Add the item to the inventory (or fail and place it back into the bank).
+			if (!player.getCarriedItems().getInventory().add(item, true)) {
+				add(item);
+				ActionSender.sendInventory(player);
+				return;
 			}
 		}
-		return depositItem;
+		ActionSender.sendInventory(player);
 	}
 
-	private int getTrickleAmount(ItemDefinition depositDef, Item depositItem, int requestedAmount) {
-		int depositAmount = 1;
-		if (depositDef.isStackable() || depositItem.getNoted()) {
-			if (requestedAmount % 10 > 0) depositAmount = 1;
-			else if (requestedAmount % 100 > 0) depositAmount = 10;
-			else if (requestedAmount % 1000 > 0) depositAmount = 100;
-			else if (requestedAmount % 10000 > 0) depositAmount = 1000;
-			else if (requestedAmount % 100000 > 0) depositAmount = 10000;
+	// Remove the items from the inventory one slot at a time.
+	private void removeFromInventory(Item item, ItemDefinition def, int requestedAmount, boolean updateClient) {
+		int i = 1;
+		int slotAmount = 1;
+		if (def.isStackable() || item.getNoted()) {
+			i = slotAmount = requestedAmount;
 		}
-		return depositAmount;
+		for (; i <= requestedAmount; i++) {
+
+			// Always remove the last slot first.
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId()));
+			item = new Item(item.getCatalogId(), slotAmount, item.getNoted(), item.getItemId());
+			if (player.getCarriedItems().getInventory().remove(item, updateClient) == -1) return;
+		}
 	}
 
 	private static boolean isCert(int itemID) {

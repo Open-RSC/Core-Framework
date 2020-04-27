@@ -182,7 +182,7 @@ public class Certer implements TalkNpcTrigger {
 				return;
 			}
 			// TODO: itemId is wrong here?
-			if (player.getBank().remove(new Item(itemID, itemAmount)) > -1) {
+			if (!player.getBank().remove(new Item(itemID, itemAmount))) {
 				player.message("You exchange the " + certerDef.getType() + ", "
 					+ itemAmount + " "
 					+ player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName()

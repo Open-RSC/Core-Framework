@@ -144,7 +144,7 @@ public class Inventory {
 					list.add(itemToAdd);
 
 					// Update the Database - Add to the last slot and create a new itemID
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					//Update the client
 					if (sendInventory)
@@ -691,6 +691,9 @@ public class Inventory {
 				// Theres no stack found
 				return 1;
 			} else {
+				if (item.getAmount() > 1) {
+					return Math.min(MAX_SIZE - list.size(), item.getAmount());
+				}
 				return 1;
 			}
 		}
