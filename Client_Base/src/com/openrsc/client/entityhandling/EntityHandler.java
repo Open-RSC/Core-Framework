@@ -5069,6 +5069,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("thievingcape", "equipment", 0, 0, true, false, 0)); //429
 			animations.add(new AnimationDef("fletchingcape", "equipment", 0, 0, true, false, 0)); //430
 			animations.add(new AnimationDef("miningcape", "equipment", 0, 0, true, false, 0)); //431
+
+			// April Fools Items
+			animations.add(new AnimationDef("coronamask", "equipment", 0, 0, true, false, 0)); // 432
+			animations.add(new AnimationDef("rubberchicken", "equipment", 0, 0, true, false, 0)); // 433
 		}
 	}
 

@@ -4517,7 +4517,11 @@ VALUES (2000, 975, 1),
        (2111, 1374, 0),
        (2401, 1375, 0),
        (2402, 1376, 0),
-       (2403, 1377, 0);
+       (2403, 1377, 0),
+       (2404, 1378, 0),
+       (2405, 1378, 1),
+       (2406, 1379, 0),
+       (2407, 1379, 1);
 
 DROP TABLE IF EXISTS `openrsc_itemstatuses`;
 CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses`
