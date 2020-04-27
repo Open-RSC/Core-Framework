@@ -829,6 +829,10 @@ public final class GameStateUpdater {
 			if (player.getUpdateFlags().hasAppearanceChanged()) {
 				player.incAppearanceID();
 			}
+
+			if (player.cantConsume()) {
+				player.decrementConsumeTimer();
+			}
 		}
 		final long processPlayersEnd	= System.currentTimeMillis();
 		return processPlayersEnd - processPlayersStart;

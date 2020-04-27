@@ -1344,7 +1344,7 @@ public class DoorAction {
 	private void replaceGameObject(GameObject obj, Player owner, int newID,
 								   boolean open) {
 		if (!owner.cantConsume()) {
-			owner.setConsumeTimer(1000);
+			owner.setConsumeTimer(2);
 			if (open) {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
 			} else {

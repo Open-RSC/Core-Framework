@@ -447,11 +447,15 @@ public final class Player extends Mob {
 	}
 
 	public boolean cantConsume() {
-		return consumeTimer - System.currentTimeMillis() > 0;
+		return consumeTimer > 0;
 	}
 
-	public void setConsumeTimer(final long l) {
-		consumeTimer = System.currentTimeMillis() + l;
+	public void setConsumeTimer(final int ticks) {
+		consumeTimer = getWorld().getServer().getConfig().GAME_TICK * ticks;
+	}
+
+	public void decrementConsumeTimer() {
+		consumeTimer -= getWorld().getServer().getConfig().GAME_TICK;
 	}
 
 	public long getLastSaveTime() {

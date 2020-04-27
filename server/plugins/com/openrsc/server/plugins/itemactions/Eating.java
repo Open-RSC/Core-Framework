@@ -22,13 +22,20 @@ public class Eating implements OpInvTrigger {
 	@Override
 	public void onOpInv(final Item item, final Player player, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
-			if (player.cantConsume() || item.getItemStatus().getNoted())
-				return;
 
-			if (player.getCarriedItems().remove(item) == -1)
+			if (player.cantConsume()) {
 				return;
+			}
 
-			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
+			if (item.getItemStatus().getNoted()) {
+				return;
+			}
+
+			if (player.getCarriedItems().remove(item) == -1) {
+				return;
+			}
+
+			player.setConsumeTimer(1); // eat speed is same as tick speed setting
 
 			ActionSender.sendSound(player, "eat");
 
