@@ -19,6 +19,8 @@ import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.*;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.Panel;
 import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
@@ -36,7 +38,10 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
@@ -11129,6 +11134,34 @@ public final class mudclient implements Runnable {
 								devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
 							} else if (var11.equalsIgnoreCase("::overlay") && S_SIDE_MENU_TOGGLE) {
 								C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
+							} else if (var11.startsWith("::wiki")) {
+								String args[] = var11.split(" ");
+								// args[0] should be ::wiki
+								String url;
+								if (args.length > 1) {
+									url = "https://classic.runescape.wiki/w/Special:Search?search=";
+									// Put a plus in for the spaces
+									for (int i = 1; i < args.length-1; i++) {
+										url += (args[i] + "+");
+									}
+									// Add the final search argument without a plus
+									url += (args[args.length - 1]);
+								} else {
+									url = "https://classic.runescape.wiki";
+								}
+
+								// Check if we can open the wiki, otherwise tell the player we can't.
+								if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+									try {
+										Desktop.getDesktop().browse(new URI(url));
+									} catch (final Exception ex) {
+										showMessage(true, null, "There is a problem with your search query",
+											MessageType.GAME, 0, null, null);
+									}
+								} else {
+									showMessage(true, null, "There was a problem opening your browser",
+										MessageType.GAME, 0, null, null);
+								}
 							} else {
 								this.sendCommandString(var11.substring(2));
 								String putQueue = var11.substring(2);
