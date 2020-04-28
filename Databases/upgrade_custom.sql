@@ -146,4 +146,7 @@ VALUES (1290, 'Ironman helm', 'For just a rather very independent scaper.', '', 
         0, 0, 0, 99000, 0),
        (1375, 'Thieving cape', 'The cape worn by masters of thieving', '', 0, 0, 0, 1, 1, 429, 2048, 11, 99, 17, 6, 0, 0, 0, 0, 99000, 0),
        (1376, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000, 0),
-       (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000, 0);
+       (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000, 0),
+	   (1378, 'Pestilence Mask', 'You wouldn\'t want to be seen in this! Stay the cabbage home!', '', 0, 0, 0, 0, 1, 432, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
+	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '', 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
+
