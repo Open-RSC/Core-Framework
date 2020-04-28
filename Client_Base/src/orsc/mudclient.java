@@ -8875,13 +8875,6 @@ public final class mudclient implements Runnable {
 		int index = 0;
 		this.getSurface().drawString("Game options", 3 + baseX, y, 0, 1);
 
-		// Reset zoom
-		if (S_ZOOM_VIEW_TOGGLE)
-		{
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Reset zoom", 21, null, null);
-		}
-
 		// camera angle mode - byte index 1
 		if (this.optionCameraModeAuto) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
@@ -9245,13 +9238,6 @@ public final class mudclient implements Runnable {
 			settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
 		else
 			settingIndex = checkPosition;
-
-		// Zoom reset
-		if (S_ZOOM_VIEW_TOGGLE) {
-			if (settingIndex == 21 && this.mouseButtonClick == 1) {
-				osConfig.C_LAST_ZOOM = 75;
-			}
-		}
 
 		// camera mode - byte index 0
 		if (settingIndex == 0 && this.mouseButtonClick == 1) {

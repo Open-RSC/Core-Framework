@@ -142,6 +142,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 			if (keyCode == 112) mudclient.interlace = !mudclient.interlace;
 			if (keyCode == 113) Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
+			if (keyCode == KeyEvent.VK_F3) C_LAST_ZOOM = 75;
 			if (keyCode == 39) mudclient.keyRight = true;
 			if (keyCode == 37) mudclient.keyLeft = true;
 			if (keyCode == 13 || keyCode == 10) mudclient.enterPressed = true;
