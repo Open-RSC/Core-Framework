@@ -150,3 +150,4 @@ VALUES (1290, 'Ironman helm', 'For just a rather very independent scaper.', '', 
 	   (1378, 'Pestilence Mask', 'You wouldn\'t want to be seen in this! Stay the cabbage home!', '', 0, 0, 0, 0, 1, 432, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
 	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '', 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
 
+UPDATE `openrsc_npcdef` SET command = 'trade' WHERE id = 806;
