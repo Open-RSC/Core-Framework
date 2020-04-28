@@ -264,7 +264,7 @@ public final class mudclient implements Runnable {
 	private int cameraAutoMoveZ = 0;
 	public int cameraZoom = 750;
 	public int lastSavedCameraZoom = 0;
-	public int minCameraZoom = 400;
+	public int minCameraZoom = 600;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
