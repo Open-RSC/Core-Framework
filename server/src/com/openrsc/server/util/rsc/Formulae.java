@@ -590,7 +590,7 @@ public final class Formulae {
 		double level;
 
 		if ((attack / multiplier) < ((double) range * 1.5D)) {
-			level = (isForXp ? (2 * defense + 3 * 1.75 * range) / 14D : (2 * defense + 3 * range) / 8D) + mage;
+			level = (isForXp ? (2 * defense + 3 * multiplier * range) / 14D : (2 * defense + 3 * range) / 8D) + mage;
 		} else {
 			level = (isForXp ? (attack + defense) / 7D : (attack + defense) / 4D) + mage;
 		}
