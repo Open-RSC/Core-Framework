@@ -25,13 +25,18 @@ public final class MySqlGameLogger extends GameLogger {
 	private final ScheduledExecutorService scheduledExecutor;
 	private final MySqlGameDatabase database;
 
-	public MySqlGameLogger(final Server server) {
+	public MySqlGameLogger(final Server server, final MySqlGameDatabase database) {
 		this.server = server;
 
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
 		running = new AtomicBoolean(false);
 		queries = new ArrayBlockingQueue<>(10000);
-		database = new MySqlGameDatabase(getServer());
+		// TODO: Implement GameLogger into the database driver.
+		if (database == null) {
+			LOGGER.error("GameDatabase provided was null or not a MySqlGameDatabase.");
+			System.exit(1);
+		}
+		this.database = database;
 	}
 
 	public final Server getServer() {

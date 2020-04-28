@@ -167,7 +167,7 @@ public class Server implements Runnable {
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
-		gameLogger = new MySqlGameLogger(this);
+		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		monitoring = new MonitoringEvent(getWorld());
