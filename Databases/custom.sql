@@ -35452,7 +35452,11 @@ VALUES (1289, 'Scythe', 'Get another from the clothes shop if you die', '', 0, 0
        (1376, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0,
         0, 0, 0, 99000, 0),
        (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0,
-        0, 99000, 0);
+        0, 99000, 0),
+	   (1378, 'Pestilence Mask', 'You wouldn\'t want to be seen in this! Stay the cabbage home!', '', 0, 0, 0, 0, 1, 432,
+        32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
+	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '',
+        0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
 
 REPLACE INTO `openrsc_npcdef` (`id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`,
                                `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`,

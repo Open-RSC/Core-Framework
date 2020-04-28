@@ -24,7 +24,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 		for (Entry<PrayerDef, Long> entry : activePrayers.entrySet()) {
 			PrayerDef def = entry.getKey();
 			long lastDrain = entry.getValue();
-			int drainDelay = (int) ((300.0 * getWorld().getServer().getConfig().GAME_TICK / def.getDrainRate()) * (1 + (getPlayerOwner().getPrayerPoints() - 1) / 32.0));
+			int drainDelay = (int) calcDrainDelay(getPlayerOwner(), def);
 			if (System.currentTimeMillis() - lastDrain >= drainDelay) {
 				entry.setValue(System.currentTimeMillis());
 				drainPrayer();
@@ -34,6 +34,10 @@ public class PrayerDrainEvent extends GameTickEvent {
 			drainPrayer();
 			partialPoints = 0.0;
 		}
+	}
+
+	private double calcDrainDelay(Player player, PrayerDef prayerDefinition) {
+		return ((300.0 * getWorld().getServer().getConfig().GAME_TICK / prayerDefinition.getDrainRate()) * (1 + (player.getPrayerPoints() - 1) / 32.0));
 	}
 
 	private void drainPrayer() {
@@ -53,7 +57,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 				activePrayers.put(prayer, System.currentTimeMillis());
 			} else if (!getPlayerOwner().getPrayers().isPrayerActivated(x) && activePrayers.containsKey(prayer)) {
 				double timePrayerUsed = System.currentTimeMillis() - activePrayers.get(prayer);
-				double drainDelay = (180000 / (prayer.getDrainRate() * (1 + getPlayerOwner().getPrayerPoints() / 30.0)));
+				double drainDelay = calcDrainDelay(getPlayerOwner(), prayer);
 				partialPoints += timePrayerUsed / drainDelay;
 				activePrayers.remove(prayer);
 			}
