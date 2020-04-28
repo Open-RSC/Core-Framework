@@ -13,7 +13,7 @@ public final class LoginLog extends Query {
 	private final String ip;
 
 	public LoginLog(World world, int player, String ip) {
-		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "logins`(`playerID`, `ip`, `time`) VALUES(?, ?, ?)");
+		super("INSERT INTO `" + world.getServer().getConfig().DB_TABLE_PREFIX + "logins`(`playerID`, `ip`, `time`) VALUES(?, ?, ?)");
 		this.player = player;
 		this.ip = ip;
 	}

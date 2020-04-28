@@ -35,9 +35,9 @@ public class MySqlGameDatabaseConnection {
 
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://"
-					+ getServer().getConfig().MYSQL_HOST + "/" + getServer().getConfig().MYSQL_DB + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
-				getServer().getConfig().MYSQL_USER,
-				getServer().getConfig().MYSQL_PASS);
+					+ getServer().getConfig().DB_HOST + "/" + getServer().getConfig().MYSQL_DB + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
+				getServer().getConfig().DB_USER,
+				getServer().getConfig().DB_PASS);
 			statement = getConnection().createStatement();
 			statement.setEscapeProcessing(true);
 			connected = checkConnection();
@@ -84,11 +84,11 @@ public class MySqlGameDatabaseConnection {
 		}
 	}
 
-	public synchronized int executeUpdate(final String string) throws SQLException {
+	protected synchronized int executeUpdate(final String string) throws SQLException {
 		return getStatement().executeUpdate(string);
 	}
 
-	public synchronized ResultSet executeQuery(final String string) throws SQLException {
+	protected synchronized ResultSet executeQuery(final String string) throws SQLException {
 		return getStatement().executeQuery(string);
 	}
 
@@ -99,15 +99,15 @@ public class MySqlGameDatabaseConnection {
 	 * @return The MySQL query to run represented as a java.sql.PreparedStatement
 	 * @throws SQLException if there was an error when preparing the statement
 	 */
-	public synchronized PreparedStatement prepareStatement(final String statement) throws SQLException {
+	protected synchronized PreparedStatement prepareStatement(final String statement) throws SQLException {
 		return getConnection().prepareStatement(statement);
 	}
 
-	public synchronized PreparedStatement prepareStatement(final String statement, final String[] generatedColumns) throws SQLException {
+	protected synchronized PreparedStatement prepareStatement(final String statement, final String[] generatedColumns) throws SQLException {
 		return getConnection().prepareStatement(statement, generatedColumns);
 	}
 
-	public synchronized PreparedStatement prepareStatement(final String statement, final int returnKeys) throws SQLException {
+	protected synchronized PreparedStatement prepareStatement(final String statement, final int returnKeys) throws SQLException {
 		return getConnection().prepareStatement(statement, returnKeys);
 	}
 
@@ -115,7 +115,7 @@ public class MySqlGameDatabaseConnection {
 		return server;
 	}
 
-	public synchronized Connection getConnection() {
+	protected synchronized Connection getConnection() {
 		return connection;
 	}
 
@@ -123,7 +123,7 @@ public class MySqlGameDatabaseConnection {
 		return statement;
 	}
 
-	public boolean isConnected() {
+	protected boolean isConnected() {
 		return connected;
 	}
 }

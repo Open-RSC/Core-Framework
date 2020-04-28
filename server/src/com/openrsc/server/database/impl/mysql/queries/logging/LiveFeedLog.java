@@ -12,7 +12,7 @@ public class LiveFeedLog extends Query {
 	private String username;
 
 	public LiveFeedLog(Player player, String feedText) {
-		super("INSERT INTO `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
+		super("INSERT INTO `" + player.getWorld().getServer().getConfig().DB_TABLE_PREFIX
 			+ "live_feeds`(`username`,`message`,`time`) VALUES(?, ?, ?)");
 		this.username = player.getUsername();
 		this.feedText = feedText;

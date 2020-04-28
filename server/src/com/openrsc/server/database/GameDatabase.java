@@ -40,6 +40,8 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		open = false;
 	}
 
+	public abstract Set<Integer> getItemIDList();
+
 	protected abstract void openInternal();
 
 	protected abstract void closeInternal();

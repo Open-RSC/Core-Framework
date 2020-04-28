@@ -34,7 +34,7 @@ public class MySqlQueries {
 
 	public MySqlQueries(final Server server) {
 		this.server = server;
-		PREFIX = getServer().getConfig().MYSQL_TABLE_PREFIX;
+		PREFIX = getServer().getConfig().DB_TABLE_PREFIX;
 
 		updateExperience = "UPDATE `" + PREFIX + "experience` SET ";
 		updateStats = "UPDATE `" + PREFIX + "curstats` SET ";
