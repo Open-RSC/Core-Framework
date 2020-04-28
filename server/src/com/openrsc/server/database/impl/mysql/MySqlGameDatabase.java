@@ -1822,7 +1822,6 @@ public class MySqlGameDatabase extends GameDatabase {
 						removeStatement.setInt(1, playerId);
 						removeStatement.setInt(2, i);
 						removeStatement.addBatch();
-						;
 					}
 					removeStatement.executeBatch();
 				} finally {
