@@ -35,7 +35,7 @@ public class MySqlGameDatabaseConnection {
 
 		try {
 			connection = DriverManager.getConnection("jdbc:mysql://"
-					+ getServer().getConfig().DB_HOST + "/" + getServer().getConfig().MYSQL_DB + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
+					+ getServer().getConfig().DB_HOST + "/" + getServer().getConfig().DB_NAME + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
 				getServer().getConfig().DB_USER,
 				getServer().getConfig().DB_PASS);
 			statement = getConnection().createStatement();

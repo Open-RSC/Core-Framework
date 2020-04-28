@@ -50,7 +50,7 @@ public class ServerConfiguration {
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
 	public String DB_HOST;
-	public String MYSQL_DB;
+	public String DB_NAME;
 	public String DB_USER;
 	public String DB_PASS;
 	public String DB_TABLE_PREFIX;
@@ -246,7 +246,7 @@ public class ServerConfiguration {
 
 		// Database settings
 		DB_TYPE = DatabaseType.getByType(tryReadInt("db_type").orElse(0));
-		MYSQL_DB = tryReadString("mysql_db").orElse("openrsc");
+		DB_NAME = tryReadString("db_name").orElse("openrsc");
 		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
 		DB_USER = tryReadString("db_user").orElse("root");
 		DB_PASS = tryReadString("db_pass").orElse("root");
