@@ -34,7 +34,7 @@ public class MySqlQueries {
 
 	public MySqlQueries(final Server server) {
 		this.server = server;
-		PREFIX = getServer().getConfig().MYSQL_TABLE_PREFIX;
+		PREFIX = getServer().getConfig().DB_TABLE_PREFIX;
 
 		updateExperience = "UPDATE `" + PREFIX + "experience` SET ";
 		updateStats = "UPDATE `" + PREFIX + "curstats` SET ";
@@ -87,7 +87,7 @@ public class MySqlQueries {
 		playerQuests = "SELECT `id`, `stage` FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 		playerAchievements = "SELECT `id`, `status` FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
-		save_DeleteBank = "DELETE i,i2 FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=?";
+		save_DeleteBank = "DELETE FROM `" + PREFIX + "bank` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
 		save_ItemCreate = "INSERT INTO `" + PREFIX + "itemstatuses`(`catalogID`, `amount`, `noted`, `wielded`, `durability`) VALUES(?, ?, ?, ?, ?)";
 		save_ItemPurge = "DELETE FROM `" + PREFIX + "itemstatuses` WHERE `itemID`=?";

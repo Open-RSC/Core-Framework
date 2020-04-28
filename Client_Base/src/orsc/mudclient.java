@@ -264,7 +264,7 @@ public final class mudclient implements Runnable {
 	private int cameraAutoMoveZ = 0;
 	public int cameraZoom = 750;
 	public int lastSavedCameraZoom = 0;
-	public int minCameraZoom = 500;
+	public int minCameraZoom = 400;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
@@ -3711,7 +3711,7 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawBoxBorder(sx, 50, sy, 35, 0);
 
 						if (this.shopCategoryID[slot] != -1) {
-							if (this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]) > 0
+							if (S_WANT_BANK_NOTES && this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]) > 0
 								&& this.getShopItemNoted(slot)) {
 								this.getSurface().drawSpriteClipping(this.spriteSelect(EntityHandler.noteDef),
 									sx, sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
@@ -3738,7 +3738,7 @@ public final class mudclient implements Runnable {
 			if (this.shopSelectedItemIndex != -1) {
 				int id = this.shopCategoryID[this.shopSelectedItemIndex];
 				if (id != -1) {
-					int count = this.shopItemCount[this.shopSelectedItemIndex];
+					int count = this.getShopItemCount(this.shopSelectedItemIndex);
 					if (count <= 0) {
 						this.getSurface().drawColoredStringCentered(204 + xr,
 							"This item is not currently available to buy", 0xFFFF00, 0, 3, 214 + yr);
@@ -3849,6 +3849,22 @@ public final class mudclient implements Runnable {
 		} catch (RuntimeException var14) {
 			throw GenUtil.makeThrowable(var14, "client.HA(" + "dummy" + ')');
 		}
+	}
+
+	private int getShopItemCount(int index) {
+		int count = 0;
+		if (S_WANT_BANK_NOTES) {
+			int catId = this.shopCategoryID[index];
+			for (int i = 0; i < this.shopCategoryID.length; i++) {
+				if (this.shopCategoryID[i] == catId) {
+					count += this.shopItemCount[i];
+				}
+			}
+		}
+		else {
+			count = this.shopItemCount[index];
+		}
+		return count;
 	}
 
 	private void drawDialogTrade() {
@@ -8859,6 +8875,13 @@ public final class mudclient implements Runnable {
 		int index = 0;
 		this.getSurface().drawString("Game options", 3 + baseX, y, 0, 1);
 
+		// Reset zoom
+		if (S_ZOOM_VIEW_TOGGLE)
+		{
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Reset zoom", 21, null, null);
+		}
+
 		// camera angle mode - byte index 1
 		if (this.optionCameraModeAuto) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
@@ -9222,6 +9245,13 @@ public final class mudclient implements Runnable {
 			settingIndex = this.panelSettings.getControlSelectedListInt(this.controlSettingPanel, checkPosition);
 		else
 			settingIndex = checkPosition;
+
+		// Zoom reset
+		if (S_ZOOM_VIEW_TOGGLE) {
+			if (settingIndex == 21 && this.mouseButtonClick == 1) {
+				osConfig.C_LAST_ZOOM = 75;
+			}
+		}
 
 		// camera mode - byte index 0
 		if (settingIndex == 0 && this.mouseButtonClick == 1) {

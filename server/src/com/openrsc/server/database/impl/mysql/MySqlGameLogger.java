@@ -2,7 +2,7 @@ package com.openrsc.server.database.impl.mysql;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
-import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.database.impl.mysql.queries.Query;
 import com.openrsc.server.database.impl.mysql.queries.ResultQuery;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public final class GameLogger implements Runnable {
+public final class MySqlGameLogger extends GameLogger {
 
 	/**
 	 * The asynchronous logger.
@@ -23,15 +23,20 @@ public final class GameLogger implements Runnable {
 	private final BlockingQueue<Query> queries;
 	private final Server server;
 	private final ScheduledExecutorService scheduledExecutor;
-	private final GameDatabase database;
+	private final MySqlGameDatabase database;
 
-	public GameLogger(final Server server) {
+	public MySqlGameLogger(final Server server, final MySqlGameDatabase database) {
 		this.server = server;
 
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
 		running = new AtomicBoolean(false);
 		queries = new ArrayBlockingQueue<>(10000);
-		database = new MySqlGameDatabase(getServer());
+		// TODO: Implement GameLogger into the database driver.
+		if (database == null) {
+			LOGGER.error("GameDatabase provided was null or not a MySqlGameDatabase.");
+			System.exit(1);
+		}
+		this.database = database;
 	}
 
 	public final Server getServer() {
@@ -51,7 +56,7 @@ public final class GameLogger implements Runnable {
 	@Override
 	public void run() {
 		if (running.get()) {
-			while (queries.size() > 0 && getServer().getDatabase().isConnected()) {
+			while (queries.size() > 0 && getDatabase().getConnection().isConnected()) {
 				pollNextQuery();
 			}
 		}
@@ -66,9 +71,9 @@ public final class GameLogger implements Runnable {
 			if (query != null) {
 				if (query instanceof ResultQuery) {
 					final ResultQuery rq = (ResultQuery) query;
-					rq.onResult(rq.prepareStatement(getServer().getDatabase().getConnection().getConnection()).executeQuery());
+					rq.onResult(rq.prepareStatement(getDatabase().getConnection().getConnection()).executeQuery());
 				} else {
-					query.prepareStatement(getServer().getDatabase().getConnection().getConnection()).execute();
+					query.prepareStatement(getDatabase().getConnection().getConnection()).execute();
 				}
 			}
 		/*} catch (final GameDatabaseException ex) {
@@ -91,7 +96,7 @@ public final class GameLogger implements Runnable {
 		runQuery(query);
 	}
 
-	public GameDatabase getDatabase() {
+	private MySqlGameDatabase getDatabase() {
 		return database;
 	}
 }

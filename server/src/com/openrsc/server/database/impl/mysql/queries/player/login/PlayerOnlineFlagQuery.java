@@ -14,14 +14,14 @@ public class PlayerOnlineFlagQuery extends Query {
 	private String loginIP;
 
 	public PlayerOnlineFlagQuery(Server server, int playerID, String loginIP, boolean online) {
-		super("UPDATE `" + server.getConfig().MYSQL_TABLE_PREFIX + "players` SET `online`=?, `login_date`=?, `login_ip`=? WHERE `id`=?");
+		super("UPDATE `" + server.getConfig().DB_TABLE_PREFIX + "players` SET `online`=?, `login_date`=?, `login_ip`=? WHERE `id`=?");
 		this.playerID = playerID;
 		this.loginIP = loginIP;
 		this.online = online;
 	}
 
 	public PlayerOnlineFlagQuery(Server server, int playerID, boolean online) {
-		super("UPDATE `" + server.getConfig().MYSQL_TABLE_PREFIX + "players` SET `online`=? WHERE `id`=?");
+		super("UPDATE `" + server.getConfig().DB_TABLE_PREFIX + "players` SET `online`=? WHERE `id`=?");
 		this.playerID = playerID;
 		this.online = online;
 		loginIP = null;

@@ -3,8 +3,9 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
-import com.openrsc.server.database.impl.mysql.GameLogger;
+import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -56,8 +57,8 @@ public class Server implements Runnable {
 	private final PluginHandler pluginHandler;
 	private final CombatScriptLoader combatScriptLoader;
 	private final EntityHandler entityHandler;
-	private final GameLogger gameLogger;
-	private final MySqlGameDatabase database;
+	private final MySqlGameLogger gameLogger;
+	private final GameDatabase database;
 	private final AchievementSystem achievementSystem;
 	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
@@ -150,14 +151,23 @@ public class Server implements Runnable {
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
-		database = new MySqlGameDatabase(this);
+		switch (getConfig().DB_TYPE){
+			case MYSQL:
+				database = new MySqlGameDatabase(this);
+				break;
+			default:
+				database = null;
+				LOGGER.error("No database type");
+				System.exit(1);
+				break;
+		}
 
 		discordService = new DiscordService(this);
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
-		gameLogger = new GameLogger(this);
+		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		monitoring = new MonitoringEvent(getWorld());
@@ -495,7 +505,7 @@ public class Server implements Runnable {
 		return combatScriptLoader;
 	}
 
-	public GameLogger getGameLogger() {
+	public MySqlGameLogger getGameLogger() {
 		return gameLogger;
 	}
 
@@ -503,7 +513,7 @@ public class Server implements Runnable {
 		return entityHandler;
 	}
 
-	public MySqlGameDatabase getDatabase() {
+	public GameDatabase getDatabase() {
 		return database;
 	}
 

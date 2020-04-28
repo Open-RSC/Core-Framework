@@ -51,7 +51,7 @@ public class CombatEvent extends GameTickEvent {
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
 
-			int exp = Formulae.combatExperience(playerKilled, 0);
+			int exp = Formulae.combatExperience(playerKilled);
 			switch (playerKiller.getCombatStyle()) {
 				case Skills.CONTROLLED_MODE:
 					for (int x = 0; x < 3; x++) {

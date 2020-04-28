@@ -144,7 +144,7 @@ public class Inventory {
 					list.add(itemToAdd);
 
 					// Update the Database - Add to the last slot and create a new itemID
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					//Update the client
 					if (sendInventory)
@@ -225,7 +225,6 @@ public class Inventory {
 					// Loop until we have the correct item.
 					if (inventoryItem.getItemId() != itemID)
 						continue;
-
 					// Confirm itemDef exists.
 					ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
 					if (inventoryDef == null)
@@ -240,7 +239,7 @@ public class Inventory {
 						// If we remove the entire stack, remove the item status.
 						if (inventoryItem.getAmount() == amount) {
 
-							// Update the Server Bank
+							// Update the Server
 							iterator.remove();
 
 							// Update the Database - Remove item status
@@ -691,6 +690,9 @@ public class Inventory {
 				// Theres no stack found
 				return 1;
 			} else {
+				if (item.getAmount() > 1) {
+					return Math.min(MAX_SIZE - list.size(), item.getAmount());
+				}
 				return 1;
 			}
 		}

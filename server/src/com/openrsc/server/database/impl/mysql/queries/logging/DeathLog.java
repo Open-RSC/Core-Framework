@@ -26,7 +26,7 @@ public class DeathLog extends Query {
 	private boolean duel;
 
 	public DeathLog(Player killed, Mob killer, boolean duel) {
-		super("INSERT INTO `" + killed.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
+		super("INSERT INTO `" + killed.getWorld().getServer().getConfig().DB_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
 		this.world = killed.getWorld();
 		this.killed = killed.getUsername();
 		this.killer = killer == null ? "null" : killer.toString();
