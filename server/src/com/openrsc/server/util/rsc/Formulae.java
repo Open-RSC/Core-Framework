@@ -469,8 +469,8 @@ public final class Formulae {
 	/**
 	 * Calculate how much experience a Mob gives
 	 */
-	public static int combatExperience(Mob mob, int roundMode) { // OPEN RSC FORMULA + PECULIARITIES OF ORIGINAL RSC
-		return ((mob.getCombatLevel(roundMode) * 2) + 20);
+	public static int combatExperience(Mob mob) { // OG RSC FORMULA = Math.floor((2*(att+str+def)+hits)/7) * 2 + 20
+		return ((mob.getCombatLevel(true) * 2) + 20);
 	}
 
 	/**
@@ -572,37 +572,30 @@ public final class Formulae {
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatlevel(int[] stats, Integer roundMode) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], roundMode);
+	public static int getCombatlevel(int[] stats, boolean isForXp) {
+		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], isForXp);
 	}
 
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, Integer roundMode) {
-		double attack = att + str;
-		double defense = def + hits;
+	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isForXp) {
+		// OG RSC combat level to use with xp calc: (2 * (att + str + def) + hits) / 7
+		int multiplier = isForXp ? 2 : 1;
+		double attack = multiplier * (att + str);
+		double defense = multiplier * def + hits;
 		double mage = pray + magic;
 		mage /= 8D;
 
 		double level;
 
-		if (attack < ((double) range * 1.5D)) {
-			level = ((defense / 4D) + ((double) range * 0.375D) + mage);
+		if ((attack / multiplier) < ((double) range * 1.5D)) {
+			level = (isForXp ? (2 * defense + 3 * 1.75 * range) / 14D : (2 * defense + 3 * range) / 8D) + mage;
 		} else {
-			level = ((attack / 4D) + (defense / 4D) + mage);
+			level = (isForXp ? (attack + defense) / 7D : (attack + defense) / 4D) + mage;
 		}
 
-		switch (roundMode != null ? roundMode : 9999) {
-			case -1:
-				return (int) Math.floor(level);
-			case 0:
-				return (int) Math.round(level);
-			case 1:
-				return (int) Math.ceil(level);
-			default:
-				return (int) level;
-		}
+		return (int) Math.floor(level);
 	}
 
 	/**
