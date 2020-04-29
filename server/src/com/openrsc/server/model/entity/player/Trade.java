@@ -3,7 +3,6 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.model.container.ContainerListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemContainer;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class Trade implements ContainerListener {
@@ -66,7 +65,6 @@ public class Trade implements ContainerListener {
 		}
 		if (isTradeActive()) {
 			ActionSender.sendTradeWindowClose(player);
-			player.setStatus(Action.IDLE);
 		}
 		setTradeActive(false);
 		setTradeAccepted(false);

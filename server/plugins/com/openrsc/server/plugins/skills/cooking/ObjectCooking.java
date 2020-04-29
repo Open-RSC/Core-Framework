@@ -21,7 +21,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ObjectCooking implements UseLocTrigger {
 	@Override
-	public void onUseLoc(GameObject object, Item item, Player owner) {
+	public void onUseLoc(Player owner, GameObject object, Item item) {
 		Npc cook = ifnearvisnpc(owner, 7, 20);
 		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
 			&& object.getID() == 119) {
@@ -198,7 +198,7 @@ public class ObjectCooking implements UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		int[] ids = new int[]{97, 11, 119, 274, 435, 491};
 		Arrays.sort(ids);
 		if ((item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id() || item.getCatalogId() == ItemId.SEAWEED.id()

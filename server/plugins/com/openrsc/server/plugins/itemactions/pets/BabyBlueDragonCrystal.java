@@ -12,12 +12,12 @@ public class BabyBlueDragonCrystal implements OpInvTrigger {
 	protected Player petOwnerA;
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return command.equalsIgnoreCase("inspect");
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		//if (getConfig().DEBUG)
 		System.out.println("Pet item clicked");
 		int id = item.getCatalogId();

@@ -77,7 +77,7 @@ public final class AuburysRunes extends AbstractShop {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
 			player.setAccessingShop(shop);
 			ActionSender.showShop(player, shop);
@@ -87,7 +87,7 @@ public final class AuburysRunes extends AbstractShop {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return ( n.getID() == 54 &&
 			player.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&

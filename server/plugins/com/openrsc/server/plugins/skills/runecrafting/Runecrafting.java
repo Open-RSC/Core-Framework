@@ -3,23 +3,23 @@ package com.openrsc.server.plugins.skills.runecrafting;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectRunecraftingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
-import com.openrsc.server.net.rsc.ActionSender;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() < 1190 || obj.getID() > 1213)
 			return false;
 
@@ -52,7 +52,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 
 		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
 
@@ -98,7 +98,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 			}
 
 			if (player.getCarriedItems().hasCatalogID(requiredTalisman, Optional.of(false))) {
-				this.onUseLoc(obj, new Item(requiredTalisman, 1), player);
+				this.onUseLoc(player, obj, new Item(requiredTalisman, 1));
 			} else {
 				player.message("You can't enter this place");
 			}
@@ -137,7 +137,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 
 		if (item.getCatalogId() == ItemId.AIR_TALISMAN.id() && obj.getID() == 1190)
 			return true;
@@ -167,7 +167,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 
 		if (player.getQuestStage(Quests.RUNE_MYSTERIES) != -1)
 		{

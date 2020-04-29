@@ -70,7 +70,7 @@ public final class BoatFromKaramja implements
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 161 || (obj.getID() == 162) || (obj.getID() == 163)) {
 			if (command.equals("board")) {
 				if (player.getY() != 713) {
@@ -97,7 +97,7 @@ public final class BoatFromKaramja implements
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(Player arg2, GameObject arg0, String arg1) {
 		return (arg0.getID() == 161 && arg0.getLocation().equals(Point.location(326, 710)))
 			|| (arg0.getID() == 163 && arg0.getLocation().equals(Point.location(319, 710)))
 			|| (arg0.getID() == 162 && arg0.getLocation().equals(Point.location(324, 710)));

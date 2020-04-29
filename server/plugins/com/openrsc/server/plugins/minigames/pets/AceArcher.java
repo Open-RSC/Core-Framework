@@ -28,7 +28,6 @@ public class AceArcher implements UseNpcTrigger {
 			player.face(npc);
 			thinkbubble(player, item);
 			player.message("You attempt to put the baby blue dragon in the crystal.");
-			npc.setBusyTimer(1600);
 
 			player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Ace Archer Pet") {
 				public void action() {
@@ -59,11 +58,9 @@ public class AceArcher implements UseNpcTrigger {
 						give(player, ItemId.A_RED_CRYSTAL.id(), 1);
 						ActionSender.sendInventory(player);
 						player.setBusy(false);
-						npc.setBusyTimer(0);
 						npc.remove();
 					} else {
 						player.message("The baby blue dragon manages to get away from you!");
-						npc.setBusyTimer(0);
 						player.setBusy(false);
 					}
 				}

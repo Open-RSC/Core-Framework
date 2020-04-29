@@ -13,7 +13,6 @@ import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.UpdateFlags;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -37,7 +36,6 @@ public abstract class Mob extends Entity {
 	private int killType = 0;
 	private int combatStyle = com.openrsc.server.constants.Skills.CONTROLLED_MODE;
 	private int poisonDamage = 0;
-	private Action status = Action.IDLE;
 	private RangeEventNpc rangeEventNpc;
 	private long lastRun = 0;
 	private boolean teleporting;
@@ -46,10 +44,6 @@ public abstract class Mob extends Entity {
 	 * next update tick.
 	 */
 	protected boolean unregistering;
-	/**
-	 * Time in MS when we are freed from the 'busy' mode.
-	 */
-	private volatile long busyTimer;
 	/**
 	 * The combat event instance.
 	 */
@@ -495,10 +489,8 @@ public abstract class Mob extends Entity {
 					}
 				}
 				((Player) this).resetAll();
-				((Player) this).setStatus(Action.FIGHTING_MOB);
 				((Player) this).produceUnderAttack();
 			} else if (this.isNpc()) {
-				((Npc) this).setStatus(Action.FIGHTING_MOB);
 				((Npc) this).produceUnderAttack();
 			} else {
 				if (!this.isNpc()) {
@@ -534,7 +526,6 @@ public abstract class Mob extends Entity {
 					((Player) this).setSkulledOn(playerVictim);
 				}
 				playerVictim.resetAll();
-				playerVictim.setStatus(Action.FIGHTING_MOB);
 				gotUnderAttack = true;
 				playerVictim.releaseUnderAttack();
 
@@ -554,7 +545,6 @@ public abstract class Mob extends Entity {
 
 			if (victim.isNpc()) {
 				Npc npcVictim = (Npc) victim;
-				npcVictim.setStatus(Action.FIGHTING_MOB);
 				gotUnderAttack = true;
 				npcVictim.releaseUnderAttack();
 			} else {
@@ -655,7 +645,6 @@ public abstract class Mob extends Entity {
 			rangeEventNpc.stop();
 			rangeEventNpc = null;
 		}
-		setStatus(Action.IDLE);
 	}
 
 	public void setRangeEventNpc(RangeEventNpc event) {
@@ -663,7 +652,6 @@ public abstract class Mob extends Entity {
 			rangeEventNpc.stop();
 		}
 		rangeEventNpc = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
 	}
 
@@ -688,10 +676,8 @@ public abstract class Mob extends Entity {
 		final int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITS) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
-				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
 				killedBy(combatWith);
 			} else {
-				((Npc) this).setStatus(Action.DIED_FROM_DAMAGE);
 				killedBy(combatWith);
 			}
 		} else {
@@ -722,10 +708,6 @@ public abstract class Mob extends Entity {
 
 	public boolean finishedPath() {
 		return getWalkingQueue().finished();
-	}
-
-	public void setStatus(final Action a) {
-		status = a;
 	}
 
 	public RangeEventNpc getRangeEventNpc() {
@@ -849,20 +831,8 @@ public abstract class Mob extends Entity {
 		return (mobSprite == 8 || mobSprite == 9) && combatWith != null;
 	}
 
-	public long getLastRun() {
-		return lastRun;
-	}
-
-	public void setLastRun(final long lastRun) {
-		this.lastRun = lastRun;
-	}
-
-	public void setBusyTimer(final int i) {
-		this.busyTimer = System.currentTimeMillis() + i;
-	}
-
 	public synchronized boolean isBusy() {
-		return busyTimer - System.currentTimeMillis() > 0 || busy.get();
+		return busy.get();
 	}
 
 	public synchronized void setBusy(final boolean busy) {
@@ -975,8 +945,10 @@ public abstract class Mob extends Entity {
 	 * Function used to drop an item after walking completes.
 	 */
 	protected Item dropItemEvent = null;
+	protected int dropItemIndex = -1;
 
-	public void setDropItemEvent(Item item) {
+	public void setDropItemEvent(int index, Item item) {
+		this.dropItemIndex = index;
 		this.dropItemEvent = item;
 	}
 
@@ -989,10 +961,11 @@ public abstract class Mob extends Entity {
 		if (!this.isPlayer()) return; // We can only run Plugins on Players.
 		final Player player = (Player) this;
 		final Item item = player.getDropItemEvent();
-		this.setDropItemEvent(null);
+		final int index = dropItemIndex;
+		this.setDropItemEvent(-1, null);
 		if (item == null) return;
 
-		getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, item, fromInventory});
+		getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, index, item, fromInventory});
 	}
 
 	protected Player talkToNpcEvent = null;
@@ -1008,9 +981,6 @@ public abstract class Mob extends Entity {
 	public void runTalkToNpcEvent() {
 		Player player = getTalkToNpcEvent();
 		setTalkToNpcEvent(null);
-		if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, this})) {
-			player.setInteractingNpc((Npc) this);
-		}
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, this});
 	}
-
 }

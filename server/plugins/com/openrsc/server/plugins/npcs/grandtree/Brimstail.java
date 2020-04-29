@@ -28,12 +28,12 @@ public class Brimstail implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 667;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		player.setBusy(true);
 		player.message("you enter the cave");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);

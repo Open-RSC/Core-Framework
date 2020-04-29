@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -51,8 +50,8 @@ public class AttackHandler implements PacketHandler {
 			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
-			if (pl.getLocation().inWilderness() && System.currentTimeMillis() - pl.getLastRun() < 3000) {
-				//player.resetPath();
+			if (pl.getLocation().inWilderness() && System.currentTimeMillis() - pl.getRanAwayTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
+				player.resetPath();
 				return;
 			}
 		}
@@ -80,10 +79,11 @@ public class AttackHandler implements PacketHandler {
 			}
 		}
 
-		player.setStatus(Action.ATTACKING_MOB);
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
-			if (affectedMob.isNpc())
+			if (affectedMob.isNpc()) {
 				player.setFollowing(affectedMob, 0);
+			}
+
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, affectedMob.isNpc() ? 1 : 2) {
 				public void executeInternal() {
 					getPlayer().resetPath();
@@ -94,7 +94,7 @@ public class AttackHandler implements PacketHandler {
 						return;
 					}
 					if (getPlayer().isBusy() || mob.isBusy() || !getPlayer().canReach(mob)
-						|| !getPlayer().checkAttack(mob, false) || getPlayer().getStatus() != Action.ATTACKING_MOB) {
+						|| !getPlayer().checkAttack(mob, false)) {
 						return;
 					}
 					if (mob.isNpc()) {
@@ -110,8 +110,7 @@ public class AttackHandler implements PacketHandler {
 				}
 			});
 		} else {
-			if (player.isBusy() || !player.checkAttack(affectedMob, true)
-				|| player.getStatus() != Action.ATTACKING_MOB) {
+			if (player.isBusy() || !player.checkAttack(affectedMob, true)) {
 				return;
 			}
 			final Mob target = affectedMob;
@@ -121,7 +120,6 @@ public class AttackHandler implements PacketHandler {
 			player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Handle Attack") {
 				@Override
 				public void action() {
-					getOwner().setStatus(Action.RANGING_MOB);
 					if (target.isPlayer()) {
 						assert target instanceof Player;
 						Player affectedPlayer = (Player) target;

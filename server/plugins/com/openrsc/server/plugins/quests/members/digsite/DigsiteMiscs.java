@@ -12,13 +12,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public class DigsiteMiscs implements DropObjTrigger {
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return DataConversions.inArray(new int[] {ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id(),
 				ItemId.MIXED_CHEMICALS_1.id(), ItemId.MIXED_CHEMICALS_2.id(), ItemId.EXPLOSIVE_COMPOUND.id()}, item.getCatalogId());
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			player.message("bang!");
 			player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));

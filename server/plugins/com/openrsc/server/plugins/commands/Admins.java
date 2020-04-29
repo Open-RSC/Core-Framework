@@ -72,12 +72,12 @@ public final class Admins implements CommandTrigger {
 		return location;
 	}
 
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return player.isAdmin();
 	}
 
 	@Override
-	public void onCommand(String cmd, String[] args, final Player player) {
+	public void onCommand(final Player player, String cmd, String[] args) {
 		if (messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}

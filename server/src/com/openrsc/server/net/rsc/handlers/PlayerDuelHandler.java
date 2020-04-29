@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -175,11 +174,9 @@ public class PlayerDuelHandler implements PacketHandler {
 
 				player.resetAllExceptDueling();
 				player.setBusy(true);
-				player.setStatus(Action.DUELING_PLAYER);
 
 				affectedPlayer.resetAllExceptDueling();
 				affectedPlayer.setBusy(true);
-				affectedPlayer.setStatus(Action.DUELING_PLAYER);
 
 				if (player.getDuel().getDuelSetting(3)) {
 					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
@@ -190,9 +187,7 @@ public class PlayerDuelHandler implements PacketHandler {
 								if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
 									player.getDuel().resetAll();
 									player.setBusy(false);
-									player.setStatus(Action.IDLE);
 									affectedPlayer.setBusy(false);
-									affectedPlayer.setStatus(Action.IDLE);
 									player.message("Your inventory is full and you can't unequip your items. Cancelling duel.");
 									affectedPlayer.message("Your opponent needs to clear his inventory. Cancelling duel.");
 									return;
@@ -206,9 +201,7 @@ public class PlayerDuelHandler implements PacketHandler {
 								if (!affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
 									affectedPlayer.getDuel().resetAll();
 									player.setBusy(false);
-									player.setStatus(Action.IDLE);
 									affectedPlayer.setBusy(false);
-									affectedPlayer.setStatus(Action.IDLE);
 									affectedPlayer.message("Your inventory is full and you can't unequip your items. Cancelling duel.");
 									player.message("Your opponent needs to clear his inventory. Cancelling duel.");
 									return;

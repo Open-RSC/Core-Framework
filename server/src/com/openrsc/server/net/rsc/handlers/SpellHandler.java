@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.*;
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
@@ -20,13 +21,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -213,7 +212,8 @@ public class SpellHandler implements PacketHandler {
 		// Cast on Inventory Item
 		else if (pID == CAST_ON_INV_ITEM) {
 			if (spell.getSpellType() == 3) {
-				Item item = player.getCarriedItems().getInventory().get(packet.readShort());
+				int invIndex = packet.readShort();
+				Item item = player.getCarriedItems().getInventory().get(invIndex);
 				if (item == null) {
 					player.resetPath();
 					return;
@@ -228,7 +228,7 @@ public class SpellHandler implements PacketHandler {
 
 				// Attempt to find a spell in a plugin, otherwise use this file.
 				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
-						new Object[]{player, item.getCatalogId(), idx})) {
+						new Object[]{player, invIndex, item.getCatalogId(), idx})) {
 					return;
 				}
 				handleItemCast(player, spell, idx, item);
@@ -761,12 +761,10 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	private void handleItemCast(Player player, final SpellDef spell, final int id, final GroundItem affectedItem) {
-		player.setStatus(Action.CASTING_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player, affectedItem.getLocation(), 4) {
 			public void executeInternal() {
 				getPlayer().resetPath();
-				if (!canCast(getPlayer()) || getPlayer().getViewArea().getGroundItem(affectedItem.getID(), getLocation()) == null
-					|| getPlayer().getStatus() != Action.CASTING_GITEM || affectedItem.isRemoved()) {
+				if (!canCast(getPlayer()) || getPlayer().getViewArea().getGroundItem(affectedItem.getID(), getLocation()) == null || affectedItem.isRemoved()) {
 					return;
 				}
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedItem.getLocation())) {
@@ -897,17 +895,16 @@ public class SpellHandler implements PacketHandler {
 		}
 		if (affectedMob.isPlayer()) {
 			Player other = (Player) affectedMob;
-			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getLastRun() < 1000) {
+			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getRanAwayTimer() < 1000) {
 				player.resetPath();
 				return;
 			}
 		}
-		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getLastRun() < 3000) {
+		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getRanAwayTimer() < 3000) {
 			player.resetPath();
 			return;
 		}
 		player.setFollowing(affectedMob);
-		player.setStatus(Action.CASTING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4) {
 			public void executeInternal() {
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedMob.getLocation())) {
@@ -918,7 +915,7 @@ public class SpellHandler implements PacketHandler {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
 				SpellDef spell = getPlayer().getWorld().getServer().getEntityHandler().getSpellDef(spellID);
-				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(Skills.HITS) <= 0 || getPlayer().getStatus() != Action.CASTING_MOB) {
+				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(Skills.HITS) <= 0) {
 					getPlayer().resetPath();
 					return;
 				}
@@ -1116,7 +1113,7 @@ public class SpellHandler implements PacketHandler {
 								getPlayer().getCache().set(spell.getName() + "_casts", 1);
 							}
 						}
-						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY()) == null) {
+						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY(), getPlayer()) == null) {
 							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, false), 1));

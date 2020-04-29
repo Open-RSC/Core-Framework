@@ -598,12 +598,12 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 458 || obj.getID() == 453;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 458) {
 			if (player.getQuestStage(getQuestId()) < 5) {
 				mes(player, "You climb up the ladder");
@@ -659,13 +659,12 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 124;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 124) {
 			if (player.getQuestStage(getQuestId()) == 5) {
 				mes(player, "you kick the loose panel",

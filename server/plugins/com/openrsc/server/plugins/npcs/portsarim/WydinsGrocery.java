@@ -27,8 +27,8 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 	}
 
 	@Override
-	public boolean blockOpBound(final GameObject obj,
-								final Integer click, final Player player) {
+	public boolean blockOpBound(final Player player, final GameObject obj,
+								final Integer click) {
 		return obj.getID() == 47 && obj.getX() == 277 && obj.getY() == 658;
 	}
 
@@ -70,8 +70,7 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 	}
 
 	@Override
-	public void onOpBound(final GameObject obj, final Integer click,
-						  final Player player) {
+	public void onOpBound(final Player player, final GameObject obj, final Integer click) {
 		if (obj.getID() == 47 && obj.getX() == 277 && obj.getY() == 658) {
 			final Npc n = player.getWorld().getNpcById(NpcId.WYDIN.id());
 

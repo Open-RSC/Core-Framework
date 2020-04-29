@@ -17,7 +17,7 @@ public class SewerValve implements OpLocTrigger {
 	private static final int LOG_RAFT_BACK = 433;
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == SEWER_VALVE_1 || obj.getID() == SEWER_VALVE_2 || obj.getID() == SEWER_VALVE_3 || obj.getID() == SEWER_VALVE_4 || obj.getID() == SEWER_VALVE_5) {
 			if (command.equalsIgnoreCase("turn left")) {
 				player.message("you turn the large metal");
@@ -111,7 +111,7 @@ public class SewerValve implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == SEWER_VALVE_1 || obj.getID() == SEWER_VALVE_2 || obj.getID() == SEWER_VALVE_3 || obj.getID() == SEWER_VALVE_4 || obj.getID() == SEWER_VALVE_5 || obj.getID() == LOG_RAFT || obj.getID() == LOG_RAFT_BACK;
 	}
 }

@@ -23,13 +23,13 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	public static final int[] STONE_REMAINING_BRIDGES = {893, 907, 905, 909, 903, 901, 895, 899, 897};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), LEDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES) || inArray(obj.getID(), STONE_REMAINING_BRIDGES)
 				|| obj.getID() == FIRST_REMAINING_BRIDGE || obj.getID() == NORTH_STONE_STEP || obj.getID() == SOUTH_STONE_STEP;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), LEDGES)) {
 			mes(player, "you climb the ledge");
 			if (succeed(player, 1)) {

@@ -12,8 +12,8 @@ import static com.openrsc.server.plugins.Functions.*;
 public final class Pick implements OpLocTrigger {
 
 	@Override
-	public boolean blockOpLoc(final GameObject obj,
-							  final String command, final Player player) {
+	public boolean blockOpLoc(final Player player, final GameObject obj,
+							  final String command) {
 		return command.equals("pick")
 			|| /* Flax */obj.getID() == 313;
 	}
@@ -34,8 +34,7 @@ public final class Pick implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(final GameObject object, final String command,
-						final Player player) {
+	public void onOpLoc(final Player player, final GameObject object, final String command) {
 		switch (object.getID()) {
 			case 72: // Wheat
 				handleCropPickup(player, ItemId.GRAIN.id(), "You get some grain");

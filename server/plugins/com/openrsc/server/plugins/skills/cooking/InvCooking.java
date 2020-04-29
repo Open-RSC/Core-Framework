@@ -15,7 +15,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class InvCooking implements UseInvTrigger {
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id()) {
 			if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
 				&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
@@ -171,7 +171,7 @@ public class InvCooking implements UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id())
 			return true;
 		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()

@@ -72,6 +72,6 @@ public final class ReportHandler implements PacketHandler {
 		}
 
 		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
-			new Object[]{cmd.toLowerCase(), args, player});
+			new Object[]{player, cmd.toLowerCase(), args});
 	}
 }

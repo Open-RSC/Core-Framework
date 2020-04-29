@@ -328,8 +328,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615)
 				|| (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614)
 				|| (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617)
@@ -339,7 +338,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 615
 			|| obj.getID() == 290 && obj.getX() == 557 && obj.getY() == 614) {
 			player.message("The crate is empty");
@@ -406,13 +405,12 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 328 && item.getCatalogId() == ItemId.ADDRESS_LABEL.id()) {
 			if (player.getQuestStage(this) == -1) {
 				player.message("You've already done this!");
@@ -427,13 +425,12 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 98 && obj.getX() == 561 && obj.getY() == 586
 			&& click == 0) {
 			player.message("choose a position for dial 1");

@@ -459,12 +459,12 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == STAIR_DOWN || obj.getID() == STAIR_UP) || (obj.getID() == LEVER || obj.getID() == COMPLETE_LEVER);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == STAIR_DOWN) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.LIT_CANDLE.id(), Optional.of(false))
 				|| player.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false))
@@ -568,12 +568,12 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.LEVER.id() && obj.getID() == LEVER_BRACKET) {
 			player.message("You fit the lever into the bracket");
 			player.getCarriedItems().remove(new Item(ItemId.LEVER.id()));

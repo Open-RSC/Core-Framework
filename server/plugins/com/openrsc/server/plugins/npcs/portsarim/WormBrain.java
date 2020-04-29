@@ -18,13 +18,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public final class WormBrain implements OpBoundTrigger {
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return player.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, final Player player) {
+	public void onOpBound(final Player player, GameObject obj, Integer click) {
 		if (player.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = ifnearvisnpc(player, NpcId.WORMBRAIN.id(), 10);

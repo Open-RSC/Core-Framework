@@ -8,9 +8,9 @@ public interface UseLocTrigger {
 	/**
 	 * Called when a user uses an inventory item on an game object
 	 */
-	void onUseLoc(GameObject obj, Item item, Player player);
+	void onUseLoc(Player player, GameObject obj, Item item);
 	/**
 	 * Return true to prevent a user when he uses an inventory item on an game object
 	 */
-	boolean blockUseLoc(GameObject obj, Item item, Player player);
+	boolean blockUseLoc(Player player, GameObject obj, Item item);
 }

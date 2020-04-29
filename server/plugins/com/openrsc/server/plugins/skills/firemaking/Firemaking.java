@@ -30,12 +30,12 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			ItemId.MAPLE_LOGS.id(), ItemId.YEW_LOGS.id(), ItemId.MAGIC_LOGS.id()};
 
 	@Override
-	public boolean blockUseObj(Item myItem, GroundItem item, Player player) {
+	public boolean blockUseObj(Player player, GroundItem item, Item myItem) {
 		return myItem.getCatalogId() == TINDERBOX && inArray(item.getID(), LOGS);
 	}
 
 	@Override
-	public void onUseObj(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		if (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING) {
 			switch (ItemId.getById(item.getID())) {
 				case LOGS:
@@ -209,13 +209,13 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING &&
 		(item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)));
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)) {
 			player.playerServerMessage(MessageType.QUEST, "I think you should put the logs down before you light them!");
 		}

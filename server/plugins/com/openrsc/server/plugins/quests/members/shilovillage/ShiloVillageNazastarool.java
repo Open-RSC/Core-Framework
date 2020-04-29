@@ -22,12 +22,12 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	private static final int TOMB_DOLMEN_Nazastarool = 724;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == TOMB_DOLMEN_Nazastarool;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == TOMB_DOLMEN_Nazastarool) {
 			if (player.getCache().hasKey("dolmen_zombie")
 				&& player.getCache().hasKey("dolmen_skeleton")

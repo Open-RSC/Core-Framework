@@ -10,7 +10,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class GnomeSlice implements UseInvTrigger {
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.ORANGE.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.LIME.id()))
@@ -27,7 +27,7 @@ public class GnomeSlice implements UseInvTrigger {
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.ORANGE.id())) {
 			player.message("you can slice or dice the orange");
 			int menu = multi(player,

@@ -7,10 +7,10 @@ public interface DropObjTrigger {
 	/**
 	 * Called when a user drops an item
 	 */
-	void onDropObj(Player player, Item item, Boolean fromInventory);
+	void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory);
 
 	/**
 	 * Return true if you wish to prevent a user from dropping an item
 	 */
-	boolean blockDropObj(Player player, Item item, Boolean fromInventory);
+	boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory);
 }

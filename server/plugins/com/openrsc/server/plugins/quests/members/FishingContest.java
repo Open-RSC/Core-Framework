@@ -69,14 +69,14 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(final GameObject obj,
-							   final Item item, final Player player) {
+	public boolean blockUseLoc(final Player player, final GameObject obj,
+							   final Item item) {
 		return obj.getID() == 355 || obj.getID() == 350;
 	}
 
 	@Override
-	public boolean blockOpLoc(final GameObject obj,
-							  final String command, final Player player) {
+	public boolean blockOpLoc(final Player player, final GameObject obj,
+							  final String command) {
 		//353 - big dave's spot, 354 - joshua's spot
 		return obj.getID() == 358 || obj.getID() == 352 || obj.getID() == 351
 				|| obj.getID() == 359 || obj.getID() == 353 || obj.getID() == 354;
@@ -468,8 +468,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(final GameObject obj, final Item item,
-						 final Player player) {
+	public void onUseLoc(final Player player, final GameObject obj, final Item item) {
 
 		if (obj.getID() == 355 && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
@@ -501,8 +500,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(final GameObject obj, final String command,
-						final Player player) {
+	public void onOpLoc(final Player player, final GameObject obj, final String command) {
 
 		if (obj.getID() == 358) {
 			Npc bonzo = ifnearvisnpc(player, NpcId.BONZO.id(), 15);

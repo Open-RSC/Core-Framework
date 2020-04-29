@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class TaskPlugin implements TalkNpcTrigger, OpLocTrigger {
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		ArrayList<Achievement> availableTasks = player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, obj);
 		if (availableTasks.size() > 1) {
 			player.message("You can get multiple tasks from this object");
@@ -55,7 +55,7 @@ public class TaskPlugin implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return player.getWorld().getServer().getAchievementSystem().getAvailableQuestsForEntity(player, obj).size() > 0;
 	}
 

@@ -39,12 +39,12 @@ public class ExitPortal implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getGameObjectDef().getObjectModel().equalsIgnoreCase("portal");
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 
 		if (command.equalsIgnoreCase("exit")) {
 			switch (obj.getID()) {

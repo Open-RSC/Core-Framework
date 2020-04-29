@@ -289,7 +289,7 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == GHOST_COFFIN_OPEN || obj.getID() == GHOST_COFFIN_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openGenericObject(obj, player, GHOST_COFFIN_OPEN, "You open the coffin");
@@ -308,7 +308,7 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
 			addnpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
@@ -333,14 +333,12 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.QUEST_SKULL.id() && obj.getID() == GHOST_COFFIN_OPEN;
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == GHOST_COFFIN_OPEN || obj.getID() == GHOST_COFFIN_CLOSED;
 	}
 

@@ -7,7 +7,6 @@ import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -40,7 +39,6 @@ public class WalkRequest implements PacketHandler {
 					opponent.setLastOpponent(opponent.getOpponent());
 					player.setLastOpponent(player.getOpponent());
 					player.setRanAwayTimer();
-					player.setLastRun(System.currentTimeMillis());
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
@@ -87,7 +85,5 @@ public class WalkRequest implements PacketHandler {
 			path.finish();
 		}
 		player.getWalkingQueue().setPath(path);
-
-		player.setStatus(Action.IDLE);
 	}
 }

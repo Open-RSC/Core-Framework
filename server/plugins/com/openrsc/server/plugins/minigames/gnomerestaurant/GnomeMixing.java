@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.minigames.gnomerestaurant;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import java.util.Optional;
@@ -24,12 +23,12 @@ public class GnomeMixing implements UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return canMix(item1, item2);
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		GnomeMix gm = null;
 		for (GnomeMix mix : GnomeMix.values()) {
 			if (mix.isValid(item1.getCatalogId(), item2.getCatalogId())) {

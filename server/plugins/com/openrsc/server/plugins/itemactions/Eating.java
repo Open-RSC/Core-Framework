@@ -15,12 +15,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Eating implements OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
-	public void onOpInv(final Item item, final Player player, final String command) {
+	public void onOpInv(final Player player, Integer invIndex, final Item item, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
 
 			if (player.cantConsume()) {

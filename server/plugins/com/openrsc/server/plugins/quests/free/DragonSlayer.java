@@ -282,8 +282,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getY() == 643 && (obj.getID() == LUMBRIDGE_LADY_SARIM1 || obj.getID() == LUMBRIDGE_LADY_SARIM2))
 			|| (obj.getY() == 641 && (obj.getID() == LUMBRIDGE_LADY_CRANDOR1 || obj.getID() == LUMBRIDGE_LADY_CRANDOR2))
 			|| obj.getID() == BOATS_LADDER
@@ -292,7 +291,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case DWARVEN_CHEST_OPEN:
 			case DWARVEN_CHEST_CLOSED:
@@ -421,12 +420,12 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 57 || obj.getID() == 58 || obj.getID() == 59 || obj.getID() == 60;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 57) {
 			//special door dwarven mine
 			if (player.getX() >= 259 && player.getCarriedItems().hasCatalogID(ItemId.WIZARDS_MIND_BOMB.id(), Optional.of(false))
@@ -478,13 +477,13 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
 				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item1.getCatalogId())
 				&& DataConversions.inArray(new int[] {ItemId.MAP_PIECE_1.id(), ItemId.MAP_PIECE_2.id(), ItemId.MAP_PIECE_3.id()}, item2.getCatalogId())) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))
@@ -499,13 +498,12 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 226 || obj.getID() == 232;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if ((obj.getID() == 226 || obj.getID() == 232) && item.getCatalogId() == ItemId.PLANK.id()) {
 			if (player.getCache().hasKey("lumb_lady") && player.getCache().getInt("lumb_lady") == CRANDOR) {
 				player.message("The ship doesn't seem easily repairable at the moment");

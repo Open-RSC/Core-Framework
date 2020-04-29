@@ -61,7 +61,7 @@ public final class PortSarimSailor implements OpLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject arg0, String arg1, Player player) {
+	public void onOpLoc(Player player, GameObject arg0, String arg1) {
 		Npc sailor = ifnearvisnpc(player, NpcId.CAPTAIN_TOBIAS.id(), 5);
 		if (sailor != null) {
 			sailor.initializeTalkScript(player);
@@ -72,7 +72,7 @@ public final class PortSarimSailor implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(Player arg2, GameObject arg0, String arg1) {
 		return (arg0.getID() == 155 && arg0.getLocation().equals(Point.location(265, 645)))
 			|| (arg0.getID() == 156 && arg0.getLocation().equals(Point.location(265, 650)))
 			|| (arg0.getID() == 157 && arg0.getLocation().equals(Point.location(265, 652)));

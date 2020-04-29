@@ -5,7 +5,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -29,12 +28,10 @@ public class GameObjectWallAction implements PacketHandler {
 			player.setSuspiciousPlayer(true, "game object wall has null object");
 			return;
 		}
-		player.setStatus(Action.USING_DOOR);
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				DoorDef def = object.getDoorDef();
-				if (getPlayer().isBusy() || getPlayer().isRanging() || def == null
-					|| getPlayer().getStatus() != Action.USING_DOOR) {
+				if (getPlayer().isBusy() || getPlayer().isRanging() || def == null) {
 					/*getPlayer().message(
 						"Busy: " + getPlayer().isBusy() +
 						" Ranging: " + getPlayer().isRanging() +
@@ -46,7 +43,7 @@ public class GameObjectWallAction implements PacketHandler {
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"OpBound",
-					new Object[]{object, click, getPlayer()}, this)) {
+					new Object[]{getPlayer(), object, click}, this)) {
 					return;
 				}
 

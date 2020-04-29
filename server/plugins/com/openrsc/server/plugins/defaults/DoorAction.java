@@ -1349,7 +1349,6 @@ public class DoorAction {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
 			} else {
 				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
-				owner.setBusyTimer(owner.getWorld().getServer().getConfig().GAME_TICK);
 			}
 			owner.playSound(open ? "opendoor" : "closedoor");
 			owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));

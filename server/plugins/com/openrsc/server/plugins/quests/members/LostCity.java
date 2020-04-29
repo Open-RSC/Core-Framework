@@ -60,14 +60,13 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), LEPROCHAUN_TREE, ENTRANA_LADDER,
 			DRAMEN_TREE);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case 244:
 				Npc monk = ifnearvisnpc(player, NpcId.MONK_OF_ENTRANA_ENTRANA.id(), 10);
@@ -85,7 +84,6 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					} else {
 						player.message("A Leprechaun jumps down from the tree and runs off");
 						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
-						player.setBusyTimer(1800);
 						lepr.walk(173, 661);
 						try {
 							player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(),null, player.getWorld().getServer().getConfig().GAME_TICK, "Lost City Leprechaun", true) {
@@ -408,12 +406,12 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.KNIFE.id(), ItemId.DRAMEN_BRANCH.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 31) {
 				mes(player,
@@ -428,13 +426,12 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return inArray(obj.getID(), MAGIC_DOOR, ZANARIS_DOOR);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == MAGIC_DOOR) {
 			player.teleport(109, 245, true);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);

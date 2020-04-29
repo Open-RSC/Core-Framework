@@ -21,12 +21,12 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	private static final HashMap<Player, RestartableDelayedEvent> playerEventMap = new HashMap<Player, RestartableDelayedEvent>();
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		// simple random for the moment
 		mes(player, 0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
@@ -50,12 +50,12 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.HOLY_WATER_VIAL.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.HOLY_WATER_VIAL.id())) {
 			player.message("You need to equip this item to throw it.");
 		}

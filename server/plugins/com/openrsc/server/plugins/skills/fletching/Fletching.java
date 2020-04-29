@@ -30,7 +30,7 @@ public class Fletching implements UseInvTrigger {
 	};
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		int item1ID = item1.getCatalogId();
 		int item2ID = item2.getCatalogId();
 		if (item1ID == com.openrsc.server.constants.ItemId.FEATHER.id() && attachFeathers(player, item1, item2)) {
@@ -461,7 +461,7 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (item1.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
 			doLogCut(player, item1, item2);
 		} else if (item2.getCatalogId() == com.openrsc.server.constants.ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {

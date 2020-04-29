@@ -9,7 +9,7 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 public class RuneTalisman implements OpInvTrigger {
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		switch(ItemId.getById(item.getCatalogId())) {
 			case AIR_TALISMAN:
 			case MIND_TALISMAN:
@@ -103,7 +103,7 @@ public class RuneTalisman implements OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.AIR_TALISMAN.id() || item.getCatalogId() == ItemId.MIND_TALISMAN.id() ||
 			item.getCatalogId() == ItemId.WATER_TALISMAN.id() || item.getCatalogId() == ItemId.EARTH_TALISMAN.id() ||
 			item.getCatalogId() == ItemId.FIRE_TALISMAN.id() || item.getCatalogId() == ItemId.BODY_TALISMAN.id() ||

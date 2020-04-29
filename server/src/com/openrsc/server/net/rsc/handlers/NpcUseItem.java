@@ -4,7 +4,6 @@ import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -24,15 +23,13 @@ public class NpcUseItem implements PacketHandler {
 			return;
 		}
 		player.setFollowing(affectedNpc);
-		player.setStatus(Action.USING_Item_ON_NPC);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
 				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
-					|| affectedNpc.isBusy()
-					|| getPlayer().getStatus() != Action.USING_Item_ON_NPC) {
+					|| affectedNpc.isBusy()) {
 					return;
 				}
 				getPlayer().resetAll();

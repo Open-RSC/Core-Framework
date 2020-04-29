@@ -5,7 +5,6 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -30,33 +29,31 @@ public class ItemUseOnNpc implements PacketHandler {
 			return;
 		}
 		player.setFollowing(affectedNpc, 0);
-		player.setStatus(Action.USING_Item_ON_NPC);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
 				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
-					|| affectedNpc.isBusy()
-					|| getPlayer().getStatus() != Action.USING_Item_ON_NPC) {
+					|| affectedNpc.isBusy()) {
 					return;
 				}
 				getPlayer().resetAll();
 				getPlayer().face(affectedNpc);
 				if (item.getNoted()) {
 					getPlayer().message("Nothing interesting happens");
+					return;
+				}
+				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
+					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					getPlayer().message(getPlayer().MEMBER_MESSAGE);
+					return;
 				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"UseNpc",
 					new Object[]{getPlayer(), affectedNpc, item}, this))
 					return;
-
-				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
-					getPlayer().message(getPlayer().MEMBER_MESSAGE);
-					return;
-				}
 			}
 		});
 	}

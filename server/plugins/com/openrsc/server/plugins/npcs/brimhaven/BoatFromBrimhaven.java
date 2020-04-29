@@ -70,7 +70,7 @@ public class BoatFromBrimhaven implements
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 320 || (obj.getID() == 321)) {
 			if (command.equals("board")) {
 				if (player.getX() < 467 || player.getX() > 468) {
@@ -97,7 +97,7 @@ public class BoatFromBrimhaven implements
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(Player arg2, GameObject arg0, String arg1) {
 		return (arg0.getID() == 320 && arg0.getLocation().equals(Point.location(468, 651)))
 			|| (arg0.getID() == 321 && arg0.getLocation().equals(Point.location(468, 646)));
 	}

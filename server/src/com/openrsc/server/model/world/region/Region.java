@@ -71,7 +71,6 @@ public class Region {
 	}
 
 	public void removeEntity(Entity e) {
-
 		if (e.isPlayer()) {
 			synchronized (players) {
 				players.remove((Player) e);
@@ -169,10 +168,10 @@ public class Region {
 		return sb.toString();
 	}
 
-	public GameObject getGameObject(int x, int y) {
+	public GameObject getGameObject(int x, int y, Entity e) {
 		synchronized (objects) {
 			for (GameObject o : objects) {
-				if (o.getX() == x && o.getY() == y) {
+				if (o.getX() == x && o.getY() == y && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
 			}
@@ -180,10 +179,10 @@ public class Region {
 		return null;
 	}
 
-	public GameObject getGameObject(Point point) {
+	public GameObject getGameObject(Point point, Entity e) {
 		synchronized (objects) {
 			for (GameObject o : objects) {
-				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 0) {
+				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 0 && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
 			}
@@ -191,10 +190,10 @@ public class Region {
 		return null;
 	}
 
-	public GameObject getWallGameObject(Point point, int direction) {
+	public GameObject getWallGameObject(Point point, int direction, Entity e) {
 		synchronized (objects) {
 			for (GameObject o : objects) {
-				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && o.getDirection() == direction) {
+				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && o.getDirection() == direction && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
 			}
@@ -202,10 +201,21 @@ public class Region {
 		return null;
 	}
 
-	public Npc getNpc(int x, int y) {
+	public GameObject getWallGameObject(Point point, Entity e) {
+		synchronized (objects) {
+			for (GameObject o : objects) {
+				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && (e == null || !o.isInvisibleTo(e))) {
+					return o;
+				}
+			}
+		}
+		return null;
+	}
+
+	public Npc getNpc(int x, int y, Entity e) {
 		synchronized (npcs) {
 			for (Npc n : npcs) {
-				if (n.getLocation().getX() == x && n.getLocation().getY() == y) {
+				if (n.getLocation().getX() == x && n.getLocation().getY() == y && (e == null || !n.isInvisibleTo(e))) {
 					return n;
 				}
 			}
@@ -213,12 +223,23 @@ public class Region {
 		return null;
 	}
 
-	public Player getPlayer(int x, int y) {
+	public Player getPlayer(int x, int y, Entity e) {
 		synchronized (players) {
 			for (Player p : players) {
-				if (p.getX() == x && p.getY() == y) {
+				if (p.getX() == x && p.getY() == y && (e == null || !p.isInvisibleTo(e))) {
 					return p;
 				}
+			}
+		}
+		return null;
+	}
+
+	public GroundItem getItem(int id, Point location, Entity e) {
+		int x = location.getX();
+		int y = location.getY();
+		for (GroundItem i : getGroundItems()) {
+			if (i.getID() == id && i.getX() == x && i.getY() == y && (e == null || !i.isInvisibleTo(e))) {
+				return i;
 			}
 		}
 		return null;

@@ -111,7 +111,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject arg0, String arg1, Player player) {
+	public void onOpLoc(Player player, GameObject arg0, String arg1) {
 		Npc monk = ifnearvisnpc(player, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
 		if (monk != null) {
 			monk.initializeTalkScript(player);
@@ -122,7 +122,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(Player arg2, GameObject arg0, String arg1) {
 		return (arg0.getID() == 240 && arg0.getLocation().equals(Point.location(257, 661)))
 			|| (arg0.getID() == 239 && arg0.getLocation().equals(Point.location(262, 661)))
 			|| (arg0.getID() == 239 && arg0.getLocation().equals(Point.location(264, 661)))

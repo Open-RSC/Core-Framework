@@ -17,12 +17,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Cactus implements UseLocTrigger {
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 35 && item.getCatalogId() == ItemId.KNIFE.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject object, final Item item, Player player) {
+	public void onUseLoc(Player player, GameObject object, final Item item) {
 		if (item.getCatalogId() != ItemId.KNIFE.id()) {
 			player.message("Nothing interesting happens");
 			return;

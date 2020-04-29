@@ -1217,13 +1217,13 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {BUTLERS_CUPBOARD_OPEN, BUTLERS_CUPBOARD_CLOSED, BASEMENT_CRATE,
 				TOP_LEVEL_BOOKCASE, CARNILLEAN_CHEST_CLOSED}, obj.getID());
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == BUTLERS_CUPBOARD_OPEN || obj.getID() == BUTLERS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, player, BUTLERS_CUPBOARD_OPEN);
@@ -1300,12 +1300,12 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getCatalogId() == ItemId.CARNILLEAN_KEY.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == CARNILLEAN_CHEST_CLOSED && item.getCatalogId() == ItemId.CARNILLEAN_KEY.id()) {
 			player.message("you use the key to open");
 			player.message("the chest");

@@ -12,7 +12,7 @@ public class BananaTree implements
 	OpLocTrigger {
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 
 		if (obj.getID() == 183) {
 			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Pick Banana Tree", player.getCarriedItems().getInventory().getFreeSlots(), false) {
@@ -43,7 +43,7 @@ public class BananaTree implements
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 183 || obj.getID() == 184;
 	}
 }

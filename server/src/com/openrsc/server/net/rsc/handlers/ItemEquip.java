@@ -1,13 +1,13 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
-import static com.openrsc.server.net.rsc.OpcodeIn.*;
+import static com.openrsc.server.net.rsc.OpcodeIn.ITEM_EQUIP_FROM_BANK;
+import static com.openrsc.server.net.rsc.OpcodeIn.ITEM_EQUIP_FROM_INVENTORY;
 
 public final class ItemEquip implements PacketHandler {
 	//Packets handled by this class:
@@ -77,7 +77,7 @@ public final class ItemEquip implements PacketHandler {
 			}
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "WearObj", new Object[]{request});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "WearObj", new Object[]{player, request.inventorySlot, request});
 	}
 
 

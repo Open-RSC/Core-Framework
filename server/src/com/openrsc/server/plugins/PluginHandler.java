@@ -323,7 +323,7 @@ public final class PluginHandler {
 				try {
 					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
-					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world, owner) {
+					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world, owner, interfce, data) {
 						@Override
 						public int action() {
 							try {

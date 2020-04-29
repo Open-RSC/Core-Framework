@@ -1248,13 +1248,13 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		/** WINDOW FOR THREAD **/
 		return obj.getID() == 205;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 205) {
 			switch (player.getQuestStage(this)) {
 				case 0:
@@ -1312,7 +1312,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		// BARRELS / SACKS / FLOUR BARREL
 		return DataConversions.inArray(new int[] {1133, 1132, 1136, 1137, 1135, 1134}, obj.getID()) || obj.getID() == 1139 || obj.getID() == 1138
 				// COMPOST / FOUNTAIN / BEEHIVE / DRAIN / GATE TO DOG / SINCLAIR CREST / SPIDER NEST WEB
@@ -1320,7 +1320,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 1133 ||
 			obj.getID() == 1132 ||
 			obj.getID() == 1136 ||
@@ -1516,7 +1516,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())
 				|| compareItemsIds(item1, item2, ItemId.ANNAS_SILVER_NECKLACE.id(), ItemId.POT_OF_FLOUR.id())
 				|| compareItemsIds(item1, item2, ItemId.BOBS_SILVER_TEACUP.id(), ItemId.POT_OF_FLOUR.id())
@@ -1541,7 +1541,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.A_SILVER_DAGGER.id(), ItemId.POT_OF_FLOUR.id())) {
 			player.message("You sprinkle a small amount of flour on the murderweapon");
 			player.message("the murderweapon is now coated with a thin layer of flour");

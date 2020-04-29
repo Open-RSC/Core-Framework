@@ -14,12 +14,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class SpinningWheel implements UseLocTrigger {
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 121;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, final Item item) {
 		int produceID = -1;
 		int requiredLevel = -1;
 		int experience = -1;

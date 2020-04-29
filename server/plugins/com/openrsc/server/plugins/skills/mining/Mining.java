@@ -42,8 +42,7 @@ public final class Mining implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(final GameObject object, String command,
-						Player player) {
+	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
@@ -66,7 +65,6 @@ public final class Mining implements OpLocTrigger {
 			}
 		} else if (object.getID() == 770) {
 			if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
-				player.setBusyTimer(1600);
 				mes(player, "you mine the rock", "and break of several large chunks");
 				give(player, ItemId.ROCKS.id(), 1);
 			} else {
@@ -157,7 +155,6 @@ public final class Mining implements OpLocTrigger {
 					"You do not have a pickaxe which you have the mining level to use");
 				return;
 			}
-			player.setBusyTimer(1800);
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 			delay(1800);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
@@ -165,7 +162,6 @@ public final class Mining implements OpLocTrigger {
 		}
 		if (player.click == 1) {
 			player.playSound("prospect");
-			player.setBusyTimer(1800);
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
 			delay(1800);
 			if (object.getID() == 496) {
@@ -276,7 +272,7 @@ public final class Mining implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588 && obj.getID() != 1227;
 	}
 

@@ -7,9 +7,9 @@ public interface OpLocTrigger {
 	/**
 	 * When a user activates an in-game Object.
 	 */
-	void onOpLoc(GameObject obj, String command, Player player);
+	void onOpLoc(Player player, GameObject obj, String command);
 	/**
 	 * Prevent a user from activating an in-game object.
 	 */
-	boolean blockOpLoc(GameObject obj, String command, Player player);
+	boolean blockOpLoc(Player player, GameObject obj, String command);
 }

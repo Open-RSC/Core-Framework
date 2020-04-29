@@ -11,7 +11,7 @@ public class PineappleTree implements
 	OpLocTrigger {
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 430) {
 			player.message("you pick a pineapple");
 			give(player, ItemId.FRESH_PINEAPPLE.id(), 1);
@@ -32,7 +32,7 @@ public class PineappleTree implements
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 431 || obj.getID() == 430;
 	}
 

@@ -43,12 +43,12 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		RuneMysteries.sedridorDialog(player,n, 0);
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return (n.getID() == 803 &&
 			player.getWorld().getServer().getConfig().WANT_RUNECRAFTING &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&

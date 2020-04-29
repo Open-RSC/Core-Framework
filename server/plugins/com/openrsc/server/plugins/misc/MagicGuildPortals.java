@@ -12,12 +12,12 @@ public class MagicGuildPortals implements OpBoundTrigger {
 	private static int[] MAGIC_PORTALS = {147, 148, 149};
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return inArray(obj.getID(), MAGIC_PORTALS);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (inArray(obj.getID(), MAGIC_PORTALS)) {
 			player.playerServerMessage(MessageType.QUEST, "you enter the magic portal");
 			if (obj.getID() == MAGIC_PORTALS[0]) {

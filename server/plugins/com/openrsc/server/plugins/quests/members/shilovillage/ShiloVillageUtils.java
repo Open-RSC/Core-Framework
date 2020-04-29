@@ -113,7 +113,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return inArray(item.getCatalogId(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
 				ItemId.BONE_KEY.id(), ItemId.BONE_BEADS.id(), ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(),
 				ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id(), ItemId.BEADS_OF_THE_DEAD.id());
@@ -121,7 +121,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 
 	//533
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			mes(player, "The remains of Rashiliyia look quite delicate.",
 				"You sense that a spirit needs to be put to rest.");
@@ -261,13 +261,13 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return inArray(item.getCatalogId(), ItemId.ZADIMUS_CORPSE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.STONE_PLAQUE.id(),
 				ItemId.BONE_SHARD.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BONE_KEY.id(), ItemId.RASHILIYA_CORPSE.id());
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) { // bury corpse
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) { // bury corpse
 		if (item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
 			player.message("Nothing interesting happens");
 		}
@@ -386,7 +386,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		//chisel and pommel sword / bone beads and wire / chisel and bone shard
 		return compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.SWORD_POMMEL.id())
 				|| compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())
@@ -394,7 +394,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 20) {
 				player.message("You need a level of 20 Crafting to craft this.");

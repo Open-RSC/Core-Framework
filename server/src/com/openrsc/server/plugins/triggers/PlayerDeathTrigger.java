@@ -15,4 +15,5 @@ public interface PlayerDeathTrigger {
 	 * @param player
 	 * @return
 	 */
-	boolean blockPlayerDeath(Player player);}
+	boolean blockPlayerDeath(Player player);
+}

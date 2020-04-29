@@ -766,13 +766,12 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 447 || obj.getID() == 449 || (obj.getID() == 457 && item.getCatalogId() == ItemId.LITTLE_KEY.id());
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 447) {
 			if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				if (player.getQuestStage(getQuestId()) == 2) {
@@ -833,13 +832,12 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {448, 449, 456, 457, ALRENAS_CUPBOARD_OPEN, ALRENAS_CUPBOARD_CLOSED}, obj.getID());
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == ALRENAS_CUPBOARD_OPEN || obj.getID() == ALRENAS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, player, ALRENAS_CUPBOARD_OPEN);

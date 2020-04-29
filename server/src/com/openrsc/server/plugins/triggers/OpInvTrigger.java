@@ -8,13 +8,14 @@ public interface OpInvTrigger {
 	/**
 	 * Called when a user performs an inventory action
 	 *
-	 * @param item
 	 * @param player
+	 * @param invIndex
+	 * @param item
 	 */
-	void onOpInv(Item item, Player player, String command);
+	void onOpInv(Player player, Integer invIndex, Item item, String command);
 
 	/**
 	 * Return true to prevent inventory action
 	 */
-	boolean blockOpInv(Item item, Player player, String command);
+	boolean blockOpInv(Player player, Integer invIndex, Item item, String command);
 }

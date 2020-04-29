@@ -225,7 +225,7 @@ public class WalkingQueue {
 
 		if (mob.isNpc()) {
 			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
-			Player player = region.getPlayer(x, y);
+			Player player = region.getPlayer(x, y, mob);
 			return player != null;
 		}
 		return false;

@@ -71,13 +71,12 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return false;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 	}
 
 	@Override
@@ -86,8 +85,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == PHOENIX_CHEST_OPEN || obj.getID() == PHOENIX_CHEST_CLOSED) {
 			return true;
 		} else if (obj.getID() == BARM_CUPBOARD_OPEN || obj.getID() == BARM_CUPBOARD_CLOSED) {
@@ -99,7 +97,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case 67:
 				if (player.getQuestStage(this) == 1) {
@@ -430,12 +428,12 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.BOOK.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BOOK:
 				mes(player,
@@ -473,7 +471,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 21 && obj.getY() == 533) {
 			if (isBlackArmGang(player) && !(player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 5)) {
 				player.message("You hear the door being unbarred");
@@ -529,8 +527,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		//door on phoenix gang entrance
 		if (obj.getID() == 19 && obj.getY() == 3370) {
 			return true;
@@ -546,14 +543,13 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item,
-								 Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 				&& obj.getY() == 532;
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 			&& obj.getY() == 532) {
 			thinkbubble(player, item);

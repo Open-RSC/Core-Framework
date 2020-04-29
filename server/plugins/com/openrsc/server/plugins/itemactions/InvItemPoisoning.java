@@ -12,12 +12,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class InvItemPoisoning implements UseInvTrigger {
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return item1.getCatalogId() == ItemId.WEAPON_POISON.id() || item2.getCatalogId() == ItemId.WEAPON_POISON.id();
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (item1.getCatalogId() == ItemId.WEAPON_POISON.id()) {
 			applyPoison(player, item2);
 		} else if (item2.getCatalogId() == ItemId.WEAPON_POISON.id()) {

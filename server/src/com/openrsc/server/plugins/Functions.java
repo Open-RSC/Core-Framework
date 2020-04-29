@@ -87,15 +87,11 @@ import com.openrsc.server.util.rsc.MessageType;
 
 public class Functions {
 
-	/**
-	 * Displays item bubble above players head.
-	 *
-	 * @param player
-	 * @param item
-	 */
-	public static void thinkbubble(final Player player, final Item item) {
-		final Bubble bubble = new Bubble(player, item.getCatalogId());
-		player.getUpdateFlags().setActionBubble(bubble);
+	public static Player getContextPlayer() {
+		final int ownerIndex = PluginTask.getContextPluginTask().getOwnerIndex();
+		final World world = PluginTask.getContextPluginTask().getWorld();
+
+		return world.getPlayer(ownerIndex);
 	}
 
 	/**
@@ -104,8 +100,8 @@ public class Functions {
 	 * @param player
 	 * @param item
 	 */
-	public static void thinkbubble(final Player player, final GroundItem item) {
-		final Bubble bubble = new Bubble(player, item.getID());
+	public static void thinkbubble(final Player player, final Item item) {
+		final Bubble bubble = new Bubble(player, item.getCatalogId());
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
 
@@ -136,14 +132,11 @@ public class Functions {
 						player.setBusy(false);
 						return;
 					}
-					npc.setBusyTimer(delay);
 				}
-				player.setBusy(true);
 				player.message(message);
 			}
 			delay(delay);
 		}
-		player.setBusy(false);
 	}
 
 	/**
@@ -155,15 +148,10 @@ public class Functions {
 	public static void mes(final Player player, final String... messages) {
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				if (player.getInteractingNpc() != null) {
-					player.getInteractingNpc().setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 3);
-				}
 				player.message("@que@" + message);
-				player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 			}
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 		}
-		player.setBusyTimer(0);
 	}
 
 	/**
@@ -184,14 +172,8 @@ public class Functions {
 				}
 				if (npc != null) {
 					npc.resetPath();
-					npc.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 				}
 				if (!player.inCombat()) {
-					if (npc != null) {
-						npc.face(player);
-						player.face(npc);
-					}
-					player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 					player.resetPath();
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
@@ -217,10 +199,8 @@ public class Functions {
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
-				player.setBusy(false);
 				return -1;
 			}
-			npc.setBusy(true);
 		}
 		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
@@ -229,27 +209,18 @@ public class Functions {
 			while (!player.checkUnderAttack()) {
 				if (player.getOption() != -1) {
 					if (npc != null && options[player.getOption()] != null) {
-						npc.setBusy(false);
 						if (sendToClient)
 							say(player, npc, options[player.getOption()]);
 					}
 					return player.getOption();
 				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
 					player.resetMenuHandler();
-					if (npc != null) {
-						npc.setBusy(false);
-						player.setBusyTimer(0);
-					}
 					return -1;
 				}
+
 				delay(1);
 			}
 			player.releaseUnderAttack();
-			player.notify();
-			//player got busy (combat), free npc if any
-			if (npc != null) {
-				npc.setBusy(false);
-			}
 			return -1;
 		}
 	}
@@ -419,6 +390,11 @@ public class Functions {
 				}
 			}
 		}
+
+		if(closestNpc != null) {
+			player.getScriptContext().setInteractingNpc(closestNpc);
+		}
+
 		return closestNpc;
 	}
 
@@ -434,6 +410,11 @@ public class Functions {
 				}
 			}
 		}
+
+		if(closestNpc != null) {
+			player.getScriptContext().setInteractingNpc(closestNpc);
+		}
+
 		return closestNpc;
 	}
 
@@ -450,32 +431,17 @@ public class Functions {
 		npc.resetPath();
 		player.resetPath();
 
-		// Set NPC to busy while they talk.
-		npc.setBusy(true);
-		player.setBusy(true);
-
-		// Face the player, face the npc.
-		npc.face(player);
-		if (!player.inCombat()) {
-			player.face(npc);
-		}
-
 		// Send each message with a delay between.
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc.isRemoved()) {
-					player.setBusy(false);
 					return;
 				}
 				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 			}
 
 			delay(delay);
-
 		}
-
-		npc.setBusy(false);
-		player.setBusy(false);
 	}
 
 	public static void npcsay(final Player player, final Npc npc, final String... messages) {
@@ -987,7 +953,6 @@ public class Functions {
 	}
 
 	public static void doTentDoor(final GameObject object, final Player player) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		if (object.getDirection() == 0) {
 			if (object.getLocation().equals(player.getLocation())) {
 				teleport(player, object.getX(), object.getY() - 1);
@@ -1042,7 +1007,6 @@ public class Functions {
 	}
 
 	public static void doWallMovePlayer(final GameObject object, final Player player, int replaceID, int delay, boolean removeObject) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		/* For the odd looking walls. */
 		if (removeObject) {
 			GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
@@ -1121,7 +1085,6 @@ public class Functions {
 	}
 
 	public static void doDoor(final GameObject object, final Player player, int replaceID) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		/* For the odd looking walls. */
 		GameObject newObject = new GameObject(object.getWorld(), object.getLocation(), replaceID, object.getDirection(), object.getType());
 		if (object.getID() == replaceID) {
@@ -1228,7 +1191,6 @@ public class Functions {
 	}
 
 	public static void doGate(final Player player, final GameObject object, int replaceID, Point destination) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		// 0 - East
 		// 1 - Diagonal S- NE
 		// 2 - South

@@ -1018,12 +1018,12 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == ELENAS_DOOR;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == ELENAS_DOOR) {
 			if (player.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 				doDoor(obj, player);
@@ -1035,13 +1035,13 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {JERICOS_CUPBOARD_ONE_OPEN, JERICOS_CUPBOARD_ONE_CLOSED, JERICOS_CUPBOARD_TWO_OPEN, JERICOS_CUPBOARD_TWO_CLOSED,
 				WATCH_TOWER, NURSE_SARAHS_CUPBOARD_OPEN, NURSE_SARAHS_CUPBOARD_CLOSED, GET_INTO_CRATES_GATE, DISTILLATOR_CRATE, OTHER_CRATE}, obj.getID());
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == JERICOS_CUPBOARD_ONE_OPEN || obj.getID() == JERICOS_CUPBOARD_ONE_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, player, JERICOS_CUPBOARD_ONE_OPEN);
@@ -1120,14 +1120,14 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER)
 				|| (item.getCatalogId() == ItemId.ROTTEN_APPLES.id() && obj.getID() == COOKING_POT)
 				|| (item.getCatalogId() == ItemId.BIOHAZARD_BRONZE_KEY.id() && obj.getID() == GET_INTO_CRATES_GATE);
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.BIRD_FEED.id() && obj.getID() == WATCH_TOWER) {
 			if (player.getQuestStage(this) == 2) {
 				mes(player, "you throw a hand full of seeds onto the watch tower",

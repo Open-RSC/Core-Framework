@@ -14,12 +14,12 @@ public class TeleportStone implements OpInvTrigger {
 	private final int TELEPORT_STONE = 2107;
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == TELEPORT_STONE;
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
 			mes(player, "the stone starts shaking...");
 			player.message("a magical portal opens up, where would you like to go?");

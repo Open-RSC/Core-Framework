@@ -78,7 +78,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.GUNDAI.id()) {
 			if (command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, player, false);
@@ -89,7 +89,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}

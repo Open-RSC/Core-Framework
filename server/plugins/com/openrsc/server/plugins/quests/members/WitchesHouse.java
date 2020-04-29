@@ -118,14 +118,13 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 69 || (obj.getID() == 70 && obj.getX() == 358) || (obj.getID() == 71 && obj.getY() == 495)
 				|| (obj.getID() == 73 && obj.getX() == 351) || (obj.getID() == 72 && obj.getX() == 356);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 69) {
 			player.message("The door is locked");
 		}
@@ -218,14 +217,13 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 255 || (obj.getID() == 256 && obj.getX() == 363)
 				|| ((obj.getID() == WITCHES_HOUSE_CUPBOARD_OPEN || obj.getID() == WITCHES_HOUSE_CUPBOARD_CLOSED) && obj.getY() == 3328);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 255) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.FRONT_DOOR_KEY.id(), Optional.of(false))) {
 				player.message("You find a key under the mat");
@@ -276,13 +274,13 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return item.getCatalogId() == ItemId.CHEESE.id() && player.getLocation().inBounds(356, 357, 494, 496);
 	}
 
 	// room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.CHEESE.id() && player.getLocation().inBounds(356, 357, 494, 496)) {
 			if (player.getQuestStage(this) == -1) {
 				say(player, null, "I would rather eat it to be honest");

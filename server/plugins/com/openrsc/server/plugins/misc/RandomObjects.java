@@ -15,7 +15,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class RandomObjects implements OpLocTrigger {
 
 	@Override
-	public void onOpLoc(final GameObject object, String command, Player owner) {
+	public void onOpLoc(Player owner, final GameObject object, String command) {
 		if (command.equals("search") && object.getID() == 17) {
 			owner.message(
 				"You search the chest, but find nothing");
@@ -24,7 +24,6 @@ public class RandomObjects implements OpLocTrigger {
 		switch (object.getID()) {
 			case 79:
 				if (command.equals("close")) {
-					owner.setBusyTimer(owner.getWorld().getServer().getConfig().GAME_TICK);
 					owner.playerServerMessage(MessageType.QUEST, "You slide the cover back over the manhole");
 					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 78, object.getDirection(), object.getType()));
 				} else {
@@ -33,7 +32,6 @@ public class RandomObjects implements OpLocTrigger {
 				break;
 			case 78:
 				if (command.equals("open")) {
-					owner.setBusyTimer(owner.getWorld().getServer().getConfig().GAME_TICK);
 					owner.playerServerMessage(MessageType.QUEST, "You slide open the manhole cover");
 					changeloc(object, new GameObject(object.getWorld(), object.getLocation(), 79, object.getDirection(), object.getType()));
 				}
@@ -170,7 +168,7 @@ public class RandomObjects implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 417) {
 			return true;
 		}

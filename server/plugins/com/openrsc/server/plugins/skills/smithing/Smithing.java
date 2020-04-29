@@ -23,15 +23,14 @@ public class Smithing implements UseLocTrigger {
 	private final int LAVA_ANVIL = 1285;
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == ANVIL
 			|| obj.getID() == DORICS_ANVIL
 			|| obj.getID() == LAVA_ANVIL;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, final Item item, final Player player) {
+	public void onUseLoc(final Player player, GameObject obj, final Item item) {
 
 		if (obj.getID() == LAVA_ANVIL) {
 			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")

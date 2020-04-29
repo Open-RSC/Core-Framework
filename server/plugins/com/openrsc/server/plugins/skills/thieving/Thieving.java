@@ -280,7 +280,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		String formattedName = obj.getGameObjectDef().getName().toUpperCase().replaceAll(" ", "_");
 
 		if (formattedName.contains("STALL")) {
@@ -311,7 +311,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = null;
 			try {
@@ -363,7 +363,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Thieving Pickpocket", repeatTimes, true) {
 			@Override
 			public void action() {
-				getOwner().setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (npc.inCombat()) {
 					interruptBatch();
 					return;
@@ -416,8 +415,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 						getOwner().getCarriedItems().getInventory().add(selectedLoot);
 					}
 				} else {
-					getOwner().setBusyTimer(0);
-					npc.setBusyTimer(0);
 					setDelayTicks(1);
 					getOwner().playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
 					npc.getUpdateFlags()
@@ -433,7 +430,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		String formattedName = obj.getGameObjectDef().getName().toUpperCase().replaceAll(" ", "_");
 		if (formattedName.contains("STALL")) {
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
@@ -454,24 +451,20 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			if (command.equalsIgnoreCase("Open")) {
 				player.playerServerMessage(MessageType.QUEST, "This chest is locked");
 			} else {
-				player.setBusyTimer(3000);
 				player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 						&& player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to pick the lock");
-						player.setBusyTimer(0);
 						return;
 					}
 				}
 				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
 					player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
-					player.setBusyTimer(0);
 					return;
 				}
 				if (!player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false))) {
 					player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
-					player.setBusyTimer(0);
 					return;
 				}
 				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
@@ -534,12 +527,11 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	 * floor door id (97) [3.11.2013 22:23:46] Kevin: the paladin chest give all
 	 * the items it says it gie all at once [3.11.2013 22:23:58] Kevin: when you
 	 * loot the chest you get teleported at 523, 606 [3.11.2013
-	 *
-	 * @param player
+	 *  @param player
 	 * @param obj
 	 */
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
 			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
@@ -662,7 +654,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
 			if (pickpocket != null) {
@@ -674,7 +666,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		handlePicklock(obj, player, click);
 	}
 

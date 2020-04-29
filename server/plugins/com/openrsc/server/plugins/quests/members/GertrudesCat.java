@@ -301,12 +301,12 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 199 && obj.getY() == 438;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 199 && obj.getY() == 438) {
 			if (player.getQuestStage(Quests.GERTRUDES_CAT) >= 2
 				|| player.getQuestStage(Quests.GERTRUDES_CAT) == -1) {
@@ -361,14 +361,13 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseObj(Item myItem, GroundItem item,
-							   Player player) {
+	public boolean blockUseObj(Player player, GroundItem item, Item myItem) {
 		return (myItem.getCatalogId() == ItemId.MILK.id() || myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id()
 				|| myItem.getCatalogId() == ItemId.KITTENS.id()) && item.getID() == ItemId.GERTRUDES_CAT.id();
 	}
 
 	@Override
-	public void onUseObj(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		if (player.getQuestStage(getQuestId()) != 2) {
 			if (myItem.getCatalogId() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 				player.message("the cat doesn't seem to be thirsty");
@@ -411,12 +410,12 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
 			mes(player, "you rub the doogle leaves over the sardine");
 			player.getCarriedItems().remove(new Item(ItemId.DOOGLE_LEAVES.id()));
@@ -426,13 +425,12 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 1039 || obj.getID() == 1041 || obj.getID() == 1040;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 1039) {
 			mes(player, "you search the crate...", "...but find nothing...");
 			if (player.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !player.getCache().hasKey("cat_sardine")
@@ -463,12 +461,12 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return item.getCatalogId() == ItemId.KITTENS.id();
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.KITTENS.id()) {
 			mes(player, "you drop the kittens", "they run back to the crate");
 			player.getCarriedItems().remove(new Item(ItemId.KITTENS.id()));

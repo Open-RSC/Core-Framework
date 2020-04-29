@@ -16,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class InvAction implements OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return inArray(item.getCatalogId(),
 			ItemId.BARCRAWL_CARD.id(), ItemId.INSTRUCTION_MANUAL.id(), ItemId.DIARY.id(),
 			ItemId.DRY_STICKS.id(), ItemId.SCRUFFY_NOTE.id(), ItemId.MAGIC_SCROLL.id(),
@@ -35,7 +35,7 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		int id = item.getCatalogId();
 
 		if (id == ItemId.OYSTER.id()) {

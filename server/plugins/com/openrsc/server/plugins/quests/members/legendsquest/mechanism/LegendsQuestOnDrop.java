@@ -10,14 +10,14 @@ import static com.openrsc.server.plugins.Functions.*;
 public class LegendsQuestOnDrop implements DropObjTrigger {
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return inArray(item.getCatalogId(), ItemId.A_CHUNK_OF_CRYSTAL.id(), ItemId.A_LUMP_OF_CRYSTAL.id(), ItemId.A_HUNK_OF_CRYSTAL.id(),
 				ItemId.A_RED_CRYSTAL.id(), ItemId.A_GLOWING_RED_CRYSTAL.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(),
 				ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id());
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()
 			|| item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id()) {
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));

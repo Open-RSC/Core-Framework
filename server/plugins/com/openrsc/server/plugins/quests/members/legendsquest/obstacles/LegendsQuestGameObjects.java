@@ -64,7 +64,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	private final int[] REFILLED = {1189, 1267, 50, 141, 342, 464};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), GRAND_VIZIERS_DESK, LEGENDS_CUPBOARD, TOTEM_POLE, ROCK, TALL_REEDS,
 				SHALLOW_WATER, CAVE_ENTRANCE_LEAVE_DUNGEON, CRATE, TABLE, BOOKCASE, CAVE_ENTRANCE_FROM_BOULDERS, CRUDE_DESK,
 				CAVE_ANCIENT_WOODEN_DOORS, HEAVY_METAL_GATE, HALF_BURIED_REMAINS, CARVED_ROCK, WOODEN_BEAM, WOODEN_BEAM + 1, ROPE_UP,
@@ -73,7 +73,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == ECHNED_ZEKIN_ROCK) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 8) {
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The rock moves quite easily.");
@@ -88,7 +88,6 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					"It slowly congeals into the shape of a body...");
 				echned = addnpc(player, NpcId.ECHNED_ZEKIN.id(), player.getX(), player.getY(), 0, 60000 * 3);
 				if (echned != null) {
-					player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 5);
 					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 					mes(player, echned, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Which slowly floats towards you.");
 					echned.initializeTalkScript(player);
@@ -584,7 +583,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (item.getCatalogId() == ItemId.MACHETTE.id() && obj.getID() == TALL_REEDS)
 				|| (item.getCatalogId() == ItemId.CUT_REED_PLANT.id() && obj.getID() == SHALLOW_WATER)
 				|| (item.getCatalogId() == ItemId.BLESSED_GOLDEN_BOWL.id() && obj.getID() == SHALLOW_WATER)
@@ -599,7 +598,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == TOTEM_POLE && item.getCatalogId() == ItemId.TOTEM_POLE.id()) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				mes(player, "You have already replaced the evil totem pole with your own.",
@@ -628,7 +627,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), CRAFTED_TOTEM_POLE, obj.getDirection(), obj.getType(), player.getUsername()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legends Quest Craft Totem Pole") {
 					public void action() {
-						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY), player);
 						if (whatObject != null && whatObject.getID() == CRAFTED_TOTEM_POLE) {
 							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
@@ -647,7 +646,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), TRIMMED_YOMMI_TREE, obj.getDirection(), obj.getType(), player.getUsername()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legend Quest Trim Yommi Tree") {
 					public void action() {
-						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY), player);
 						if (whatObject != null && whatObject.getID() == TRIMMED_YOMMI_TREE) {
 							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
@@ -665,7 +664,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), CHOPPED_YOMMI_TREE, obj.getDirection(), obj.getType(), player.getUsername()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 60000, "Legend Quest Chop Yommi Tree") {
 					public void action() {
-						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY), player);
 						if (whatObject != null && whatObject.getID() == CHOPPED_YOMMI_TREE) {
 							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), FERTILE_EARTH, obj.getDirection(), obj.getType()));
 						}
@@ -694,7 +693,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), GROWN_YOMMI_TREE, obj.getDirection(), obj.getType(), player.getUsername()));
 			obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 15000, "Legend Quest Water Yommi Tree") {
 				public void action() {
-					GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+					GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY), player);
 					if (whatObject != null && whatObject.getID() == GROWN_YOMMI_TREE) {
 						obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), ROTTEN_YOMMI_TREE, obj.getDirection(), obj.getType()));
 						if (player.isLoggedIn()) {
@@ -743,7 +742,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), YOMMI_TREE, obj.getDirection(), obj.getType()));
 				obj.getWorld().getServer().getGameEventHandler().add(new SingleEvent(obj.getWorld(), null, 15000, "Legends Quest Grow Yommi Tree") {
 					public void action() {
-						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY));
+						GameObject whatObject = player.getWorld().getRegionManager().getRegion(Point.location(objectX, objectY)).getGameObject(Point.location(objectX, objectY), player);
 						if (whatObject != null && whatObject.getID() == YOMMI_TREE) {
 							obj.getWorld().registerGameObject(new GameObject(obj.getWorld(), obj.getLocation(), DEAD_YOMMI_TREE, obj.getDirection(), obj.getType(), player.getUsername()));
 							if (player.isLoggedIn()) {

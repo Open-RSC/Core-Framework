@@ -72,7 +72,6 @@ public class GemMining implements OpLocTrigger {
 
 		if (player.click == 1) {
 			player.playSound("prospect");
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 			if (obj.getID() == GEM_ROCK) {
@@ -154,12 +153,12 @@ public class GemMining implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"));
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			handleGemRockMining(obj, player, player.click);
 		}

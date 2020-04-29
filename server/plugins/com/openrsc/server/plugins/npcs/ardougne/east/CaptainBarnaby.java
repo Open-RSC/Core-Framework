@@ -61,7 +61,7 @@ public final class CaptainBarnaby implements OpLocTrigger,
 
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 157) {
 			if (command.equals("board")) {
 				if (player.getY() != 616) {
@@ -79,7 +79,7 @@ public final class CaptainBarnaby implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(Player arg2, GameObject arg0, String arg1) {
 		return (arg0.getID() == 157 && arg0.getLocation().equals(Point.location(536, 617)))
 			|| (arg0.getID() == 155 && arg0.getLocation().equals(Point.location(531, 617)));
 	}

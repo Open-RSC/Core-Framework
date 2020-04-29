@@ -41,12 +41,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you drop the kitten");
@@ -58,12 +58,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			mes(player, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
@@ -219,12 +219,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2);
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2)) {
 			boolean isGrownCat = item1.getCatalogId() != ItemId.KITTEN.id() && item2.getCatalogId() != ItemId.KITTEN.id();
 			Item item;
@@ -269,7 +269,6 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 				n.face(player);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				n.remove();
-				player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				//possibly non kosher
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
@@ -282,7 +281,6 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			n.face(player);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			n.remove();
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");

@@ -467,13 +467,13 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	 **/
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 88 && obj.getX() == 509 && obj.getY() == 3441) || (obj.getID() == 90 && obj.getX() == 512 && obj.getY() == 3441)
 				|| obj.getID() == 91 || obj.getID() == 92;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		switch (obj.getID()) {
 			case 88:
 				if (player.getCache().hasKey("north_leverA")
@@ -564,12 +564,12 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	 **/
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (command.equalsIgnoreCase("pull") && (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318))
 			doLever(player, obj.getID());
 		else if (command.equalsIgnoreCase("inspect") && (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318))

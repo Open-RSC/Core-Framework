@@ -416,14 +416,13 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	} // DUNGEON SPIDER 656 poison
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {928, 937, 936, 929, 917, 930, 919, 935, 934, 927, 925}, obj.getID())
 				|| (obj.getID() == 926 && obj.getX() == 689 && obj.getY() == 3513);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 928) {
 			if (player.getQuestStage(getQuestId()) == 0) {
 				player.teleport(712, 3512, false);
@@ -704,13 +703,12 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id()) {
 			Npc guard = ifnearvisnpc(player, NpcId.GOBLIN_GUARD.id(), 5);
 			if (guard != null) {

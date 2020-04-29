@@ -1,9 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -16,9 +14,7 @@ public final class ItemDropHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		if (player.getStatus() == Action.DROPPING_GITEM) {
-			return;
-		}
+
 		player.resetAll();
 		int idx = (int) packet.readShort();
 		int amount = packet.readInt();
@@ -62,10 +58,10 @@ public final class ItemDropHandler implements PacketHandler {
 
 		// Set up our player to drop an item after walking
 		if (!player.getWalkingQueue().finished()) {
-			player.setDropItemEvent(item);
+			player.setDropItemEvent(idx, item);
 		}
 		else {
-			player.setDropItemEvent(item);
+			player.setDropItemEvent(idx, item);
 			player.runDropEvent(fromInventory);
 		}
 	}

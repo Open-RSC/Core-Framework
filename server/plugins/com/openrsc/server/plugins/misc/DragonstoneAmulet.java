@@ -19,12 +19,12 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	private static int FOUNTAIN_OF_HEROES = 282;
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			player.message("You rub the amulet");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
@@ -83,12 +83,12 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
 			player.setBusy(true);
 			player.message("You dip the amulet in the fountain");

@@ -13,12 +13,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Hopper implements UseLocTrigger, OpLocTrigger {
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getCatalogId() == ItemId.GRAIN.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getAttribute("contains_item", null) != null) {
 			player.message("There is already grain in the hopper");
 			return;
@@ -30,12 +30,12 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getGameObjectDef() != null && obj.getGameObjectDef().getName().toLowerCase().equals("hopper") && command.equals("operate");
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "You operate the hopper");
 		player.playSound("mechanical");
 		int contains = obj.getAttribute("contains_item", -1);

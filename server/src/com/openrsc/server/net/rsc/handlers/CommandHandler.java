@@ -19,7 +19,7 @@ public final class CommandHandler implements PacketHandler {
 			}
 
 			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
-				new Object[]{cmd.toLowerCase(), args, player});
+				new Object[]{player, cmd.toLowerCase(), args});
 		}
 	}
 }

@@ -57,12 +57,12 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == TRAVEL_CART;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == TRAVEL_CART) {
 			if (command.equalsIgnoreCase("Board")) {
 				player.message("This looks like a sturdy travelling cart.");

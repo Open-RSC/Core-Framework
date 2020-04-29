@@ -371,8 +371,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == BANK_CHEST || (obj.getID() == STONE_GATE && player.getY() < 735)) {
 			return true;
 		}
@@ -380,7 +379,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == BANK_CHEST) {
 			if (player.isIronMan(2)) {
 				player.message("As an Ultimate Iron Man, you cannot use the bank.");

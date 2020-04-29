@@ -46,14 +46,13 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id())
 				|| (obj.getID() == QuestObjects.COMPOST && item.getCatalogId() == ItemId.SPADE.id());
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
 			mes(player, "You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
@@ -92,8 +91,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case 36:
 				return true;
@@ -111,7 +109,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case QuestObjects.LADDER:
 				if (player.getCache().hasKey("LeverA") || player.getCache().hasKey("LeverB")
@@ -441,8 +439,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() >= 25 && obj.getID() <= 29) {
 			return true;
 		}
@@ -456,7 +453,7 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		Cache c = player.getCache();
 		switch (obj.getID()) {
 			case 35:
@@ -619,12 +616,12 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.FISH_FOOD.id(), ItemId.POISON.id())) {
 			player.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
 			player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
@@ -634,13 +631,12 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item,
-								 Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.CLOSET_KEY.id() && obj.getID() == 35;
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.CLOSET_KEY.id() && obj.getID() == 35) {
 			doDoor(obj, player);
 			player.message("You unlock the door");

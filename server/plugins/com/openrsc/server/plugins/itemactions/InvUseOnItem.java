@@ -28,7 +28,7 @@ public class InvUseOnItem implements UseInvTrigger {
 	};
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if(item1.getItemStatus().getNoted() || item2.getItemStatus().getNoted()) return;
 
 		/*
@@ -278,7 +278,7 @@ public class InvUseOnItem implements UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.YELLOWDYE.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.BLUEDYE.id()))

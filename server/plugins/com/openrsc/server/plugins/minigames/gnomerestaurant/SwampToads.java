@@ -14,12 +14,12 @@ import com.openrsc.server.constants.ItemId;
 public class SwampToads implements TakeObjTrigger, OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.SWAMP_TOAD.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.SWAMP_TOAD.id()) {
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you pull the legs off the toad");
 			player.message("poor toad..at least they'll grow back");

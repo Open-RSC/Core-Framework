@@ -512,15 +512,14 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item,
-								 Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return (obj.getID() == 83 && obj.getY() == 3428 && item.getCatalogId() == ItemId.JAIL_KEYS.id())
 				|| (obj.getID() == 83 && obj.getY() == 3425 && item.getCatalogId() == ItemId.JAIL_KEYS.id())
 				|| (obj.getID() == 84 && obj.getY() == 3353 && item.getCatalogId() == ItemId.DUSTY_KEY.id());
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		/*
 		 * Velrak cell door
 		 */
@@ -546,13 +545,12 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 87 && obj.getY() == 3353;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 87 && obj.getY() == 3353 && player.getQuestStage(this) == 2) {
 			doDoor(obj, player);
 			player.message("You just went through a secret door");

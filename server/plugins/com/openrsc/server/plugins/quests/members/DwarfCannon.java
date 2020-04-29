@@ -175,7 +175,7 @@ public class DwarfCannon
 							int cannonX = player.getCache().getInt("cannon_x");
 							int cannonY = player.getCache().getInt("cannon_y");
 
-							GameObject cannon = player.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY);
+							GameObject cannon = player.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY, player);
 							// does not exist or the object there is not a cannon.
 							if (cannon == null || !DataConversions.inArray(Cannon.cannonObjectIDs, cannon.getID())) {
 								mes(player, "the dwarf gives you a new cannon");
@@ -526,7 +526,7 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 181 || obj.getID() == 182 || obj.getID() == 183 || obj.getID() == 184 || obj.getID() == 185 || obj.getID() == 186)
 				|| obj.getID() == 194 || (obj.getID() == 197 && obj.getX() == 278);
 	}
@@ -562,7 +562,7 @@ public class DwarfCannon
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 193) {
 			mes(player, "you search the railing", "but find nothing of interest");
 		}
@@ -635,13 +635,13 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == 982 && obj.getY() == 523) || (obj.getID() == 981 || obj.getID() == 985) || obj.getID() == 994 || obj.getID() == 983
 				|| obj.getID() == 986 || obj.getID() == 987;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 981) {
 			player.message("you climb up the ladder");
 			if(player.getQuestStage(this) == 0) {

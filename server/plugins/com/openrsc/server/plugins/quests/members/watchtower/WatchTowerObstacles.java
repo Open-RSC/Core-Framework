@@ -54,7 +54,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 	private static int OGRE_ENCLAVE_EXIT = 1024;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == TOWER_FIRST_FLOOR_LADDER || obj.getID() == COMPLETED_QUEST_LADDER || obj.getID() == TOWER_SECOND_FLOOR_LADDER)
 				|| (obj.getID() == WATCHTOWER_LEVER || obj.getID() == WATCHTOWER_LEVER_DOWNPOSITION) || inArray(obj.getID(), WRONG_BUSHES)
 				|| inArray(obj.getID(), CORRECT_BUSHES) || inArray(obj.getID(), TELEPORT_CAVES)
@@ -66,7 +66,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == COMPLETED_QUEST_LADDER) {
 			player.teleport(636, 1684);
 		}
@@ -399,12 +399,12 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == BATTLEMENT || obj.getID() == SOUTH_WEST_BATTLEMENT || inArray(obj.getID(), CAVE_EXITS);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (inArray(obj.getID(), CAVE_EXITS)) { // 6 WEBS!!
 			if (obj.getID() == CAVE_EXITS[0]) {
 				player.teleport(648, 769);

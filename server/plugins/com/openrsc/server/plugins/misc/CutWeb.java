@@ -16,12 +16,12 @@ public class CutWeb implements UseBoundTrigger,
 	private static int WEB = 24;
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return obj.getID() == WEB;
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == WEB) {
 			if (item.getDef(player.getWorld()).getWieldPosition() != 4 && item.getCatalogId() != ItemId.KNIFE.id()) {
 				player.message("Nothing interesting happens");
@@ -39,13 +39,13 @@ public class CutWeb implements UseBoundTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return player.getWorld().getServer().getConfig().WANT_LEFTCLICK_WEBS
 			&& obj.getID() == WEB;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 
 		boolean canCut = false;
 		//First, check their equipment for an appropriate weapon

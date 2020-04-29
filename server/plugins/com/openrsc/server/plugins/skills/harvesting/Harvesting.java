@@ -142,8 +142,7 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(final GameObject object, String command,
-						Player player) {
+	public void onOpLoc(Player player, final GameObject object, String command) {
 		int retrytimes;
 		// Harvest of Xmas Tree
 		if (object.getID() == 1238) {
@@ -394,7 +393,7 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return command.equalsIgnoreCase("harvest") ||
 			command.equalsIgnoreCase("clip") || (command.equals("collect") && obj.getID() == 1238);
 	}

@@ -66,7 +66,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		if ((n.getID() == AUCTIONEER) && command.equalsIgnoreCase("Auction")) {
 			return true;
 		}
@@ -77,7 +77,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == AUCTIONEER) {
 			if (command.equalsIgnoreCase("Auction")) {
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())

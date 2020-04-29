@@ -283,12 +283,12 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.GNOME_COCKTAIL_GUIDE.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.GNOME_COCKTAIL_GUIDE.id()) {
 			player.message("you open blurberry's cocktail book");
 			player.message("inside are a list of cocktails");
@@ -327,14 +327,14 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
 			checkAndRemoveBlurberry(player, true);
 		}
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return false;
 	}
 

@@ -35,7 +35,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 	public static int GATE_OF_ZAMORAK = 875;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2) || obj.getID() == CRATE || inArray(obj.getID(), DUG_UP_SOIL)
 				|| obj.getID() == LEDGE || obj.getID() == WALL_GRILL_EAST || obj.getID() == WALL_GRILL_WEST
 				|| inArray(obj.getID(), ROCKS) || obj.getID() == HIJACK_ROCK || obj.getID() == PASSAGE || obj.getID() == CAGE_REMAINS
@@ -44,7 +44,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 	// 753, 3475
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2)) {
 			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[0]) {
 				mes(player, "you climb the pile of mud...",
@@ -156,7 +156,6 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			}
 		}
 		else if (obj.getID() == HIJACK_ROCK) {
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			player.message("you climb onto the rock");
 			if (DataConversions.getRandom().nextInt(5) == 4) {
 				player.message("but you slip");
@@ -236,12 +235,12 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return inArray(obj.getID(), RAILINGS);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (inArray(obj.getID(), RAILINGS)) {
 			if (click == 0) {
 				if (obj.getID() == 168) {
@@ -254,7 +253,6 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 					player.message("you need a level of 50 thieving to pick this lock");
 					return;
 				}
-				player.setBusyTimer(1600);
 				player.message("You manage to pick the lock");
 				player.message("you walk through");
 				if (obj.getDirection() == 0) {

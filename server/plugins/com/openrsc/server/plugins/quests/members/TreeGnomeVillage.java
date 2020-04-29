@@ -805,13 +805,12 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 101 && obj.getY() == 705) || (obj.getID() == 101 && obj.getX() == 540 && obj.getY() == 445);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 101 && obj.getY() == 705) {
 			player.message("You push your way through the fence");
 			doDoor(obj, player, 16);
@@ -823,13 +822,12 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {392, 388, 393, KHAZARD_CHEST_OPEN, KHAZARD_CHEST_CLOSED}, obj.getID());
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 392) {
 			Npc trackerTwo = ifnearvisnpc(player, NpcId.TRACKER_2.id(), 5);
 			switch (player.getQuestStage(getQuestId())) {

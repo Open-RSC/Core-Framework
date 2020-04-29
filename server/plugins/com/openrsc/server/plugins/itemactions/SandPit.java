@@ -12,12 +12,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class SandPit implements UseLocTrigger {
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 302 && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, final Item item) {
 		final int itemID = item.getCatalogId();
 		final int refilledID = ItemId.SAND.id();
 		if (item.getCatalogId() != ItemId.BUCKET.id()) {

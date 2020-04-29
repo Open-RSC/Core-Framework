@@ -12,14 +12,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Casket implements OpInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.CASKET.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.CASKET.id()) {
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 			int randomChanceOpen = DataConversions.random(0, 1081);
 

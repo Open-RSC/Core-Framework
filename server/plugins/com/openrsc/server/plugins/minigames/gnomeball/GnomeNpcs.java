@@ -94,7 +94,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
@@ -221,7 +221,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
 			Zone currentZone = GnomeField.getInstance().resolvePositionToZone(player);
 			if (currentZone == GnomeField.Zone.ZONE_NO_PASS) {
@@ -294,7 +294,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
 			//pass to -> direct use of command
 			//pass -> passing via gnome ball's shoot (requires player to be in correct position)
-			this.onOpNpc(n, "pass", player);
+			this.onOpNpc(player, n, "pass");
 		}
 	}
 
