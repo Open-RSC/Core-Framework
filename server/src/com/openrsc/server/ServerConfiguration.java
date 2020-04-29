@@ -150,6 +150,7 @@ public class ServerConfiguration {
 	public boolean LOOTED_CHESTS_STUCK;
 	public boolean WANT_RUNECRAFTING;
 	public boolean WANT_HARVESTING;
+	public boolean WANT_CUSTOM_LEATHER;
 	public boolean WANT_DISCORD_AUCTION_UPDATES;
 	public String DISCORD_AUCTION_WEBHOOK_URL;
 	public boolean WANT_DISCORD_MONITORING_UPDATES;
@@ -390,6 +391,7 @@ public class ServerConfiguration {
 		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
 		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
 		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
+		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);

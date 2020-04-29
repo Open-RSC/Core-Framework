@@ -781,15 +781,26 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		String[] options = new String[]{
-			"Armour",
-			"Gloves",
-			"Boots",
-			"Cancel"
-		};
+		final boolean customLeather = player.getWorld().getServer().getConfig().WANT_CUSTOM_LEATHER;
+
+		String[] options = customLeather ?
+			new String[]{
+				"Armour",
+				"Gloves",
+				"Boots",
+				"Other",
+				"Cancel"
+			}
+			:
+			new String[]{
+				"Armour",
+				"Gloves",
+				"Boots",
+				"Cancel"
+			};
 
 		int type = multi(player, options);
-		if (type < 0 || type > 3) {
+		if (type < 0 || type > (customLeather ? 4 : 3)) {
 			return;
 		}
 
@@ -810,6 +821,42 @@ public class Crafting implements UseInvTrigger,
 				result = new Item(ItemId.BOOTS.id(), 1);
 				reqLvl = 7;
 				exp = 65;
+				break;
+			case 3:
+				if(!customLeather) {
+					return;
+				}
+
+				String[] customMenu = new String[]{
+					"Chaps",
+					"Top",
+					"Skirt",
+					"Cancel"
+				};
+
+				int customType = multi(player, customMenu);
+				if(customType < 0 || customType > 3)
+					return;
+
+				switch(customType) {
+					case 0:
+						result = new Item(ItemId.LEATHER_CHAPS.id(), 1);
+						reqLvl = 10;
+						exp = 80;
+						break;
+					case 1:
+						result = new Item(ItemId.LEATHER_TOP.id(), 1);
+						reqLvl = 14;
+						exp = 100;
+						break;
+					case 2:
+						result = new Item(ItemId.LEATHER_SKIRT.id(), 1);
+						reqLvl = 10;
+						exp = 80;
+						break;
+					default:
+						return;
+				}
 				break;
 			default:
 				return;
