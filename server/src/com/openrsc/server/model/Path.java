@@ -76,20 +76,79 @@ public class Path {
 		/*
 		 * And calculate the number of steps there is between the points.
 		 */
-		boolean xLarger = Math.abs(diffX) >= Math.abs(diffY);
-		while ((xLarger ? diffX : diffY) != 0) {
+		while (Math.abs(diffX) > 0 || Math.abs(diffY) > 0) {
 			/*
 			 * Keep lowering the differences until they reach 0 - when our route
 			 * will be complete.
 			 */
+			int moveX = Math.max(-maxTiles, Math.min(maxTiles, diffX));
+			int moveY = Math.max(-maxTiles, Math.min(maxTiles, diffY));
 
-			diffX -= Math.max(-maxTiles, Math.min(maxTiles, diffX));
-			diffY -= Math.max(-maxTiles, Math.min(maxTiles, diffY));
+			boolean canWalkX = PathValidation.checkAdjacent(mob, last, new Point(x - (diffX - moveX), y - diffY));
+			boolean canWalkY = PathValidation.checkAdjacent(mob, last, new Point(x - diffX, y - (diffY - moveY)));
+			boolean canWalkXY = PathValidation.checkAdjacent(mob, last, new Point(x - (diffX - moveX), y - (diffY - moveY)));
 
-			/*
-			 * Add this next step to the queue.
-			 */
+			if (Math.abs(diffX) > 0 && Math.abs(diffY) > 0 && canWalkX && canWalkY) {
+
+				// Can walk straight diagonally.
+				if (canWalkXY) {
+					diffX -= moveX;
+					diffY -= moveY;
+				}
+
+				// Wall in the way, must zigzag.
+				else {
+					boolean canWalkX2 = PathValidation.checkAdjacent(mob,
+						new Point(x - (diffX - moveX), y - diffY),
+						new Point(x - (diffX - moveX), y - (diffY - moveY)));
+					boolean canWalkY2 = PathValidation.checkAdjacent(mob,
+						new Point(x - diffX, y - (diffY - moveY)),
+						new Point(x - (diffX - moveX), y - (diffY - moveY)));
+					if (canWalkX2)
+						diffX -= moveX;
+					else if (canWalkY2)
+						diffY -= moveY;
+					else
+						return;
+				}
+			}
+
+			else if (Math.abs(diffX) > 0 && canWalkX)
+				diffX -= moveX;
+
+			else if (Math.abs(diffY) > 0 && canWalkY)
+				diffY -= moveY;
+
+			else {
+				diffX -= moveX;
+				diffY -= moveY;
+			}
+/*
+			// Check for blocked X (East/West).
+			if (Math.abs(diffY) == 0 && canWalkX) {
+				diffX -= moveX;
+			}
+
+			// Check for blocked Y (North/South).
+			else if (Math.abs(diffX) == 0 && canWalkY) {
+				diffY -= moveY;
+			}
+
+			// Diagonal
+			else {
+				diffX -= moveX;
+				diffY -= moveY;
+			}
+*/
+
 			addStepInternal(x - diffX, y - diffY);
+
+			last = waypoints.peekLast();
+/*
+			diffX -= moveX;
+			diffY -= moveY;
+			addStepInternal(x - diffX, y - diffY);
+*/
 		}
 	}
 
