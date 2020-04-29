@@ -35458,6 +35458,10 @@ VALUES (1289, 'Scythe', 'Get another from the clothes shop if you die', '', 0, 0
 	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '',
         0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
 
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1000, `wearSlot`=12, `requiredLevel`=1, `requiredSkillId`=4 WHERE `id` IN (
+    11, 190, 574, 592, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723, 786
+);
+
 REPLACE INTO `openrsc_npcdef` (`id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`,
                                `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`,
                                `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`,
