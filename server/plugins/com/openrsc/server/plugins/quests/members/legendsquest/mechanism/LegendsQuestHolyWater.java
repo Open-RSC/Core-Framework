@@ -30,7 +30,8 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 		// simple random for the moment
 		mes(player, 0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
-		player.getCarriedItems().getInventory().replace(ItemId.ENCHANTED_VIAL.id(), ItemId.HOLY_WATER_VIAL.id());
+		player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_VIAL.id()));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.HOLY_WATER_VIAL.id()));
 		if(!player.getCache().hasKey("remaining_blessed_bowl")) {
 			player.getCache().set("remaining_blessed_bowl", DataConversions.random(1, 15));
 		} else {
@@ -41,7 +42,8 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 			// empty the bowl
 			else {
 				player.message("The pure water in the golden bowl has run out...");
-				player.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+				player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 				player.getCache().remove("remaining_blessed_bowl");
 			}
 		}

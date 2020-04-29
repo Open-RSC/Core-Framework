@@ -36,7 +36,8 @@ public class Chef implements TalkNpcTrigger {
 						mes(player, "Caleb holds the gauntlets and closes his eyes",
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
-						player.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_COOKING.id());
+						player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_COOKING.id()));
 						player.getCache().set("famcrest_gauntlets", Gauntlets.COOKING.id());
 					} else if (menu == 1) {
 						npcsay(player, n, "Ok suit yourself");
@@ -66,10 +67,10 @@ public class Chef implements TalkNpcTrigger {
 			case 2:
 				npcsay(player, n, "How is the fish collecting going?");
 				if (!player.getCarriedItems().hasCatalogID(ItemId.SWORDFISH.id(), Optional.of(false))
-					&& !player.getCarriedItems().hasCatalogID(ItemId.BASS.id(), Optional.of(false))
-					&& !player.getCarriedItems().hasCatalogID(ItemId.TUNA.id(), Optional.of(false))
-					&& !player.getCarriedItems().hasCatalogID(ItemId.SALMON.id(), Optional.of(false))
-					&& !player.getCarriedItems().hasCatalogID(ItemId.SHRIMP.id(), Optional.of(false))) {
+					|| !player.getCarriedItems().hasCatalogID(ItemId.BASS.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.TUNA.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.SALMON.id(), Optional.of(false))
+					|| !player.getCarriedItems().hasCatalogID(ItemId.SHRIMP.id(), Optional.of(false))) {
 					say(player, n, "I haven't got all the fish yet");
 					npcsay(player, n, "Remember I want cooked swordfish, bass, tuna, salmon and shrimp");
 				} else {

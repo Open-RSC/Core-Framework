@@ -6,7 +6,7 @@ public class ExpiredAuction {
 	public int item_id;
 	public int item_amount;
 	public long time;
-	public String claim_time;
+	public long claim_time;
 	public Boolean claimed;
 	public String explanation;
 }

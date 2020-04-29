@@ -19,6 +19,8 @@ import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.*;
+import orsc.graphics.gui.Menu;
+import orsc.graphics.gui.Panel;
 import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
@@ -36,7 +38,10 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
@@ -264,7 +269,7 @@ public final class mudclient implements Runnable {
 	private int cameraAutoMoveZ = 0;
 	public int cameraZoom = 750;
 	public int lastSavedCameraZoom = 0;
-	public int minCameraZoom = 500;
+	public int minCameraZoom = 600;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
@@ -3711,7 +3716,7 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawBoxBorder(sx, 50, sy, 35, 0);
 
 						if (this.shopCategoryID[slot] != -1) {
-							if (this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]) > 0
+							if (S_WANT_BANK_NOTES && this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]) > 0
 								&& this.getShopItemNoted(slot)) {
 								this.getSurface().drawSpriteClipping(this.spriteSelect(EntityHandler.noteDef),
 									sx, sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
@@ -3738,7 +3743,7 @@ public final class mudclient implements Runnable {
 			if (this.shopSelectedItemIndex != -1) {
 				int id = this.shopCategoryID[this.shopSelectedItemIndex];
 				if (id != -1) {
-					int count = this.shopItemCount[this.shopSelectedItemIndex];
+					int count = this.getShopItemCount(this.shopSelectedItemIndex);
 					if (count <= 0) {
 						this.getSurface().drawColoredStringCentered(204 + xr,
 							"This item is not currently available to buy", 0xFFFF00, 0, 3, 214 + yr);
@@ -3849,6 +3854,22 @@ public final class mudclient implements Runnable {
 		} catch (RuntimeException var14) {
 			throw GenUtil.makeThrowable(var14, "client.HA(" + "dummy" + ')');
 		}
+	}
+
+	private int getShopItemCount(int index) {
+		int count = 0;
+		if (S_WANT_BANK_NOTES) {
+			int catId = this.shopCategoryID[index];
+			for (int i = 0; i < this.shopCategoryID.length; i++) {
+				if (this.shopCategoryID[i] == catId) {
+					count += this.shopItemCount[i];
+				}
+			}
+		}
+		else {
+			count = this.shopItemCount[index];
+		}
+		return count;
 	}
 
 	private void drawDialogTrade() {
@@ -11113,6 +11134,34 @@ public final class mudclient implements Runnable {
 								devMenuNpcID = Integer.parseInt(var11.split(" ")[1]);
 							} else if (var11.equalsIgnoreCase("::overlay") && S_SIDE_MENU_TOGGLE) {
 								C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
+							} else if (var11.startsWith("::wiki")) {
+								String args[] = var11.split(" ");
+								// args[0] should be ::wiki
+								String url;
+								if (args.length > 1) {
+									url = "https://classic.runescape.wiki/w/Special:Search?search=";
+									// Put a plus in for the spaces
+									for (int i = 1; i < args.length-1; i++) {
+										url += (args[i] + "+");
+									}
+									// Add the final search argument without a plus
+									url += (args[args.length - 1]);
+								} else {
+									url = "https://classic.runescape.wiki";
+								}
+
+								// Check if we can open the wiki, otherwise tell the player we can't.
+								if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+									try {
+										Desktop.getDesktop().browse(new URI(url));
+									} catch (final Exception ex) {
+										showMessage(true, null, "There is a problem with your search query",
+											MessageType.GAME, 0, null, null);
+									}
+								} else {
+									showMessage(true, null, "There was a problem opening your browser",
+										MessageType.GAME, 0, null, null);
+								}
 							} else {
 								this.sendCommandString(var11.substring(2));
 								String putQueue = var11.substring(2);
@@ -11156,18 +11205,16 @@ public final class mudclient implements Runnable {
 							++this.mouseButtonDownTime;
 						}
 						if (!isAndroid()) {
-							if (this.mouseButtonDownTime > 500)
-								this.mouseButtonItemCountIncrement += 100000;
-							else if (this.mouseButtonDownTime > 350)
-								this.mouseButtonItemCountIncrement += 10000;
-							else if (this.mouseButtonDownTime > 250)
-								this.mouseButtonItemCountIncrement += 1000;
+							if (this.mouseButtonDownTime > 600)
+								this.mouseButtonItemCountIncrement += 5000;
+							else if (this.mouseButtonDownTime > 450)
+								this.mouseButtonItemCountIncrement += 500;
+							else if (this.mouseButtonDownTime > 300)
+								this.mouseButtonItemCountIncrement += 50;
 							else if (this.mouseButtonDownTime > 150)
-								this.mouseButtonItemCountIncrement += 100;
-							else if (this.mouseButtonDownTime > 100)
-								this.mouseButtonItemCountIncrement += 10;
+								this.mouseButtonItemCountIncrement += 5;
 							else if (this.mouseButtonDownTime > 50)
-								this.mouseButtonItemCountIncrement++;
+								++this.mouseButtonItemCountIncrement;
 							else if (this.mouseButtonDownTime > 20 && (this.mouseButtonDownTime & 5) == 0)
 								++this.mouseButtonItemCountIncrement;
 						}

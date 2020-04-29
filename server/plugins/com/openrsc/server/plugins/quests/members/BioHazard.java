@@ -178,10 +178,14 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 						say(player, n, "I'm afraid I've you lost some of the stuff that you gave me");
 						npcsay(player, n, "That's alright, I've got plenty");
 						mes(player, "Elena replaces your items");
-						player.getCarriedItems().getInventory().replace(ItemId.LIQUID_HONEY.id(), ItemId.LIQUID_HONEY.id());
-						player.getCarriedItems().getInventory().replace(ItemId.ETHENEA.id(), ItemId.ETHENEA.id());
-						player.getCarriedItems().getInventory().replace(ItemId.SULPHURIC_BROLINE.id(), ItemId.SULPHURIC_BROLINE.id());
-						player.getCarriedItems().getInventory().replace(ItemId.PLAGUE_SAMPLE.id(), ItemId.PLAGUE_SAMPLE.id());
+						player.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.LIQUID_HONEY.id()));
+						player.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.ETHENEA.id()));
+						player.getCarriedItems().remove(new Item(ItemId.SULPHURIC_BROLINE.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.SULPHURIC_BROLINE.id()));
+						player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.PLAGUE_SAMPLE.id()));
 						npcsay(player, n, "OK so that's the colourless ethenea...",
 							"Some highly toxic sulphuric broline...",
 							"And some bog-standard liquid honey...");

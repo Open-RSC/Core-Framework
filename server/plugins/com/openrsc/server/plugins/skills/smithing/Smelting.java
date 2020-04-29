@@ -46,7 +46,8 @@ public class Smelting implements UseLocTrigger {
 						@Override
 						public void action() {
 							getOwner().incExp(Skills.SMITHING, 100, true);
-							getOwner().getCarriedItems().getInventory().replace(ItemId.STEEL_BAR.id(), ItemId.MULTI_CANNON_BALL.id(),false);
+							getOwner().getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
+							getOwner().getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id()),false);
 							if (getOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
 								getOwner().getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
 								int charges;

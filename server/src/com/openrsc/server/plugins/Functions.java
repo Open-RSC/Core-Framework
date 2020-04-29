@@ -414,7 +414,7 @@ public class Functions {
 		if(closestNpc != null) {
 			player.getScriptContext().setInteractingNpc(closestNpc);
 		}
-		
+
 		return closestNpc;
 	}
 

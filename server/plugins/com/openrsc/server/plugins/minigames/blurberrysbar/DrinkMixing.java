@@ -51,7 +51,8 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			player.setBusy(true);
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, dm.messages[0]);
 			if (dm.itemIDOther == ItemId.MILK.id()) {
-				player.getCarriedItems().getInventory().replace(ItemId.MILK.id(), ItemId.BUCKET.id());
+				player.getCarriedItems().remove(new Item(ItemId.MILK.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			} else {
 				player.getCarriedItems().remove(new Item(dm.itemIDOther));
 			}
@@ -60,28 +61,33 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			}
 			if (player.getCache().hasKey("fruit_blast_base")) { // fruit blast
 				if (dm.itemIDOther == ItemId.LEMON_SLICES.id()) {
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.FRUIT_BLAST.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.FRUIT_BLAST.id()));
 				} else {
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 				}
 				player.setBusy(false);
 				checkAndRemoveBlurberry(player, true);
 			}
 			if (player.getCache().hasKey("drunk_dragon_base")) {
 				if (dm.itemIDOther != ItemId.CREAM.id() && dm.itemIDOther != ItemId.PINEAPPLE_CHUNKS.id()) { // heat to finish drunk dragon
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				}
 			}
 			if (player.getCache().hasKey("sgg_base")) {
 				if (dm.itemIDOther != ItemId.EQUA_LEAVES.id() && dm.itemIDOther != ItemId.LIME_SLICES.id()) { // SGG
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				} else {
 					if (player.getCache().hasKey("leaves_into_drink") && player.getCache().hasKey("lime_slices_to_drink")) {
-						player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.SGG.id());
+						player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.SGG.id()));
 						player.setBusy(false);
 						checkAndRemoveBlurberry(player, true);
 					}
@@ -89,19 +95,22 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			}
 			if (player.getCache().hasKey("chocolate_saturday_base")) {
 				if (dm.itemIDOther != ItemId.CHOCOLATE_BAR.id()) { // heat for range - chocolate saturday
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				}
 			}
 			if (player.getCache().hasKey("heated_choco_saturday")) {
 				if (dm.itemIDOther != ItemId.CREAM.id() && dm.itemIDOther != ItemId.CHOCOLATE_DUST.id()) { // finish chocolate saturday
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				} else {
 					if (player.getCache().hasKey("cream_into_drink") && player.getCache().hasKey("choco_dust_into_drink")) {
-						player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.CHOCOLATE_SATURDAY.id());
+						player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
 						player.setBusy(false);
 						checkAndRemoveBlurberry(player, true);
 					}
@@ -110,7 +119,8 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			if (player.getCache().hasKey("blurberry_special_base")) {
 				if (dm.itemIDOther != ItemId.DICED_ORANGE.id() && dm.itemIDOther != ItemId.DICED_LEMON.id()
 						&& dm.itemIDOther != ItemId.LIME_SLICES.id() && dm.itemIDOther != ItemId.EQUA_LEAVES.id()) { // blurberry special finish
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				} else {
@@ -118,7 +128,8 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 						&& player.getCache().hasKey("diced_lemon_in_drink")
 						&& player.getCache().hasKey("lime_slices_to_drink")
 						&& player.getCache().hasKey("leaves_into_drink")) {
-						player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.BLURBERRY_SPECIAL.id());
+						player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.BLURBERRY_SPECIAL.id()));
 						player.setBusy(false);
 						checkAndRemoveBlurberry(player, true);
 					}
@@ -127,14 +138,16 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			if (player.getCache().hasKey("pineapple_punch_base")) { // finish pineapple punch
 				if (dm.itemIDOther != ItemId.PINEAPPLE_CHUNKS.id() && dm.itemIDOther != ItemId.LIME_CHUNKS.id()
 						&& dm.itemIDOther != ItemId.LIME_SLICES.id()) {
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				} else {
 					if (player.getCache().hasKey("diced_pa_to_drink")
 						&& player.getCache().hasKey("diced_lime_in_drink")
 						&& player.getCache().hasKey("lime_slices_to_drink")) {
-						player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.PINEAPPLE_PUNCH.id());
+						player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.PINEAPPLE_PUNCH.id()));
 						player.setBusy(false);
 						checkAndRemoveBlurberry(player, true);
 					}
@@ -142,13 +155,15 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			}
 			if (player.getCache().hasKey("wizard_blizzard_base")) { // finish wizard blizzard
 				if (dm.itemIDOther != ItemId.PINEAPPLE_CHUNKS.id() && dm.itemIDOther != ItemId.LIME_SLICES.id()) {
-					player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.ODD_LOOKING_COCKTAIL.id());
+					player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
 					player.setBusy(false);
 					checkAndRemoveBlurberry(player, true);
 				} else {
 					if (player.getCache().hasKey("diced_pa_to_drink")
 						&& player.getCache().hasKey("lime_slices_to_drink")) {
-						player.getCarriedItems().getInventory().replace(ItemId.FULL_COCKTAIL_GLASS.id(), ItemId.WIZARD_BLIZZARD.id());
+						player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.WIZARD_BLIZZARD.id()));
 						player.setBusy(false);
 						checkAndRemoveBlurberry(player, true);
 					}
@@ -217,15 +232,18 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 				if (checkAndRemoveBlurberry(player, false)) {
 					checkAndRemoveBlurberry(player, true);
 					if (complete) {
-						player.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.FULL_COCKTAIL_GLASS.id());
+						player.getCarriedItems().remove(new Item(ItemId.COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
 						if (!player.getCache().hasKey(nextCache) && nextCache != null)
 							player.getCache().store(nextCache, true);
 					} else {
-						player.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.HALF_COCKTAIL_GLASS.id());
+						player.getCarriedItems().remove(new Item(ItemId.COCKTAIL_GLASS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_COCKTAIL_GLASS.id()));
 					}
 				} else {
 					// ??
-					player.getCarriedItems().getInventory().replace(ItemId.COCKTAIL_GLASS.id(), ItemId.COCKTAIL_GLASS.id());
+					player.getCarriedItems().remove(new Item(ItemId.COCKTAIL_GLASS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.COCKTAIL_GLASS.id()));
 				}
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "you pour the contents into a glass");
 			} else {

@@ -37,7 +37,8 @@ public class PotFlour implements UseObjTrigger, TakeObjTrigger {
 			if (player.getCarriedItems().hasCatalogID(ItemId.POT.id())) {
 				player.message("You put the flour in the pot");
 				player.getWorld().unregisterItem(item);
-				player.getCarriedItems().getInventory().replace(ItemId.POT.id(), ItemId.POT_OF_FLOUR.id());
+				player.getCarriedItems().remove(new Item(ItemId.POT.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.POT_OF_FLOUR.id()));
 			} else {
 				player.message("I can't pick it up!");
 				player.message("I need a pot to hold it in");

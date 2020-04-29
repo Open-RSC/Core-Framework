@@ -19,15 +19,9 @@ public final class Pick implements OpLocTrigger {
 	}
 
 	private void handleCropPickup(final Player player, int objID, String pickMessage) {
-		int delaytime = player.getWorld().getServer().getConfig().GAME_TICK;
+		int delayTime = player.getWorld().getServer().getConfig().GAME_TICK;
 
-		if (delaytime == 600)
-			delaytime = 300;//openrsc
-		else if (delaytime == 420)
-			delaytime = 370;//cabbage
-
-		// TODO: This should be a config, because authentic RSC did not batch this behaviour.
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delaytime, "Pick Vegetal", 30, true) {
+		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delayTime, "Pick Vegetal", 30, true) {
 			@Override
 			public void action() {
 				getOwner().playerServerMessage(MessageType.QUEST, pickMessage);

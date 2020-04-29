@@ -419,7 +419,8 @@ public final class Harvesting implements OpLocTrigger {
 				}
 				player.playerServerMessage(MessageType.QUEST, "You add soil to the spot");
 				player.setAttribute("soiled", new TimePoint(obj.getX(), obj.getY(), timestamp));
-				player.getCarriedItems().getInventory().replace( ItemId.SOIL.id(), ItemId.BUCKET.id());
+				player.getCarriedItems().remove(new Item(ItemId.SOIL.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			}
 			return HarvestingEvents.SOIL.getID();
 		}

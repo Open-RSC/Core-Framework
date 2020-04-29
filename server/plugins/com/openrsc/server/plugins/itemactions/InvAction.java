@@ -144,23 +144,28 @@ public class InvAction implements OpInvTrigger {
 		}
 		else if (id == ItemId.BURNTPIE.id() && command.equalsIgnoreCase("empty dish")) {
 			player.message("you remove the burnt pie from the pie dish");
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.PIE_DISH.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 		}
 		else if (id == ItemId.BURNT_STEW.id() && command.equalsIgnoreCase("empty")) {
 			player.message("you remove the burnt stew from the bowl");
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 		}
 		else if (id == ItemId.BURNT_CURRY.id() && command.equalsIgnoreCase("empty")) {
 			player.message("you remove the burnt curry from the bowl");
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BOWL.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 		}
 		else if (id == ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
 			player.message("You empty the plain water out of the Blessed Golden Bowl.");
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 		}
 		else if (id == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
 			player.message("You empty the plain water out of the Golden Bowl.");
-			player.getCarriedItems().getInventory().replace(item.getCatalogId(), ItemId.GOLDEN_BOWL.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id()));
 		}
 		else if (id == ItemId.SPADE.id()) {
 			// nothing - no action/message was triggered with spade's dig option
@@ -170,9 +175,11 @@ public class InvAction implements OpInvTrigger {
 	private void handleOyster(Player player, int oyster) {
 		player.message("you open the oyster shell");
 		if (DataConversions.random(0, 10) == 1) {
-			player.getCarriedItems().getInventory().replace(oyster, ItemId.OYSTER_PEARLS.id());
+			player.getCarriedItems().remove(new Item(oyster));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.OYSTER_PEARLS.id()));
 		} else {
-			player.getCarriedItems().getInventory().replace(oyster, ItemId.EMPTY_OYSTER.id());
+			player.getCarriedItems().remove(new Item(oyster));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.EMPTY_OYSTER.id()));
 		}
 	}
 
@@ -502,7 +509,8 @@ public class InvAction implements OpInvTrigger {
 			if (player.getCache().hasKey("bird_feed")) {
 				player.getCache().remove("bird_feed");
 			}
-			player.getCarriedItems().getInventory().replace(ItemId.MESSENGER_PIGEONS.id(), ItemId.PIGEON_CAGE.id());
+			player.getCarriedItems().remove(new Item(ItemId.MESSENGER_PIGEONS.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIGEON_CAGE.id()));
 		} else {
 			player.message("the pigeons don't want to leave");
 		}

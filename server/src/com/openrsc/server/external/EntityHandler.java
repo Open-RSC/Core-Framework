@@ -174,8 +174,9 @@ public final class EntityHandler {
 				def.combatModel = npc.combatModel;
 				def.combatSprite = npc.combatSprite;
 				def.roundMode = npc.roundMode;
-				def.pkBot = npc.pkBot;
-
+				if (server.getConfig().WANT_PK_BOTS) {
+					def.pkBot = npc.pkBot;
+				}
 				npcDefinitions.add(def);
 			}
 

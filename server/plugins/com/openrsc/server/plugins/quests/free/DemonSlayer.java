@@ -67,7 +67,8 @@ public class DemonSlayer implements QuestInterface,
 							"You pour the liquid down the drain");
 						mes(player, "Ok I think I've washed the key down into the sewer",
 							"I'd better go down and get it before someone else finds it");
-						player.getCarriedItems().getInventory().replace(ItemId.BUCKET_OF_WATER.id(), ItemId.BUCKET.id());
+						player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 						player.getWorld().registerItem(
 							new GroundItem(player.getWorld(), ItemId.SILVERLIGHT_KEY_3.id(), 117, 3294, 1, player));
 					}

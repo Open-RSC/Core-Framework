@@ -1,6 +1,6 @@
 package com.openrsc.server.content.market;
 
-public class CollectableItem {
+public class CollectibleItem {
 	public int claim_id;
 	public String explanation;
 	public int item_amount;

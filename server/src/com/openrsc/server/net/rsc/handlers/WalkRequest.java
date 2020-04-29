@@ -39,7 +39,6 @@ public class WalkRequest implements PacketHandler {
 					opponent.setLastOpponent(opponent.getOpponent());
 					player.setLastOpponent(player.getOpponent());
 					player.setRanAwayTimer();
-					player.setLastRun(System.currentTimeMillis());
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();

@@ -235,7 +235,8 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 				case EMPTY_VIAL:
 					player.message("You fill the vial with the liquid");
 					player.message("You close the barrel");
-					player.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.UNIDENTIFIED_LIQUID.id());
+					player.getCarriedItems().remove(new Item(ItemId.EMPTY_VIAL.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
 					say(player, null, "I'm not sure what this stuff is",
 						"I had better be very careful with it",

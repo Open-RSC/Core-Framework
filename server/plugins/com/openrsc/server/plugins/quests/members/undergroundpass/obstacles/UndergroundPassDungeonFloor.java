@@ -55,7 +55,8 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 				player.message("you need a bucket first");
 			} else {
 				player.message("you poor some of the strong brew into your bucket");
-				player.getCarriedItems().getInventory().replace(ItemId.BUCKET.id(), ItemId.DWARF_BREW.id());
+				player.getCarriedItems().remove(new Item(ItemId.BUCKET.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_BREW.id()));
 			}
 		}
 		else if (obj.getID() == PILE_OF_MUD) {
@@ -78,7 +79,8 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 				if (!player.getCache().hasKey("brew_on_tomb") && !player.getCache().hasKey("ash_on_doll")) {
 					player.getCache().store("brew_on_tomb", true);
 				}
-				player.getCarriedItems().getInventory().replace(ItemId.DWARF_BREW.id(), ItemId.BUCKET.id());
+				player.getCarriedItems().remove(new Item(ItemId.DWARF_BREW.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			} else {
 				mes(player, "you consider pouring the brew over the grave");
 				player.message("but it seems such a waste");

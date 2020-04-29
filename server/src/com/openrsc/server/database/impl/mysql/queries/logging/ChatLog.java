@@ -12,7 +12,7 @@ public final class ChatLog extends Query {
 	private final String sender, message;
 
 	public ChatLog(World world, String sender, String message) {
-		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "chat_logs`(`sender`, `message`, `time`) VALUES(?, ?, ?)");
+		super("INSERT INTO `" + world.getServer().getConfig().DB_TABLE_PREFIX + "chat_logs`(`sender`, `message`, `time`) VALUES(?, ?, ?)");
 		this.sender = sender;
 		this.message = message;
 	}

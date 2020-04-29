@@ -120,12 +120,21 @@ public final class InterfaceShopHandler implements PacketHandler {
 			int totalMoney = 0;
 			int totalSold = 0;
 			int ticker = 1;
+			int tickCount = 0;
 			for (int i = 0; i < amount; amount -= ticker) {
-				if (amount % 10 > 0) ticker = 1;
-				else if (amount % 100 > 10) ticker = 10;
-				else if (amount % 1000 > 100) ticker = 100;
-				else if (amount % 10000 > 1000) ticker = 1000;
-				else if (amount % 100000 > 10000) ticker = 10000;
+				tickCount++;
+				if (tickCount > 60)
+					ticker += 5000;
+				else if (tickCount > 45)
+					ticker += 500;
+				else if (tickCount > 30)
+					ticker += 50;
+				else if (tickCount > 15)
+					ticker += 5;
+				else if (tickCount > 5)
+					++ticker;
+				else if (tickCount > 2)
+					++ticker;
 				// Start with selling noted and move to normal after.
 				Item toSell = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(true))
@@ -135,7 +144,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 						player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(false))
 					);
 				}
-				ticker = Math.min(ticker, toSell.getAmount());
+				ticker = Math.min(ticker, amount);
 				if (player.getCarriedItems().remove(new Item(toSell.getCatalogId(), ticker, toSell.getNoted(), toSell.getItemId())) == -1) {
 					/* Break, player doesn't have anything. */
 					player.message("You don't have that many items");

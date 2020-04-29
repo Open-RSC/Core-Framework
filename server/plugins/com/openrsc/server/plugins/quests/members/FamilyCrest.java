@@ -153,6 +153,9 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				case -1:
 					npcsay(player, n, "Thankyou for saving our family honour",
 						"We will never forget you");
+					if (player.getWorld().getServer().getConfig().CAN_RETRIEVE_POST_QUEST_ITEMS) {
+						disenchantGauntlets(player, n);
+					}
 					break;
 			}
 		}
@@ -191,6 +194,60 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
+	public static void disenchantGauntlets(Player player, Npc npc) {
+		int goldCost = 200000;
+		int drunkDragons = 3;
+		if (player.getCarriedItems().getInventory().hasCatalogID(Gauntlets.getById(getGauntletEnchantment(player)).catalogId())
+		&& getGauntletEnchantment(player) != Gauntlets.STEEL.id()) {
+
+			if (player.getCarriedItems().getInventory().countId(ItemId.DRUNK_DRAGON.id()) >= drunkDragons
+			&& player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= goldCost) {
+
+				if (multi(player, npc, "You're welcome", "I've got your stuff, let's do this") == 1) {
+					for (int i = 0; i < drunkDragons; i++) {
+						mes(player, "You give a Drunk Dragon to Dimintheis");
+						player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+					}
+					mes(player, "You give " + goldCost + " coins to Dimintheis");
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), goldCost));
+					mes(player, "You give your gauntlets to Dimintheis");
+					player.getCarriedItems().remove(new Item(Gauntlets.getById(getGauntletEnchantment(player)).catalogId()));
+					mes(player, "Dimintheis takes your gauntlets",
+					"He mutters some words that you don't understand",
+					"He hands you back a pair of steel gauntlets");
+					give(player, Gauntlets.STEEL.catalogId(), 1);
+					player.getCache().set("famcrest_gauntlets", Gauntlets.STEEL.id());
+					npcsay(player, npc, "It's done",
+						"Just don't tell my kids about this");
+				}
+
+			} else {
+				if (multi(player, npc, "You're welcome", "I may have made an error in judgement...") == 1) {
+					npcsay(player, npc, "How so?");
+					int choice = multi(player, npc, "I should have sided with the demon",
+						"While I love my enchanted gauntlets, I would like a different enchantment");
+					if (choice == 0) {
+						npcsay(player, npc, "Bit late for that now...");
+					} else if (choice == 1) {
+						npcsay(player, npc, "Alright I can disenchant your gauntlets",
+							"If you do me a favor");
+						say(player, npc, "I'm all ears");
+						npcsay(player, npc, "I'm going to need " + drunkDragons + " Drunk Dragons and " + goldCost + " coins");
+						choice = multi(player, npc, "Sure no problem",
+							"No way",
+							"How am I supposed to get a dragon drunk?");
+						if (choice == 2) {
+							npcsay(player, npc, "You don't",
+								"It's a fancy-schmancy cocktail made by the little folk that live in trees");
+							multi(player, npc, "Sure I can do that",
+								"That seems like too much effort, I'll pass");
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.DIMINTHEIS.id() || n.getID() == NpcId.AVAN.id() || n.getID() == NpcId.JOHNATHON.id();
@@ -223,7 +280,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							mes(player, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
-							player.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
+							player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+							player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()));
 							player.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
 							npcsay(player, n,
@@ -378,7 +436,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					if (menu == 0) {
 						mes(player, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
-						player.getCarriedItems().getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
+						player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_CHAOS.id()));
 						player.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
 					} else if (menu == 0) {
 						npcsay(player, n,

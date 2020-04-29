@@ -45,7 +45,8 @@ public class Refill implements UseLocTrigger {
 								+ " from the "
 								+ obj.getGameObjectDef().getName().toLowerCase()
 							);
-							getOwner().getCarriedItems().getInventory().replace(itemID, refilledID,true);
+							getOwner().getCarriedItems().remove(new Item(itemID));
+							getOwner().getCarriedItems().getInventory().add(new Item(refilledID));
 						} else {
 							interruptBatch();
 						}

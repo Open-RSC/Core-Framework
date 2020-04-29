@@ -32,7 +32,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 		try {
 			long now = System.currentTimeMillis() / 1000;
 
-			getWorld().getServer().getGameLogger().addQuery(new ResultQuery("SELECT `key`, `value` FROM `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` WHERE `playerID`=-1") {
+			getWorld().getServer().getGameLogger().addQuery(new ResultQuery("SELECT `key`, `value` FROM `" + getWorld().getServer().getConfig().DB_TABLE_PREFIX + "player_cache` WHERE `playerID`=-1") {
 				@Override
 				public void onResult(ResultSet result) throws SQLException {
 					if (!result.next()) {
@@ -68,7 +68,7 @@ public class WildernessCycleEvent extends DelayedEvent {
 				getWorld().sendWorldMessage("Wilderness rules changed: " + getFriendlyString(lastWildernessType)
 					+ ". Next change in " + timeUntilChange() + " hours.");
 
-				getWorld().getServer().getGameLogger().addQuery(new Query("UPDATE `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
+				getWorld().getServer().getGameLogger().addQuery(new Query("UPDATE `" + getWorld().getServer().getConfig().DB_TABLE_PREFIX + "player_cache` SET `value`=?, `key`=? WHERE `playerID`='-1'") {
 
 					@Override
 					public Query build() {

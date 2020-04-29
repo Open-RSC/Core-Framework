@@ -1,6 +1,7 @@
 package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
+import com.openrsc.server.database.DatabaseType;
 import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,11 +48,12 @@ public class ServerConfiguration {
 	public int RESTART_DELAY;
 	public int RESTART_DELAY_2;
 	public int AGGRO_RANGE;
-	public String MYSQL_HOST;
-	public String MYSQL_DB;
-	public String MYSQL_USER;
-	public String MYSQL_PASS;
-	public String MYSQL_TABLE_PREFIX;
+	public DatabaseType DB_TYPE;
+	public String DB_HOST;
+	public String DB_NAME;
+	public String DB_USER;
+	public String DB_PASS;
+	public String DB_TABLE_PREFIX;
 	public int PLAYER_LEVEL_LIMIT;
 	public double COMBAT_EXP_RATE;
 	public double SKILLING_EXP_RATE;
@@ -183,7 +185,7 @@ public class ServerConfiguration {
 	public boolean WANT_SHOW_KITTENS_CIVILLIAN;
 	public boolean WANT_BARTER_WORMBRAINS;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
-	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
+	public boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
 	public boolean CAN_USE_CRACKER_ON_SELF;
 
 	public int RING_OF_RECOIL_LIMIT;
@@ -204,7 +206,8 @@ public class ServerConfiguration {
 
 	public String configFile;
 	private String[] deprecatedKeys = new String[]{
-		"bank_size", "want_password_massage"
+		"bank_size", "want_password_massage", "mysql_db",
+		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix"
 	};
 
 	/**
@@ -243,11 +246,12 @@ public class ServerConfiguration {
 		notifyDeprecated();
 
 		// Database settings
-		MYSQL_DB = tryReadString("mysql_db").orElse("openrsc");
-		MYSQL_HOST = tryReadString("mysql_host").orElse("localhost:3306");
-		MYSQL_USER = tryReadString("mysql_user").orElse("root");
-		MYSQL_PASS = tryReadString("mysql_pass").orElse("root");
-		MYSQL_TABLE_PREFIX = tryReadString("mysql_table_prefix").orElse("openrsc_");
+		DB_TYPE = DatabaseType.getByType(tryReadInt("db_type").orElse(0));
+		DB_NAME = tryReadString("db_name").orElse("openrsc");
+		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
+		DB_USER = tryReadString("db_user").orElse("root");
+		DB_PASS = tryReadString("db_pass").orElse("root");
+		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("openrsc_");
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");

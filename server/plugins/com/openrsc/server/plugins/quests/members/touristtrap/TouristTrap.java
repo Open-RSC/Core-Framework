@@ -1227,8 +1227,10 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 			npcsay(player, n, "Ok, here's the clothes, I won't need them anymore.");
 			mes(player, "The slave gives you his dirty, flea infested robe.",
 				"The slave gives you his muddy, sweat soaked shirt.");
-			player.getCarriedItems().getInventory().replace(ItemId.DESERT_ROBE.id(), ItemId.SLAVES_ROBE_BOTTOM.id());
-			player.getCarriedItems().getInventory().replace(ItemId.DESERT_SHIRT.id(), ItemId.SLAVES_ROBE_TOP.id());
+			player.getCarriedItems().remove(new Item(ItemId.DESERT_ROBE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.SLAVES_ROBE_BOTTOM.id()));
+			player.getCarriedItems().remove(new Item(ItemId.DESERT_SHIRT.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.SLAVES_ROBE_TOP.id()));
 			player.getCarriedItems().remove(new Item(ItemId.DESERT_BOOTS.id()));
 			Npc newSlave = changenpc(n, NpcId.ESCAPING_MINING_SLAVE.id(), true);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);

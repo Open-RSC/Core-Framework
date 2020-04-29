@@ -45,24 +45,19 @@ public class Inventory {
 	//----------------------------------------------------------------
 	//Constructors----------------------------------------------------
 	public Inventory(Player player, PlayerInventory[] inventory) {
-		try {
-			this.player = player;
-			for (int i = 0; i < inventory.length; i++) {
-				Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
-				ItemDefinition itemDef = item.getDef(player.getWorld());
-				item.setWielded(false);
-				if (item.isWieldable(player.getWorld()) && inventory[i].wielded) {
-					if (itemDef != null) {
-						if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-							item.setWielded(true);
-						list.add(item);
+		this.player = player;
+		for (int i = 0; i < inventory.length; i++) {
+			Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (item.isWieldable(player.getWorld()) && inventory[i].item.isWielded()) {
+				if (itemDef != null) {
+					if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						item.getItemStatus().setWielded(true);
+						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 					}
-					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-				} else
-					list.add(item);
+				}
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			list.add(item);
 		}
 	}
 	//----------------------------------------------------------------
@@ -149,7 +144,7 @@ public class Inventory {
 					list.add(itemToAdd);
 
 					// Update the Database - Add to the last slot and create a new itemID
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					//Update the client
 					if (sendInventory)
@@ -230,7 +225,6 @@ public class Inventory {
 					// Loop until we have the correct item.
 					if (inventoryItem.getItemId() != itemID)
 						continue;
-
 					// Confirm itemDef exists.
 					ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
 					if (inventoryDef == null)
@@ -245,7 +239,7 @@ public class Inventory {
 						// If we remove the entire stack, remove the item status.
 						if (inventoryItem.getAmount() == amount) {
 
-							// Update the Server Bank
+							// Update the Server
 							iterator.remove();
 
 							// Update the Database - Remove item status
@@ -298,34 +292,11 @@ public class Inventory {
 		return -1;
 	}
 
-	public void replace(int i, int j) {
-		this.replace(i, j, true);
+	public void replace(Item itemToReplace, Item newItem, boolean sendInventory) {
+
 	}
 
-	public void replace(int i, int j, boolean sendInventory) {
-		Item old = new Item(i);
-		Item newitem = new Item(j);
-		if (old.getDef(player.getWorld()) != null && newitem.getDef(player.getWorld()) != null
-			&& player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-			&& old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
-			&& player.getCarriedItems().getEquipment().hasEquipped(i)) {
-			newitem.setWielded(false);
-			if (player.getCarriedItems().getEquipment().remove(old, old.getAmount()) != -1)
-				player.getCarriedItems().getEquipment().add(newitem);
-			player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
-				player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
-				old.getDef(player.getWorld()).getWearableId(), false);
-			player.updateWornItems(newitem.getDef(player.getWorld()).getWieldPosition(),
-				newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
-			ActionSender.sendEquipmentStats(player);
-		} else {
-			if (remove(new Item(i), true) != -1);
-			add(new Item(j), false);
-			if (sendInventory)
-				ActionSender.sendInventory(player);
-		}
-	}
-
+	// Used in custom bank interface to swap items.
 	public void swap(int slot, int to) {
 		if (slot <= 0 && to <= 0 && to == slot) {
 			return;
@@ -343,6 +314,7 @@ public class Inventory {
 		}
 	}
 
+	// Used in custom bank interface to insert items.
 	public boolean insert(int slot, int to) {
 		if (slot < 0 || to < 0 || to == slot) {
 			return false;
@@ -414,36 +386,36 @@ public class Inventory {
 		}
 	}
 	public void dropOnDeath(Mob opponent) {
-		// temporary map to sort - ideally should be comparator for item
+
+		// deathItemsMap: Compiles a list of Value : Items
+		// Stacks receive a value of -1, as they are always removed.
 		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
+
+		// A list of all the items a player has prior to death.
 		ArrayList<Item> deathItemsList = new ArrayList<>();
-		ArrayList<Item> oldEquippedList = new ArrayList<>();
+		// A list of all items equipped prior to death.
+		ArrayList<Integer> oldEquippedList = new ArrayList<>();
 		Integer key;
 		ArrayList<Item> value;
 		ItemDefinition def;
 
+		// Add equipment items and values to deathItemsMap (only if config is enabled).
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
-					def = equipped.getDef(player.getWorld());
-					// stackable always lost
-					key = def.isStackable() ? -1 : def.getDefaultPrice();
-					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
-					oldEquippedList.add(equipped);
-					value.add(equipped);
-					deathItemsMap.put(key, value);
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
+					player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
 				}
 			}
 		}
-		for (Item invItem : list) {
+
+		// Add inventory items and values to deathItemsMap
+		for (Item invItem : getItems()) {
 			def = invItem.getDef(player.getWorld());
-			// stackable always lost
-			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice();
+			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
 			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
 			value.add(invItem);
 			deathItemsMap.put(key, value);
@@ -475,9 +447,14 @@ public class Inventory {
 				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 					player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 					item.getDef(player.getWorld()).getWearableId(), false);
-				item.setWielded(false);
+				try {
+					item.setWielded(player.getWorld().getServer().getDatabase(), false);
+				}
+				catch (GameDatabaseException e) {
+					LOGGER.error(e);
+				}
 			}
-			iterator.remove();
+			remove(item, false);
 
 			log.addDroppedItem(item);
 			Player dropOwner;
@@ -517,15 +494,7 @@ public class Inventory {
 				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
 				break;
 		}
-		// TODO: Remove items from inventory properly. (must update in DB)
-		//Add the remaining items to the players inventory
-		list.clear();
-		for (Item returnItem : deathItemsList) {
-			add(returnItem, false);
-			if (oldEquippedList.contains(returnItem)) {
-				player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
-			}
-		}
+
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
 			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
 			add(new Item(fam_gloves, 1), false);
@@ -684,35 +653,38 @@ public class Inventory {
 
 	public int getRequiredSlots(Item item) {
 		synchronized(list) {
-			//Check item definition
+			// Check item definition
 			ItemDefinition itemDef = item.getDef(player.getWorld());
 			if (itemDef == null)
 				return Integer.MAX_VALUE;
 
-			//Check if the item is a stackable
-			if (itemDef.isStackable() || item.getNoted()) { /**Item IS stackable*/
-				//Check if there's a stack that can be added to
+			// Check if the item is a stackable
+			if (itemDef.isStackable() || item.getNoted()) {
+				// Check if there's a stack that can be added to
 				for (Item inventoryItem : list) {
-					//Check for matching catalogID
+					// Check for matching catalogID
 					if (inventoryItem.getCatalogId() != item.getCatalogId())
 						continue;
 
-					//Check for matching noted status
-					if (!inventoryItem.getNoted())
+					// Check for matching noted status
+					if (inventoryItem.getNoted() != item.getNoted())
 						continue;
 
-					//Make sure there's room in the stack
+					// Make sure there's room in the stack
 					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
 						continue;
 
-					//Check if all of the stack can fit in the existing stack
+					// Check if all of the stack can fit in the existing stack
 					int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
 					return remainingSize < item.getAmount() ? 1 : 0;
 				}
 
-				//Theres no stack found
+				// Theres no stack found
 				return 1;
 			} else {
+				if (item.getAmount() > 1) {
+					return Math.min(MAX_SIZE - list.size(), item.getAmount());
+				}
 				return 1;
 			}
 		}

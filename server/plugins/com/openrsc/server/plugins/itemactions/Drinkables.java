@@ -23,7 +23,7 @@ public class Drinkables implements OpInvTrigger {
 			return;
 		}
 		int id = item.getCatalogId();
-		player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // drink speed is same as tick speed setting
+		player.setConsumeTimer(1); // drink speed is same as tick speed setting
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);
 
@@ -390,7 +390,8 @@ public class Drinkables implements OpInvTrigger {
 			"No, I've had second thoughts...");
 		if (drink == 0) {
 			player.message("You drink the potion...");
-			player.getCarriedItems().getInventory().replace(ItemId.GUJUO_POTION.id(), ItemId.EMPTY_VIAL.id());
+			player.getCarriedItems().remove(new Item(ItemId.GUJUO_POTION.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.EMPTY_VIAL.id()));
 			if (!player.getCache().hasKey("gujuo_potion")) {
 				player.getCache().store("gujuo_potion", true);
 			}

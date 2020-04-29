@@ -1,14 +1,14 @@
 package com.openrsc.server.content.market.task;
 
-import com.openrsc.server.content.market.CollectableItem;
+import com.openrsc.server.content.market.CollectibleItem;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.struct.ExpiredAuction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PlayerCollectItemsTask extends MarketTask {
@@ -26,7 +26,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		ArrayList<CollectableItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectableItemsFor(player.getDatabaseID());
+		ArrayList<CollectibleItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectibleItemsFor(player.getDatabaseID());
 
 		if (list.size() == 0) {
 			player.message("You have no items to collect.");
@@ -35,11 +35,9 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 		StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
 		try {
-			PreparedStatement setCollected = player.getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("UPDATE `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "expired_auctions` SET `claim_time`= '" + System.currentTimeMillis()
-					+ "',`claimed`='1' WHERE `claim_id`=?");
-			for (CollectableItem i : list) {
+			ArrayList<ExpiredAuction> dbCollectibleItems = new ArrayList<>();
+			for (CollectibleItem i : list) {
+				ExpiredAuction dbItem = new ExpiredAuction();
 				Item item = new Item(i.item_id, i.item_amount);
 				if (!player.getBank().canHold(item)) {
 					items.append("@gre@Rest of the items are still held by auctioneer% make more space in bank and claim.");
@@ -47,12 +45,14 @@ public class PlayerCollectItemsTask extends MarketTask {
 				}
 				player.getBank().add(item);
 				items.append(" @lre@").append(item.getDef(player.getWorld()).getName()).append(" @whi@x @cya@").append(item.getAmount()).append("@whi@ ").append(i.explanation).append(" %");
-				setCollected.setInt(1, i.claim_id);
-				setCollected.addBatch();
+				dbItem.claim_id = i.claim_id;
+				dbItem.claim_time = System.currentTimeMillis();
+				dbCollectibleItems.add(dbItem);
 			}
-			try{setCollected.executeBatch();}
-			finally{setCollected.close();}
-		} catch (SQLException e) {
+			player.getWorld().getServer().getDatabase()
+				.collectItems(dbCollectibleItems.toArray(new ExpiredAuction[dbCollectibleItems.size()]));
+
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
 		ActionSender.sendBox(player, items.toString(), true);

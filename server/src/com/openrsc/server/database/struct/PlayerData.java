@@ -1,5 +1,7 @@
 package com.openrsc.server.database.struct;
 
+import com.openrsc.server.Server;
+
 public class PlayerData {
 	public int playerId;
 	public int groupId;
@@ -13,7 +15,7 @@ public class PlayerData {
 	public int fatigue;
 	public int kills;
 	public int deaths;
-	public int kills2;
+	public int npc_kills;
 	public int ironMan;
 	public int ironManRestriction;
 	public int hcIronManDeath;

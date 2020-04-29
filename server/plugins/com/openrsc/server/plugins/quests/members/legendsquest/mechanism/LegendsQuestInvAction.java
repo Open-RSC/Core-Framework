@@ -133,7 +133,8 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 					if (player.getCarriedItems().hasCatalogID(ItemId.EMPTY_VIAL.id(), Optional.of(false))) {
 						mes(player, "The spell is cast perfectly..",
 								"You enchant one of the empty vials.");
-						player.getCarriedItems().getInventory().replace(ItemId.EMPTY_VIAL.id(), ItemId.ENCHANTED_VIAL.id());
+						player.getCarriedItems().remove(new Item(ItemId.EMPTY_VIAL.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.ENCHANTED_VIAL.id()));
 					} else {
 						player.message("This spell looks as if it needs some other components.");
 					}
@@ -174,7 +175,8 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 				give(player, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 1);
 			}
 			player.message("You place the seeds in the pure sacred water...");
-			player.getCarriedItems().getInventory().replace(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.BLESSED_GOLDEN_BOWL.id());
+			player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The pure water in the golden bowl has run out...");
 			player.message("You start to see little shoots growing on the seeds.");
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 4) {

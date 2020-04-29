@@ -574,7 +574,8 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 
 	public void checkTorchCrossing(Player player) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
-			player.getCarriedItems().getInventory().replace(ItemId.LIT_TORCH.id(), ItemId.UNLIT_TORCH.id());
+			player.getCarriedItems().remove(new Item(ItemId.LIT_TORCH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.UNLIT_TORCH.id()));
 			mes(player, "your torch goes out on the crossing");
 		}
 	}

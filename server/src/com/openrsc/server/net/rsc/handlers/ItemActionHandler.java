@@ -15,7 +15,6 @@ public class ItemActionHandler implements PacketHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
 		int idx = (int) packet.readShort();
 		int amount = packet.readInt();
 		int commandIndex;
@@ -24,9 +23,13 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
-			player.setSuspiciousPlayer(true, "item idx < -1 or idx >= inv size");
+		if (idx < -1) {
+			player.setSuspiciousPlayer(true, "item idx < -1");
 			return;
+		}
+
+		if (idx >= player.getCarriedItems().getInventory().size()) {
+			player.setSuspiciousPlayer(true, "idx >= inv size");
 		}
 		Item tempitem = null;
 

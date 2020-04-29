@@ -831,14 +831,6 @@ public abstract class Mob extends Entity {
 		return (mobSprite == 8 || mobSprite == 9) && combatWith != null;
 	}
 
-	public long getLastRun() {
-		return lastRun;
-	}
-
-	public void setLastRun(final long lastRun) {
-		this.lastRun = lastRun;
-	}
-
 	public synchronized boolean isBusy() {
 		return busy.get();
 	}
@@ -909,12 +901,12 @@ public abstract class Mob extends Entity {
 		return skills;
 	}
 
-	public int getCombatLevel(final int roundMode) {
-		return getSkills().getCombatLevel(roundMode);
+	public int getCombatLevel(final boolean isForXp) {
+		return getSkills().getCombatLevel(isForXp);
 	}
 
 	public int getCombatLevel() {
-		return getSkills().getCombatLevel(null);
+		return getSkills().getCombatLevel(false);
 	}
 
 	public boolean isTeleporting() {

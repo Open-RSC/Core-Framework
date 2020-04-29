@@ -179,7 +179,8 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 						"Take this letter and give it to one of the workmen",
 						"And they will allow you to use it");
 					player.message("The expert hands you a letter");
-					player.getCarriedItems().getInventory().replace(ItemId.TALISMAN_OF_ZAROS.id(), ItemId.DIGSITE_SCROLL.id());
+					player.getCarriedItems().remove(new Item(ItemId.TALISMAN_OF_ZAROS.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.DIGSITE_SCROLL.id()));
 					break;
 				case UNIDENTIFIED_LIQUID:
 					say(player, n, "Do you know what this is ?");
@@ -187,7 +188,8 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 					say(player, n, "From one of the barrels at the digsite");
 					npcsay(player, n, "This is a dangerous liquid called nitroglycerin",
 						"Be careful how you handle it");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_LIQUID.id(), ItemId.NITROGLYCERIN.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.NITROGLYCERIN.id()));
 					break;
 				case NITROGLYCERIN:
 					say(player, n, "Can you tell me any more about this ?");
@@ -203,7 +205,8 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 						"I know what this is...",
 						"It's called ammonium nitrate - A strong chemical",
 						"Why you want this i'll never know...");
-					player.getCarriedItems().getInventory().replace(ItemId.UNIDENTIFIED_POWDER.id(), ItemId.AMMONIUM_NITRATE.id());
+					player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_POWDER.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.AMMONIUM_NITRATE.id()));
 					break;
 				case MIXED_CHEMICALS_1:
 					say(player, n, "Hey, look at this");

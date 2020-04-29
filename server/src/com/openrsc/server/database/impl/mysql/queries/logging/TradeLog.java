@@ -21,7 +21,7 @@ public final class TradeLog extends Query {
 	private List<Item> player1Offer, player2Offer;
 
 	public TradeLog(World world, String player1, String player2, List<Item> player1Offer, List<Item> player2Offer, String player1_ip, String player2_ip) {
-		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "trade_logs`(`player1`, `player2`, `player1_items`, `player2_items`, `player1_ip`, `player2_ip`, `time`) VALUES(?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + world.getServer().getConfig().DB_TABLE_PREFIX + "trade_logs`(`player1`, `player2`, `player1_items`, `player2_items`, `player1_ip`, `player2_ip`, `time`) VALUES(?, ?, ?, ?, ?, ?, ?)");
 		this.player1 = player1;
 		this.player2 = player2;
 		this.player1Offer = player1Offer;

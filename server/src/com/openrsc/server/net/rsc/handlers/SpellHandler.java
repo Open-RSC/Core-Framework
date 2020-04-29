@@ -895,12 +895,12 @@ public class SpellHandler implements PacketHandler {
 		}
 		if (affectedMob.isPlayer()) {
 			Player other = (Player) affectedMob;
-			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getLastRun() < 1000) {
+			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getRanAwayTimer() < 1000) {
 				player.resetPath();
 				return;
 			}
 		}
-		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getLastRun() < 3000) {
+		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getRanAwayTimer() < 3000) {
 			player.resetPath();
 			return;
 		}

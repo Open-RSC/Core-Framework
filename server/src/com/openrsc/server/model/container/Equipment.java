@@ -153,49 +153,54 @@ public class Equipment {
 			return false;
 		}
 
-		switch (request.requestType) {
-			case FROM_INVENTORY:
-				request.item.setWielded(false);
-				break;
-			case FROM_EQUIPMENT:
-				synchronized (list) {
-					synchronized (player) {
-						//Can't unequip something if inventory is full
-						if (player.getCarriedItems().getInventory().full()) {
-							player.message("You need more inventory space to unequip that.");
-							return false;
-						}
-						if (remove(request.item, request.item.getAmount()) == -1)
-							return false;
-						request.item.setWielded(false);
-						player.getCarriedItems().getInventory().add(request.item, true);
+		try {
+			switch (request.requestType) {
+				case FROM_INVENTORY:
+					request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+					break;
+				case FROM_EQUIPMENT:
+					synchronized (list) {
+						synchronized (player) {
+							//Can't unequip something if inventory is full
+							if (player.getCarriedItems().getInventory().full()) {
+								player.message("You need more inventory space to unequip that.");
+								return false;
+							}
+							if (remove(request.item, request.item.getAmount()) == -1)
+								return false;
+							request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+							player.getCarriedItems().getInventory().add(request.item, true);
 
-					}
-				}
-				break;
-			case FROM_BANK:
-				synchronized (list) {
-					synchronized (player.getBank().getItems()) {
-						//Can't unequip something if bank is full
-						if (player.getBank().full()) {
-							player.message("You need more inventory space to unequip that.");
-							return false;
 						}
-						if (remove(request.item, request.item.getAmount()) == -1)
-							return false;
-						request.item.setWielded(false);
-						player.getBank().add(request.item);
-						ActionSender.showBank(player);
 					}
-				}
-				break;
-			case CHECK_IF_EQUIPMENT_TAB:
-				if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-					request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
-				} else {
-					request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
-				}
-				return unequipItem(request);
+					break;
+				case FROM_BANK:
+					synchronized (list) {
+						synchronized (player.getBank().getItems()) {
+							//Can't unequip something if bank is full
+							if (player.getBank().full()) {
+								player.message("You need more inventory space to unequip that.");
+								return false;
+							}
+							if (remove(request.item, request.item.getAmount()) == -1)
+								return false;
+							request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+							player.getBank().add(request.item);
+							ActionSender.showBank(player);
+						}
+					}
+					break;
+				case CHECK_IF_EQUIPMENT_TAB:
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
+					} else {
+						request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
+					}
+					return unequipItem(request);
+			}
+		}
+		catch (GameDatabaseException e) {
+			LOGGER.error(e);
 		}
 
 		if (request.sound) {
@@ -250,13 +255,17 @@ public class Equipment {
 		if (request.sound)
 			player.playSound("click");
 
-		//Update the look of the player
-		player.updateWornItems(request.item.getDef(player.getWorld()).getWieldPosition(), request.item.getDef(player.getWorld()).getAppearanceId(),
-			request.item.getDef(player.getWorld()).getWearableId(), true);
+		updateClient(request.item.getDef(player.getWorld()));
 
-		//Send new stats / equipment to client
-		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
 		return true;
+	}
+
+	public void updateClient(ItemDefinition item) {
+		// Update the look of the player
+		player.updateWornItems(item.getWieldPosition(), item.getAppearanceId(), item.getWearableId(), true);
+
+		// Send new stats / equipment to client
+		ActionSender.sendEquipmentStats(player, item.getWieldPosition());
 	}
 
 	/**
@@ -280,7 +289,12 @@ public class Equipment {
 				add(request.item);
 
 			} else { //On a world without equipment tab
-				request.item.setWielded(true);
+				try {
+					request.item.setWielded(player.getWorld().getServer().getDatabase(), true);
+				}
+				catch (GameDatabaseException e) {
+					LOGGER.error(e);
+				}
 			}
 
 		}
@@ -312,22 +326,22 @@ public class Equipment {
 					player.getBank().getFirstIndexById(request.item.getCatalogId())
 				);
 
-				if (!itemDef.isStackable()) { /**Not a stackable item*/
-					if (player.getBank().remove(toEquip.getCatalogId(), 1, toEquip.getItemId()) == -1)
+				if (!itemDef.isStackable()) {
+					if (!player.getBank().remove(toEquip.getCatalogId(), 1))
 						return false;
 
-					if (originalAmount > 1) { /**Need to split the stack*/
+					if (originalAmount > 1) {
 						add(new Item(toEquip.getCatalogId(), 1));
-					} else { /**Don't need to split the stack*/
+					} else {
 						add(request.item);
 					}
-				} else { /**Stackable item*/
-					if (player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount(), toEquip.getItemId()) == -1)
+				} else {
+					if (!player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount()))
 						return false;
 
-					if (originalAmount > request.item.getAmount()) { /**Need to split the stack*/
+					if (originalAmount > request.item.getAmount()) {
 						add(new Item(request.item.getCatalogId(), request.item.getAmount()));
-					} else { /**Don't need to split the stack*/
+					} else {
 						add(request.item);
 					}
 				}

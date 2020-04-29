@@ -163,7 +163,8 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Well done !",
 					"You have completed mapping the Kharazai jungle on the southern end of Karamja,");
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Grand Vizier Erkle will be pleased.");
-				player.getCarriedItems().getInventory().replace(ItemId.RADIMUS_SCROLLS.id(), ItemId.RADIMUS_SCROLLS_COMPLETE.id()); // switch map to complete map.
+				player.getCarriedItems().remove(new Item(ItemId.RADIMUS_SCROLLS.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.RADIMUS_SCROLLS_COMPLETE.id())); // switch map to complete map.
 				checkMapComplete(player);
 				player.getCache().remove("JUNGLE_EAST");
 				player.getCache().remove("JUNGLE_MIDDLE");
