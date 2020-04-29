@@ -38,7 +38,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		super(world, owner, 0, null, true);
 		this.data = data;
 		this.action = Action.getActionFromPlugin(pluginInterface);
-		this.scriptContext = new ScriptContext(owner.getWorld(), owner != null ? owner.getIndex() : null);
+		this.scriptContext = new ScriptContext(world, owner != null ? owner.getIndex() : null);
 
 		if(this.action == null) {
 			throw new IllegalArgumentException("Cannot locate action from Plugin: " + pluginInterface);
