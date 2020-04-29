@@ -566,25 +566,20 @@ public class Npc extends Mob {
 					case Skills.CONTROLLED_MODE: // CONTROLLED
 						for (int x = 0; x < 3; x++) {
 							skillsDist[x] = 1;
-							//player.incExp(x, totalXP, true);
 						}
 						break;
 					case Skills.AGGRESSIVE_MODE: // AGGRESSIVE
 						skillsDist[Skills.STRENGTH] = 3;
-						//player.incExp(Skills.STRENGTH, totalXP * 3, true);
 						break;
 					case Skills.ACCURATE_MODE: // ACCURATE
 						skillsDist[Skills.ATTACK] = 3;
-						//player.incExp(Skills.ATTACK, totalXP * 3, true);
 						break;
 					case Skills.DEFENSIVE_MODE: // DEFENSIVE
 						skillsDist[Skills.DEFENSE] = 3;
-						//player.incExp(Skills.DEFENSE, totalXP * 3, true);
 						break;
 				}
 				skillsDist[Skills.HITS] = 1;
 				player.incExp(skillsDist, totalXP, true);
-				//player.incExp(Skills.HITS, totalXP, true);
 			}
 		}
 
