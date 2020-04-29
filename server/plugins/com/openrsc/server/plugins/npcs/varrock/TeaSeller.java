@@ -12,8 +12,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 
-import static com.openrsc.server.plugins.Functions.multi;
-import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class TeaSeller extends AbstractShop implements TakeObjTrigger {
 

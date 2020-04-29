@@ -10,8 +10,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.multi;
-import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class GeneralStore extends AbstractShop {
 
@@ -84,7 +83,7 @@ public final class GeneralStore extends AbstractShop {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		Shop shop = getShop(n, player);
 		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
 			player.setAccessingShop(shop);

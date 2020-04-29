@@ -17,7 +17,7 @@ public abstract class AbstractShop implements OpNpcTrigger, TalkNpcTrigger {
 	public abstract Shop getShop();
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
 			Shop shop = getShop();
 			player.setAccessingShop(shop);
@@ -26,7 +26,7 @@ public abstract class AbstractShop implements OpNpcTrigger, TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return blockTalkNpc(player, n);
 	}
 }
