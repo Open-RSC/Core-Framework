@@ -788,7 +788,7 @@ public class Crafting implements UseInvTrigger,
 				"Armour",
 				"Gloves",
 				"Boots",
-				"Other",
+				"More...",
 				"Cancel"
 			}
 			:
