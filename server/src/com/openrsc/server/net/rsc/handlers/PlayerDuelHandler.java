@@ -245,7 +245,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				}
 
 				player.walkToEntity(affectedPlayer.getX(), affectedPlayer.getY());
-				player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, 0) {
+				player.setWalkToAction(new WalkToMobAction(player, affectedPlayer, 1) {
 					public void executeInternal() {
 						Player affectedPlayer = (Player) mob;
 						getPlayer().resetPath();

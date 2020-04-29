@@ -25,6 +25,6 @@ public abstract class WalkToMobAction extends WalkToAction {
 	@Override
 	public boolean shouldExecuteInternal() {
 		return getPlayer().withinRange(mob, radius)
-			&& PathValidation.checkAdjacent(getPlayer().getWorld(), getPlayer().getLocation(), mob.getLocation(), true);
+			&& PathValidation.checkAdjacentDistance(getPlayer().getWorld(), getPlayer().getLocation(), mob.getLocation(), true);
 	}
 }
