@@ -849,14 +849,6 @@ public abstract class Mob extends Entity {
 		return (mobSprite == 8 || mobSprite == 9) && combatWith != null;
 	}
 
-	public long getLastRun() {
-		return lastRun;
-	}
-
-	public void setLastRun(final long lastRun) {
-		this.lastRun = lastRun;
-	}
-
 	public void setBusyTimer(final int i) {
 		this.busyTimer = System.currentTimeMillis() + i;
 	}
