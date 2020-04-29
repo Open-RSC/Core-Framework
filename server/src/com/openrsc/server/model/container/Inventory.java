@@ -394,7 +394,7 @@ public class Inventory {
 		// A list of all the items a player has prior to death.
 		ArrayList<Item> deathItemsList = new ArrayList<>();
 		// A list of all items equipped prior to death.
-		ArrayList<Item> oldEquippedList = new ArrayList<>();
+		ArrayList<Integer> oldEquippedList = new ArrayList<>();
 		Integer key;
 		ArrayList<Item> value;
 		ItemDefinition def;
@@ -404,16 +404,10 @@ public class Inventory {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
-					def = equipped.getDef(player.getWorld());
-					key = def.isStackable() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
-					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
-					oldEquippedList.add(equipped);
-					value.add(equipped);
-					deathItemsMap.put(key, value);
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
+					player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
 				}
 			}
 		}
@@ -501,12 +495,6 @@ public class Inventory {
 				break;
 		}
 
-		//Add the remaining items to the players inventory
-		for (Item returnItem : deathItemsList) {
-			if (oldEquippedList.contains(returnItem)) {
-				player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
-			}
-		}
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
 			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
 			add(new Item(fam_gloves, 1), false);
