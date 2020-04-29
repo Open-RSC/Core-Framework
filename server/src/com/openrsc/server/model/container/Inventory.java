@@ -386,21 +386,26 @@ public class Inventory {
 		}
 	}
 	public void dropOnDeath(Mob opponent) {
-		// temporary map to sort - ideally should be comparator for item
+
+		// deathItemsMap: Compiles a list of Value : Items
+		// Stacks receive a value of -1, as they are always removed.
 		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
+
+		// A list of all the items a player has prior to death.
 		ArrayList<Item> deathItemsList = new ArrayList<>();
+		// A list of all items equipped prior to death.
 		ArrayList<Item> oldEquippedList = new ArrayList<>();
 		Integer key;
 		ArrayList<Item> value;
 		ItemDefinition def;
 
+		// Add equipment items and values to deathItemsMap (only if config is enabled).
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
 					def = equipped.getDef(player.getWorld());
-					// stackable always lost
-					key = def.isStackable() ? -1 : def.getDefaultPrice();
+					key = def.isStackable() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
 					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
 					oldEquippedList.add(equipped);
 					value.add(equipped);
@@ -412,10 +417,11 @@ public class Inventory {
 				}
 			}
 		}
-		for (Item invItem : list) {
+
+		// Add inventory items and values to deathItemsMap
+		for (Item invItem : getItems()) {
 			def = invItem.getDef(player.getWorld());
-			// stackable always lost
-			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice();
+			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
 			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
 			value.add(invItem);
 			deathItemsMap.put(key, value);
@@ -454,7 +460,7 @@ public class Inventory {
 					LOGGER.error(e);
 				}
 			}
-			iterator.remove();
+			remove(item, false);
 
 			log.addDroppedItem(item);
 			Player dropOwner;
@@ -494,11 +500,9 @@ public class Inventory {
 				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
 				break;
 		}
-		// TODO: Remove items from inventory properly. (must update in DB)
+
 		//Add the remaining items to the players inventory
-		list.clear();
 		for (Item returnItem : deathItemsList) {
-			add(returnItem, false);
 			if (oldEquippedList.contains(returnItem)) {
 				player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, returnItem, EquipRequest.RequestType.FROM_INVENTORY, false));
 			}
