@@ -61,7 +61,8 @@ public enum Action {
 	playerrangeplayer(EntityType.PLAYER, "playerrangeplayer"),
 	teleport(EntityType.NONE, "teleport"),
 	withdraw(EntityType.NONE, "withdraw"),
-	startup(EntityType.NONE, "startup");
+	startup(EntityType.NONE, "startup"),
+	trade(EntityType.NONE, "opnpc");
 
 	public static Action getActionFromPlugin(final String pluginInterface) {
 		for (Action action : Action.values()) {
