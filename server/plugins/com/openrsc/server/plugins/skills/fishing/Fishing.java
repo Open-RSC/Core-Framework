@@ -55,9 +55,10 @@ public class Fishing implements OpLocTrigger {
 
 		final ObjectFishingDef def = player.getWorld().getServer().getEntityHandler().getObjectFishingDef(object.getID(), click);
 
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
+
 		if (!player.withinRange(object, 1)) {
 			return;
 		}

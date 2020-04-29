@@ -28,9 +28,9 @@ public class Woodcutting implements OpLocTrigger {
 	private void handleWoodcutting(final GameObject object, final Player player,
 								   final int click) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
 		if (!player.withinRange(object, 2)) {
 			return;
 		}

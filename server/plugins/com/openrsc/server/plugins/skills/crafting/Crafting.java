@@ -25,7 +25,6 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -204,7 +203,7 @@ public class Crafting implements UseInvTrigger,
 				"Amulet"
 		};
 		int type = multi(player, options);
-		if (player.isBusy() || type < 0 || type > 2) {
+		if (type < 0 || type > 2) {
 			return;
 		}
 		reply.set(options[type]);
@@ -262,7 +261,7 @@ public class Crafting implements UseInvTrigger,
 
 		int gem = multi(player, options);
 
-		if (player.isBusy() || gem < 0 || gem > (player.getWorld().getServer().getConfig().MEMBER_WORLD ? 5 + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
+		if (gem < 0 || gem > (player.getWorld().getServer().getConfig().MEMBER_WORLD ? 5 + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
 			return;
 		}
 		reply.set(options[gem]);
@@ -349,7 +348,7 @@ public class Crafting implements UseInvTrigger,
 				"Unholy symbol of Zamorak"
 		};
 		int type = multi(player, options);
-		if (player.isBusy() || type < 0 || type > 1) {
+		if (type < 0 || type > 1) {
 			return;
 		}
 		reply.set(options[type]);
@@ -400,7 +399,7 @@ public class Crafting implements UseInvTrigger,
 	private void doPotteryMolding(final Item item, final Player player) {
 		String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
 		int type = multi(player, options);
-		if (player.isBusy() || type < 0 || type > 2) {
+		if (type < 0 || type > 2) {
 			return;
 		}
 
@@ -665,7 +664,7 @@ public class Crafting implements UseInvTrigger,
 		};
 
 		int type = multi(player, options);
-		if (player.isBusy() || type < 0 || type > 2) {
+		if (type < 0 || type > 2) {
 			return;
 		}
 
@@ -783,14 +782,14 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		String[] options = new String[]{
-				"Armour",
-				"Gloves",
-				"Boots",
-				"Cancel"
+			"Armour",
+			"Gloves",
+			"Boots",
+			"Cancel"
 		};
 
 		int type = multi(player, options);
-		if (player.isBusy() || type < 0 || type > 3) {
+		if (type < 0 || type > 3) {
 			return;
 		}
 

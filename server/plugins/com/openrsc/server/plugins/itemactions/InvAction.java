@@ -259,9 +259,10 @@ public class InvAction implements OpInvTrigger {
 
 		int option = multi(player, options);
 
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
+
 		if (option == 0) {
 			ActionSender.sendBox(player, "Constructing the cannon% %"
 				+ "To construct the cannon, firstly set down Dwarf cannon base on the ground.% %"

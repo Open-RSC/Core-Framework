@@ -108,9 +108,10 @@ public final class Mining implements OpLocTrigger {
 	}
 
 	private void handleMining(final GameObject object, Player player, int click) {
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
+
 		if (!player.withinRange(object, 1)) {
 			return;
 		}

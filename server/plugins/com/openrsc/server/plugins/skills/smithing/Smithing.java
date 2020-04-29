@@ -160,9 +160,9 @@ public class Smithing implements UseLocTrigger {
 
 	private void handleGoldSmithing(Player player) {
 		int goldOption = multi(player, "Golden bowl.", "Cancel");
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
 		if (goldOption == 0) {
 			mes(player, "You hammer the metal...");
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
@@ -191,9 +191,9 @@ public class Smithing implements UseLocTrigger {
 		int firstType = firstMenu(item, player);
 		if (firstType < 0) return;
 
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
 
 		// Second Smithing Menu
 		int secondType = secondMenu(item, player, firstType);
@@ -202,7 +202,7 @@ public class Smithing implements UseLocTrigger {
 		// Distribute to the correct function to make our final choice
 		int toMake = chooseItem(player, secondType);
 
-		if (player.isBusy() || toMake == -1) {
+		if (toMake == -1) {
 			return;
 		}
 
@@ -387,9 +387,9 @@ public class Smithing implements UseLocTrigger {
 	private void makeWire(Item item, Player player) {
 		player.message("What sort of craft item do you want to make?");
 		int bronzeWireOption = multi(player, "Bronze Wire(1 bar)", "Cancel");
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
 		if (player.getSkills().getLevel(Skills.SMITHING) < 4) {
 			player.message("You need to be at least level 4 smithing to do that");
 			return;

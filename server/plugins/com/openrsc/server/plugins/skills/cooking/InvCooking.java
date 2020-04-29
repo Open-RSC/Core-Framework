@@ -72,7 +72,7 @@ public class InvCooking implements UseInvTrigger {
 
 			player.message("What would you like to make?");
 			int option = multi(player, "Bread dough", "Pastry dough", "Pizza dough", "Pitta dough");
-			if (player.isBusy() || option < 0 || option > 3) {
+			if (option < 0 || option > 3) {
 				return;
 			}
 			int productID = -1;

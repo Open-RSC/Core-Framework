@@ -281,7 +281,7 @@ public class Fletching implements UseInvTrigger {
 				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
 
 		int type = multi(player, options);
-		if (player.isBusy() || type < 0 || type > options.length) {
+		if (type < 0 || type > options.length) {
 			return;
 		}
 

@@ -353,10 +353,12 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (player.getQuestStage(this) != 3)
+		if (player.getQuestStage(this) != 3) {
 			return;
-		if (player.isBusy())
+		}
+		/*if (player.isBusy()) {
 			return;
+		}*/
 		if ((player.getY() == 548 && player.getX() >= 287 && player.getX() <= 291)
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (player.getX() == 290 || player.getX() == 289) {

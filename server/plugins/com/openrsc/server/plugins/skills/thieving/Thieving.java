@@ -53,7 +53,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		else if (stall.equals(Stall.TEA_STALL)) {
 			int chance_player_caught = 60;
 			Npc teaseller = ifnearvisnpc(player, stall.getOwnerID(), 8);
-			boolean caught = (chance_player_caught > DataConversions.random(0, 100)) && !teaseller.isBusy();
+			boolean caught = (chance_player_caught > DataConversions.random(0, 100));
 			if (caught) {
 				npcsay(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
 				player.setBusy(false);

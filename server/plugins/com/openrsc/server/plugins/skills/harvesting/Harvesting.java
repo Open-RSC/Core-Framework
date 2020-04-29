@@ -389,7 +389,7 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	private boolean harvestingChecks(final GameObject obj, final Player player) {
-		return !player.isBusy() && player.withinRange(obj, 1);
+		return !player.withinRange(obj, 1);
 	}
 
 	@Override

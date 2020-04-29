@@ -7,7 +7,7 @@ import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class IronManInvUseOnPlayer implements UsePlayerTrigger {
+public class ArravInvUseOnPlayer implements UsePlayerTrigger {
 
 	@Override
 	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
@@ -37,9 +37,6 @@ public class IronManInvUseOnPlayer implements UsePlayerTrigger {
 			|| item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_1.id()
 			|| item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_2.id()
 			|| item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id()) {
-			if (otherPlayer.isBusy() || player.isBusy()) {
-				return;
-			}
 			if (otherPlayer.getCarriedItems().getInventory().full()) {
 				player.message("Other player doesn't have enough inventory space to receive the object");
 				return;

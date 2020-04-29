@@ -12,8 +12,10 @@ public class BailingBucket implements OpInvTrigger {
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (player.isBusy())
+		/*if (player.isBusy()) {
 			return;
+		}*/
+
 		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
 		if (trawler != null && (trawler.getShipAreaWater().inBounds(player.getLocation())
 			|| trawler.getShipArea().inBounds(player.getLocation()))) {

@@ -63,9 +63,10 @@ public class GemMining implements OpLocTrigger {
 				break;
 		}
 
-		if (player.isBusy()) {
+		/*if (player.isBusy()) {
 			return;
-		}
+		}*/
+
 		if (!player.withinRange(obj, 1)) {
 			return;
 		}
