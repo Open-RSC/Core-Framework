@@ -559,25 +559,32 @@ public class Npc extends Mob {
 
 			Player player = getWorld().getPlayerUUID(ID);
 			if (player != null) {
+				int skillsDist[] = {0, 0, 0, 0};
 				// Give the player their share of the experience.
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 				switch (player.getCombatStyle()) {
 					case Skills.CONTROLLED_MODE: // CONTROLLED
 						for (int x = 0; x < 3; x++) {
-							player.incExp(x, totalXP, true);
+							skillsDist[x] = 1;
+							//player.incExp(x, totalXP, true);
 						}
 						break;
 					case Skills.AGGRESSIVE_MODE: // AGGRESSIVE
-						player.incExp(Skills.STRENGTH, totalXP * 3, true);
+						skillsDist[Skills.STRENGTH] = 3;
+						//player.incExp(Skills.STRENGTH, totalXP * 3, true);
 						break;
 					case Skills.ACCURATE_MODE: // ACCURATE
-						player.incExp(Skills.ATTACK, totalXP * 3, true);
+						skillsDist[Skills.ATTACK] = 3;
+						//player.incExp(Skills.ATTACK, totalXP * 3, true);
 						break;
 					case Skills.DEFENSIVE_MODE: // DEFENSIVE
-						player.incExp(Skills.DEFENSE, totalXP * 3, true);
+						skillsDist[Skills.DEFENSE] = 3;
+						//player.incExp(Skills.DEFENSE, totalXP * 3, true);
 						break;
 				}
-				player.incExp(Skills.HITS, totalXP, true);
+				skillsDist[Skills.HITS] = 1;
+				player.incExp(skillsDist, totalXP, true);
+				//player.incExp(Skills.HITS, totalXP, true);
 			}
 		}
 

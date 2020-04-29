@@ -901,8 +901,8 @@ public abstract class Mob extends Entity {
 		return skills;
 	}
 
-	public int getCombatLevel(final boolean isForXp) {
-		return getSkills().getCombatLevel(isForXp);
+	public int getCombatLevel(final boolean isSpecial) {
+		return getSkills().getCombatLevel(isSpecial);
 	}
 
 	public int getCombatLevel() {
