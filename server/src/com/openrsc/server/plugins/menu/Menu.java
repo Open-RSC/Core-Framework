@@ -80,7 +80,7 @@ public class Menu {
 		if(i >= 0 && i <= options.size()) {
 			Option option = options.get(i);
 			if (option != null) {
-				say(player, player.getScriptContext().getInteractingNpc(), option.getOption());
+				say(player, null, option.getOption());
 				option.action();
 			}
 		}

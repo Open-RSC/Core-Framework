@@ -90,7 +90,7 @@ public final class Moderator implements CommandTrigger {
 					+ "@gre@Busy:@whi@ " + (targetPlayer.isBusy() ? "true" : "false") + " %"
 					+ "@gre@IP:@whi@ " + targetPlayer.getLastIP() + " %"
 					+ "@gre@Last Login:@whi@ " + targetPlayer.getDaysSinceLastLogin() + " days ago %"
-					+ "@gre@Coordinates:@whi@ " + targetPlayer.getScriptContext().getCurrentAction() + " at " + targetPlayer.getLocation().toString() + " %"
+					+ "@gre@Coordinates:@whi@ " + targetPlayer.getLocation().toString() + " %"
 					+ "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
 					+ "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"

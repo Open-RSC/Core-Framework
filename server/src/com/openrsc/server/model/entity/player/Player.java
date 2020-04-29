@@ -123,10 +123,6 @@ public final class Player extends Mob {
 	private volatile int questionOption;
 
 	/**
-	 * The game content script context for this Player
-	 */
-	private final ScriptContext scriptContext;
-	/**
 	 * An atomic reference to the players carried items.
 	 * Multiple threads access this and it never changes.
 	 */
@@ -350,7 +346,6 @@ public final class Player extends Mob {
 	 */
 	public Player(final World world, final LoginRequest request) {
 		super(world);
-		scriptContext = new ScriptContext(this);
 
 		password = request.getPassword();
 		usernameHash = DataConversions.usernameToHash(request.getUsername());
@@ -3103,9 +3098,5 @@ public final class Player extends Mob {
 	 */
 	public synchronized CarriedItems getCarriedItems() {
 		return this.carriedItems.get();
-	}
-
-	public ScriptContext getScriptContext() {
-		return scriptContext;
 	}
 }

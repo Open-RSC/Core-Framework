@@ -87,13 +87,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 public class Functions {
 
-	public static Player getContextPlayer() {
-		final int ownerIndex = PluginTask.getContextPluginTask().getOwnerIndex();
-		final World world = PluginTask.getContextPluginTask().getWorld();
-
-		return world.getPlayer(ownerIndex);
-	}
-
 	/**
 	 * Displays item bubble above players head.
 	 *
@@ -161,7 +154,9 @@ public class Functions {
 	 * @param npc
 	 * @param messages
 	 */
-	public static void say(final Player player, final Npc npc, final String... messages) {
+	public static void say(final Player player, Npc npc, final String... messages) {
+		npc = npc != null ? npc : PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc();
+
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
@@ -392,7 +387,7 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
-			player.getScriptContext().setInteractingNpc(closestNpc);
+			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
 		}
 
 		return closestNpc;
@@ -412,7 +407,7 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
-			player.getScriptContext().setInteractingNpc(closestNpc);
+			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
 		}
 
 		return closestNpc;

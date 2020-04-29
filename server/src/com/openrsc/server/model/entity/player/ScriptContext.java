@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.EntityType;
+import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,18 +20,16 @@ public class ScriptContext {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final Player player;
+	private final World world;
 
+	private volatile Integer ownerIndex = null;
 	private volatile Action currentAction = Action.idle;
 	private volatile Integer interactingIndex = null;
 	private volatile Point interactingCoordinate = null;
 
-	public ScriptContext(final Player player) {
-		this.player = player;
-	}
-
-	public Player getPlayer() {
-		return player;
+	public ScriptContext(final World world, final Integer playerIndex) {
+		this.world = world;
+		this.ownerIndex = playerIndex;
 	}
 
 	public Action getCurrentAction() {
@@ -41,7 +40,15 @@ public class ScriptContext {
 		return interactingCoordinate;
 	}
 
+	public Player getContextPlayer() {
+		return getWorld().getPlayer(ownerIndex);
+	}
+
 	public Npc getInteractingNpc() {
+		if(getContextPlayer() == null) {
+			return null;
+		}
+
 		if(getCurrentAction().getEntityType() != EntityType.NPC) {
 			return null;
 		}
@@ -50,10 +57,14 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getPlayer().getWorld().getNpc(interactingIndex);
+		return getWorld().getNpc(interactingIndex);
 	}
 
 	public Player getInteractingPlayer() {
+		if(getContextPlayer() == null) {
+			return null;
+		}
+
 		if(getCurrentAction().getEntityType() != EntityType.PLAYER) {
 			return null;
 		}
@@ -62,10 +73,14 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getPlayer().getWorld().getPlayer(interactingIndex);
+		return getWorld().getPlayer(interactingIndex);
 	}
 
 	public GroundItem getInteractingGroundItem() {
+		if(getContextPlayer() == null) {
+			return null;
+		}
+
 		if(getCurrentAction().getEntityType() != EntityType.GROUND_ITEM) {
 			return null;
 		}
@@ -78,10 +93,14 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getPlayer().getRegion().getItem(interactingIndex, interactingCoordinate, getPlayer());
+		return getContextPlayer().getRegion().getItem(interactingIndex, interactingCoordinate, getContextPlayer());
 	}
 
 	public GameObject getInteractingLocation() {
+		if(getContextPlayer() == null) {
+			return null;
+		}
+
 		if(getCurrentAction().getEntityType() != EntityType.LOCATION) {
 			return null;
 		}
@@ -90,10 +109,14 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getPlayer().getRegion().getGameObject(interactingCoordinate, getPlayer());
+		return getContextPlayer().getRegion().getGameObject(interactingCoordinate, getContextPlayer());
 	}
 
 	public GameObject getInteractingBoundary() {
+		if(getContextPlayer() == null) {
+			return null;
+		}
+
 		if(getCurrentAction().getEntityType() != EntityType.BOUNDARY) {
 			return null;
 		}
@@ -102,10 +125,14 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getPlayer().getRegion().getWallGameObject(interactingCoordinate, getPlayer());
+		return getContextPlayer().getRegion().getWallGameObject(interactingCoordinate, getContextPlayer());
 	}
 
 	public Item getInteractingInventory() {
+		if(getContextPlayer() == null) {
+			return null;
+		}
+
 		if(getCurrentAction().getEntityType() != EntityType.INVENTORY_ITEM) {
 			return null;
 		}
@@ -114,70 +141,103 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getPlayer().getCarriedItems().getInventory().get(interactingIndex);
+		return getContextPlayer().getCarriedItems().getInventory().get(interactingIndex);
 	}
 
 	public void setInteractingNpc(final Npc npc) {
+		if(getContextPlayer() == null) {
+			return;
+		}
+
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
+
 		npc.setBusy(true);
-		npc.face(getPlayer());
-		getPlayer().face(npc);
+		npc.face(getContextPlayer());
+		getContextPlayer().face(npc);
 		this.interactingIndex = npc.getIndex();
 		this.interactingCoordinate = npc.getLocation();
 	}
 
 	public void setInteractingPlayer(final Player player) {
+		if(getContextPlayer() == null) {
+			return;
+		}
+
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
-		getPlayer().face(player);
+
+		getContextPlayer().face(player);
 		this.interactingIndex = player.getIndex();
 		this.interactingCoordinate = player.getLocation();
 	}
 
 	public void setInteractingGroundItem(final GroundItem groundItem) {
+		if(getContextPlayer() == null) {
+			return;
+		}
+
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
+
 		this.interactingIndex = groundItem.getID();
 		this.interactingCoordinate = groundItem.getLocation();
 	}
 
 	public void setInteractingLocation(final GameObject location) {
+		if(getContextPlayer() == null) {
+			return;
+		}
+
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
+
 		this.interactingIndex = null;
 		this.interactingCoordinate = location.getLocation();
 	}
 
 	public void setInteractingBoundary(final GameObject boundary) {
+		if(getContextPlayer() == null) {
+			return;
+		}
+
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
+
 		this.interactingIndex = null;
 		this.interactingCoordinate = boundary.getLocation();
 	}
 
 	public void setInteractingInventory(final Integer index) {
+		if(getContextPlayer() == null) {
+			return;
+		}
+
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
+
 		this.interactingIndex = index;
-		this.interactingCoordinate = getPlayer().getLocation();
+		this.interactingCoordinate = getContextPlayer().getLocation();
 	}
 
 	public void startScript(final Action action, final Object[] scriptData) {
 		setCurrentAction(action);
-		getPlayer().setBusy(true);
+
+		if(getContextPlayer() != null) {
+			getContextPlayer().setBusy(true);
+		}
 
 		if(scriptData.length > 1) {
 			final Object interactingObject = scriptData[1];
@@ -214,7 +274,10 @@ public class ScriptContext {
 		if(npc != null) {
 			npc.setBusy(false);
 		}
-		getPlayer().setBusy(false);
+
+		if(getContextPlayer() != null) {
+			getContextPlayer().setBusy(false);
+		}
 
 		this.currentAction = Action.idle;
 		this.interactingIndex = null;
@@ -227,5 +290,9 @@ public class ScriptContext {
 
 	public void setCoordinate(final Point coordinate) {
 		this.interactingCoordinate = coordinate;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

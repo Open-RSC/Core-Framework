@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc;
 
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.ScriptContext;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -28,16 +29,16 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private volatile boolean threadRunning = false;
 	private volatile boolean tickCompleted = false;
 	private volatile Thread pluginThread;
-	private volatile int ownerIndex;
 
+	private final ScriptContext scriptContext;
 	private final Object[] data;
 	private final Action action;
 
 	public PluginTask(final World world, final Player owner, final String pluginInterface, final Object[] data) {
 		super(world, owner, 0, null, true);
-		this.ownerIndex = owner == null ? -1 : owner.getIndex();
 		this.data = data;
 		this.action = Action.getActionFromPlugin(pluginInterface);
+		this.scriptContext = new ScriptContext(owner.getWorld(), owner != null ? owner.getIndex() : null);
 
 		if(this.action == null) {
 			throw new IllegalArgumentException("Cannot locate action from Plugin: " + pluginInterface);
@@ -90,9 +91,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		setThreadRunning(true);
 		setTickCompleted(false);
 		tasksMap.put(threadName, this);
-		if(getPlayerOwner() != null) {
-			getPlayerOwner().getScriptContext().startScript(action, data);
-		}
+		getScriptContext().startScript(action, data);
 	}
 
 	private synchronized void unregisterPluginThread() {
@@ -104,9 +103,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 			setTickCompleted(false);
 			tasksMap.remove(thread.getName());
 			pluginThread = null;
-			if(getPlayerOwner() != null) {
-				getPlayerOwner().getScriptContext().endScript();
-			}
+			getScriptContext().endScript();
 
 			thread.interrupt();
 		}
@@ -140,9 +137,10 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		return pluginThread;
 	}
 
-	public int getOwnerIndex() {
-		return ownerIndex;
+	public synchronized ScriptContext getScriptContext() {
+		return scriptContext;
 	}
+
 
 	public class PluginInterruptedException extends RuntimeException {}
 }
