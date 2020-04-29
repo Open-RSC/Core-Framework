@@ -81,7 +81,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		Zone playerZone = GnomeField.getInstance().resolvePositionToZone(player);
 		if (playerZone == Zone.ZONE_NO_PASS) {
 			player.message("you can't make the pass from here");
@@ -99,7 +99,6 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 		} else if (playerZone == Zone.ZONE_1XP_OUTER || playerZone == Zone.ZONE_1XP_INNER) {
 			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = ifnearvisnpc(player, GnomeNpcs.GOALIE, 15);
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
@@ -128,7 +127,6 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 		} else if (playerZone == Zone.ZONE_2XP_OUTER || playerZone == Zone.ZONE_2XP_INNER) {
 			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = ifnearvisnpc(player, GnomeNpcs.GOALIE, 15);
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
@@ -232,17 +230,17 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.GNOME_BALL.id();
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 702;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 702) {
 			if (player.getY() > 456 || !player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
 				player.message("you open the gate");

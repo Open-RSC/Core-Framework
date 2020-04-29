@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -47,7 +46,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onUseLoc(final GameObject object, final Item item, final Player owner) {
+	public void onUseLoc(final Player owner, final GameObject object, final Item item) {
 		if (doors.blockInvUseOnWallObject(object, item, owner)) {
 			doors.onInvUseOnWallObject(object, item, owner);
 		} else {
@@ -57,12 +56,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return false;
 	}
 
 	@Override
-	public void onOpLoc(final GameObject obj, final String command, final Player player) {
+	public void onOpLoc(final Player player, final GameObject obj, final String command) {
 		if (doors.blockObjectAction(obj, command, player)) {
 			doors.onObjectAction(obj, command, player);
 		} else if (ladders.blockObjectAction(obj, command, player)) {
@@ -73,7 +72,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return false;
 	}
 
@@ -90,7 +89,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onUseBound(GameObject object, Item item, Player owner) {
+	public void onUseBound(Player owner, GameObject object, Item item) {
 		if (doors.blockInvUseOnWallObject(object, item, owner)) {
 			doors.onInvUseOnWallObject(object, item, owner);
 		} else {
@@ -99,12 +98,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return false;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (doors.blockWallObjectAction(obj, click, player)) {
 			doors.onWallObjectAction(obj, click, player);
 		} else {
@@ -113,7 +112,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return false;
 	}
 
@@ -128,23 +127,24 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onCommand(String cmd, String[] args, Player player) {
+	public void onCommand(Player player, String cmd, String[] args) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return false;
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
+		// TODO: For runescript compatibility, all of the calls to getCurrentAction/setCurrentAction should be done in the drop handler.
+
 		final int finalAmount = item.getAmount(); // Possibly more than 1 for non-stack items, in this situation.
 
 		// We need to figure out how many times MAX to loop the batch.
 		int slotsOccupiedByItem = player.getCarriedItems().getInventory().countSlotsOccupied(item, finalAmount);
 
-		player.setStatus(Action.DROPPING_GITEM);
 		player.getWorld().getServer().getGameEventHandler().add(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Player Batch Drop", slotsOccupiedByItem, false, true) {
 			int dropCount = 0;
 
@@ -152,19 +152,16 @@ public class Default implements DefaultHandler,
 				// Player doesn't have the item in their inventory.
 				if (!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) {
 					stop();
-					getOwner().setStatus(Action.IDLE);
 					return;
 				}
 				// Player moved after queuing up a drop.
 				if (getOwner().hasMoved()) {
 					stop();
-					getOwner().setStatus(Action.IDLE);
 					return;
 				}
 				// We've exceeded the amount we requested to drop.
 				if (dropCount >= finalAmount) {
 					stop();
-					getOwner().setStatus(Action.IDLE);
 					return;
 				}
 				// We don't have any more in the inventory to drop.
@@ -172,7 +169,6 @@ public class Default implements DefaultHandler,
 					(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
 					getOwner().message("You don't have the entered amount to drop");
 					stop();
-					getOwner().setStatus(Action.IDLE);
 					return;
 				}
 				// Grab the last item by the ID we are trying to drop.
@@ -192,13 +188,11 @@ public class Default implements DefaultHandler,
 
 				if (fromInventory) {
 					if (player.getCarriedItems().remove(toDrop) < 0) {
-						player.setStatus(Action.IDLE);
 						return;
 					}
 				} else {
 					int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(toDrop.getCatalogId());
 					if (slot == -1 || player.getCarriedItems().getEquipment().get(slot).getAmount() != toDrop.getAmount()) {
-						player.setStatus(Action.IDLE);
 						return;
 					}
 					player.getCarriedItems().getEquipment().remove(toDrop, toDrop.getAmount());
@@ -217,14 +211,12 @@ public class Default implements DefaultHandler,
 
 				if (finalAmount > 1)
 					getOwner().message("Dropped " + Math.min(dropCount, finalAmount) + "/" + finalAmount);
-
-				getOwner().setStatus(Action.IDLE);
 			}
 		});
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return false;
 	}
 
@@ -239,32 +231,32 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		player.message("Nothing interesting happens");
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return false;
 	}
 
 	@Override
-	public void onUseObj(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		player.message("Nothing interesting happens");
 	}
 
 	@Override
-	public boolean blockUseObj(Item myItem, GroundItem item, Player player) {
+	public boolean blockUseObj(Player player, GroundItem item, Item myItem) {
 		return false;
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		player.message("Nothing interesting happens");
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return false;
 	}
 
@@ -279,12 +271,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return false;
 	}
 
@@ -380,12 +372,12 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onSpellInv(Player player, Integer itemID, Integer spellID) {
+	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockSpellInv(Player player, Integer itemID, Integer spellID) {
+	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
 		return false;
 	}
 
@@ -472,22 +464,22 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onRemoveObj(UnequipRequest request) {
+	public void onRemoveObj(Player player, Integer invIndex, UnequipRequest request) {
 		request.player.getCarriedItems().getEquipment().unequipItem(request);
 	}
 
 	@Override
-	public boolean blockRemoveObj(UnequipRequest request) {
+	public boolean blockRemoveObj(Player player, Integer invIndex, UnequipRequest request) {
 		return false;
 	}
 
 	@Override
-	public void onWearObj(EquipRequest request) {
+	public void onWearObj(Player player, Integer invIndex, EquipRequest request) {
 		request.player.getCarriedItems().getEquipment().equipItem(request);
 	}
 
 	@Override
-	public boolean blockWearObj(EquipRequest request) {
+	public boolean blockWearObj(Player player, Integer invIndex, EquipRequest request) {
 		return false;
 	}
 

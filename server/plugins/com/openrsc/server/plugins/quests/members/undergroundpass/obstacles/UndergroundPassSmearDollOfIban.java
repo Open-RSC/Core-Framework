@@ -16,14 +16,14 @@ public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 	 **/
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.IBANS_ASHES.id(), ItemId.A_DOLL_OF_IBAN.id())
 				|| compareItemsIds(item1, item2, ItemId.IBANS_CONSCIENCE.id(), ItemId.A_DOLL_OF_IBAN.id())
 				|| compareItemsIds(item1, item2, ItemId.IBANS_SHADOW.id(), ItemId.A_DOLL_OF_IBAN.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.IBANS_ASHES.id(), ItemId.A_DOLL_OF_IBAN.id())) {
 			player.message("you rub the ashes into the doll");
 			player.getCarriedItems().remove(new Item(ItemId.IBANS_ASHES.id()));

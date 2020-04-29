@@ -204,7 +204,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	private void openGates(Player player) {
-		GameObject the_gate = player.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550));
+		GameObject the_gate = player.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550), player);
 		changeloc(the_gate, player.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
 		player.teleport(513, 549);
 	}
@@ -225,12 +225,12 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == MITHRIL_GATES;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == MITHRIL_GATES) {
 			if (command.equals("open")) {
 				if (player.getY() <= 550) {

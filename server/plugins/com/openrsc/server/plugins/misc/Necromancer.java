@@ -23,7 +23,6 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 			Npc zombie = ifnearvisnpc(player, NpcId.ZOMBIE_INVOKED.id(), 10);
 			if (!player.getCache().hasKey("necroSpawn") || (player.getCache().hasKey("necroSpawn") && player.getCache().getInt("necroSpawn") < 7) || (player.getCache().hasKey("killedZomb") && player.getCache().getInt("killedZomb") != 0 && zombie == null)) {
 				npcsay(player, necromancer, "I summon the undead to smite you down");
-				player.setBusyTimer(3000);
 				zombie = player.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
 				zombie.setShouldRespawn(false);
 				delay(1600);
@@ -43,7 +42,6 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 				}
 			} else if (player.getCache().getInt("necroSpawn") > 6 && player.getCache().hasKey("necroSpawn") && zombie != null && player.getCache().getInt("killedZomb") != 0) {
 				npcsay(player, zombie, "Raargh");
-				player.setBusyTimer(3000);
 				zombie.startCombat(player);
 			} else if (player.getCache().getInt("killedZomb") == 0 && player.getCache().hasKey("killedZomb")) {
 				player.startCombat(necromancer);

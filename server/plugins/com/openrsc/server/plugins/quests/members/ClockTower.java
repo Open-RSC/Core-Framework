@@ -130,13 +130,13 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	 * Second Lever (rats cage) #373 First Lever (rats cage)
 	 */
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364 || obj.getID() == 365)
 				|| (obj.getID() == 373 || obj.getID() == 374) || (obj.getID() == 371 && obj.getY() == 3475);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 362 || obj.getID() == 363 || obj.getID() == 364 || obj.getID() == 365) {
 			switch (player.getQuestStage(this)) {
 				case 0:
@@ -169,13 +169,13 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			GameObject dynGate, statGate, newGate;
 			boolean correctSetup = false;
 			if (obj.getID() == 373) {
-				dynGate = player.getWorld().getRegionManager().getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
-				statGate = player.getWorld().getRegionManager().getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
+				dynGate = player.getWorld().getRegionManager().getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475), player);
+				statGate = player.getWorld().getRegionManager().getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475), player);
 				//outer gate was open + inner gate is open
 				correctSetup = (dynGate.getID() == 372) && (statGate.getID() == 372);
 			} else {
-				dynGate = player.getWorld().getRegionManager().getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475));
-				statGate = player.getWorld().getRegionManager().getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475));
+				dynGate = player.getWorld().getRegionManager().getRegion(Point.location(590, 3475)).getGameObject(Point.location(590, 3475), player);
+				statGate = player.getWorld().getRegionManager().getRegion(Point.location(594, 3475)).getGameObject(Point.location(594, 3475), player);
 				//inner gate was closed + outer gate is closed
 				correctSetup = (dynGate.getID() == 371) && (statGate.getID() == 371);
 			}
@@ -220,7 +220,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	 */
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) ||
 				((obj.getID() == 364 || obj.getID() == 363 || obj.getID() == 362 || obj.getID() == 365)
 				&& (item.getCatalogId() == ItemId.LARGE_COG_PURPLE.id() || item.getCatalogId() == ItemId.LARGE_COG_BLACK.id()
@@ -228,7 +228,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 375 && item.getCatalogId() == ItemId.RAT_POISON.id()) {
 			player.message("You pour the rat poison into the feeding trough");
 			player.getCarriedItems().remove(new Item(ItemId.RAT_POISON.id()));
@@ -305,12 +305,12 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	 * Wallobjects: #111 rat cage cell
 	 */
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 111) || (obj.getID() == 22 && obj.getX() == 584 && obj.getY() == 3457);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 111) {
 			if (player.getCache().hasKey("rats_dead") || atQuestStage(player, this, -1)) {
 				player.message("In a panic to escape, the rats have..");
@@ -331,12 +331,12 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseObj(Item myItem, GroundItem item, Player player) {
+	public boolean blockUseObj(Player player, GroundItem item, Item myItem) {
 		return myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id();
 	}
 
 	@Override
-	public void onUseObj(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			mes(player, "You pour water over the cog",
 				"The cog quickly cools down");

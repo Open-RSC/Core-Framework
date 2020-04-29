@@ -21,12 +21,12 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.BULL_ROARER.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.BULL_ROARER.id()) {
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You start to swing the bullroarer above your head.",
 				"You feel a bit silly at first, but soon it makes an interesting sound.");

@@ -16,12 +16,12 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 	private static final int[] WINCH = {1095, 1053};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), WINCH);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), WINCH)) {
 			switch (player.getQuestStage(Quests.DIGSITE)) {
 				case -1:
@@ -85,12 +85,12 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return inArray(obj.getID(), WINCH) && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (inArray(obj.getID(), WINCH) && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (obj.getID() == WINCH[0]) {
 				if (player.getCache().hasKey("digsite_winshaft")) {

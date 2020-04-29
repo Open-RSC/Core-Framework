@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Skull;
 import com.openrsc.server.model.entity.update.Wield;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -188,7 +187,6 @@ public class PkBot extends Npc {
 			healEventNpc.stop();
 			healEventNpc = null;
 		}
-		setStatus(Action.IDLE);
 	}
 
 	public RangeEventNpc getRangeEventNpc() {
@@ -200,7 +198,6 @@ public class PkBot extends Npc {
 			rangeEventNpc.stop();
 		}
 		rangeEventNpc = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
 	}
 
@@ -221,7 +218,6 @@ public class PkBot extends Npc {
 			throwingEvent.stop();
 			throwingEvent = null;
 		}
-		setStatus(Action.IDLE);
 	}
 
 	public boolean checkAttack(Npc mob, boolean missile) {

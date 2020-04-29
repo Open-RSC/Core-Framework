@@ -967,8 +967,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == QuestObjects.Snake_Jungle_Vine
 			|| isObject(obj, QuestObjects.Ardrigal_Palm_Tree)
 			|| isObject(obj, QuestObjects.Sito_Scorched_Earth)
@@ -978,7 +977,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 	//herbs should only be obtainable if player is assigned to find them, must pass with
 	//Trufitus to drop trick, unless the player is on the legends quest (for snakes weed + ardrigal)
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (isObject(obj, QuestObjects.Snake_Jungle_Vine)) {
 			if (!atQuestStage(player, this, 1) && player.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
 				player.message("Yep, it looks like a vine...");
@@ -1050,13 +1049,12 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == QuestObjects.Rogues_Purse_Wall;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (isObject(obj, QuestObjects.Rogues_Purse_Wall)) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), Optional.of(false))
 				&& !player.getCarriedItems().hasCatalogID(ItemId.ROGUES_PURSE.id(), Optional.of(false))

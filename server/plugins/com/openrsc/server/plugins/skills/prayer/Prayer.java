@@ -11,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Prayer implements OpLocTrigger {
 
 	@Override
-	public void onOpLoc(final GameObject object, String command, Player player) {
+	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (command.equalsIgnoreCase("recharge at")) {
 			int maxPray = getMaxLevel(player, Skills.PRAYER) + (object.getID() == 200 ? 2 : 0);
 			if (getCurrentLevel(player, Skills.PRAYER) == maxPray) {
@@ -33,7 +33,7 @@ public class Prayer implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return command.equals("recharge at");
 	}
 

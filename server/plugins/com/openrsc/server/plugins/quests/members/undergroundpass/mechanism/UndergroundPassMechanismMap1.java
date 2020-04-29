@@ -25,7 +25,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		String itemArrow1 = item1.getDef(player.getWorld()).getName().toLowerCase();
 		String itemArrow2 = item2.getDef(player.getWorld()).getName().toLowerCase();
 		return (item1.getCatalogId() == ItemId.DAMP_CLOTH.id() && itemArrow2.contains("arrows"))
@@ -33,7 +33,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		String itemArrow1 = item1.getDef(player.getWorld()).getName().toLowerCase();
 		String itemArrow2 = item2.getDef(player.getWorld()).getName().toLowerCase();
 		if ((item1.getCatalogId() == ItemId.DAMP_CLOTH.id() && itemArrow2.contains("arrows"))
@@ -47,7 +47,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (item.getCatalogId() == ItemId.ARROW.id() && obj.getID() == 97)
 				|| (item.getCatalogId() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE)
 				|| (item.getCatalogId() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1))
@@ -55,7 +55,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.ARROW.id() && obj.getID() == 97) {
 			player.message("you light the cloth wrapped arrow head");
 			player.getCarriedItems().remove(new Item(ItemId.ARROW.id()));

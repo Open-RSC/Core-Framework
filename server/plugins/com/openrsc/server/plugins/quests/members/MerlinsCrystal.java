@@ -48,8 +48,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == 292 || obj.getID() == 293)
 			|| obj.getID() == 291
 			|| (obj.getID() == 296 && obj.getY() == 366 && command
@@ -57,7 +56,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 292 || obj.getID() == 293) {
 			Npc arhein = ifnearvisnpc(player, NpcId.ARHEIN.id(), 10);
 			if (player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 2) {
@@ -180,13 +179,12 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 294 || obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 294) {
 			if (item.getCatalogId() == ItemId.INSECT_REPELLANT.id()) {
 				mes(player, "you squirt insect repellant on the beehive",
@@ -226,13 +224,12 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getX() == 277 && obj.getY() == 632;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getX() == 277 && obj.getY() == 632) {
 			if ((player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 3) || !player.getCache().hasKey("lady_test")) {
 				doDoor(obj, player);
@@ -288,13 +285,13 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return player.getX() == 448 && player.getY() == 435 && item.getCatalogId() == ItemId.BAT_BONES.id()
 			&& player.getCache().hasKey("magic_words") && player.getCarriedItems().hasCatalogID(ItemId.LIT_BLACK_CANDLE.id(), Optional.of(false));
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		Npc n = addnpc(player.getWorld(), NpcId.THRANTAX.id(), player.getX(), player.getY(), 300000);
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		player.message("Suddenly a demon appears");

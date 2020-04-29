@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FishingTrawler extends DelayedEvent {
-	
+
 	public static final Point SPAWN_LAND = new Point(538, 703);
 	public static final int MAX_PLAYERS = 10;
 	/**
@@ -29,20 +29,20 @@ public class FishingTrawler extends DelayedEvent {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final int SHIP_WATER_LIMIT_SECOND_BOAT = 500;
 	private static final int SHIP_WATER_LIMIT_SINK = 1000;
-	
+
 	private static final Point SPAWN_EAST_FAIL = new Point(254, 759);
 	private static final Point SPAWN_WEST_FAIL = new Point(302, 759);
-	
+
 	private final int LEAK1 = 1077;
 	private final int LEAK2 = 1071;
-	
+
 	private Area shipArea;
 	private Point spawnLocation;
 	private Area shipAreaWater;
 	private Point shipAreaWaterSpawn;
 	private TrawlerBoat boat;
 	private Point spawnFail;
-	
+
 	private boolean netBroken = false;
 	private int waterLevel;
 	private int fishCaught = 0;
@@ -58,7 +58,7 @@ public class FishingTrawler extends DelayedEvent {
 		"it's a fierce sea today traveller", "check those nets"};
 	private String[] murphys_messages_ship2 = new String[]{"we're going under", "we'll all end up in a watery grave",
 		"check those nets"};
-	
+
 	private List<SimpleSubscriber<FishingTrawler>> subscribers = new ArrayList<SimpleSubscriber<FishingTrawler>>();
 
 	public FishingTrawler(World world, TrawlerBoat selectedBoat) {
@@ -67,7 +67,7 @@ public class FishingTrawler extends DelayedEvent {
 		if (selectedBoat == TrawlerBoat.EAST) {
 			shipArea = new Area(270, 278, 740, 744, "FishingTrawler: Fine");
 			spawnLocation = new Point(272, 742);
-			
+
 			setShipAreaWater(new Area(245, 253, 727, 731, "FishingTrawler: Water"));
 			shipAreaWaterSpawn = new Point(251, 729);
 			spawnFail = SPAWN_EAST_FAIL;
@@ -75,7 +75,7 @@ public class FishingTrawler extends DelayedEvent {
 		else {
 			shipArea = new Area(318, 326, 740, 744, "FishingTrawler: Fine");
 			spawnLocation = new Point(320, 742);
-			
+
 			setShipAreaWater(new Area(293, 301, 727, 731, "FishingTrawler: Water"));
 			shipAreaWaterSpawn = new Point(299, 729);
 			spawnFail = SPAWN_WEST_FAIL;
@@ -83,25 +83,25 @@ public class FishingTrawler extends DelayedEvent {
 		currentCleanTries = 0;
 		boat = selectedBoat;
 	}
-	
+
 	public TrawlerBoat getBoat() {
 		return boat;
 	}
-	
+
 	// fairness rule, if 4 minutes is remaining just play with current players
 	public boolean isAvailable() {
 		return this.currentStage == State.STANDBY || (this.currentStage == State.FIRST_SHIP &&
 				timeTillReturn >= 400 && players.size() < MAX_PLAYERS);
 	}
-	
+
 	public boolean register(SimpleSubscriber<FishingTrawler> subscriber) {
 		return subscribers.add(subscriber);
 	}
-	
+
 	private void unregisterAll() {
 		subscribers.clear();
 	}
-	
+
 	@Override
 	public void run() {
 		try {
@@ -120,7 +120,7 @@ public class FishingTrawler extends DelayedEvent {
 					catch(RuntimeException e) {
 					}
 				}
-				
+
 				// safe to clean up
 				// or maximum attempts to teleport remaining players exceeded
 				// finalize
@@ -383,7 +383,7 @@ public class FishingTrawler extends DelayedEvent {
 			/* The ship is leaking hardcore. */
 			if (freeLeakIndex == -1) {
 				break;
-			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y) != null) {
+			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y, null) != null) {
 				continue;
 			}
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;
@@ -453,7 +453,7 @@ public class FishingTrawler extends DelayedEvent {
 		if (waterLevel < 0)
 			waterLevel = 0;
 	}
-	
+
 	public void addPlayer(Player player) {
 		player.setLocation(spawnLocation, true);
 		players.add(player);
@@ -462,7 +462,7 @@ public class FishingTrawler extends DelayedEvent {
 			start();
 		}
 	}
-	
+
 	public void disconnectPlayer(Player player, boolean fromAction) {
 		players.remove(player);
 		player.setLocation(spawnFail, true);
@@ -478,7 +478,7 @@ public class FishingTrawler extends DelayedEvent {
 		player.setLocation(SPAWN_WEST_FAIL, true);
 		ActionSender.hideFishingTrawlerInterface(player);
 	}
-	
+
 	public Area getShipAreaWater() {
 		return shipAreaWater;
 	}
@@ -486,32 +486,32 @@ public class FishingTrawler extends DelayedEvent {
 	public void setShipAreaWater(Area shipAreaWater) {
 		this.shipAreaWater = shipAreaWater;
 	}
-	
+
 	public enum TrawlerBoat {
 		WEST(0),
 		EAST(1);
 		private int id;
-		
+
 		TrawlerBoat(int id) {
 			this.id = id;
 		}
-		
+
 		public int id() {
 			return this.id;
 		}
 	}
-	
+
 	public enum State {
 		CLEANUP(-1),
 		STANDBY(0),
 		FIRST_SHIP(1),
 		SECOND_SHIP(2);
 		private int id;
-		
+
 		State(int id) {
 			this.id = id;
 		}
-		
+
 		public int id() {
 			return this.id;
 		}

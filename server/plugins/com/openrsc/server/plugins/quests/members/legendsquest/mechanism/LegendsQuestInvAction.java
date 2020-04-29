@@ -20,7 +20,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return inArray(item.getCatalogId(),
 			ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id(),
 			ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), ItemId.SHAMANS_TOME.id(), ItemId.BOOKING_OF_BINDING.id(),
@@ -29,7 +29,7 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This totem pole is utterly awe inspiring.",
 				"Perhaps you should show it to Radimus Erkle...");
@@ -162,12 +162,12 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.YOMMI_TREE_SEED.id(), ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id())) {
 			for (int i = 0; i < player.getCarriedItems().getInventory().countId(ItemId.YOMMI_TREE_SEED.id()); i++) {
 				player.getCarriedItems().remove(new Item(ItemId.YOMMI_TREE_SEED.id()));

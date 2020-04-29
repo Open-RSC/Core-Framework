@@ -43,7 +43,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 	private static final int X_BARREL_OPEN = 1083;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {HOUSE_EAST_CHEST_OPEN, HOUSE_EAST_CHEST_CLOSED, HOUSE_EAST_CUPBOARD_OPEN, HOUSE_EAST_CUPBOARD_CLOSED,
 				HOUSE_WEST_CHESTS_OPEN, HOUSE_WEST_CHESTS_CLOSED, TENT_CHEST_OPEN, TENT_CHEST_LOCKED, HOUSE_BOOKCASE, SPECIMEN_TRAY,
 				CLIMB_UP_ROPE_SMALL_CAVE, CLIMB_UP_ROPE_BIG_CAVE, BRICK, X_BARREL_OPEN}, obj.getID()) || inArray(obj.getID(), SIGNPOST)
@@ -51,7 +51,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == X_BARREL_OPEN) {
 			player.message("You search the barrel");
 			player.message("The barrel has a foul-smelling liquid inside...");
@@ -179,13 +179,13 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
 				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) {
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_OPEN, obj.getDirection(), obj.getType()));
 			player.message("you use the key in the chest");

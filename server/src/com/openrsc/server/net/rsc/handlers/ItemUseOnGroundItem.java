@@ -7,22 +7,10 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class ItemUseOnGroundItem implements PacketHandler {
-
-	private GroundItem getItem(int id, Point location, Player player) {
-		int x = location.getX();
-		int y = location.getY();
-		for (GroundItem i : player.getViewArea().getItemsInView()) {
-			if (i.getID() == id && !i.isInvisibleTo(player) && i.getX() == x && i.getY() == y) {
-				return i;
-			}
-		}
-		return null;
-	}
 
 	public void handlePacket(Packet packet, final Player player) throws Exception {
 		if (player.isBusy()) {
@@ -42,7 +30,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		if (myItem == null)
 			return;
 
-		final GroundItem item = getItem(groundItemId, location, player);
+		final GroundItem item = player.getRegion().getItem(groundItemId, location, player);
 
 		if (item == null) {
 			player.setSuspiciousPlayer(true, "item use on ground item null item");
@@ -56,15 +44,13 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		}
 
 		boolean firemaking = myItem.getCatalogId() == ItemId.TINDERBOX.id();
-		player.setStatus(Action.USING_Item_ON_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player,
 			item.getLocation(), firemaking ? 0 : 1) {
 			public void executeInternal() {
 				if (getPlayer().isBusy()
 					|| getPlayer().isRanging()
-					|| getItem(groundItemId, getLocation(), getPlayer()) == null
-					|| !getPlayer().canReach(item)
-					|| getPlayer().getStatus() != Action.USING_Item_ON_GITEM) {
+					|| getPlayer().getRegion().getItem(groundItemId, getLocation(), getPlayer()) == null
+					|| !getPlayer().canReach(item) ) {
 					return;
 				}
 				if (myItem == null || item == null)
@@ -77,7 +63,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 					return;
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UseObj", new Object[]{myItem, item, getPlayer()}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UseObj", new Object[]{getPlayer(), myItem, item}, this);
 			}
 		});
 

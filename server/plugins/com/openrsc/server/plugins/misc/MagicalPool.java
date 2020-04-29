@@ -9,12 +9,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class MagicalPool implements OpLocTrigger {
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 1166 || obj.getID() == 1155;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 1155) {
 			/*
 			if (!player.canUsePool()) {

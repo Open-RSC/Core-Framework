@@ -4,7 +4,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.Packet;
@@ -28,13 +27,11 @@ public final class NpcTalkTo implements PacketHandler {
 			return;
 		}
 		player.setFollowing(n, 1);
-		player.setStatus(Action.TALKING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
-				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(n)
-					|| getPlayer().getStatus() != Action.TALKING_MOB) {
+				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(n)) {
 					return;
 				}
 				getPlayer().resetAll();
@@ -61,9 +58,8 @@ public final class NpcTalkTo implements PacketHandler {
 						}
 					}
 				}
-				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n})) {
-					getPlayer().setInteractingNpc(n);
-				}
+
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n});
 			}
 
 			private Point canWalk(World world, int x, int y) {

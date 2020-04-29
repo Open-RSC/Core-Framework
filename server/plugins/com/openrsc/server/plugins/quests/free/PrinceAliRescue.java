@@ -60,8 +60,8 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	}
 
 	@Override
-	public boolean blockUseBound(final GameObject obj,
-								 final Item item, final Player player) {
+	public boolean blockUseBound(final Player player, final GameObject obj,
+								 final Item item) {
 		return obj.getID() == 45 && obj.getY() == 640 && item.getCatalogId() == ItemId.BRONZE_KEY.id();
 	}
 
@@ -74,8 +74,8 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(final GameObject obj,
-								final Integer click, final Player player) {
+	public boolean blockOpBound(final Player player, final GameObject obj,
+								final Integer click) {
 		return obj.getID() == 45 && obj.getY() == 640;
 	}
 
@@ -924,8 +924,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	}
 
 	@Override
-	public void onUseBound(final GameObject obj, final Item item,
-						   final Player player) {
+	public void onUseBound(final Player player, final GameObject obj, final Item item) {
 		if (obj.getID() == 45 && item.getCatalogId() == ItemId.BRONZE_KEY.id()) {
 			if (obj.getY() == 640) {
 				final Npc keli = ifnearvisnpc(player, NpcId.LADY_KELI.id(), 20);
@@ -974,8 +973,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	}
 
 	@Override
-	public void onOpBound(final GameObject obj, final Integer click,
-						  final Player player) {
+	public void onOpBound(final Player player, final GameObject obj, final Integer click) {
 		if (obj.getID() == 45) {
 			if (obj.getY() == 640) {
 				final Npc keli = ifnearvisnpc(player, NpcId.LADY_KELI.id(), 20);

@@ -23,7 +23,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 	private static int BOULDER = 867;
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getCatalogId() == ItemId.ROPE.id())
 				|| (obj.getID() == UndergroundPassObstaclesMap2.PASSAGE && item.getCatalogId() == ItemId.PLANK.id())
 				|| (obj.getID() == BOULDER && item.getCatalogId() == ItemId.RAILING.id())
@@ -32,7 +32,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == UndergroundPassObstaclesMap2.WALL_GRILL_EAST && item.getCatalogId() == ItemId.ROPE.id()) {
 			if (player.getX() == 763 && player.getY() == 3463) {
 				player.message("you can't reach the grill from here");

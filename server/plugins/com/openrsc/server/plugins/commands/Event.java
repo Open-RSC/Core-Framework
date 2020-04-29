@@ -35,7 +35,7 @@ public final class Event implements CommandTrigger {
 		Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
 		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641), Point.location(425,564)};
 
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return player.isEvent();
 	}
 
@@ -44,7 +44,7 @@ public final class Event implements CommandTrigger {
 	 * Development usable commands in general
 	 */
 	@Override
-	public void onCommand(String cmd, String[] args, Player player) {
+	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}

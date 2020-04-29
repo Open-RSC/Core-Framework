@@ -35,7 +35,7 @@ public class Bones implements OpInvTrigger {
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if(command.equalsIgnoreCase("bury")) {
 			if (item.getNoted()) {
 				player.message("You can't bury noted bones");
@@ -67,7 +67,7 @@ public class Bones implements OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return command.equalsIgnoreCase("bury");
 	}
 }

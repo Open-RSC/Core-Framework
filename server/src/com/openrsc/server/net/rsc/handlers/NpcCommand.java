@@ -2,7 +2,6 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.action.WalkToMobAction;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -42,7 +41,7 @@ public final class NpcCommand implements PacketHandler {
 				getPlayer().resetAll();
 				NPCDef def = affectedNpc.getDef();
 				String command = (click ? def.getCommand1() : def.getCommand2()).toLowerCase();
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "OpNpc", new Object[]{affectedNpc, command, getPlayer()}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "OpNpc", new Object[]{getPlayer(), affectedNpc, command}, this);
 			}
 		});
 	}

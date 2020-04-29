@@ -3,9 +3,10 @@ package com.openrsc.server.plugins.menu;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 
-import static  com.openrsc.server.plugins.Functions.*;
-
 import java.util.ArrayList;
+
+import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.say;
 
 /**
  * This system is for adding a new menu item on NPC under certain circumstances.
@@ -64,9 +65,6 @@ public class Menu {
 		ActionSender.sendMenu(player, option);
 		long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start <= 19500 && player.getMenu() != null && player.getOption() == -1) {
-			if (player.getInteractingNpc() != null)
-				player.getInteractingNpc().setBusyTimer(3000);
-
 			delay(1);
 		}
 
@@ -82,7 +80,7 @@ public class Menu {
 		if(i >= 0 && i <= options.size()) {
 			Option option = options.get(i);
 			if (option != null) {
-				say(player, player.getInteractingNpc(), option.getOption());
+				say(player, player.getScriptContext().getInteractingNpc(), option.getOption());
 				option.action();
 			}
 		}

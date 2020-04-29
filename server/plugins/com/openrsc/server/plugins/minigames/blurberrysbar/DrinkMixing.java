@@ -22,12 +22,12 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return canMix(item1, item2);
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		DrinkMix dm = null;
 		for (DrinkMix mix : DrinkMix.values()) {
 			if (mix.isValid(item1.getCatalogId(), item2.getCatalogId())) {
@@ -158,12 +158,12 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.COCKTAIL_SHAKER.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.COCKTAIL_GLASS.id(), Optional.of(false))) {
 				boolean complete = false;

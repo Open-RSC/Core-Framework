@@ -11,12 +11,12 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
-	public boolean blockSpellInv(Player player, Integer itemID, Integer spellID) {
+	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
 		return (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override
-	public void onSpellInv(Player player, Integer itemID, Integer spellID) {
+	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
 		SpellDef spellDef = player.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
 		if (spellDef == null)
 			return;

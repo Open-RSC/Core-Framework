@@ -27,12 +27,12 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 	public static int PILE_OF_MUD = 890;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == LADDER || obj.getID() == TOMB_OF_IBAN || obj.getID() == DWARF_BARREL || obj.getID() == PILE_OF_MUD;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == LADDER) {
 			mes(player, "you climb the ladder");
 			player.message("it leads to some stairs, you walk up...");
@@ -66,12 +66,12 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == TOMB_OF_IBAN && (item.getCatalogId() == ItemId.DWARF_BREW.id() || item.getCatalogId() == ItemId.TINDERBOX.id());
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.DWARF_BREW.id()) {
 			if (player.getCache().hasKey("doll_of_iban") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				player.message("you pour the strong alcohol over the tomb");
@@ -106,12 +106,12 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == SPIDER_NEST_RAILING;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == SPIDER_NEST_RAILING) {
 			mes(player, "you search the bars");
 			if (player.getCache().hasKey("doll_of_iban") || player.getQuestStage(Quests.UNDERGROUND_PASS) >= 7 || player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {

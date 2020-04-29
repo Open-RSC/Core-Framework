@@ -52,7 +52,7 @@ public class Crafting implements UseInvTrigger,
 	};
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		int item1ID = item1.getCatalogId();
 		int item2ID = item2.getCatalogId();
 		CarriedItems carriedItems = player.getCarriedItems();
@@ -128,7 +128,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, final Item item, final Player player) {
+	public void onUseLoc(final Player player, GameObject obj, final Item item) {
 
 		if (!craftingChecks(obj, item, player)) return;
 
@@ -931,7 +931,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(item1.getCatalogId());
 		ItemGemDef gemDef2 = player.getWorld().getServer().getEntityHandler().getItemGemDef(item2.getCatalogId());
 		int item1ID = item1.getCatalogId();
@@ -965,7 +965,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return craftingTypeChecks(obj, item, player);
 	}
 }

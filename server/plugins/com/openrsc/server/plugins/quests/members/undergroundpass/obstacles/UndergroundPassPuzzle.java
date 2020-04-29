@@ -22,13 +22,13 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 	public static int[] WORKING_GRILLS = {777, 785, 786, 787, 788, 789, 790, 791};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), WORKING_GRILLS) || obj.getID() == FAIL_GRILL || obj.getID() == WALK_HERE_ROCK_EAST
 				|| obj.getID() == WALK_HERE_ROCK_WEST || obj.getID() == LEVER;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), WORKING_GRILLS)) {
 			moveForward(player, obj);
 		}

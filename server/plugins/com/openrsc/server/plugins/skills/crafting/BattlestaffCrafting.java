@@ -21,7 +21,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		Battlestaff combine = null;
 		for (Battlestaff c : Battlestaff.values()) {
 			if (c.isValid(item1.getCatalogId(), item2.getCatalogId())) {
@@ -48,7 +48,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return canCraft(item1, item2);
 	}
 

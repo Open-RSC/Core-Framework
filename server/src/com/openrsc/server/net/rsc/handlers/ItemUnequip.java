@@ -1,6 +1,5 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Equipment.EquipmentSlot;
 import com.openrsc.server.model.entity.player.Player;
@@ -80,6 +79,6 @@ public class ItemUnequip implements PacketHandler {
 			return;
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "RemoveObj", new Object[]{request});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "RemoveObj", new Object[]{player, request.inventorySlot, request});
 	}
 }

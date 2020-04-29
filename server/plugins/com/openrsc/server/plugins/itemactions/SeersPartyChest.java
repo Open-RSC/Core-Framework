@@ -14,7 +14,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Random;
 
 public class SeersPartyChest implements UseLocTrigger {
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		if(obj.getID() != 18 && obj.getID() != 17) {
 			return false;
 		}
@@ -27,7 +27,7 @@ public class SeersPartyChest implements UseLocTrigger {
 		return true;
 	}
 
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if(player.getCarriedItems().remove(item) <= -1) {
 			return;
 		}

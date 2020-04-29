@@ -152,7 +152,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (command.equals("drink from") && obj.getID() == 147
 			&& obj.getX() == 316 && obj.getY() == 666) {
 			if (player.getQuestStage(this) != 2) {
@@ -172,8 +172,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 147 && command.equals("drink from");
 	}
 

@@ -269,13 +269,12 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {492, 486, 467, 469, BAXTORIAN_CUPBOARD_OPEN, BAXTORIAN_CUPBOARD_CLOSED, 481, 471, 479, 470, 480, 463, 462, 482, 464}, obj.getID());
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 464) {
 			mes(player, "you board the small raft", "and push off down stream",
 				"the raft is pulled down stream by strong currents",
@@ -627,8 +626,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (item.getCatalogId() == ItemId.LARGE_KEY.id() && obj.getID() == 480)
 			|| item.getCatalogId() == ItemId.AN_OLD_KEY.id() && obj.getID() == 135
 			|| (obj.getID() == 462 || obj.getID() == 463
@@ -642,7 +640,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 480 && item.getCatalogId() == ItemId.LARGE_KEY.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.LARGE_KEY.id(), Optional.of(false))) {
 				doGate(player, obj);
@@ -741,12 +739,12 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.BOOK_ON_BAXTORIAN.id() || item.getCatalogId() == ItemId.MITHRIL_SEED.id();
 	}
 
 	@Override
-	public void onOpInv(Item i, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item i, String command) {
 		if (i.getCatalogId() == ItemId.MITHRIL_SEED.id()) {
 			mes(player, "you open the small mithril case");
 			if (player.getViewArea().getGameObject(player.getLocation()) != null) {
@@ -824,26 +822,24 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 135;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 135) {
 			mes(player, "the door is locked", "you need a key");
 		}
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item,
-								 Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id();
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id()) {
 			mes(player, "you open the door with the key");
 			doDoor(obj, player);

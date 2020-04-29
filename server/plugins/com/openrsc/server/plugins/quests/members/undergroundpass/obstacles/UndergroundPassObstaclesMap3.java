@@ -33,12 +33,12 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 	public static final Area boundArea = new Area(PIT_COORDS[0] - 24, PIT_COORDS[0] + 24, PIT_COORDS[1] - 24, PIT_COORDS[1] + 24);
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), CAGES) || obj.getID() == DEMONS_CHEST_CLOSED || obj.getID() == ZAMORAKIAN_TEMPLE_DOOR;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), CAGES)) {
 			if (obj.getID() == CAGES[1]) {
 				player.message("the man seems to be entranced");

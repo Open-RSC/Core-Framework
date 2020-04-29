@@ -114,12 +114,12 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == GRAVE_OF_SCORPIUS;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == GRAVE_OF_SCORPIUS) {
 			player.message("Here lies Scorpius:");
 			player.message("Only those who have seen beyond the stars");

@@ -44,7 +44,7 @@ public class Fishing implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(final GameObject object, String command, Player player) {
+	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
 			|| command.equals("cage")) {
 			handleFishing(object, player, player.click, command);
@@ -237,7 +237,7 @@ public class Fishing implements OpLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		//special hemenster fishing spots
 		if (obj.getID() == 351 || obj.getID() == 352 || obj.getID() == 353 || obj.getID() == 354)
 			return false;

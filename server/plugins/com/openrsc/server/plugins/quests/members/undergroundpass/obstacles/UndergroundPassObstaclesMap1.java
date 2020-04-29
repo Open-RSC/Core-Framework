@@ -56,7 +56,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	public static int[] SPEAR_ROCKS = {806, 807, 808, 809, 810, 811, 882, 883};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String cmd, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String cmd) {
 		return obj.getID() == UNDERGROUND_CAVE || obj.getID() == CRUMBLED_ROCK
 				|| inArray(obj.getID(), READ_ROCKS) || inArray(obj.getID(), MAIN_ROCKS)
 				|| inArray(obj.getID(), MAIN_LEDGE) || obj.getID() == FIRST_SWAMP
@@ -66,7 +66,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String cmd, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String cmd) {
 		if (obj.getID() == UNDERGROUND_CAVE) {
 			switch (player.getQuestStage(Quests.UNDERGROUND_PASS)) {
 				case 0:
@@ -261,7 +261,6 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	}
 
 	public static void doLedge(final GameObject object, final Player player, int damage) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		player.message("you climb the ledge");
 		boolean failLedge = !Formulae.calcProductionSuccessful(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failLedge) {
@@ -301,7 +300,6 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 
 	public static void doRock(final GameObject object, final Player player, int damage, boolean eventMessage,
 							  int spikeLocation) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		player.message("you climb onto the rock");
 		boolean failRock = !Formulae.calcProductionSuccessful(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failRock) {

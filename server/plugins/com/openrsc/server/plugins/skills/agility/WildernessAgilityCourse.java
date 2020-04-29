@@ -27,12 +27,12 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 	private static Integer lastObstacle = VINE;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), GATE, SECOND_GATE, WILD_PIPE, WILD_ROPESWING, STONE, LEDGE, VINE);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		final int failRate = failRate();
 		if (obj.getID() == GATE) {
 			if (getCurrentLevel(player, Skills.AGILITY) < 52) {

@@ -18,24 +18,24 @@ public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 	private final int CRYSTAL_CHEST_OPEN = 247;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == CRYSTAL_CHEST;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == CRYSTAL_CHEST) {
 			player.message("the chest is locked");
 		}
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
 			int respawnTime = 1000;
 			player.message("you unlock the chest with your key");

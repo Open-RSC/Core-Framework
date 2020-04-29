@@ -12,7 +12,7 @@ public class DiskOfReturning implements OpInvTrigger {
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if(item.getCatalogId() == ItemId.DISK_OF_RETURNING.id()) {
 			if (player.getLocation().onBlackHole()) {
 				player.message("You spin your disk of returning");
@@ -25,7 +25,7 @@ public class DiskOfReturning implements OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.DISK_OF_RETURNING.id();
 	}
 }

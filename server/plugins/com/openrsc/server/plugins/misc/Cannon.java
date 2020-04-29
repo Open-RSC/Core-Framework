@@ -214,7 +214,7 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 943 && !command.equalsIgnoreCase("fire")) {
 			return true;
 		} else if (obj.getID() == 943 && command.equalsIgnoreCase("fire")) {
@@ -227,7 +227,7 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), 946, 947, 948, 943) && !obj.getOwner().equals(player.getUsername())) {
 			if (!command.equalsIgnoreCase("fire")) {
 				player.message("you can't pick that up, the owners still around");
@@ -251,19 +251,19 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.DWARF_CANNON_BASE.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_BASE.id()) {
 			handleBase(player, item, command);
 		}
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 946) {
 			return true;
 		}
@@ -277,7 +277,7 @@ public class Cannon implements OpLocTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 946) {
 			if (!obj.getOwner().equals(player.getUsername())) {
 				player.message("you can only add this stand to your own base");

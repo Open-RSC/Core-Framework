@@ -8,9 +8,9 @@ public interface UseBoundTrigger {
 	/**
 	 * Called when a user uses an inventory item on an game object
 	 */
-	void onUseBound(GameObject obj, Item item, Player player);
+	void onUseBound(Player player, GameObject obj, Item item);
 	/**
 	 * Return true to prevent a user when he uses an inventory item on an game object
 	 */
-	boolean blockUseBound(GameObject obj, Item item, Player player);
+	boolean blockUseBound(Player player, GameObject obj, Item item);
 }

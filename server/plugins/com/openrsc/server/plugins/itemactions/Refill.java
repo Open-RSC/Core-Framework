@@ -21,13 +21,13 @@ public class Refill implements UseLocTrigger {
 	};
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (inArray(obj.getID(), VALID_OBJECTS_OTHER)
 			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id());
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, final Item item) {
 		for (int i = 0; i < REFILLABLE.length; i++) {
 			if (REFILLABLE[i] == item.getCatalogId()) {
 				final int itemID = item.getCatalogId();

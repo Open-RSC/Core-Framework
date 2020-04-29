@@ -353,7 +353,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682)
 				|| (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694)
 				|| (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681)
@@ -363,7 +363,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682) {
 			if (player.getCache().hasKey("talked_alf") || player.getQuestStage(this) == -1) {
 				player.message("you open the door");
@@ -505,12 +505,12 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return obj.getID() == 80 || obj.getID() == 81;
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 80) {
 			if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
 				thinkbubble(player, item);
@@ -530,13 +530,13 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED
 				|| obj.getID() == CANDLESTICK_CHEST_OPEN || obj.getID() == CANDLESTICK_CHEST_CLOSED;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		Npc guard = ifnearvisnpc(player, NpcId.GUARD_PIRATE.id(), 10);
 		Npc grip = ifnearvisnpc(player, NpcId.GRIP.id(), 15);
 		if (obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED) {

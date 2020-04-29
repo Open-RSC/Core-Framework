@@ -11,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class DrinkHeating implements UseLocTrigger {
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			return true;
 		}
@@ -23,7 +23,7 @@ public class DrinkHeating implements UseLocTrigger {
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			mes(player, "you briefly place the drink in the oven");
 			player.message("you remove the warm drink");

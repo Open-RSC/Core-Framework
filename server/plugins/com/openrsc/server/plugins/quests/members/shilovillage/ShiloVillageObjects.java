@@ -7,9 +7,8 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
@@ -46,7 +45,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 	private static final int TOMB_DOORS = 794;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), SPEC_STONE, BUMPY_DIRT, PILE_OF_RUBBLE, SMASHED_TABLE, WET_ROCKS, CAVE_SACK, ROTTEN_GALLOWS, PILE_OF_RUBBLE_TATTERED_SCROLL,
 				WELL_STACKED_ROCKS, TOMB_DOLMEN_HANDHOLDS, SEARCH_TREE_FOR_ENTRANCE, HILLSIDE_ENTRANCE, RASH_EXIT_DOOR, METALLIC_DUNGEON_GATE, CLIMB_CAVE_ROCKS,
 				TOMB_DOORS) || (obj.getID() == BRIDGE_BLOCKADE && command.equalsIgnoreCase("Investigate"));
@@ -55,7 +54,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 	// 572
 	// 377 3633
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == TOMB_DOORS) {
 			if (command.equalsIgnoreCase("Open")) {
 				if (player.getCache().hasKey("tomb_door_shilo")) {
@@ -139,7 +138,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 						changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
 						player.teleport(348, 3616);
 						player.damage(getCurrentLevel(player, Skills.HITS) / 2 + 1);
-						if (player.getStatus() != Action.DIED_FROM_DAMAGE) {
+						if (getCurrentLevel(player, Skills.HITS) > 0) {
 							mes(player, "@red@You feel invisible hands starting to choke you...");
 							player.teleport(348, 3614);
 							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
@@ -526,7 +525,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.SPADE.id())
 				|| (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.LIT_CANDLE.id())
 				|| (obj.getID() == BUMPY_DIRT && item.getCatalogId() == ItemId.ROPE.id())
@@ -538,7 +537,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == TOMB_DOORS && item.getCatalogId() == ItemId.BONES.id()) {
 			if (!ifheld(player, ItemId.BONES.id(), 3)) {
 				player.message("You do not have enough bones for all the recesses.");

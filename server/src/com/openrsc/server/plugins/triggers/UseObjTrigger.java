@@ -5,6 +5,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 
 public interface UseObjTrigger {
-	void onUseObj(Item myItem, GroundItem item, Player player);
-	boolean blockUseObj(Item myItem, GroundItem item, Player player);
+	void onUseObj(Player player, GroundItem item, Item myItem);
+	boolean blockUseObj(Player player, GroundItem item, Item myItem);
 }

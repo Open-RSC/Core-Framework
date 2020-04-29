@@ -12,12 +12,12 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class RawEssence implements OpLocTrigger {
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 1227;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		int axeID = Mining.getAxe(player);
 		if (axeID < 0)
 		{

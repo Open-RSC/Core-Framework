@@ -11,6 +11,8 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.impl.*;
@@ -19,14 +21,16 @@ import com.openrsc.server.login.PlayerRemoveRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
-import com.openrsc.server.model.container.*;
+import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.CarriedItems;
+import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.PkBot;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
@@ -36,8 +40,6 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
-import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -101,7 +103,6 @@ public final class Player extends Mob {
 	private int IRON_MAN_MODE = IronmanMode.None.id();
 	private int IRON_MAN_RESTRICTION = 1;
 	private int IRON_MAN_HC_DEATH = 0;
-	public int lastMineTry = -1;
 	public int click = -1;
 	private FireCannonEvent cannonEvent = null;
 	private long consumeTimer = 0;
@@ -120,6 +121,10 @@ public final class Player extends Mob {
 	private int incorrectSleepTries = 0;
 	private volatile int questionOption;
 
+	/**
+	 * The game content script context for this Player
+	 */
+	private final ScriptContext scriptContext;
 	/**
 	 * An atomic reference to the players carried items.
 	 * Multiple threads access this and it never changes.
@@ -185,10 +190,6 @@ public final class Player extends Mob {
 	 * Is the player accessing their bank?
 	 */
 	private boolean inBank = false;
-	/**
-	 * The npc we are currently interacting with
-	 */
-	private Npc interactingNpc = null;
 	/**
 	 * Channel
 	 */
@@ -285,10 +286,7 @@ public final class Player extends Mob {
 	 * Player sleep word
 	 */
 	private String sleepword;
-	/**
-	 * The current status of the player
-	 */
-	private volatile Action status = Action.IDLE;
+
 	/**
 	 * If the player has been sending suspicious packets
 	 */
@@ -351,6 +349,7 @@ public final class Player extends Mob {
 	 */
 	public Player(final World world, final LoginRequest request) {
 		super(world);
+		scriptContext = new ScriptContext(this);
 
 		password = request.getPassword();
 		usernameHash = DataConversions.usernameToHash(request.getUsername());
@@ -846,7 +845,8 @@ public final class Player extends Mob {
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getCarriedItems().getEquipment().get(slot) != null) {
-					getWorld().getServer().getPluginHandler().handlePlugin(this, "DropObj", new Object[]{this, item, false});
+					// TODO: Second argument to the plugin should NOT be null here as the Equipped Equipment for Cabbage server should still have an inventory index.
+					getWorld().getServer().getPluginHandler().handlePlugin(this, "DropObj", new Object[]{this, null, item, false});
 				}
 			}
 
@@ -1048,14 +1048,6 @@ public final class Player extends Mob {
 		return incorrectSleepTries;
 	}
 
-	public Npc getInteractingNpc() {
-		return interactingNpc;
-	}
-
-	public void setInteractingNpc(final Npc interactingNpc) {
-		this.interactingNpc = interactingNpc;
-	}
-
 	public String getLastIP() {
 		return lastIP;
 	}
@@ -1118,6 +1110,9 @@ public final class Player extends Mob {
 
 	public synchronized void setOption(final int option) {
 		this.questionOption = option;
+		if(this.questionOption == -1) {
+			this.menuHandler = null;
+		}
 	}
 
 	public int getOwner() {
@@ -1217,7 +1212,6 @@ public final class Player extends Mob {
 			rangeEvent.stop();
 		}
 		rangeEvent = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(rangeEvent);
 	}
 
@@ -1230,7 +1224,6 @@ public final class Player extends Mob {
 			throwingEvent.stop();
 		}
 		throwingEvent = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(throwingEvent);
 	}
 
@@ -1310,14 +1303,6 @@ public final class Player extends Mob {
 
 	public int getSpellWait() {
 		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
-	}
-
-	public synchronized Action getStatus() {
-		return status;
-	}
-
-	public synchronized void setStatus(Action a) {
-		status = a;
 	}
 
 	public String getUsername() {
@@ -2023,8 +2008,6 @@ public final class Player extends Mob {
 		if (isRanging()) {
 			resetRange();
 		}
-		setInteractingNpc(null);
-		setStatus(Action.IDLE);
 	}
 
 	public void resetAllExceptTrading() {
@@ -2053,7 +2036,6 @@ public final class Player extends Mob {
 			throwingEvent.stop();
 			throwingEvent = null;
 		}
-		setStatus(Action.IDLE);
 	}
 
 	public void resetShop() {
@@ -3111,5 +3093,9 @@ public final class Player extends Mob {
 	 */
 	public synchronized CarriedItems getCarriedItems() {
 		return this.carriedItems.get();
+	}
+
+	public ScriptContext getScriptContext() {
+		return scriptContext;
 	}
 }

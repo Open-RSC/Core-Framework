@@ -15,10 +15,9 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 	private static int COAL_TRUCK = 383;
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == COAL_TRUCK) {
 			if (player.getCache().hasKey("coal_truck") && player.getCache().getInt("coal_truck") > 0) {
-				player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 				int coalLeft = player.getCache().getInt("coal_truck");
 				player.playerServerMessage(MessageType.QUEST, "You remove a piece of coal from the truck");
 				give(player, ItemId.COAL.id(), 1);
@@ -30,17 +29,17 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == COAL_TRUCK;
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id()) {
 			player.setBusy(true);
 			int coalAmount = player.getCarriedItems().getInventory().countId(ItemId.COAL.id());

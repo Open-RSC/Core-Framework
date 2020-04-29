@@ -30,7 +30,6 @@ public class Ladders {
 	}
 
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 		if (obj.getID() == 487 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;

@@ -294,13 +294,12 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 63 && obj.getY() == 3332) || (obj.getID() == 64 && (obj.getY() == 3336 || obj.getY() == 3332));
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 63 && obj.getY() == 3332) {
 			Npc suit = player.getWorld().getNpc(NpcId.SUIT_OF_ARMOUR.id(), 374, 374, 3330, 3334);
 			if (suit != null && !(player.getX() <= 373)) {
@@ -316,15 +315,14 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == 236 &&
 				(item.getCatalogId() == ItemId.RAW_CHICKEN.id() || item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()
 				|| item.getCatalogId() == ItemId.RAW_BEEF.id() || item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id());
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 236 &&
 				(item.getCatalogId() == ItemId.RAW_CHICKEN.id() || item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()
 				|| item.getCatalogId() == ItemId.RAW_BEEF.id() || item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id())) {

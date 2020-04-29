@@ -25,7 +25,7 @@ public class WoodcutJungle implements OpLocTrigger,
 	private static int JUNGLE_TREE_STUMP = 1087;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), JUNGLE_TREES)) {
 			return true;
 		}
@@ -36,7 +36,7 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), JUNGLE_TREES)) {
 			handleJungleWoodcut(obj, player);
 		}
@@ -140,12 +140,12 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == JUNGLE_VINE;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == JUNGLE_VINE) {
 			handleJungleWoodcut(obj, player);
 		}

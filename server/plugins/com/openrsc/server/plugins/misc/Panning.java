@@ -21,19 +21,19 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	private static int PANNING_POINT = 1058;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == PANNING_POINT;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == PANNING_POINT) {
 			player.message("If I had a panning tray I could pan here");
 		}
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == PANNING_POINT;
 	}
 
@@ -56,7 +56,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == PANNING_POINT) {
 			if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 				Npc guide = ifnearvisnpc(player, NpcId.DIGSITE_GUIDE.id(), 15);
@@ -135,13 +135,13 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.PANNING_TRAY.id() || item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id() || item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id();
 	}
 
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.PANNING_TRAY.id()) {
 			player.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
 			say(player, null, "Err, why am I searching an empty tray ?");

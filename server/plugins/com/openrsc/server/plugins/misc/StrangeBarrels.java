@@ -99,14 +99,13 @@ public class StrangeBarrels implements OpLocTrigger {
 			NpcId.RAT_LVL8.id(), NpcId.SCORPION.id()};
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == STRANGE_BARREL;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == STRANGE_BARREL) {
-			player.setBusyTimer(player.getWorld().getServer().getConfig().GAME_TICK);
 			int action = DataConversions.random(0, 4);
 			if (action != 0) {
 				player.message("You smash the barrel open.");
@@ -115,7 +114,7 @@ public class StrangeBarrels implements OpLocTrigger {
 					public void action() {
 						int newObjectX = DataConversions.random(467, 476);
 						int newObjectY = DataConversions.random(3699, 3714);
-						if (player.getWorld().getRegionManager().getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY)) != null) {
+						if (player.getWorld().getRegionManager().getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY), player) != null) {
 							addloc(new GameObject(obj.getWorld(), obj.getLoc()));
 						} else {
 							addloc(new GameObject(obj.getWorld(), Point.location(newObjectX, newObjectY), 1178, 0, 0));

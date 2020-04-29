@@ -2396,12 +2396,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), IRON_GATE, ROCK_1, WOODEN_DOORS, DESK, BOOKCASE, CAPTAINS_CHEST) || (obj.getID() == STONE_GATE && player.getY() >= 735);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == STONE_GATE && player.getY() >= 735) {
 			if (command.equals("go through")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
@@ -2628,12 +2628,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch");
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch")) {
 			mes(player, "You watch the Mercenary Captain for some time.",
 				"He has a large metal key attached to his belt.",
@@ -2846,7 +2846,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801)
 				|| (obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802)
 				|| obj.getID() == TENT_DOOR_1 || obj.getID() == TENT_DOOR_2
@@ -2854,7 +2854,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802) {
 			mes(player, "You search the window.",
 				"After some time you find that one of the bars looks weak,  ",

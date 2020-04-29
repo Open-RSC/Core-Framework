@@ -55,14 +55,14 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.BANANA.id() && obj.getID() == 182
 				|| item.getCatalogId() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
 				|| item.getCatalogId() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED;
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.BANANA.id() && obj.getID() == 182 && obj.getY() == 711) {
 			if (player.getCache().hasKey("bananas")) {
 				if (player.getCache().getInt("bananas") >= 10) {
@@ -292,13 +292,12 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 182 || obj.getID() == 185;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case 182:
 				String s = "";
@@ -335,7 +334,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return (player.getY() == 548 && player.getX() > 287 && player.getX() < 291)
 			&& item.getCatalogId() == ItemId.SPADE.id();
 	}
@@ -353,7 +352,7 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (player.getQuestStage(this) != 3)
 			return;
 		if (player.isBusy())

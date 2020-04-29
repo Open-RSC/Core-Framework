@@ -335,7 +335,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		player.message("It would be selfish to keep this for myself");
 		player.message("I should give it to someone else");
 	}
@@ -346,7 +346,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 }

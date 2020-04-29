@@ -16,12 +16,12 @@ public class UndergroundPassIban implements UseLocTrigger {
 	private static int PIT_OF_THE_DAMNED = 913;
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == PIT_OF_THE_DAMNED && item.getCatalogId() == ItemId.A_DOLL_OF_IBAN.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == PIT_OF_THE_DAMNED) {
 			//iban has been killed (+ doesn't matter status of doll)
 			if(atQuestStages(player, Quests.UNDERGROUND_PASS, 8, -1)) {

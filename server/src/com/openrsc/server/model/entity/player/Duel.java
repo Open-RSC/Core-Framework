@@ -1,12 +1,11 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import com.openrsc.server.model.container.ContainerListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemContainer;
 import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -133,7 +132,6 @@ public class Duel implements ContainerListener {
 
 		if (isDuelActive()) {
 			ActionSender.sendDuelWindowClose(player);
-			player.setStatus(Action.IDLE);
 		}
 
 		setDuelActive(false);

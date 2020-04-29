@@ -170,7 +170,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		switch (obj.getID()) {
 			case HOLE:
 				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
@@ -202,20 +202,17 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item,
-							   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == HOLE;
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command,
-							  Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == LISTEN_GRILL;
 	}
 
 	@Override
-	public void onOpLoc(final GameObject obj, String command,
-						final Player player) {
+	public void onOpLoc(final Player player, final GameObject obj, String command) {
 		switch (obj.getID()) {
 			case LISTEN_GRILL:
 				if (player.getQuestStage(this) == 1) {
@@ -251,8 +248,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click,
-								Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 38 && obj.getLocation().equals(DOOR_LOCATION)) {
 			return true;
 		}
@@ -266,8 +262,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onOpBound(final GameObject obj, Integer click,
-						  final Player player) {
+	public void onOpBound(final Player player, final GameObject obj, Integer click) {
 		switch (obj.getID()) {
 			case DOOR_ENTRANCE:
 				if (obj.getLocation().equals(DOOR_LOCATION) && player.getX() <= 270) {

@@ -6,7 +6,6 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -15,7 +14,6 @@ public class ItemUseOnObject implements PacketHandler {
 
 	private void handleDoor(final Player player, final Point location,
 							final GameObject object, final int dir, final Item item) {
-		player.setStatus(Action.USING_Item_ON_DOOR);
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				getPlayer().resetPath();
@@ -23,8 +21,7 @@ public class ItemUseOnObject implements PacketHandler {
 					object.getLocation(), object.getDirection());
 				if (getPlayer().isBusy() || getPlayer().isRanging()
 					|| !getPlayer().getCarriedItems().hasCatalogID(item.getCatalogId()) || obj == null
-					|| !obj.equals(object)
-					|| getPlayer().getStatus() != Action.USING_Item_ON_DOOR) {
+					|| !obj.equals(object)) {
 					return;
 				}
 				getPlayer().resetAll();
@@ -37,7 +34,7 @@ public class ItemUseOnObject implements PacketHandler {
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"UseBound",
-					new Object[]{object, item, getPlayer()}, this))
+					new Object[]{getPlayer(), object, item}, this))
 					return;
 			}
 		});
@@ -45,12 +42,11 @@ public class ItemUseOnObject implements PacketHandler {
 
 	private void handleObject(final Player player, final Point location,
 							  final GameObject object, final Item item) {
-		player.setStatus(Action.USING_Item_ON_OBJECT);
 		if ((object.getID() == 226 || object.getID() == 232) && player.withinRange(object, 2)) {
 			player.resetPath();
 			player.resetAll();
 			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
-				player, "UseLoc", new Object[]{object, item, player}))
+				player, "UseLoc", new Object[]{player, object, item}))
 				return;
 		}
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
@@ -60,8 +56,7 @@ public class ItemUseOnObject implements PacketHandler {
 				GameObject obj = getPlayer().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj == null || getPlayer().isBusy() || getPlayer().isRanging()
 					|| !getPlayer().getCarriedItems().getInventory().contains(item)
-					|| !getPlayer().atObject(object) || obj == null
-					|| getPlayer().getStatus() != Action.USING_Item_ON_OBJECT) {
+					|| !getPlayer().atObject(object) || obj == null) {
 					return;
 				}
 				getPlayer().resetAll();
@@ -74,7 +69,7 @@ public class ItemUseOnObject implements PacketHandler {
 
 				if (getPlayer().getWorld().getServer().getPluginHandler()
 					.handlePlugin(getPlayer(), "UseLoc",
-						new Object[]{(GameObject) object, item, getPlayer()}, this))
+						new Object[]{getPlayer(), (GameObject) object, item}, this))
 					return;
 			}
 		});

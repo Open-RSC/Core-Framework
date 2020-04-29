@@ -2,7 +2,6 @@ package com.openrsc.server.event.custom;
 
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
@@ -17,7 +16,6 @@ public abstract class BatchEvent extends DelayedEvent {
 					  int repeatFor, boolean gathering, boolean allowDuplicateEvents) {
 		super(world, owner, delay, descriptor, allowDuplicateEvents);
 		owner.resetPath();
-		owner.setBusyTimer(delay);// + 200);
 		this.gathering = gathering;
 		this.batchProgression = getWorld().getServer().getConfig().BATCH_PROGRESSION;
 		if (this.batchProgression) this.repeatFor = repeatFor;
@@ -38,15 +36,12 @@ public abstract class BatchEvent extends DelayedEvent {
 	@Override
 	public void run() {
 		if (getOwner().hasMoved()) { // If the player walks away, stop batching
-			getOwner().setStatus(Action.IDLE);
 			interruptBatch();
 			return;
 		}
 		if (repeated < repeatFor) {
-			//owner.setBusyTimer(delay + 200); // This was locking the player until all batching completed
 			action();
 			if (++repeated >= repeatFor) {
-				getOwner().setStatus(Action.IDLE);
 				interruptBatch();
 				return;
 			}
@@ -67,7 +62,6 @@ public abstract class BatchEvent extends DelayedEvent {
 
 	public void interruptBatch() {
 		if (this.batchProgression) ActionSender.sendRemoveProgressBar(getOwner());
-		getOwner().setBusyTimer(0);
 		getOwner().setBatchEvent(null);
 		super.stop();
 	}

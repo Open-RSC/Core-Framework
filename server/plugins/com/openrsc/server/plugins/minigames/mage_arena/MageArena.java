@@ -461,13 +461,13 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 1019 || obj.getID() == 1020 || obj.getID() == 1027
 			|| obj.getID() == SARADOMIN_STONE || obj.getID() == GUTHIX_STONE || obj.getID() == ZAMORAK_STONE;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		boolean firstTimeEnchant = false;
 		if (obj.getID() == 1019 || obj.getID() == 1020) {
 			player.message("you open the gate ...");

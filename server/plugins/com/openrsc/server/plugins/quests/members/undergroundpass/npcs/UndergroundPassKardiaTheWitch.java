@@ -25,12 +25,12 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	private static int WITCH_CHEST = 885;
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == WITCH_RAILING || obj.getID() == WITCH_DOOR;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == WITCH_RAILING) {
 			mes(player, "inside you see Kardia the witch");
 			player.message("her appearence make's you feel quite ill");
@@ -87,12 +87,12 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id();
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
 			if (!player.getCache().hasKey("kardia_cat")) {
 				mes(player, "you place the cat by the door");
@@ -111,12 +111,12 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == WITCH_CHEST;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == WITCH_CHEST) {
 			mes(player, "you search the chest");
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !player.getCache().hasKey("doll_of_iban")) {

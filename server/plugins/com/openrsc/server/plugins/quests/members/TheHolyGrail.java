@@ -268,12 +268,12 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 117 || obj.getID() == 116;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 117) {
 			if (player.getQuestStage(this) >= 1
 				&& atQuestStage(player, Quests.MERLINS_CRYSTAL, -1)
@@ -296,12 +296,12 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.MAGIC_WHISTLE.id() || item.getCatalogId() == ItemId.BELL.id() || item.getCatalogId() == ItemId.MAGIC_GOLDEN_FEATHER.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.MAGIC_WHISTLE.id()) {
 			if (player.getLocation().inBounds(490, 652, 491, 653)) { // SQUARE PLOT
 				if (player.getQuestStage(this) == 5 || player.getQuestStage(this) == -1) {
@@ -400,12 +400,12 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 408;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 408) {
 			if (player.getQuestStage(this) == 4) {
 				mes(player, "You hear muffled noises from the sack");

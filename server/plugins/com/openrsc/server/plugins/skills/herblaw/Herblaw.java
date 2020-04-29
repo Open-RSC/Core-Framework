@@ -22,13 +22,13 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 	@Override
-	public void onOpInv(final Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, final Item item, String command) {
 		if (command.equalsIgnoreCase("Identify")) {
 			handleHerbIdentify(item, player);
 		}
 	}
 
-	public boolean blockOpInv(final Item i, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, final Item i, String command) {
 		return command.equalsIgnoreCase("Identify");
 	}
 
@@ -92,7 +92,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item, Item usedWith) {
+	public void onUseInv(Player player, Integer invIndex, Item item, Item usedWith) {
 		ItemHerbSecond secondDef = null;
 		int itemID = item.getCatalogId();
 		int usedWithID = usedWith.getCatalogId();
@@ -237,7 +237,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 	}
 
-	public boolean blockUseInv(Player player, Item item, Item usedWith) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item, Item usedWith) {
 		int itemID = item.getCatalogId();
 		int usedWithID = usedWith.getCatalogId();
 		if ((player.getWorld().getServer().getEntityHandler().getItemHerbSecond(itemID, usedWithID)) != null

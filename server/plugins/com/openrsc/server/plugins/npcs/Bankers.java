@@ -91,7 +91,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public void onOpNpc(Npc n, String command, Player player) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (inArray(n.getID(), BANKERS)) {
 			if (command.equalsIgnoreCase("Bank") && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 				quickFeature(n, player, false);
@@ -102,7 +102,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	}
 
 	@Override
-	public boolean blockOpNpc(Npc n, String command, Player player) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		if (inArray(n.getID(), BANKERS) && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}

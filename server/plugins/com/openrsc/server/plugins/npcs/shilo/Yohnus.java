@@ -49,12 +49,12 @@ public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return obj.getID() == 165;
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 165) {
 			if (player.getY() <= 844) {
 				player.teleport(400, 845);

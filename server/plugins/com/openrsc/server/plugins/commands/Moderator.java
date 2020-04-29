@@ -19,12 +19,12 @@ public final class Moderator implements CommandTrigger {
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return player.isMod();
 	}
 
 	@Override
-	public void onCommand(String cmd, String[] args, Player player) {
+	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}
@@ -90,7 +90,7 @@ public final class Moderator implements CommandTrigger {
 					+ "@gre@Busy:@whi@ " + (targetPlayer.isBusy() ? "true" : "false") + " %"
 					+ "@gre@IP:@whi@ " + targetPlayer.getLastIP() + " %"
 					+ "@gre@Last Login:@whi@ " + targetPlayer.getDaysSinceLastLogin() + " days ago %"
-					+ "@gre@Coordinates:@whi@ " + targetPlayer.getStatus() + " at " + targetPlayer.getLocation().toString() + " %"
+					+ "@gre@Coordinates:@whi@ " + targetPlayer.getScriptContext().getCurrentAction() + " at " + targetPlayer.getLocation().toString() + " %"
 					+ "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
 					+ "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"

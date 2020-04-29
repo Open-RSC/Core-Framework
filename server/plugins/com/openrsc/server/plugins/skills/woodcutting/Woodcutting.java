@@ -19,8 +19,8 @@ import static com.openrsc.server.plugins.Functions.*;
 public class Woodcutting implements OpLocTrigger {
 
 	@Override
-	public boolean blockOpLoc(final GameObject obj,
-							  final String command, final Player player) {
+	public boolean blockOpLoc(final Player player, final GameObject obj,
+							  final String command) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(obj.getID());
 		return (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204);
 	}
@@ -130,7 +130,7 @@ public class Woodcutting implements OpLocTrigger {
 	}
 
 	@Override
-	public void onOpLoc(final GameObject object, final String command, final Player player) {
+	public void onOpLoc(final Player player, final GameObject object, final String command) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
 		if (command.equals("chop") && def != null && object.getID() != 245 && object.getID() != 204) {
 			handleWoodcutting(object, player, player.click);

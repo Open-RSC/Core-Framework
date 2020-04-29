@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.entity.update.Damage;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -200,7 +199,6 @@ public class CombatEvent extends GameTickEvent {
 				int delayedAggro = 0;
 				if (defenderMob.isPlayer()) {
 					Player player = (Player) defenderMob;
-					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else if(!((Npc) defenderMob).isPkBot()){
 					delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
@@ -228,7 +226,6 @@ public class CombatEvent extends GameTickEvent {
 				int delayedAggro = 0;
 				if (attackerMob.isPlayer()) {
 					Player player = (Player) attackerMob;
-					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else {
 					if (!((Npc) attackerMob).isPkBot() && attackerMob.getCombatState() == CombatState.RUNNING)

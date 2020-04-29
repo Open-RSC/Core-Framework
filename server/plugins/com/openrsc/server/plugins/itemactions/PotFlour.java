@@ -10,7 +10,7 @@ import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 public class PotFlour implements UseObjTrigger, TakeObjTrigger {
 
 	@Override
-	public boolean blockUseObj(Item myItem, GroundItem item, Player player) {
+	public boolean blockUseObj(Player player, GroundItem item, Item myItem) {
 		return item.getID() == ItemId.FLOUR.id() && myItem.getCatalogId() == ItemId.POT.id();
 	}
 
@@ -20,7 +20,7 @@ public class PotFlour implements UseObjTrigger, TakeObjTrigger {
 	}
 
 	@Override
-	public void onUseObj(Item myItem, GroundItem item, Player player) {
+	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		if (myItem.getCatalogId() == ItemId.POT.id()) {
 			if (player.getCarriedItems().remove(myItem) < 0)
 				return;

@@ -35,12 +35,12 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 	public static final int SEARCH = 1;
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return inArray(obj.getID(), FLAME_WALL, RUT, ANCIENT_WALL, RUINED_WALL);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == ANCIENT_WALL) {
 			if (click == USE) {
 				if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
@@ -198,12 +198,12 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 	}
 
 	@Override
-	public boolean blockUseBound(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return obj.getID() == FLAME_WALL || obj.getID() == ANCIENT_WALL;
 	}
 
 	@Override
-	public void onUseBound(GameObject obj, Item item, Player player) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == FLAME_WALL) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case BLESSED_GOLDEN_BOWL_WITH_PURE_WATER:

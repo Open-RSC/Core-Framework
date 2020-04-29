@@ -10,12 +10,12 @@ import static com.openrsc.server.plugins.Functions.*;
 public class DeadTree implements OpLocTrigger {
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 88;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		player.setBusy(true);
 		player.message("The tree seems to lash out at you!");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);

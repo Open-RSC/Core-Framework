@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc;
 
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,9 +30,18 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private volatile Thread pluginThread;
 	private volatile int ownerIndex;
 
-	public PluginTask(final World world, final Player owner) {
+	private final Object[] data;
+	private final Action action;
+
+	public PluginTask(final World world, final Player owner, final String pluginInterface, final Object[] data) {
 		super(world, owner, 0, null, true);
-		ownerIndex = owner == null ? -1 : owner.getIndex();
+		this.ownerIndex = owner == null ? -1 : owner.getIndex();
+		this.data = data;
+		this.action = Action.getActionFromPlugin(pluginInterface);
+
+		if(this.action == null) {
+			throw new IllegalArgumentException("Cannot locate action from Plugin: " + pluginInterface);
+		}
 	}
 
 	public synchronized Integer call() {
@@ -80,6 +90,9 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		setThreadRunning(true);
 		setTickCompleted(false);
 		tasksMap.put(threadName, this);
+		if(getPlayerOwner() != null) {
+			getPlayerOwner().getScriptContext().startScript(action, data);
+		}
 	}
 
 	private synchronized void unregisterPluginThread() {
@@ -91,6 +104,9 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 			setTickCompleted(false);
 			tasksMap.remove(thread.getName());
 			pluginThread = null;
+			if(getPlayerOwner() != null) {
+				getPlayerOwner().getScriptContext().endScript();
+			}
 
 			thread.interrupt();
 		}
@@ -122,6 +138,10 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	public synchronized Thread getPluginThread() {
 		return pluginThread;
+	}
+
+	public int getOwnerIndex() {
+		return ownerIndex;
 	}
 
 	public class PluginInterruptedException extends RuntimeException {}

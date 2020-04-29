@@ -16,12 +16,12 @@ public class SpiritTrees implements OpLocTrigger {
 	private static int YOUNG_SPIRIT_TREES = 391;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == YOUNG_SPIRIT_TREES || obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE || obj.getID() == STRONGHOLD_SPIRIT_TREE;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		/** STRONGHOLD SPIRIT TREE
 		 *  NOTE: does not teleport you back to tree gnome village unless you have completed Grand Tree quest
 		 * **/

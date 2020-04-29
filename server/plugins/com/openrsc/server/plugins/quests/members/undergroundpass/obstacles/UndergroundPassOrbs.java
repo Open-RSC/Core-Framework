@@ -31,14 +31,14 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 	public static int FURNACE = 813;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), NORTH_PASSAGE) || inArray(obj.getID(), WEST_PASSAGE) || obj.getID() == SOUTH_WEST_PASSAGE
 				|| obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP || obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE
 				|| obj.getID() == SOUTH_WEST_STALAGMITE;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String cmd, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String cmd) {
 		if (inArray(obj.getID(), NORTH_PASSAGE)) {
 			if (cmd.equalsIgnoreCase("walk here")) {
 				mes(player, "you walk down the passage way");
@@ -152,7 +152,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2]))
 				|| (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE)
 				|| (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
@@ -160,7 +160,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2])) {
 			player.message("you carefully place the planks over the pressure triggers");
 			player.message("you walk across the wooden planks");

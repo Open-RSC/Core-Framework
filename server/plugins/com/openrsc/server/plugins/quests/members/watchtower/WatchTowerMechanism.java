@@ -22,12 +22,12 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 	private static final int TOBAN_CHEST_CLOSED = 978;
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id();
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id()) {
 			openChest(obj, 2000, TOBAN_CHEST_OPEN);
 			if (player.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
@@ -42,14 +42,14 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
 				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) ||
 			compareItemsIds(item1, item2, ItemId.BAT_BONES.id(), ItemId.VIAL.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if ((item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item1.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id()) &&
 				(item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BODY.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_BASE.id() || item2.getCatalogId() == ItemId.OGRE_RELIC_PART_HEAD.id())) {
 			player.message("I think these fit together, but I can't seem to make it fit");

@@ -11,12 +11,12 @@ public final class PlayerModerator implements CommandTrigger {
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return player.isMod() || player.isPlayerMod();
 	}
 
 	@Override
-	public void onCommand(String cmd, String[] args, Player player) {
+	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}

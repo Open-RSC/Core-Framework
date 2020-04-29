@@ -1199,14 +1199,14 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return DataConversions.inArray(new int[] {GLOUGHS_CUPBOARD_OPEN, GLOUGHS_CUPBOARD_CLOSED, TREE_LADDER_UP, TREE_LADDER_DOWN, SHIPYARD_GATE,
 				GLOUGH_CHEST_CLOSED, WATCH_TOWER_UP, WATCH_TOWER_DOWN, WATCH_TOWER_STONE_STAND, ROOT_ONE, ROOT_TWO, ROOT_THREE, PUSH_ROOT, PUSH_ROOT_BACK}, obj.getID())
 			|| (obj.getID() == STRONGHOLD_GATE && player.getQuestStage(this) == 0);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, final Player player) {
+	public void onOpLoc(final Player player, GameObject obj, String command) {
 		if (obj.getID() == GLOUGHS_CUPBOARD_OPEN || obj.getID() == GLOUGHS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openCupboard(obj, player, GLOUGHS_CUPBOARD_OPEN);
@@ -1502,14 +1502,14 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id())
 				|| (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getCatalogId() == ItemId.PEBBLE_3.id()
 				|| item.getCatalogId() == ItemId.PEBBLE_2.id() || item.getCatalogId() == ItemId.PEBBLE_4.id() || item.getCatalogId() == ItemId.PEBBLE_1.id()));
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id()) {
 			mes(player, "the key fits the chest");
 			player.message("you open the chest");

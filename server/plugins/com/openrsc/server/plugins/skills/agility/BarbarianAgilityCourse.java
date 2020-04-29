@@ -32,12 +32,12 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 	private static Integer lastObstacle = LOW_WALL2;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), PIPE, BACK_PIPE, SWING, LOG, LEDGE, NET, HANDHOLDS);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == BACK_PIPE || obj.getID() == PIPE) {
 			if (getCurrentLevel(player, Skills.AGILITY) < 35) {
 				player.message("You need an agility level of 35 to attempt to squeeze through the pipe");
@@ -156,12 +156,12 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 	}
 
 	@Override
-	public boolean blockOpBound(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return inArray(obj.getID(), LOW_WALL, LOW_WALL2);
 	}
 
 	@Override
-	public void onOpBound(GameObject obj, Integer click, Player player) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {

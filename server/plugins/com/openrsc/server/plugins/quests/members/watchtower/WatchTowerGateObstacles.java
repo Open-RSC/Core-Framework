@@ -21,12 +21,12 @@ public class WatchTowerGateObstacles implements OpLocTrigger {
 	private static int OGRE_ELCLAVE_GATE = 1068;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == NORTH_WEST_GATE || obj.getID() == EAST_SOUTH_GATE || obj.getID() == OGRE_ELCLAVE_GATE;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == OGRE_ELCLAVE_GATE) {
 			player.playerServerMessage(MessageType.QUEST, "The gate is locked tight");
 			player.message("I'll have to find another way out...");

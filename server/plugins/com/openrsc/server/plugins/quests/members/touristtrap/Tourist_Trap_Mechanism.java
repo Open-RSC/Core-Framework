@@ -32,32 +32,32 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	private static int DISTURBED_SAND2 = 945;
 
 	@Override
-	public boolean blockRemoveObj(UnequipRequest request) {
+	public boolean blockRemoveObj(Player player, Integer invIndex, UnequipRequest request) {
 		return (request.item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || request.item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (request.player.getLocation().inTouristTrapCave()) && request.player.getQuestStage(Quests.TOURIST_TRAP) != -1;
 	}
 
 	@Override
-	public void onRemoveObj(UnequipRequest request) {
+	public void onRemoveObj(Player player, Integer invIndex, UnequipRequest request) {
 		Item item = request.item;
-		Player player = request.player;
-		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (player.getLocation().inTouristTrapCave()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
-			player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true));
+		Player requestPlayer = request.player;
+		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (requestPlayer.getLocation().inTouristTrapCave()) && requestPlayer.getQuestStage(Quests.TOURIST_TRAP) != -1) {
+			requestPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(requestPlayer, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true));
 
-			Npc n = ifnearvisnpc(player, NpcId.MERCENARY.id(), 5);
+			Npc n = ifnearvisnpc(requestPlayer, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
-				n.teleport(player.getX(), player.getY());
-				player.teleport(player.getX(), player.getY());
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				npcsay(player, n, "Oi! What are you doing down here?",
+				n.teleport(requestPlayer.getX(), requestPlayer.getY());
+				requestPlayer.teleport(requestPlayer.getX(), requestPlayer.getY());
+				delay(requestPlayer.getWorld().getServer().getConfig().GAME_TICK);
+				npcsay(requestPlayer, n, "Oi! What are you doing down here?",
 					"You're no slave!");
-				n.startCombat(player);
+				n.startCombat(requestPlayer);
 			} else {
-				player.teleport(player.getX(), player.getY());
-				Npc newNpc = addnpc(player.getWorld(), NpcId.MERCENARY.id(), player.getX(), player.getY(), 30000);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				npcsay(player, newNpc, "Oi! What are you doing down here?",
+				requestPlayer.teleport(requestPlayer.getX(), requestPlayer.getY());
+				Npc newNpc = addnpc(requestPlayer.getWorld(), NpcId.MERCENARY.id(), requestPlayer.getX(), requestPlayer.getY(), 30000);
+				delay(requestPlayer.getWorld().getServer().getConfig().GAME_TICK);
+				npcsay(requestPlayer, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
-				newNpc.startCombat(player);
+				newNpc.startCombat(requestPlayer);
 			}
 		}
 	}
@@ -214,13 +214,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	}
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), DISTURBED_SAND1, DISTURBED_SAND2, 1006, MINING_CAVE, MINING_CAVE_BACK, MINING_CART,
 				MINING_BARREL, TRACK, LIFT_PLATFORM, LIFT_UP, MINING_CART_ABOVE);
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		//closest to irena
 		if (obj.getID() == DISTURBED_SAND1) {
 			if (command.equals("look")) {
@@ -860,7 +860,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	}
 
 	@Override
-	public boolean blockUseLoc(GameObject obj, Item item, Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id())
 				|| (obj.getID() == MINING_CART && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id())
 				|| (obj.getID() == LIFT_PLATFORM && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id())
@@ -868,7 +868,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	}
 
 	@Override
-	public void onUseLoc(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 1006 && item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_DART_TIP.id(), Optional.of(false))) {
 				player.message("You have already made the prototype dart tip.");
@@ -907,12 +907,12 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	}
 
 	@Override
-	public boolean blockUseInv(Player player, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id());
 	}
 
 	@Override
-	public void onUseInv(Player player, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.FEATHER.id(), ItemId.PROTOTYPE_DART_TIP.id())) {
 			attachFeathersToPrototype(player, item1, item2);
 		}
@@ -936,12 +936,12 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id();
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
 			if (player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));

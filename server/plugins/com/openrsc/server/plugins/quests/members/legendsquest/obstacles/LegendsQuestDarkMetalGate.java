@@ -16,12 +16,12 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 	public static final int DARK_METAL_GATE = 1165;
 
 	@Override
-	public boolean blockOpLoc(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == DARK_METAL_GATE;
 	}
 
 	@Override
-	public void onOpLoc(GameObject obj, String command, Player player) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == DARK_METAL_GATE) {
 			if (command.equalsIgnoreCase("open")) {
 				if (player.getY() <= 3715) {

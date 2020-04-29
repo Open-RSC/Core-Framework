@@ -9,14 +9,14 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ItemDurability implements OpInvTrigger {
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return (item.getCatalogId() == ItemId.RING_OF_RECOIL.id() || item.getCatalogId() == ItemId.RING_OF_FORGING.id()
 			|| item.getCatalogId() == ItemId.DWARVEN_RING.id())
 			&& (command.equalsIgnoreCase("check") || command.equalsIgnoreCase("break"));
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (command.equalsIgnoreCase("check")) {
 			int charges;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {

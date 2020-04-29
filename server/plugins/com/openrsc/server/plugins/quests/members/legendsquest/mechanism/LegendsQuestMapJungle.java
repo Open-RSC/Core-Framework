@@ -39,7 +39,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
 			player.message("The map of Kharazi Jungle is complete, Sir Radimus will be pleased.");
 			int menu = multi(player, "Read Mission Briefing", "Close");
@@ -188,7 +188,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.RADIMUS_SCROLLS.id() || item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id();
 	}
 }

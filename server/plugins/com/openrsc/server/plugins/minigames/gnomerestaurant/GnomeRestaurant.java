@@ -509,12 +509,12 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 	}
 
 	@Override
-	public boolean blockOpInv(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.GIANNE_COOK_BOOK.id();
 	}
 
 	@Override
-	public void onOpInv(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.GIANNE_COOK_BOOK.id()) {
 			player.message("you open aluft's cook book");
 			player.message("inside are various gnome dishes");
@@ -575,14 +575,14 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 	}
 
 	@Override
-	public void onDropObj(Player player, Item item, Boolean fromInventory) {
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.GNOMECRUNCHIE.id() || item.getCatalogId() == ItemId.GNOMEBOWL.id() || item.getCatalogId() == ItemId.GNOMEBATTA.id()) {
 			resetGnomeCooking(player);
 		}
 	}
 
 	@Override
-	public boolean blockDropObj(Player player, Item item, Boolean fromInventory) {
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return false;
 	}
 }
