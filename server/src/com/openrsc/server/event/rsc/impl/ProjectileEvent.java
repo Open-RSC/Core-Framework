@@ -89,7 +89,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			opponent.message("You start a new ring of recoil");
 		}
 
-		caster.getSkills().subtractLevel(3, reflectedDamage, false);
+		caster.getSkills().subtractLevel(Skills.HITS, reflectedDamage, false);
 		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
 
 		if (caster.getSkills().getLevel(Skills.HITS) <= 0) {
@@ -124,7 +124,7 @@ public class ProjectileEvent extends SingleTickEvent {
 		}
 
 		int lastHits = opponent.getLevel(Skills.HITPOINTS);
-		opponent.getSkills().subtractLevel(3, damage, false);
+		opponent.getSkills().subtractLevel(Skills.HITS, damage, false);
 		opponent.getUpdateFlags().setDamage(new Damage(opponent, damage));
 
 
