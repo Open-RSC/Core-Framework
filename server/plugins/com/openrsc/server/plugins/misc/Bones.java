@@ -11,28 +11,9 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Bones implements OpInvTrigger {
 
-	private void giveBonesExperience(Player player, Item item) {
-
-		// TODO: Config for custom sounds.
-		//owner.playSound("takeobject");
-
-		switch (ItemId.getById(item.getCatalogId())) {
-			case BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
-				break;
-			case BAT_BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
-				break;
-			case BIG_BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
-				break;
-			case DRAGON_BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
-				break;
-			default:
-				player.message("Nothing interesting happens");
-				break;
-		}
+	@Override
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return command.equalsIgnoreCase("bury");
 	}
 
 	@Override
@@ -69,8 +50,27 @@ public class Bones implements OpInvTrigger {
 		}
 	}
 
-	@Override
-	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return command.equalsIgnoreCase("bury");
+	private void giveBonesExperience(Player player, Item item) {
+
+		// TODO: Config for custom sounds.
+		//owner.playSound("takeobject");
+
+		switch (ItemId.getById(item.getCatalogId())) {
+			case BONES:
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
+				break;
+			case BAT_BONES:
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
+				break;
+			case BIG_BONES:
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
+				break;
+			case DRAGON_BONES:
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
+				break;
+			default:
+				player.message("Nothing interesting happens");
+				break;
+		}
 	}
 }
