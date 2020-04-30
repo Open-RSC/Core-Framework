@@ -52,6 +52,21 @@ public class Crafting implements UseInvTrigger,
 		ItemId.UNFIRED_BOWL.id()
 	};
 
+	final int[] amulet_moulds = {
+		ItemId.RING_MOULD.id(),
+		ItemId.NECKLACE_MOULD.id(),
+		ItemId.AMULET_MOULD.id(),
+	};
+	final int[] gems = {
+		ItemId.NOTHING.id(),
+		ItemId.SAPPHIRE.id(),
+		ItemId.EMERALD.id(),
+		ItemId.RUBY.id(),
+		ItemId.DIAMOND.id(),
+		ItemId.DRAGONSTONE.id(),
+		ItemId.OPAL.id(),
+	};
+
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		int item1ID = item1.getCatalogId();
@@ -198,9 +213,9 @@ public class Crafting implements UseInvTrigger,
 
 		// select type
 		String[] options = new String[]{
-				"Ring",
-				"Necklace",
-				"Amulet"
+			"Ring",
+			"Necklace",
+			"Amulet"
 		};
 		int type = multi(player, options);
 		if (type < 0 || type > 2) {
@@ -208,53 +223,38 @@ public class Crafting implements UseInvTrigger,
 		}
 		reply.set(options[type]);
 
-		final int[] moulds = {
-				ItemId.RING_MOULD.id(),
-				ItemId.NECKLACE_MOULD.id(),
-				ItemId.AMULET_MOULD.id(),
-		};
-		final int[] gems = {
-				ItemId.NOTHING.id(),
-				ItemId.SAPPHIRE.id(),
-				ItemId.EMERALD.id(),
-				ItemId.RUBY.id(),
-				ItemId.DIAMOND.id(),
-				ItemId.DRAGONSTONE.id(),
-				ItemId.OPAL.id(),
-		};
-
 		// select gem
 		options = new String[]{
-				"Gold",
-				"Sapphire",
-				"Emerald",
-				"Ruby",
-				"Diamond"
+			"Gold",
+			"Sapphire",
+			"Emerald",
+			"Ruby",
+			"Diamond"
 		};
 		if (player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				options = new String[]{
-						"Gold",
-						"Sapphire",
-						"Emerald",
-						"Ruby",
-						"Diamond",
-						"Dragonstone",
-						"Opal"
+					"Gold",
+					"Sapphire",
+					"Emerald",
+					"Ruby",
+					"Diamond",
+					"Dragonstone",
+					"Opal"
 				};
 			} else {
 				options = new String[]{
-						"Gold",
-						"Sapphire",
-						"Emerald",
-						"Ruby",
-						"Diamond",
-						"Dragonstone"
+					"Gold",
+					"Sapphire",
+					"Emerald",
+					"Ruby",
+					"Diamond",
+					"Dragonstone"
 				};
 			}
 		}
-		if (player.getCarriedItems().getInventory().countId(moulds[type]) < 1) {
-			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(moulds[type]).getName() + " to make a " + reply.get());
+		if (player.getCarriedItems().getInventory().countId(amulet_moulds[type]) < 1) {
+			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(amulet_moulds[type]).getName() + " to make a " + reply.get());
 			return;
 		}
 		player.message("What type of " + reply.get() + " would you like to make?");
@@ -273,8 +273,7 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		if (def.itemID == ItemId.NOTHING.id())
-		{
+		if (def.itemID == ItemId.NOTHING.id()) {
 			player.message("You have no reason to make that item.");
 			return;
 		}
@@ -289,54 +288,67 @@ public class Crafting implements UseInvTrigger,
 				retrytimes = Math.min(player.getCarriedItems().getInventory().countId(gems[gem]), retrytimes);
 			}
 			if (retrytimes <= 0) {
-				if (gem != 0 && player.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
+				if (gem != -1 && player.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
 					player.message("You don't have a " + reply.get() + ".");
 				}
 				return;
 			}
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Craft Gold Jewelry", retrytimes, false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
-					owner.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
-					interruptBatch();
-					return;
-				}
-				if (gem != 0 && owner.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
-					owner.message("You don't have a " + reply.get() + ".");
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				if (owner.getCarriedItems().remove(item) > -1 && (gem == 0 || owner.getCarriedItems().remove(new Item(gems[gem])) > -1)) {
-					thinkbubble(getOwner(), item);
-					Item result;
-					if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
-						result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-					} else if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
-						result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
-					} else {
-						result = new Item(def.getItemID(), 1);
-					}
-					owner.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
-					owner.getCarriedItems().getInventory().add(result);
-					owner.incExp(Skills.CRAFTING, def.getExp(), true);
-				} else {
-					owner.message("You don't have a " + reply.get() + ".");
-					interruptBatch();
-				}
+		batchGoldJewelry(player, item, def, gem, gems, type, reply, retrytimes);
+	}
+
+	private void batchGoldJewelry(Player player, Item item, ItemCraftingDef def, int gem, int[] gems, int type, AtomicReference<String> reply, int repeat) {
+		if (player.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
+			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
+			return;
+		}
+		if (gem != 0 && player.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
+			player.message("You don't have a " + reply.get() + ".");
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
 			}
-		});
+		}
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0
+			|| (gem > 0 && player.getCarriedItems().getInventory().countId(gems[gem], Optional.of(false)) <= 0)) {
+			player.message("You don't have a " + reply.get() + ".");
+			return;
+		}
+
+		// Remove items
+		player.getCarriedItems().remove(item);
+		if (gem > 0) {
+			player.getCarriedItems().remove(new Item(gems[gem]));
+		}
+		thinkbubble(player, item);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		Item result;
+		if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
+			result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
+		} else if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
+			result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+		} else {
+			result = new Item(def.getItemID(), 1);
+		}
+		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
+		player.getCarriedItems().getInventory().add(result);
+		player.incExp(Skills.CRAFTING, def.getExp(), true);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if(repeat > 0) {
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
+			);
+			batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
+		}
 	}
 
 	private void doSilverJewelry(final Item item, final Player player) {
@@ -354,12 +366,12 @@ public class Crafting implements UseInvTrigger,
 		reply.set(options[type]);
 
 		int[] moulds = {
-				ItemId.HOLY_SYMBOL_MOULD.id(),
-				ItemId.UNHOLY_SYMBOL_MOULD.id(),
+			ItemId.HOLY_SYMBOL_MOULD.id(),
+			ItemId.UNHOLY_SYMBOL_MOULD.id(),
 		};
 		final int[] results = {
-				ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
-				ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
+			ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
+			ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
 		};
 		if (player.getCarriedItems().getInventory().countId(moulds[type]) < 1) {
 			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(moulds[type]).getName() + " to make a " + reply.get() + "!");
