@@ -23,8 +23,6 @@ ALTER TABLE `openrsc_players`
     ADD `petfatigue` INT(10) NULL DEFAULT '0' AFTER `fatigue`;
 ALTER TABLE `openrsc_players`
     ADD `pets` INT(10) NOT NULL DEFAULT '0' AFTER `npc_kills`;
-ALTER TABLE `openrsc_npcdef`
-    ADD `pkBot` tinyint(1) DEFAULT 0;
 
 
 /*
@@ -35458,53 +35456,26 @@ VALUES (1289, 'Scythe', 'Get another from the clothes shop if you die', '', 0, 0
 	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '',
         0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
 
-REPLACE INTO `openrsc_npcdef` (`id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`,
-                               `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`,
-                               `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`,
-                               `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`,
-                               `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`,
-                               `combatSprite`, `canEdit`, `roundMode`, `pkBot`)
-VALUES (794, 'Auctioneer', 'He gives access to auction house', 'Auction', '', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 0,
-        1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 16761440, 2, 8409120, 13415270, 145, 230, 6, 6, 5, 0, 0, 0),
-       (795, 'Auction Clerk', 'There to help me make my auctions', 'Auction', 'Teleport', 15, 16, 12, 18, NULL, 15, 0,
-        0, 0, 30, 3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6,
-        5, 0, 0, 0),
-       (796, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18,
-        NULL, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145,
-        220, 6, 6, 5, 0, 0, 0),
-       (797, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18,
-        NULL, 15, 0, 0, 0, 30, 0, 1, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145,
-        230, 6, 6, 5, 0, 0, 0),
-       (798, 'Gaia', 'The earth queen with a rotten heart', '', '', 78, 79, 79, 80, NULL, 79, 0, 1, 1, 30, 241, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 0, 0),
-       (799, 'Iron Man', 'An Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 0, 319, 320, -1, -1, -1, -1, -1,
-        -1, -1, -1, -1, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, 1, 0, 0),
-       (800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 0, 322, 323,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0, 0),
-       (801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 324, 325, 326,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0, 0),
-       (802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, NULL, 300, 0, 1, 1, 30, 309, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0, 0, 0),
-       (803, 'Wizard Sedridor', 'An old wizard', 'teleport', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77,
-        76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0, 0),
-       (804, 'Pk Bot', '', '', '', 30, 59, 48, 1, 59, 34, 0, 1, 1, 60, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1,
-        14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0, 0),
-       (805, 'Scot Ruth', 'A smelly, dirty dwarf', '', '', 20, 17, 16, 20, NULL, 18, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1,
-        45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 0, 0),
-       (806, 'Gardener', 'She takes care of the plants around', '', '', 25, 25, 10, 20, NULL, 20, 0, 0, 0, 30, 3, 4, 2,
-        -1, -1, -1, -1, 87, -1, -1, -1, -1, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, 0, 0, 0),
-       (807, 'Gramat', 'He looks worried', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1,
-        -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0, 0),
-       (808, 'Dwarven Smithy', 'A master of metals', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1,
-        45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0, 0),
-       (809, 'Dwarven Youth', 'He is upset', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1,
-        -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0, 0),
-       (810, 'Balrog', 'A massive black demon', '', '', 999, 250, 500, 80, NULL, 217, 1, 1, 1, 73, 164, -1, -1, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, -1, 0),
-       (811, 'Silicius', 'A Peaceful monk', '', '', 12, 13, 15, 12, NULL, 13, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, 83, 87,
-        -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 0, 0),
-       (812, 'Robin Banks', 'A master thief', '', '', 34, 32, 37, 33, NULL, 34, 1, 0, 0, 61, 6, 1, 2, -1, 50, -1, 45,
-        -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, 0, -1, 0);
+REPLACE INTO `openrsc_npcdef` (`id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`, `combatSprite`, `canEdit`, `roundMode`) VALUES
+(794, 'Auctioneer', 'He gives access to auction house', 'Auction', '', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 0, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 16761440, 2, 8409120, 13415270, 145, 230, 6, 6, 5, 0, 0),
+(795, 'Auction Clerk', 'There to help me make my auctions', 'Auction', 'Teleport', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6, 5, 0, 0),
+(796, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(797, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 0, 1, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145, 230, 6, 6, 5, 0, 0),
+(798, 'Gaia', 'The earth queen with a rotten heart', '', '', 78, 79, 79, 80, NULL, 79, 0, 1, 1, 30, 241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 275, 262, 11, 11, 30, 0, 0),
+(799, 'Iron Man', 'An Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 0, 319, 320, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
+(800, 'Ultimate Iron Man', 'An Ultimate Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 0, 322, 323, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
+(801, 'Hardcore Iron Man', 'A Hardcore Iron Man', 'Armour', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 45, 324, 325, 326, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, 1, 0),
+(802, 'Greatwood', 'A scary hard slamming tree', '', '', 255, 245, 400, 300, NULL, 300, 0, 1, 1, 30, 309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 345, 410, 11, 11, 30, 0, 0),
+(803, 'Wizard Sedridor', 'An old wizard', 'teleport', '', 0, 0, 0, 0, NULL, 0, 0, 0, 0, 30, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(804, 'Pk Bot', '', '', '', 30, 59, 48, 1, 59, 34, 0, 1, 1, 60, 6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1, 14535816, 255, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(805, 'Scot Ruth', 'A smelly, dirty dwarf', '', '', 20, 17, 16, 20, NULL, 18, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, 0, 0),
+(806, 'Gardener', 'She takes care of the plants around', '', '', 25, 25, 10, 20, NULL, 20, 0, 0, 0, 30, 3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, 0, 0),
+(807, 'Gramat', 'He looks worried', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0),
+(808, 'Dwarven Smithy', 'A master of metals', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0),
+(809, 'Dwarven Youth', 'He is upset', '', '', 20, 17, 16, 20, NULL, 18, 0, 0, 0, 30, 6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, 0, 0),
+(810, 'Balrog', 'A massive black demon', '', '', 999, 250, 500, 80, NULL, 217, 1, 1, 1, 73, 164, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 358, 341, 11, 11, 30, 0, -1),
+(811, 'Silicius', 'A Peaceful monk', '', '', 12, 13, 15, 12, NULL, 13, 1, 0, 0, 30, 6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, 0, 0),
+(812, 'Robin Banks', 'A master thief', '', '', 34, 32, 37, 33, NULL, 34, 1, 0, 0, 61, 6, 1, 2, -1, 50, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, 0, -1);
 
 REPLACE INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`)
 VALUES (794, '1', 20, 0, 2260),
