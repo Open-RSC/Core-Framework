@@ -1,71 +1,71 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public class Bones implements OpInvTrigger {
 
-	private void buryBonesHelper(Player owner, Item item) {
-		owner.message("You bury the "
-			+ item.getDef(owner.getWorld()).getName().toLowerCase());
+	private void giveBonesExperience(Player player, Item item) {
 
 		// TODO: Config for custom sounds.
 		//owner.playSound("takeobject");
 
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
-				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
 				break;
 			case BAT_BONES:
-				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
 				break;
 			case BIG_BONES:
-				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
 				break;
 			case DRAGON_BONES:
-				owner.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
 				break;
 			default:
-				owner.message("Nothing interesting happens");
+				player.message("Nothing interesting happens");
 				break;
 		}
 	}
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if(command.equalsIgnoreCase("bury")) {
+		if (command.equalsIgnoreCase("bury")) {
 			if (item.getNoted()) {
 				player.message("You can't bury noted bones");
 				return;
 			}
 
-			int buryAmount = item.getAmount();
-			if (buryAmount > 1) {
-				if (!player.getWorld().getServer().getConfig().BATCH_PROGRESSION)
-					buryAmount = 1;
+			int buryAmount = 1;
+			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				buryAmount = item.getAmount();
 			}
 
-			player.message("You dig a hole in the ground");
+			buryBones(player, item, buryAmount);
+		}
+	}
 
-			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, String.format("Bury %s", item.getDef(player.getWorld()).getName()), buryAmount, false) {
-				@Override
-				public void action() {
-					Item toRemove = getOwner().getCarriedItems().getInventory().get(
-						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
-					if (getOwner().getCarriedItems().remove(toRemove) > -1) {
-						buryBonesHelper(player, item);
-					} else
-						interruptBatch();
 
-					if (!this.isCompleted())
-						player.message("You dig a hole in the ground");
-				}
-			});
+	private void buryBones(Player player, Item item, int repeat) {
+		player.message("You dig a hole in the ground");
+		Item toRemove = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		player.message("You bury the " + item.getDef(player.getWorld()).getName().toLowerCase());
+		if (player.getCarriedItems().remove(toRemove) > -1) {
+			giveBonesExperience(player, item);
+			repeat--;
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			if (repeat > 0 && player.getCarriedItems().getInventory().countId(toRemove.getCatalogId(), Optional.of(false)) > 0) {
+				buryBones(player, item, repeat);
+			}
 		}
 	}
 
