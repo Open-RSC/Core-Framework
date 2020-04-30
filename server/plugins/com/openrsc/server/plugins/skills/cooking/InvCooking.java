@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.skills.cooking;
 
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
@@ -43,28 +42,22 @@ public class InvCooking implements UseInvTrigger {
 			}
 			if (player.getCarriedItems().getInventory().contains(item1)
 				&& player.getCarriedItems().getInventory().contains(item2)) {
+				if (player.getSkills().getLevel(Skills.COOKING) < 35) {
+					player.playerServerMessage(MessageType.QUEST, "You need level 35 cooking to do this");
+					return;
+				}
 				player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
 				player.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
 				player.getCarriedItems().remove(new Item(ItemId.GRAPES.id()));
-
-				player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "Cook Wine", 1, false) {
-					@Override
-					public void action() {
-						if (getOwner().getSkills().getLevel(Skills.COOKING) < 35) {
-							getOwner().playerServerMessage(MessageType.QUEST, "You need level 35 cooking to do this");
-							interruptBatch();
-							return;
-						}
-						if (Formulae.goodWine(getOwner().getSkills().getLevel(Skills.COOKING))) {
-							getOwner().playerServerMessage(MessageType.QUEST, "You make some nice wine");
-							getOwner().getCarriedItems().getInventory().add(new Item(ItemId.WINE.id()));
-							getOwner().incExp(Skills.COOKING, 440, true);
-						} else {
-							getOwner().playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
-							getOwner().getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
-						}
-					}
-				});
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				if (Formulae.goodWine(player.getSkills().getLevel(Skills.COOKING))) {
+					player.playerServerMessage(MessageType.QUEST, "You make some nice wine");
+					player.getCarriedItems().getInventory().add(new Item(ItemId.WINE.id()));
+					player.incExp(Skills.COOKING, 440, true);
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
+				}
 			}
 		} else if (isWaterItem(item1) && item2.getCatalogId() == ItemId.POT_OF_FLOUR.id()
 				|| item1.getCatalogId() == ItemId.POT_OF_FLOUR.id() && isWaterItem(item2)) {
